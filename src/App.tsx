@@ -11,6 +11,9 @@ import ROICalculator from "./pages/ROICalculator";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import PrivacyCompliance from "./components/PrivacyCompliance";
+import TrustBadges from "./components/TrustBadges";
+import AutomationDashboard from "./components/AutomationDashboard";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +31,9 @@ const App = () => (
           <Route path="/roi-calculator" element={<ROICalculator />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/privacy" element={<PrivacyCompliance />} />
+          <Route path="/trust" element={<TrustBadges />} />
+          <Route path="/automation" element={<AutomationDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

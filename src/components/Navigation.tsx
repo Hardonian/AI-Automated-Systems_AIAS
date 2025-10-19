@@ -10,6 +10,9 @@ export const Navigation = () => {
     { name: 'Services', href: '/services', isRoute: true },
     { name: 'Case Studies', href: '/case-studies', isRoute: true },
     { name: 'ROI Calculator', href: '/roi-calculator', isRoute: true },
+    { name: 'Automation', href: '/automation', isRoute: true },
+    { name: 'Privacy', href: '/privacy', isRoute: true },
+    { name: 'Trust', href: '/trust', isRoute: true },
     { name: 'Resources', href: '#resources', isRoute: false },
   ];
 

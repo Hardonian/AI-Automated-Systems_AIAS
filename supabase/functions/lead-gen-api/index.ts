@@ -1,35 +1,39 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Simple in-memory rate limiter
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT_WINDOW = 3600000; // 1 hour
-const RATE_LIMIT_MAX_REQUESTS = 3;
+// Validation schema
+const leadGenRequestSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100, "Name too long (max 100 characters)"),
+  email: z.string().trim().email("Invalid email address").max(255, "Email too long"),
+});
 
-function checkRateLimit(identifier: string): boolean {
-  const now = Date.now();
-  const limit = rateLimitMap.get(identifier);
+// Initialize Supabase client
+const supabaseAdmin = createClient(
+  Deno.env.get('SUPABASE_URL') ?? '',
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+);
 
-  if (!limit || now > limit.resetTime) {
-    rateLimitMap.set(identifier, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+// Distributed rate limit check
+async function checkRateLimit(identifier: string): Promise<boolean> {
+  const { data, error } = await supabaseAdmin.rpc('check_rate_limit', {
+    p_identifier: identifier,
+    p_endpoint: 'lead-gen-api',
+    p_max_requests: 3,
+    p_window_seconds: 3600
+  });
+
+  if (error) {
+    console.error('Rate limit check error:', error);
     return true;
   }
 
-  if (limit.count >= RATE_LIMIT_MAX_REQUESTS) {
-    return false;
-  }
-
-  limit.count++;
-  return true;
-}
-
-function validateEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+  return data === true;
 }
 
 serve(async (req) => {
@@ -38,40 +42,41 @@ serve(async (req) => {
   }
 
   try {
-    const { name, email } = await req.json();
-
-    // Rate limiting by email
-    if (!checkRateLimit(email)) {
+    const body = await req.json();
+    
+    // Validate input with Zod
+    const validation = leadGenRequestSchema.safeParse(body);
+    if (!validation.success) {
       return new Response(
-        JSON.stringify({ error: 'Too many requests. Please try again later.' }),
+        JSON.stringify({ error: validation.error.errors[0].message }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { name, email } = validation.data;
+
+    // Distributed rate limiting by email
+    const isAllowed = await checkRateLimit(email);
+    if (!isAllowed) {
+      return new Response(
+        JSON.stringify({ error: 'Too many requests. Please try again in 1 hour.' }),
         { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Input validation
-    if (!name || typeof name !== 'string' || name.trim().length === 0 || name.length > 100) {
-      throw new Error('Invalid name (max 100 characters)');
-    }
-
-    if (!email || !validateEmail(email) || email.length > 255) {
-      throw new Error('Invalid email address');
-    }
-
-    // TODO: Generate PDF guide (10-page master system prompts)
-    // TODO: Send email with PDF attachment
-    // TODO: Add to mailing list (Mailchimp/Klaviyo/etc)
-    // TODO: Store lead in CRM
+    // TODO: Generate PDF with 10-page master system prompts
+    // TODO: Send PDF via email (use SendGrid, Mailgun, or Resend)
+    // TODO: Add to CRM/mailing list
 
     console.log('Lead captured:', {
       name: name.trim(),
       email: email.toLowerCase().trim(),
-      timestamp: new Date().toISOString(),
     });
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: 'Thank you! Check your email for your free guide on mastering AI agent system prompts.' 
+        message: 'Thank you! Check your email for your free guide.' 
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

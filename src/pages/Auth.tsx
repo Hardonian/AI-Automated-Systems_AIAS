@@ -10,11 +10,15 @@ import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { User } from "@supabase/supabase-js";
 
+type PasswordStrength = 'weak' | 'medium' | 'strong';
+
 export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [passwordStrength, setPasswordStrength] = useState<PasswordStrength | null>(null);
+  const [activeTab, setActiveTab] = useState("signin");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -40,8 +44,42 @@ export default function Auth() {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  const checkPasswordStrength = (pwd: string): PasswordStrength => {
+    let strength = 0;
+    if (pwd.length >= 8) strength++;
+    if (pwd.length >= 12) strength++;
+    if (/[a-z]/.test(pwd) && /[A-Z]/.test(pwd)) strength++;
+    if (/\d/.test(pwd)) strength++;
+    if (/[^a-zA-Z\d]/.test(pwd)) strength++;
+    
+    if (strength <= 2) return 'weak';
+    if (strength <= 4) return 'medium';
+    return 'strong';
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const pwd = e.target.value;
+    setPassword(pwd);
+    if (pwd.length > 0 && activeTab === 'signup') {
+      setPasswordStrength(checkPasswordStrength(pwd));
+    } else {
+      setPasswordStrength(null);
+    }
+  };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate password strength for signup
+    if (passwordStrength === 'weak') {
+      toast({
+        title: "Weak Password",
+        description: "Please use a stronger password with at least 8 characters, including uppercase, lowercase, numbers, and symbols.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -62,6 +100,7 @@ export default function Auth() {
       });
       setEmail("");
       setPassword("");
+      setPasswordStrength(null);
     } catch (error: any) {
       toast({
         title: "Sign up failed",
@@ -118,7 +157,7 @@ export default function Auth() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="signin" className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="signin">Sign In</TabsTrigger>
                 <TabsTrigger value="signup">Sign Up</TabsTrigger>
@@ -175,11 +214,40 @@ export default function Auth() {
                       type="password"
                       placeholder="••••••••"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={handlePasswordChange}
                       required
                       disabled={loading}
-                      minLength={6}
+                      minLength={8}
                     />
+                    {passwordStrength && (
+                      <div className="flex items-center gap-2 mt-2">
+                        <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                          <div
+                            className={`h-full transition-all ${
+                              passwordStrength === 'weak'
+                                ? 'bg-destructive w-1/3'
+                                : passwordStrength === 'medium'
+                                ? 'bg-warning w-2/3'
+                                : 'bg-success w-full'
+                            }`}
+                          />
+                        </div>
+                        <span className={`text-xs font-medium ${
+                          passwordStrength === 'weak'
+                            ? 'text-destructive'
+                            : passwordStrength === 'medium'
+                            ? 'text-warning'
+                            : 'text-success'
+                        }`}>
+                          {passwordStrength === 'weak' && 'Weak'}
+                          {passwordStrength === 'medium' && 'Medium'}
+                          {passwordStrength === 'strong' && 'Strong'}
+                        </span>
+                      </div>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      Use 8+ characters with uppercase, lowercase, numbers & symbols
+                    </p>
                   </div>
                   <Button type="submit" className="w-full" disabled={loading}>
                     {loading ? "Creating account..." : "Create Account"}

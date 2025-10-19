@@ -1,41 +1,45 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Simple in-memory rate limiter
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT_WINDOW = 300000; // 5 minutes
-const RATE_LIMIT_MAX_REQUESTS = 5;
+// Validation schema
+const bookingRequestSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100, "Name too long (max 100 characters)"),
+  email: z.string().trim().email("Invalid email address").max(255, "Email too long"),
+  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number").optional().or(z.literal('')),
+  company: z.string().max(200, "Company name too long (max 200 characters)").optional(),
+  meetingType: z.enum(['video', 'phone', 'chat'], { errorMap: () => ({ message: "Invalid meeting type" }) }),
+  date: z.string().min(1, "Date is required"),
+  time: z.string().min(1, "Time is required"),
+  notes: z.string().max(2000, "Notes too long (max 2000 characters)").optional(),
+});
 
-function checkRateLimit(identifier: string): boolean {
-  const now = Date.now();
-  const limit = rateLimitMap.get(identifier);
+// Initialize Supabase client
+const supabaseAdmin = createClient(
+  Deno.env.get('SUPABASE_URL') ?? '',
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+);
 
-  if (!limit || now > limit.resetTime) {
-    rateLimitMap.set(identifier, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+// Distributed rate limit check
+async function checkRateLimit(identifier: string): Promise<boolean> {
+  const { data, error } = await supabaseAdmin.rpc('check_rate_limit', {
+    p_identifier: identifier,
+    p_endpoint: 'booking-api',
+    p_max_requests: 5,
+    p_window_seconds: 300
+  });
+
+  if (error) {
+    console.error('Rate limit check error:', error);
     return true;
   }
 
-  if (limit.count >= RATE_LIMIT_MAX_REQUESTS) {
-    return false;
-  }
-
-  limit.count++;
-  return true;
-}
-
-function validateEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
-function validatePhone(phone: string): boolean {
-  // Basic international phone validation
-  const phoneRegex = /^\+?[1-9]\d{1,14}$/;
-  return phoneRegex.test(phone.replace(/[\s\-()]/g, ''));
+  return data === true;
 }
 
 serve(async (req) => {
@@ -44,43 +48,26 @@ serve(async (req) => {
   }
 
   try {
-    const { name, email, phone, company, meetingType, date, time, notes } = await req.json();
-
-    // Rate limiting by email
-    if (!checkRateLimit(email)) {
+    const body = await req.json();
+    
+    // Validate input with Zod
+    const validation = bookingRequestSchema.safeParse(body);
+    if (!validation.success) {
       return new Response(
-        JSON.stringify({ error: 'Too many booking requests. Please try again later.' }),
-        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: validation.error.errors[0].message }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Input validation
-    if (!name || typeof name !== 'string' || name.trim().length === 0 || name.length > 100) {
-      throw new Error('Invalid name (max 100 characters)');
-    }
+    const { name, email, phone, company, meetingType, date, time, notes } = validation.data;
 
-    if (!email || !validateEmail(email) || email.length > 255) {
-      throw new Error('Invalid email address');
-    }
-
-    if (phone && !validatePhone(phone)) {
-      throw new Error('Invalid phone number');
-    }
-
-    if (company && company.length > 200) {
-      throw new Error('Company name too long (max 200 characters)');
-    }
-
-    if (notes && notes.length > 2000) {
-      throw new Error('Notes too long (max 2000 characters)');
-    }
-
-    if (!meetingType || !['video', 'phone', 'chat'].includes(meetingType)) {
-      throw new Error('Invalid meeting type');
-    }
-
-    if (!date || !time) {
-      throw new Error('Date and time are required');
+    // Distributed rate limiting by email
+    const isAllowed = await checkRateLimit(email);
+    if (!isAllowed) {
+      return new Response(
+        JSON.stringify({ error: 'Too many booking requests. Please try again in 5 minutes.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     // TODO: Integrate with booking system (Calendly, Cal.com, or custom)

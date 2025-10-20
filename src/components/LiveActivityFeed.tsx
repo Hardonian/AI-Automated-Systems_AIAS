@@ -15,12 +15,12 @@ export const LiveActivityFeed = () => {
   const [currentActivity, setCurrentActivity] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = globalThis.setInterval(() => {
       setActiveWorkflows(prev => prev + Math.floor(Math.random() * 3));
       setCurrentActivity(prev => (prev + 1) % activities.length);
     }, 4000);
 
-    return () => clearInterval(interval);
+    return () => globalThis.clearInterval(interval);
   }, []);
 
   const activity = activities[currentActivity];

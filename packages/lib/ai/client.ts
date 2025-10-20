@@ -2,9 +2,17 @@ import { createAIProvider, createFallbackAIProvider } from './providers';
 import { ChatRequest, AuditRequest, EstimateRequest, ContentGenerationRequest, WorkflowGenerationRequest } from './types';
 import { config } from '@ai-consultancy/config';
 
+interface AIProvider {
+  chat(request: ChatRequest): Promise<any>;
+  audit(request: AuditRequest): Promise<any>;
+  estimate(request: EstimateRequest): Promise<any>;
+  generateContent(request: ContentGenerationRequest): Promise<any>;
+  generateWorkflow(request: WorkflowGenerationRequest): Promise<any>;
+}
+
 export class AIClient {
-  private primaryProvider: any;
-  private fallbackProvider: any;
+  private primaryProvider: AIProvider | null;
+  private fallbackProvider: AIProvider | null;
 
   constructor() {
     try {
@@ -23,7 +31,7 @@ export class AIClient {
   }
 
   private async executeWithFallback<T>(
-    operation: (provider: any) => Promise<T>,
+    operation: (provider: AIProvider) => Promise<T>,
     operationName: string
   ): Promise<T> {
     if (this.primaryProvider) {

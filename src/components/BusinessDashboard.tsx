@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { formatCurrency, formatPercentage, formatNumber } from '@/lib/utils';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -18,7 +19,7 @@ import {
   PieChart,
   LineChart
 } from 'lucide-react';
-import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart as RechartsPieChart, Cell } from 'recharts';
+import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart as RechartsPieChart, Pie, Cell } from 'recharts';
 
 interface BusinessMetrics {
   revenue: {
@@ -156,21 +157,14 @@ const BusinessDashboard: React.FC = () => {
 
   useEffect(() => {
     // Simulate API call
-    setTimeout(() => {
+    globalThis.setTimeout(() => {
       setMetrics(mockMetrics);
       setAlerts(mockAlerts);
       setLoading(false);
     }, 1000);
-  }, [timeRange]);
+  }, [timeRange, mockMetrics, mockAlerts]);
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
-  };
+  // Using shared utility function
 
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat('en-US').format(num);

@@ -49,9 +49,9 @@ const PartnershipPortal: React.FC = () => {
 
   const copyReferralLink = () => {
     const link = createReferralLink(referralCode);
-    navigator.clipboard.writeText(link);
+    globalThis.navigator?.clipboard?.writeText(link);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    globalThis.setTimeout(() => setCopied(false), 2000);
   };
 
   const getTierIcon = (tierId: string) => {

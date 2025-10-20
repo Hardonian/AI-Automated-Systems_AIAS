@@ -10,12 +10,12 @@ export const LeadGenForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: globalThis.React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     // Simulate API call
-    setTimeout(() => {
+    globalThis.setTimeout(() => {
       toast({
         title: "Success! 🎉",
         description: "Check your email for the Master System Prompts Guide PDF",

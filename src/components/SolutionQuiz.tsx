@@ -69,9 +69,9 @@ export const SolutionQuiz = () => {
     setAnswers({ ...answers, [currentQuestion]: value });
     
     if (currentQuestion < questions.length - 1) {
-      setTimeout(() => setCurrentQuestion(currentQuestion + 1), 300);
+      globalThis.setTimeout(() => setCurrentQuestion(currentQuestion + 1), 300);
     } else {
-      setTimeout(() => setShowResults(true), 300);
+      globalThis.setTimeout(() => setShowResults(true), 300);
     }
   };
 

@@ -106,7 +106,7 @@ export class AuthService {
   }
 
   static async createJWT(user: AuthUser): Promise<string> {
-    const secret = new TextEncoder().encode(config.security.jwtSecret);
+    const secret = new (globalThis.TextEncoder || TextEncoder)().encode(config.security.jwtSecret);
     
     return new SignJWT({ 
       userId: user.id,
@@ -120,7 +120,7 @@ export class AuthService {
 
   static async verifyJWT(token: string): Promise<{ userId: string; email: string } | null> {
     try {
-      const secret = new TextEncoder().encode(config.security.jwtSecret);
+      const secret = new (globalThis.TextEncoder || TextEncoder)().encode(config.security.jwtSecret);
       const { payload } = await jwtVerify(token, secret);
       
       return {

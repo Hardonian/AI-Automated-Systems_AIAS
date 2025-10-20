@@ -22,7 +22,7 @@ export const AIChat = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -45,7 +45,7 @@ export const AIChat = () => {
     setIsLoading(true);
 
     // Simulate AI response
-    setTimeout(() => {
+    globalThis.setTimeout(() => {
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: 'I understand your request. This is a demo response. In production, this would connect to your AI backend via Supabase Edge Functions.',

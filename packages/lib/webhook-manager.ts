@@ -25,7 +25,7 @@ export interface WebhookEvent {
 }
 
 export class WebhookManager {
-  private retryQueue: Map<string, NodeJS.Timeout> = new Map();
+  private retryQueue: Map<string, ReturnType<typeof setTimeout>> = new Map();
   private maxRetries = 5;
   private baseRetryDelay = 1000; // 1 second
 
@@ -273,7 +273,7 @@ export class WebhookManager {
     });
 
     // Schedule retry
-    const timeout = setTimeout(async () => {
+    const timeout = globalThis.setTimeout(async () => {
       try {
         await this.processWebhook(webhookId, webhookEvent.payload);
       } catch (retryError) {
@@ -355,7 +355,7 @@ export class WebhookManager {
   async cancelRetry(webhookId: string): Promise<void> {
     const timeout = this.retryQueue.get(webhookId);
     if (timeout) {
-      clearTimeout(timeout);
+      globalThis.clearTimeout(timeout);
       this.retryQueue.delete(webhookId);
     }
 

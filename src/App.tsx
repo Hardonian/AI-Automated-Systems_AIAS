@@ -42,7 +42,7 @@ const App = () => {
     monitoringService.trackEvent('app_initialized', {
       version: import.meta.env.VITE_APP_VERSION || '1.0.0',
       environment: import.meta.env.MODE,
-      userAgent: navigator.userAgent,
+      userAgent: globalThis.navigator?.userAgent || 'unknown',
     });
 
     // Track page view

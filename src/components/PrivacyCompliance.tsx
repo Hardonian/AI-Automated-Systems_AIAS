@@ -117,7 +117,7 @@ export const PrivacyCompliance: React.FC = () => {
 
   useEffect(() => {
     // Check if user has existing consent
-    const existingConsent = localStorage.getItem('privacy_consent');
+    const existingConsent = globalThis.localStorage?.getItem('privacy_consent');
     if (!existingConsent) {
       setShowConsentBanner(true);
     } else {
@@ -142,12 +142,12 @@ export const PrivacyCompliance: React.FC = () => {
       privacySettings,
       {
         ipAddress: '127.0.0.1', // In real app, get actual IP
-        userAgent: navigator.userAgent,
+        userAgent: globalThis.navigator?.userAgent || 'unknown',
         jurisdiction
       }
     );
 
-    localStorage.setItem('privacy_consent', JSON.stringify({
+    globalThis.localStorage?.setItem('privacy_consent', JSON.stringify({
       settings: privacySettings,
       jurisdiction,
       consentId: consentData.id,

@@ -17,7 +17,12 @@ class OpenAIProvider implements AIProvider {
     });
   }
 
-  async chat(request: ChatRequest): Promise<any> {
+  async chat(request: ChatRequest): Promise<{
+    content: string;
+    usage?: any;
+    model?: string;
+    provider: string;
+  }> {
     const response = await this.client.chat.completions.create({
       model: request.model || 'gpt-4',
       messages: request.messages as any,

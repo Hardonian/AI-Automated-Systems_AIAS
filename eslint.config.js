@@ -100,6 +100,72 @@ export default tseslint.config(
       }, { 
         enforceForRenamedProperties: false 
       }],
+      
+      // Import organization
+      "import/order": ["warn", {
+        "groups": [
+          "builtin",
+          "external", 
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }],
+      "import/no-duplicates": "error",
+      "import/no-unresolved": "off", // TypeScript handles this
+      
+      // TypeScript specific
+      "@typescript-eslint/no-unused-vars": ["warn", { 
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_" 
+      }],
+      "@typescript-eslint/prefer-nullish-coalescing": "warn",
+      "@typescript-eslint/prefer-optional-chain": "warn",
+      "@typescript-eslint/no-unnecessary-condition": "warn",
+      "@typescript-eslint/no-floating-promises": "warn",
+      "@typescript-eslint/await-thenable": "warn",
+      "@typescript-eslint/no-misused-promises": "warn",
+      
+      // React specific
+      "react/jsx-key": "error",
+      "react/jsx-no-useless-fragment": "warn",
+      "react/self-closing-comp": "warn",
+      "react/jsx-sort-props": ["warn", {
+        "callbacksLast": true,
+        "shorthandFirst": true,
+        "noSortAlphabetically": false,
+        "reservedFirst": true
+      }],
+      
+      // Performance and best practices
+      "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
+      "no-await-in-loop": "warn",
+      "prefer-const": "error",
+      "no-var": "error",
+      "eqeqeq": ["error", "always"],
+      "curly": ["error", "all"],
+      "no-eval": "error",
+      "no-implied-eval": "error",
+      "no-new-func": "error",
+      "no-script-url": "error",
+      "no-sequences": "error",
+      "no-throw-literal": "error",
+      "no-unmodified-loop-condition": "error",
+      "no-unused-labels": "error",
+      "no-useless-call": "error",
+      "no-useless-concat": "error",
+      "no-useless-escape": "error",
+      "no-void": "error",
+      "prefer-promise-reject-errors": "error",
+      "radix": "error",
+      "wrap-iife": ["error", "any"],
+      "yoda": "error"
     },
   },
 );

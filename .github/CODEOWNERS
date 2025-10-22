@@ -1,0 +1,43 @@
+# Global ownership
+* @Scott Hardie
+
+# Core application files
+/src/ @Scott Hardie
+/apps/ @Scott Hardie
+/packages/ @Scott Hardie
+
+# Configuration files
+package.json @Scott Hardie
+tsconfig*.json @Scott Hardie
+eslint.config.js @Scott Hardie
+.prettierrc @Scott Hardie
+tailwind.config.ts @Scott Hardie
+vite.config.ts @Scott Hardie
+next.config.js @Scott Hardie
+
+# Documentation
+README.md @Scott Hardie
+CONTRIBUTING.md @Scott Hardie
+CODE_OF_CONDUCT.md @Scott Hardie
+SECURITY.md @Scott Hardie
+CHANGELOG.md @Scott Hardie
+/docs/ @Scott Hardie
+
+# CI/CD
+.github/ @Scott Hardie
+.github/workflows/ @Scott Hardie
+
+# Infrastructure
+Dockerfile @Scott Hardie
+docker-compose*.yml @Scott Hardie
+nginx.conf @Scott Hardie
+
+# Database
+prisma/ @Scott Hardie
+supabase/ @Scott Hardie
+
+# Monitoring
+monitoring/ @Scott Hardie
+
+# Security
+ops/security/ @Scott Hardie

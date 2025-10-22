@@ -2,479 +2,291 @@
 
 Thank you for your interest in contributing to the AIAS Platform! This document provides guidelines and information for contributors.
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Code of Conduct](#code-of-conduct)
 - [Getting Started](#getting-started)
-- [Development Workflow](#development-workflow)
-- [Code Standards](#code-standards)
-- [Testing Guidelines](#testing-guidelines)
+- [Development Setup](#development-setup)
+- [Contributing Process](#contributing-process)
+- [Coding Standards](#coding-standards)
+- [Testing](#testing)
 - [Pull Request Process](#pull-request-process)
 - [Issue Reporting](#issue-reporting)
-- [Documentation](#documentation)
 
-## 🤝 Code of Conduct
+## Code of Conduct
 
-This project adheres to a code of conduct. By participating, you are expected to uphold this code. Please report unacceptable behavior to conduct@aias-platform.com.
+This project adheres to our [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
 
-### Our Pledge
-
-We pledge to make participation in our project a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation.
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
 - Node.js 18.17.0 or higher
 - pnpm 8.0.0 or higher
 - Git
-- Docker (optional, for local development)
 
 ### Development Setup
 
-1. **Fork and Clone**
+1. **Fork and clone the repository**
    ```bash
-   # Fork the repository on GitHub
-   git clone https://github.com/YOUR_USERNAME/aias-platform.git
+   git clone https://github.com/your-username/aias-platform.git
    cd aias-platform
    ```
 
-2. **Install Dependencies**
+2. **Install dependencies**
    ```bash
    pnpm install
    ```
 
-3. **Set up Environment**
+3. **Set up environment variables**
    ```bash
    cp .env.example .env.local
    # Edit .env.local with your configuration
    ```
 
-4. **Start Development Server**
+4. **Set up the database**
    ```bash
-   pnpm dev
+   pnpm run db:push
+   pnpm run db:seed
    ```
 
-5. **Run Tests**
+5. **Start the development server**
    ```bash
-   pnpm test
+   pnpm run dev
    ```
 
-## 🔄 Development Workflow
+## Contributing Process
 
-### Branch Naming
+### 1. Create a Feature Branch
 
-Use descriptive branch names with prefixes:
-
-- `feature/description` - New features
-- `fix/description` - Bug fixes
-- `docs/description` - Documentation updates
-- `refactor/description` - Code refactoring
-- `test/description` - Test improvements
-- `chore/description` - Maintenance tasks
-
-Examples:
-- `feature/ai-agent-builder`
-- `fix/payment-processing-bug`
-- `docs/api-documentation-update`
-
-### Commit Messages
-
-We use [Conventional Commits](https://www.conventionalcommits.org/) format:
-
-```
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
+```bash
+git checkout -b feature/your-feature-name
+# or
+git checkout -b fix/your-bug-fix
 ```
 
-**Types:**
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes
-- `style`: Code style changes (formatting, etc.)
-- `refactor`: Code refactoring
-- `test`: Adding or updating tests
-- `chore`: Maintenance tasks
+### 2. Make Your Changes
 
-**Examples:**
-```
-feat(ai): add custom AI agent builder interface
+- Write clean, readable code
+- Follow the coding standards
+- Add tests for new functionality
+- Update documentation as needed
 
-fix(payments): resolve Stripe webhook validation issue
+### 3. Test Your Changes
 
-docs(api): update authentication endpoints documentation
-```
+```bash
+# Run linting
+pnpm run lint
 
-## 📝 Code Standards
+# Run type checking
+pnpm run typecheck
 
-### TypeScript
+# Run tests
+pnpm run test
 
-- Use strict TypeScript mode
-- Define explicit types for all functions and variables
-- Use interfaces for object shapes
-- Prefer `type` over `interface` for unions and primitives
-- Use proper error handling with typed errors
-
-```typescript
-// ✅ Good
-interface User {
-  id: string;
-  email: string;
-  name: string;
-}
-
-type UserRole = 'admin' | 'user' | 'guest';
-
-function createUser(userData: Omit<User, 'id'>): Promise<User> {
-  // Implementation
-}
-
-// ❌ Bad
-function createUser(userData: any): any {
-  // Implementation
-}
+# Run E2E tests
+pnpm run test:e2e
 ```
 
-### React Components
+### 4. Commit Your Changes
+
+We use [Conventional Commits](https://www.conventionalcommits.org/):
+
+```bash
+git commit -m "feat: add new feature"
+git commit -m "fix: resolve bug in component"
+git commit -m "docs: update README"
+```
+
+### 5. Push and Create Pull Request
+
+```bash
+git push origin feature/your-feature-name
+```
+
+Then create a pull request on GitHub.
+
+## Coding Standards
+
+### TypeScript/JavaScript
+
+- Use TypeScript for all new code
+- Follow the existing ESLint configuration
+- Use meaningful variable and function names
+- Add JSDoc comments for public APIs
+- Prefer functional components over class components
+- Use hooks for state management
+
+### React
 
 - Use functional components with hooks
-- Define proper prop types
-- Use meaningful component names
-- Keep components small and focused
-- Use proper error boundaries
+- Implement proper error boundaries
+- Follow accessibility guidelines
+- Use TypeScript for prop types
+- Implement proper loading and error states
 
-```typescript
-// ✅ Good
-interface ButtonProps {
-  variant: 'primary' | 'secondary';
-  size: 'sm' | 'md' | 'lg';
-  children: React.ReactNode;
-  onClick: () => void;
-  disabled?: boolean;
-}
+### CSS/Styling
 
-export function Button({ variant, size, children, onClick, disabled }: ButtonProps) {
-  return (
-    <button
-      className={cn(buttonVariants({ variant, size }))}
-      onClick={onClick}
-      disabled={disabled}
-    >
-      {children}
-    </button>
-  );
-}
-
-// ❌ Bad
-export function Button(props: any) {
-  return <button {...props} />;
-}
-```
+- Use Tailwind CSS for styling
+- Follow mobile-first responsive design
+- Use CSS variables for theming
+- Implement dark mode support
+- Follow accessibility guidelines
 
 ### File Organization
 
-- Use kebab-case for file names
-- Group related files in folders
-- Use index files for clean imports
-- Separate concerns (components, hooks, utils, types)
-
 ```
-components/
-├── ui/
-│   ├── button.tsx
-│   ├── input.tsx
-│   └── index.ts
-├── forms/
-│   ├── user-form.tsx
-│   └── index.ts
-└── index.ts
+src/
+├── components/          # Reusable UI components
+├── pages/              # Page components
+├── hooks/              # Custom React hooks
+├── lib/                # Utility functions
+├── types/              # TypeScript type definitions
+└── integrations/       # Third-party integrations
 ```
 
-### Naming Conventions
+## Testing
 
-- **Variables**: camelCase (`userName`, `isLoading`)
-- **Functions**: camelCase (`getUserData`, `handleSubmit`)
-- **Components**: PascalCase (`UserProfile`, `PaymentForm`)
-- **Constants**: UPPER_SNAKE_CASE (`API_BASE_URL`, `MAX_RETRY_ATTEMPTS`)
-- **Files**: kebab-case (`user-profile.tsx`, `api-client.ts`)
+### Unit Tests
 
-## 🧪 Testing Guidelines
+- Write tests for all new functionality
+- Use Vitest for unit testing
+- Aim for high test coverage
+- Test both happy path and edge cases
 
-### Test Structure
+### Integration Tests
 
-- Write tests for all new features
-- Maintain 80%+ code coverage
-- Use descriptive test names
-- Group related tests with `describe` blocks
-- Use proper setup and teardown
+- Test component interactions
+- Test API integrations
+- Test user workflows
 
-```typescript
-// ✅ Good
-describe('UserService', () => {
-  let userService: UserService;
-  let mockApiClient: jest.Mocked<ApiClient>;
+### E2E Tests
 
-  beforeEach(() => {
-    mockApiClient = createMockApiClient();
-    userService = new UserService(mockApiClient);
-  });
-
-  describe('createUser', () => {
-    it('should create a user with valid data', async () => {
-      // Arrange
-      const userData = { name: 'John Doe', email: 'john@example.com' };
-      mockApiClient.post.mockResolvedValue({ id: '1', ...userData });
-
-      // Act
-      const result = await userService.createUser(userData);
-
-      // Assert
-      expect(result).toEqual({ id: '1', ...userData });
-      expect(mockApiClient.post).toHaveBeenCalledWith('/users', userData);
-    });
-
-    it('should throw error for invalid email', async () => {
-      // Arrange
-      const userData = { name: 'John Doe', email: 'invalid-email' };
-
-      // Act & Assert
-      await expect(userService.createUser(userData)).rejects.toThrow('Invalid email');
-    });
-  });
-});
-```
-
-### Test Types
-
-- **Unit Tests**: Test individual functions and components
-- **Integration Tests**: Test API endpoints and database interactions
-- **E2E Tests**: Test complete user workflows
-- **Visual Tests**: Test component rendering and styling
+- Use Playwright for E2E testing
+- Test critical user journeys
+- Test across different browsers
+- Test responsive design
 
 ### Running Tests
 
 ```bash
-# Run all tests
-pnpm test
+# Unit tests
+pnpm run test
 
-# Run tests in watch mode
-pnpm test:watch
+# E2E tests
+pnpm run test:e2e
 
-# Run tests with coverage
-pnpm test:coverage
-
-# Run E2E tests
-pnpm test:e2e
-
-# Run specific test file
-pnpm test user-service.test.ts
+# Test coverage
+pnpm run test:coverage
 ```
 
-## 🔍 Pull Request Process
+## Pull Request Process
 
 ### Before Submitting
 
-1. **Update Documentation**
-   - Update README.md if needed
-   - Add/update API documentation
-   - Update inline code comments
+- [ ] Code follows the coding standards
+- [ ] All tests pass
+- [ ] No linting errors
+- [ ] TypeScript compilation succeeds
+- [ ] Documentation is updated
+- [ ] Commit messages follow conventional format
 
-2. **Run Quality Checks**
-   ```bash
-   pnpm typecheck
-   pnpm lint
-   pnpm format:check
-   pnpm test
-   pnpm test:e2e
-   ```
+### PR Template
 
-3. **Update Tests**
-   - Add tests for new features
-   - Update existing tests if needed
-   - Ensure all tests pass
+When creating a pull request, please include:
 
-### Pull Request Template
-
-Use the following template for pull requests:
-
-```markdown
-## Description
-Brief description of changes
-
-## Type of Change
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Documentation update
-- [ ] Performance improvement
-- [ ] Code refactoring
-
-## Testing
-- [ ] Unit tests pass
-- [ ] Integration tests pass
-- [ ] E2E tests pass
-- [ ] Manual testing completed
-
-## Checklist
-- [ ] Code follows project style guidelines
-- [ ] Self-review completed
-- [ ] Documentation updated
-- [ ] Tests added/updated
-- [ ] No breaking changes (or breaking changes documented)
-
-## Screenshots (if applicable)
-Add screenshots to help explain your changes
-
-## Additional Notes
-Any additional information about the changes
-```
+1. **Description**: What changes were made and why
+2. **Type**: feat, fix, docs, style, refactor, test, chore
+3. **Testing**: How the changes were tested
+4. **Screenshots**: If applicable
+5. **Breaking Changes**: If any
+6. **Related Issues**: Link to related issues
 
 ### Review Process
 
-1. **Automated Checks**
-   - All CI/CD checks must pass
-   - Code coverage must be maintained
-   - Security scans must pass
-   - Performance budgets must be met
+1. Automated checks must pass
+2. At least one reviewer approval required
+3. All conversations must be resolved
+4. No merge conflicts
 
-2. **Code Review**
-   - At least one approval required
-   - Address all review comments
-   - Update documentation if needed
-
-3. **Merge Process**
-   - Squash and merge for feature branches
-   - Rebase and merge for hotfixes
-   - Delete feature branch after merge
-
-## 🐛 Issue Reporting
+## Issue Reporting
 
 ### Bug Reports
 
-Use the bug report template:
+When reporting bugs, please include:
 
-```markdown
-**Describe the bug**
-A clear and concise description of what the bug is.
-
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
-
-**Expected behavior**
-A clear and concise description of what you expected to happen.
-
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Environment:**
-- OS: [e.g. iOS]
-- Browser [e.g. chrome, safari]
-- Version [e.g. 22]
-
-**Additional context**
-Add any other context about the problem here.
-```
+- Clear description of the issue
+- Steps to reproduce
+- Expected vs actual behavior
+- Screenshots if applicable
+- Environment details (OS, browser, etc.)
 
 ### Feature Requests
 
-Use the feature request template:
+When requesting features, please include:
 
-```markdown
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is.
+- Clear description of the feature
+- Use case and motivation
+- Proposed solution (if any)
+- Alternatives considered
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+### Issue Labels
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+- `bug`: Something isn't working
+- `enhancement`: New feature or request
+- `documentation`: Improvements to documentation
+- `good first issue`: Good for newcomers
+- `help wanted`: Extra attention is needed
+- `priority: high`: High priority
+- `priority: medium`: Medium priority
+- `priority: low`: Low priority
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
-```
+## Development Guidelines
 
-## 📚 Documentation
+### Git Workflow
 
-### Code Documentation
+1. Always work on feature branches
+2. Keep commits atomic and focused
+3. Use descriptive commit messages
+4. Rebase before merging
+5. Squash commits when appropriate
 
-- Use JSDoc for functions and classes
-- Document complex algorithms and business logic
-- Keep comments up-to-date with code changes
-- Use meaningful variable and function names
+### Code Review
 
-```typescript
-/**
- * Calculates the total price including tax and discounts
- * @param basePrice - The base price before tax and discounts
- * @param taxRate - The tax rate as a decimal (e.g., 0.08 for 8%)
- * @param discountAmount - The discount amount to apply
- * @returns The total price after applying tax and discounts
- */
-function calculateTotalPrice(
-  basePrice: number,
-  taxRate: number,
-  discountAmount: number = 0
-): number {
-  const priceAfterDiscount = basePrice - discountAmount;
-  const taxAmount = priceAfterDiscount * taxRate;
-  return priceAfterDiscount + taxAmount;
-}
-```
+- Be constructive and respectful
+- Focus on the code, not the person
+- Suggest improvements, don't just criticize
+- Ask questions if something is unclear
+- Approve when you're confident in the changes
 
-### API Documentation
+### Performance
 
-- Document all API endpoints
-- Include request/response examples
-- Document error codes and messages
-- Keep documentation synchronized with code
+- Consider performance implications
+- Use React.memo when appropriate
+- Implement proper loading states
+- Optimize images and assets
+- Monitor bundle size
 
-### README Updates
+### Security
 
-- Update README.md for significant changes
-- Include setup instructions for new features
-- Update dependency versions
-- Add troubleshooting information
+- Never commit secrets or credentials
+- Use environment variables for configuration
+- Validate all user inputs
+- Follow security best practices
+- Report security issues privately
 
-## 🚀 Release Process
+## Getting Help
 
-### Version Numbering
+- Check existing issues and discussions
+- Join our community discussions
+- Contact maintainers for urgent issues
+- Read the documentation thoroughly
 
-We use [Semantic Versioning](https://semver.org/):
-
-- **MAJOR**: Breaking changes
-- **MINOR**: New features (backward compatible)
-- **PATCH**: Bug fixes (backward compatible)
-
-### Release Checklist
-
-- [ ] All tests pass
-- [ ] Documentation updated
-- [ ] CHANGELOG.md updated
-- [ ] Version numbers updated
-- [ ] Release notes prepared
-- [ ] Security scan completed
-
-## 🤔 Questions?
-
-If you have questions about contributing:
-
-- Check existing [GitHub Issues](https://github.com/your-org/aias-platform/issues)
-- Join our [Discord Community](https://discord.gg/aias-platform)
-- Email us at contributors@aias-platform.com
-
-## 🙏 Recognition
+## Recognition
 
 Contributors will be recognized in:
 - CONTRIBUTORS.md file
 - Release notes
 - Project documentation
-- Community highlights
 
-Thank you for contributing to AIAS Platform! 🎉
+Thank you for contributing to AIAS Platform! 🚀

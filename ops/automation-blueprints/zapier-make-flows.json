@@ -1,0 +1,236 @@
+{
+  "version": "1.0",
+  "description": "Automation blueprints for Zapier and Make.com workflows",
+  "last_updated": "2025-01-XX",
+  "flows": [
+    {
+      "name": "Form Fill → Notion CRM + Gmail Follow-up",
+      "platform": "zapier",
+      "trigger": {
+        "service": "Google Forms / Typeform / Webflow",
+        "event": "New Form Submission",
+        "fields": ["email", "name", "company", "message", "source"]
+      },
+      "actions": [
+        {
+          "step": 1,
+          "service": "Notion",
+          "action": "Create Database Entry",
+          "database": "CRM Leads",
+          "mapping": {
+            "Name": "{{trigger.name}}",
+            "Email": "{{trigger.email}}",
+            "Company": "{{trigger.company}}",
+            "Message": "{{trigger.message}}",
+            "Source": "{{trigger.source}}",
+            "Date": "{{trigger.date}}",
+            "Status": "New"
+          }
+        },
+        {
+          "step": 2,
+          "service": "Gmail",
+          "action": "Send Email",
+          "to": "{{trigger.email}}",
+          "subject": "Thanks for reaching out!",
+          "template": "welcome-email-template"
+        },
+        {
+          "step": 3,
+          "service": "Slack",
+          "action": "Send DM",
+          "channel": "#leads",
+          "message": "New lead: {{trigger.name}} from {{trigger.source}}"
+        }
+      ],
+      "fallback": "Manual: Export form CSV → Import to Notion → Send email template"
+    },
+    {
+      "name": "Stripe Sale → Supabase → Google Sheet → Slack DM",
+      "platform": "make",
+      "trigger": {
+        "service": "Stripe",
+        "event": "Payment Succeeded",
+        "webhook": "stripe.payment_intent.succeeded"
+      },
+      "actions": [
+        {
+          "step": 1,
+          "service": "Supabase",
+          "action": "Insert Row",
+          "table": "transactions",
+          "mapping": {
+            "customer_email": "{{trigger.customer_email}}",
+            "amount_cad": "{{trigger.amount}}",
+            "currency": "CAD",
+            "stripe_id": "{{trigger.payment_intent_id}}",
+            "date": "{{trigger.created}}"
+          }
+        },
+        {
+          "step": 2,
+          "service": "Google Sheets",
+          "action": "Append Row",
+          "spreadsheet": "Finance Dashboard",
+          "worksheet": "Transactions",
+          "row": [
+            "{{trigger.date}}",
+            "{{trigger.customer_email}}",
+            "{{trigger.amount_cad}}",
+            "CAD",
+            "{{trigger.stripe_id}}"
+          ]
+        },
+        {
+          "step": 3,
+          "service": "Slack",
+          "action": "Send DM",
+          "channel": "#revenue",
+          "message": "💰 New sale: ${{trigger.amount_cad}} CAD from {{trigger.customer_email}}"
+        },
+        {
+          "step": 4,
+          "service": "Supabase Function",
+          "endpoint": "calculate-monthly-revenue",
+          "method": "POST"
+        }
+      ],
+      "fallback": "Manual: Export Stripe CSV → Import to Google Sheet → Calculate GST/HST"
+    },
+    {
+      "name": "Social Post → Auto-log to Marketing Dashboard",
+      "platform": "zapier",
+      "trigger": {
+        "service": "Buffer / Hootsuite / Facebook",
+        "event": "Post Published",
+        "fields": ["post_text", "platform", "scheduled_time", "url"]
+      },
+      "actions": [
+        {
+          "step": 1,
+          "service": "Google Sheets",
+          "action": "Append Row",
+          "spreadsheet": "Marketing Dashboard",
+          "worksheet": "Social Posts",
+          "row": [
+            "{{trigger.date}}",
+            "{{trigger.platform}}",
+            "{{trigger.post_text}}",
+            "{{trigger.url}}",
+            "{{trigger.scheduled_time}}"
+          ]
+        },
+        {
+          "step": 2,
+          "service": "Supabase",
+          "action": "Insert Row",
+          "table": "marketing_activities",
+          "mapping": {
+            "type": "social_post",
+            "platform": "{{trigger.platform}}",
+            "content": "{{trigger.post_text}}",
+            "url": "{{trigger.url}}",
+            "date": "{{trigger.date}}"
+          }
+        }
+      ],
+      "fallback": "Manual: Copy post details → Add to marketing dashboard manually"
+    },
+    {
+      "name": "New GitHub Issue → Notion Task + Slack Alert",
+      "platform": "make",
+      "trigger": {
+        "service": "GitHub",
+        "event": "Issue Opened",
+        "webhook": "github.issues.opened"
+      },
+      "actions": [
+        {
+          "step": 1,
+          "service": "Notion",
+          "action": "Create Page",
+          "parent": "Task Database",
+          "mapping": {
+            "Title": "{{trigger.issue.title}}",
+            "URL": "{{trigger.issue.url}}",
+            "Labels": "{{trigger.issue.labels}}",
+            "Assignee": "{{trigger.issue.assignee}}",
+            "Status": "To Do"
+          }
+        },
+        {
+          "step": 2,
+          "service": "Slack",
+          "action": "Send Message",
+          "channel": "#development",
+          "message": "New issue: {{trigger.issue.title}} - {{trigger.issue.url}}"
+        }
+      ],
+      "fallback": "Manual: Create Notion task from GitHub issue"
+    },
+    {
+      "name": "Customer Support Ticket → Auto-assign + Follow-up",
+      "platform": "zapier",
+      "trigger": {
+        "service": "Intercom / Zendesk / Email",
+        "event": "New Ticket Created",
+        "fields": ["email", "subject", "message", "priority"]
+      },
+      "actions": [
+        {
+          "step": 1,
+          "service": "Notion",
+          "action": "Create Database Entry",
+          "database": "Support Tickets",
+          "mapping": {
+            "Customer Email": "{{trigger.email}}",
+            "Subject": "{{trigger.subject}}",
+            "Message": "{{trigger.message}}",
+            "Priority": "{{trigger.priority}}",
+            "Status": "Open",
+            "Created": "{{trigger.date}}"
+          }
+        },
+        {
+          "step": 2,
+          "service": "Gmail",
+          "action": "Send Email",
+          "to": "{{trigger.email}}",
+          "subject": "Re: {{trigger.subject}}",
+          "template": "ticket-acknowledgment"
+        },
+        {
+          "step": 3,
+          "service": "Slack",
+          "action": "Send DM",
+          "channel": "#support",
+          "message": "New {{trigger.priority}} ticket from {{trigger.email}}: {{trigger.subject}}"
+        }
+      ],
+      "fallback": "Manual: Create support ticket → Send acknowledgment email → Add to tracking"
+    }
+  ],
+  "setup_instructions": {
+    "zapier": [
+      "1. Go to zapier.com and create account",
+      "2. Click 'Create Zap'",
+      "3. Select trigger service (e.g., Google Forms)",
+      "4. Authenticate and test trigger",
+      "5. Add action steps as specified above",
+      "6. Test and activate Zap"
+    ],
+    "make": [
+      "1. Go to make.com and create account",
+      "2. Click 'Create a new scenario'",
+      "3. Add trigger module (e.g., Stripe webhook)",
+      "4. Configure webhook URL in Stripe dashboard",
+      "5. Add action modules as specified above",
+      "6. Test scenario and save"
+    ]
+  },
+  "privacy_notes": {
+    "data_flow": "All flows respect user privacy. Customer emails are stored in secured databases (Supabase) with encryption at rest. GDPR/CCPA compliant.",
+    "data_retention": "Customer data retained per privacy policy. Can be deleted via DSAR requests.",
+    "audit_logging": "All automation activities logged to /ops/logs/automation-audit.log"
+  }
+}

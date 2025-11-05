@@ -1,0 +1,5 @@
+Date,Transaction ID,Customer Email,Product/Service,Amount (CAD),GST/HST (CAD),Total (CAD),Payment Method,Status,Notes
+2025-01-01,TXN-001,customer@example.com,Basic Plan,29.99,3.90,33.89,Stripe,Completed,Monthly subscription
+2025-01-02,TXN-002,client@example.com,Pro Plan,99.99,13.00,112.99,Stripe,Completed,Annual subscription
+2025-01-03,TXN-003,user@example.com,API Credits,50.00,6.50,56.50,Stripe,Completed,One-time purchase
+2025-01-04,TXN-004,test@example.com,Basic Plan,29.99,3.90,33.89,Stripe,Refunded,Refund processed

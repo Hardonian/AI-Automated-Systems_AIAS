@@ -176,6 +176,132 @@ npm run ops check
 
 See `/ops/SCHEDULE.md` for detailed schedule.
 
+## 🤖 Automated Operations Suite
+
+This repository includes a comprehensive **Automated Venture Operations Suite** designed for Canadian solo founders and small teams. This suite provides workflows, templates, and automation assets for hands-off operations, marketing, finance, and growth.
+
+### Quick Start
+
+```bash
+# Review daily routine checklist
+cat ops/daily-routine.md
+
+# Set up automation workflows
+# See ops/automation-blueprints/ for GitHub Actions, Zapier/Make flows
+
+# Access dashboard templates
+ls ops/dashboards/
+```
+
+### What's Included
+
+**Daily Operations:**
+- 15-minute startup checklist (`ops/daily-routine.md`)
+- Automated analytics and reporting
+- System health monitoring
+
+**Marketing Automation:**
+- Lead capture to CRM flows (`ops/marketing/automated-leadflow-guide.md`)
+- CRM integration guides (`ops/marketing/crm-integration-guide.md`)
+- Social media automation templates
+
+**Support Operations:**
+- Helpdesk playbook (`ops/support/helpdesk-playbook.md`)
+- Chatbot FAQ builder (`ops/support/chatbot-faq-builder.md`)
+- Support ticket workflows
+
+**Growth & Community:**
+- Influencer outreach automation (`ops/growth/influencer-outreach-automation.md`)
+- Content seeding checklist (`ops/growth/content-seeding-checklist.md`)
+- Community engagement plan (`ops/growth/community-engagement-plan.md`)
+
+**Legal Templates:**
+- Vendor contract template (`ops/legal/vendor-contract-template.md`)
+- NDA template (`ops/legal/nda-template.md`)
+
+**Funding Resources:**
+- Seed funding prep playbook (`ops/funding/seed-prep-playbook.md`)
+- Investor outreach email templates (`ops/funding/investor-outreach-email-bank.md`)
+- Canadian grants & incubator list (`ops/funding/grant-and-incubator-list-canada.md`)
+
+**Automation Blueprints:**
+- GitHub Actions workflows (auto-deploy, analytics, maintenance)
+- Zapier/Make flow templates (`ops/automation-blueprints/zapier-make-flows.json`)
+- Vercel/Supabase configuration templates
+
+**Dashboard Templates:**
+- Marketing dashboard (`ops/dashboards/marketing-dashboard-template.csv`)
+- Finance dashboard (`ops/dashboards/finance-dashboard-template.csv`)
+- KPI tracker (`ops/dashboards/kpi-tracker-template.csv`)
+
+### Automated Workflows
+
+**GitHub Actions:**
+- `auto-deploy-vercel.yml` - Auto-deploy to Vercel on push to main
+- `daily-analytics.yml` - Daily analytics report generation
+- `supabase-weekly-maintenance.yml` - Weekly Supabase backups and maintenance
+
+**Analytics Scripts:**
+- `scripts/analytics-marketing.js` - Marketing metrics generation
+- `scripts/analytics-finance.js` - Finance tracking (CAD)
+- `scripts/analytics-kpi.js` - KPI dashboard data
+
+### Setup Instructions
+
+**Quick Start:** Follow `ops/SETUP_CHECKLIST.md` for complete step-by-step setup guide.
+
+1. **Review Daily Routine**
+   - Read `ops/daily-routine.md` for 15-minute startup checklist
+   - Understand what runs automatically vs. manually
+
+2. **Configure Automation**
+   - **GitHub Actions:** See `ops/automation-blueprints/GITHUB_ACTIONS_SETUP.md`
+   - **Zapier/Make:** See `ops/automation-blueprints/ZAPIER_MAKE_SETUP.md`
+   - Set up Supabase functions for scheduled tasks
+
+3. **Customize Dashboards**
+   - See `ops/dashboards/DASHBOARD_SETUP.md` for complete guide
+   - Copy dashboard templates from `ops/dashboards/`
+   - Connect to your data sources (Stripe, Supabase, etc.)
+   - Update analytics scripts with your API keys
+
+4. **Set Up CRM**
+   - Choose CRM (Notion, Airtable, Google Sheets)
+   - Follow `ops/marketing/crm-integration-guide.md`
+   - Connect lead capture forms
+
+5. **Review Legal Templates**
+   - Customize vendor contract and NDA templates
+   - Have legal counsel review before use
+
+**Complete Setup Checklist:** See `ops/SETUP_CHECKLIST.md` for all 10 phases.
+
+### Financial Tracking (CAD)
+
+All financial templates and dashboards are configured for Canadian operations:
+- CAD currency formatting
+- GST/HST tracking
+- Canadian tax considerations
+- Government grant information
+
+### Privacy & Compliance
+
+All automation workflows include:
+- GDPR/CCPA compliance considerations
+- Data flow documentation
+- Privacy-preserving practices
+- Audit logging
+
+### Documentation
+
+Full documentation available in `/ops/` directory:
+- Automation blueprints with setup instructions
+- Step-by-step guides for each workflow
+- Template customization guidelines
+- Troubleshooting guides
+
+---
+
 ## 🛠️ Development
 
 ### Available Scripts

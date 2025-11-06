@@ -76,30 +76,56 @@ export default function BlogPage() {
         ))}
       </div>
 
-      <div className="text-center mt-12">
-        <p className="text-muted-foreground mb-4">
-          More articles coming soon. Subscribe to get notified.
-        </p>
-        <Card className="max-w-md mx-auto">
+      <div className="mt-12 space-y-8">
+        <Card className="bg-primary/10 border-primary/20">
           <CardHeader>
-            <CardTitle>Stay Updated</CardTitle>
+            <CardTitle className="text-2xl">GenAI Content Engine</CardTitle>
             <CardDescription>
-              Get the latest tips and case studies delivered to your inbox.
+              Convert your blog posts into optimized website pages automatically
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <input
-                type="email"
-                placeholder="your@email.com"
-                className="w-full px-4 py-2 border rounded-md"
-              />
-              <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
-                Subscribe
-              </button>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">
+              Upload your blog posts and articles. Our GenAI Content Engine uses systems thinking to analyze your content 
+              from 6 perspectives (SEO, UX, structure, conversion, technical, systems), then automatically generates 
+              optimized website pages with proper SEO, user experience, and conversion optimization.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button asChild>
+                <Link href="/genai-content-engine">Try GenAI Content Engine</Link>
+              </Button>
+              <Button variant="outline" asChild>
+                <Link href="/systems-thinking">Learn About Systems Thinking</Link>
+              </Button>
             </div>
           </CardContent>
         </Card>
+
+        <div className="text-center">
+          <p className="text-muted-foreground mb-4">
+            More articles coming soon. Subscribe to get notified.
+          </p>
+          <Card className="max-w-md mx-auto">
+            <CardHeader>
+              <CardTitle>Stay Updated</CardTitle>
+              <CardDescription>
+                Get the latest tips and case studies delivered to your inbox.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  className="w-full px-4 py-2 border rounded-md"
+                />
+                <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
+                  Subscribe
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

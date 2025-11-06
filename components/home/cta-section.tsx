@@ -47,12 +47,15 @@ export function CTASection() {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" asChild>
-                  <Link href="/systems-thinking">Learn About Systems Thinking</Link>
+                  <Link href="/genai-content-engine">Try GenAI Content Engine</Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
-                  <Link href="/demo">Book Consultation</Link>
+                  <Link href="/systems-thinking">Learn About Systems Thinking</Link>
                 </Button>
               </div>
+              <p className="text-sm text-muted-foreground mt-4">
+                See systems thinking + GenAI in action: Automated website creation from your blog posts and articles.
+              </p>
             </CardContent>
           </Card>
         </div>

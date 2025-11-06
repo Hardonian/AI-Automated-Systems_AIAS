@@ -24,7 +24,7 @@ export function Hero() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button size="lg" className="text-base" asChild>
-              <Link href="/pricing">Start Free Trial</Link>
+              <Link href="/genai-content-engine">Try GenAI Engine</Link>
             </Button>
             <Button size="lg" variant="outline" className="text-base" asChild>
               <Link href="/demo">Book Demo</Link>
@@ -35,8 +35,12 @@ export function Hero() {
               <strong className="text-foreground">AI amplifies systems thinking</strong> — it doesn't replace it. 
               Systems thinking is uniquely human, irreplaceable, and the key to sustainable success.
             </p>
-            <p>✅ Multi-dimensional problem-solving • ✅ Root cause analysis • ✅ Holistic solutions</p>
-            <p className="mt-2">Join <strong className="text-foreground">2,000+ businesses worldwide</strong> using systems thinking + AI for optimal outcomes</p>
+            <p>✅ Multi-dimensional problem-solving • ✅ Root cause analysis • ✅ Holistic solutions • ✅ GenAI Content Engine</p>
+            <p className="mt-2">
+              <strong className="text-foreground">GenAI Content Engine:</strong> AI-powered blog and article analysis for automated website creation. 
+              Systems thinking + GenAI generates optimized websites automatically.
+            </p>
+            <p className="mt-1">Join <strong className="text-foreground">2,000+ businesses worldwide</strong> using systems thinking + AI for optimal outcomes</p>
           </div>
         </div>
       </FadeIn>

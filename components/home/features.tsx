@@ -49,7 +49,7 @@ export function Features() {
         </div>
       </FadeIn>
       <StaggerList>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature) => (
             <StaggerItem key={feature.title}>
               <Card className={`h-full ${feature.highlight ? 'border-primary border-2 shadow-lg' : ''}`}>

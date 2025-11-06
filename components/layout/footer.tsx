@@ -16,6 +16,8 @@ export function Footer() {
             <ul className="space-y-2">
               <li><a href="/features" className="hover:underline">Features</a></li>
               <li><a href="/pricing" className="hover:underline">Pricing</a></li>
+              <li><a href="/systems-thinking" className="hover:underline">Systems Thinking</a></li>
+              <li><a href="/genai-content-engine" className="hover:underline">GenAI Content Engine</a></li>
               <li><a href="/integrations" className="hover:underline">Integrations</a></li>
               <li><a href="/case-studies" className="hover:underline">Case Studies</a></li>
             </ul>

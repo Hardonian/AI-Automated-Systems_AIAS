@@ -13,7 +13,7 @@ import { OrganizationSchema, WebSiteSchema } from "@/components/seo/structured-d
 export const metadata: Metadata = {
   title: "Systems Thinking + AI: The Critical Skill for the AI Age | AIAS Platform",
   description: "Systems thinking is THE skill needed more than ever in the AI age. It's what makes you stand out in the job market, succeed in business, and achieve optimal outcomes. Combined with AI automation.",
-  keywords: ["systems thinking", "AI age skills", "job market advantage", "business success", "systems thinking training", "critical thinking skills", "AI automation", "holistic problem solving", "root cause analysis", "multi-perspective thinking", "career differentiation", "systems thinking methodology"],
+  keywords: ["systems thinking", "AI age skills", "job market advantage", "business success", "systems thinking training", "critical thinking skills", "AI automation", "holistic problem solving", "root cause analysis", "multi-perspective thinking", "career differentiation", "systems thinking methodology", "genai content engine", "automated website creation", "ai blog analysis", "website automation", "genai website generator"],
   authors: [{ name: "AIAS Platform Team" }],
   creator: "AIAS Platform",
   publisher: "AIAS Platform",

@@ -291,12 +291,15 @@ export default function SystemsThinkingPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/demo">Book Consultation</Link>
+                <Link href="/genai-content-engine">Try GenAI Content Engine</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/consulting">Learn More</Link>
+                <Link href="/demo">Book Consultation</Link>
               </Button>
             </div>
+            <p className="text-sm text-muted-foreground mt-4">
+              <strong>GenAI Content Engine:</strong> See systems thinking + GenAI in action with automated website creation.
+            </p>
           </div>
         </section>
       </div>

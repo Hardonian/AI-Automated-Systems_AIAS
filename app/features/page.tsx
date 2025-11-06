@@ -54,8 +54,30 @@ const featureCategories = [
     ],
   },
   {
-    title: "Canadian Integrations",
-    description: "20+ Canadian-first integrations built for your business",
+    title: "GenAI Content Engine",
+    description: "AI-powered blog and article analysis engine for automated website creation. Systems thinking + GenAI analyzes content from 6 perspectives and generates optimized websites automatically.",
+    features: [
+      {
+        name: "Blog & Article Analysis",
+        description: "Analyze existing content from SEO, UX, structure, conversion, technical, and systems perspectives. Systems thinking reveals optimization opportunities.",
+      },
+      {
+        name: "Automated Website Generation",
+        description: "GenAI generates optimized website pages, blog posts, and content based on systems thinking analysis. SEO-optimized, user-friendly, conversion-focused.",
+      },
+      {
+        name: "Multi-Perspective Optimization",
+        description: "Content optimized from all 6 perspectives, not just keywords. Systems thinking ensures holistic website creation.",
+      },
+      {
+        name: "Continuous Improvement",
+        description: "Ongoing analysis and optimization. Systems thinking monitors performance and generates improvements automatically.",
+      },
+    ],
+  },
+  {
+    title: "Global Integrations",
+    description: "100+ integrations worldwide built for your business",
     features: [
       {
         name: "E-Commerce Platforms",

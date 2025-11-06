@@ -18,6 +18,9 @@ export function Header() {
           <Link href="/pricing" className="px-3 py-2 hover:underline text-sm">
             Pricing
           </Link>
+          <Link href="/systems-thinking" className="px-3 py-2 hover:underline text-sm font-medium">
+            Systems Thinking
+          </Link>
           <Link href="/integrations" className="px-3 py-2 hover:underline text-sm">
             Integrations
           </Link>

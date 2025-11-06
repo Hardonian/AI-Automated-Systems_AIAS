@@ -116,12 +116,17 @@ This consultant packet contains everything you need to:
 ## 🧠 CORE METHODOLOGY
 
 **Our Philosophy:**
-- **Systems Thinking:** Analyze problems from multiple perspectives
+- **Systems Thinking:** Analyze problems from multiple perspectives (THE critical skill for the AI age)
 - **Root Cause Focus:** Address underlying causes, not symptoms
 - **Holistic Solutions:** Productivity requires process, technology, people, data, systems, AND automation
 - **Optimal Outcomes:** Best results come from integrated, multi-dimensional approaches
 
-**Key Principle:** Automation is one tool among many - not the solution itself.
+**Key Principles:**
+- Automation is one tool among many - not the solution itself
+- **Systems thinking is THE skill needed more than ever in the AI age**
+- Systems thinking is what makes you stand out in the job market
+- Systems thinking is what drives business success
+- AI amplifies systems thinking - it doesn't replace it
 
 ---
 

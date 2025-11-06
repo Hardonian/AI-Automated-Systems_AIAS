@@ -23,6 +23,9 @@ export function MobileNav() {
           <Link href="/pricing" onClick={() => setOpen(false)} className="text-lg font-medium hover:underline">
             Pricing
           </Link>
+          <Link href="/systems-thinking" onClick={() => setOpen(false)} className="text-lg font-medium hover:underline text-primary">
+            Systems Thinking
+          </Link>
           <Link href="/integrations" onClick={() => setOpen(false)} className="text-lg font-medium hover:underline">
             Integrations
           </Link>

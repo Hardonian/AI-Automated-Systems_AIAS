@@ -79,6 +79,8 @@
 
 **Our Approach: Systems Thinking + Holistic Productivity**
 
+**Critical Truth:** Systems thinking is THE skill needed more than ever in the AI age. It's what makes you stand out in the job market, succeed in business, and achieve optimal outcomes.
+
 **We believe productivity requires multiple approaches:**
 - ✅ Process Optimization (how work flows)
 - ✅ Technology & Tools (what tools are used)
@@ -92,6 +94,8 @@
 - Root causes must be addressed
 - Multiple perspectives reveal optimal solutions
 - Sustainable results require holistic approach
+- **AI amplifies systems thinking - it doesn't replace it**
+- **Systems thinking is THE competitive advantage in the AI age**
 
 **AIAS Platform:**
 - Built in Canada, trusted globally
@@ -101,11 +105,17 @@
 - Enterprise security (GDPR, PIPEDA, SOC 2)
 
 **Our Expertise:**
-- Systems thinking methodology
+- Systems thinking methodology (THE critical skill for AI age)
 - Multi-dimensional productivity analysis
 - [X] years of holistic consulting
 - [X] successful implementations
 - Education & stakeholder management expertise
+
+**Why Systems Thinking Matters:**
+- **AI can automate tasks, but AI cannot replicate systems thinking**
+- **Systems thinking = Job market differentiation**
+- **Systems thinking = Business success driver**
+- **Systems thinking = Sustainable competitive advantage**
 
 ---
 

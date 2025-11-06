@@ -8,21 +8,53 @@ import { Toaster } from "@/components/ui/toaster";
 import { PWARegistration } from "@/components/pwa-registration";
 import { PerformanceHUD } from "@/components/dev/performance-hud";
 import AgentProvider from "@/components/agent/AgentProvider";
+import { OrganizationSchema, WebSiteSchema } from "@/components/seo/structured-data";
 
 export const metadata: Metadata = {
-  title: "Hardonia",
-  description: "Modern, fast, and accessible commerce experience.",
+  title: "Systems Thinking + AI: The Critical Skill for the AI Age | AIAS Platform",
+  description: "Systems thinking is THE skill needed more than ever in the AI age. It's what makes you stand out in the job market, succeed in business, and achieve optimal outcomes. Combined with AI automation.",
+  keywords: ["systems thinking", "AI age skills", "job market advantage", "business success", "systems thinking training", "critical thinking skills", "AI automation", "holistic problem solving", "root cause analysis", "multi-perspective thinking", "career differentiation", "systems thinking methodology", "genai content engine", "automated website creation", "ai blog analysis", "website automation", "genai website generator"],
+  authors: [{ name: "AIAS Platform Team" }],
+  creator: "AIAS Platform",
+  publisher: "AIAS Platform",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
   manifest: "/manifest.webmanifest",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://aias-platform.com"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "Hardonia",
-    description: "Modern, fast, and accessible commerce experience.",
+    title: "AIAS Platform — AI Automation for Global Businesses | Canadian-Built",
+    description: "Save 10+ hours/week with no-code AI agents. Built in Canada, trusted by businesses worldwide. Multi-currency, 100+ integrations, enterprise security.",
     type: "website",
+    url: "https://aias-platform.com",
+    siteName: "AIAS Platform",
+    locale: "en_US",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "AIAS Platform — AI Automation for Canadian Businesses",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hardonia",
-    description: "Modern, fast, and accessible commerce experience.",
+    title: "AIAS Platform — AI Automation for Canadian Businesses",
+    description: "Save 10+ hours/week with no-code AI agents. CAD $49/month. Made in Canada.",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
@@ -43,6 +75,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel="manifest" href="/manifest.json" />
         <script dangerouslySetInnerHTML={{__html:`if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));}`}} />
         {/* [META:END:pwa] */}
+        <OrganizationSchema />
+        <WebSiteSchema />
       </head>
       <body className="min-h-dvh antialiased">
         <ThemeProvider>

@@ -1,0 +1,154 @@
+{
+  "monetization": {
+    "enabled": true,
+    "streams": {
+      "affiliate": {
+        "enabled": true,
+        "minTraffic": 0,
+        "description": "Affiliate marketing in blog articles and RSS news",
+        "revenueShare": 0.15,
+        "commissionRange": {
+          "min": 0.10,
+          "max": 0.30
+        }
+      },
+      "sponsoredContent": {
+        "enabled": false,
+        "minTraffic": 5000,
+        "description": "Sponsored editorial takes and blog posts",
+        "pricing": {
+          "quickTake": {
+            "min": 500,
+            "max": 1500
+          },
+          "fullEditorial": {
+            "min": 1500,
+            "max": 5000
+          },
+          "monthlyPackage": {
+            "min": 2000,
+            "max": 8000
+          }
+        }
+      },
+      "premiumContent": {
+        "enabled": false,
+        "minTraffic": 10000,
+        "description": "Premium content paywall and subscriptions",
+        "tiers": {
+          "premium": {
+            "price": 9,
+            "currency": "USD",
+            "features": ["unlocked_content", "premium_rss", "frameworks"]
+          },
+          "pro": {
+            "price": 19,
+            "currency": "USD",
+            "features": ["all_premium", "exclusive_frameworks", "priority_support"]
+          }
+        }
+      },
+      "displayAds": {
+        "enabled": false,
+        "minTraffic": 10000,
+        "description": "Programmatic display advertising",
+        "adNetworks": ["google_adsense", "premium_network"],
+        "adPlacements": ["blog_articles", "rss_feed", "sidebar"]
+      },
+      "digitalProducts": {
+        "enabled": false,
+        "minTraffic": 15000,
+        "description": "Digital products and courses",
+        "products": {
+          "systemsThinkingCourse": {
+            "price": 499,
+            "currency": "USD",
+            "type": "course"
+          },
+          "automationTemplates": {
+            "price": 199,
+            "currency": "USD",
+            "type": "template_pack"
+          },
+          "consultingToolkit": {
+            "price": 599,
+            "currency": "USD",
+            "type": "toolkit"
+          }
+        }
+      },
+      "marketplace": {
+        "enabled": false,
+        "minUsers": 1000,
+        "description": "User-generated marketplace with platform fees",
+        "commissionRate": 0.25,
+        "featuredListingPrice": 100,
+        "premiumAccessPrice": 29
+      },
+      "emailNewsletter": {
+        "enabled": false,
+        "minSubscribers": 1000,
+        "description": "Email newsletter monetization",
+        "sponsoredNewsletterPrice": {
+          "min": 500,
+          "max": 2000
+        },
+        "premiumNewsletterPrice": 9
+      },
+      "webinars": {
+        "enabled": false,
+        "minTraffic": 10000,
+        "description": "Live webinars and events",
+        "ticketPrice": {
+          "min": 49,
+          "max": 199
+        },
+        "sponsoredWebinarPrice": {
+          "min": 2000,
+          "max": 5000
+        }
+      }
+    },
+    "affiliatePrograms": {
+      "shopify": {
+        "enabled": true,
+        "commissionRate": 0.20,
+        "cookieDays": 30
+      },
+      "stripe": {
+        "enabled": true,
+        "commissionRate": 0.10,
+        "cookieDays": 90
+      },
+      "wave": {
+        "enabled": true,
+        "commissionRate": 0.15,
+        "cookieDays": 30
+      },
+      "notion": {
+        "enabled": true,
+        "commissionRate": 0.20,
+        "cookieDays": 30
+      },
+      "zapier": {
+        "enabled": true,
+        "commissionRate": 0.20,
+        "cookieDays": 30
+      },
+      "make": {
+        "enabled": true,
+        "commissionRate": 0.25,
+        "cookieDays": 30
+      }
+    },
+    "tracking": {
+      "revenueTracking": true,
+      "conversionTracking": true,
+      "channelAttribution": true,
+      "analytics": {
+        "googleAnalytics": true,
+        "customDashboard": true
+      }
+    }
+  }
+}

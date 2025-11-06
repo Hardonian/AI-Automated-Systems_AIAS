@@ -5,20 +5,34 @@ import FadeIn from "@/components/motion/fade-in";
 
 const features = [
   {
-    title: "Lightning Fast",
-    description: "Optimized for performance with instant page loads and smooth interactions.",
+    title: "No-Code AI Agents",
+    description: "Build custom AI agents with drag-and-drop interface. No coding required. Deploy in 30 minutes.",
+    icon: "🤖",
   },
   {
-    title: "Fully Accessible",
-    description: "WCAG 2.2 AA compliant with keyboard navigation and screen reader support.",
+    title: "Canadian Integrations",
+    description: "20+ Canadian-first integrations: Shopify, Wave Accounting, Stripe CAD, RBC, TD, Interac. Built for Canadian businesses.",
+    icon: "🇨🇦",
   },
   {
-    title: "Mobile First",
-    description: "Beautiful on every device with responsive design and touch-friendly interfaces.",
+    title: "Save 10+ Hours/Week",
+    description: "Automate repetitive tasks automatically. Reduce manual errors by 90%. Focus on high-value work.",
+    icon: "⏱️",
   },
   {
-    title: "Dark Mode",
-    description: "Seamless light and dark themes that respect your system preferences.",
+    title: "Affordable CAD Pricing",
+    description: "CAD $49/month (vs. $150+ competitors). Transparent GST/HST. Annual discounts available. Cancel anytime.",
+    icon: "💰",
+  },
+  {
+    title: "PIPEDA Compliant",
+    description: "Canadian data residency. PIPEDA-compliant privacy policy. Enterprise security. Your data stays in Canada.",
+    icon: "🔒",
+  },
+  {
+    title: "50+ Pre-Built Templates",
+    description: "E-commerce automation, customer support, invoice processing, lead qualification. Industry-specific templates.",
+    icon: "📋",
   },
 ];
 
@@ -27,17 +41,21 @@ export function Features() {
     <section className="py-20">
       <FadeIn>
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Hardonia</h2>
-          <p className="text-muted-foreground text-lg">Built with modern best practices</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Systems Thinking + AI = Success</h2>
+          <p className="text-muted-foreground text-lg">
+            Systems thinking is THE critical skill for the AI age. It's what makes you stand out in the job market, 
+            succeed in business, and achieve optimal outcomes. Combined with AI automation, it's unstoppable.
+          </p>
         </div>
       </FadeIn>
       <StaggerList>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature) => (
             <StaggerItem key={feature.title}>
-              <Card>
+              <Card className={`h-full ${feature.highlight ? 'border-primary border-2 shadow-lg' : ''}`}>
                 <CardHeader>
-                  <CardTitle>{feature.title}</CardTitle>
+                  <div className="text-4xl mb-2">{feature.icon}</div>
+                  <CardTitle className={feature.highlight ? 'text-primary' : ''}>{feature.title}</CardTitle>
                   <CardDescription>{feature.description}</CardDescription>
                 </CardHeader>
               </Card>

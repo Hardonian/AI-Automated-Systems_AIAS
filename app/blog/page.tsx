@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import Link from "next/link";
 import { getLatestArticles, getArticlesByCategory, getFeaturedArticles } from "@/lib/blog/articles";
 import { Button } from "@/components/ui/button";
+import { AffiliateLink } from "@/components/monetization/affiliate-link";
 
 export const metadata: Metadata = {
   title: "Blog — Systems Thinking + AI | Daily Articles | AIAS Platform",
@@ -201,6 +202,11 @@ export default function BlogPage() {
             Upload your blog posts and articles. Our GenAI Content Engine uses systems thinking to analyze your content 
             from 6 perspectives (SEO, UX, structure, conversion, technical, systems), then automatically generates 
             optimized website pages with proper SEO, user experience, and conversion optimization.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            <strong>Recommended Tools:</strong> Use <AffiliateLink product="Notion">Notion</AffiliateLink> for content planning, 
+            <AffiliateLink product="Zapier"> Zapier</AffiliateLink> for automation workflows, or 
+            <AffiliateLink product="Make"> Make</AffiliateLink> for advanced integrations.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button asChild>

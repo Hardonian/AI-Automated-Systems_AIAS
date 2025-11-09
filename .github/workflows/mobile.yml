@@ -1,0 +1,131 @@
+name: Expo EAS Build & Submit
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Platform to build for"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - ios
+          - android
+      profile:
+        description: "Build profile"
+        required: true
+        default: "production"
+        type: choice
+        options:
+          - production
+          - preview
+          - development
+
+env:
+  EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+  APPLE_ID: ${{ secrets.APPLE_ID }}
+  APP_STORE_CONNECT_APP_ID: ${{ secrets.APP_STORE_CONNECT_APP_ID }}
+  APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+  GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
+
+jobs:
+  build:
+    name: Build Mobile Apps
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: mobile-build-${{ github.ref }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Expo CLI
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Setup Google Service Account
+        if: github.event.inputs.platform == 'android' || github.event.inputs.platform == 'all' || github.event_name == 'push'
+        run: |
+          if [ -n "$GOOGLE_SERVICE_ACCOUNT_KEY" ]; then
+            echo "$GOOGLE_SERVICE_ACCOUNT_KEY" > service-account.json
+            echo "Google service account key configured"
+          else
+            echo "Warning: GOOGLE_SERVICE_ACCOUNT_KEY not set, Android submission may fail"
+          fi
+
+      - name: Run EAS Build Diagnostics
+        run: eas diagnostics --non-interactive || true
+
+      - name: Build iOS
+        if: github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all' || (github.event_name == 'push' && contains(github.ref, 'refs/tags/'))
+        run: |
+          eas build --platform ios \
+            --profile ${{ github.event.inputs.profile || 'production' }} \
+            --non-interactive \
+            --wait
+
+      - name: Build Android
+        if: github.event.inputs.platform == 'android' || github.event.inputs.platform == 'all' || (github.event_name == 'push' && contains(github.ref, 'refs/tags/'))
+        run: |
+          eas build --platform android \
+            --profile ${{ github.event.inputs.profile || 'production' }} \
+            --non-interactive \
+            --wait
+
+      - name: Submit iOS to App Store
+        if: (github.event.inputs.profile == 'production' || github.event_name == 'push') && (github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all')
+        run: |
+          eas submit --platform ios \
+            --latest \
+            --non-interactive \
+            --wait || echo "iOS submission skipped or failed (check credentials)"
+
+      - name: Submit Android to Play Store
+        if: (github.event.inputs.profile == 'production' || github.event_name == 'push') && (github.event.inputs.platform == 'android' || github.event.inputs.platform == 'all')
+        run: |
+          eas submit --platform android \
+            --latest \
+            --non-interactive \
+            --wait || echo "Android submission skipped or failed (check credentials)"
+
+      - name: Post Build Notification
+        if: always()
+        uses: slackapi/slack-github-action@v1
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          payload: |
+            {
+              "text": "${{ job.status == 'success' && '✅' || '❌' }} Mobile Build ${{ job.status }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Mobile Build ${{ job.status }}*\n\nPlatform: ${{ github.event.inputs.platform || 'all' }}\nProfile: ${{ github.event.inputs.profile || 'production' }}\nRef: ${{ github.ref }}\nCommit: ${{ github.sha }}"
+                  }
+                }
+              ]
+            }
+        continue-on-error: true

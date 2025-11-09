@@ -1,0 +1,51 @@
+{
+  "cli": {
+    "version": ">=3.0.0"
+  },
+  "build": {
+    "development": {
+      "distribution": "internal",
+      "channel": "development",
+      "ios": {
+        "simulator": true
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "channel": "preview",
+      "ios": {
+        "simulator": false
+      }
+    },
+    "production": {
+      "distribution": "store",
+      "channel": "production",
+      "autoIncrement": "version",
+      "ios": {
+        "simulator": false
+      },
+      "android": {
+        "buildType": "apk"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "${APPLE_ID}",
+        "ascAppId": "${APP_STORE_CONNECT_APP_ID}",
+        "appleTeamId": "${APPLE_TEAM_ID}"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./service-account.json",
+        "track": "internal"
+      }
+    }
+  },
+  "updates": {
+    "channel": "production",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
+  }
+}

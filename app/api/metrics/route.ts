@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
 import { SystemError, formatError } from "@/src/lib/errors";
+import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -37,6 +38,8 @@ interface MetricsResponse {
  * Used by /admin/metrics dashboard
  */
 export async function GET(req: NextRequest): Promise<NextResponse<MetricsResponse>> {
+  const startTime = Date.now();
+  
   try {
     const supabase = createClient(
       env.supabase.url,
@@ -82,7 +85,31 @@ export async function GET(req: NextRequest): Promise<NextResponse<MetricsRespons
     }
 
     // Aggregate metrics by source
-    const aggregated: Record<string, any> = {
+    interface SourceMetrics {
+      latest: Record<string, unknown>;
+      count: number;
+      lastUpdated: string;
+    }
+    
+    interface AggregatedMetrics {
+      performance: {
+        webVitals: Record<string, unknown>;
+        supabase: Record<string, unknown>;
+        expo: Record<string, unknown>;
+        ci: Record<string, unknown>;
+      };
+      status: "healthy" | "degraded" | "error";
+      lastUpdated: string;
+      sources: Record<string, SourceMetrics>;
+      trends?: Record<string, {
+        average: number;
+        min: number;
+        max: number;
+        count: number;
+      }>;
+    }
+    
+    const aggregated: AggregatedMetrics = {
       performance: {
         webVitals: {},
         supabase: {},
@@ -95,7 +122,13 @@ export async function GET(req: NextRequest): Promise<NextResponse<MetricsRespons
     };
 
     // Group by source and extract key metrics
-    const sourceGroups: Record<string, any[]> = {};
+    interface MetricEntry {
+      source: string;
+      metric: Record<string, unknown>;
+      ts: string;
+    }
+    
+    const sourceGroups: Record<string, MetricEntry[]> = {};
     for (const metric of latestMetrics || []) {
       if (!sourceGroups[metric.source]) {
         sourceGroups[metric.source] = [];
@@ -135,13 +168,14 @@ export async function GET(req: NextRequest): Promise<NextResponse<MetricsRespons
 
     // Calculate overall status
     const hasRegressions = Object.values(aggregated.sources).some(
-      (source: any) => source.latest?.isRegression === true
+      (source: SourceMetrics) => (source.latest?.isRegression as boolean) === true
     );
     if (hasRegressions) {
       aggregated.status = "degraded";
     }
 
-    // Calculate trends (7-day moving average)
+    // Calculate trends (7-day moving average) - cache this expensive operation
+    // TODO: Move to background job or cache with 60s TTL
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
@@ -151,17 +185,38 @@ export async function GET(req: NextRequest): Promise<NextResponse<MetricsRespons
       .gte("ts", sevenDaysAgo.toISOString())
       .order("ts", { ascending: true });
 
-    if (trendData) {
+    if (trendData && trendData.length > 0) {
       aggregated.trends = calculateTrends(trendData);
     }
 
+    const duration = Date.now() - startTime;
+    
+    // Track performance
+    telemetry.trackPerformance({
+      name: "metrics_api",
+      value: duration,
+      unit: "ms",
+      tags: { status: aggregated.status },
+    });
+    
     return NextResponse.json(aggregated, {
       headers: {
         "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
         "Content-Type": "application/json",
+        "X-Response-Time": `${duration}ms`,
       },
     });
   } catch (error: unknown) {
+    const duration = Date.now() - startTime;
+    
+    // Track error
+    telemetry.trackPerformance({
+      name: "metrics_api",
+      value: duration,
+      unit: "ms",
+      tags: { status: "error" },
+    });
+    
     console.error("Metrics API error:", error);
     const systemError = new SystemError(
       "Internal server error",
@@ -182,19 +237,35 @@ export async function GET(req: NextRequest): Promise<NextResponse<MetricsRespons
         lastUpdated: new Date().toISOString(),
         sources: {},
       },
-      { status: formatted.statusCode }
+      { 
+        status: formatted.statusCode,
+        headers: {
+          "X-Response-Time": `${duration}ms`,
+        },
+      }
     );
   }
 }
 
-function calculateTrends(metrics: Array<{ source: string; metric: Record<string, unknown>; ts: string }>): Record<string, {
+interface TrendMetric {
+  source: string;
+  metric: Record<string, unknown>;
+  ts: string;
+}
+
+function calculateTrends(metrics: TrendMetric[]): Record<string, {
   average: number;
   min: number;
   max: number;
   count: number;
 }> {
-  const trends: Record<string, any> = {};
-  const sourceGroups: Record<string, any[]> = {};
+  const trends: Record<string, {
+    average: number;
+    min: number;
+    max: number;
+    count: number;
+  }> = {};
+  const sourceGroups: Record<string, TrendMetric[]> = {};
 
   // Group by source
   for (const metric of metrics) {
@@ -204,18 +275,19 @@ function calculateTrends(metrics: Array<{ source: string; metric: Record<string,
     sourceGroups[metric.source].push(metric);
   }
 
-  // Calculate 7-day moving averages
-  for (const [source, sourceMetrics] of Object.entries(sourceGroups)) {
-    const numericValues: number[] = [];
-    for (const m of sourceMetrics) {
-      const metric = m.metric || {};
-      // Extract numeric values
-      for (const key in metric) {
-        if (typeof metric[key] === "number") {
-          numericValues.push(metric[key]);
+    // Calculate 7-day moving averages
+    for (const [source, sourceMetrics] of Object.entries(sourceGroups)) {
+      const numericValues: number[] = [];
+      for (const m of sourceMetrics) {
+        const metric = m.metric || {};
+        // Extract numeric values
+        for (const key in metric) {
+          const value = metric[key];
+          if (typeof value === "number") {
+            numericValues.push(value);
+          }
         }
       }
-    }
 
     if (numericValues.length > 0) {
       const avg =

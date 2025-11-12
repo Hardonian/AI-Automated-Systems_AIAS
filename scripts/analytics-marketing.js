@@ -9,12 +9,20 @@
 const fs = require('fs');
 const path = require('path');
 
-// Uncomment if using Supabase
-// const { createClient } = require('@supabase/supabase-js');
-// const supabase = createClient(
-//   process.env.SUPABASE_URL,
-//   process.env.SUPABASE_KEY
-// );
+// Load environment variables
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+
+// Initialize Supabase client if available
+let supabase = null;
+if (SUPABASE_URL && SUPABASE_KEY) {
+  try {
+    const { createClient } = require('@supabase/supabase-js');
+    supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+  } catch (e) {
+    console.warn('⚠️  @supabase/supabase-js not installed. Install with: npm install @supabase/supabase-js');
+  }
+}
 
 async function generateMarketingAnalytics() {
   try {
@@ -34,79 +42,54 @@ async function generateMarketingAnalytics() {
     ];
 
     // OPTION 1: Fetch from Supabase (if using)
-    // Uncomment and customize based on your schema:
-    /*
-    try {
-      const { data: posts, error } = await supabase
-        .from('marketing_activities')
-        .select('*')
-        .eq('type', 'social_post')
-        .gte('date', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()); // Last 7 days
-      
-      if (error) throw error;
-      
-      posts.forEach(post => {
-        const ctr = post.impressions > 0 
-          ? ((post.engagements / post.impressions) * 100).toFixed(2) + '%' 
-          : '0%';
-        const roi = post.cost > 0 
-          ? ((post.leads_generated * 50 - post.cost) / post.cost * 100).toFixed(0) + '%'
-          : 'N/A';
+    if (supabase) {
+      try {
+        const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+        const { data: posts, error } = await supabase
+          .from('marketing_activities')
+          .select('*')
+          .eq('type', 'social_post')
+          .gte('date', sevenDaysAgo)
+          .order('date', { ascending: false });
         
-        marketingData.push([
-          post.date.split('T')[0],
-          post.platform,
-          post.post_type || 'Post',
-          post.content.substring(0, 50) + '...',
-          post.url || '',
-          post.engagements || 0,
-          post.impressions || 0,
-          ctr,
-          post.leads_generated || 0,
-          post.cost || 0,
-          roi
-        ]);
-      });
-    } catch (error) {
-      console.error('Error fetching from Supabase:', error.message);
-    }
-    */
-
-    // OPTION 2: Fetch from API (example with placeholder)
-    // Replace with your actual API calls:
-    /*
-    try {
-      const response = await fetch('https://api.yoursocialplatform.com/posts', {
-        headers: { 'Authorization': `Bearer ${process.env.SOCIAL_API_KEY}` }
-      });
-      const posts = await response.json();
-      
-      posts.forEach(post => {
-        // Process and add to marketingData array
-      });
-    } catch (error) {
-      console.error('Error fetching from API:', error.message);
-    }
-    */
-
-    // OPTION 3: Read from CSV file (if exported manually)
-    // Uncomment to read from existing export:
-    /*
-    try {
-      const csvPath = path.join(__dirname, '../ops/dashboards/marketing-export.csv');
-      if (fs.existsSync(csvPath)) {
-        const csvContent = fs.readFileSync(csvPath, 'utf-8');
-        const lines = csvContent.split('\n').slice(1); // Skip header
-        lines.forEach(line => {
-          if (line.trim()) {
-            marketingData.push(line.split(','));
-          }
-        });
+        if (error) throw error;
+        
+        if (posts) {
+          posts.forEach(post => {
+            const impressions = post.impressions || 0;
+            const engagements = post.engagements || 0;
+            const cost = post.cost || 0;
+            const leadsGenerated = post.leads_generated || 0;
+            
+            const ctr = impressions > 0 
+              ? ((engagements / impressions) * 100).toFixed(2) + '%' 
+              : '0%';
+            const roi = cost > 0 
+              ? (((leadsGenerated * 50 - cost) / cost) * 100).toFixed(0) + '%'
+              : 'N/A';
+            
+            marketingData.push([
+              post.date ? post.date.split('T')[0] : readableDate,
+              post.platform || 'Unknown',
+              post.post_type || 'Post',
+              (post.content || '').substring(0, 50) + ((post.content || '').length > 50 ? '...' : ''),
+              post.url || '',
+              engagements,
+              impressions,
+              ctr,
+              leadsGenerated,
+              cost.toFixed(2),
+              roi
+            ]);
+          });
+        }
+      } catch (error) {
+        // Table may not exist, skip silently
+        if (!error.message.includes('relation') && !error.message.includes('does not exist')) {
+          console.error('Error fetching from Supabase:', error.message);
+        }
       }
-    } catch (error) {
-      console.error('Error reading CSV:', error.message);
     }
-    */
 
     // If no data fetched, add sample row for testing
     if (marketingData.length === 1) {

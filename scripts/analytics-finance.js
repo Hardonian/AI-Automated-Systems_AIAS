@@ -9,15 +9,31 @@
 const fs = require('fs');
 const path = require('path');
 
-// Uncomment if using Stripe
-// const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+// Load environment variables
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 
-// Uncomment if using Supabase
-// const { createClient } = require('@supabase/supabase-js');
-// const supabase = createClient(
-//   process.env.SUPABASE_URL,
-//   process.env.SUPABASE_KEY
-// );
+// Initialize Stripe client if available
+let stripe = null;
+if (STRIPE_SECRET_KEY) {
+  try {
+    stripe = require('stripe')(STRIPE_SECRET_KEY);
+  } catch (e) {
+    console.warn('⚠️  stripe not installed. Install with: npm install stripe');
+  }
+}
+
+// Initialize Supabase client if available
+let supabase = null;
+if (SUPABASE_URL && SUPABASE_KEY) {
+  try {
+    const { createClient } = require('@supabase/supabase-js');
+    supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+  } catch (e) {
+    console.warn('⚠️  @supabase/supabase-js not installed. Install with: npm install @supabase/supabase-js');
+  }
+}
 
 // GST/HST rates by province (2025)
 const TAX_RATES = {
@@ -59,95 +75,79 @@ async function generateFinanceAnalytics() {
     ];
 
     // OPTION 1: Fetch from Stripe API
-    // Uncomment and customize:
-    /*
-    try {
-      const charges = await stripe.charges.list({
-        limit: 100,
-        created: {
-          gte: Math.floor(Date.now() / 1000) - 86400 // Last 24 hours
-        }
-      });
+    if (stripe) {
+      try {
+        const sevenDaysAgo = Math.floor(Date.now() / 1000) - (7 * 24 * 60 * 60);
+        const charges = await stripe.charges.list({
+          limit: 100,
+          created: { gte: sevenDaysAgo }
+        });
 
-      for (const charge of charges.data) {
-        if (charge.currency !== 'cad') continue; // Only CAD transactions
-        
-        const amount = charge.amount / 100; // Convert from cents
-        const province = charge.billing_details.address?.state || 'ON';
-        const tax = calculateTax(amount, province);
-        const total = amount + tax;
-        
-        financeData.push([
-          new Date(charge.created * 1000).toISOString().split('T')[0],
-          charge.id,
-          charge.billing_details.email || 'N/A',
-          charge.description || 'Product/Service',
-          amount.toFixed(2),
-          tax.toFixed(2),
-          total.toFixed(2),
-          charge.payment_method_details?.type || 'Stripe',
-          charge.status === 'succeeded' ? 'Completed' : charge.status,
-          charge.metadata?.notes || ''
-        ]);
+        for (const charge of charges.data) {
+          if (charge.currency !== 'cad' && charge.currency !== 'usd') continue;
+          
+          const amount = charge.amount / 100; // Convert from cents
+          const province = charge.billing_details.address?.state || charge.billing_details.address?.province || 'ON';
+          const tax = calculateTax(amount, province);
+          const total = amount + tax;
+          
+          financeData.push([
+            new Date(charge.created * 1000).toISOString().split('T')[0],
+            charge.id,
+            charge.billing_details.email || 'N/A',
+            charge.description || 'Product/Service',
+            amount.toFixed(2),
+            tax.toFixed(2),
+            total.toFixed(2),
+            charge.payment_method_details?.type || 'Stripe',
+            charge.status === 'succeeded' ? 'Completed' : charge.status,
+            charge.metadata?.notes || ''
+          ]);
+        }
+      } catch (error) {
+        console.error('Error fetching from Stripe:', error.message);
       }
-    } catch (error) {
-      console.error('Error fetching from Stripe:', error.message);
     }
-    */
 
     // OPTION 2: Fetch from Supabase transactions table
-    // Uncomment and customize:
-    /*
-    try {
-      const { data: transactions, error } = await supabase
-        .from('transactions')
-        .select('*')
-        .gte('date', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()) // Last 7 days
-        .order('date', { ascending: false });
-      
-      if (error) throw error;
-      
-      transactions.forEach(txn => {
-        const amount = parseFloat(txn.amount_cad);
-        const tax = calculateTax(amount, txn.province || 'ON');
-        const total = amount + tax;
+    if (supabase) {
+      try {
+        const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+        const { data: transactions, error } = await supabase
+          .from('transactions')
+          .select('*')
+          .gte('date', sevenDaysAgo)
+          .order('date', { ascending: false });
         
-        financeData.push([
-          txn.date.split('T')[0],
-          txn.stripe_id || txn.id,
-          txn.customer_email,
-          txn.product_service || 'Product/Service',
-          amount.toFixed(2),
-          tax.toFixed(2),
-          total.toFixed(2),
-          txn.payment_method || 'Stripe',
-          txn.status || 'Completed',
-          txn.notes || ''
-        ]);
-      });
-    } catch (error) {
-      console.error('Error fetching from Supabase:', error.message);
-    }
-    */
-
-    // OPTION 3: Read from CSV export (if exported manually)
-    // Uncomment to read from existing export:
-    /*
-    try {
-      const csvPath = path.join(__dirname, '../ops/dashboards/finance-export.csv');
-      if (fs.existsSync(csvPath)) {
-        const csvContent = fs.readFileSync(csvPath, 'utf-8');
-        const lines = csvContent.split('\n').slice(1); // Skip header
-        lines.forEach(line => {
-          if (line.trim()) {
-            financeData.push(line.split(','));
-          }
-        });
+        if (error) throw error;
+        
+        if (transactions) {
+          transactions.forEach(txn => {
+            const amount = parseFloat(txn.amount_cad || txn.amount || 0);
+            const tax = calculateTax(amount, txn.province || 'ON');
+            const total = amount + tax;
+            
+            financeData.push([
+              txn.date ? txn.date.split('T')[0] : readableDate,
+              txn.stripe_id || txn.id,
+              txn.customer_email || 'N/A',
+              txn.product_service || 'Product/Service',
+              amount.toFixed(2),
+              tax.toFixed(2),
+              total.toFixed(2),
+              txn.payment_method || 'Stripe',
+              txn.status || 'Completed',
+              txn.notes || ''
+            ]);
+          });
+        }
+      } catch (error) {
+        // Table may not exist, skip silently
+        if (!error.message.includes('relation') && !error.message.includes('does not exist')) {
+          console.error('Error fetching from Supabase:', error.message);
+        }
       }
-    } catch (error) {
-      console.error('Error reading CSV:', error.message);
     }
-    */
 
     // If no data fetched, add sample row for testing
     if (financeData.length === 1) {

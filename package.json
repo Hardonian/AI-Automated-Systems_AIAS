@@ -216,7 +216,8 @@
     "dq:check": "tsx scripts/agents/run_data_quality.ts",
     "system:doctor": "tsx scripts/agents/system_doctor.ts",
     "system:health": "tsx scripts/agents/system_health.ts",
-    "orchestrate": "tsx scripts/orchestrate_master.ts"
+    "orchestrate": "tsx scripts/orchestrate_master.ts",
+    "aurora:prime": "tsx ai/aurora_prime.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.8.2",

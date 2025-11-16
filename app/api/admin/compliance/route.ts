@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
-export const config = { runtime: 'edge' };
+export const runtime = 'nodejs'; // Requires Node.js runtime for fs operations
 
 export async function GET() {
   try {
@@ -54,9 +54,10 @@ export async function GET() {
       gdpr: 'pass',
       issues: 0
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: error.message },
+      { error: errorMessage },
       { status: 500 }
     );
   }

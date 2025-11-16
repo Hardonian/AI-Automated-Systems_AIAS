@@ -160,7 +160,20 @@ export class SecurityMonitor {
         throw error;
       }
       
-      return (data || []).map((row: any) => ({
+      interface SecurityEventRow {
+        type: string;
+        severity: string;
+        tenant_id?: string;
+        user_id?: string;
+        ip_address?: string;
+        endpoint?: string;
+        method?: string;
+        user_agent?: string;
+        details?: Record<string, unknown>;
+        timestamp: string;
+      }
+
+      return (data || []).map((row: SecurityEventRow) => ({
         type: row.type,
         severity: row.severity,
         tenantId: row.tenant_id,
@@ -206,7 +219,12 @@ export class SecurityMonitor {
       const eventsByType: Record<string, number> = {};
       const eventsBySeverity: Record<string, number> = {};
       
-      events.forEach((event: any) => {
+      interface EventRow {
+        type: string;
+        severity: string;
+      }
+
+      events.forEach((event: EventRow) => {
         eventsByType[event.type] = (eventsByType[event.type] || 0) + 1;
         eventsBySeverity[event.severity] = (eventsBySeverity[event.severity] || 0) + 1;
       });

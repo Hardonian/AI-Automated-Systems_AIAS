@@ -107,7 +107,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         platforms: string[];
       }>();
 
-      spendData?.forEach((row: any) => {
+      interface SpendRow {
+        date: string;
+        spend_cents?: number;
+        clicks?: number;
+        impressions?: number;
+        conversions?: number;
+        platform?: string;
+        [key: string]: unknown;
+      }
+
+      spendData?.forEach((row: SpendRow) => {
         const date = row.date;
         if (!metricsByDate.has(date)) {
           metricsByDate.set(date, {

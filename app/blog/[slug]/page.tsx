@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getArticleBySlug, getLatestArticles } from "@/lib/blog/articles";
+import { getArticleBySlug, getLatestArticles, type BlogArticle } from "@/lib/blog/articles";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -196,7 +196,7 @@ export default function BlogArticlePage({ params }: PageProps) {
 }
 
 // Component to render article content with affiliate links
-function ArticleContent({ article }: { article: any }) {
+function ArticleContent({ article }: { article: BlogArticle }) {
   // Check if article has affiliate-related tags
   const hasAffiliateContent = article.tags.some((tag: string) => 
     ["shopify", "wave", "stripe", "notion", "zapier", "make", "automation", "e-commerce", "accounting"].includes(tag.toLowerCase())

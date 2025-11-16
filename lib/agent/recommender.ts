@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 
 type Reco = {
   title: string; body: string; kind: "workflow"|"automation"|"tip"|"support";
-  score: number; rationale: any; cta?: { label: string; href?: string; action?: string };
+  score: number; rationale: Record<string, unknown>; cta?: { label: string; href?: string; action?: string };
 };
 
 export async function makeRecommendations(userId: string) {

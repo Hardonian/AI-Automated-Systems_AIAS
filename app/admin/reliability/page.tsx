@@ -61,8 +61,9 @@ export default function ReliabilityDashboardPage() {
       const data = await response.json();
       setDashboard(data);
       setError(null);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      setError(errorMessage);
       console.error("Failed to fetch reliability dashboard:", err);
     } finally {
       setLoading(false);

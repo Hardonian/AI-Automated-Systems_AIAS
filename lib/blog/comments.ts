@@ -1,6 +1,8 @@
 // AI-Moderated Comment System
 // Comments analyzed with systems thinking and AI moderation
 
+import type { BlogArticle } from "./articles";
+
 export interface Comment {
   id: string;
   articleSlug: string;
@@ -113,7 +115,7 @@ export function moderateComment(comment: Comment): ModerationResult {
 }
 
 // Generate systems thinking insight for comment
-export function generateSystemsThinkingInsight(comment: Comment, article: any): string {
+export function generateSystemsThinkingInsight(comment: Comment, article: BlogArticle): string {
   const content = comment.content.toLowerCase();
   
   // Check for systems thinking concepts

@@ -45,10 +45,11 @@ export async function GET() {
     }
 
     return NextResponse.json({ rows: data || [] });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     console.error("Audit log API error:", error);
     return NextResponse.json(
-      { error: "Internal server error", details: error.message },
+      { error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }

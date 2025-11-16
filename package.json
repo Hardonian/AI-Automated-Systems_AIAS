@@ -223,7 +223,10 @@
     "omega:validate-schema": "tsx scripts/master-omega-prime/validate-schema.ts",
     "omega:brand-audit": "tsx scripts/master-omega-prime/brand-audit.ts",
     "omega:brand-fix": "tsx scripts/master-omega-prime/brand-audit.ts --fix",
-    "omega:full-diagnostic": "npm run omega:validate-env && npm run omega:validate-schema && npm run omega:brand-audit"
+    "omega:full-diagnostic": "npm run omega:validate-env && npm run omega:validate-schema && npm run omega:brand-audit",
+    "db:validate": "tsx scripts/validate-db-schema.ts",
+    "generate:api-client": "tsx scripts/generate-api-client.ts",
+    "api:docs": "echo 'OpenAPI spec available at /api/openapi'"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.8.2",

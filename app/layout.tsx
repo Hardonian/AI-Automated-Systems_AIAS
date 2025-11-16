@@ -13,6 +13,15 @@ import AgentProvider from "@/components/agent/AgentProvider";
 import { OrganizationSchema, WebSiteSchema } from "@/components/seo/structured-data";
 import { EnhancedErrorBoundary } from "@/lib/error-handling/error-boundary-enhanced";
 import { TelemetryProvider } from "@/lib/monitoring/telemetry-provider";
+import { validateEnvOnStartup } from "@/lib/env-validation";
+import { initializeOpenTelemetry } from "@/lib/observability/opentelemetry";
+
+// Validate environment variables at startup (server-side only)
+if (typeof window === "undefined") {
+  validateEnvOnStartup();
+  // Initialize OpenTelemetry if enabled
+  initializeOpenTelemetry();
+}
 
 export const metadata: Metadata = {
   title: "Custom AI Platform Development | AIAS Consultancy",

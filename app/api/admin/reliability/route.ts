@@ -43,9 +43,10 @@ export async function GET() {
       trends: { last_7_days: { uptime: [], latency: [], cost: [] } },
       recommendations: []
     });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: error.message },
+      { error: errorMessage },
       { status: 500 }
     );
   }

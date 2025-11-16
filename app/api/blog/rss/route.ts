@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { rssFeeds, analyzeRSSItemWithSystemsThinking } from "@/lib/blog/rss-feed";
+import { rssFeeds, analyzeRSSItemWithSystemsThinking, type RSSFeedItem } from "@/lib/blog/rss-feed";
 
 // RSS Feed Endpoint
 // Fetches and analyzes AI/Tech news with systems thinking perspective
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch RSS feeds (simplified - in production, use RSS parser)
-    const items: any[] = [];
+    const items: RSSFeedItem[] = [];
 
     // TODO: Integrate with RSS parser library
     // For now, return structure

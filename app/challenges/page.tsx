@@ -3,6 +3,12 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
 import ChallengeCard from "@/components/gamification/ChallengeCard";
 
+interface ChallengeRequirements {
+  min_level?: number;
+  required_actions?: string[];
+  metadata?: Record<string, unknown>;
+}
+
 interface Challenge {
   id: number;
   title: string;
@@ -11,7 +17,7 @@ interface Challenge {
   start_date: string;
   end_date: string;
   xp_reward: number;
-  requirements: any;
+  requirements: ChallengeRequirements | null;
 }
 
 export default function ChallengesPage() {

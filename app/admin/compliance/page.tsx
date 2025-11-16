@@ -34,8 +34,9 @@ export default function ComplianceDashboardPage() {
       const data = await response.json();
       setCompliance(data);
       setError(null);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      setError(errorMessage);
       console.error("Failed to fetch compliance status:", err);
     } finally {
       setLoading(false);

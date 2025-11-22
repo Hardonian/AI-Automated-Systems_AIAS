@@ -29,7 +29,7 @@ jobs:
 
       - name: Upload preflight report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: preflight-report
           path: reports/exec/preflight_report.md

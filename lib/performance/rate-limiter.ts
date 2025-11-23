@@ -1,9 +1,16 @@
 /**
  * Distributed Rate Limiting Service
  * Supports Redis (ioredis) and Vercel KV with in-memory fallback
+ * 
+ * Production-ready rate limiting with:
+ * - Distributed state via Redis/Vercel KV
+ * - Automatic fallback to in-memory for development
+ * - Comprehensive error handling and logging
+ * - Performance monitoring
  */
 
 import Redis from 'ioredis';
+import { logger } from '@/lib/logging/structured-logger';
 
 interface RateLimitConfig {
   windowMs: number;
@@ -43,10 +50,15 @@ class RateLimiter {
 
         await this.redis.connect();
         this.useRedis = true;
-        console.log('[RateLimiter] Using Redis for distributed rate limiting');
+        logger.info('Rate limiter initialized with Redis', {
+          provider: 'redis',
+          url: redisUrl.replace(/:[^:@]+@/, ':****@'), // Mask password
+        });
         return;
       } catch (error) {
-        console.warn('[RateLimiter] Redis connection failed, falling back to in-memory:', error);
+        logger.warn('Redis connection failed, falling back to in-memory rate limiting', {
+          error: error instanceof Error ? error.message : String(error),
+        });
         this.redis = null;
       }
     }
@@ -54,12 +66,17 @@ class RateLimiter {
     // Try Vercel KV if available
     if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
       this.useVercelKV = true;
-      console.log('[RateLimiter] Using Vercel KV for distributed rate limiting');
+      logger.info('Rate limiter initialized with Vercel KV', {
+        provider: 'vercel-kv',
+      });
       return;
     }
 
     // Fallback to in-memory
-    console.warn('[RateLimiter] Using in-memory rate limiting (not suitable for production)');
+    logger.warn('Using in-memory rate limiting (not suitable for production)', {
+      warning: 'Rate limits will reset on serverless cold starts',
+      recommendation: 'Configure REDIS_URL or KV_REST_API_URL for production',
+    });
   }
 
   /**
@@ -102,7 +119,10 @@ class RateLimiter {
         resetTime,
       };
     } catch (error) {
-      console.error('[RateLimiter] Redis error:', error);
+      logger.error('Redis rate limit check failed', error instanceof Error ? error : new Error(String(error)), {
+        key,
+        config,
+      });
       throw error;
     }
   }
@@ -170,7 +190,10 @@ class RateLimiter {
         resetTime,
       };
     } catch (error) {
-      console.error('[RateLimiter] Vercel KV error:', error);
+      logger.error('Vercel KV rate limit check failed', error instanceof Error ? error : new Error(String(error)), {
+        key,
+        config,
+      });
       throw error;
     }
   }
@@ -240,7 +263,11 @@ class RateLimiter {
       try {
         return await this.checkRateLimitRedis(key, config);
       } catch (error) {
-        console.warn('[RateLimiter] Redis failed, falling back to in-memory:', error);
+        logger.warn('Redis rate limit check failed, falling back to in-memory', {
+          error: error instanceof Error ? error.message : String(error),
+          key,
+          fallback: 'in-memory',
+        });
         // Fall through to in-memory
       }
     }
@@ -250,7 +277,11 @@ class RateLimiter {
       try {
         return await this.checkRateLimitVercelKV(key, config);
       } catch (error) {
-        console.warn('[RateLimiter] Vercel KV failed, falling back to in-memory:', error);
+        logger.warn('Vercel KV rate limit check failed, falling back to in-memory', {
+          error: error instanceof Error ? error.message : String(error),
+          key,
+          fallback: 'in-memory',
+        });
         // Fall through to in-memory
       }
     }

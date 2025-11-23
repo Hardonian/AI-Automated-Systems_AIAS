@@ -6,20 +6,55 @@ labels: enhancement
 assignees: ''
 ---
 
+## Feature Description
+
+<!-- A clear and concise description of the feature you'd like to see -->
+
 ## Problem Statement
-A clear and concise description of what problem this feature would solve.
+
+<!-- What problem does this feature solve? What pain point does it address? -->
 
 ## Proposed Solution
-A clear and concise description of what you want to happen.
+
+<!-- Describe how you envision this feature working -->
 
 ## Alternatives Considered
-A clear and concise description of any alternative solutions or features you've considered.
 
-## Use Case
-Describe a specific scenario where this feature would be useful.
+<!-- Describe any alternative solutions or features you've considered -->
 
-## Additional Context
-Add any other context, mockups, or examples about the feature request here.
+## Use Cases
+
+<!-- Provide specific examples of how this feature would be used -->
+
+1. 
+2. 
+3. 
+
+## Benefits
+
+<!-- What benefits would this feature provide? -->
+
+- 
+- 
+- 
 
 ## Implementation Notes
-If you have ideas on how this could be implemented, please share them here.
+
+<!-- Any technical considerations or implementation details -->
+
+## Mockups / Examples
+
+<!-- If applicable, add mockups, wireframes, or examples -->
+
+## Additional Context
+
+<!-- Add any other context, references, or examples about the feature request -->
+
+---
+
+**Checklist:**
+
+- [ ] I have searched existing issues to ensure this is not a duplicate
+- [ ] I have provided a clear problem statement
+- [ ] I have considered alternatives
+- [ ] I have provided use cases

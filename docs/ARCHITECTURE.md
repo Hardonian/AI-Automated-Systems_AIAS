@@ -2,417 +2,317 @@
 
 ## Overview
 
-The AIAS Platform is an enterprise-grade, multi-tenant SaaS platform built with modern technologies and best practices. This document provides a comprehensive overview of the system architecture, design decisions, and implementation details.
+AIAS Platform is a modern, enterprise-grade AI consultancy platform built with Next.js 14, TypeScript, and Supabase. The platform provides multi-tenant architecture, AI agent capabilities, workflow automation, and comprehensive security features.
 
 ## System Architecture
 
-### High-Level Architecture
-
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        Frontend Layer                        │
-│  Next.js 14 (React 18) + TypeScript + Tailwind CSS        │
-│  - Server-Side Rendering (SSR)                             │
-│  - Static Site Generation (SSG)                           │
-│  - Progressive Web App (PWA)                              │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      API Layer (Next.js)                     │
-│  - RESTful API Routes                                       │
-│  - Serverless Functions                                     │
-│  - Middleware (Auth, Rate Limiting, Multi-Tenant)           │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    Backend Services Layer                    │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │   Supabase   │  │    Redis     │  │   External    │     │
-│  │  (PostgreSQL) │  │   (Cache)    │  │   Services    │     │
-│  └──────────────┘  └──────────────┘  └──────────────┘     │
-│  - Auth & RLS     - Rate Limiting   - Stripe              │
-│  - Database       - Session Store   - OpenAI              │
-│  - Storage         - Job Queue      - Resend               │
-│  - Realtime        - Pub/Sub        - GitHub               │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    Infrastructure Layer                      │
-│  - Vercel (Hosting & Edge Functions)                        │
-│  - Supabase (Database & Backend)                           │
-│  - Docker (Containerization)                               │
-│  - GitHub Actions (CI/CD)                                  │
+│                    Client Layer (Browser)                  │
+│  Next.js App (React 18) • PWA • Service Worker              │
+└───────────────────────┬─────────────────────────────────────┘
+                         │ HTTPS
+┌───────────────────────▼─────────────────────────────────────┐
+│                      Edge Layer                              │
+│  Vercel Edge • Middleware (Security, Rate Limit, Tenant)    │
+└───────────────────────┬─────────────────────────────────────┘
+                         │
+         ┌───────────────┴───────────────┐
+         │                               │
+┌────────▼────────┐            ┌─────────▼─────────┐
+│   API Routes    │            │  Supabase Edge     │
+│  (Next.js API) │            │  Functions         │
+│                │            │                    │
+│  - Route       │            │  - Chat API        │
+│    Handlers    │            │  - Analytics       │
+│  - Validation  │            │  - Workflows       │
+│  - Auth        │            │  - Billing         │
+└────────┬────────┘            └─────────┬──────────┘
+         │                               │
+         └───────────────┬───────────────┘
+                         │
+┌────────────────────────▼─────────────────────────────────────┐
+│                  Supabase Backend                            │
+│  PostgreSQL • Auth • Storage • Realtime • RLS               │
+│                                                               │
+│  - Multi-tenant isolation                                    │
+│  - Row-level security policies                                │
+│  - Real-time subscriptions                                   │
+│  - Edge functions                                             │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+┌────────────────────────▼─────────────────────────────────────┐
+│              External Services                                │
+│  OpenAI • Stripe • Redis • Monitoring (Sentry/OTEL)           │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## Technology Stack
+## Core Components
 
-### Frontend
+### Frontend Layer
 
-- **Framework:** Next.js 14 (App Router)
-- **Language:** TypeScript 5.3+
-- **UI Library:** React 18
-- **Styling:** Tailwind CSS 3.3+
-- **Components:** Radix UI (headless components)
-- **Animations:** Framer Motion
-- **State Management:** React Query (TanStack Query)
-- **Forms:** React Hook Form + Zod validation
-
-### Backend
-
-- **Database:** PostgreSQL (via Supabase)
-- **ORM:** Prisma (for migrations)
-- **Auth:** Supabase Auth
-- **Storage:** Supabase Storage
-- **Cache:** Redis (ioredis)
-- **Queue:** BullMQ (via Redis)
-
-### Infrastructure
-
-- **Hosting:** Vercel
-- **Database:** Supabase (PostgreSQL)
-- **CDN:** Vercel Edge Network
-- **CI/CD:** GitHub Actions
-- **Containerization:** Docker
-- **Monitoring:** OpenTelemetry, Custom Telemetry
-
-### AI & Integrations
-
-- **AI Models:** OpenAI GPT-4/3.5, Anthropic Claude, Google Gemini
-- **Payments:** Stripe
-- **Email:** Resend
-- **Analytics:** Custom telemetry system
-
-## Project Structure
-
-```
-aias-platform/
-├── app/                    # Next.js App Router pages
-│   ├── api/               # API routes
-│   ├── admin/             # Admin dashboard pages
-│   └── [pages]/           # Public pages
-├── components/             # React components
-│   ├── ui/                # Base UI components
-│   ├── layout/            # Layout components
-│   └── [feature]/         # Feature-specific components
-├── lib/                   # Shared libraries and utilities
-│   ├── api/               # API utilities
-│   ├── auth/              # Authentication utilities
-│   ├── db/                # Database utilities
-│   └── utils/             # General utilities
-├── supabase/              # Supabase configuration
-│   ├── migrations/        # Database migrations
-│   └── functions/         # Edge functions
-├── scripts/               # Build and utility scripts
-├── tests/                 # Test files
-├── docs/                  # Documentation
-└── ops/                   # Operations and deployment
-```
-
-## Core Features
-
-### 1. Multi-Tenant Architecture
-
-**Design:** Complete tenant isolation at the database and application level.
-
-**Implementation:**
-- Tenant ID extracted from subdomain, header, or query parameter
-- Row-Level Security (RLS) policies enforce tenant isolation
-- All queries filtered by tenant_id
-- Tenant-specific configurations and settings
-
-**Key Tables:**
-- `tenants` - Tenant information
-- `tenant_members` - User-tenant relationships
-- All data tables include `tenant_id` column
-
-### 2. Authentication & Authorization
-
-**Design:** JWT-based authentication with Supabase Auth.
-
-**Implementation:**
-- Supabase Auth handles user authentication
-- JWT tokens stored in HTTP-only cookies
-- Middleware validates tokens on protected routes
-- Role-based access control (RBAC) via tenant_members table
-
-**Security:**
-- Password hashing via Supabase
-- OAuth providers (GitHub, Google)
-- Session management
-- Token refresh
-
-### 3. API Design
-
-**Design:** RESTful API with consistent error handling.
-
-**Principles:**
-- RESTful conventions
-- Consistent error responses
-- Rate limiting per endpoint
-- Input validation with Zod
-- Type-safe with TypeScript
-
-**Error Handling:**
-```typescript
-{
-  error: "Error type",
-  message: "Human-readable message",
-  details: {}
-}
-```
-
-### 4. Database Schema
-
-**Design:** PostgreSQL with Supabase extensions.
+**Technology Stack:**
+- Next.js 14 (App Router)
+- React 18
+- TypeScript 5.3
+- Tailwind CSS
+- Radix UI Components
+- Framer Motion
 
 **Key Features:**
-- Row-Level Security (RLS) on all tables
-- Foreign key constraints
-- Indexes for performance
-- Triggers for audit logging
-- Functions for complex queries
+- Server Components for optimal performance
+- Client Components for interactivity
+- Middleware for security and routing
+- PWA support with service workers
 
-**Migration Strategy:**
-- Versioned migrations in `supabase/migrations/`
-- Safe migrations (no data loss)
-- Rollback support
-- Migration validation
+### API Layer
 
-### 5. Observability
+**Route Handlers:**
+- Located in `app/api/`
+- 43+ API endpoints
+- Unified route handler utilities
+- Built-in security, validation, and error handling
 
-**Design:** Comprehensive logging, metrics, and tracing.
+**Key Utilities:**
+- `createRouteHandler()` - Secure route handler factory
+- `createGETHandler()` - GET request handler with caching
+- `createPOSTHandler()` - POST request handler
+- Input validation with Zod
+- Automatic error formatting
+- Rate limiting integration
 
-**Components:**
-- **Structured Logging:** JSON-formatted logs
-- **OpenTelemetry:** Distributed tracing
-- **Custom Telemetry:** Application-specific metrics
-- **Error Tracking:** Error boundaries and logging
-- **Performance Monitoring:** Core Web Vitals
+### Backend Layer
 
-**Metrics Tracked:**
-- Request latency
-- Error rates
-- Database query performance
-- API endpoint usage
-- User actions
+**Supabase:**
+- PostgreSQL database
+- Authentication (JWT-based)
+- Row-Level Security (RLS) for multi-tenant isolation
+- Real-time subscriptions
+- Storage buckets
+- Edge Functions (Deno runtime)
 
-### 6. Security
+**Database Schema:**
+- Multi-tenant tables with `tenant_id` columns
+- RLS policies for tenant isolation
+- Audit logging tables
+- Workflow execution tables
+- AI agent configuration tables
 
-**Design:** Defense in depth with multiple security layers.
+### Security Architecture
 
-**Layers:**
-1. **Network:** HTTPS/TLS enforced
-2. **Application:** Input validation, sanitization
-3. **Database:** RLS policies, parameterized queries
-4. **Infrastructure:** Security headers, rate limiting
-5. **Monitoring:** Threat detection, audit logging
+**Multi-Layer Security:**
 
-**Security Headers:**
-- Content-Security-Policy
-- X-Frame-Options
-- X-Content-Type-Options
-- Strict-Transport-Security
-- Referrer-Policy
+1. **Edge Security (Middleware)**
+   - Rate limiting (Redis/Vercel KV)
+   - Tenant isolation validation
+   - Security headers (CSP, HSTS, etc.)
+   - Request size limits
+   - IP-based restrictions
 
-### 7. Performance Optimization
+2. **Application Security**
+   - Input validation (Zod schemas)
+   - Output sanitization
+   - SQL injection prevention (parameterized queries)
+   - XSS protection
+   - CSRF protection
 
-**Design:** Multiple optimization strategies.
+3. **Database Security**
+   - Row-Level Security (RLS) policies
+   - Tenant isolation at database level
+   - Audit logging
+   - Encrypted connections
 
-**Strategies:**
-- **Caching:** Redis for frequently accessed data
-- **CDN:** Vercel Edge Network for static assets
-- **Code Splitting:** Dynamic imports
-- **Image Optimization:** Next.js Image component
-- **Database:** Indexes, query optimization
-- **Bundle Optimization:** Tree shaking, minification
+4. **Authentication & Authorization**
+   - Supabase Auth (JWT tokens)
+   - Role-based access control (RBAC)
+   - Permission checks
+   - Token refresh handling
 
-### 8. CI/CD Pipeline
+## Data Flow
 
-**Design:** Automated testing and deployment.
+### Request Flow
 
-**Stages:**
-1. **Lint:** ESLint, Prettier
-2. **Type Check:** TypeScript compiler
-3. **Tests:** Unit, integration, E2E
-4. **Build:** Production build
-5. **Deploy:** Vercel deployment
-6. **Health Check:** Post-deployment verification
+1. **Client Request** → Browser sends HTTP request
+2. **Edge Middleware** → Security checks, rate limiting, tenant validation
+3. **API Route Handler** → Request validation, authentication, authorization
+4. **Business Logic** → Core application logic
+5. **Database Query** → Supabase client with RLS enforcement
+6. **Response** → Formatted JSON response with security headers
 
-**Workflows:**
-- Pre-merge validation
-- Automated testing
-- Preview deployments
-- Production deployments
-- Rollback procedures
+### Multi-Tenant Isolation
 
-## Design Patterns
+**Tenant Identification:**
+- Header: `x-tenant-id`
+- Subdomain: `{tenant}.example.com`
+- Query parameter: `?tenantId={id}` (API routes only)
 
-### 1. Repository Pattern
+**Isolation Layers:**
+1. Middleware validates tenant access
+2. RLS policies filter data by tenant_id
+3. Cache keys prefixed with tenant_id
+4. Audit logs include tenant_id
 
-Database access abstracted through repository functions.
+## Caching Strategy
 
-### 2. Service Layer
+**Multi-Tier Caching:**
 
-Business logic separated from API routes.
+1. **Edge Cache (Vercel)**
+   - Static assets
+   - Public API responses
+   - CDN distribution
 
-### 3. Middleware Chain
+2. **Application Cache (Redis/Vercel KV)**
+   - API response caching
+   - User session data
+   - Rate limit counters
+   - Tag-based invalidation
 
-Request processing through middleware chain (auth, rate limiting, validation).
+3. **In-Memory Cache (Fallback)**
+   - Development only
+   - Not suitable for production
+   - Resets on cold starts
 
-### 4. Error Boundary
+## Error Handling
 
-React error boundaries catch and handle component errors.
+**Error Taxonomy:**
+- `ValidationError` (400) - Input validation failures
+- `AuthenticationError` (401) - Auth failures
+- `AuthorizationError` (403) - Permission denied
+- `NotFoundError` (404) - Resource not found
+- `ConflictError` (409) - Resource conflicts
+- `RateLimitError` (429) - Rate limit exceeded
+- `SystemError` (500) - Internal errors
+- `NetworkError` (503) - External service failures
 
-### 5. Provider Pattern
+**Error Flow:**
+1. Error thrown with appropriate error class
+2. `formatError()` formats for API response
+3. Structured logger records error
+4. Telemetry tracks error metrics
+5. User receives sanitized error message
 
-Context providers for global state (theme, auth, telemetry).
+## Logging & Observability
 
-## Scalability Considerations
+**Structured Logging:**
+- JSON-formatted logs
+- Contextual information (userId, requestId, etc.)
+- Log levels: debug, info, warn, error, fatal
+- Production telemetry integration
 
-### Horizontal Scaling
+**Monitoring:**
+- Health check endpoints (`/api/healthz`)
+- Performance metrics tracking
+- Error tracking (Sentry integration)
+- OpenTelemetry support
 
-- Stateless API routes
-- Serverless functions
-- Database connection pooling
-- Redis for shared state
+## Performance Optimizations
 
-### Vertical Scaling
+**Frontend:**
+- Server Components for reduced client bundle
+- Code splitting and lazy loading
+- Image optimization (Next.js Image)
+- Bundle analysis and tree-shaking
 
+**Backend:**
 - Database query optimization
-- Caching strategies
+- Connection pooling
+- Response caching
+- Edge runtime for low latency
+
+**Infrastructure:**
+- Vercel Edge Network
 - CDN for static assets
-- Edge functions for low latency
-
-### Performance Targets
-
-- **API Response Time:** < 200ms (p95)
-- **Page Load Time:** < 2s (First Contentful Paint)
-- **Database Query Time:** < 100ms (p95)
-- **Uptime:** 99.9% SLA
-
-## Security Considerations
-
-### Data Protection
-
-- Encryption at rest (Supabase)
-- Encryption in transit (TLS)
-- PII handling compliance (GDPR, CCPA, PIPEDA)
-- Secure secret management
-
-### Access Control
-
-- Multi-factor authentication (MFA)
-- Role-based access control (RBAC)
-- Tenant isolation
-- Audit logging
-
-### Vulnerability Management
-
-- Dependency scanning
-- Security audits
-- Penetration testing
-- Bug bounty program
+- Redis for distributed caching
+- Database indexes
 
 ## Deployment Architecture
 
-### Production Environment
+**Environments:**
+- Development (local)
+- Preview (Vercel preview deployments)
+- Staging (optional)
+- Production
 
-- **Frontend:** Vercel (Edge Network)
-- **API:** Vercel Serverless Functions
-- **Database:** Supabase (PostgreSQL)
-- **Cache:** Redis (Upstash/Vercel KV)
-- **CDN:** Vercel Edge Network
-- **Monitoring:** Custom + OpenTelemetry
+**CI/CD Pipeline:**
+- GitHub Actions for testing
+- Automated deployments via Vercel
+- Database migrations via Supabase CLI
+- Environment variable management
 
-### Development Environment
+## Scalability Considerations
 
-- **Local:** Next.js dev server
-- **Database:** Supabase local development
-- **Testing:** Vitest, Playwright
+**Horizontal Scaling:**
+- Stateless API routes
+- Distributed caching (Redis/KV)
+- Database connection pooling
+- Edge function distribution
 
-### Staging Environment
+**Vertical Scaling:**
+- Database query optimization
+- Caching strategies
+- CDN utilization
+- Resource monitoring
 
-- **Mirror:** Production-like environment
-- **Testing:** Integration tests
-- **Preview:** PR preview deployments
+## Security Best Practices
 
-## Monitoring & Observability
+1. **Never expose service role keys to client**
+2. **Always validate input with Zod schemas**
+3. **Use RLS policies for data access**
+4. **Implement rate limiting on all API routes**
+5. **Sanitize all user input**
+6. **Use HTTPS everywhere**
+7. **Rotate secrets regularly**
+8. **Monitor for security events**
+9. **Keep dependencies updated**
+10. **Follow principle of least privilege**
 
-### Logging
+## Development Workflow
 
-- Structured JSON logs
-- Log levels (debug, info, warn, error)
-- Centralized log aggregation
-- Log retention policies
+1. **Local Development**
+   - `pnpm dev` - Start dev server
+   - `.env.local` - Local environment variables
+   - Supabase local development (optional)
 
-### Metrics
+2. **Testing**
+   - Unit tests (Vitest)
+   - Integration tests
+   - E2E tests (Playwright)
+   - Type checking (TypeScript)
 
-- Application metrics (request rate, latency, errors)
-- Infrastructure metrics (CPU, memory, disk)
-- Business metrics (user actions, conversions)
-- Custom metrics (feature usage, performance)
+3. **Code Quality**
+   - ESLint for linting
+   - Prettier for formatting
+   - Pre-commit hooks (Husky)
+   - Type checking
 
-### Tracing
+4. **Deployment**
+   - Push to GitHub
+   - CI runs tests
+   - Vercel deploys preview/production
+   - Database migrations run automatically
 
-- Distributed tracing with OpenTelemetry
-- Request correlation IDs
-- Span tracking across services
-- Performance profiling
+## Future Architecture Considerations
 
-### Alerting
-
-- Error rate thresholds
-- Performance degradation alerts
-- Security incident alerts
-- Infrastructure alerts
-
-## Disaster Recovery
-
-### Backup Strategy
-
-- Database backups (daily)
-- Point-in-time recovery
-- Backup retention (30 days)
-- Backup verification
-
-### Recovery Procedures
-
-- RTO (Recovery Time Objective): < 4 hours
-- RPO (Recovery Point Objective): < 1 hour
-- Failover procedures
-- Data restoration procedures
-
-## Future Considerations
-
-### Planned Enhancements
-
+**Potential Enhancements:**
+- Microservices for specific features
+- Message queue for async processing
 - GraphQL API layer
-- WebSocket support for real-time features
-- Microservices architecture (if needed)
-- Kubernetes deployment option
+- Advanced caching strategies
 - Multi-region deployment
+- Kubernetes for self-hosted deployments
 
-### Scalability Roadmap
+## Glossary
 
-- Database read replicas
-- Caching layer expansion
-- CDN optimization
-- Edge function migration
-- Performance optimization
+- **RLS**: Row-Level Security - Database-level access control
+- **Edge Runtime**: Serverless runtime at the edge
+- **Tenant**: A customer organization with isolated data
+- **Rate Limiting**: Protection against API abuse
+- **CSP**: Content Security Policy - Browser security feature
+- **JWT**: JSON Web Token - Authentication token format
 
 ## References
 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Supabase Documentation](https://supabase.com/docs)
 - [Vercel Documentation](https://vercel.com/docs)
-- [OpenTelemetry Documentation](https://opentelemetry.io/docs)
-- [API Documentation](./API.md)
-
----
-
-**Last Updated:** 2025-01-30  
-**Version:** 1.0.0
+- [TypeScript Documentation](https://www.typescriptlang.org/docs)

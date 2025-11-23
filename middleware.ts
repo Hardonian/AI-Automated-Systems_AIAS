@@ -7,6 +7,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '@/lib/env';
+import { rateLimiter } from '@/lib/performance/rate-limiter';
 
 // Security headers configuration
 const securityHeaders = {
@@ -42,22 +43,6 @@ const rateLimitConfig = {
   default: { windowMs: 60 * 1000, maxRequests: 100 },
 };
 
-// In-memory rate limit store (fallback when Redis unavailable)
-// Note: In serverless environments, this is per-instance and will reset on cold start
-// For production, use Redis or Vercel KV for distributed rate limiting
-const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
-
-// Cleanup expired rate limit entries (lazy cleanup on access, not via setInterval)
-// setInterval doesn't work reliably in serverless - cleanup happens during rate limit checks
-function cleanupExpiredEntries(): void {
-  const now = Date.now();
-  for (const [key, value] of rateLimitStore.entries()) {
-    if (value.resetTime < now) {
-      rateLimitStore.delete(key);
-    }
-  }
-}
-
 /**
  * Get client IP address from request
  */
@@ -79,50 +64,26 @@ function getClientIP(request: NextRequest): string {
 }
 
 /**
- * Check rate limit for request
+ * Check rate limit for request (uses distributed rate limiter with Redis/KV fallback)
  */
-function checkRateLimit(
+async function checkRateLimit(
   pathname: string,
   identifier: string
-): { allowed: boolean; remaining: number; resetTime: number } {
-  // Cleanup expired entries on each check (lazy cleanup)
-  cleanupExpiredEntries();
-  
+): Promise<{ allowed: boolean; remaining: number; resetTime: number }> {
   const config = rateLimitConfig[pathname as keyof typeof rateLimitConfig] || rateLimitConfig.default;
-  const key = `rate_limit:${pathname}:${identifier}`;
-  const now = Date.now();
   
-  const entry = rateLimitStore.get(key);
-  
-  if (!entry || entry.resetTime < now) {
-    // New window
-    rateLimitStore.set(key, {
-      count: 1,
-      resetTime: now + config.windowMs,
-    });
+  try {
+    return await rateLimiter.checkRateLimit(pathname, identifier, config);
+  } catch (error) {
+    // If rate limiter fails completely, fail open (allow request)
+    // This prevents rate limiting from breaking the application
+    console.error('Rate limit check failed:', error);
     return {
       allowed: true,
-      remaining: config.maxRequests - 1,
-      resetTime: now + config.windowMs,
+      remaining: config.maxRequests,
+      resetTime: Date.now() + config.windowMs,
     };
   }
-  
-  entry.count++;
-  rateLimitStore.set(key, entry);
-  
-  if (entry.count > config.maxRequests) {
-    return {
-      allowed: false,
-      remaining: 0,
-      resetTime: entry.resetTime,
-    };
-  }
-  
-  return {
-    allowed: true,
-    remaining: config.maxRequests - entry.count,
-    resetTime: entry.resetTime,
-  };
 }
 
 /**
@@ -363,7 +324,7 @@ Disallow: /
   
   // Rate limiting for API routes
   if (pathname.startsWith('/api/')) {
-    const rateLimit = checkRateLimit(pathname, identifier);
+    const rateLimit = await checkRateLimit(pathname, identifier);
     
     if (!rateLimit.allowed) {
       const response = NextResponse.json(
@@ -420,8 +381,9 @@ Disallow: /
       
       // Add rate limit headers
       if (pathname.startsWith('/api/')) {
-        const rateLimit = checkRateLimit(pathname, identifier);
-        response.headers.set('X-RateLimit-Limit', '100');
+        const rateLimit = await checkRateLimit(pathname, identifier);
+        const config = rateLimitConfig[pathname as keyof typeof rateLimitConfig] || rateLimitConfig.default;
+        response.headers.set('X-RateLimit-Limit', config.maxRequests.toString());
         response.headers.set('X-RateLimit-Remaining', rateLimit.remaining.toString());
         response.headers.set('X-RateLimit-Reset', Math.ceil(rateLimit.resetTime / 1000).toString());
       }
@@ -448,8 +410,9 @@ Disallow: /
   
   // Add rate limit headers for API routes
   if (pathname.startsWith('/api/')) {
-    const rateLimit = checkRateLimit(pathname, identifier);
-    response.headers.set('X-RateLimit-Limit', '100');
+    const rateLimit = await checkRateLimit(pathname, identifier);
+    const config = rateLimitConfig[pathname as keyof typeof rateLimitConfig] || rateLimitConfig.default;
+    response.headers.set('X-RateLimit-Limit', config.maxRequests.toString());
     response.headers.set('X-RateLimit-Remaining', rateLimit.remaining.toString());
     response.headers.set('X-RateLimit-Reset', Math.ceil(rateLimit.resetTime / 1000).toString());
   }

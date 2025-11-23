@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createGETHandler } from "@/lib/api/route-handler";
 import { getAllActivationMetrics, getFunnelMetrics } from "@/lib/analytics/metrics";
+import { logger } from "@/lib/logging/structured-logger";
 
 export const runtime = "edge";
 
@@ -47,7 +48,10 @@ export const GET = createGETHandler(
         },
       });
     } catch (error) {
-      console.error("Error calculating metrics", error);
+      logger.error("Error calculating metrics", error instanceof Error ? error : new Error(String(error)), {
+        endpoint: "/api/admin/metrics",
+        days,
+      });
       return NextResponse.json(
         { error: "Failed to calculate metrics" },
         { status: 500 }

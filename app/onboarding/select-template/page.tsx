@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TemplateCard } from "@/components/templates/TemplateCard";
 import { Search, Loader2 } from "lucide-react";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface WorkflowTemplate {
   id: string;
@@ -38,7 +39,10 @@ export default function SelectTemplatePage() {
       const data = await response.json();
       setTemplates(data.templates);
     } catch (err) {
-      console.error("Failed to fetch templates", err);
+      logger.error("Failed to fetch templates", err instanceof Error ? err : new Error(String(err)), { 
+        component: "SelectTemplatePage",
+        action: "fetchTemplates"
+      });
     } finally {
       setLoading(false);
     }

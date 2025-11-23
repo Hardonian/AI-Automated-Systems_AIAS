@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { errorTracker } from "@/lib/monitoring/error-tracker";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -32,7 +33,12 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       componentStack: errorInfo.componentStack,
     });
 
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+    // Log with structured logger
+    logger.error("ErrorBoundary caught an error", {
+      componentStack: errorInfo.componentStack,
+      errorName: error.name,
+      errorMessage: error.message,
+    }, error);
   }
 
   resetError = () => {

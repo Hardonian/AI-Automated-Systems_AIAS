@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { track } from "@/lib/telemetry/track";
+import { logger } from "@/lib/logging/structured-logger";
 
 export default function ResultsPage() {
   const router = useRouter();
@@ -64,7 +65,11 @@ export default function ResultsPage() {
         app: "web",
       });
     } catch (error) {
-      console.error("Failed to execute workflow", error);
+      logger.error("Failed to execute workflow", error instanceof Error ? error : new Error(String(error)), {
+        component: "ResultsPage",
+        workflowId,
+        action: "executeWorkflow"
+      });
       setExecution({
         id: "error",
         workflowId,

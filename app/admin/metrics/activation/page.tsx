@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { ActivationChart } from "@/components/metrics/ActivationChart";
 import { FunnelChart } from "@/components/metrics/FunnelChart";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface ActivationMetrics {
   metrics: {
@@ -55,7 +56,10 @@ export default function ActivationMetricsDashboard() {
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Failed to fetch metrics";
       setError(errorMessage);
-      console.error("Failed to fetch activation metrics:", err);
+      logger.error("Failed to fetch activation metrics", err instanceof Error ? err : new Error(String(err)), {
+        component: "ActivationMetricsPage",
+        action: "fetchMetrics"
+      });
     } finally {
       setLoading(false);
     }

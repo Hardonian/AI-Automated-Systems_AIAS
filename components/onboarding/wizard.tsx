@@ -258,6 +258,8 @@ function ChooseIntegrationStep({ onNext }: { onNext: () => void }) {
         onNext();
       }
     } catch (error) {
+      // Note: Using console.error here as this is a demo/fallback scenario
+      // In production, this should use structured logger
       console.error("Failed to connect integration", error);
       // For demo purposes, continue anyway
       onNext();

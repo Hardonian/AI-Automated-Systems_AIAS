@@ -238,6 +238,8 @@
     "create:rollback": "tsx scripts/create-rollback.ts",
     "startup:validate": "tsx scripts/startup-validation.ts",
     "test:api-contract": "vitest run tests/api/contract.test.ts",
+    "test:api": "vitest run tests/api/",
+    "test:api:watch": "vitest watch tests/api/",
     "ci": "pnpm lint && pnpm typecheck && pnpm format:check && pnpm test && pnpm build"
   },
   "devDependencies": {

@@ -283,6 +283,18 @@ All tests are configured to run in CI. See [.github/workflows/ci.yml](.github/wo
 
 ## Documentation
 
+### Core Documentation
+
+- **[Stack Discovery](docs/stack-discovery.md)** - Complete technical audit and stack analysis
+- **[Backend Strategy](docs/backend-strategy.md)** - Database and backend architecture decisions
+- **[Frontend Hosting Strategy](docs/frontend-hosting-strategy.md)** - Vercel deployment and hosting guide
+- **[CI/CD Overview](docs/ci-overview.md)** - Complete guide to CI/CD workflows and branch protection
+- **[Environment Variables & Secrets](docs/env-and-secrets.md)** - Environment variable management guide
+- **[Local Development Guide](docs/local-dev.md)** - Setup and development workflow
+- **[Demo Script](docs/demo-script.md)** - Guide for demonstrating the platform
+
+### Additional Documentation
+
 - **[Getting Started Guide](docs/getting-started.md)** - Complete setup and configuration
 - **[API Documentation](docs/api.md)** - Comprehensive API reference
 - **[Deployment Guide](DEPLOYMENT_GUIDE.md)** - Production deployment instructions

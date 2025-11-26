@@ -111,12 +111,14 @@ See [USE_CASES.md](./USE_CASES.md) for detailed examples.
 
 ## Quick Start
 
+**For detailed setup instructions, see [Local Setup Guide](docs/SETUP_LOCAL.md)**
+
 ### Prerequisites
 
 - Node.js 20 or higher
-- pnpm 8.0.0 or higher
-- Docker and Docker Compose (optional, for local development)
-- PostgreSQL 14+ (or use Supabase)
+- pnpm 8.15.0 or higher
+- Git
+- Supabase account (free) - [Get one here](https://supabase.com)
 
 ### Installation
 
@@ -135,15 +137,23 @@ See [USE_CASES.md](./USE_CASES.md) for detailed examples.
    ```bash
    cp .env.example .env.local
    # Edit .env.local with your configuration
+   # TODO: Get Supabase credentials from supabase.com → Create project → Settings → API
    ```
 
-4. **Start the development server**
+4. **Set up database (Supabase)**
+   - Create project at [supabase.com](https://supabase.com)
+   - Copy credentials to `.env.local`
+   - Migrations apply automatically in CI/CD (or run `pnpm run supa:migrate:apply` locally)
+
+5. **Start the development server**
    ```bash
    pnpm dev
    ```
 
-5. **Open your browser**
+6. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
+
+**For production deployment, see [Deployment Guide](docs/DEPLOYMENT.md)**
 
 ### Docker Setup
 
@@ -298,12 +308,14 @@ All tests are configured to run in CI. See [.github/workflows/ci.yml](.github/wo
 
 ### Core Documentation
 
+- **[Local Setup Guide](docs/SETUP_LOCAL.md)** - ⭐ **START HERE** - Get app running locally
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Deploy to production (Vercel)
+- **[Local Development Guide](docs/local-dev.md)** - Detailed development workflow
 - **[Stack Discovery](docs/stack-discovery.md)** - Complete technical audit and stack analysis
 - **[Backend Strategy](docs/backend-strategy.md)** - Database and backend architecture decisions
 - **[Frontend Hosting Strategy](docs/frontend-hosting-strategy.md)** - Vercel deployment and hosting guide
 - **[CI/CD Overview](docs/ci-overview.md)** - Complete guide to CI/CD workflows and branch protection
 - **[Environment Variables & Secrets](docs/env-and-secrets.md)** - Environment variable management guide
-- **[Local Development Guide](docs/local-dev.md)** - Setup and development workflow
 - **[Demo Script](docs/demo-script.md)** - Guide for demonstrating the platform
 
 ### Additional Documentation

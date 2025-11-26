@@ -1,7 +1,65 @@
 # YC Gap Analysis — AIAS Platform
 
 **Generated:** 2025-01-29  
+**Last Updated:** 2025-01-31  
 **Status:** Living Document — Update as gaps are closed
+
+---
+
+## MASTER TODO — Prioritized Task List
+
+**Purpose:** Single source of truth for most important remaining tasks across all venture lenses.  
+**Update Frequency:** Weekly (or whenever gaps are closed)
+
+### MUST DO NOW (Blockers for YC Application/Interview)
+
+| Priority | Task | Owner | Status | Links |
+|----------|------|-------|--------|-------|
+| MUST | Launch MVP and get first 10 paying customers | Founder | ⏳ Pending | Gap 1, Gap 6 |
+| MUST | Start tracking real metrics (MRR, DAU, activation, retention) | Tech Founder | ⏳ Pending | Gap 4, `YC_METRICS_CHECKLIST.md` |
+| MUST | Document actual revenue data (MRR, paying customers) | Founder | ⏳ Pending | Gap 6, `YC_INTERVIEW_CHEATSHEET.md` |
+| MUST | Create team page with founder bios, LinkedIn profiles | Founder | ✅ Complete | Gap 9, `app/about/page.tsx` |
+| MUST | Get Supabase credentials and set up local environment | Tech Founder | ⏳ Pending | `docs/SETUP_LOCAL.md` |
+
+### NEXT (Should Do Before YC Interview)
+
+| Priority | Task | Owner | Status | Links |
+|----------|------|-------|--------|-------|
+| NEXT | Create comparison table (AIAS vs. Zapier/Make) | Founder | ⏳ Pending | Gap 2, `app/compare/page.tsx` |
+| NEXT | Add UTM tracking to signup flow | Tech Founder | ⏳ Pending | Gap 5, `app/api/auth/signup/route.ts` |
+| NEXT | Track marketing spend and calculate CAC by channel | Founder | ⏳ Pending | Gap 5, Gap 7 |
+| NEXT | Launch MVP and test distribution channels | Founder | ⏳ Pending | Gap 7, `YC_DISTRIBUTION_PLAN.md` |
+| NEXT | Create financial model (revenue, costs, runway) | Founder | ⏳ Pending | Gap 11, `yc/FINANCIAL_PROJECTIONS.md` |
+| NEXT | Calculate LTV:CAC ratio and validate unit economics | Founder | ⏳ Pending | Gap 12, `YC_METRICS_CHECKLIST.md` |
+| NEXT | Create mentor onboarding document for Techstars | Founder | ⏳ Pending | Techstars Lens, `yc/TECHSTARS_MENTOR_GUIDE.md` |
+| NEXT | Document founder story and problem connection | Founder | ✅ Complete | EF Lens, Antler Lens, `yc/EF_FOUNDER_STORY.md` |
+| NEXT | Run 3 growth experiments and document results | Founder | ⏳ Pending | 500 Global Lens, Gap 8, `yc/500_GLOBAL_EXPERIMENTS.md` |
+| NEXT | Create metrics dashboard with real data | Tech Founder | ⏳ Pending | Gap 4, Techstars Lens, `app/admin/metrics/page.tsx` |
+
+### LATER (Nice to Have)
+
+| Priority | Task | Owner | Status | Links |
+|----------|------|-------|--------|-------|
+| LATER | Create case studies or demo videos | Founder | ⏳ Pending | Gap 3, `app/case-studies/page.tsx` |
+| LATER | Create changelog and document shipping velocity | Tech Founder | ⏳ Pending | Gap 10, `CHANGELOG.md` |
+| LATER | Build SEO landing pages (5-10 pages) | Founder | ⏳ Pending | 500 Global Lens, `app/seo/[keyword]/page.tsx` |
+| LATER | Add viral invite flow after onboarding | Tech Founder | ⏳ Pending | 500 Global Lens, `app/onboarding/complete/page.tsx` |
+| LATER | Document Jobs-to-Be-Done framework | Founder | ⏳ Pending | JTBD Lens, `yc/JTBD_PRIMARY_JOBS.md` |
+| LATER | Define and instrument "aha moment" for PLG | Tech Founder | ⏳ Pending | PLG Lens, `yc/PLG_AHA_MOMENT.md` |
+| LATER | Create validation board (Lean Startup) | Founder | ⏳ Pending | Lean Startup Lens, `yc/LEAN_STARTUP_VALIDATION_BOARD.md` |
+| LATER | Submit to Shopify App Store | Founder | ⏳ Pending | 500 Global Lens, Gap 7 |
+
+**Legend:**
+- ⏳ Pending
+- 🔄 In Progress
+- ✅ Complete
+- ❌ Blocked
+
+**How to Update:**
+1. Mark tasks as complete when done
+2. Add new tasks as gaps are identified
+3. Update status weekly
+4. Link to relevant docs/files
 
 ---
 

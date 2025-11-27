@@ -179,27 +179,8 @@ jobs:
           retention-days: 7
 
   # ============================================================================
-  # Database Migrations (Run on main branch push)
-  # ============================================================================
-  migrate-database:
-    name: Database Migrations
-    runs-on: ubuntu-latest
-    needs: [build]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-      - uses: actions/checkout@v4
-      - uses: supabase/setup-cli@v1
-        with:
-          version: latest
-      - run: supabase login --token ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      - run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
-      - run: supabase db push --linked
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
-
-  # ============================================================================
   # Frontend Deployment (Run on PR and main branch)
+  # NOTE: Migrations run automatically on server startup, not in CI/CD
   # ============================================================================
   deploy-frontend:
     name: Deploy Frontend

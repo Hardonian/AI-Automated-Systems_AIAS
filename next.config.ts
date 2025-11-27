@@ -31,7 +31,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Enable instrumentation hook for automatic migrations on server startup
   experimental: {
+    instrumentationHook: true,
     optimizePackageImports: [
       "lucide-react",
       "@radix-ui/react-dialog",
@@ -41,6 +43,10 @@ const nextConfig: NextConfig = {
       "@radix-ui/react-dropdown-menu",
       "framer-motion",
     ],
+    // Ensure proper file tracing for Vercel deployments
+    outputFileTracingIncludes: {
+      '/api/**': ['./**'],
+    },
   },
   // Performance optimizations
   compiler: {

@@ -40,6 +40,7 @@ const checkoutSchema = z.object({
   tier: z.enum(["starter", "pro", "enterprise"], {
     errorMap: () => ({ message: "Tier must be one of: starter, pro, enterprise" }),
   }),
+  billingPeriod: z.enum(["month", "year"]).optional().default("month"),
 });
 
 /**
@@ -53,7 +54,7 @@ export const POST = createPOSTHandler(
     
     // Body is already validated by route handler
     const body = await request.json();
-    const { priceId, userId, tier } = checkoutSchema.parse(body);
+    const { priceId, userId, tier, billingPeriod } = checkoutSchema.parse(body);
     
     // Check if canary deployment is enabled for this user
     const handlerType = await getCheckoutHandler(userId);
@@ -92,7 +93,15 @@ export const POST = createPOSTHandler(
           metadata: {
             userId,
             tier,
+            billingPeriod: billingPeriod || "month",
           },
+          // Support annual billing with discount
+          subscription_data: billingPeriod === "year" ? {
+            metadata: {
+              billing_period: "year",
+              tier,
+            },
+          } : undefined,
         });
       },
       {

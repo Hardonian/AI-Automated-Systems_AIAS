@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { Check } from "lucide-react";
+import { PricingAnalytics } from "@/components/pricing/PricingAnalytics";
 
 export const metadata: Metadata = {
   title: "Pricing — AIAS Platform | Starting at $49/month | Multi-Currency Support",
@@ -14,58 +15,70 @@ const plans = [
     name: "Free",
     price: "$0",
     period: "month",
-    description: "Perfect for trying AIAS Platform",
+    tagline: "Perfect for trying AIAS Platform",
+    description: "Get started with AI automation at no cost. Perfect for testing workflows, learning the platform, and automating small tasks.",
     features: [
-      "3 AI agents",
-      "100 automations/month",
-      "Basic templates",
-      "Email support",
-      "Community access",
+      "3 AI agents to automate your workflows",
+      "100 automations per month",
+      "Basic templates to get started",
+      "Community support and resources",
+      "No credit card required",
     ],
     cta: "Start Free",
     popular: false,
+    annualPrice: null,
   },
   {
     name: "Starter",
     price: "$49",
     period: "month",
-    description: "For solo operators and small businesses",
+    tagline: "For solo operators and small businesses",
+    description: "Everything you need to automate your business operations. Save 10+ hours per week with unlimited automations and Canadian-first integrations.",
     features: [
-      "10 AI agents",
-      "Unlimited automations",
-      "50+ templates",
-      "Canadian integrations (20+)",
-      "Email support (24-48h)",
+      "10 AI agents for comprehensive automation",
+      "Unlimited automations—never worry about limits",
+      "50+ pre-built templates for common workflows",
+      "20+ Canadian integrations (Shopify, Wave, RBC, TD)",
+      "Email support with 24-48h response time",
       "Analytics dashboard",
+      "Multi-currency support (CAD/USD/EUR)",
       "Cancel anytime",
     ],
     cta: "Start Free Trial",
     popular: true,
+    annualPrice: "$490",
+    annualSavings: "$98",
+    annualDiscount: "20%",
   },
   {
     name: "Pro",
     price: "$149",
     period: "month",
-    description: "For small teams (2-10 employees)",
+    tagline: "For small teams (2-10 employees)",
+    description: "Advanced features for growing teams. Collaborate, scale, and automate everything with priority support and advanced analytics.",
     features: [
-      "50 AI agents",
+      "50 AI agents for team-wide automation",
       "Unlimited automations",
-      "All templates",
-      "Advanced integrations",
-      "Priority support (24h)",
-      "Advanced analytics",
-      "Team collaboration",
+      "All workflow templates (100+)",
+      "Advanced integrations (50+)",
+      "Priority support (24h response)",
+      "Advanced analytics & reporting",
+      "Team collaboration features",
       "API access",
-      "White-label options",
+      "White-label options available",
     ],
     cta: "Start Free Trial",
     popular: false,
+    annualPrice: "$1,490",
+    annualSavings: "$298",
+    annualDiscount: "20%",
   },
 ];
 
 export default function PricingPage() {
   return (
     <div className="container py-16">
+      <PricingAnalytics />
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-bold mb-4">
           Simple, Transparent Pricing
@@ -93,28 +106,25 @@ export default function PricingPage() {
             )}
             <CardHeader>
               <CardTitle className="text-2xl">{plan.name}</CardTitle>
+              <CardDescription className="text-sm font-medium text-primary mt-1">
+                {plan.tagline}
+              </CardDescription>
               <div className="mt-4">
                 <span className="text-4xl font-bold">{plan.price}</span>
                 <span className="text-muted-foreground">/{plan.period}</span>
                 <p className="text-xs text-muted-foreground mt-1">Multi-currency available</p>
               </div>
-              {plan.name === "Starter" && (
+              {plan.annualPrice && (
                 <div className="mt-2">
-                  <span className="text-sm text-muted-foreground line-through">$490/year</span>
+                  <span className="text-sm text-muted-foreground line-through">
+                    ${(parseInt(plan.price.replace('$', '')) * 12).toLocaleString()}/year
+                  </span>
                   <span className="text-sm font-medium text-primary ml-2">
-                    $490/year (save $98) • Save 20%
+                    {plan.annualPrice}/year (save {plan.annualSavings}) • Save {plan.annualDiscount}
                   </span>
                 </div>
               )}
-              {plan.name === "Pro" && (
-                <div className="mt-2">
-                  <span className="text-sm text-muted-foreground line-through">$1,490/year</span>
-                  <span className="text-sm font-medium text-primary ml-2">
-                    $1,490/year (save $298) • Save 20%
-                  </span>
-                </div>
-              )}
-              <CardDescription className="mt-2">{plan.description}</CardDescription>
+              <CardDescription className="mt-2 text-sm">{plan.description}</CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="space-y-3 mb-6">

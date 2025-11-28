@@ -170,13 +170,25 @@
 
 ## Slide 12: Team
 
-**[Founders to fill in: Names, roles, backgrounds]**
+**Scott Hardie — Founder & CEO**
 
-- **Technical founder:** Built MVP, full-stack expertise
-- **Business founder:** GTM experience, Canadian SMB market knowledge
-- **Advisors:** [If applicable]
+- **Location:** Toronto, Canada
+- **Background:** Technical founder, full-stack developer, product builder
+- **Previous Experience:** 
+  - Built Hardonian Industries (e-commerce platform)
+  - Ran Shopify store (Hardonia.store) — experienced manual order processing pain
+  - Active developer with 40+ public repositories
+- **Expertise:** 
+  - Canadian SMB market (lived experience)
+  - E-commerce automation
+  - Full-stack development (Next.js, React, TypeScript, Supabase)
+  - Product development and execution
 
-**Why Us:** Deep understanding of Canadian SMB pain, technical + GTM skills
+**Why Us:** 
+- Lived the problem (15+ hours/week on manual tasks)
+- Built solution for own business, then productized
+- Strong technical execution (comprehensive platform built)
+- Deep Canadian market understanding (Toronto-based, Canadian integrations)
 
 ---
 

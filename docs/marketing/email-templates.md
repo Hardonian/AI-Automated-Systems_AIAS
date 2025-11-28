@@ -23,10 +23,10 @@ We're raising $500K-$1M pre-seed to reach 100 paying customers and $5K MRR in 90
 Would you be open to a 15-minute call to discuss?
 
 Best,  
-[Founder Name]  
-[Title]  
-[Company]  
-[Email] | [Phone] | [LinkedIn]
+Scott Hardie  
+Founder & CEO  
+AIAS Platform  
+team@aias-platform.com | [Phone] | [LinkedIn: scottrmhardie](https://www.linkedin.com/in/scottrmhardie)
 
 ---
 
@@ -52,10 +52,10 @@ Our users need [Partner's value proposition], and your customers need automation
 Would you be open to a call to explore this?
 
 Best,  
-[Founder Name]  
-[Title]  
-[Company]  
-[Email] | [Phone] | [LinkedIn]
+Scott Hardie  
+Founder & CEO  
+AIAS Platform  
+team@aias-platform.com | [Phone] | [LinkedIn: scottrmhardie](https://www.linkedin.com/in/scottrmhardie)
 
 ---
 
@@ -85,8 +85,8 @@ Welcome to AIAS Platform! We're excited to help you automate your business and s
 Ready to automate? [Start Building →](https://aias-platform.com/dashboard)
 
 Best,  
-[Your Name]  
-Founder, AIAS Platform
+Scott Hardie  
+Founder & CEO, AIAS Platform
 
 ---
 
@@ -143,8 +143,8 @@ Your 14-day free trial ends in 3 days. Don't lose access to your automations!
 **Questions?** Reply to this email or schedule a call: [Calendar Link]
 
 Best,  
-[Your Name]  
-Founder, AIAS Platform
+Scott Hardie  
+Founder & CEO, AIAS Platform
 
 ---
 
@@ -171,8 +171,8 @@ We noticed you haven't deployed any workflows recently. Is everything okay?
 **Need help?** Reply to this email and we'll get you set up.
 
 Best,  
-[Your Name]  
-Founder, AIAS Platform
+Scott Hardie  
+Founder & CEO, AIAS Platform
 
 ---
 

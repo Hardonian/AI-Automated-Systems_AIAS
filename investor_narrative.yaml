@@ -276,16 +276,23 @@ qa_bank:
   team_execution:
     - question: "Who's on the team?"
       answer: |
-        [Founders to fill in: Technical founder, business founder, advisors]. 
-        We have deep expertise in Canadian SMB market, automation, and AI. 
-        Technical founder built the MVP. Business founder has GTM experience.
+        Scott Hardie, Founder & CEO. Based in Toronto, Canada. Technical founder 
+        with full-stack development expertise, product builder, and e-commerce 
+        experience (Hardonian Industries, Hardonia.store). Built comprehensive 
+        platform (not just MVP) with multi-tenant architecture, enterprise security, 
+        and 20+ integrations. Deep understanding of Canadian SMB market pain points 
+        from running e-commerce business. Active developer with 40+ public repositories.
 
     - question: "Why are you the right team to build this?"
       answer: |
-        [Founders to fill in: Relevant experience, domain expertise, execution 
-        track record]. We understand Canadian SMB pain (lived experience), have 
-        technical skills to build, and GTM experience to sell. We're scrappy, 
-        focused, and ready to execute.
+        Scott has lived the problem: Ran Shopify store (Hardonia.store) and spent 
+        15+ hours/week on manual order processing. Tried Zapier but it cost $50/month 
+        for just 5 automations. Built solution for own business, then productized 
+        it. Strong technical execution: Built comprehensive platform with visual 
+        workflow builder, AI agents, and Canadian-first integrations. Canadian 
+        market expertise: Based in Toronto, understands Canadian SMB needs, PIPEDA 
+        compliance, and Canadian integrations (Shopify, Wave, RBC, TD). We're 
+        scrappy, focused, and ready to execute.
 
     - question: "What's your 12-month plan?"
       answer: |

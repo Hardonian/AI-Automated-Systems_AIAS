@@ -1,10 +1,12 @@
 {
   "buildCommand": "bash vercel-build.sh",
-  "devCommand": "pnpm run dev",
+  "devCommand": "cd apps/web && pnpm run dev",
   "installCommand": "export ENABLE_EXPERIMENTAL_COREPACK=1 && corepack enable && corepack prepare pnpm@8.15.0 --activate && pnpm install --frozen-lockfile",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "framework": "nextjs",
   "regions": ["iad1"],
-  "outputDirectory": ".next",
+  "outputDirectory": "apps/web/.next",
   "env": {
     "NODE_ENV": "production",
     "PRISMA_CLIENT_ENGINE_TYPE": "wasm",
@@ -25,7 +27,7 @@
     "autoJobCancelation": true,
     "silent": false
   },
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- apps/web/ && git diff --quiet HEAD^ HEAD -- vercel.json vercel-build.sh .vercelignore pnpm-lock.yaml",
   "preview": {
     "automaticDeployment": true
   },

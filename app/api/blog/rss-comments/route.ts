@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { data: savedComment, error: saveError } = await supabase
+    const { data: _savedComment, error: saveError } = await supabase
       .from('blog_comments')
       .insert({
         post_slug: `rss-${itemId}`,

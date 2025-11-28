@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
 import { SystemError, formatError } from "@/lib/errors";
@@ -10,7 +10,7 @@ export const runtime = "nodejs"; // Use Node.js runtime for ioredis compatibilit
 export const dynamic = "force-dynamic";
 export const revalidate = 60; // Cache for 60 seconds
 
-interface MetricsResponse {
+interface _MetricsResponse {
   performance: {
     webVitals: Record<string, unknown>;
     supabase: Record<string, unknown>;
@@ -93,7 +93,7 @@ export const GET = createGETHandler(
         error instanceof Error ? error : new Error(String(error)),
         { details: error.message }
       );
-      const formatted = formatError(systemError);
+      const _formatted = formatError(systemError);
       throw systemError; // Let route handler catch and format
     }
     

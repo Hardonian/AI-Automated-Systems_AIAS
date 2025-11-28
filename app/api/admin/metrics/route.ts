@@ -21,10 +21,10 @@ export async function GET(request: NextRequest) {
     }
 
     const searchParams = request.nextUrl.searchParams;
-    const range = searchParams.get('range') || '1h';
+    const _range = searchParams.get('range') || '1h';
 
     // Get metrics from database (simplified - implement proper metrics collection)
-    const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+    const _supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
     // Mock metrics for now - in production, query from metrics table
     const metrics = {

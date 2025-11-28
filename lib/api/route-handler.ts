@@ -32,6 +32,8 @@ export interface RouteHandlerOptions {
     ttl?: number;
     tags?: string[];
   };
+  cacheable?: boolean; // Legacy alias for cache.enabled
+  cacheTTL?: number; // Legacy alias for cache.ttl
 }
 
 export interface RouteContext {
@@ -48,6 +50,15 @@ export function createRouteHandler(
   handler: (context: RouteContext) => Promise<NextResponse>,
   options: RouteHandlerOptions = {}
 ): (request: NextRequest) => Promise<NextResponse> {
+  // Convert legacy cacheable/cacheTTL to cache object
+  const normalizedOptions: RouteHandlerOptions = { ...options };
+  if (options.cacheable !== undefined && !options.cache) {
+    normalizedOptions.cache = {
+      enabled: options.cacheable,
+      ttl: options.cacheTTL,
+    };
+  }
+  
   return async (request: NextRequest): Promise<NextResponse> => {
     const startTime = Date.now();
     
@@ -72,10 +83,10 @@ export function createRouteHandler(
     
     try {
       // Check request size
-      if (options.maxBodySize) {
+      if (normalizedOptions.maxBodySize) {
         const body = await getBodyText();
-        if (!checkRequestSize(body, options.maxBodySize)) {
-          const error = new ValidationError('Request too large', undefined, { maxSize: options.maxBodySize });
+        if (!checkRequestSize(body, normalizedOptions.maxBodySize)) {
+          const error = new ValidationError('Request too large', undefined, { maxSize: normalizedOptions.maxBodySize });
           const formatted = formatError(error);
           return NextResponse.json(
             { error: formatted.message },
@@ -86,14 +97,14 @@ export function createRouteHandler(
       
       // Get user ID from request
       let userId: string | null = null;
-      if (options.requireAuth || options.requireTenant) {
+      if (normalizedOptions.requireAuth || normalizedOptions.requireTenant) {
         const authHeader = request.headers.get('authorization');
         if (authHeader?.startsWith('Bearer ')) {
           // Extract user ID from token (simplified - should verify JWT)
           userId = request.headers.get('x-user-id') || null;
         }
         
-        if (options.requireAuth && !userId) {
+        if (normalizedOptions.requireAuth && !userId) {
           const error = new AuthenticationError('Authentication required');
           const formatted = formatError(error);
           return NextResponse.json(
@@ -105,7 +116,7 @@ export function createRouteHandler(
       
       // Get tenant ID
       let tenantId: string | null = null;
-      if (options.requireTenant) {
+      if (normalizedOptions.requireTenant) {
         tenantId = request.headers.get('x-tenant-id') || null;
         
         if (!tenantId) {
@@ -122,7 +133,7 @@ export function createRouteHandler(
           const access = await tenantIsolation.validateAccess(
             tenantId,
             userId,
-            options.requiredPermission
+            normalizedOptions.requiredPermission
           );
           
           if (!access.allowed) {
@@ -137,10 +148,10 @@ export function createRouteHandler(
       }
       
       // Validate request body
-      if (options.validateBody) {
+      if (normalizedOptions.validateBody) {
         try {
           const body = await getBodyJson();
-          const validation = validateInput(options.validateBody, body);
+          const validation = validateInput(normalizedOptions.validateBody, body);
           
           if (!validation.success) {
             const error = new ValidationError(
@@ -168,16 +179,16 @@ export function createRouteHandler(
       }
       
       // Check cache
-      if (options.cache?.enabled) {
+      if (normalizedOptions.cache?.enabled) {
         const bodyText = await getBodyText();
         const cacheKey = `api:${request.nextUrl.pathname}:${bodyText}`;
         const cache = getCacheService();
         if (cache) {
-          const cached = await cache.get(cacheKey, {
-            ttl: options.cache.ttl,
-            tenantId: tenantId || undefined,
-            tags: options.cache.tags,
-          });
+        const cached = await cache.get(cacheKey, {
+          ttl: normalizedOptions.cache.ttl,
+          tenantId: tenantId || undefined,
+          tags: normalizedOptions.cache.tags,
+        });
           
           if (cached) {
             const response = NextResponse.json(cached);
@@ -205,7 +216,7 @@ export function createRouteHandler(
       response.headers.set('X-Response-Time', `${Date.now() - startTime}ms`);
       
       // Cache response if enabled
-      if (options.cache?.enabled && response.status === 200) {
+      if (normalizedOptions.cache?.enabled && response.status === 200) {
         try {
           const body = await response.clone().json();
           const bodyText = await getBodyText();
@@ -213,9 +224,9 @@ export function createRouteHandler(
           const cache = getCacheService();
           if (cache) {
             await cache.set(cacheKey, body, {
-              ttl: options.cache.ttl,
+              ttl: normalizedOptions.cache.ttl,
               tenantId: tenantId || undefined,
-              tags: options.cache.tags,
+              tags: normalizedOptions.cache.tags,
             });
           }
           response.headers.set('X-Cache', 'MISS');

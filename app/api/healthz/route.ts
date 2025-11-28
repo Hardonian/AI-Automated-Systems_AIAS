@@ -118,7 +118,7 @@ export async function GET(): Promise<NextResponse<HealthCheckResult>> {
     (async () => {
       const authStart = Date.now();
       const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
-      const { data: { users }, error } = await supabaseService.auth.admin.listUsers({
+      const { data: { users: _users }, error } = await supabaseService.auth.admin.listUsers({
         page: 1,
         perPage: 1,
       });
@@ -133,7 +133,7 @@ export async function GET(): Promise<NextResponse<HealthCheckResult>> {
     (async () => {
       try {
         const supabaseAnon = createClient(supabaseUrl, supabaseAnonKey);
-        const { data, error } = await supabaseAnon
+        const { data: _data, error } = await supabaseAnon
           .from("api_logs")
           .select("*")
           .limit(1);

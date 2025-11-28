@@ -8,7 +8,7 @@ import { recordError } from "@/lib/utils/error-detection";
 import { retry } from "@/lib/utils/retry";
 import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
 import { z } from "zod";
-import { useCanaryCheckout, recordCheckoutRequest, getCheckoutHandler } from "@/lib/canary/checkout";
+import { recordCheckoutRequest, getCheckoutHandler } from "@/lib/canary/checkout";
 
 // Load environment variables dynamically - no hardcoded values
 const stripe = new Stripe(env.stripe.secretKey!, {
@@ -20,13 +20,13 @@ const supabase = createClient(
   env.supabase.serviceRoleKey
 );
 
-const XP_MULTIPLIERS: Record<string, number> = {
+const _XP_MULTIPLIERS: Record<string, number> = {
   starter: 1.25,
   pro: 1.5,
   enterprise: 2.0,
 };
 
-interface CheckoutResponse {
+interface _CheckoutResponse {
   sessionId?: string;
   error?: string;
 }

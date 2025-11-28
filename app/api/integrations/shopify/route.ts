@@ -149,7 +149,7 @@ export async function GET(request: NextRequest) {
       message: "Redirect user to this URL to authorize",
     });
   } catch (error) {
-    logger.error("Error initiating Shopify OAuth", { error });
+    logger.error("Error initiating Shopify OAuth", error instanceof Error ? error : undefined);
     return NextResponse.json(
       { error: "Failed to initiate OAuth flow" },
       { status: 500 }

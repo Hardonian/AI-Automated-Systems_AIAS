@@ -159,7 +159,7 @@ export const POST = createPOSTHandler(async (context) => {
   }
   
   // Parse and validate body (already validated by route handler)
-  const body = await request.json();
+  const _body = await request.json();
   
   // Create workflow (example - would use actual Supabase client)
   // const workflow = await createWorkflow(tenantId, body);

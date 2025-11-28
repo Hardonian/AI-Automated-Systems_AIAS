@@ -23,7 +23,7 @@ const feedbackSchema = z.object({
   comment: z.string().max(1000).optional(),
 });
 
-export const POST = createValidatedRoute(feedbackSchema, async (data, req: NextRequest): Promise<NextResponse<FeedbackResponse>> => {
+export const POST = createValidatedRoute(feedbackSchema, async (data, _req: NextRequest): Promise<NextResponse<FeedbackResponse>> => {
   try {
     // Load environment variables dynamically
     const { env } = await import("@/lib/env");

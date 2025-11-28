@@ -71,7 +71,7 @@ export const GET = createGETHandler(
         integrationData.business_id = businessId;
       }
 
-      const { data: integration, error: dbError } = await supabase
+      const { data: _integration, error: dbError } = await supabase
         .from("integrations")
         .upsert(integrationData, {
           onConflict: "user_id,provider",
@@ -107,7 +107,7 @@ export const GET = createGETHandler(
         `${request.nextUrl.origin}/onboarding/create-workflow?integration=${provider}`
       );
     } catch (error) {
-      logger.error("Error handling OAuth callback", { error, provider });
+      logger.error("Error handling OAuth callback", error instanceof Error ? error : undefined, { provider });
       return NextResponse.json(
         { error: "Failed to handle OAuth callback" },
         { status: 500 }

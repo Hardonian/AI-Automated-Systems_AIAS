@@ -208,7 +208,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse<WebhookRespons
 
       case "customer.subscription.updated":
       case "customer.subscription.deleted": {
-        const subscription = event.data.object as Stripe.Subscription;
+        const _subscription = event.data.object as Stripe.Subscription;
         // Handle subscription updates/cancellations
         break;
       }

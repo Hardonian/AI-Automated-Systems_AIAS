@@ -6,7 +6,7 @@
 import { NextResponse } from 'next/server';
 import { createGETHandler } from '@/lib/api/route-handler';
 
-import openApiSpecRaw from "@/../docs/openapi-complete.yaml?raw";
+import _openApiSpecRaw from "@/../docs/openapi-complete.yaml?raw";
 
 // Use inline spec instead of parsing YAML
 const openApiSpec = {

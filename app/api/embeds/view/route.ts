@@ -3,7 +3,7 @@ import { createServerClient } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
   try {
-    const supabase = await createServerClient();
+    const _supabase = await createServerClient();
     const body = await request.json();
     const { embedId, workflowId } = body;
 

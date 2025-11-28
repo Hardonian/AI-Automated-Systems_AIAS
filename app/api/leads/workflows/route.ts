@@ -25,7 +25,7 @@ export const POST = createPOSTHandler(
     const body = createWorkflowSchema.parse(await context.request.json());
     const tenantId = context.tenantId || undefined;
     
-    const workflowId = await autopilotWorkflowService.createWorkflow(body, tenantId);
+    const workflowId = await autopilotWorkflowService.createWorkflow(body as any, tenantId);
     
     return NextResponse.json({ success: true, workflowId });
   },

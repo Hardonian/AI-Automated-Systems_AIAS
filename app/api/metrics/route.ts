@@ -10,29 +10,29 @@ export const runtime = "nodejs"; // Use Node.js runtime for ioredis compatibilit
 export const dynamic = "force-dynamic";
 export const revalidate = 60; // Cache for 60 seconds
 
-interface _MetricsResponse {
-  performance: {
-    webVitals: Record<string, unknown>;
-    supabase: Record<string, unknown>;
-    expo: Record<string, unknown>;
-    ci: Record<string, unknown>;
-  };
-  status: "healthy" | "degraded" | "error";
-  lastUpdated: string;
-  sources: Record<string, {
-    latest: Record<string, unknown>;
-    count: number;
-    lastUpdated: string;
-  }>;
-  trends?: Record<string, {
-    average: number;
-    min: number;
-    max: number;
-    count: number;
-  }>;
-  error?: string;
-  message?: string;
-}
+// interface MetricsResponse {
+//   performance: {
+//     webVitals: Record<string, unknown>;
+//     supabase: Record<string, unknown>;
+//     expo: Record<string, unknown>;
+//     ci: Record<string, unknown>;
+//   };
+//   status: "healthy" | "degraded" | "error";
+//   lastUpdated: string;
+//   sources: Record<string, {
+//     latest: Record<string, unknown>;
+//     count: number;
+//     lastUpdated: string;
+//   }>;
+//   trends?: Record<string, {
+//     average: number;
+//     min: number;
+//     max: number;
+//     count: number;
+//   }>;
+//   error?: string;
+//   message?: string;
+// }
 
 /**
  * Performance Metrics API Endpoint
@@ -42,7 +42,7 @@ interface _MetricsResponse {
  */
 export const GET = createGETHandler(
   async (context) => {
-    const { request } = context;
+    // const { request } = context; // Will be used for query params
     const startTime = Date.now();
     
     const supabase = createClient(

@@ -78,9 +78,10 @@ export const POST = createValidatedRoute(feedbackSchema, async (data, _req: Next
     );
 
     if (error) {
+      const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
       const systemError = new SystemError(
         "Failed to submit feedback",
-        error instanceof Error ? error : new Error(String(error)),
+        errorObj,
         { userId, rating }
       );
       recordError(systemError, { endpoint: '/api/feedback', userId, rating });

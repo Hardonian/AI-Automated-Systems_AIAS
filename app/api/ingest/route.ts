@@ -8,10 +8,10 @@ import { z } from "zod";
 
 export const runtime = "edge";
 
-interface IngestResponse {
-  success?: boolean;
-  error?: string;
-}
+// interface IngestResponse {
+//   success?: boolean;
+//   error?: string;
+// }
 
 /**
  * Event ingestion schema

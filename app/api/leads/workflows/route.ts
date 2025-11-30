@@ -7,6 +7,7 @@ import { createPOSTHandler, createGETHandler } from '@/lib/api/route-handler';
 import { autopilotWorkflowService } from '@/lib/lead-generation/autopilot-workflows';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
+import { env } from '@/lib/env';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,16 +43,10 @@ export const GET = createGETHandler(
     const tenantId = context.tenantId || undefined;
     
     // Get workflows for tenant
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    
-    if (!supabaseUrl || !supabaseKey) {
-      throw new Error('Missing required Supabase environment variables');
-    }
-    
+    // CTO Mode: Use centralized env module - never destructure process.env
     const { data: workflows } = await createClient(
-      supabaseUrl,
-      supabaseKey
+      env.supabase.url,
+      env.supabase.serviceRoleKey
     )
       .from('autopilot_workflows')
       .select('*')

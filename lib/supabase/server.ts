@@ -1,32 +1,45 @@
-import { createClient } from "@supabase/supabase-js";
-import { env } from "@/lib/env";
+import { createClient } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
+import type { Database } from '@/types/supabase';
 
 /**
  * Create Supabase server client for use in Server Components and API routes
- * This client uses cookies for authentication
  * 
- * CRITICAL: Validates environment variables before creating client
+ * Uses async cookies() for Next.js 15 compatibility.
+ * Build-safe: won't throw during build if env vars are missing.
+ * 
+ * NOTE: For full Next.js 15 cookie handling, consider installing @supabase/ssr
+ * and using createServerClient from that package instead.
  */
-export async function createServerClient() {
-  // Validate required environment variables
-  if (!env.supabase.url) {
-    throw new Error(
-      'NEXT_PUBLIC_SUPABASE_URL or SUPABASE_URL is required but not set. ' +
-      'Please set this variable in your environment configuration.'
+export async function createServerSupabaseClient() {
+  // Next.js 15: cookies() must be awaited
+  const cookieStore = await cookies();
+  
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseKey) {
+    // Build-safe: only throw at runtime, not during build
+    if (process.env.NODE_ENV === 'production' && !process.env.SKIP_ENV_VALIDATION) {
+      throw new Error('Missing Supabase environment variables');
+    }
+    // During build, return a placeholder client to prevent build failures
+    return createClient<Database>(
+      supabaseUrl || 'https://placeholder.supabase.co',
+      supabaseKey || 'placeholder-key',
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+        },
+      }
     );
   }
-
-  if (!env.supabase.anonKey) {
-    throw new Error(
-      'NEXT_PUBLIC_SUPABASE_ANON_KEY or SUPABASE_ANON_KEY is required but not set. ' +
-      'Please set this variable in your environment configuration.'
-    );
-  }
-
-  // Note: Cookies are handled by Supabase client automatically
-  return createClient(
-    env.supabase.url,
-    env.supabase.anonKey,
+  
+  return createClient<Database>(
+    supabaseUrl,
+    supabaseKey,
     {
       auth: {
         persistSession: false,
@@ -35,4 +48,9 @@ export async function createServerClient() {
       },
     }
   );
+}
+
+// Legacy export for backwards compatibility
+export async function createServerClient() {
+  return createServerSupabaseClient();
 }

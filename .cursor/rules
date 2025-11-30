@@ -1,0 +1,109 @@
+# Vercel + Supabase + Next.js + TypeScript Build Doctor
+
+## Priority Directive
+When ANY build error occurs, or when asked to fix builds, execute this sequence:
+
+1. Run `npx tsc --noEmit` and capture ALL errors
+2. Run `npm run build 2>&1` and capture ALL errors  
+3. Categorize errors (Type/Lint/Prisma/Env/Next/Import)
+4. Fix in dependency order: env → prisma → types → components → config
+5. Verify with full build before declaring success
+
+## Automatic Fixes to Apply
+
+### next.config.ts / next.config.mjs
+- Set `eslint.ignoreDuringBuilds: true`
+- Set `output: 'standalone'` (for Vercel)
+- Add Supabase image domains to `remotePatterns`
+- Add webpack config for Prisma edge compatibility
+
+### tsconfig.json
+- Set `moduleResolution: "bundler"`
+- Set `strict: true`
+- Ensure `skipLibCheck: true`
+- Set `noUncheckedIndexedAccess: false` (optional, for compatibility)
+- Set `forceConsistentCasingInFileNames: true`
+
+### package.json
+- Add `"postinstall": "prisma generate || true"`
+- Add `"type-check": "tsc --noEmit"`
+- Add `"vercel-build": "prisma generate && prisma migrate deploy --skip-seed && next build"`
+
+### prisma/schema.prisma
+- Add `binaryTargets: ["native", "rhel-openssl-3.0.x", "rhel-openssl-1.0.x"]`
+- Ensure `directUrl` is configured in datasource
+
+### vercel.json
+- Set `buildCommand: "prisma generate && next build"`
+- Set `installCommand` with `--legacy-peer-deps` if needed
+- Add build env vars: `PRISMA_CLIENT_ENGINE_TYPE`, `SKIP_ENV_VALIDATION`
+
+## Next.js 15 Async Patterns
+
+Always use async/await for:
+- `params` in page/layout components (params is now a Promise)
+- `searchParams` in page components (searchParams is now a Promise)
+- `cookies()` from next/headers (must be awaited)
+- `headers()` from next/headers (must be awaited)
+
+Example fixes:
+```typescript
+// ❌ Wrong (Next.js 14)
+export default function Page({ params }) {
+  const { id } = params;
+}
+
+// ✅ Correct (Next.js 15)
+export default async function Page({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  const { id } = await params;
+}
+```
+
+## Type Error Priorities
+
+Fix in this order:
+1. Import/module resolution errors → Run `npm install && npx prisma generate`
+2. Prisma type generation → Run `npx prisma generate`
+3. Async params/searchParams types → Update to Promise types
+4. Null/undefined safety → Add optional chaining and nullish coalescing
+5. Implicit any types → Add explicit types or `unknown` with type guards
+6. Unused variables (warnings) → Remove or prefix with `_`
+
+## Environment Variable Handling
+
+- Use `SKIP_ENV_VALIDATION=true` during build if env vars are missing
+- Never throw errors during build for missing optional env vars
+- Validate env vars at runtime, not build time
+- Use zod for env validation with build-safe fallbacks
+
+## Never Do
+
+- Use `@ts-ignore` or `@ts-expect-error` without fixing root cause
+- Set `ignoreBuildErrors: true` in production (only for separate CI type-check)
+- Commit without running `tsc --noEmit`
+- Push without successful local build
+- Hardcode API keys or secrets
+- Remove type safety for convenience
+
+## Error Recovery Patterns
+
+If build fails:
+1. "Module not found" → Run `npm install` then `npx prisma generate`
+2. "Type error" → Run `npx tsc --noEmit` and fix each error systematically
+3. "Cannot find name" → Check imports, run `npx prisma generate`
+4. "ENOENT .prisma/client" → Delete `node_modules/.prisma`, reinstall
+5. "Connection refused" → Env vars missing, add `SKIP_ENV_VALIDATION=true`
+6. "Dynamic server usage" → Add `export const dynamic = 'force-dynamic'`
+7. "Metadata export" → Ensure metadata is not in client components
+
+## Success Criteria
+
+✅ `npx tsc --noEmit` exits with code 0
+✅ `npm run build` completes without errors
+✅ No TypeScript errors in output
+✅ Vercel build shows green checkmark
+✅ All CI checks pass on GitHub

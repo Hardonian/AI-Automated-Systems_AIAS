@@ -8,9 +8,10 @@
       "SKIP_ENV_VALIDATION": "1"
     }
   },
-  "buildCommand": "cd apps/web && prisma generate --schema=./prisma/schema.prisma && cd ../.. && next build",
+  "buildCommand": "prisma generate --schema=./prisma/schema.prisma && next build",
   "cleanUrls": true,
   "devCommand": "pnpm run dev",
+  "rootDirectory": "apps/web",
   "env": {
     "ENABLE_EXPERIMENTAL_COREPACK": "1",
     "NEXT_TELEMETRY_DISABLED": "1",

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@hookform/resolvers':
+        specifier: ^3.3.2
+        version: 3.10.0(react-hook-form@7.65.0)
       '@octokit/rest':
         specifier: ^20.0.2
         version: 20.1.2
@@ -685,6 +688,9 @@ importers:
 
   packages/lib:
     dependencies:
+      '@ai-consultancy/config':
+        specifier: workspace:*
+        version: link:../config
       '@anthropic-ai/sdk':
         specifier: ^0.9.1
         version: 0.9.1
@@ -742,6 +748,10 @@ importers:
       zod:
         specifier: ^3.22.4
         version: 3.25.76
+    devDependencies:
+      '@types/bcryptjs':
+        specifier: ^2.4.6
+        version: 2.4.6
 
 packages:
 

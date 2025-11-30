@@ -105,7 +105,7 @@
     "dev": "next dev",
     "build": "turbo run build",
     "build:next": "next build",
-    "postinstall": "patch-package && cd apps/web && prisma generate || true",
+    "postinstall": "patch-package --error-on-fail=false && cd apps/web && prisma generate || true",
     "type-check": "tsc --noEmit",
     "vercel-build": "cd apps/web && prisma generate && prisma migrate deploy --skip-seed && cd ../.. && next build",
     "build:analyze": "ANALYZE=true vite build",
@@ -258,7 +258,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.8.2",
     "@lhci/cli": "^0.13.0",
-    "@opentelemetry/api": "^1.8.0",
+    "@opentelemetry/api": "^1.7.0",
     "@opentelemetry/auto-instrumentations-node": "^0.47.0",
     "@opentelemetry/exporter-metrics-otlp-http": "^0.47.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.47.0",

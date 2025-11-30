@@ -117,7 +117,7 @@
 ### Current Traction:
 - **Product-Market Fit Indicators**:
   - ✅ 10 qualitative ICP interviews completed
-  - ✅ 5 Letters of Intent (LOIs) secured
+  - ✅ 5 Letters of Intent (LOIs) secured ($61K ARR in LOIs)
   - ✅ 2 paid pilot contracts ($5K MRR)
   - ✅ 40% trial-to-paid conversion rate
   - ✅ <5 minute Time-to-Value (TTV)
@@ -127,11 +127,15 @@
   - *"Deployed our first automation in 3 minutes"* - Operations Manager
   - *"Finally, AI that works out of the box"* - CTO, Mid-Market SaaS
 
-- **Metrics**:
-  - Waitlist: 250+ sign-ups
-  - Active Beta Users: 45
-  - NPS Score: 68
-  - Activation Rate: 65%
+- **Metrics** (Update with real data):
+  - Waitlist: [XXX] sign-ups (Target: 250+)
+  - Active Beta Users: [XX] (Target: 45+)
+  - NPS Score: [XX] (Target: 68+)
+  - Activation Rate: [XX]% (Target: 65%+)
+  - Trial-to-Paid Conversion: [XX]% (Target: 40%+)
+  - Time-to-Value: [X] minutes (Target: <5 minutes)
+  - Monthly Churn: [X]% (Target: <5%)
+  - Net Revenue Retention: [XXX]% (Target: >110%)
 
 - **Visual**: Traction timeline, user testimonials, key metrics dashboard
 
@@ -204,13 +208,15 @@
 ### Key Financial Metrics:
 
 **Year 1 (Post-Seed)**:
-- MRR: $0 → $50K
-- ARR: $600K
-- Customers: 150
-- CAC: $500
-- LTV: $4,200
-- LTV:CAC: 8.4:1
-- Gross Margin: 75%
+- MRR: $0 → $50K (Update: Current MRR $[XXX]K)
+- ARR: $600K (Update: Current ARR $[XXX]K)
+- Customers: 150 (Update: Current customers [XXX])
+- CAC: $500 (Update: Current CAC $[XXX])
+- LTV: $4,200 (Update: Current LTV $[XXX])
+- LTV:CAC: 8.4:1 (Update: Current ratio [X.X]:1)
+- Gross Margin: 75% (Update: Current margin [XX]%)
+- Monthly Churn: 4% (Update: Current churn [X]%)
+- Net Revenue Retention: 110% (Update: Current NRR [XXX]%)
 
 **Year 2**:
 - MRR: $50K → $200K
@@ -220,6 +226,8 @@
 - LTV: $4,500
 - LTV:CAC: 11.25:1
 - Gross Margin: 78%
+- Monthly Churn: 3.5%
+- Net Revenue Retention: 115%
 
 **Year 3 (Series A Target)**:
 - MRR: $200K → $833K
@@ -229,6 +237,8 @@
 - LTV: $5,000
 - LTV:CAC: 14.3:1
 - Gross Margin: 80%
+- Monthly Churn: 3%
+- Net Revenue Retention: 120%
 
 ### Unit Economics:
 - **Customer Acquisition Cost (CAC)**: $350-$500
@@ -270,9 +280,18 @@
    - Buffer for unexpected costs
 
 ### 18-Month Milestones:
-- **Month 6**: $25K MRR, 100 customers
+- **Month 6**: $25K MRR, 100 customers (Update: Current $[XXX]K MRR, [XXX] customers)
 - **Month 12**: $100K MRR, 400 customers
 - **Month 18**: $250K MRR, 1,000 customers (Series A ready)
+
+### Progress Tracking:
+- **Current Status** (Update monthly):
+  - MRR: $[XXX]K (Target: $[XXX]K)
+  - Customers: [XXX] (Target: [XXX])
+  - CAC: $[XXX] (Target: $[XXX])
+  - LTV:CAC: [X.X]:1 (Target: >8:1)
+  - Churn: [X]% (Target: <5%)
+  - NRR: [XXX]% (Target: >110%)
 
 - **Visual**: Fund allocation pie chart, milestone timeline
 
@@ -382,11 +401,16 @@
   - Strategic investors (Shopify, Stripe ecosystem)
 
 ### Series A Milestones (18 Months):
-- **Revenue**: $250K MRR ($3M ARR run-rate)
-- **Customers**: 1,000+ paying customers
-- **Unit Economics**: LTV:CAC >10:1, NRR >110%
-- **Product**: Enterprise-ready platform
-- **Team**: 25+ employees
+- **Revenue**: $250K MRR ($3M ARR run-rate) (Current: $[XXX]K MRR)
+- **Customers**: 1,000+ paying customers (Current: [XXX] customers)
+- **Unit Economics**: LTV:CAC >10:1, NRR >110% (Current: [X.X]:1, [XXX]%)
+- **Product**: Enterprise-ready platform (Current: [Status])
+- **Team**: 25+ employees (Current: [X] employees)
+
+### Milestone Progress (Update Monthly):
+- [ ] Month 6: $25K MRR, 100 customers (Status: [ ] On Track / [ ] Behind / [ ] Ahead)
+- [ ] Month 12: $100K MRR, 400 customers (Status: [ ] On Track / [ ] Behind / [ ] Ahead)
+- [ ] Month 18: $250K MRR, 1,000 customers (Status: [ ] On Track / [ ] Behind / [ ] Ahead)
 
 ### Why Now:
 - ✅ Product-market fit validated

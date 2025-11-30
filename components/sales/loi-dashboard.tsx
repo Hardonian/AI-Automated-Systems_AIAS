@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { LOIForm } from "./loi-form";
 
 interface LOI {
   id: string;
@@ -101,6 +102,11 @@ export function LOIDashboard() {
 
   return (
     <div className="space-y-6">
+      {/* Action Button */}
+      <div className="flex justify-end">
+        <LOIForm onSuccess={fetchLOIs} />
+      </div>
+
       {/* Summary Cards */}
       {summary && (
         <div className="grid gap-4 md:grid-cols-4">

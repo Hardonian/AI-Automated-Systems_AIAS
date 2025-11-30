@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  engineType      = env("PRISMA_CLIENT_ENGINE_TYPE")
+  engineType      = "library"
   binaryTargets   = ["native", "rhel-openssl-3.0.x", "rhel-openssl-1.0.x"]
   previewFeatures = ["driverAdapters"]
 }

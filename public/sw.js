@@ -31,8 +31,10 @@ function isAllowedOrigin(url) {
     const urlObj = new URL(url);
     return ALLOWED_ORIGINS.some(origin => {
       if (origin.includes('*')) {
-        const pattern = origin.replace(/\*/g, '.*');
-        return new RegExp(`^${pattern}`).test(urlObj.origin);
+        // Escape literal dots first, then replace * with .* for regex matching
+        // Using $ anchor to ensure exact match to end of string
+        const pattern = origin.replace(/\./g, '\\.').replace(/\*/g, '.*');
+        return new RegExp(`^${pattern}$`).test(urlObj.origin);
       }
       return urlObj.origin === origin;
     });

@@ -58,7 +58,7 @@ export function OnboardingWizard() {
   const steps: Step[] = [
     {
       id: "welcome",
-      title: "Welcome to AIAS Platform",
+      title: "Welcome to AI Automated Systems",
       description: "Get your first automation running in under 5 minutes",
       estimatedTime: 30, // 30 seconds
       component: <WelcomeStep onNext={() => goToNext()} />,
@@ -273,7 +273,7 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
     <div className="space-y-6">
       <div className="text-center">
         <Sparkles className="h-16 w-16 text-primary mx-auto mb-4" />
-        <h3 className="text-2xl font-bold mb-2">Welcome to AIAS Platform!</h3>
+        <h3 className="text-2xl font-bold mb-2">Welcome to AI Automated Systems!</h3>
         <p className="text-muted-foreground">
           Get your first automation running in under 5 minutes. No credit card required.
         </p>

@@ -1,10 +1,10 @@
 /**
- * Secure Service Worker for AIAS Platform PWA
+ * Secure Service Worker for AI Automated Systems PWA
  * Implements security best practices, caching strategies, and offline support
  */
 
 const CACHE_VERSION = 'v2';
-const CACHE_NAME = `aias-platform-${CACHE_VERSION}`;
+const CACHE_NAME = `aias-${CACHE_VERSION}`;
 const OFFLINE_PAGE = '/offline';
 const API_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 

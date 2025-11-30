@@ -18,7 +18,7 @@ export async function sendEmail({ to, subject, html, from }: EmailOptions) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: from || process.env.RESEND_FROM_EMAIL || "AIAS <noreply@aias-platform.com>",
+      from: from || process.env.RESEND_FROM_EMAIL || "AI Automated Systems <support@aiautomatedsystems.ca>",
       to,
       subject,
       html,

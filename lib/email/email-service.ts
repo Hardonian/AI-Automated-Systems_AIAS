@@ -41,8 +41,8 @@ class EmailService {
       this.provider = 'smtp';
     }
 
-    this.fromEmail = env.email?.fromEmail || 'noreply@aias-platform.com';
-    this.fromName = env.email?.fromName || 'AIAS Platform';
+    this.fromEmail = env.email?.fromEmail || 'inquiries@aiautomatedsystems.ca';
+    this.fromName = env.email?.fromName || 'AI Automated Systems';
   }
 
   /**

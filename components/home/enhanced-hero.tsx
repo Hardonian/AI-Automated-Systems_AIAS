@@ -97,7 +97,7 @@ export function EnhancedHero() {
           className="inline-flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 rounded-full bg-gradient-to-r from-primary/20 via-primary/10 to-accent/20 text-primary text-sm md:text-base font-bold border-2 border-primary/30 shadow-xl backdrop-blur-md"
         >
           <Sparkles className="h-4 w-4 md:h-5 md:w-5 animate-pulse" aria-hidden="true" />
-          <span>Custom AI Platforms Built by AIAS Consultancy</span>
+          <span>Custom AI Platforms Built by AI Automated Systems</span>
         </motion.div>
         
         {/* Main headline - mobile responsive */}
@@ -192,7 +192,7 @@ export function EnhancedHero() {
             asChild
           >
             <Link href="/signup" aria-label="Start your 14-day free trial - no credit card required">
-              Try AIAS Platform Free
+              Try AI Automated Systems Free
             </Link>
           </Button>
         </motion.div>

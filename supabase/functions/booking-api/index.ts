@@ -187,7 +187,7 @@ serve(async (req) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: 'AIAS Platform <noreply@aias-platform.com>',
+            from: 'AI Automated Systems <inquiries@aiautomatedsystems.ca>',
             to: bookingData.email,
             subject: `Booking Confirmed: ${bookingData.meeting_type} Meeting on ${bookingData.requested_date}`,
             html: `
@@ -212,7 +212,7 @@ serve(async (req) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: { email: 'noreply@aias-platform.com', name: 'AIAS Platform' },
+            from: { email: 'inquiries@aiautomatedsystems.ca', name: 'AI Automated Systems' },
             personalizations: [{
               to: [{ email: bookingData.email }],
               subject: `Booking Confirmed: ${bookingData.meeting_type} Meeting`,

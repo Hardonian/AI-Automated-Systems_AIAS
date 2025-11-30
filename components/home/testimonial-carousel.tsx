@@ -11,7 +11,7 @@ const testimonials = [
     company: "TechRetail Inc.",
     image: "👩‍💼",
     rating: 5,
-    text: "AIAS Platform saved us 15+ hours per week. Our team can now focus on strategy instead of manual data entry. The ROI was visible within the first month.",
+    text: "AI Automated Systems saved us 15+ hours per week. Our team can now focus on strategy instead of manual data entry. The ROI was visible within the first month.",
     location: "Toronto, Canada",
   },
   {
@@ -76,7 +76,7 @@ export function TestimonialCarousel() {
             Loved by Businesses Worldwide
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            See what our clients say about working with AIAS Platform
+            See what our clients say about working with AI Automated Systems
           </p>
           <div className="mt-4 flex items-center justify-center gap-2">
             <div className="flex items-center gap-1">

@@ -19,7 +19,7 @@ export const About = () => {
       social: {
         github: "https://github.com/aias-founder",
         linkedin: "https://linkedin.com/in/aias-founder",
-        email: "founder@aias.com"
+        email: "inquiries@aiautomatedsystems.ca"
       },
       avatar: "👨‍💻"
     },

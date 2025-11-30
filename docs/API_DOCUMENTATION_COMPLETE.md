@@ -97,7 +97,7 @@ pnpm run test:api:watch    # Watch mode
 
 **Access:**
 - Development: `http://localhost:3000/api/swagger`
-- Production: `https://aias-platform.com/api/swagger`
+- Production: `https://aiautomatedsystems.ca/api/swagger`
 
 ---
 

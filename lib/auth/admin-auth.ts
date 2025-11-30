@@ -34,7 +34,7 @@ export async function verifyAdminAuth(
         return {
           user: {
             id: "dev-admin",
-            email: "admin@aias-platform.com",
+            email: "admin@aiautomatedsystems.ca",
             role: "admin",
           },
           error: null,

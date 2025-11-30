@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { LTVCACDashboard } from "@/components/metrics/ltv-cac-dashboard";
 
 export const metadata: Metadata = {
-  title: "LTV:CAC Dashboard — Admin | AIAS Platform",
+  title: "LTV:CAC Dashboard — Admin | AI Automated Systems",
   description: "Real-time unit economics dashboard for investor review",
 };
 

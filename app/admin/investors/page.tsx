@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { InvestorDashboard } from "@/components/sales/investor-dashboard";
 
 export const metadata: Metadata = {
-  title: "Investor Outreach — Admin | AIAS Platform",
+  title: "Investor Outreach — Admin | AI Automated Systems",
   description: "Track investor meetings and deal status for Seed Round fundraising",
 };
 

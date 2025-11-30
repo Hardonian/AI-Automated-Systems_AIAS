@@ -208,8 +208,8 @@
 **Headline:** Let's build the future of Canadian business automation
 
 **Contact:**
-- Email: [founder@aias-platform.com]
-- Website: [https://aias-platform.com]
+- Email: [inquiries@aiautomatedsystems.ca]
+- Website: [https://aiautomatedsystems.ca]
 - Demo: [https://your-app.vercel.app]
 
 **Visual:** QR code to demo or website

@@ -55,7 +55,7 @@ async function seedDemo() {
         avatar: null,
       },
       {
-        email: "admin@aias-platform.com",
+        email: "admin@aiautomatedsystems.ca",
         name: "Admin User",
         avatar: null,
       },

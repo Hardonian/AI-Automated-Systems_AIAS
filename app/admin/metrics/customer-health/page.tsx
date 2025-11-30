@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { CustomerHealthDashboardEnhanced } from "@/components/metrics/customer-health-dashboard-enhanced";
 
 export const metadata: Metadata = {
-  title: "Customer Health Dashboard — Admin | AIAS Platform",
+  title: "Customer Health Dashboard — Admin | AI Automated Systems",
   description: "Real-time customer health scores and retention metrics",
 };
 

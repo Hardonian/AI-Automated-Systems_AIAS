@@ -20,11 +20,11 @@ export function Footer() {
           >
             <div className="flex items-center gap-2 mb-4">
               <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" />
-              <h3 className="font-bold text-lg text-foreground">AIAS Platform</h3>
+              <h3 className="font-bold text-lg text-foreground">AI Automated Systems</h3>
             </div>
             <p className="text-sm mb-4 leading-relaxed">
-              Custom AI platforms, workflow automation systems, and intelligent agents. AIAS Consultancy builds complete solutions 
-              (like TokPulse and Hardonia Suite) while AIAS Platform powers business automation.
+              Custom AI platforms, workflow automation systems, and intelligent agents. AI Automated Systems builds complete solutions 
+              (like TokPulse and Hardonia Suite) while the AIAS Platform powers business automation for our SaaS customers.
             </p>
             <div className="flex flex-wrap gap-2 text-xs">
               <span className="px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">🚀 Custom Builds</span>
@@ -104,7 +104,7 @@ export function Footer() {
               { href: "/privacy", label: "Privacy" },
               { href: "/status", label: "Status" },
               { href: "/help", label: "Help" },
-              { href: "mailto:support@aias-platform.com", label: "Support" },
+              { href: "mailto:support@aiautomatedsystems.ca", label: "Support" },
             ].map((link) => (
               <Link
                 key={link.href}
@@ -138,7 +138,7 @@ export function Footer() {
             ))}
           </div>
           <div className="text-center text-xs text-muted-foreground">
-            © {new Date().getFullYear()} AIAS Consultancy / AI Automated Services. All rights reserved.
+            © {new Date().getFullYear()} AI Automated Systems. All rights reserved.
             <br />
             <span className="mt-2 inline-block">Built in Canada 🇨🇦 • Serving the World 🌍</span>
           </div>

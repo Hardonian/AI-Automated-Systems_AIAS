@@ -73,7 +73,7 @@ export function ConversionCTA() {
                   Start Saving 10+ Hours/Week Today
                 </h2>
                 <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-                  Join 2,000+ businesses worldwide automating with AIAS Platform. 
+                  Join 2,000+ businesses worldwide automating with AI Automated Systems. 
                   <span className="font-bold text-foreground"> No credit card required.</span> 14-day free trial. Cancel anytime.
                 </p>
               </div>

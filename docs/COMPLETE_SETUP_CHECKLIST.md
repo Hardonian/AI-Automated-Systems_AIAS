@@ -253,7 +253,7 @@ const handleCheckout = async (plan: Plan) => {
 
 **Founder Contact:**
 - Scott Hardie
-- Email: team@aias-platform.com
+- Email: inquiries@aiautomatedsystems.ca
 - LinkedIn: [scottrmhardie](https://www.linkedin.com/in/scottrmhardie)
 - GitHub: [shardie-github](https://github.com/shardie-github)
 

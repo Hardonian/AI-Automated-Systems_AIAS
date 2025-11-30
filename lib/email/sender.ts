@@ -35,7 +35,7 @@ export async function sendEmailViaResend(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: options.from || 'AIAS Platform <noreply@aias-platform.com>',
+        from: options.from || 'AI Automated Systems <inquiries@aiautomatedsystems.ca>',
         to: options.to,
         reply_to: options.replyTo,
         subject: options.subject,
@@ -77,7 +77,7 @@ export async function sendEmailViaSendGrid(
 ): Promise<{ id: string; message: string }> {
   try {
     const formData = new FormData();
-    formData.append('from', options.from || 'noreply@aias-platform.com');
+    formData.append('from', options.from || 'inquiries@aiautomatedsystems.ca');
     formData.append('to', options.to);
     if (options.replyTo) formData.append('reply_to', options.replyTo);
     formData.append('subject', options.subject);
@@ -129,7 +129,7 @@ export async function sendEmailViaMailgun(
 ): Promise<{ id: string; message: string }> {
   try {
     const formData = new FormData();
-    formData.append('from', options.from || `AIAS Platform <noreply@${domain}>`);
+    formData.append('from', options.from || `AI Automated Systems <inquiries@${domain}>`);
     formData.append('to', options.to);
     if (options.replyTo) formData.append('h:Reply-To', options.replyTo);
     formData.append('subject', options.subject);

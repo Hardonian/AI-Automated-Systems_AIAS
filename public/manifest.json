@@ -1,7 +1,7 @@
 {
-  "name": "AIAS Platform",
+  "name": "AI Automated Systems",
   "short_name": "AIAS",
-  "description": "Enterprise-grade AI consultancy platform with custom AI agents and workflow automation",
+  "description": "Enterprise-grade AI automation platform with custom AI agents and workflow automation",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

@@ -28,9 +28,9 @@
 - Strong technical execution (comprehensive platform built)
 
 **From `package.json`:**
-- **Author:** "AIAS Platform Team"
-- **Email:** team@aias-platform.com
-- **URL:** https://aias-platform.com
+- **Author:** "AI Automated Systems"
+- **Email:** inquiries@aiautomatedsystems.ca
+- **URL:** https://aiautomatedsystems.ca
 
 **From `VALUE_PROPOSITION.md`:**
 - Contains "Founder Vision" section:

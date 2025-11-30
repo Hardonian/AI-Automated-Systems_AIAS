@@ -494,7 +494,7 @@
 ## 🔒 VDR Access Instructions
 
 ### For Investors:
-1. Request access via: [vdr@aias-platform.com]
+1. Request access via: [inquiries@aiautomatedsystems.ca]
 2. Access granted within 24 hours
 3. VDR URL: [VDR Platform URL]
 4. Access duration: 30 days (extendable)

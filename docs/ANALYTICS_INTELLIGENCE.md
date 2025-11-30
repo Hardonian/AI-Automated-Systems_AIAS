@@ -419,7 +419,7 @@ $$ LANGUAGE plpgsql;
 
 ### Alert Channels
 - Slack (#alerts)
-- Email (team@aias-platform.com)
+- Email (inquiries@aiautomatedsystems.ca)
 - PagerDuty (critical only)
 - In-app notifications
 

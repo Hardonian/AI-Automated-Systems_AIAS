@@ -21,14 +21,14 @@ export function Header() {
           <Link 
             href="/" 
             className="font-bold text-xl flex items-center gap-2 hover:opacity-80 transition-opacity group"
-            aria-label="AIAS Platform - Home"
+            aria-label="AI Automated Systems - Home"
           >
             <Sparkles 
               className="h-5 w-5 text-primary group-hover:rotate-12 transition-transform" 
               aria-hidden="true"
             />
             <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              AIAS Platform
+              AI Automated Systems
             </span>
           </Link>
         </motion.div>

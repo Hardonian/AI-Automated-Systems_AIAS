@@ -69,7 +69,7 @@ export async function sendStreakReminderEmail(userId: string, days: number) {
           </p>
           
           <p style="margin: 0 0 15px 0;">
-            Don't let it break! Come back to AIAS Platform today to keep your streak going and earn more XP.
+            Don't let it break! Come back to AI Automated Systems today to keep your streak going and earn more XP.
           </p>
           
           <div style="text-align: center; margin: 30px 0;">
@@ -81,7 +81,7 @@ export async function sendStreakReminderEmail(userId: string, days: number) {
         </div>
         
         <p style="color: #666; font-size: 14px; text-align: center; margin-top: 30px;">
-          AIAS Platform Team
+          AI Automated Systems Team
         </p>
       </body>
     </html>
@@ -136,7 +136,7 @@ export async function sendChallengeNotificationEmail(userId: string, challengeTi
         </div>
         
         <p style="color: #666; font-size: 14px; text-align: center; margin-top: 30px;">
-          AIAS Platform Team
+          AI Automated Systems Team
         </p>
       </body>
     </html>
@@ -207,7 +207,7 @@ export async function sendMilestoneEmail(userId: string, milestoneType: string) 
         </div>
         
         <p style="color: #666; font-size: 14px; text-align: center; margin-top: 30px;">
-          AIAS Platform Team
+          AI Automated Systems Team
         </p>
       </body>
     </html>

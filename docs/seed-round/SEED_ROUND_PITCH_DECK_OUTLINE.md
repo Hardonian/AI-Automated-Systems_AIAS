@@ -427,9 +427,9 @@
 **"Let's build the future of business automation together"**
 
 - **Contact Information**:
-  - Email: [founder@aias-platform.com]
-  - Website: [aias-platform.com]
-  - Demo: [demo.aias-platform.com]
+  - Email: [inquiries@aiautomatedsystems.ca]
+  - Website: [aiautomatedsystems.ca]
+  - Demo: [demo.aiautomatedsystems.ca]
 
 - **Call to Action**:
   - "Schedule a demo"

@@ -26,7 +26,7 @@ Best,
 Scott Hardie  
 Founder & CEO  
 AIAS Platform  
-team@aias-platform.com | [Phone] | [LinkedIn: scottrmhardie](https://www.linkedin.com/in/scottrmhardie)
+inquiries@aiautomatedsystems.ca | [Phone] | [LinkedIn: scottrmhardie](https://www.linkedin.com/in/scottrmhardie)
 
 ---
 
@@ -55,7 +55,7 @@ Best,
 Scott Hardie  
 Founder & CEO  
 AIAS Platform  
-team@aias-platform.com | [Phone] | [LinkedIn: scottrmhardie](https://www.linkedin.com/in/scottrmhardie)
+inquiries@aiautomatedsystems.ca | [Phone] | [LinkedIn: scottrmhardie](https://www.linkedin.com/in/scottrmhardie)
 
 ---
 

@@ -24,7 +24,7 @@ export function Footer() {
             </div>
             <p className="text-sm mb-4 leading-relaxed">
               Custom AI platforms, workflow automation systems, and intelligent agents. AI Automated Systems builds complete solutions 
-              (like TokPulse and Hardonia Suite) while the AIAS Platform powers business automation.
+              (like TokPulse and Hardonia Suite) while the AIAS Platform powers business automation for our SaaS customers.
             </p>
             <div className="flex flex-wrap gap-2 text-xs">
               <span className="px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">🚀 Custom Builds</span>

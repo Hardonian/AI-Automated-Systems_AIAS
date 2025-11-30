@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
     const caseStudies: CaseStudy[] = [
       {
         id: "cs_001",
-        title: "How Acme E-commerce Saved 20 Hours Per Week with AIAS Platform",
+        title: "How Acme E-commerce Saved 20 Hours Per Week with AI Automated Systems",
         customer: "Acme E-commerce",
         industry: "E-commerce",
         companySize: "50-200 employees",

@@ -43,6 +43,9 @@ docs/
 
 # Scripts that shouldn't be deployed
 scripts/
+# But allow Vercel build scripts
+!scripts/vercel-ignore.sh
+!scripts/vercel-install.sh
 tests/
 *.test.ts
 *.test.tsx

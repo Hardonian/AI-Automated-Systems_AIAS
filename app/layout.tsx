@@ -73,11 +73,12 @@ export const metadata: Metadata = {
   classification: "Business Software",
   icons: [
     { rel: "icon", url: "/favicon.ico" },
-    { rel: "apple-touch-icon", url: "/apple-touch-icon.png", sizes: "180x180" },
-    { rel: "icon", type: "image/png", sizes: "32x32", url: "/favicon-32x32.png" },
-    { rel: "icon", type: "image/png", sizes: "16x16", url: "/favicon-16x16.png" },
+    // Note: Additional icon files can be added when available
+    // { rel: "apple-touch-icon", url: "/apple-touch-icon.png", sizes: "180x180" },
+    // { rel: "icon", type: "image/png", sizes: "32x32", url: "/favicon-32x32.png" },
+    // { rel: "icon", type: "image/png", sizes: "16x16", url: "/favicon-16x16.png" },
   ],
-  manifest: "/manifest.webmanifest",
+  manifest: "/manifest.json",
   metadataBase: new URL(siteUrl),
   alternates: {
     canonical: "/",
@@ -96,11 +97,11 @@ export const metadata: Metadata = {
     alternateLocale: ["en_CA"],
     images: [
       {
-        url: "/og-image.png",
+        url: "/placeholder.svg",
         width: 1200,
         height: 630,
         alt: "AI Automated Systems — Custom AI Platform Development",
-        type: "image/png",
+        type: "image/svg+xml",
       },
     ],
   },
@@ -110,7 +111,7 @@ export const metadata: Metadata = {
     description: "We build custom AI platforms — not integrations. See TokPulse and Hardonia Suite. From strategy to deployment.",
     creator: "@aias_platform",
     site: "@aias_platform",
-    images: ["/og-image.png"],
+    images: ["/placeholder.svg"],
   },
   robots: {
     index: true,

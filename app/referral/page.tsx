@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -210,10 +211,10 @@ export default function ReferralPage() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" asChild>
-            <a href="/signup">Sign Up to Get Started</a>
+            <Link href="/signup">Sign Up to Get Started</Link>
           </Button>
           <Button size="lg" variant="outline" asChild>
-            <a href="/signin">Sign In</a>
+            <Link href="/signin">Sign In</Link>
           </Button>
         </div>
       </div>

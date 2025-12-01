@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface StatusItem {
   service: string;
@@ -116,9 +117,9 @@ export default function Status() {
           <li>This status page</li>
           <li>Email notifications (for subscribed users)</li>
           <li>
-            <a href="/docs/trust/STATUS.md" className="text-primary hover:underline">
+            <Link href="/docs/trust/STATUS.md" className="text-primary hover:underline">
               Incident communication policy
-            </a>
+            </Link>
           </li>
         </ul>
         <p className="text-sm text-muted-foreground mt-4">

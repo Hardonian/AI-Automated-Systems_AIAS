@@ -1,0 +1,35 @@
+{
+  "date": "2025-12-01",
+  "leadTime": {
+    "current": 26,
+    "target": 12,
+    "unit": "hours"
+  },
+  "cycleTime": {
+    "current": 42,
+    "target": 30,
+    "unit": "minutes"
+  },
+  "failureRate": {
+    "ci": 5,
+    "build": 2,
+    "deploy": 1,
+    "unit": "percentage"
+  },
+  "mttr": {
+    "current": 0,
+    "target": 240,
+    "unit": "minutes"
+  },
+  "queueLengths": {
+    "review": 8,
+    "ci": 3,
+    "build": 0,
+    "deploy": 0
+  },
+  "reworkRate": {
+    "current": 18,
+    "target": 10,
+    "unit": "percentage"
+  }
+}

@@ -287,7 +287,7 @@
     "eslint-plugin-unused-imports": "^4.3.0",
     "globals": "^13.24.0",
     "husky": "^8.0.3",
-    "js-yaml": "^4.1.0",
+    "js-yaml": "^4.1.1",
     "knip": "^5.68.0",
     "license-checker": "^25.0.1",
     "lighthouse-ci": "^1.13.1",

@@ -188,12 +188,19 @@ npm run living-system:test-signup       # Test sign-up flow
    - Visit `/dashboard` to see all metrics
    - Includes health monitor and real-time feed
 
-## Support
+## Support & Contact
 
 For detailed information, see:
 - Implementation Guide: `docs/LIVING_SYSTEM_IMPLEMENTATION.md`
 - Data Flow: `docs/data-flow-diagram.md`
 - Positioning: `docs/positioning-clarity.md`
+
+**Official Website:** https://aiautomatedsystems.ca
+
+**Contact:**
+- **Help Center Support:** support@aiautomatedsystems.ca (for existing clients and technical support)
+- **Consulting & Inquiries:** inquiries@aiautomatedsystems.ca (for consulting, workflow services, and hiring)
+- **Feedback & Bug Reports:** scottrmhardie@gmail.com (for comments, feedback, bug reports, or general inquiries)
 
 ---
 

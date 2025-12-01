@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "@/src/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Activity, Radio } from "lucide-react";
-import type { Database } from "@/src/integrations/supabase/types";
 
 /**
  * Realtime Dashboard Component
@@ -20,77 +19,73 @@ export function RealtimeDashboard() {
   const [connectionError, setConnectionError] = useState<string | null>(null);
 
   useEffect(() => {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    // Use the existing supabase client from the integration
+    let channel: ReturnType<typeof supabase.channel> | null = null;
 
-    if (!supabaseUrl || !supabaseAnonKey) {
-      setConnectionError("Supabase configuration missing");
-      return;
+    try {
+      // Subscribe to activity_log changes
+      channel = supabase
+        .channel("activity-feed")
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "activity_log",
+          },
+          (payload) => {
+            if (payload.new) {
+              setActivities((prev) => [payload.new, ...prev].slice(0, 20));
+            }
+          }
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "posts",
+          },
+          () => {
+            // Post creation can trigger UI updates if needed
+          }
+        )
+        .subscribe((status) => {
+          if (status === "SUBSCRIBED") {
+            setIsConnected(true);
+            setConnectionError(null);
+          } else if (status === "CHANNEL_ERROR") {
+            setIsConnected(false);
+            setConnectionError("Subscription error");
+          } else if (status === "TIMED_OUT") {
+            setIsConnected(false);
+            setConnectionError("Connection timeout");
+          } else if (status === "CLOSED") {
+            setIsConnected(false);
+          }
+        });
+
+      // Load initial activities
+      supabase
+        .from("activity_log")
+        .select("activity_type, created_at, metadata, user_id")
+        .order("created_at", { ascending: false })
+        .limit(10)
+        .then(({ data, error }) => {
+          if (!error && data) {
+            setActivities(data);
+          }
+        });
+    } catch (error) {
+      setConnectionError("Failed to initialize realtime connection");
+      setIsConnected(false);
     }
-
-    const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
-
-    // Subscribe to activity_log changes
-    const channel = supabase
-      .channel("activity-feed")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "activity_log",
-        },
-        (payload) => {
-          console.log("New activity received:", payload);
-          setActivities((prev) => [payload.new, ...prev].slice(0, 20));
-        }
-      )
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "posts",
-        },
-        (payload) => {
-          console.log("New post received:", payload);
-          // You can add post-specific handling here
-        }
-      )
-      .subscribe((status) => {
-        if (status === "SUBSCRIBED") {
-          setIsConnected(true);
-          setConnectionError(null);
-          console.log("✅ Realtime subscription active");
-        } else if (status === "CHANNEL_ERROR") {
-          setIsConnected(false);
-          setConnectionError("Subscription error");
-          console.error("❌ Realtime subscription error");
-        } else if (status === "TIMED_OUT") {
-          setIsConnected(false);
-          setConnectionError("Connection timeout");
-          console.warn("⚠️ Realtime connection timeout");
-        } else if (status === "CLOSED") {
-          setIsConnected(false);
-          console.log("🔌 Realtime connection closed");
-        }
-      });
-
-    // Load initial activities
-    supabase
-      .from("activity_log")
-      .select("activity_type, created_at, metadata, user_id")
-      .order("created_at", { ascending: false })
-      .limit(10)
-      .then(({ data, error }) => {
-        if (!error && data) {
-          setActivities(data);
-        }
-      });
 
     // Cleanup on unmount
     return () => {
-      supabase.removeChannel(channel);
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
     };
   }, []);
 

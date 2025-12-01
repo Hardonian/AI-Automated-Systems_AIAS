@@ -198,10 +198,17 @@ If health check shows "needs_attention":
 2. Check if data exists in tables
 3. Verify SQL views are working correctly
 
-## Support
+## Support & Contact
 
 For issues or questions:
 - Review documentation in `/docs`
 - Check Supabase logs
 - Review Vercel function logs
 - Consult the data flow diagram in `docs/data-flow-diagram.md`
+
+**Official Website:** https://aiautomatedsystems.ca
+
+**Contact:**
+- **Help Center Support:** support@aiautomatedsystems.ca (for existing clients and technical support)
+- **Consulting & Inquiries:** inquiries@aiautomatedsystems.ca (for consulting, workflow services, and hiring)
+- **Feedback & Bug Reports:** scottrmhardie@gmail.com (for comments, feedback, bug reports, or general inquiries)

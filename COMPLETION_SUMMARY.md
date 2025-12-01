@@ -238,6 +238,15 @@ After setup, verify everything works:
 - ✅ Master setup automation
 - ✅ Documentation complete
 
+## Contact & Support
+
+**Official Website:** https://aiautomatedsystems.ca
+
+**Contact:**
+- **Help Center Support:** support@aiautomatedsystems.ca (for existing clients and technical support)
+- **Consulting & Inquiries:** inquiries@aiautomatedsystems.ca (for consulting, workflow services, and hiring)
+- **Feedback & Bug Reports:** scottrmhardie@gmail.com (for comments, feedback, bug reports, or general inquiries)
+
 ---
 
 **Implementation Date**: 2025-02-03  

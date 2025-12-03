@@ -7,6 +7,90 @@
       "env": "staging",
       "description": "Example canary flag for testing",
       "created": "2024-01-01T00:00:00Z"
+    },
+    "new_dashboard": {
+      "enabled": false,
+      "description": "New dashboard UI",
+      "rolloutType": "percentage",
+      "rolloutPercentage": 10,
+      "created": "2025-02-03T00:00:00Z"
+    },
+    "beta_sidebar": {
+      "enabled": false,
+      "description": "Beta sidebar navigation",
+      "rolloutType": "segment",
+      "rolloutSegments": ["beta", "internal"],
+      "created": "2025-02-03T00:00:00Z"
+    },
+    "checkout_v2": {
+      "enabled": false,
+      "description": "New checkout flow",
+      "rolloutType": "experiment",
+      "experimentKey": "checkout_flow_v2",
+      "created": "2025-02-03T00:00:00Z"
+    }
+  },
+  "experiments": {
+    "checkout_flow_v2": {
+      "key": "checkout_flow_v2",
+      "description": "A/B test for new checkout flow",
+      "enabled": false,
+      "startDate": "2025-02-03T00:00:00Z",
+      "endDate": "2025-03-03T00:00:00Z",
+      "variants": [
+        {
+          "name": "control",
+          "percentage": 50
+        },
+        {
+          "name": "variant_a",
+          "percentage": 25
+        },
+        {
+          "name": "variant_b",
+          "percentage": 25
+        }
+      ],
+      "primaryMetric": "checkout_completion_rate",
+      "created": "2025-02-03T00:00:00Z"
+    },
+    "onboarding_flow_v2": {
+      "key": "onboarding_flow_v2",
+      "description": "Test new onboarding flow",
+      "enabled": false,
+      "variants": [
+        {
+          "name": "control",
+          "percentage": 50
+        },
+        {
+          "name": "variant_a",
+          "percentage": 50
+        }
+      ],
+      "primaryMetric": "onboarding_completion_rate",
+      "created": "2025-02-03T00:00:00Z"
+    },
+    "dashboard_layout_test": {
+      "key": "dashboard_layout_test",
+      "description": "Test different dashboard layouts",
+      "enabled": false,
+      "variants": [
+        {
+          "name": "control",
+          "percentage": 33
+        },
+        {
+          "name": "layout_a",
+          "percentage": 33
+        },
+        {
+          "name": "layout_b",
+          "percentage": 34
+        }
+      ],
+      "primaryMetric": "engagement_time",
+      "created": "2025-02-03T00:00:00Z"
     }
   },
   "environments": {

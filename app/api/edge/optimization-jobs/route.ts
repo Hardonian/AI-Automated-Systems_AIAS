@@ -191,8 +191,23 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // TODO: Queue the optimization job for background processing
-    // This would integrate with your job queue system (e.g., Bull, BullMQ, etc.)
+    // Queue the optimization job for background processing
+    try {
+      const { queueOptimizationJob } = await import('@/lib/edge-ai/queue');
+      await queueOptimizationJob({
+        jobId: job.id,
+        userId: user.id,
+        modelId: validatedData.model_id,
+        deviceProfileId: validatedData.device_profile_id,
+        targetFormat: validatedData.target_format,
+        quantizationType: validatedData.quantization_type,
+        optimizationLevel: validatedData.optimization_level,
+        additionalConfig: validatedData.additional_config,
+      });
+    } catch (queueError) {
+      logger.warn('Failed to queue optimization job', { error: queueError, jobId: job.id });
+      // Don't fail the request, job can be queued manually later
+    }
 
     return NextResponse.json({ job }, { status: 201 });
   } catch (error) {

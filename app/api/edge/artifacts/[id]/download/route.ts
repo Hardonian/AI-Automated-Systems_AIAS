@@ -74,9 +74,16 @@ export async function GET(
       })
       .eq("id", id);
 
-    // TODO: Generate signed URL for file download from storage
-    // For now, return the file path and metadata
-    // In production, you'd generate a signed URL from your storage provider (S3, GCS, etc.)
+    // Generate signed URL for file download
+    const { getArtifactDownloadUrl } = await import('@/lib/edge-ai/storage');
+    const downloadResult = await getArtifactDownloadUrl(artifact.file_path, 3600); // 1 hour expiry
+
+    if (!downloadResult.success || !downloadResult.url) {
+      return NextResponse.json(
+        { error: 'Failed to generate download URL' },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       artifact: {
@@ -85,8 +92,8 @@ export async function GET(
         file_path: artifact.file_path,
         file_size_bytes: artifact.file_size_bytes,
         mime_type: artifact.mime_type,
-        // In production, include a signed download URL here
-        // download_url: await generateSignedUrl(artifact.file_path),
+        download_url: downloadResult.url,
+        expires_at: new Date(Date.now() + 3600 * 1000).toISOString(), // 1 hour from now
       },
     });
   } catch (error) {

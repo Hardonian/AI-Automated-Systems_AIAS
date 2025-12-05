@@ -209,7 +209,24 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // TODO: Queue the benchmark job for background processing
+    // Queue the benchmark job for background processing
+    try {
+      const { queueBenchmarkJob } = await import('@/lib/edge-ai/queue');
+      await queueBenchmarkJob({
+        benchmarkId: benchmark.id,
+        userId: user.id,
+        modelId: validatedData.model_id,
+        optimizationJobId: validatedData.optimization_job_id,
+        deviceProfileId: validatedData.device_profile_id,
+        batchSize: validatedData.batch_size || 1,
+        numIterations: validatedData.num_iterations || 100,
+        warmupIterations: validatedData.warmup_iterations || 10,
+        testDatasetPath: validatedData.test_dataset_path,
+      });
+    } catch (queueError) {
+      logger.warn('Failed to queue benchmark job', { error: queueError, benchmarkId: benchmark.id });
+      // Don't fail the request, job can be queued manually later
+    }
 
     return NextResponse.json({ benchmark }, { status: 201 });
   } catch (error) {

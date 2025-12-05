@@ -28,6 +28,30 @@
       "rolloutType": "experiment",
       "experimentKey": "checkout_flow_v2",
       "created": "2025-02-03T00:00:00Z"
+    },
+    "edge_ai_models": {
+      "enabled": true,
+      "description": "Edge AI model upload and management",
+      "created": "2025-01-31T00:00:00Z"
+    },
+    "edge_ai_optimization": {
+      "enabled": true,
+      "description": "Edge AI model optimization jobs",
+      "rolloutType": "percentage",
+      "rolloutPercentage": 100,
+      "created": "2025-01-31T00:00:00Z"
+    },
+    "edge_ai_benchmarking": {
+      "enabled": true,
+      "description": "Edge AI performance benchmarking",
+      "rolloutType": "percentage",
+      "rolloutPercentage": 100,
+      "created": "2025-01-31T00:00:00Z"
+    },
+    "edge_ai_artifacts": {
+      "enabled": true,
+      "description": "Edge AI artifact downloads and SDK exports",
+      "created": "2025-01-31T00:00:00Z"
     }
   },
   "experiments": {

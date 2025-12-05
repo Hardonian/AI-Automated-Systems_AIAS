@@ -16,7 +16,10 @@ Supabase Dashboard → Settings → API holds the canonical values for all Supab
 
 | Variable | Description | Where to Find |
 |----------|-------------|---------------|
-| `DATABASE_URL` | PostgreSQL connection string | Construct from service role key |
+| `DATABASE_URL` | PostgreSQL connection string | Construct from service role key (or use UpStash Postgres) |
+| `DIRECT_URL` | Direct PostgreSQL connection (for migrations) | Same as DATABASE_URL or UpStash Postgres direct URL |
+| `UPSTASH_POSTGRES_URL` | UpStash Postgres connection string (optional) | UpStash Console → Database → Connection String |
+| `UPSTASH_POSTGRES_DIRECT_URL` | UpStash Postgres direct connection (optional) | UpStash Console → Database → Direct Connection |
 | `SUPABASE_URL` | Your Supabase project URL | Settings → API → Project URL |
 | `SUPABASE_ANON_KEY` | Anonymous/public key | Settings → API → anon/public key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Service role key (bypasses RLS) | Settings → API → service_role key |
@@ -25,11 +28,22 @@ Supabase Dashboard → Settings → API holds the canonical values for all Supab
 
 ### Database URL Format
 
+#### Option 1: Supabase PostgreSQL
 ```
 postgresql://postgres:{SUPABASE_SERVICE_ROLE_KEY}@db.{SUPABASE_PROJECT_REF}.supabase.co:5432/postgres?sslmode=require
 ```
 
-**⚠️ Security Warning:** Never expose `SUPABASE_SERVICE_ROLE_KEY` to the client. It bypasses Row Level Security (RLS).
+#### Option 2: UpStash Postgres (Recommended for Prisma)
+```
+UPSTASH_POSTGRES_URL=postgresql://default:password@host.upstash.io:5432/defaultdb
+UPSTASH_POSTGRES_DIRECT_URL=postgresql://default:password@host.upstash.io:5432/defaultdb
+```
+
+**Note:** The system automatically uses `UPSTASH_POSTGRES_URL` if available, otherwise falls back to `DATABASE_URL`.
+
+**⚠️ Security Warning:** Never expose `SUPABASE_SERVICE_ROLE_KEY` or database credentials to the client. It bypasses Row Level Security (RLS).
+
+**📖 See Also:** [UpStash Postgres Setup Guide](./UPSTASH_POSTGRES_SETUP.md) for detailed configuration.
 
 ---
 

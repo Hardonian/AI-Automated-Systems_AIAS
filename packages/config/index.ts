@@ -9,8 +9,11 @@ const envSchema = z.object({
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
 
   // Database - Load dynamically from environment
+  // Supports UpStash Postgres or standard PostgreSQL
   DATABASE_URL: z.string().url().optional(),
   DIRECT_URL: z.string().url().optional(),
+  UPSTASH_POSTGRES_URL: z.string().url().optional(),
+  UPSTASH_POSTGRES_DIRECT_URL: z.string().url().optional(),
 
   // Supabase - Load dynamically from environment
   SUPABASE_URL: z.string().url().optional(),

@@ -85,9 +85,10 @@ export const env = {
   },
   
   // Database Configuration
+  // Supports UpStash Postgres (UPSTASH_POSTGRES_URL) or standard PostgreSQL (DATABASE_URL)
   database: {
-    url: getEnvVar('DATABASE_URL', true),
-    directUrl: getEnvVar('DIRECT_URL', false),
+    url: getEnvVar('UPSTASH_POSTGRES_URL', false) || getEnvVar('DATABASE_URL', true),
+    directUrl: getEnvVar('UPSTASH_POSTGRES_DIRECT_URL', false) || getEnvVar('DIRECT_URL', false),
   },
   
   // Application Configuration

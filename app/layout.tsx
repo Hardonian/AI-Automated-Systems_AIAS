@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
+import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -196,6 +197,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   {children}
                 </main>
                 <Footer />
+                <Analytics />
                 <EnhancedStickyCTA />
                 <Toaster />
                 <PWARegistration />

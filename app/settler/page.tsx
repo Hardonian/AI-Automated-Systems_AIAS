@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Building2, Zap, Shield, Globe, CheckCircle2, ArrowRight, Code, Database, Lock, TrendingUp } from "lucide-react";
 import { ServiceSchema } from "@/components/seo/structured-data";
 import { Badge } from "@/components/ui/badge";
+import { DashboardPreview } from "@/components/dashboard/dashboard-preview";
 
 export const metadata: Metadata = {
   title: "Settler — Enterprise Settlement & Payment Platform | AIAS Partner",
@@ -123,6 +124,29 @@ export default function SettlerPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Dashboard Preview Section */}
+        <section className="py-20 bg-muted/30">
+          <div className="container">
+            <div className="text-center mb-12 max-w-3xl mx-auto">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                Real-Time Analytics & Insights
+              </h2>
+              <p className="text-xl text-muted-foreground">
+                Get comprehensive visibility into your payment operations with our advanced dashboard.
+              </p>
+            </div>
+            <DashboardPreview
+              title="Settler Analytics Dashboard"
+              description="Transaction monitoring, settlement tracking, and performance metrics"
+              variant="settler"
+              onRequestPreview={() => {
+                // Scroll to demo CTA or open contact form
+                document.getElementById("demo-cta")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            />
           </div>
         </section>
 
@@ -252,7 +276,7 @@ export default function SettlerPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-br from-blue-600 to-purple-600 text-white">
+        <section id="demo-cta" className="py-20 bg-gradient-to-br from-blue-600 to-purple-600 text-white">
           <div className="container">
             <div className="max-w-3xl mx-auto text-center space-y-8">
               <h2 className="text-4xl md:text-5xl font-bold">

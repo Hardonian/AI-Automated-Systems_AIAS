@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Building2, ArrowRight, Zap, Shield, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { DashboardPreview } from "@/components/dashboard/dashboard-preview";
 
 export function SettlerShowcase() {
   return (
@@ -77,6 +78,18 @@ export function SettlerShowcase() {
             </CardContent>
           </Card>
         </motion.div>
+      </div>
+      
+      {/* Dashboard Preview */}
+      <div className="container mt-12">
+        <DashboardPreview
+          title="Settler Analytics Dashboard"
+          description="Request access to view live transaction analytics and settlement insights"
+          variant="settler"
+          onRequestPreview={() => {
+            window.location.href = "/settler#demo-cta";
+          }}
+        />
       </div>
     </section>
   );

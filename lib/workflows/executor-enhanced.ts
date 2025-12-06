@@ -8,13 +8,12 @@ import { env } from "@/lib/env";
 import { logger } from "@/lib/logging/structured-logger";
 import { track } from "@/lib/telemetry/track";
 import { getTemplate, validateTemplateConfig } from "./templates";
-import { RateLimiter } from "@/lib/performance/rate-limiter";
+import { rateLimiter } from "@/lib/performance/rate-limiter";
 import { CircuitBreaker } from "@/lib/resilience/circuit-breaker";
+import { ShopifyClient } from "@/lib/integrations/shopify-client";
+import { WaveClient } from "@/lib/integrations/wave-client";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
-
-// Initialize rate limiter
-const rateLimiter = new RateLimiter();
 
 // Circuit breakers for each integration
 const circuitBreakers = new Map<string, CircuitBreaker>();
@@ -58,9 +57,9 @@ export interface WorkflowAction {
 }
 
 /**
- * Check rate limits for user
+ * Check rate limits for user and track usage
  */
-async function checkRateLimit(userId: string, plan: string): Promise<boolean> {
+async function checkRateLimit(userId: string, plan: string): Promise<{ allowed: boolean; remaining: number }> {
   // Get plan limits
   const limits: Record<string, { monthly: number }> = {
     free: { monthly: 100 },
@@ -69,31 +68,72 @@ async function checkRateLimit(userId: string, plan: string): Promise<boolean> {
   };
 
   const limit = limits[plan]?.monthly || limits.free.monthly;
-  const key = `workflow:${userId}:${new Date().toISOString().slice(0, 7)}`; // Monthly key
+  const monthKey = new Date().toISOString().slice(0, 7); // YYYY-MM
+  const identifier = `${userId}:${monthKey}`;
 
   try {
-    const result = await rateLimiter.checkLimit(key, {
+    const result = await rateLimiter.checkRateLimit("workflows", identifier, {
       windowMs: 30 * 24 * 60 * 60 * 1000, // 30 days
       maxRequests: limit,
     });
+
+    // Track usage in database
+    await trackUsage(userId, plan, limit, result.remaining);
 
     if (!result.allowed) {
       logger.warn("Rate limit exceeded", {
         userId,
         plan,
         limit,
+        remaining: result.remaining,
         resetTime: new Date(result.resetTime).toISOString(),
       });
-      return false;
     }
 
-    return true;
+    return { allowed: result.allowed, remaining: result.remaining };
   } catch (error) {
-    // If rate limiting fails, allow the request (fail open)
+    // If rate limiting fails, allow the request (fail open) but log it
     logger.error("Rate limit check failed", error instanceof Error ? error : new Error(String(error)), {
       userId,
     });
-    return true;
+    return { allowed: true, remaining: limit };
+  }
+}
+
+/**
+ * Track automation usage in database
+ */
+async function trackUsage(userId: string, plan: string, limit: number, remaining: number): Promise<void> {
+  try {
+    const monthKey = new Date().toISOString().slice(0, 7);
+    const usageKey = `usage:${userId}:${monthKey}`;
+    const used = limit - remaining;
+
+    // Upsert usage record
+    const { error } = await supabase
+      .from("automation_usage")
+      .upsert(
+        {
+          id: usageKey,
+          user_id: userId,
+          plan,
+          month: monthKey,
+          limit,
+          used,
+          remaining,
+        },
+        {
+          onConflict: "id",
+        }
+      );
+
+    if (error) {
+      logger.warn("Failed to track usage", { error: error.message, userId });
+    } else {
+      logger.info("Usage tracked", { userId, plan, used, remaining, limit });
+    }
+  } catch (error) {
+    logger.warn("Failed to track usage", { error, userId });
   }
 }
 
@@ -116,19 +156,36 @@ export async function executeWorkflow(
 
   try {
     // Get user plan for rate limiting
-    const { data: userData } = await supabase
-      .from("profiles")
-      .select("plan")
-      .eq("id", userId)
+    // Check subscription_plans or user_subscriptions table
+    const { data: subscription } = await supabase
+      .from("user_subscriptions")
+      .select("plan_id, subscription_plans(tier)")
+      .eq("user_id", userId)
+      .eq("status", "active")
       .single();
 
-    const plan = (userData?.plan as string) || "free";
+    // Fallback to checking profiles or default to free
+    let plan = "free";
+    if (subscription?.subscription_plans?.tier) {
+      plan = subscription.subscription_plans.tier as string;
+    } else {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("plan")
+        .eq("id", userId)
+        .single();
+      plan = (profile?.plan as string) || "free";
+    }
+
+    // Normalize plan name
+    if (plan === "professional") plan = "pro";
+    if (plan === "starter" || plan === "standard") plan = "starter";
 
     // Check rate limits
-    const allowed = await checkRateLimit(userId, plan);
-    if (!allowed) {
+    const rateLimitResult = await checkRateLimit(userId, plan);
+    if (!rateLimitResult.allowed) {
       throw new Error(
-        `Monthly automation limit reached. Upgrade your plan or wait until next month. Current plan: ${plan}`
+        `Monthly automation limit reached (${rateLimitResult.remaining} remaining). Upgrade your plan or wait until next month. Current plan: ${plan}`
       );
     }
 
@@ -377,8 +434,7 @@ async function executeAction(
 }
 
 /**
- * Execute Shopify action with real API structure
- * NOTE: Requires SHOPIFY_ACCESS_TOKEN in integrationData
+ * Execute Shopify action with real API calls
  */
 async function executeShopifyAction(
   config: Record<string, unknown>,
@@ -388,47 +444,80 @@ async function executeShopifyAction(
   const shop = integrationData.shop as string;
   const accessToken = integrationData.access_token as string;
 
-  if (!accessToken) {
-    throw new Error("Shopify access token not found. Please reconnect your Shopify integration.");
+  if (!accessToken || !shop) {
+    throw new Error("Shopify credentials not found. Please reconnect your Shopify integration.");
   }
-
-  const shopifyUrl = `https://${shop}.myshopify.com/admin/api/2024-01`;
 
   logger.info("Executing Shopify action", { action, shop, config });
 
   try {
+    const client = new ShopifyClient({ shop, accessToken });
+
     switch (action) {
       case "get_orders":
         const date = (config.date as string) || "today";
-        const response = await fetch(`${shopifyUrl}/orders.json?status=any&created_at_min=${date}`, {
-          headers: {
-            "X-Shopify-Access-Token": accessToken,
-            "Content-Type": "application/json",
-          },
-        });
+        let ordersResponse;
 
-        if (!response.ok) {
-          throw new Error(`Shopify API error: ${response.status} ${response.statusText}`);
+        if (date === "today") {
+          ordersResponse = await client.getTodaysOrders();
+        } else {
+          ordersResponse = await client.getOrders({
+            status: "any",
+            created_at_min: date,
+          });
         }
 
-        const data = await response.json();
         return {
           success: true,
-          orders: data.orders || [],
-          count: data.orders?.length || 0,
+          orders: ordersResponse.orders || [],
+          count: ordersResponse.orders?.length || 0,
         };
 
-      case "send_email":
-        // Shopify doesn't have a direct email API, this would use their notification system
-        // For now, return success (this would need to be implemented via Shopify's notification API)
-        logger.warn("Shopify send_email action not fully implemented", { config });
+      case "get_order":
+        const orderId = config.orderId as number;
+        if (!orderId) {
+          throw new Error("Order ID is required for get_order action");
+        }
+        const orderResponse = await client.getOrder(orderId);
         return {
           success: true,
-          message: "Email notification queued (Shopify email API integration pending)",
+          order: orderResponse.order,
+        };
+
+      case "update_order":
+        const updateOrderId = config.orderId as number;
+        const updates = config.updates as Partial<unknown>;
+        if (!updateOrderId || !updates) {
+          throw new Error("Order ID and updates are required for update_order action");
+        }
+        const updatedOrder = await client.updateOrder(updateOrderId, updates as never);
+        return {
+          success: true,
+          order: updatedOrder.order,
+        };
+
+      case "send_notification":
+        const notificationOrderId = config.orderId as number;
+        if (!notificationOrderId) {
+          throw new Error("Order ID is required for send_notification action");
+        }
+        const notificationResult = await client.sendOrderNotification(notificationOrderId);
+        return {
+          success: notificationResult.success,
+          message: "Order notification sent via Shopify",
+        };
+
+      case "get_products":
+        const limit = (config.limit as number) || 50;
+        const productsResponse = await client.getProducts({ limit });
+        return {
+          success: true,
+          products: productsResponse.products || [],
+          count: productsResponse.products?.length || 0,
         };
 
       default:
-        throw new Error(`Unsupported Shopify action: ${action}`);
+        throw new Error(`Unsupported Shopify action: ${action}. Supported actions: get_orders, get_order, update_order, send_notification, get_products`);
     }
   } catch (error) {
     const errorObj: Error = error instanceof Error ? error : new Error(String(error));
@@ -438,8 +527,7 @@ async function executeShopifyAction(
 }
 
 /**
- * Execute Wave action with real API structure
- * NOTE: Requires WAVE_ACCESS_TOKEN in integrationData
+ * Execute Wave action with real API calls
  */
 async function executeWaveAction(
   config: Record<string, unknown>,
@@ -449,47 +537,80 @@ async function executeWaveAction(
   const businessId = integrationData.business_id as string;
   const accessToken = integrationData.access_token as string;
 
-  if (!accessToken) {
-    throw new Error("Wave access token not found. Please reconnect your Wave Accounting integration.");
+  if (!accessToken || !businessId) {
+    throw new Error("Wave credentials not found. Please reconnect your Wave Accounting integration.");
   }
-
-  const waveUrl = "https://api.waveapps.com";
 
   logger.info("Executing Wave action", { action, businessId, config });
 
   try {
+    const client = new WaveClient({ businessId, accessToken });
+
     switch (action) {
       case "get_revenue":
         const date = (config.date as string) || "today";
-        // Wave API endpoint for revenue (this is a placeholder - actual endpoint may differ)
-        const response = await fetch(`${waveUrl}/businesses/${businessId}/financials`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        });
+        let revenueData;
 
-        if (!response.ok) {
-          throw new Error(`Wave API error: ${response.status} ${response.statusText}`);
+        if (date === "today") {
+          revenueData = await client.getTodaysRevenue();
+        } else {
+          // Parse date range or use single date
+          const startDate = new Date(date);
+          const endDate = new Date(startDate);
+          endDate.setDate(endDate.getDate() + 1);
+          revenueData = await client.getRevenue({
+            startDate: startDate.toISOString(),
+            endDate: endDate.toISOString(),
+          });
         }
 
-        const data = await response.json();
         return {
           success: true,
-          revenue: data.revenue || 0,
-          date,
+          revenue: revenueData.revenue,
+          period: revenueData.period,
+        };
+
+      case "get_invoices":
+        const status = (config.status as string) || "ALL";
+        const limit = (config.limit as number) || 50;
+        const invoices = await client.getInvoices({ status, limit });
+        return {
+          success: true,
+          invoices,
+          count: invoices.length,
+        };
+
+      case "get_overdue_invoices":
+        const daysOverdue = (config.daysOverdue as number) || 7;
+        const overdueInvoices = await client.getOverdueInvoices(daysOverdue);
+        return {
+          success: true,
+          invoices: overdueInvoices,
+          count: overdueInvoices.length,
+          daysOverdue,
         };
 
       case "create_invoice":
-        // Wave invoice creation (placeholder - actual implementation needed)
-        logger.warn("Wave create_invoice action not fully implemented", { config });
+        const invoiceData = config.invoiceData as {
+          customerEmail: string;
+          customerName: string;
+          items: Array<{ description: string; quantity: number; unitPrice: number }>;
+          dueDate?: string;
+        };
+
+        if (!invoiceData || !invoiceData.customerEmail || !invoiceData.items) {
+          throw new Error("Invoice data is required: customerEmail, customerName, items");
+        }
+
+        const newInvoice = await client.createInvoice(invoiceData);
         return {
           success: true,
-          message: "Invoice creation queued (Wave invoice API integration pending)",
+          invoice: newInvoice,
+          message: "Invoice created successfully",
         };
 
       default:
-        throw new Error(`Unsupported Wave action: ${action}`);
+        throw new Error(`Unsupported Wave action: ${action}. Supported actions: get_revenue, get_invoices, get_overdue_invoices, create_invoice`);
     }
   } catch (error) {
     const errorObj: Error = error instanceof Error ? error : new Error(String(error));

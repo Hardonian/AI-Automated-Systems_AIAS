@@ -139,6 +139,22 @@ export default async function DashboardPage() {
       {/* Upgrade prompts and welcome dashboard */}
       <DashboardUpgradeSection userPlan={userPlan} isFirstVisit={isFirstVisit} />
       
+      {/* Quick Links */}
+      <div className="mb-6 flex gap-4">
+        <a
+          href="/dashboard/analytics"
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+        >
+          View Analytics
+        </a>
+        <a
+          href="/workflows"
+          className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors"
+        >
+          Manage Workflows
+        </a>
+      </div>
+      
       {/* Show empty state for first-time users */}
       {isFirstVisit && (
         <div className="mb-8">

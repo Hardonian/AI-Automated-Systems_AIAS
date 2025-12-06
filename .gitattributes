@@ -1,11 +1,27 @@
-# Git-crypt configuration for sensitive documents
-# Files in INVESTOR-RELATIONS-PRIVATE should be encrypted
-INVESTOR-RELATIONS-PRIVATE/** filter=git-crypt diff=git-crypt
-*.key filter=git-crypt diff=git-crypt
-*.pem filter=git-crypt diff=git-crypt
+# Git Attributes for git-crypt
+# Protect sensitive financial data
 
-# Planning and venture documents should be encrypted
-**/planning/** filter=git-crypt diff=git-crypt
-**/venture/** filter=git-crypt diff=git-crypt
-**/*planning*.md filter=git-crypt diff=git-crypt
-**/*venture*.md filter=git-crypt diff=git-crypt
+# Financial data directory - encrypted
+internal/private/financial/** filter=git-crypt diff=git-crypt
+internal/private/financial/** !filter !diff
+
+# AIAS-specific financial reports - encrypted
+internal/private/financial/aias/** filter=git-crypt diff=git-crypt
+internal/private/financial/aias/** !filter !diff
+
+# Financial data files
+*.financial filter=git-crypt diff=git-crypt
+*.financial !filter !diff
+
+# Accounting data
+*.accounting filter=git-crypt diff=git-crypt
+*.accounting !filter !diff
+
+# Sensitive reports
+internal/private/reports/** filter=git-crypt diff=git-crypt
+internal/private/reports/** !filter !diff
+
+# Keep admin tools visible (not encrypted)
+lib/admin/** !filter !diff
+app/admin/** !filter !diff
+components/admin/** !filter !diff

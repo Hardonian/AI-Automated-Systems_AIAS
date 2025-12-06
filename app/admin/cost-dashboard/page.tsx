@@ -2,11 +2,13 @@
  * Executive Cost Dashboard
  * 
  * Comprehensive dashboard for monitoring and managing infrastructure costs.
+ * Admin access required.
  */
 
 "use client";
 
 import { useEffect, useState } from "react";
+import { AdminLayout } from "@/components/admin/admin-layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -105,7 +107,8 @@ export default function CostDashboard() {
   );
 
   return (
-    <div className="container py-8 space-y-6">
+    <AdminLayout>
+      <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -393,6 +396,7 @@ export default function CostDashboard() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+    </AdminLayout>
   );
 }

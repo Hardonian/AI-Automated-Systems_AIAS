@@ -24,11 +24,62 @@ const nextConfig = {
     config.externals = config.externals || [];
     if (isServer) {
       config.externals.push('pg', 'pg-native', '@prisma/client', 'ioredis');
+    } else {
+      // Exclude server-only modules from client bundle
+      config.externals.push({
+        'canvas': 'commonjs canvas',
+        'jsdom': 'commonjs jsdom',
+        'isomorphic-dompurify': 'commonjs isomorphic-dompurify',
+      });
     }
     
     // Ignore server-only modules on client
     if (!isServer) {
       config.resolve.alias['@/lib/database/migrations'] = false;
+      // Exclude server-only DOMPurify module
+      config.resolve.alias['@/lib/utils/dompurify-server'] = false;
+      // Exclude native modules that can't run in browser
+      config.resolve.alias['canvas'] = false;
+      config.resolve.alias['jsdom'] = false;
+      // Prevent webpack from trying to bundle these
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        canvas: false,
+        jsdom: false,
+        'isomorphic-dompurify': false,
+      };
+      // Use IgnorePlugin to completely ignore these modules and their dependencies
+      const webpack = require('webpack');
+      config.plugins = config.plugins || [];
+      config.plugins.push(
+        new webpack.IgnorePlugin({
+          resourceRegExp: /^(canvas|jsdom|isomorphic-dompurify|agent-base|https-proxy-agent|http-proxy-agent)$/,
+        }),
+        new webpack.IgnorePlugin({
+          checkResource(resource, context) {
+            // Ignore net, tls, and other Node.js built-in modules
+            if (['net', 'tls', 'dns', 'fs', 'path', 'os', 'crypto'].includes(resource)) {
+              return true;
+            }
+            // Ignore jsdom and related packages
+            if (resource.includes('jsdom') || resource.includes('canvas') || resource.includes('isomorphic-dompurify')) {
+              return true;
+            }
+            return false;
+          },
+        })
+      );
+      // Add fallbacks for Node.js built-ins
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        net: false,
+        tls: false,
+        dns: false,
+        fs: false,
+        path: false,
+        os: false,
+        crypto: false,
+      };
     }
     
     // Optimize bundle splitting

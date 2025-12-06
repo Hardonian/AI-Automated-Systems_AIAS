@@ -13,33 +13,48 @@
 
 let DOMPurify: any = null;
 let isServer = typeof window === 'undefined';
+let dompurifyInitialized = false;
 
-// Try to load DOMPurify
-if (!isServer) {
+// Initialize client-side DOMPurify synchronously (only runs in browser)
+// This code only executes in the browser, so webpack won't try to bundle server modules
+if (typeof window !== 'undefined' && !isServer) {
   try {
-    // Client-side: use regular DOMPurify
+    // Client-side: use regular DOMPurify (synchronous require is OK here since we're in browser)
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     DOMPurify = require('dompurify');
+    dompurifyInitialized = true;
   } catch (e) {
     // DOMPurify not installed, will use fallback
   }
-} else {
+}
+
+// Lazy initialization function for server-side (prevents webpack from bundling server-only dependencies)
+async function initializeDOMPurify() {
+  if (dompurifyInitialized || !isServer) {
+    return;
+  }
+
   try {
-    // Server-side: use isomorphic-dompurify
-    const createDOMPurify = require('isomorphic-dompurify');
-    const { JSDOM } = require('jsdom');
-    const window = new JSDOM('').window;
-    DOMPurify = createDOMPurify(window);
+    // Server-side: use server-only module with dynamic import
+    // Use a string-based import to prevent webpack from statically analyzing it
+    const dompurifyServerModule = await import(
+      /* webpackIgnore: true */
+      './dompurify-server'
+    );
+    DOMPurify = dompurifyServerModule.createServerDOMPurify();
+    dompurifyInitialized = true;
   } catch (e) {
-    // isomorphic-dompurify not installed, will use fallback
+    // Server DOMPurify not available, will use fallback
   }
 }
 
 /**
  * Sanitize HTML using DOMPurify if available, otherwise use basic sanitization
+ * Synchronous version for client-side use
  */
 export function sanitizeHTML(html: string): string {
-  if (DOMPurify) {
-    // Use DOMPurify for robust sanitization
+  // For client-side, DOMPurify should already be initialized
+  if (!isServer && DOMPurify) {
     return DOMPurify.sanitize(html, {
       ALLOWED_TAGS: [
         'p', 'br', 'strong', 'em', 'u', 'b', 'i', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
@@ -53,7 +68,31 @@ export function sanitizeHTML(html: string): string {
     });
   }
 
-  // Fallback to basic sanitization (from sanitize-html.ts)
+  // For server-side or when DOMPurify is not available, use fallback
+  return sanitizeHTMLFallback(html);
+}
+
+/**
+ * Async version for server-side sanitization
+ * Use this in server components or API routes
+ */
+export async function sanitizeHTMLAsync(html: string): Promise<string> {
+  await initializeDOMPurify();
+  
+  if (DOMPurify) {
+    return DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: [
+        'p', 'br', 'strong', 'em', 'u', 'b', 'i', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'ul', 'ol', 'li', 'a', 'blockquote', 'code', 'pre', 'img',
+        'div', 'span', 'table', 'thead', 'tbody', 'tr', 'td', 'th', 'hr',
+      ],
+      ALLOWED_ATTR: [
+        'href', 'title', 'target', 'rel', 'src', 'alt', 'width', 'height', 'class',
+      ],
+      ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+    });
+  }
+
   return sanitizeHTMLFallback(html);
 }
 

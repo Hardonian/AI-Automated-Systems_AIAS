@@ -135,15 +135,13 @@ export function sanitizeHTMLServer(html: string): string {
  * NOTE: For better security, consider using DOMPurify via dompurify-wrapper.ts
  */
 export function sanitize(html: string): string {
-  // Try to use DOMPurify if available
-  try {
-    const { sanitizeHTML: dompurifySanitize } = require('./dompurify-wrapper');
-    return dompurifySanitize(html);
-  } catch (e) {
-    // Fallback to basic sanitization
-    if (typeof window === 'undefined') {
-      return sanitizeHTMLServer(html);
-    }
+  // For client-side, use browser-based sanitization only
+  // Don't try to use DOMPurify wrapper on client to avoid webpack analyzing server imports
+  if (typeof window !== 'undefined') {
     return sanitizeHTML(html);
   }
+  
+  // Server-side: use basic sanitization (DOMPurify requires async initialization)
+  // For server-side with DOMPurify, use sanitizeHTMLAsync from dompurify-wrapper
+  return sanitizeHTMLServer(html);
 }

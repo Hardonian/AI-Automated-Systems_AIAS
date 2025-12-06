@@ -26,12 +26,7 @@ interface UserData {
   interests?: string[];
 }
 
-interface EmailTemplate {
-  id: string;
-  subject: string;
-  html: string;
-  text?: string;
-}
+// EmailTemplate interface removed - not used in this file
 
 /**
  * Load email template from file system
@@ -118,7 +113,6 @@ export async function sendTrialWelcomeEmail(user: UserData): Promise<boolean> {
     }
     
     // Fallback to original implementation
-  try {
     const template = loadEmailTemplate('lifecycle/trial_welcome.html');
     const components = loadEmailComponents();
     

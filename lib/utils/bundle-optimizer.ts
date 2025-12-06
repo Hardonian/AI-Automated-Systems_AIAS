@@ -16,13 +16,15 @@ export function analyzeBundle(moduleName: string): void {
       const resources = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
       const moduleResources = resources.filter((r) => r.name.includes(moduleName));
       
-      console.group(`📦 Bundle Analysis: ${moduleName}`);
-      moduleResources.forEach((resource) => {
-        const size = (resource as any).transferSize || 0;
-        const duration = resource.duration;
-        console.log(`${resource.name}: ${(size / 1024).toFixed(2)}KB, ${duration.toFixed(2)}ms`);
+      // Use logger instead of console.log
+      const { logger } = require("@/lib/utils/logger");
+      logger.debug(`Bundle Analysis: ${moduleName}`, {
+        resources: moduleResources.map((resource) => ({
+          name: resource.name,
+          size: ((resource as any).transferSize || 0) / 1024,
+          duration: resource.duration,
+        })),
       });
-      console.groupEnd();
     }
   }
 }

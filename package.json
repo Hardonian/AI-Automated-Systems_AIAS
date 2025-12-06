@@ -1,6 +1,6 @@
 {
   "name": "aias-platform",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Enterprise-grade AI consultancy platform showcasing custom AI agents, workflow automation, and intelligent business solutions",
   "private": true,
   "license": "MIT",

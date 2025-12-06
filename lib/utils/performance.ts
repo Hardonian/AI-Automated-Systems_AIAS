@@ -131,6 +131,10 @@ export function analyzeBundleSize(moduleName: string): void {
     const moduleChunks = chunks.filter((chunk: any) =>
       chunk.includes(moduleName)
     );
-    console.log(`Bundle analysis for ${moduleName}:`, moduleChunks);
+    // Use logger instead of console.log
+    if (typeof window !== "undefined") {
+      const { logger } = require("@/lib/utils/logger");
+      logger.debug(`Bundle analysis for ${moduleName}`, { chunks: moduleChunks });
+    }
   }
 }

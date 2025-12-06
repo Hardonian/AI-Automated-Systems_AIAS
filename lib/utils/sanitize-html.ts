@@ -135,15 +135,22 @@ export function sanitizeHTMLServer(html: string): string {
  * NOTE: For better security, consider using DOMPurify via dompurify-wrapper.ts
  */
 export function sanitize(html: string): string {
-  // Try to use DOMPurify if available
-  try {
-    const { sanitizeHTML: dompurifySanitize } = require('./dompurify-wrapper');
-    return dompurifySanitize(html);
-  } catch (e) {
-    // Fallback to basic sanitization
-    if (typeof window === 'undefined') {
-      return sanitizeHTMLServer(html);
+  // For client-side, try to use DOMPurify if available
+  if (typeof window !== 'undefined') {
+    try {
+      // Import only the sanitizeHTML function to avoid bundling server code
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { sanitizeHTML: dompurifySanitize } = require('./dompurify-wrapper');
+      if (dompurifySanitize) {
+        return dompurifySanitize(html);
+      }
+    } catch (e) {
+      // DOMPurify not available, fall through to basic sanitization
     }
     return sanitizeHTML(html);
   }
+  
+  // Server-side: use basic sanitization (DOMPurify requires async initialization)
+  // For server-side with DOMPurify, use sanitizeHTMLAsync from dompurify-wrapper
+  return sanitizeHTMLServer(html);
 }

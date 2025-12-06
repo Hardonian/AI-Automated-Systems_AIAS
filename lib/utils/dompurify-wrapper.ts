@@ -15,31 +15,32 @@ let DOMPurify: any = null;
 let isServer = typeof window === 'undefined';
 let dompurifyInitialized = false;
 
-// Lazy initialization function to prevent webpack from bundling server-only dependencies
+// Initialize client-side DOMPurify synchronously (only runs in browser)
+if (!isServer) {
+  try {
+    // Client-side: use regular DOMPurify (synchronous require is OK here since we're in browser)
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    DOMPurify = require('dompurify');
+    dompurifyInitialized = true;
+  } catch (e) {
+    // DOMPurify not installed, will use fallback
+  }
+}
+
+// Lazy initialization function for server-side (prevents webpack from bundling server-only dependencies)
 async function initializeDOMPurify() {
-  if (dompurifyInitialized) {
+  if (dompurifyInitialized || !isServer) {
     return;
   }
 
-  if (!isServer) {
-    try {
-      // Client-side: use regular DOMPurify
-      DOMPurify = (await import('dompurify')).default;
-      dompurifyInitialized = true;
-    } catch (e) {
-      // DOMPurify not installed, will use fallback
-    }
-  } else {
-    try {
-      // Server-side: use isomorphic-dompurify (it handles jsdom internally)
-      // Use dynamic import to prevent webpack from bundling jsdom/canvas for client
-      const createDOMPurify = (await import('isomorphic-dompurify')).default;
-      // isomorphic-dompurify handles the jsdom setup internally, so we don't need to import it directly
-      DOMPurify = createDOMPurify;
-      dompurifyInitialized = true;
-    } catch (e) {
-      // isomorphic-dompurify not installed, will use fallback
-    }
+  try {
+    // Server-side: use server-only module with dynamic import
+    // This prevents webpack from bundling jsdom/canvas for client
+    const { createServerDOMPurify } = await import('./dompurify-server');
+    DOMPurify = createServerDOMPurify();
+    dompurifyInitialized = true;
+  } catch (e) {
+    // Server DOMPurify not available, will use fallback
   }
 }
 

@@ -24,11 +24,38 @@ const nextConfig = {
     config.externals = config.externals || [];
     if (isServer) {
       config.externals.push('pg', 'pg-native', '@prisma/client', 'ioredis');
+    } else {
+      // Exclude server-only modules from client bundle
+      config.externals.push({
+        'canvas': 'commonjs canvas',
+        'jsdom': 'commonjs jsdom',
+        'isomorphic-dompurify': 'commonjs isomorphic-dompurify',
+      });
     }
     
     // Ignore server-only modules on client
     if (!isServer) {
       config.resolve.alias['@/lib/database/migrations'] = false;
+      // Exclude server-only DOMPurify module
+      config.resolve.alias['@/lib/utils/dompurify-server'] = false;
+      // Exclude native modules that can't run in browser
+      config.resolve.alias['canvas'] = false;
+      config.resolve.alias['jsdom'] = false;
+      // Prevent webpack from trying to bundle these
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        canvas: false,
+        jsdom: false,
+        'isomorphic-dompurify': false,
+      };
+      // Use IgnorePlugin to completely ignore these modules
+      const webpack = require('webpack');
+      config.plugins = config.plugins || [];
+      config.plugins.push(
+        new webpack.IgnorePlugin({
+          resourceRegExp: /^(canvas|jsdom)$/,
+        })
+      );
     }
     
     // Optimize bundle splitting

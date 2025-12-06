@@ -87,6 +87,13 @@ export const POST = createPOSTHandler(
         app: "web",
       });
 
+      // Track funnel stage
+      const { trackIntegrationConnect } = await import("@/lib/analytics/funnel-tracking");
+      trackIntegrationConnect(user.id, "shopify", {
+        shop: validatedData.shop,
+        timestamp: new Date().toISOString(),
+      });
+
       // Check if user has activated (has integration + workflow)
       const { data: workflows } = await supabase
         .from("workflows")
@@ -142,7 +149,11 @@ export async function GET(request: NextRequest) {
     // 2. Redirect user to Shopify OAuth page
     // 3. Handle callback in POST endpoint above
 
-    const shopifyOAuthUrl = `https://${shop}.myshopify.com/admin/oauth/authorize?client_id=${process.env.SHOPIFY_CLIENT_ID}&scope=read_orders,write_orders&redirect_uri=${encodeURIComponent(process.env.SHOPIFY_REDIRECT_URI || "")}`;
+    // Get Shopify OAuth credentials from env (if available)
+    // Note: SHOPIFY_CLIENT_ID and SHOPIFY_REDIRECT_URI should be added to env.ts
+    const shopifyClientId = ""; // TODO: Add to env.ts
+    const shopifyRedirectUri = env.app.siteUrl ? `${env.app.siteUrl}/api/integrations/shopify/callback` : "";
+    const shopifyOAuthUrl = `https://${shop}.myshopify.com/admin/oauth/authorize?client_id=${shopifyClientId}&scope=read_orders,write_orders&redirect_uri=${encodeURIComponent(shopifyRedirectUri)}`;
 
     return NextResponse.json({
       oauth_url: shopifyOAuthUrl,

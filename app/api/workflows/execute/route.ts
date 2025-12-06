@@ -3,8 +3,9 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logging/structured-logger";
-import { createPOSTHandler } from "@/lib/api/route-handler";
-import { executeWorkflow } from "@/lib/workflows/executor";
+import { createPOSTHandler, handleApiError } from "@/lib/api/route-handler";
+import { executeWorkflow } from "@/lib/workflows/executor-enhanced";
+import { trackWorkflowExecute } from "@/lib/analytics/funnel-tracking";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -58,23 +59,26 @@ export const POST = createPOSTHandler(
         validatedData.trigger ? { ...validatedData.trigger, config: validatedData.trigger.config || {} } : undefined
       );
 
+      // Track workflow execution in funnel
+      if (execution.status === "completed") {
+        trackWorkflowExecute(user.id, validatedData.workflowId, {
+          executionId: execution.id,
+          timestamp: new Date().toISOString(),
+        });
+      }
+
       return NextResponse.json({
         execution,
         message: "Workflow executed successfully",
       });
     } catch (error) {
-      const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+      const errorObj = error instanceof Error ? error : new Error(String(error));
       logger.error("Workflow execution failed", errorObj, {
         workflowId: validatedData.workflowId,
         userId: user.id,
       });
 
-      return NextResponse.json(
-        {
-          error: error instanceof Error ? error.message : "Workflow execution failed",
-        },
-        { status: 500 }
-      );
+      return handleApiError(error, "Workflow execution failed");
     }
   },
   {

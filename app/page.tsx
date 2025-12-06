@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import { EnhancedHero } from "@/components/home/enhanced-hero";
+import { ContentDrivenHero } from "@/components/content/ContentDrivenHero";
 import { Features } from "@/components/home/features";
 import { StatsSection } from "@/components/home/stats-section";
 import { TrustBadges } from "@/components/home/trust-badges";
@@ -7,6 +8,7 @@ import { ConversionCTA } from "@/components/home/conversion-cta";
 import { SettlerShowcase } from "@/components/home/settler-showcase";
 import { SoftwareApplicationSchema } from "@/components/seo/structured-data";
 import { FAQSchema } from "@/components/seo/structured-data";
+import { loadAIASContent } from "@/lib/content/loader";
 
 // Lazy load below-the-fold components for performance
 const Testimonials = dynamic(() => import("@/components/home/testimonials").then(mod => ({ default: mod.Testimonials })), {
@@ -22,27 +24,31 @@ const FAQ = dynamic(() => import("@/components/home/faq").then(mod => ({ default
   loading: () => <div className="py-16" aria-label="Loading FAQ" />,
 });
 
-const homepageFAQs = [
-  {
-    question: "What's the difference between AI Automated Systems consulting and the AIAS Platform?",
-    answer: "AI Automated Systems builds custom AI platforms from scratch (like TokPulse and Hardonia Suite). We architect, develop, and deploy complete solutions tailored to your business. The AIAS Platform is our SaaS product for businesses that want ready-made automation tools.",
-  },
-  {
-    question: "How long does it take to build a custom AI platform?",
-    answer: "Typical timelines range from 8-16 weeks depending on complexity. We provide weekly demos throughout development so you see progress every step of the way.",
-  },
-  {
-    question: "Do you provide ongoing support after launch?",
-    answer: "Yes. We offer ongoing support packages including 24/7 monitoring, performance optimization, feature enhancements, bug fixes, and strategic consulting.",
-  },
-];
+export default async function HomePage() {
+  // Load content from config (with defaults if file doesn't exist)
+  let content;
+  try {
+    content = await loadAIASContent();
+  } catch (error) {
+    // Fallback to defaults if loading fails
+    console.error("Error loading content, using defaults:", error);
+    content = null;
+  }
 
-export default function HomePage() {
+  // Extract FAQs for schema
+  const homepageFAQs = content?.faq?.categories.flatMap(cat => 
+    cat.questions.map(q => ({ question: q.question, answer: q.answer }))
+  ) || [];
+
   return (
     <>
       <SoftwareApplicationSchema />
       <FAQSchema faqs={homepageFAQs} />
-      <EnhancedHero />
+      {content ? (
+        <ContentDrivenHero content={content.hero} />
+      ) : (
+        <EnhancedHero />
+      )}
       <StatsSection />
       <TrustBadges />
       <CaseStudyPreview />

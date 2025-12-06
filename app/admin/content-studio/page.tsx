@@ -1,0 +1,350 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2, Save, RefreshCw, Eye } from "lucide-react";
+import { ContentStudioHero } from "@/components/content-studio/ContentStudioHero";
+import { ContentStudioFeatures } from "@/components/content-studio/ContentStudioFeatures";
+import { ContentStudioTestimonials } from "@/components/content-studio/ContentStudioTestimonials";
+import { ContentStudioFAQ } from "@/components/content-studio/ContentStudioFAQ";
+import type { AIASContent, SettlerContent } from "@/lib/content/schemas";
+
+export default function ContentStudioPage() {
+  const { toast } = useToast();
+  const [authenticated, setAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [activeSite, setActiveSite] = useState<"aias" | "settler">("aias");
+  const [aiasContent, setAiasContent] = useState<AIASContent | null>(null);
+  const [settlerContent, setSettlerContent] = useState<SettlerContent | null>(
+    null
+  );
+  const [saving, setSaving] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
+
+  // Check if already authenticated (stored in sessionStorage)
+  useEffect(() => {
+    const auth = sessionStorage.getItem("content_studio_auth");
+    if (auth === "true") {
+      setAuthenticated(true);
+      loadContent();
+    }
+  }, []);
+
+  const handleLogin = async () => {
+    if (!password) {
+      toast({
+        title: "Password required",
+        description: "Please enter the access token",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Test authentication by trying to save (which will fail if wrong, but won't actually save without proper token)
+      // Or we can create a dedicated auth endpoint
+      const response = await fetch("/api/content/aias", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${password}`,
+        },
+        body: JSON.stringify({}), // Empty body just to test auth
+      });
+
+      // If we get 401, token is wrong
+      if (response.status === 401) {
+        throw new Error("Invalid token");
+      }
+
+      // Otherwise, assume it's valid (even if it fails for other reasons)
+      sessionStorage.setItem("content_studio_auth", "true");
+      sessionStorage.setItem("content_studio_token", password);
+      setAuthenticated(true);
+      await loadContent();
+      toast({
+        title: "Authenticated",
+        description: "You can now edit content",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Authentication failed",
+        description: error.message || "Invalid token. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadContent = async () => {
+    setLoading(true);
+    try {
+      const [aiasRes, settlerRes] = await Promise.all([
+        fetch("/api/content/aias"),
+        fetch("/api/content/settler"),
+      ]);
+
+      if (aiasRes.ok) {
+        const aias = await aiasRes.json();
+        setAiasContent(aias);
+      }
+
+      if (settlerRes.ok) {
+        const settler = await settlerRes.json();
+        setSettlerContent(settler);
+      }
+    } catch (error) {
+      toast({
+        title: "Error loading content",
+        description: "Failed to load content. Using defaults.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!hasChanges) {
+      toast({
+        title: "No changes",
+        description: "No changes to save",
+      });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const token = sessionStorage.getItem("content_studio_token") || password;
+      if (!token) {
+        throw new Error("Not authenticated");
+      }
+
+      const content = activeSite === "aias" ? aiasContent : settlerContent;
+      const endpoint = activeSite === "aias" ? "/api/content/aias" : "/api/content/settler";
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(content),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to save");
+      }
+
+      setHasChanges(false);
+      toast({
+        title: "Saved successfully",
+        description: "Your changes have been saved.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error saving",
+        description: error.message || "Failed to save content",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleReset = () => {
+    loadContent();
+    setHasChanges(false);
+    toast({
+      title: "Reset",
+      description: "Changes discarded",
+    });
+  };
+
+  if (!authenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Content Studio Access</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleLogin();
+                  }
+                }}
+                placeholder="Enter access token"
+              />
+            </div>
+            <Button
+              onClick={handleLogin}
+              disabled={loading || !password}
+              className="w-full"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Authenticating...
+                </>
+              ) : (
+                "Authenticate"
+              )}
+            </Button>
+            <p className="text-sm text-muted-foreground text-center">
+              Set CONTENT_STUDIO_TOKEN in your environment variables
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="border-b bg-card">
+        <div className="container py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">Content Studio</h1>
+              <p className="text-sm text-muted-foreground">
+                Edit content for AIAS and Settler.dev
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const url =
+                    activeSite === "aias" ? "/" : "/settler";
+                  window.open(url, "_blank");
+                }}
+              >
+                <Eye className="mr-2 h-4 w-4" />
+                Preview
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleReset}
+                disabled={!hasChanges || saving}
+              >
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Reset
+              </Button>
+              <Button
+                onClick={handleSave}
+                disabled={!hasChanges || saving}
+                size="sm"
+              >
+                {saving ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="mr-2 h-4 w-4" />
+                    Save Changes
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container py-6">
+        <Tabs value={activeSite} onValueChange={(v) => setActiveSite(v as "aias" | "settler")}>
+          <TabsList className="mb-6">
+            <TabsTrigger value="aias">AIAS Site</TabsTrigger>
+            <TabsTrigger value="settler">Settler.dev</TabsTrigger>
+          </TabsList>
+
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : (
+            <>
+              <TabsContent value="aias" className="space-y-6">
+                {aiasContent && (
+                  <>
+                    <ContentStudioHero
+                      content={aiasContent.hero}
+                      onChange={(hero) => {
+                        setAiasContent({ ...aiasContent, hero });
+                        setHasChanges(true);
+                      }}
+                    />
+                    <ContentStudioFeatures
+                      content={aiasContent.features}
+                      onChange={(features) => {
+                        setAiasContent({ ...aiasContent, features });
+                        setHasChanges(true);
+                      }}
+                    />
+                    <ContentStudioTestimonials
+                      content={aiasContent.testimonials}
+                      onChange={(testimonials) => {
+                        setAiasContent({ ...aiasContent, testimonials });
+                        setHasChanges(true);
+                      }}
+                    />
+                    <ContentStudioFAQ
+                      content={aiasContent.faq}
+                      onChange={(faq) => {
+                        setAiasContent({ ...aiasContent, faq });
+                        setHasChanges(true);
+                      }}
+                    />
+                  </>
+                )}
+              </TabsContent>
+
+              <TabsContent value="settler" className="space-y-6">
+                {settlerContent && (
+                  <>
+                    <ContentStudioHero
+                      content={settlerContent.hero}
+                      onChange={(hero) => {
+                        setSettlerContent({ ...settlerContent, hero });
+                        setHasChanges(true);
+                      }}
+                    />
+                    <ContentStudioFeatures
+                      content={settlerContent.features}
+                      onChange={(features) => {
+                        setSettlerContent({ ...settlerContent, features });
+                        setHasChanges(true);
+                      }}
+                    />
+                    {/* Add more Settler-specific editors as needed */}
+                  </>
+                )}
+              </TabsContent>
+            </>
+          )}
+        </Tabs>
+      </div>
+    </div>
+  );
+}

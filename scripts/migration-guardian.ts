@@ -9,7 +9,34 @@
 import { execSync } from 'child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, cpSync } from 'fs';
 import { join, dirname } from 'path';
-import { parse } from 'dotenv';
+// Parse .env files manually to avoid dependency on dotenv package
+function parseEnvFile(content: string): Record<string, string> {
+  const result: Record<string, string> = {};
+  const lines = content.split('\n');
+  
+  for (const line of lines) {
+    const trimmed = line.trim();
+    // Skip comments and empty lines
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    
+    // Match KEY=VALUE or KEY="VALUE" or KEY='VALUE'
+    const match = trimmed.match(/^([^=]+)=(.*)$/);
+    if (match) {
+      const key = match[1].trim();
+      let value = match[2].trim();
+      
+      // Remove quotes if present
+      if ((value.startsWith('"') && value.endsWith('"')) ||
+          (value.startsWith("'") && value.endsWith("'"))) {
+        value = value.slice(1, -1);
+      }
+      
+      result[key] = value;
+    }
+  }
+  
+  return result;
+}
 // Prisma Client will be imported dynamically after generation check
 
 // ============================================
@@ -147,7 +174,7 @@ function loadEnvConfig(): EnvConfig {
     const filePath = join(process.cwd(), file);
     try {
       const content = readFileSync(filePath, 'utf-8');
-      const parsed = parse(content);
+      const parsed = parseEnvFile(content);
       
       if (!config.databaseUrl && parsed.DATABASE_URL) {
         config.databaseUrl = parsed.DATABASE_URL;

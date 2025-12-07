@@ -9,9 +9,15 @@ import { join } from 'path';
 import { execSync } from 'child_process';
 
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');
-const SUPABASE_PROJECT_REF = process.env.SUPABASE_PROJECT_REF;
-const SUPABASE_ACCESS_TOKEN = process.env.SUPABASE_ACCESS_TOKEN;
-const SUPABASE_DB_URL = process.env.SUPABASE_DB_URL;
+// Check multiple environment variable sources (GitHub secrets, local env, etc.)
+const SUPABASE_PROJECT_REF = process.env.SUPABASE_PROJECT_REF || 
+                              process.env.VITE_SUPABASE_PROJECT_ID?.replace(/"/g, '') ||
+                              process.env.NEXT_PUBLIC_SUPABASE_PROJECT_REF;
+const SUPABASE_ACCESS_TOKEN = process.env.SUPABASE_ACCESS_TOKEN || 
+                              process.env.SUPABASE_TOKEN;
+const SUPABASE_DB_URL = process.env.SUPABASE_DB_URL || 
+                        process.env.DATABASE_URL ||
+                        process.env.POSTGRES_URL;
 
 interface MigrationFile {
   name: string;
@@ -67,9 +73,12 @@ async function applyViaSupabaseCLI(): Promise<boolean> {
   console.log('\n🔄 Attempting to apply migrations via Supabase CLI...\n');
 
   if (!SUPABASE_PROJECT_REF) {
-    console.log('⚠️  SUPABASE_PROJECT_REF not set. Skipping Supabase CLI method.');
+    console.log('⚠️  SUPABASE_PROJECT_REF not found in environment variables.');
+    console.log('   Checked: SUPABASE_PROJECT_REF, VITE_SUPABASE_PROJECT_ID, NEXT_PUBLIC_SUPABASE_PROJECT_REF');
     return false;
   }
+
+  console.log(`✅ Found SUPABASE_PROJECT_REF: ${SUPABASE_PROJECT_REF.substring(0, 8)}...`);
 
   try {
     // Link project if needed

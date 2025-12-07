@@ -235,6 +235,8 @@
     "verify:db": "tsx scripts/agents/verify_db.ts",
     "delta:migrate": "tsx scripts/agents/generate_delta_migration.ts",
     "migrate:apply": "tsx scripts/apply-migrations-direct.ts",
+    "migrate": "tsx scripts/migrate.ts",
+    "migrate:auto": "tsx scripts/apply-migrations-auto.ts",
     "migrate:apply-all": "tsx scripts/apply-all-pending-changes.ts",
     "migrate:run": "tsx scripts/run-migrations.ts",
     "migrate:guardian": "tsx scripts/migration-guardian.ts",

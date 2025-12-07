@@ -169,6 +169,16 @@ class AIAutoScale {
     const { slope, intercept, rSquared } = this.linearRegression(timestamps, costs);
     
     const currentCost = costs[costs.length - 1];
+    if (currentCost === undefined || currentCost === 0) {
+      return {
+        current_monthly: 0,
+        projected_monthly: 0,
+        deviation_percent: 0,
+        trend: 'stable',
+        confidence: 0
+      };
+    }
+    
     const projectedCost = slope * (timestamps.length + 30) + intercept; // 30 days ahead
     
     const deviation = ((projectedCost - currentCost) / currentCost) * 100;

@@ -106,7 +106,7 @@ class Orchestrator {
     }
 
     // Initialize modules
-    this.dependencyHealth = new DependencyHealthChecker(this.supabase, this.config);
+    this.dependencyHealth = new DependencyHealthChecker(this.supabase);
     this.costForecaster = new CostForecaster(this.supabase, this.octokit, this.config);
     this.securityAuditor = new SecurityAuditor(this.supabase, this.octokit, this.config);
     this.uptimeMonitor = new UptimeMonitor(this.supabase, this.config);

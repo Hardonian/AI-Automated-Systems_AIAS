@@ -1,0 +1,2 @@
+# This directory contains only unmigrated migrations
+# All migrated/redundant migrations have been moved to migrations_archive/

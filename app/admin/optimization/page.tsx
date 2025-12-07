@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Lightbulb, TrendingUp, Zap, AlertCircle } from "lucide-react";
 
@@ -38,7 +38,10 @@ export default function OptimizationPage() {
         setCandidates(data.candidates || []);
       }
     } catch (error) {
-      console.error("Failed to load improvements", error);
+      logger.error("Failed to load improvements", error instanceof Error ? error : new Error(String(error)), {
+        component: "OptimizationPage",
+        action: "loadImprovements",
+      });
     } finally {
       setLoading(false);
     }

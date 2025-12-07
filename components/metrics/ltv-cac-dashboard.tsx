@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TrendingUp, TrendingDown, DollarSign, Users, Target, AlertCircle } from "lucide-react";
@@ -54,7 +55,10 @@ export function LTVCACDashboard() {
         setMockData();
       }
     } catch (error) {
-      console.error("Failed to fetch metrics", error);
+      logger.error("Failed to fetch metrics", error instanceof Error ? error : new Error(String(error)), {
+        component: "LTVCACDashboard",
+        action: "fetchMetrics",
+      });
       setMockData();
     } finally {
       setLoading(false);

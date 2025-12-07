@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { getExperimentVariant } from "@/lib/experiments/feature-flags";
 
 export async function GET(request: NextRequest) {
@@ -33,7 +34,10 @@ export async function GET(request: NextRequest) {
       sessionId,
     });
   } catch (error) {
-    console.error("Error getting experiment variant:", error);
+    logger.error("Error getting experiment variant", error instanceof Error ? error : new Error(String(error)), {
+      component: "ExperimentsVariantAPI",
+      action: "GET",
+    });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

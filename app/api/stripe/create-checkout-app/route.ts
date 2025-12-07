@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
 import { ValidationError, formatError } from "@/lib/errors";
 import { createPOSTHandler } from "@/lib/api/route-handler";
 // import { recordError } from "@/lib/utils/error-detection"; // Will be used for error tracking
@@ -108,7 +109,12 @@ export const POST = createPOSTHandler(
         maxAttempts: 3,
         initialDelayMs: 1000,
         onRetry: (attempt, err) => {
-          console.warn(`Retrying Stripe checkout (attempt ${attempt})`, { error: err.message });
+          logger.warn(`Retrying Stripe checkout (attempt ${attempt})`, {
+            component: "StripeCheckoutAPI",
+            action: "retry",
+            attempt,
+            error: err.message,
+          });
         },
       }
     );

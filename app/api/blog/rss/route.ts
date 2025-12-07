@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { rssFeeds, analyzeRSSItemWithSystemsThinking, type RSSFeedItem } from "@/lib/blog/rss-feed";
 
 // RSS Feed Endpoint
@@ -49,7 +50,11 @@ export async function GET(request: NextRequest) {
           feed: feed.name,
           error: error instanceof Error ? error.message : String(error),
         });
-        console.error(`Failed to fetch feed ${feed.name}:`, error);
+        logger.error(`Failed to fetch feed ${feed.name}`, error instanceof Error ? error : new Error(String(error)), {
+          component: "RSSAPI",
+          action: "fetchFeed",
+          feedName: feed.name,
+        });
       }
     });
 

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
+import { createGETHandler, RouteContext } from "@/lib/api/route-handler";
 import { requireAdmin } from "@/lib/auth/admin-auth";
 import { seedRoundDB } from "@/lib/database/seed-round-db";
 
@@ -158,7 +160,11 @@ export async function GET(request: NextRequest) {
         }));
       } catch (dbError) {
         // Fallback to mock data if database table doesn't exist yet
-        console.warn("Database query failed, using mock data:", dbError);
+        logger.warn("Database query failed, using mock data", {
+          component: "CustomerHealthAPI",
+          action: "getCustomers",
+          error: dbError instanceof Error ? dbError.message : String(dbError),
+        });
         customers = getMockCustomerHealthData();
       }
 
@@ -215,7 +221,10 @@ export async function GET(request: NextRequest) {
         lastUpdated: new Date().toISOString(),
       });
     } catch (error) {
-      console.error("Error fetching customer health:", error);
+      logger.error("Error fetching customer health", error instanceof Error ? error : new Error(String(error)), {
+        component: "CustomerHealthAPI",
+        action: "GET",
+      });
       return NextResponse.json(
         { error: "Failed to fetch customer health data" },
         { status: 500 }

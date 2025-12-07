@@ -7,6 +7,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -59,7 +60,10 @@ export function AdminLayout({ children, requireFinancialAccess = false }: AdminL
       setUser({ email: data.email, role: data.role });
       setIsAuthorized(true);
     } catch (error) {
-      console.error("Error checking admin access:", error);
+      logger.error("Error checking admin access", error instanceof Error ? error : new Error(String(error)), {
+        component: "AdminLayout",
+        action: "checkAccess",
+      });
       setIsAuthorized(false);
     } finally {
       setIsLoading(false);

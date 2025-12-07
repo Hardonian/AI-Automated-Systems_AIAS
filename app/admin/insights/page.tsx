@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Info } from "lucide-react";
@@ -71,7 +71,10 @@ export default function InsightsPage() {
         setHealthSignals(healthData.signals || []);
       }
     } catch (error) {
-      console.error("Failed to load insights", error);
+      logger.error("Failed to load insights", error instanceof Error ? error : new Error(String(error)), {
+        component: "InsightsPage",
+        action: "loadInsights",
+      });
     } finally {
       setLoading(false);
     }

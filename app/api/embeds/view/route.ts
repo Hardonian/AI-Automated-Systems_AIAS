@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 // import { createServerClient } from "@/lib/supabase/server"; // Will be used for tracking
 
 export async function POST(request: Request) {
@@ -13,7 +14,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error tracking embed view:", error);
+    logger.error("Error tracking embed view", error instanceof Error ? error : new Error(String(error)), {
+      component: "EmbedViewAPI",
+      action: "POST",
+    });
     return NextResponse.json(
       { error: "Failed to track embed view" },
       { status: 500 }

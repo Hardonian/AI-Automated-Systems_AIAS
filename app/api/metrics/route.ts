@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 export const runtime = "nodejs"; // Use Node.js runtime for ioredis compatibility
 export const dynamic = "force-dynamic";
 export const revalidate = 60; // Cache for 60 seconds
@@ -60,7 +61,10 @@ export const GET = createGETHandler(
     if (rpcError) {
       // Fallback to regular query if RPC function doesn't exist
       if (rpcError.message.includes("function") && rpcError.message.includes("does not exist")) {
-        console.warn("RPC function not available, using fallback query");
+        logger.warn("RPC function not available, using fallback query", {
+          component: "MetricsAPI",
+          action: "getLatestMetrics",
+        });
         const { data: fallbackMetrics, error: fallbackError } = await supabase
           .from("metrics_log")
           .select("source, metric, ts")
@@ -80,7 +84,10 @@ export const GET = createGETHandler(
     }
 
     if (error) {
-      console.error("Error fetching metrics:", error);
+      logger.error("Error fetching metrics", error instanceof Error ? error : new Error(String(error)), {
+        component: "MetricsAPI",
+        action: "GET",
+      });
       const systemError = new SystemError(
         "Failed to fetch metrics",
         error instanceof Error ? error : new Error(String(error)),

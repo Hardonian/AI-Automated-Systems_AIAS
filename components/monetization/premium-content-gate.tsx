@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -39,7 +40,10 @@ export function PremiumContentGate({
           setIsUnlocked(data.isPremium || false);
         }
       } catch (error) {
-        console.error('Failed to check subscription:', error);
+        logger.error('Failed to check subscription', error instanceof Error ? error : new Error(String(error)), {
+          component: "PremiumContentGate",
+          action: "checkSubscription",
+        });
       } finally {
         setIsLoading(false);
       }

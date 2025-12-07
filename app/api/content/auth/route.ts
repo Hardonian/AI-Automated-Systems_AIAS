@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 /**
  * GET /api/content/auth
  * Get Content Studio token for authenticated admin user
@@ -51,7 +52,10 @@ export async function GET(request: NextRequest) {
     );
 
     if (tokenError) {
-      console.error("Token generation error:", tokenError);
+      logger.error("Token generation error", tokenError instanceof Error ? tokenError : new Error(String(tokenError)), {
+        component: "ContentAuthAPI",
+        action: "generateToken",
+      });
       return NextResponse.json(
         { error: "Failed to generate token" },
         { status: 500 }

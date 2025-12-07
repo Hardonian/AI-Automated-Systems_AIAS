@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,7 +43,10 @@ export function ShareInvite({ userId, referralCode }: ShareInviteProps) {
         });
       }
     } catch (err) {
-      console.error("Failed to copy:", err);
+      logger.error("Failed to copy", err instanceof Error ? err : new Error(String(err)), {
+        component: "ShareInvite",
+        action: "handleCopy",
+      });
     }
   };
 
@@ -69,7 +73,10 @@ export function ShareInvite({ userId, referralCode }: ShareInviteProps) {
           });
         }
       } catch (err) {
-        console.error("Failed to share:", err);
+        logger.error("Failed to share", err instanceof Error ? err : new Error(String(err)), {
+          component: "ShareInvite",
+          action: "handleShare",
+        });
       }
     }
   };

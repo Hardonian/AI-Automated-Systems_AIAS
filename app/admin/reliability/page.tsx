@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ReliabilityDashboard {
@@ -64,7 +65,10 @@ export default function ReliabilityDashboardPage() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Unknown error";
       setError(errorMessage);
-      console.error("Failed to fetch reliability dashboard:", err);
+      logger.error("Failed to fetch reliability dashboard", err instanceof Error ? err : new Error(String(err)), {
+        component: "ReliabilityPage",
+        action: "fetchDashboard",
+      });
     } finally {
       setLoading(false);
     }

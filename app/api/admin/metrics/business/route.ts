@@ -4,6 +4,8 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logging/structured-logger";
 import { env } from "@/lib/env";
 import { getAllActivationMetrics } from "@/lib/analytics/metrics";
 
@@ -125,7 +127,10 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Business metrics API error:", error);
+    logger.error("Business metrics API error", error instanceof Error ? error : new Error(String(error)), {
+      component: "BusinessMetricsAPI",
+      action: "GET",
+    });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

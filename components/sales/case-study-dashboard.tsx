@@ -71,7 +71,10 @@ export function CaseStudyDashboard() {
       setCaseStudies(data.caseStudies || []);
       setSummary(data.summary || null);
     } catch (error) {
-      console.error("Error fetching case studies:", error);
+      logger.error("Error fetching case studies", error instanceof Error ? error : new Error(String(error)), {
+        component: "CaseStudyDashboard",
+        action: "fetchCaseStudies",
+      });
     } finally {
       setLoading(false);
     }

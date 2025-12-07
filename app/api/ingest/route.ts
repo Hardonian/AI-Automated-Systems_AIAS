@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 export const runtime = "edge";
 
 // interface IngestResponse {
@@ -69,7 +70,12 @@ export const POST = createPOSTHandler(
         maxAttempts: 3,
         initialDelayMs: 1000,
         onRetry: (attempt, err) => {
-          console.warn(`Retrying ingest (attempt ${attempt})`, { error: err.message });
+          logger.warn(`Retrying ingest (attempt ${attempt})`, {
+            component: "IngestAPI",
+            action: "retry",
+            attempt,
+            error: err.message,
+          });
         },
       }
     );

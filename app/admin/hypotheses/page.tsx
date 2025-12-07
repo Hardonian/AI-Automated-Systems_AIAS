@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -32,7 +33,10 @@ export default function HypothesesDashboard() {
       const data = await response.json();
       setHypotheses(data.hypotheses || []);
     } catch (err) {
-      console.error("Failed to fetch hypotheses:", err);
+      logger.error("Failed to fetch hypotheses", err instanceof Error ? err : new Error(String(err)), {
+        component: "HypothesesPage",
+        action: "fetchHypotheses",
+      });
       // Use mock data from LEAN_STARTUP_HYPOTHESES.md
       setHypotheses([
         {

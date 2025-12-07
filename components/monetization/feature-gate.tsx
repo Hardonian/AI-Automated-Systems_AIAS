@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { FeatureLockBadge } from "./feature-lock-badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -31,7 +32,11 @@ export function FeatureGate({ feature, requiredPlan, children, fallback }: Featu
         setHasAccess(false);
       }
     } catch (error) {
-      console.error("Failed to check feature access", error);
+      logger.error("Failed to check feature access", error instanceof Error ? error : new Error(String(error)), {
+        component: "FeatureGate",
+        action: "checkAccess",
+        feature,
+      });
       setHasAccess(false);
     } finally {
       setLoading(false);

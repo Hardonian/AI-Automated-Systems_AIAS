@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -157,7 +158,10 @@ export function WelcomeDashboard({
                     });
                     setHasConnectedEmail(true);
                   } catch (error) {
-                    console.error("Failed to mark email connected:", error);
+                    logger.error("Failed to mark email connected", error instanceof Error ? error : new Error(String(error)), {
+                      component: "WelcomeDashboard",
+                      action: "markEmailConnected",
+                    });
                   }
                   window.location.href = "/integrations";
                 }}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Bell, AlertCircle, CheckCircle2, Clock, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,7 +44,10 @@ export function SeedRoundNotificationBell() {
       setNotifications(data.notifications || []);
       setSummary(data.summary || null);
     } catch (error) {
-      console.error("Error fetching notifications:", error);
+      logger.error("Error fetching notifications", error instanceof Error ? error : new Error(String(error)), {
+        component: "SeedRoundNotificationBell",
+        action: "fetchNotifications",
+      });
     } finally {
       setLoading(false);
     }

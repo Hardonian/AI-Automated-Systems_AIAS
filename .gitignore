@@ -157,3 +157,7 @@ coverage/
 # Misc
 *.patch
 *.diff
+
+# Archive (keep structure but ignore large files if needed)
+archive/**/*.log
+archive/**/*.tmp

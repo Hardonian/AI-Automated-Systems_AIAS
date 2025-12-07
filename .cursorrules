@@ -1,0 +1,111 @@
+# Repository Hygiene Rules
+
+## Documentation Standards
+
+1. **No markdown files outside `/docs/`**
+   - All documentation must be in `/docs/` or subdirectories
+   - Root-level `.md` files should only be: README.md, CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md, CHANGELOG.md
+   - All other markdown files should be moved to `/docs/` or `/archive/old_docs/`
+
+2. **No markdown files inside `/src/` or `/app/`**
+   - Documentation belongs in `/docs/`
+   - Code comments are acceptable, but no standalone `.md` files
+
+3. **No scratchpad files**
+   - Files like `notes.md`, `todo.md`, `scratch.md`, `ideas.md` should not be committed
+   - Use issue tracking or project management tools instead
+
+## Code Organization
+
+4. **No deprecated code outside `/archive/`**
+   - Unused components, modules, or utilities should be moved to `/archive/deprecated_code/`
+   - If uncertain about usage, move to archive rather than delete
+
+5. **Consistent naming conventions**
+   - Files: kebab-case (e.g., `user-profile.tsx`)
+   - Components: PascalCase (e.g., `UserProfile.tsx`)
+   - Documentation: kebab-case with numbered prefixes for sequential reading (e.g., `00-intro.md`, `01-architecture.md`)
+
+6. **No duplicate business documents**
+   - All business strategy documents should be consolidated into:
+     - `/docs/internal/business-strategy.md` (internal/private)
+     - `/docs/external/product-overview.md` (public/external)
+   - All other business documents should be archived
+
+## File Structure
+
+7. **Standard directory structure**
+   ```
+   /src/                → active application code only
+   /components/         → live UI components
+   /lib/                → utilities
+   /hooks/              → custom hooks
+   /public/             → production assets
+   /docs/               → canonical documentation
+   /scripts/            → dev & automation tools
+   /tests/              → test suite
+   /archive/            → ALL deprecated material
+   ```
+
+8. **No random folders**
+   - Folders like `notes/`, `tmp/`, `backup/`, `ideas/` should not exist outside `/archive/`
+   - All deprecated material must be in `/archive/` subdirectories
+
+## Code Quality
+
+9. **No commented-out code blocks**
+   - Remove commented-out code unless explicitly marked with `// PRESERVE: [reason]`
+   - Use version control history instead of keeping old code commented
+
+10. **Consistent error handling**
+    - Use structured error handling patterns
+    - Replace `console.log` with proper logging utilities
+    - Use error boundaries and proper error types
+
+11. **No unused imports**
+    - Remove unused imports
+    - Use tools like `eslint-plugin-unused-imports` to detect
+
+## Security
+
+12. **No secrets in code**
+    - Never commit API keys, tokens, passwords, or secrets
+    - Use environment variables and `.env.example` for documentation
+    - All sensitive files should be in `.gitignore`
+
+13. **Proper file permissions**
+    - Scripts should have appropriate `chmod` permissions
+    - Sensitive files should have restricted permissions
+
+## Git Hygiene
+
+14. **No stale branches**
+    - Delete merged branches regularly
+    - Remove abandoned feature branches
+    - Only preserve active branches with real work-in-progress
+
+15. **Meaningful commit messages**
+    - Use conventional commit format: `type(scope): description`
+    - Examples: `feat(auth): add OAuth support`, `fix(api): resolve rate limit issue`
+
+## Monitoring & Maintenance
+
+16. **Detect dead code**
+    - Regularly scan for unused components, modules, utilities
+    - Use tools like `knip`, `ts-prune`, `depcheck` to identify unused code
+    - Move to archive rather than delete if uncertain
+
+17. **Documentation links**
+    - Ensure all links in documentation work
+    - Update README references when files are moved
+    - Keep documentation in sync with code structure
+
+## Enforcement
+
+These rules should be enforced through:
+- Pre-commit hooks (via Husky)
+- CI/CD pipeline checks
+- Regular repository audits
+- Code review process
+
+Violations should be flagged and corrected before merging.

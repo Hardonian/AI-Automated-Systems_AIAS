@@ -43,6 +43,7 @@ export default function ContentStudioPage() {
       setAuthenticated(true);
       loadContent();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Auto-save functionality
@@ -96,6 +97,7 @@ export default function ContentStudioPage() {
     if (authenticated === false) {
       tryAdminAuth();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authenticated]);
 
   const handleLogin = async () => {

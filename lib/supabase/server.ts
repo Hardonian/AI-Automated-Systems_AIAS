@@ -82,3 +82,8 @@ export async function createServerSupabaseClient() {
 export async function createServerClient() {
   return createServerSupabaseClient();
 }
+
+// Export alias for createClient (used by API routes)
+export async function createClient() {
+  return createServerSupabaseClient();
+}

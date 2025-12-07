@@ -8,7 +8,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 interface EmptyStateEnhancedProps {
@@ -68,5 +68,26 @@ export function EmptyStateEnhanced({
         </CardContent>
       )}
     </Card>
+  );
+}
+
+/**
+ * Pre-configured empty state for workflows
+ */
+export function WorkflowsEmptyState() {
+  return (
+    <EmptyStateEnhanced
+      icon={Sparkles}
+      title="No workflows yet"
+      description="Create your first workflow to start automating your business processes. Workflows help you connect multiple agents and tools together."
+      action={{
+        label: "Create Workflow",
+        href: "/onboarding/create-workflow",
+      }}
+      secondaryAction={{
+        label: "Browse Templates",
+        href: "/templates",
+      }}
+    />
   );
 }

@@ -37,13 +37,21 @@ export const spacing = {
 /**
  * Section spacing component
  */
+const spacingValues = {
+  xs: 'space-y-2',
+  sm: 'space-y-4',
+  md: 'space-y-6',
+  lg: 'space-y-8',
+  xl: 'space-y-12',
+} as const;
+
 export function Section({
   children,
   spacing = 'lg',
   className,
 }: {
   children: React.ReactNode;
-  spacing?: keyof typeof spacing;
+  spacing?: keyof typeof spacingValues;
   className?: string;
 }) {
   return (

@@ -3,7 +3,7 @@
  * Defines feature flags, limits, and access levels for free, trial, and paid plans
  */
 
-export type PlanTier = "free" | "trial" | "starter" | "pro";
+export type PlanTier = "free" | "trial" | "starter" | "pro" | "enterprise";
 
 export interface PlanFeatures {
   // News Feed

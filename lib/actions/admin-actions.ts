@@ -39,7 +39,7 @@ export async function assignAdminRole(userId: string): Promise<{
         role: "admin",
       })
       .onConflict("user_id,role")
-      .ignore();
+      .ignore() as any;
 
     if (roleError) {
       console.error("Role assignment error:", roleError);
@@ -50,10 +50,10 @@ export async function assignAdminRole(userId: string): Promise<{
     }
 
     // Get or create Content Studio token
-    const { data: token, error: tokenError } = await supabase.rpc(
-      "get_or_create_content_studio_token",
+    const { data: token, error: tokenError } = await (supabase.rpc(
+      "get_or_create_content_studio_token" as any,
       { _user_id: userId }
-    );
+    ) as any);
 
     if (tokenError) {
       console.error("Token generation error:", tokenError);
@@ -62,7 +62,7 @@ export async function assignAdminRole(userId: string): Promise<{
 
     return {
       success: true,
-      token: token || undefined,
+      token: (token as string | null) || undefined,
     };
   } catch (error) {
     console.error("Admin role assignment error:", error);

@@ -21,7 +21,7 @@ export function UpgradePromptEnhanced({
   integrationCount: _integrationCount = 0,
   variant = "card",
 }: UpgradePromptEnhancedProps) {
-  if (currentPlan === "starter" || currentPlan === "pro" || currentPlan === "enterprise" || (currentPlan !== "free" && currentPlan !== "trial")) {
+  if (currentPlan === "starter" || currentPlan === "pro" || currentPlan === "enterprise") {
     return null; // Don't show upgrade prompt for paid users
   }
 

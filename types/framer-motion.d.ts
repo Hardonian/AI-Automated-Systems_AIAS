@@ -1,17 +1,21 @@
-// Type declarations for framer-motion to fix React 19 compatibility
-// Augment framer-motion module to be more permissive with motion component props
+/**
+ * Type declarations to fix Framer Motion className issues
+ * Extends motion components to accept className prop
+ */
+
 import 'framer-motion';
+import { HTMLAttributes } from 'react';
 
 declare module 'framer-motion' {
-  import * as React from 'react';
+  // Override HTMLAttributesWithoutMotionProps to include className
+  export type HTMLAttributesWithoutMotionProps<T extends keyof React.JSX.IntrinsicElements> = 
+    Omit<HTMLAttributes<React.JSX.IntrinsicElements[T]>, 'style'> & {
+      className?: string;
+      style?: React.CSSProperties | any;
+    };
   
-  // Make motion components accept any valid HTML attributes plus motion props
-  export const motion: {
-    div: React.ComponentType<any>;
-    span: React.ComponentType<any>;
-    p: React.ComponentType<any>;
-    section: React.ComponentType<any>;
-    button: React.ComponentType<any>;
-    [key: string]: React.ComponentType<any>;
-  };
+  // Extend MotionProps to include className
+  export interface MotionProps {
+    className?: string;
+  }
 }

@@ -35,7 +35,7 @@ export function ContentDrivenFeatures({ content }: ContentDrivenFeaturesProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="inline-block mb-4"
+            {...({ className: "inline-block mb-4" } as any)}
           >
             <span className="px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold border border-primary/20">
               Powerful Features
@@ -57,7 +57,7 @@ export function ContentDrivenFeatures({ content }: ContentDrivenFeaturesProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
+              {...({ className: "text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto leading-relaxed" } as any)}
             >
               {content.sectionSubtitle}
             </motion.p>
@@ -92,7 +92,7 @@ export function ContentDrivenFeatures({ content }: ContentDrivenFeaturesProps) {
                         <motion.div
                           whileHover={{ scale: 1.1, rotate: 5 }}
                           transition={{ type: "spring", stiffness: 300 }}
-                          className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${gradient} mb-4 shadow-lg`}
+                          {...({ className: `inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${gradient} mb-4 shadow-lg` } as any)}
                         >
                           <Icon className="h-7 w-7 text-white" />
                         </motion.div>

@@ -24,6 +24,7 @@
       "@/*": ["./*"]
     },
     "baseUrl": ".",
+    "typeRoots": ["./node_modules/@types", "./types"],
     "forceConsistentCasingInFileNames": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitAny": true,

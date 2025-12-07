@@ -51,7 +51,7 @@ export function ErrorState({
             <Button 
               onClick={onRetry} 
               variant="outline" 
-              size="default"
+              size="md"
               aria-label="Retry loading content"
             >
               <RefreshCw className="h-4 w-4 mr-2" aria-hidden="true" />

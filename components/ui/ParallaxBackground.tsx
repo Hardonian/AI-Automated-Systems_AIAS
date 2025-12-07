@@ -22,7 +22,7 @@ interface BlobProps {
 function Blob({ className, speed = 0.5, initialX = 0 }: BlobProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
-    target: ref,
+    target: ref as React.RefObject<HTMLElement>,
     offset: ["start end", "end start"],
   });
 
@@ -47,7 +47,7 @@ export function ParallaxBackground({
 }: ParallaxBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
-    target: containerRef,
+    target: containerRef as React.RefObject<HTMLElement>,
     offset: ["start start", "end end"],
   });
 

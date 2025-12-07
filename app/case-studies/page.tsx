@@ -7,6 +7,7 @@ import { Rocket } from "lucide-react";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { getUserPlanData } from "@/lib/trial/user-plan";
 import { GatedCaseStudy } from "@/components/case-studies/gated-case-study";
+import type { PlanTier } from "@/config/plans";
 
 export const metadata: Metadata = {
   title: "Case Studies — AIAS Consultancy | Custom Builds & Platform Success Stories",
@@ -123,7 +124,7 @@ export default async function CaseStudiesPage() {
   const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
   
-  let userPlan: "free" | "trial" | "starter" | "pro" = "free";
+  let userPlan: PlanTier = "free";
   if (user) {
     const userData = await getUserPlanData(user.id);
     userPlan = userData.plan;

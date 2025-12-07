@@ -116,7 +116,7 @@
     "build:next": "next build",
     "postinstall": "patch-package --error-on-fail=false || true",
     "type-check": "tsc --noEmit",
-    "vercel-build": "cd apps/web && export DATABASE_URL=${UPSTASH_POSTGRES_URL:-${DATABASE_URL}} && export DIRECT_URL=${UPSTASH_POSTGRES_DIRECT_URL:-${DIRECT_URL:-${DATABASE_URL}}} && prisma generate && (prisma migrate deploy || echo 'Migration skipped') && cd ../.. && next build",
+    "vercel-build": "cd apps/web && export DATABASE_URL=${UPSTASH_POSTGRES_URL:-${DATABASE_URL:-}} && export DIRECT_URL=${UPSTASH_POSTGRES_DIRECT_URL:-${DIRECT_URL:-${DATABASE_URL:-}}} && (if [ -n \"$DATABASE_URL\" ] && [[ \"$DATABASE_URL\" =~ ^postgres ]]; then prisma generate && (prisma migrate deploy || echo 'Migration skipped'); else echo 'Skipping Prisma migrations (DATABASE_URL not set or invalid)'; prisma generate || echo 'Prisma generate skipped'; fi) && cd ../.. && next build",
     "build:analyze": "ANALYZE=true vite build",
     "preview": "next start",
     "start": "next start",
@@ -348,6 +348,28 @@
     "pnpm": ">=8.0.0"
   },
   "packageManager": "pnpm@8.15.0",
+  "pnpm": {
+    "overrides": {
+      "react": "$react",
+      "react-dom": "$react-dom",
+      "@types/react": "$@types/react",
+      "@types/react-dom": "$@types/react-dom"
+    },
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "react",
+        "react-dom",
+        "@types/react",
+        "@types/react-dom"
+      ],
+      "allowedVersions": {
+        "react": "19",
+        "react-dom": "19",
+        "@types/react": "19",
+        "@types/react-dom": "19"
+      }
+    }
+  },
   "funding": {
     "type": "github",
     "url": "https://github.com/sponsors/your-org"

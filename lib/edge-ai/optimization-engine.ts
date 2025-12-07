@@ -319,12 +319,12 @@ async function simulateBenchmark(
 
   const latencyMs = {
     mean: latencies.reduce((a, b) => a + b, 0) / latencies.length,
-    median: latencies[Math.floor(latencies.length / 2)],
-    p50: latencies[Math.floor(latencies.length * 0.5)],
-    p95: latencies[Math.floor(latencies.length * 0.95)],
-    p99: latencies[Math.floor(latencies.length * 0.99)],
-    min: latencies[0],
-    max: latencies[latencies.length - 1],
+    median: latencies[Math.floor(latencies.length / 2)] || 0,
+    p50: latencies[Math.floor(latencies.length * 0.5)] || 0,
+    p95: latencies[Math.floor(latencies.length * 0.95)] || 0,
+    p99: latencies[Math.floor(latencies.length * 0.99)] || 0,
+    min: latencies[0] || 0,
+    max: latencies[latencies.length - 1] || 0,
   };
 
   const throughputOpsPerSec = (1000 / latencyMs.mean) * batchSize;

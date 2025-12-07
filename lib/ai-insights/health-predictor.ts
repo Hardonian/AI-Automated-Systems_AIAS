@@ -59,11 +59,11 @@ async function detectPerformanceDegradation(): Promise<HealthSignal[]> {
     const baseline = 500; // 500ms baseline
     const threshold = baseline * 1.5; // 50% degradation
 
-    if (avgResponseTime > threshold || p95ResponseTime > threshold * 2) {
+    if (avgResponseTime > threshold || (p95ResponseTime && p95ResponseTime > threshold * 2)) {
       signals.push({
         type: "performance_degradation",
         severity: avgResponseTime > threshold * 2 ? "high" : "medium",
-        message: `API response time degradation detected: avg ${Math.round(avgResponseTime)}ms, p95 ${Math.round(p95ResponseTime)}ms`,
+        message: `API response time degradation detected: avg ${Math.round(avgResponseTime)}ms, p95 ${p95ResponseTime ? Math.round(p95ResponseTime) : 'N/A'}ms`,
         confidence: 75,
         predictedImpact: "User experience degradation, potential timeout errors",
         recommendedAction: "Check database performance, review slow queries, consider scaling resources",

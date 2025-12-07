@@ -154,7 +154,7 @@ export class AgentMeshCoordinator {
       // Execute workflow steps
       let output = context.input;
       for (const step of workflow.steps) {
-        output = await this.executeStep(step, output, context);
+        output = (await this.executeStep(step, output, context)) as Record<string, unknown>;
       }
 
       return {

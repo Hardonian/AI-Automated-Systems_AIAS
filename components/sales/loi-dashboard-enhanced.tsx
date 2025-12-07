@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { LOIForm } from "./loi-form";
-import { TrendingUp, FileText, CheckCircle2, Clock, Sparkles, ArrowUpRight } from "lucide-react";
+import { TrendingUp, FileText, CheckCircle2, Clock, Sparkles, ArrowUpRight, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface LOI {
@@ -103,13 +103,13 @@ export function LOIDashboardEnhanced() {
       },
     };
 
-    const variant = variants[status] || variants.draft;
-    const Icon = variant.icon;
+    const variant = (status && variants[status]) || variants.draft;
+    const Icon = variant?.icon || AlertCircle;
 
     return (
-      <Badge className={variant.className}>
+      <Badge className={variant?.className || ''}>
         <Icon className="mr-1 h-3 w-3" />
-        {variant.label}
+        {variant?.label || status}
       </Badge>
     );
   };
@@ -130,11 +130,11 @@ export function LOIDashboardEnhanced() {
       },
     };
 
-    const variant = variants[tier] || variants.Starter;
+    const variant = (tier && variants[tier]) || variants.Starter;
 
     return (
-      <Badge variant="outline" className={variant.className}>
-        {variant.label}
+      <Badge variant="outline" className={variant?.className || ''}>
+        {variant?.label || tier}
       </Badge>
     );
   };

@@ -10,7 +10,7 @@ import { pricingTiers, SubscriptionTier } from '@/lib/pricing/tiers';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Check, Sparkles, Zap, Shield, Users } from 'lucide-react';
+import { Check, Zap, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { trackCTAClick } from '@/lib/cro/optimization';
 
@@ -56,7 +56,7 @@ export function EnhancedPricing() {
         {pricingTiers.map((tier) => {
           const price = billingPeriod === 'monthly' ? tier.price.monthly : tier.price.yearly / 12;
           const isPopular = tier.id === 'pro';
-          const isEnterprise = tier.id === 'enterprise';
+          const _isEnterprise = tier.id === 'enterprise';
 
           return (
             <Card

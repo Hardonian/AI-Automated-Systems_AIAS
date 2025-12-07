@@ -4,7 +4,7 @@
  * Monitors costs in real-time and provides alerts when thresholds are exceeded.
  */
 
-import { ServiceCost, CostMetrics } from "./service-costs";
+import { ServiceCost } from "./service-costs";
 import { logger } from "@/lib/utils/logger";
 
 export interface CostAlert {

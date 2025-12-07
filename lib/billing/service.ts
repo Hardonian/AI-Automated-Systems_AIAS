@@ -158,7 +158,7 @@ export class PlaceholderBillingService implements IBillingService {
 
   async addPaymentMethod(
     userId: string,
-    paymentMethodData: unknown
+    _paymentMethodData: unknown
   ): Promise<PaymentMethod> {
     logger.info("Placeholder: Adding payment method", { userId });
     throw new Error("Billing service not implemented. Use placeholder for development only.");

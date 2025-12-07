@@ -97,7 +97,7 @@ export class CanaryMonitor {
       const p95Index = Math.floor(sorted.length * 0.95);
       const p95 = sorted[p95Index];
 
-      if (p95 > this.config.latencyThreshold) {
+      if (p95 && p95 > this.config.latencyThreshold) {
         await this.triggerRollback(canaryId, 'latency_exceeded', {
           p95,
           threshold: this.config.latencyThreshold,
@@ -215,7 +215,7 @@ export class CanaryMonitor {
     }
     const sorted = [...metrics.latencies].sort((a, b) => a - b);
     const p95Index = Math.floor(sorted.length * 0.95);
-    return sorted[p95Index];
+    return sorted[p95Index] ?? null;
   }
 
   /**

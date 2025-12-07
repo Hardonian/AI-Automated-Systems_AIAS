@@ -40,7 +40,7 @@ export async function collectInsights(): Promise<WeeklyInsights> {
 
     // 1. Usage pattern insights
     const usagePatterns = await analyzeUsagePatterns(30);
-    const topFeatures = usagePatterns.slice(0, 5);
+    const _topFeatures = usagePatterns.slice(0, 5);
     const lowAdoptionFeatures = usagePatterns.filter((p) => p.adoptionRate < 10);
 
     if (lowAdoptionFeatures.length > 0) {
@@ -77,24 +77,26 @@ export async function collectInsights(): Promise<WeeklyInsights> {
     const frictionPoints = await detectFrictionPoints();
     if (frictionPoints.length > 0) {
       const topFriction = frictionPoints[0];
-      insights.push({
-        type: "friction",
-        category: "onboarding",
-        title: "Onboarding Friction Detected",
-        description: `Step "${topFriction.step}" has ${topFriction.dropOffRate.toFixed(1)}% drop-off rate`,
-        impact: "high",
-        effort: "medium",
-        priority: 80,
-        data: { step: topFriction.step, dropOffRate: topFriction.dropOffRate },
-        recommendedAction: `Improve step "${topFriction.step}" with better guidance or simplify the process`,
-      });
+      if (topFriction) {
+        insights.push({
+          type: "friction",
+          category: "onboarding",
+          title: "Onboarding Friction Detected",
+          description: `Step "${topFriction.step}" has ${topFriction.dropOffRate.toFixed(1)}% drop-off rate`,
+          impact: "high",
+          effort: "medium",
+          priority: 80,
+          data: { step: topFriction.step, dropOffRate: topFriction.dropOffRate },
+          recommendedAction: `Improve step "${topFriction.step}" with better guidance or simplify the process`,
+        });
+      }
     }
 
     // 4. Error insights
     const errorAnalysis = await analyzeErrors(7);
     if (errorAnalysis.topErrors.length > 0) {
       const topError = errorAnalysis.topErrors[0];
-      if (topError.count > 20) {
+      if (topError && topError.count > 20) {
         insights.push({
           type: "error",
           category: "error_pattern",

@@ -50,14 +50,16 @@ export async function GET(request: NextRequest) {
     const grouped: Record<string, { completed: number; failed: number }> = {};
 
     executions?.forEach((execution) => {
-      const date = new Date(execution.started_at).toISOString().split("T")[0]; // YYYY-MM-DD
-      if (!grouped[date]) {
-        grouped[date] = { completed: 0, failed: 0 };
+      if (!execution.started_at) return;
+      const dateStr = new Date(execution.started_at).toISOString().split("T")[0]; // YYYY-MM-DD
+      if (!dateStr) return;
+      if (!grouped[dateStr]) {
+        grouped[dateStr] = { completed: 0, failed: 0 };
       }
       if (execution.status === "completed") {
-        grouped[date].completed++;
+        grouped[dateStr]!.completed++;
       } else if (execution.status === "failed") {
-        grouped[date].failed++;
+        grouped[dateStr]!.failed++;
       }
     });
 
@@ -68,10 +70,11 @@ export async function GET(request: NextRequest) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
       const dateStr = date.toISOString().split("T")[0];
+      const groupData = grouped[dateStr];
       result.push({
         date: dateStr,
-        completed: grouped[dateStr]?.completed || 0,
-        failed: grouped[dateStr]?.failed || 0,
+        completed: groupData?.completed || 0,
+        failed: groupData?.failed || 0,
       });
     }
 

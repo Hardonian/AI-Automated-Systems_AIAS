@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logging/structured-logger";
+import { env } from "@/lib/env";
+import { cookies } from "next/headers";
+import { createClient } from "@supabase/supabase-js";
 /**
  * GET /api/content/auth
  * Get Content Studio token for authenticated admin user

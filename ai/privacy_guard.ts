@@ -247,7 +247,7 @@ class PrivacyGuard {
   private calculateConfidence(redactions: Array<{ severity: string }>): number {
     if (redactions.length === 0) return 1.0;
     
-    const severityWeights = {
+    const severityWeights: { [key: string]: number } = {
       low: 0.3,
       medium: 0.6,
       high: 0.8,

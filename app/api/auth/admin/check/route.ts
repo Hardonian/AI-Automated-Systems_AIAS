@@ -5,6 +5,9 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { getAdminUser, hasAdminRole, AdminRole } from "@/lib/auth/admin-auth";
+import { addSecurityHeaders } from "@/lib/middleware/security";
+import { logger } from "@/lib/logging/structured-logger";
 export const dynamic = "force-dynamic";
 
 /**

@@ -307,7 +307,7 @@ export class UptimeMonitor {
           labels: 'recurring-error'
         });
 
-        const existingIssue = issues?.find(i => 
+        const existingIssue = issues?.find((i: any) => 
           i.title.includes(pattern.error.substring(0, 50))
         );
 

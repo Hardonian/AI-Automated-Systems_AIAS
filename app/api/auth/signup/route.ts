@@ -4,6 +4,8 @@ import { env } from "@/lib/env";
 import { z } from "zod";
 import { trackSignup } from "@/lib/analytics/funnel-tracking";
 import { rateLimit, getClientIP } from "@/lib/utils/rate-limit";
+import { logger } from "@/lib/logging/structured-logger";
+import { handleApiError } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 

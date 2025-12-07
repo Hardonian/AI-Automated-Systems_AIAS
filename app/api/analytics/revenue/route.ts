@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
+import { handleApiError } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -58,10 +60,10 @@ export async function GET(request: NextRequest) {
       if (plan && typeof plan === 'object' && !Array.isArray(plan)) {
         const planObj = plan as { tier?: string; price_monthly?: number };
         const tier = planObj.tier?.toLowerCase() || "starter";
-        if (tier in planCounts) {
-          planCounts[tier].count++;
+        if (tier && tier in planCounts) {
+          planCounts[tier]!.count++;
           const price = planObj.price_monthly || 0;
-          planCounts[tier].revenue += price;
+          planCounts[tier]!.revenue += price;
         }
       }
     });
@@ -69,16 +71,16 @@ export async function GET(request: NextRequest) {
     // Count from profiles (fallback)
     profiles?.forEach((profile) => {
       const tier = profile.subscription_tier?.toLowerCase() || "starter";
-      if (tier in planCounts) {
-        planCounts[tier].count++;
+      if (tier && tier in planCounts) {
+        planCounts[tier]!.count++;
         // Use default prices if not in subscriptions table
-        if (planCounts[tier].revenue === 0) {
+        if (planCounts[tier]!.revenue === 0) {
           const prices: Record<string, number> = {
             starter: 49,
             pro: 149,
             enterprise: 299,
           };
-          planCounts[tier].revenue += prices[tier] || 0;
+          planCounts[tier]!.revenue += prices[tier] || 0;
         }
       }
     });

@@ -1,4 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
+import { checkPremiumSubscription } from "@/lib/billing/subscription-check";
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

@@ -1,12 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
-import { loadAIASContent, saveAIASContent } from "@/lib/content/loader";
-import { logger } from "@/lib/logging/structured-logger";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import type { AIASContent } from "@/lib/content/schemas";
-import { logger } from "@/lib/logging/structured-logger";
-
 /**
  * GET /api/content/aias
  * Returns the current AIAS content
@@ -16,7 +8,7 @@ export async function GET() {
     const content = await loadAIASContent();
     return NextResponse.json(content);
   } catch (error: any) {
-    console.error("Error loading AIAS content:", error);
+    logger.error("Error loading AIAS content:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Failed to load content" },
       { status: 500 }
@@ -96,7 +88,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error("Error saving AIAS content:", error);
+    logger.error("Error saving AIAS content:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: error.message || "Failed to save content" },
       { status: 500 }

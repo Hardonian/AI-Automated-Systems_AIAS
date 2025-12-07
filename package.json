@@ -281,6 +281,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
+    "@eslint/js": "^9.39.1",
     "@lhci/cli": "^0.15.1",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/auto-instrumentations-node": "^0.67.2",

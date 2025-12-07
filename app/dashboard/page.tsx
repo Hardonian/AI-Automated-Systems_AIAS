@@ -11,8 +11,6 @@ import { WhatsNextChecklist } from "@/components/onboarding/whats-next-checklist
 import { UsageProgressBanner } from "@/components/monetization/usage-progress-banner";
 import { TrialCountdownBanner } from "@/components/monetization/trial-countdown-banner";
 import { DashboardClient } from "./dashboard-client";
-import { logger } from "@/lib/logging/structured-logger";
-
 /**
  * Public Dashboard: "Loud & High" Social Proof Metrics
  * 

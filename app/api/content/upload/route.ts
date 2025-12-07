@@ -1,10 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
-import { createClient } from "@supabase/supabase-js";
-import { logger } from "@/lib/logging/structured-logger";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-
 /**
  * POST /api/content/upload
  * Uploads an image to Supabase storage
@@ -119,7 +113,7 @@ export async function POST(request: NextRequest) {
       });
 
     if (error) {
-      console.error("Supabase upload error:", error);
+      logger.error("Supabase upload error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
       return NextResponse.json(
         { error: "Failed to upload file" },
         { status: 500 }
@@ -137,7 +131,7 @@ export async function POST(request: NextRequest) {
       fileName: fileName,
     });
   } catch (error: any) {
-    console.error("Upload error:", error);
+    logger.error("Upload error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: error.message || "Failed to upload file" },
       { status: 500 }

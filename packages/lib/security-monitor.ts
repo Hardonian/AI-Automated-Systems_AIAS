@@ -211,8 +211,8 @@ export class SecurityMonitor {
   private async checkLoginFailurePattern(event: SecurityEvent, params: string[]): Promise<boolean> {
     if (event.type !== SecurityEventType.LOGIN_FAILURE) return false;
 
-    const maxFailures = parseInt(params[0]);
-    const timeWindow = parseInt(params[1]) * 1000; // Convert to milliseconds
+    const maxFailures = parseInt(params[0] || "0");
+    const timeWindow = parseInt(params[1] || "0") * 1000; // Convert to milliseconds
     const now = Date.now();
 
     // Get recent login failures for this IP
@@ -244,8 +244,8 @@ export class SecurityMonitor {
   }
 
   private async checkApiRateLimit(event: SecurityEvent, params: string[]): Promise<boolean> {
-    const maxCalls = parseInt(params[0]);
-    const timeWindow = parseInt(params[1]) * 1000; // Convert to milliseconds
+    const maxCalls = parseInt(params[0] || "0");
+    const timeWindow = parseInt(params[1] || "0") * 1000; // Convert to milliseconds
     const now = Date.now();
 
     const key = `${event.userId || event.ipAddress}:api_calls`;

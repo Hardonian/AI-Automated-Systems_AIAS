@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Save, RefreshCw, Eye } from "lucide-react";
 import { ContentStudioHero } from "@/components/content-studio/ContentStudioHero";
@@ -396,7 +395,7 @@ export default function ContentStudioPage() {
                 Reset
               </Button>
               <Button
-                onClick={handleSave}
+                onClick={() => handleSave()}
                 disabled={(!hasChanges && !saving) || saving}
                 size="sm"
               >

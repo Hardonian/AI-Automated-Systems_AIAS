@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { createPOSTHandler } from "@/lib/api/route-handler";
 import { executeWorkflow } from "@/lib/workflows/executor";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);

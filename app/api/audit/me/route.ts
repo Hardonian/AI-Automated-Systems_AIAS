@@ -1,9 +1,5 @@
 // [STAKE+TRUST:BEGIN:audit_api]
 import { NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
-import { createClient } from "@supabase/supabase-js";
-import { logger } from "@/lib/logging/structured-logger";
-
 export const runtime = "edge";
 
 export async function GET() {
@@ -39,7 +35,7 @@ export async function GET() {
       .limit(100);
 
     if (error) {
-      console.error("Audit log query error:", error);
+      logger.error("Audit log query error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
       return NextResponse.json(
         { error: "Failed to fetch audit log", details: error.message },
         { status: 500 }
@@ -49,7 +45,7 @@ export async function GET() {
     return NextResponse.json({ rows: data || [] });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    console.error("Audit log API error:", error);
+    logger.error("Audit log API error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Internal server error", details: errorMessage },
       { status: 500 }

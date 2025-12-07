@@ -220,7 +220,7 @@ export class AIGenerators {
   // Helper methods to parse AI responses
   private static extractScore(_analysis: string): number {
     const scoreMatch = _analysis.match(/(?:score|rating|grade)[:\s]*(\d+)/i);
-    return scoreMatch ? parseInt(scoreMatch[1]) : 75;
+    return scoreMatch && scoreMatch[1] ? parseInt(scoreMatch[1]) : 75;
   }
 
   private static extractCategories(_analysis: string) {

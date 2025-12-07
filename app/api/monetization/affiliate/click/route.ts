@@ -1,8 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
-import { databasePMFTracker } from "@/lib/analytics/database-integration";
-import { logger } from "@/lib/logging/structured-logger";
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -19,7 +15,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Affiliate click tracking error:", error);
+    logger.error("Affiliate click tracking error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Failed to track affiliate click" },
       { status: 500 }

@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { handleApiError } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -56,11 +54,15 @@ export async function GET(request: NextRequest) {
 
     // Count from subscriptions table
     subscriptions?.forEach((sub) => {
-      const tier = (sub.subscription_plans as { tier: string; price_monthly: number })?.tier?.toLowerCase() || "starter";
-      if (tier in planCounts) {
-        planCounts[tier].count++;
-        const price = (sub.subscription_plans as { price_monthly: number })?.price_monthly || 0;
-        planCounts[tier].revenue += price;
+      const plan = sub.subscription_plans;
+      if (plan && typeof plan === 'object' && !Array.isArray(plan)) {
+        const planObj = plan as { tier?: string; price_monthly?: number };
+        const tier = planObj.tier?.toLowerCase() || "starter";
+        if (tier in planCounts) {
+          planCounts[tier].count++;
+          const price = planObj.price_monthly || 0;
+          planCounts[tier].revenue += price;
+        }
       }
     });
 

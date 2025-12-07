@@ -1,12 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
-import OpenAI from "openai";
-import { logger } from "@/lib/logging/structured-logger";
-import { createClient } from "@supabase/supabase-js";
-import { logger } from "@/lib/logging/structured-logger";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-
 /**
  * POST /api/content/ai/seo
  * Provides SEO optimization suggestions
@@ -119,7 +111,7 @@ Provide suggestions in a structured format with specific recommendations.`;
       suggestions,
     });
   } catch (error: any) {
-    console.error("SEO analysis error:", error);
+    logger.error("SEO analysis error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: error.message || "Failed to analyze SEO" },
       { status: 500 }

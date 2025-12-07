@@ -5,8 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { ActivationChart } from "@/components/metrics/ActivationChart";
 import { FunnelChart } from "@/components/metrics/FunnelChart";
-import { logger } from "@/lib/logging/structured-logger";
-
 interface ActivationMetrics {
   metrics: {
     activation_rate: number;

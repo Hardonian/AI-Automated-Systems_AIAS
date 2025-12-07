@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { handleApiError } from "@/lib/api/route-handler";
 import { track } from "@/lib/telemetry/track";
 import { isValidModelFormat, isValidDeviceType } from "@/lib/edge-ai/utils";
 

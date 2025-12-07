@@ -5,12 +5,6 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
-import { costMonitor } from "@/lib/cost-tracking/cost-monitor";
-import { logger } from "@/lib/logging/structured-logger";
-import { addSecurityHeaders } from "@/lib/middleware/security";
-import { logger } from "@/lib/logging/structured-logger";
-
 export const dynamic = "force-dynamic";
 
 /**
@@ -36,7 +30,7 @@ export async function GET(request: NextRequest) {
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    console.error("Error fetching alerts:", error);
+    logger.error("Error fetching alerts:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Failed to fetch alerts" },
       { status: 500 }

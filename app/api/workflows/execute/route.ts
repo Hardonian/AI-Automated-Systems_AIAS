@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { createPOSTHandler, handleApiError } from "@/lib/api/route-handler";
 import { executeWorkflow } from "@/lib/workflows/executor-enhanced";
 import { trackWorkflowExecute } from "@/lib/analytics/funnel-tracking";
 

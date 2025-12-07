@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { handleApiError } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -97,31 +95,38 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Calculate conversion rates
+    // Calculate conversion rates with null safety
+    const signup = signupCount ?? 0;
+    const onboarding = onboardingCount ?? 0;
+    const integration = integrationCount ?? 0;
+    const workflow = workflowCount ?? 0;
+    const execution = executionCount ?? 0;
+    const activation = activationCount ?? 0;
+
     const conversionRates = {
-      signupToOnboarding: signupCount > 0 ? (onboardingCount / signupCount) * 100 : 0,
-      onboardingToIntegration: onboardingCount > 0 ? (integrationCount / onboardingCount) * 100 : 0,
-      integrationToWorkflow: integrationCount > 0 ? (workflowCount / integrationCount) * 100 : 0,
-      workflowToExecute: workflowCount > 0 ? (executionCount / workflowCount) * 100 : 0,
-      overallActivation: signupCount > 0 ? (activationCount / signupCount) * 100 : 0,
+      signupToOnboarding: signup > 0 ? (onboarding / signup) * 100 : 0,
+      onboardingToIntegration: onboarding > 0 ? (integration / onboarding) * 100 : 0,
+      integrationToWorkflow: integration > 0 ? (workflow / integration) * 100 : 0,
+      workflowToExecute: workflow > 0 ? (execution / workflow) * 100 : 0,
+      overallActivation: signup > 0 ? (activation / signup) * 100 : 0,
     };
 
     return NextResponse.json({
       period: "last_30_days",
       stages: {
-        signup: signupCount,
-        onboarding_start: onboardingCount,
-        integration_connect: integrationCount,
-        workflow_create: workflowCount,
-        workflow_execute: executionCount,
-        activated: activationCount,
+        signup: signup,
+        onboarding_start: onboarding,
+        integration_connect: integration,
+        workflow_create: workflow,
+        workflow_execute: execution,
+        activated: activation,
       },
       conversionRates,
       dropOffPoints: {
-        signupToOnboarding: signupCount - onboardingCount,
-        onboardingToIntegration: onboardingCount - integrationCount,
-        integrationToWorkflow: integrationCount - workflowCount,
-        workflowToExecute: workflowCount - executionCount,
+        signupToOnboarding: signup - onboarding,
+        onboardingToIntegration: onboarding - integration,
+        integrationToWorkflow: integration - workflow,
+        workflowToExecute: workflow - execution,
       },
     });
   } catch (error) {

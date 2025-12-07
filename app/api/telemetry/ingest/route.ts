@@ -1,14 +1,4 @@
 import { NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { createPOSTHandler } from "@/lib/api/route-handler";
-import { logger } from "@/lib/logging/structured-logger";
-import { z } from "zod";
-import { logger } from "@/lib/logging/structured-logger";
-import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
-import { logger } from "@/lib/logging/structured-logger";
-
 export const runtime = "edge";
 
 /**
@@ -45,7 +35,7 @@ export const POST = createPOSTHandler(
     const validation = telemetrySchema.safeParse(parsedBody);
     if (!validation.success) {
       // Log validation errors but don't block ingestion
-      console.warn("Telemetry validation warnings:", validation.error.errors);
+      logger.warn("Telemetry validation warnings:", { component: "route", ...validation.error.errors });
     }
     
     const startTime = Date.now();

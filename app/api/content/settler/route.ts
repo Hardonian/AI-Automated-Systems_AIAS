@@ -1,12 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
-import { loadSettlerContent, saveSettlerContent } from "@/lib/content/loader";
-import { logger } from "@/lib/logging/structured-logger";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import type { SettlerContent } from "@/lib/content/schemas";
-import { logger } from "@/lib/logging/structured-logger";
-
 /**
  * GET /api/content/settler
  * Returns the current Settler content
@@ -16,7 +8,7 @@ export async function GET() {
     const content = await loadSettlerContent();
     return NextResponse.json(content);
   } catch (error: any) {
-    console.error("Error loading Settler content:", error);
+    logger.error("Error loading Settler content:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Failed to load content" },
       { status: 500 }
@@ -96,7 +88,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error("Error saving Settler content:", error);
+    logger.error("Error saving Settler content:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: error.message || "Failed to save content" },
       { status: 500 }

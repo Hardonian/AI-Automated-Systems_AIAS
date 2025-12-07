@@ -5,8 +5,6 @@ import { SystemError, ValidationError, formatError } from "@/lib/errors";
 import { recordError } from "@/lib/utils/error-detection";
 import { retry } from "@/lib/utils/retry";
 import { z } from "zod";
-import { logger } from "@/lib/logging/structured-logger";
-
 export const runtime = "edge";
 
 interface TelemetryResponse {

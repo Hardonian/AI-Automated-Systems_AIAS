@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { createGETHandler } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -125,8 +123,8 @@ export const GET = createGETHandler(
       return NextResponse.json({
         metrics: {
           activation_rate: Math.round(activationRate * 100) / 100,
-          time_to_activation_ms: medianTimeToActivation,
-          time_to_activation_hours: Math.round((medianTimeToActivation / (1000 * 60 * 60)) * 100) / 100,
+          time_to_activation_ms: medianTimeToActivation ?? 0,
+          time_to_activation_hours: Math.round(((medianTimeToActivation ?? 0) / (1000 * 60 * 60)) * 100) / 100,
           day_7_retention: Math.round(day7Retention * 100) / 100,
           total_signups: totalSignups,
           total_integrations: totalIntegrations,

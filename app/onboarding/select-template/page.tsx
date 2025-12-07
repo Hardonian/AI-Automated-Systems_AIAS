@@ -7,8 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TemplateCard } from "@/components/templates/TemplateCard";
 import { Search, Loader2 } from "lucide-react";
-import { logger } from "@/lib/logging/structured-logger";
-
 interface WorkflowTemplate {
   id: string;
   name: string;

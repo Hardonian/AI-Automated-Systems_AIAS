@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { handleApiError } from "@/lib/api/route-handler";
 import { isValidDeviceType } from "@/lib/edge-ai/utils";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);

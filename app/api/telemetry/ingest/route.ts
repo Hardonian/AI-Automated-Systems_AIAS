@@ -1,4 +1,9 @@
 import { NextResponse } from "next/server";
+import { createPOSTHandler } from "@/lib/api/route-handler";
+import { logger } from "@/lib/logging/structured-logger";
+import { env } from "@/lib/env";
+import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
+import { z } from "zod";
 export const runtime = "edge";
 
 /**

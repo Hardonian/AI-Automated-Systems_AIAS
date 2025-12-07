@@ -4,6 +4,8 @@ import { z } from "zod";
 import { env } from "@/lib/env";
 import { track } from "@/lib/telemetry/track";
 import { rateLimit, getClientIP } from "@/lib/utils/rate-limit";
+import { createPOSTHandler } from "@/lib/api/route-handler";
+import { logger } from "@/lib/logging/structured-logger";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 

@@ -4,9 +4,13 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logging/structured-logger";
 import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
 import { getAllActivationMetrics } from "@/lib/analytics/metrics";
+import { logger } from "@/lib/logging/structured-logger";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 

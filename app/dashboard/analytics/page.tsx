@@ -1,13 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { logger } from "@/lib/logging/structured-logger";
 import { Button } from "@/components/ui/button";
+import { logger } from "@/lib/logging/structured-logger";
 import { Progress } from "@/components/ui/progress";
+import { logger } from "@/lib/logging/structured-logger";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
+import { logger } from "@/lib/logging/structured-logger";
 import { TrendingUp, TrendingDown, Clock, Zap, CheckCircle, XCircle } from "lucide-react";
+import { logger } from "@/lib/logging/structured-logger";
 import { UsageProgressBanner } from "@/components/monetization/usage-progress-banner";
+import { logger } from "@/lib/logging/structured-logger";
 import { TrialCountdownBanner } from "@/components/monetization/trial-countdown-banner";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface UsageData {
   plan: string;

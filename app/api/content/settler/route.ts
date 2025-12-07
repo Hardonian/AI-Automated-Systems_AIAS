@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { loadSettlerContent, saveSettlerContent } from "@/lib/content/loader";
+import { logger } from "@/lib/logging/structured-logger";
 import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
 import type { SettlerContent } from "@/lib/content/schemas";
+import { logger } from "@/lib/logging/structured-logger";
 
 /**
  * GET /api/content/settler

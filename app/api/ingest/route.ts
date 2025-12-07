@@ -1,10 +1,17 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
 import { NetworkError } from "@/lib/errors";
+import { logger } from "@/lib/logging/structured-logger";
 import { createPOSTHandler } from "@/lib/api/route-handler";
+import { logger } from "@/lib/logging/structured-logger";
 import { retry } from "@/lib/utils/retry";
+import { logger } from "@/lib/logging/structured-logger";
 import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
+import { logger } from "@/lib/logging/structured-logger";
 import { z } from "zod";
+import { logger } from "@/lib/logging/structured-logger";
 
 export const runtime = "edge";
 

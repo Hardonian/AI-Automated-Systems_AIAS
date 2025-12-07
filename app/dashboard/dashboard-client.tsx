@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { UsageProgressBanner } from "@/components/monetization/usage-progress-banner";
+import { logger } from "@/lib/logging/structured-logger";
 import { TrialCountdownBanner } from "@/components/monetization/trial-countdown-banner";
+import { logger } from "@/lib/logging/structured-logger";
 import { WhatsNextChecklist } from "@/components/onboarding/whats-next-checklist";
+import { logger } from "@/lib/logging/structured-logger";
 
 export function DashboardClient() {
   const [usage, setUsage] = useState<{ used: number; limit: number; plan: string } | null>(null);

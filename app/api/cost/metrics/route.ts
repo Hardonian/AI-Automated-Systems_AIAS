@@ -5,12 +5,19 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { CostAggregator } from "@/lib/cost-tracking/service-costs";
+import { logger } from "@/lib/logging/structured-logger";
 import { costMonitor } from "@/lib/cost-tracking/cost-monitor";
+import { logger } from "@/lib/logging/structured-logger";
 import { CostOptimizer } from "@/lib/cost-tracking/cost-optimizer";
+import { logger } from "@/lib/logging/structured-logger";
 import { ServiceCost } from "@/lib/cost-tracking/service-costs";
+import { logger } from "@/lib/logging/structured-logger";
 import { addSecurityHeaders } from "@/lib/middleware/security";
+import { logger } from "@/lib/logging/structured-logger";
 import { addCacheHeaders } from "@/lib/middleware/cache";
+import { logger } from "@/lib/logging/structured-logger";
 
 export const dynamic = "force-dynamic";
 

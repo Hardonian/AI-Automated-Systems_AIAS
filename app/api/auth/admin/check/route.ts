@@ -5,8 +5,11 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { getAdminUser, hasAdminRole, AdminRole } from "@/lib/auth/admin-auth";
+import { logger } from "@/lib/logging/structured-logger";
 import { addSecurityHeaders } from "@/lib/middleware/security";
+import { logger } from "@/lib/logging/structured-logger";
 
 export const dynamic = "force-dynamic";
 

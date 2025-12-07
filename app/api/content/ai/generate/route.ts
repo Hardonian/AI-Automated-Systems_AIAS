@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import OpenAI from "openai";
+import { logger } from "@/lib/logging/structured-logger";
 import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logging/structured-logger";
 import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
 
 /**
  * POST /api/content/ai/generate

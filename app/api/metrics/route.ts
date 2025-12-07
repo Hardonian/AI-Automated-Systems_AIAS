@@ -1,10 +1,17 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logging/structured-logger";
 import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
 import { SystemError } from "@/lib/errors";
+import { logger } from "@/lib/logging/structured-logger";
 import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
+import { logger } from "@/lib/logging/structured-logger";
 import { cacheService } from "@/lib/performance/cache";
+import { logger } from "@/lib/logging/structured-logger";
 import { createGETHandler } from "@/lib/api/route-handler";
+import { logger } from "@/lib/logging/structured-logger";
 
 export const runtime = "nodejs"; // Use Node.js runtime for ioredis compatibility
 export const dynamic = "force-dynamic";

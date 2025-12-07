@@ -5,9 +5,13 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { costMonitor } from "@/lib/cost-tracking/cost-monitor";
+import { logger } from "@/lib/logging/structured-logger";
 import { CostThreshold } from "@/lib/cost-tracking/cost-monitor";
+import { logger } from "@/lib/logging/structured-logger";
 import { addSecurityHeaders } from "@/lib/middleware/security";
+import { logger } from "@/lib/logging/structured-logger";
 
 export const dynamic = "force-dynamic";
 

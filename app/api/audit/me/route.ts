@@ -1,6 +1,8 @@
 // [STAKE+TRUST:BEGIN:audit_api]
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logging/structured-logger";
 
 export const runtime = "edge";
 

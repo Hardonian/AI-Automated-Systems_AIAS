@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { logger } from "@/lib/logging/structured-logger";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { logger } from "@/lib/logging/structured-logger";
 import { DollarSign, TrendingUp, Users, CreditCard } from "lucide-react";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface RevenueData {
   mrr: number;

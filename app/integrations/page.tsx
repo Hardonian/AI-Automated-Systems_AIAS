@@ -86,26 +86,26 @@ const integrations = [
 export default function IntegrationsPage() {
   return (
     <div className="container py-16">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+      <div className="text-center mb-12 px-4">
+        <h1 className="text-4xl md:text-5xl font-bold mb-6">
           Global Integrations for Every Market
         </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
           Connect business tools worldwide. Built in Canada, designed for global markets. 
           Support for North America, Europe, Asia-Pacific, and beyond. No coding required — connect in minutes.
         </p>
-        <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
+        <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
           🇨🇦 Built in Canada • 🌍 More Integrations Coming Soon
         </div>
-        <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg max-w-3xl mx-auto">
-          <p className="text-sm text-blue-900 dark:text-blue-100">
+        <div className="mt-6 p-4 md:p-5 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg max-w-3xl mx-auto">
+          <p className="text-sm md:text-base text-blue-900 dark:text-blue-100 leading-relaxed">
             <strong>Current Status:</strong> Shopify and Wave Accounting are available now. More integrations are being added regularly. 
-            See below for availability status of each integration.
+            See below for availability status.
           </p>
         </div>
-        <div className="mt-6 p-6 bg-primary/5 rounded-lg max-w-3xl mx-auto">
-          <h2 className="text-xl font-bold mb-2">🇨🇦 Canadian Integrations — Our Specialty</h2>
-          <p className="text-muted-foreground mb-4">
+        <div className="mt-8 p-6 md:p-8 bg-primary/5 rounded-lg max-w-3xl mx-auto">
+          <h2 className="text-xl md:text-2xl font-bold mb-4">🇨🇦 Canadian Integrations — Our Specialty</h2>
+          <p className="text-muted-foreground mb-6 text-base md:text-lg leading-relaxed">
             We specialize in Canadian business tools: Shopify, Wave Accounting, Stripe CAD, RBC, TD, Interac, and more. 
             Built for Canadian businesses with Canadian data residency options.
           </p>
@@ -125,16 +125,16 @@ export default function IntegrationsPage() {
       </div>
 
       {integrations.map((category) => (
-        <section key={category.category} className="mb-12">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-2">{category.category}</h2>
-            <p className="text-muted-foreground">{category.description}</p>
+        <section key={category.category} className="mb-12 px-4">
+          <div className="mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">{category.category}</h2>
+            <p className="text-muted-foreground text-base md:text-lg leading-relaxed">{category.description}</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {category.tools.map((tool) => (
               <Card key={tool.name}>
-                <CardHeader>
-                  <div className="flex items-start justify-between mb-2">
+                <CardHeader className="pb-4">
+                  <div className="flex items-start justify-between mb-3">
                     <CardTitle className="text-lg">{tool.name}</CardTitle>
                     {tool.status === "available" ? (
                       <Badge className="bg-green-500">Available</Badge>
@@ -142,7 +142,7 @@ export default function IntegrationsPage() {
                       <Badge variant="secondary">Coming Soon</Badge>
                     )}
                   </div>
-                  <CardDescription>{tool.description}</CardDescription>
+                  <CardDescription className="text-sm leading-relaxed">{tool.description}</CardDescription>
                 </CardHeader>
               </Card>
             ))}
@@ -150,27 +150,27 @@ export default function IntegrationsPage() {
         </section>
       ))}
 
-      <div className="mt-12 text-center space-y-4">
-        <h2 className="text-2xl font-bold">Don't See Your Tool?</h2>
-        <p className="text-muted-foreground">
+      <div className="mt-12 text-center space-y-6 px-4">
+        <h2 className="text-2xl md:text-3xl font-bold">Don't See Your Tool?</h2>
+        <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
           We're constantly adding new integrations. Request one or build your own with our API.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button variant="outline" asChild>
+          <Button variant="outline" className="h-11 text-base" asChild>
             <Link href="/help">Request Integration</Link>
           </Button>
-          <Button variant="outline" asChild>
+          <Button variant="outline" className="h-11 text-base" asChild>
             <Link href="/api">View API Docs</Link>
           </Button>
         </div>
       </div>
 
-      <div className="mt-12 text-center space-y-4 bg-muted/50 rounded-lg p-8">
-        <h2 className="text-2xl font-bold">Ready to Connect Your Tools?</h2>
-        <p className="text-muted-foreground">
+      <div className="mt-12 text-center space-y-6 bg-muted/50 rounded-lg p-8 md:p-10 px-4">
+        <h2 className="text-2xl md:text-3xl font-bold">Ready to Connect Your Tools?</h2>
+        <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
           Start automating your workflows today. Connect your first integration in minutes.
         </p>
-        <Button size="lg" asChild>
+        <Button size="lg" className="h-12 text-base font-semibold" asChild>
           <Link href="/pricing">Start Free Trial</Link>
         </Button>
       </div>

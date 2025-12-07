@@ -118,40 +118,40 @@ export default function ServicesPage() {
     <>
       <ServiceSchema />
       <div className="container py-16">
-      <div className="text-center mb-16 max-w-3xl mx-auto">
+      <div className="text-center mb-16 max-w-3xl mx-auto px-4">
         <h1 className="text-4xl md:text-5xl font-bold mb-6">
           AIAS Consultancy — Custom Development Services
         </h1>
-        <p className="text-xl text-muted-foreground mb-6">
+        <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
           Need something custom? We build complete AI platforms, automation systems, 
           and intelligent agents tailored to your business. See our work: TokPulse, Hardonia Suite.
         </p>
-        <div className="p-6 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg mb-6">
-          <h2 className="text-lg font-semibold mb-2">SaaS vs. Consulting — Which Do You Need?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+        <div className="p-6 md:p-8 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg mb-8">
+          <h2 className="text-lg md:text-xl font-semibold mb-4">SaaS vs. Consulting — Which Do You Need?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
             <div>
-              <h3 className="font-semibold mb-2">AIAS Platform (SaaS)</h3>
-              <p className="text-sm text-muted-foreground mb-2">Choose if you want:</p>
-              <ul className="text-sm space-y-1 text-muted-foreground">
+              <h3 className="font-semibold mb-3 text-base">AIAS Platform (SaaS)</h3>
+              <p className="text-sm text-muted-foreground mb-3">Choose if you want:</p>
+              <ul className="text-sm space-y-2 text-muted-foreground mb-4">
                 <li>• Self-serve automation ($49-149/month)</li>
                 <li>• Pre-built templates and integrations</li>
                 <li>• Quick setup (30 minutes)</li>
                 <li>• Standard workflows</li>
               </ul>
-              <Button size="sm" variant="outline" className="mt-3 w-full" asChild>
+              <Button size="sm" variant="outline" className="w-full" asChild>
                 <Link href="/pricing">View SaaS Plans</Link>
               </Button>
             </div>
             <div>
-              <h3 className="font-semibold mb-2">AIAS Consultancy (Custom)</h3>
-              <p className="text-sm text-muted-foreground mb-2">Choose if you need:</p>
-              <ul className="text-sm space-y-1 text-muted-foreground">
+              <h3 className="font-semibold mb-3 text-base">AIAS Consultancy (Custom)</h3>
+              <p className="text-sm text-muted-foreground mb-3">Choose if you need:</p>
+              <ul className="text-sm space-y-2 text-muted-foreground mb-4">
                 <li>• Custom platform development</li>
                 <li>• Unique business requirements</li>
                 <li>• Full-stack development (8-16 weeks)</li>
                 <li>• Ongoing support and optimization</li>
               </ul>
-              <Button size="sm" variant="outline" className="mt-3 w-full" asChild>
+              <Button size="sm" variant="outline" className="w-full" asChild>
                 <Link href="/demo">Schedule Consultation</Link>
               </Button>
             </div>
@@ -167,13 +167,13 @@ export default function ServicesPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 px-4">
         {services.map((service) => {
           const Icon = service.icon;
           return (
             <Card key={service.title} className="h-full">
-              <CardHeader>
-                <div className="flex items-start justify-between mb-2">
+              <CardHeader className="pb-4">
+                <div className="flex items-start justify-between mb-3">
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Icon className="h-6 w-6 text-primary" />
                   </div>
@@ -183,16 +183,16 @@ export default function ServicesPage() {
                     </Badge>
                   )}
                 </div>
-                <CardTitle className="text-xl mb-2">{service.title}</CardTitle>
-                <CardDescription className="text-base">{service.description}</CardDescription>
+                <CardTitle className="text-xl mb-3">{service.title}</CardTitle>
+                <CardDescription className="text-base leading-relaxed">{service.description}</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
+              <CardContent className="pt-6">
+                <div className="space-y-5">
                   <div>
-                    <h4 className="font-semibold text-sm mb-2">Deliverables:</h4>
-                    <ul className="space-y-1">
+                    <h4 className="font-semibold text-sm mb-3">Deliverables:</h4>
+                    <ul className="space-y-2">
                       {service.deliverables.map((item, idx) => (
-                        <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                        <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2 leading-relaxed">
                           <span className="text-primary mt-1">•</span>
                           <span>{item}</span>
                         </li>
@@ -200,7 +200,7 @@ export default function ServicesPage() {
                     </ul>
                   </div>
                   <div className="pt-4 border-t">
-                    <p className="text-sm text-muted-foreground mb-3">
+                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
                       <strong>Typical Timeline:</strong> {service.timeline}
                     </p>
                     {"link" in service && service.link && (
@@ -216,9 +216,9 @@ export default function ServicesPage() {
         })}
       </div>
 
-      <div className="bg-muted/50 rounded-lg p-8 text-center">
-        <h2 className="text-2xl font-bold mb-4">Ready to Build Your Custom AI Platform?</h2>
-        <p className="text-muted-foreground mb-6">
+      <div className="bg-muted/50 rounded-lg p-8 md:p-10 text-center px-4">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Build Your Custom AI Platform?</h2>
+        <p className="text-muted-foreground mb-6 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
           Schedule a strategy call to discuss your project. We'll review your needs, 
           share relevant case studies, and outline a custom solution.
         </p>

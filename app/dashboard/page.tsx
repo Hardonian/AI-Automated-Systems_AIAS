@@ -169,9 +169,9 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Ecosystem Dashboard</h1>
-        <p className="text-muted-foreground">
+      <div className="mb-8 px-4">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Ecosystem Dashboard</h1>
+        <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
           Real-time metrics showing our living, breathing community
         </p>
         {allCylindersFiring && (
@@ -188,18 +188,18 @@ export default async function DashboardPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 px-4">
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <Users className="w-5 h-5" />
               New Users This Week
             </CardTitle>
-            <CardDescription>KPI 1: Growth Momentum</CardDescription>
+            <CardDescription className="text-sm mt-1">KPI 1: Growth Momentum</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{kpiData.newUsersThisWeek}</div>
-            <p className="text-sm text-muted-foreground mt-2">
+          <CardContent className="pt-6">
+            <div className="text-3xl font-bold mb-3">{kpiData.newUsersThisWeek}</div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Threshold: 50+ users
               {(kpiData as any).kpi1Met ? (
                 <Badge className="ml-2" variant="default">
@@ -215,18 +215,18 @@ export default async function DashboardPage() {
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <Eye className="w-5 h-5" />
               Average Post Views
             </CardTitle>
-            <CardDescription>KPI 2: Content Engagement</CardDescription>
+            <CardDescription className="text-sm mt-1">KPI 2: Content Engagement</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">
+          <CardContent className="pt-6">
+            <div className="text-3xl font-bold mb-3">
               {Math.round(kpiData.avgPostViews)}
             </div>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Threshold: 100+ views
               {(kpiData as any).kpi2Met ? (
                 <Badge className="ml-2" variant="default">
@@ -242,16 +242,16 @@ export default async function DashboardPage() {
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <Activity className="w-5 h-5" />
               Actions Last Hour
             </CardTitle>
-            <CardDescription>KPI 3: Real-Time Engagement</CardDescription>
+            <CardDescription className="text-sm mt-1">KPI 3: Real-Time Engagement</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{kpiData.actionsLastHour}</div>
-            <p className="text-sm text-muted-foreground mt-2">
+          <CardContent className="pt-6">
+            <div className="text-3xl font-bold mb-3">{kpiData.actionsLastHour}</div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Threshold: 20+ actions
               {(kpiData as any).kpi3Met ? (
                 <Badge className="ml-2" variant="default">
@@ -273,12 +273,12 @@ export default async function DashboardPage() {
       </div>
 
       {/* Additional Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 px-4">
         <Card>
-          <CardHeader>
-            <CardTitle>Community Overview</CardTitle>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg">Community Overview</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <div className="space-y-4">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Total Users</span>
@@ -297,13 +297,13 @@ export default async function DashboardPage() {
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <MessageSquare className="w-5 h-5" />
               Most Engaged Posts
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             {topPosts.length > 0 ? (
               <div className="space-y-3">
                 {topPosts.map((post: any) => (
@@ -327,15 +327,15 @@ export default async function DashboardPage() {
       </div>
 
       {/* Recent Activity Feed */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+      <Card className="mx-4">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg">
             <TrendingUp className="w-5 h-5" />
             Recent Activity
           </CardTitle>
-          <CardDescription>Live engagement signals from the community</CardDescription>
+          <CardDescription className="text-sm mt-1">Live engagement signals from the community</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           {recentActivity.length > 0 ? (
             <div className="space-y-2">
               {recentActivity.map((activity: any, idx: number) => (
@@ -362,14 +362,14 @@ export default async function DashboardPage() {
 
       {/* External Data Enrichment */}
       {techNews && (
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle>Tech Community Insights</CardTitle>
-            <CardDescription>
+        <Card className="mt-6 mx-4">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg">Tech Community Insights</CardTitle>
+            <CardDescription className="text-sm mt-1">
               Enriched with data from {techNews.source === "dev.to" ? "Dev.to API" : "sample data"}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             {techNews.articles && techNews.articles.length > 0 ? (
               <div className="space-y-2">
                 {techNews.articles.slice(0, 3).map((article: any, idx: number) => (

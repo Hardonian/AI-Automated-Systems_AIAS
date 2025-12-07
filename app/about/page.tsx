@@ -14,93 +14,93 @@ export default function AboutPage() {
   return (
     <ParallaxBackground className="container py-16">
       <div className="max-w-3xl mx-auto space-y-12">
-        <div className="text-center">
+        <div className="text-center px-4">
           <TextReveal
             as="h1"
-            className="text-4xl md:text-5xl font-bold mb-4 block"
+            className="text-4xl md:text-5xl font-bold mb-6 block"
             delay={0.1}
             staggerDelay={0.03}
           >
             About AIAS Platform
           </TextReveal>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg md:text-xl text-muted-foreground mb-6 leading-relaxed">
             Systems thinking + AI automation. The critical skill for the AI age. Built in Canada, serving the world. 🇨🇦 🌍
           </p>
-          <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
+          <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
             🧠 Systems Thinking: The Critical Skill for the AI Age
           </div>
         </div>
 
-        <section>
-          <h2 className="text-2xl font-bold mb-4">Our Mission: Systems Thinking for the AI Age</h2>
-          <div className="bg-primary/10 p-6 rounded-lg mb-4">
-            <p className="font-semibold text-lg mb-2">
+        <section className="px-4">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6">Our Mission: Systems Thinking for the AI Age</h2>
+          <div className="bg-primary/10 p-6 md:p-8 rounded-lg mb-6">
+            <p className="font-semibold text-lg md:text-xl mb-3 leading-relaxed">
               Systems thinking is THE critical skill needed more than ever in the AI age.
             </p>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-base leading-relaxed">
               It's what makes you stand out in the job market, succeed in business, and achieve optimal outcomes. 
               AI amplifies systems thinking — it doesn't replace it.
             </p>
           </div>
-          <p className="text-muted-foreground mb-4">
+          <p className="text-muted-foreground mb-5 text-base leading-relaxed">
             AIAS Platform was founded in Canada with a global vision. Built on years of experience supporting 
             stakeholders across education, healthcare, technology, and business sectors worldwide, we understand 
             that <strong>productivity requires multiple approaches</strong> — not just automation. Systems thinking is 
             the foundation of everything we do.
           </p>
-          <p className="text-muted-foreground mb-4">
+          <p className="text-muted-foreground mb-5 text-base leading-relaxed">
             Our mission is to develop systems thinking capabilities while making AI automation accessible to businesses everywhere. 
             We believe that <strong>automation alone fails</strong> — but systems thinking combined with AI automation creates 
             unstoppable results. That's why every solution we build analyzes problems from multiple perspectives, finds root causes, 
             and designs holistic solutions.
           </p>
-          <p className="text-muted-foreground mb-4">
+          <p className="text-muted-foreground mb-6 text-base leading-relaxed">
             With deep roots in education and stakeholder management, we've seen first-hand how <strong>systems thinking</strong> 
             transforms outcomes across industries. Whether you're managing educational programs, healthcare operations, or business 
             processes, systems thinking reveals optimal solutions that automation alone cannot achieve.
           </p>
         </section>
 
-        <section>
-          <h2 className="text-2xl font-bold mb-4">Why Systems Thinking + AI = Success</h2>
-          <div className="bg-muted/50 p-6 rounded-lg mb-4">
-            <h3 className="font-semibold text-lg mb-3">The AI Paradox:</h3>
-            <p className="text-muted-foreground mb-3">
+        <section className="px-4">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6">Why Systems Thinking + AI = Success</h2>
+          <div className="bg-muted/50 p-6 md:p-8 rounded-lg mb-6">
+            <h3 className="font-semibold text-lg md:text-xl mb-4">The AI Paradox:</h3>
+            <p className="text-muted-foreground mb-4 text-base leading-relaxed">
               The more AI advances, the more systems thinking is needed. AI can automate tasks, but AI cannot replicate systems thinking.
             </p>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <ul className="space-y-3 text-sm md:text-base text-muted-foreground">
               <li>• AI eliminates routine → Systems thinking becomes essential</li>
               <li>• AI handles data → Systems thinking interprets meaning</li>
               <li>• AI automates tasks → Systems thinking designs solutions</li>
               <li>• AI scales execution → Systems thinking creates strategy</li>
             </ul>
           </div>
-          <p className="text-muted-foreground mb-4">
+          <p className="text-muted-foreground mb-5 text-base leading-relaxed">
             Our Canadian roots give us a unique perspective on global business needs. We understand the importance of 
             strong privacy laws (PIPEDA), transparent pricing, and reliable service. But more importantly, we understand 
             that <strong>systems thinking is the foundation of success</strong> in the AI age.
           </p>
-          <p className="text-muted-foreground mb-4">
+          <p className="text-muted-foreground mb-5 text-base leading-relaxed">
             That's why AIAS Platform combines:
           </p>
-          <ul className="space-y-2 text-muted-foreground mb-4">
-            <li className="flex items-start gap-2">
+          <ul className="space-y-3 text-muted-foreground mb-6">
+            <li className="flex items-start gap-3 text-base leading-relaxed">
               <span className="text-primary mt-1">✓</span>
               <span><strong>Systems Thinking:</strong> THE critical skill for the AI age. Multi-perspective analysis, root cause identification, holistic solutions</span>
             </li>
-            <li className="flex items-start gap-2">
+            <li className="flex items-start gap-3 text-base leading-relaxed">
               <span className="text-primary mt-1">✓</span>
               <span><strong>AI Automation:</strong> Strategic automation that amplifies systems thinking. AI handles execution, systems thinking creates strategy</span>
             </li>
-            <li className="flex items-start gap-2">
+            <li className="flex items-start gap-3 text-base leading-relaxed">
               <span className="text-primary mt-1">✓</span>
               <span><strong>Job Market Advantage:</strong> Systems thinking is what makes you stand out. Career differentiation, higher compensation, job security</span>
             </li>
-            <li className="flex items-start gap-2">
+            <li className="flex items-start gap-3 text-base leading-relaxed">
               <span className="text-primary mt-1">✓</span>
               <span><strong>Business Success:</strong> Systems thinking drives sustainable success. Competitive advantage, optimal outcomes, market leadership</span>
             </li>
-            <li className="flex items-start gap-2">
+            <li className="flex items-start gap-3 text-base leading-relaxed">
               <span className="text-primary mt-1">✓</span>
               <span><strong>Global Excellence:</strong> Built in Canada, serving the world. Systems thinking works everywhere, across all markets and cultures</span>
             </li>

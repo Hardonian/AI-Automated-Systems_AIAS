@@ -172,44 +172,44 @@ const featureCategories = [
 export default function FeaturesPage() {
   return (
     <ParallaxBackground className="container py-16">
-      <div className="text-center mb-12">
+      <div className="text-center mb-12 px-4">
         <TextReveal
           as="h1"
-          className="text-4xl md:text-5xl font-bold mb-4 block"
+          className="text-4xl md:text-5xl font-bold mb-6 block"
           delay={0.1}
           staggerDelay={0.03}
         >
           Powerful Features. Simple Setup.
         </TextReveal>
-        <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+        <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-6 leading-relaxed">
           Automate workflows, analyze campaigns, and get personalized insights. Everything you need to save time and grow your business.
         </p>
-        <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
+        <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
           ⚡ Quick Setup • 🔄 High-Volume Automations • 📊 Analytics Dashboard
         </div>
       </div>
 
       {featureCategories.map((category) => (
-        <section key={category.title} className="mb-16">
-          <div className="text-center mb-8">
+        <section key={category.title} className="mb-16 px-4">
+          <div className="text-center mb-10">
             <TextReveal
               as="h2"
-              className="text-3xl font-bold mb-2"
+              className="text-3xl md:text-4xl font-bold mb-4"
               delay={0.2}
               staggerDelay={0.02}
             >
               {category.title}
             </TextReveal>
-            <p className="text-muted-foreground">{category.description}</p>
+            <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-2xl mx-auto">{category.description}</p>
           </div>
           <BentoGrid columns={2} className="gap-6">
             {category.features.map((feature) => (
               <BentoGridItem key={feature.name} colSpan={1} rowSpan={1}>
                 <SpotlightCard>
                   <Card className="border-0 bg-transparent shadow-none h-full">
-                    <CardHeader>
-                      <CardTitle>{feature.name}</CardTitle>
-                      <CardDescription>{feature.description}</CardDescription>
+                    <CardHeader className="pb-4">
+                      <CardTitle className="text-xl mb-2">{feature.name}</CardTitle>
+                      <CardDescription className="text-base leading-relaxed">{feature.description}</CardDescription>
                     </CardHeader>
                   </Card>
                 </SpotlightCard>
@@ -219,16 +219,16 @@ export default function FeaturesPage() {
         </section>
       ))}
 
-      <div className="text-center mt-12 space-y-4 bg-primary/5 rounded-lg p-8">
-        <h2 className="text-2xl font-bold mb-2">Ready to Automate Your Workflows?</h2>
-        <p className="text-muted-foreground mb-4">
+      <div className="text-center mt-16 space-y-6 bg-primary/5 rounded-lg p-8 md:p-10 px-4">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Automate Your Workflows?</h2>
+        <p className="text-muted-foreground mb-6 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
           Start your 30-day free trial. No credit card required. Connect your tools and automate your first workflow in minutes.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button size="lg" className="h-12 text-base font-semibold" asChild>
             <Link href="/signup">Start 30-Day Free Trial</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button size="lg" variant="outline" className="h-12 text-base font-semibold" asChild>
             <Link href="/pricing">See Pricing</Link>
           </Button>
         </div>

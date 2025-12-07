@@ -43,7 +43,7 @@ interface DependencyReport {
 export class DependencyHealthChecker {
   constructor(
     private supabase: any,
-    private config: any
+    private _config: any
   ) {}
 
   async check(): Promise<ModuleResult> {

@@ -200,11 +200,19 @@ class AIAutoScale {
    * Simple linear regression implementation
    */
   private linearRegression(x: number[], y: number[]): { slope: number; intercept: number; rSquared: number } {
-    const n = x.length;
-    const sumX = x.reduce((a, b) => a + b, 0);
-    const sumY = y.reduce((a, b) => a + b, 0);
-    const sumXY = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
-    const sumXX = x.reduce((sum, xi) => sum + xi * xi, 0);
+    const n = Math.min(x.length, y.length);
+    if (n === 0) {
+      return { slope: 0, intercept: 0, rSquared: 0 };
+    }
+    
+    // Ensure arrays are aligned
+    const xValues = x.slice(0, n);
+    const yValues = y.slice(0, n);
+    
+    const sumX = xValues.reduce((a, b) => a + b, 0);
+    const sumY = yValues.reduce((a, b) => a + b, 0);
+    const sumXY = xValues.reduce((sum, xi, i) => sum + xi * yValues[i]!, 0);
+    const sumXX = xValues.reduce((sum, xi) => sum + xi * xi, 0);
     // const sumYY = y.reduce((sum, yi) => sum + yi * yi, 0); // Not used in current calculation
 
     const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
@@ -212,11 +220,11 @@ class AIAutoScale {
 
     // Calculate R-squared
     const yMean = sumY / n;
-    const ssRes = y.reduce((sum, yi, i) => {
-      const predicted = slope * x[i] + intercept;
+    const ssRes = yValues.reduce((sum, yi, i) => {
+      const predicted = slope * xValues[i]! + intercept;
       return sum + Math.pow(yi - predicted, 2);
     }, 0);
-    const ssTot = y.reduce((sum, yi) => sum + Math.pow(yi - yMean, 2), 0);
+    const ssTot = yValues.reduce((sum, yi) => sum + Math.pow(yi - yMean, 2), 0);
     const rSquared = 1 - (ssRes / ssTot);
 
     return { slope, intercept, rSquared: Math.max(0, rSquared) };

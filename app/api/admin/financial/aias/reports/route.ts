@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { searchParams } = new URL(request.url);
+    const { searchParams: _searchParams } = new URL(request.url);
     // const reportType = searchParams.get("type") || "monthly"; // TODO: Use when implementing report filtering
     // const year = searchParams.get("year"); // TODO: Use when implementing report filtering
     // const month = searchParams.get("month"); // TODO: Use when implementing report filtering

@@ -70,9 +70,10 @@ export async function GET(request: NextRequest) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
       const dateStr = date.toISOString().split("T")[0];
-      const groupData = grouped[dateStr];
+      const groupData = dateStr ? grouped[dateStr] : undefined;
+      const finalDateStr = dateStr || new Date().toISOString().split('T')[0] || '';
       result.push({
-        date: dateStr,
+        date: finalDateStr,
         completed: groupData?.completed || 0,
         failed: groupData?.failed || 0,
       });

@@ -13,6 +13,11 @@ export interface SecurityEvent {
   ip: string;
   path: string;
   userAgent?: string;
+  userId?: string;
+  tenantId?: string;
+  ipAddress?: string;
+  endpoint?: string;
+  method?: string;
   details?: Record<string, any>;
   timestamp: number;
 }

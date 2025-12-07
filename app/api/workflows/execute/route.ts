@@ -5,6 +5,8 @@ import { env } from "@/lib/env";
 import { executeWorkflow } from "@/lib/workflows/executor-enhanced";
 import { trackWorkflowExecute } from "@/lib/analytics/funnel-tracking";
 import { createPOSTHandler } from "@/lib/api/route-handler";
+import { logger } from "@/lib/logging/structured-logger";
+import { handleApiError } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 

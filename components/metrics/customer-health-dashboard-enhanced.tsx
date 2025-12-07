@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from "recharts";
 import { motion } from "framer-motion";
-import { TrendingUp, Activity, Heart, AlertTriangle, CheckCircle2, Users } from "lucide-react";
+import { TrendingUp, Activity, Heart, AlertTriangle, CheckCircle2, Users, AlertCircle } from "lucide-react";
 
 interface CustomerHealth {
   id: string;
@@ -103,13 +103,13 @@ export function CustomerHealthDashboardEnhanced() {
       },
     };
 
-    const variant = variants[status] || variants.green;
-    const Icon = variant.icon;
+    const variant = (status && variants[status]) || variants.green;
+    const Icon = variant?.icon || AlertCircle;
 
     return (
-      <Badge className={variant.className}>
+      <Badge className={variant?.className || ''}>
         <Icon className="mr-1 h-3 w-3" />
-        {variant.label}
+        {variant?.label || status}
       </Badge>
     );
   };
@@ -261,7 +261,7 @@ export function CustomerHealthDashboardEnhanced() {
                     <Tooltip />
                     <Legend />
                     <Bar dataKey="value" radius={[8, 8, 0, 0]}>
-                      {["Healthy", "At Risk", "Critical"].map((name, index) => (
+                      {["Healthy", "At Risk", "Critical"].map((name) => (
                         <Cell key={name} fill={COLORS[name === "Healthy" ? "green" : name === "At Risk" ? "yellow" : "red"]} />
                       ))}
                     </Bar>

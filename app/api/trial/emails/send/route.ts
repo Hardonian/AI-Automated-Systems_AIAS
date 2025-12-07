@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { processTrialEmailsForUser, processAllTrialEmails } from "@/lib/email-cadence/sender";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/logging/structured-logger";
 /**
  * POST /api/trial/emails/send
  * Send trial emails (can be called for specific user or all users)

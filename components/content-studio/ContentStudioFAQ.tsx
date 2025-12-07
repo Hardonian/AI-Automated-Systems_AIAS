@@ -30,11 +30,14 @@ export function ContentStudioFAQ({
 
   const updateCategory = (categoryIndex: number, field: string, value: any) => {
     const newCategories = [...content.categories];
-    newCategories[categoryIndex] = {
-      ...newCategories[categoryIndex],
-      [field]: value,
-    };
-    updateField("categories", newCategories);
+    const existingCategory = newCategories[categoryIndex];
+    if (existingCategory) {
+      newCategories[categoryIndex] = {
+        ...existingCategory,
+        [field]: value,
+      };
+      updateField("categories", newCategories);
+    }
   };
 
   const updateQuestion = (
@@ -44,13 +47,18 @@ export function ContentStudioFAQ({
     value: any
   ) => {
     const newCategories = [...content.categories];
-    const questions = [...newCategories[categoryIndex].questions];
-    questions[questionIndex] = { ...questions[questionIndex], [field]: value };
-    newCategories[categoryIndex] = {
-      ...newCategories[categoryIndex],
-      questions,
-    };
-    updateField("categories", newCategories);
+    const category = newCategories[categoryIndex];
+    if (!category) return;
+    const questions = [...category.questions];
+    const existingQuestion = questions[questionIndex];
+    if (existingQuestion) {
+      questions[questionIndex] = { ...existingQuestion, [field]: value };
+      newCategories[categoryIndex] = {
+        ...category,
+        questions,
+      };
+      updateField("categories", newCategories);
+    }
   };
 
   const addCategory = () => {
@@ -70,11 +78,14 @@ export function ContentStudioFAQ({
 
   const addQuestion = (categoryIndex: number) => {
     const newCategories = [...content.categories];
-    newCategories[categoryIndex].questions.push({
-      question: "New Question?",
-      answer: "New Answer.",
-    });
-    updateField("categories", newCategories);
+    const category = newCategories[categoryIndex];
+    if (category) {
+      category.questions.push({
+        question: "New Question?",
+        answer: "New Answer.",
+      });
+      updateField("categories", newCategories);
+    }
   };
 
   const removeCategory = (categoryIndex: number) => {
@@ -86,10 +97,11 @@ export function ContentStudioFAQ({
 
   const removeQuestion = (categoryIndex: number, questionIndex: number) => {
     const newCategories = [...content.categories];
-    newCategories[categoryIndex].questions = newCategories[
-      categoryIndex
-    ].questions.filter((_, i) => i !== questionIndex);
-    updateField("categories", newCategories);
+    const category = newCategories[categoryIndex];
+    if (category) {
+      category.questions = category.questions.filter((_, i) => i !== questionIndex);
+      updateField("categories", newCategories);
+    }
   };
 
   return (

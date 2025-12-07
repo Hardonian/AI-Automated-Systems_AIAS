@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import type { Database } from "@/src/integrations/supabase/types";
+import { logger } from "@/lib/logging/structured-logger";
 /**
  * Health Status Endpoint: "All-Cylinder Firing Check"
  * 
@@ -61,13 +62,13 @@ export async function GET() {
 
     // Fetch all 3 KPI views
     const [kpi1Result, kpi2Result, kpi3Result] = await Promise.all([
-      supabase.from("kpi_new_users_week").select("*").single(),
-      supabase.from("kpi_avg_post_views").select("*").single(),
-      supabase.from("kpi_actions_last_hour").select("*").single(),
+      (supabase.from("kpi_new_users_week").select("*").single() as any) as Promise<{ data: any; error: any }>,
+      (supabase.from("kpi_avg_post_views").select("*").single() as any) as Promise<{ data: any; error: any }>,
+      (supabase.from("kpi_actions_last_hour").select("*").single() as any) as Promise<{ data: any; error: any }>,
     ]);
 
     // Handle KPI 1: New Users This Week
-    const kpi1 = kpi1Result.data;
+    const kpi1 = kpi1Result.data as any;
     const newUsersWeek = {
       value: kpi1?.new_users_count || 0,
       threshold: 50,
@@ -75,7 +76,7 @@ export async function GET() {
     };
 
     // Handle KPI 2: Average Post Views
-    const kpi2 = kpi2Result.data;
+    const kpi2 = kpi2Result.data as any;
     const avgPostViews = {
       value: Number(kpi2?.avg_post_views || 0),
       threshold: 100,
@@ -83,7 +84,7 @@ export async function GET() {
     };
 
     // Handle KPI 3: Actions Last Hour
-    const kpi3 = kpi3Result.data;
+    const kpi3 = kpi3Result.data as any;
     const actionsLastHour = {
       value: kpi3?.actions_count || 0,
       threshold: 20,

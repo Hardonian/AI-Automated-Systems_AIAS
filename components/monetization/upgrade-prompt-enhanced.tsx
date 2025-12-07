@@ -18,10 +18,10 @@ export function UpgradePromptEnhanced({
   currentPlan,
   trialDaysRemaining,
   workflowCount = 0,
-  integrationCount = 0,
+  integrationCount: _integrationCount = 0,
   variant = "card",
 }: UpgradePromptEnhancedProps) {
-  if (currentPlan === "starter" || currentPlan === "pro" || currentPlan === "enterprise") {
+  if (currentPlan === "starter" || currentPlan === "pro" || currentPlan === "enterprise" || (currentPlan !== "free" && currentPlan !== "trial")) {
     return null; // Don't show upgrade prompt for paid users
   }
 

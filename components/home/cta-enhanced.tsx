@@ -8,9 +8,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Sparkles, Users, Clock } from 'lucide-react';
+import { ArrowRight, Users, Clock } from 'lucide-react';
 import Link from 'next/link';
-import { trackCTAClick, detectExitIntent, showUrgencyIndicator } from '@/lib/cro/optimization';
+import { trackCTAClick, detectExitIntent } from '@/lib/cro/optimization';
 import { motion } from 'framer-motion';
 
 interface CTAEnhancedProps {
@@ -21,7 +21,7 @@ interface CTAEnhancedProps {
 }
 
 export function CTAEnhanced({
-  variant = 'primary',
+  variant: _variant = 'primary',
   urgency = 'high',
   showSocialProof = true,
   showUrgency = true,

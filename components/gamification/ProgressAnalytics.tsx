@@ -40,7 +40,7 @@ export default function ProgressAnalytics() {
         const date = new Date(startDate);
         date.setDate(date.getDate() + i);
         chartData.push({
-          date: date.toISOString().split("T")[0],
+          date: date.toISOString().split("T")[0] || '',
           xp: dailyXP + Math.floor(Math.random() * 20),
         });
       }

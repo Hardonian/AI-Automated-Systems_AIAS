@@ -7,9 +7,6 @@ import { enrichWithExternalData, generateSampleMetrics, getIndustryBenchmarks } 
 import { HealthMonitor } from "@/components/monitoring/health-monitor";
 import { RealtimeDashboard } from "@/components/dashboard/realtime-dashboard";
 import { DashboardUpgradeSection } from "@/components/dashboard/dashboard-upgrade-section";
-import { WhatsNextChecklist } from "@/components/onboarding/whats-next-checklist";
-import { UsageProgressBanner } from "@/components/monetization/usage-progress-banner";
-import { TrialCountdownBanner } from "@/components/monetization/trial-countdown-banner";
 import { DashboardClient } from "./dashboard-client";
 /**
  * Public Dashboard: "Loud & High" Social Proof Metrics
@@ -39,28 +36,28 @@ async function getKPIData() {
 
     // Fetch KPI views
     const [kpi1, kpi2, kpi3, profilesCount, postsCount] = await Promise.all([
-      supabase.from("kpi_new_users_week").select("*").single(),
-      supabase.from("kpi_avg_post_views").select("*").single(),
-      supabase.from("kpi_actions_last_hour").select("*").single(),
+      (supabase.from("kpi_new_users_week").select("*").single() as any) as Promise<{ data: any; error: any }>,
+      (supabase.from("kpi_avg_post_views").select("*").single() as any) as Promise<{ data: any; error: any }>,
+      (supabase.from("kpi_actions_last_hour").select("*").single() as any) as Promise<{ data: any; error: any }>,
       supabase.from("profiles").select("id", { count: "exact", head: true }),
       supabase.from("posts").select("id", { count: "exact", head: true }),
     ]);
 
+    const kpi1Data = kpi1.data as any;
+    const kpi2Data = kpi2.data as any;
+    const kpi3Data = kpi3.data as any;
     return {
-      newUsersThisWeek: kpi1.data?.new_users_count || 0,
-      avgPostViews: Number(kpi2.data?.avg_post_views || 0),
-      actionsLastHour: kpi3.data?.actions_count || 0,
+      newUsersThisWeek: kpi1Data?.new_users_count || 0,
+      avgPostViews: Number(kpi2Data?.avg_post_views || 0),
+      actionsLastHour: kpi3Data?.actions_count || 0,
       totalUsers: profilesCount.count || 0,
       totalPosts: postsCount.count || 0,
-      kpi1Met: kpi1.data?.threshold_met || false,
-      kpi2Met: kpi2.data?.threshold_met || false,
-      kpi3Met: kpi3.data?.threshold_met || false,
+      kpi1Met: kpi1Data?.threshold_met || false,
+      kpi2Met: kpi2Data?.threshold_met || false,
+      kpi3Met: kpi3Data?.threshold_met || false,
     };
   } catch (error) {
-    logger.error("Error fetching KPI data", error instanceof Error ? error : new Error(String(error)), {
-      component: "DashboardPage",
-      action: "getKPIData",
-    });
+    console.error("Error fetching KPI data", error);
     // Return sample data on error
     return generateSampleMetrics();
   }
@@ -82,11 +79,11 @@ async function getRecentActivity() {
       },
     });
 
-    const { data } = await supabase
+    const { data } = await ((supabase
       .from("activity_log")
       .select("activity_type, created_at, metadata")
       .order("created_at", { ascending: false })
-      .limit(10);
+      .limit(10)) as any);
 
     return data || [];
   } catch {
@@ -110,11 +107,11 @@ async function getTopPosts() {
       },
     });
 
-    const { data } = await supabase
+    const { data } = await ((supabase
       .from("posts")
       .select("id, title, view_count, created_at")
       .order("view_count", { ascending: false })
-      .limit(5);
+      .limit(5)) as any);
 
     return data || [];
   } catch {
@@ -363,7 +360,7 @@ export default async function DashboardPage() {
       </Card>
 
       {/* External Data Enrichment */}
-      {techNews && (
+      {techNews && 'articles' in techNews && (
         <Card className="mt-6 mx-4">
           <CardHeader className="pb-4">
             <CardTitle className="text-lg">Tech Community Insights</CardTitle>
@@ -391,8 +388,8 @@ export default async function DashboardPage() {
                 ))}
               </div>
             ) : null}
-            {techNews.note && (
-              <p className="text-xs text-muted-foreground mt-2">{techNews.note}</p>
+            {'note' in techNews && techNews.note && typeof techNews.note === 'string' && (
+              <p className="text-xs text-muted-foreground mt-2">{String(techNews.note)}</p>
             )}
           </CardContent>
         </Card>

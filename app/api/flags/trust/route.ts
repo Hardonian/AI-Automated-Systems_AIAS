@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
+import { isEdgeConfigAvailable, getEdgeConfigValue } from "@/lib/config/edge-config";
+import { logger } from "@/lib/logging/structured-logger";
 
 export const runtime = 'nodejs'; // Requires Node.js runtime for fs operations
 export const dynamic = "force-dynamic";

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
 import { SystemError, ValidationError, formatError } from "@/lib/errors";
+import { logger } from "@/lib/logging/structured-logger";
+import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -188,7 +190,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       value: duration,
       unit: "ms",
       tags: { status: "success" },
-    });
+    } as any);
 
     logger.info("Metrics computation completed", { duration });
 
@@ -213,7 +215,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       value: duration,
       unit: "ms",
       tags: { status: "error" },
-    });
+    } as any);
 
     logger.error("Compute Metrics ETL failed", systemError, { duration });
 

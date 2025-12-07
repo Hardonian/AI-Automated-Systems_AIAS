@@ -69,7 +69,9 @@ export function OnboardingWizard() {
   }, []);
 
   const goToNext = () => {
-    const currentStepId = steps[currentStep].id;
+    const step = steps[currentStep];
+    if (!step) return;
+    const currentStepId = step.id;
     if (!completedSteps.includes(currentStepId)) {
       setCompletedSteps([...completedSteps, currentStepId]);
     }
@@ -159,15 +161,17 @@ export function OnboardingWizard() {
       </div>
 
       {/* Current Step Content */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{steps[currentStep].title}</CardTitle>
-          <CardDescription>{steps[currentStep].description}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {steps[currentStep].component}
-        </CardContent>
-      </Card>
+      {steps[currentStep] && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{steps[currentStep]!.title}</CardTitle>
+            <CardDescription>{steps[currentStep]!.description}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {steps[currentStep]!.component}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Navigation */}
       {currentStep < steps.length - 1 && (

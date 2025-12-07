@@ -4,7 +4,8 @@ import { z } from "zod";
 import { env } from "@/lib/env";
 import { track } from "@/lib/telemetry/track";
 import { isValidModelFormat } from "@/lib/edge-ai/utils";
-import type { EdgeAIModel } from "@/lib/edge-ai/types";
+import { logger } from "@/lib/logging/structured-logger";
+import { handleApiError } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 

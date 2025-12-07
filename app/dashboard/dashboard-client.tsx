@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { UsageProgressBanner } from '@/components/monetization/usage-progress-banner';
+import { TrialCountdownBanner } from '@/components/monetization/trial-countdown-banner';
+import { WhatsNextChecklist } from '@/components/onboarding/whats-next-checklist';
 export function DashboardClient() {
   const [usage, setUsage] = useState<{ used: number; limit: number; plan: string } | null>(null);
   const [trialInfo, setTrialInfo] = useState<{ daysRemaining: number; trialEndDate: string } | null>(null);
@@ -15,7 +18,7 @@ export function DashboardClient() {
           setUsage({ used: data.used, limit: data.limit, plan: data.plan });
         }
       })
-      .catch((err) => logger.error("Unhandled error", err instanceof Error ? err : new Error(String(err)), { component: "dashboard-client", action: "unknown" }));
+      .catch((err) => console.error("Unhandled error", err));
 
     // Fetch trial info
     fetch("/api/trial/user-data")
@@ -29,7 +32,7 @@ export function DashboardClient() {
         }
         setIsFirstVisit(data.isFirstVisit || false);
       })
-      .catch((err) => logger.error("Unhandled error", err instanceof Error ? err : new Error(String(err)), { component: "dashboard-client", action: "unknown" }));
+      .catch((err) => console.error("Unhandled error", err));
   }, []);
 
   return (

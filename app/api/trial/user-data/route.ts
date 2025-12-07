@@ -7,7 +7,7 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
  * GET /api/trial/user-data
  * Get current user's trial and plan data
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
     

@@ -73,7 +73,7 @@ export default function SDKExportPage() {
                     <div>
                       <p className="text-sm font-medium mb-2">Supported Formats:</p>
                       <div className="flex flex-wrap gap-2">
-                        {exportType.formats.map((format) => (
+                        {(exportType.formats || []).map((format) => (
                           <span
                             key={format}
                             className="px-2 py-1 bg-muted rounded text-xs"
@@ -88,7 +88,7 @@ export default function SDKExportPage() {
                     <div>
                       <p className="text-sm font-medium mb-2">Languages:</p>
                       <div className="flex flex-wrap gap-2">
-                        {exportType.languages.map((lang) => (
+                        {(exportType.languages || []).map((lang) => (
                           <span
                             key={lang}
                             className="px-2 py-1 bg-muted rounded text-xs"
@@ -103,7 +103,7 @@ export default function SDKExportPage() {
                     <div>
                       <p className="text-sm font-medium mb-2">Platforms:</p>
                       <div className="flex flex-wrap gap-2">
-                        {exportType.platforms.map((platform) => (
+                        {(exportType.platforms || []).map((platform) => (
                           <span
                             key={platform}
                             className="px-2 py-1 bg-muted rounded text-xs"
@@ -118,7 +118,7 @@ export default function SDKExportPage() {
                     <div>
                       <p className="text-sm font-medium mb-2">Templates:</p>
                       <div className="flex flex-wrap gap-2">
-                        {exportType.templates.map((template) => (
+                        {(exportType.templates || []).map((template) => (
                           <span
                             key={template}
                             className="px-2 py-1 bg-muted rounded text-xs"

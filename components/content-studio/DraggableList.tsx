@@ -48,7 +48,9 @@ export function DraggableList<T>({
 
     const newItems = [...items];
     const [removed] = newItems.splice(draggedIndex, 1);
-    newItems.splice(dropIndex, 0, removed);
+    if (removed) {
+      newItems.splice(dropIndex, 0, removed);
+    }
     
     onReorder(newItems);
     setDraggedIndex(null);

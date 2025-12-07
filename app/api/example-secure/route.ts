@@ -37,11 +37,12 @@ export const GET = createGETHandler(async (context) => {
   // Validate tenant access
   const access = await tenantIsolation.validateAccess(tenantId, userId);
   if (!access.allowed) {
-    await securityMonitor.recordEvent({
-      type: 'unauthorized',
+    await securityMonitor.logEvent({
+      type: 'unauthorized_access',
       severity: 'medium',
-      tenantId,
       userId,
+      ip: context.request.headers.get('x-forwarded-for') || 'unknown',
+      path: '/api/example-secure',
       ipAddress: context.request.headers.get('x-forwarded-for') || 'unknown',
       endpoint: '/api/example-secure',
       method: 'GET',
@@ -113,11 +114,12 @@ export const POST = createPOSTHandler(async (context) => {
   );
   
   if (!access.allowed) {
-    await securityMonitor.recordEvent({
-      type: 'unauthorized',
+    await securityMonitor.logEvent({
+      type: 'unauthorized_access',
       severity: 'medium',
-      tenantId,
       userId,
+      ip: request.headers.get('x-forwarded-for') || 'unknown',
+      path: '/api/example-secure',
       ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
       endpoint: '/api/example-secure',
       method: 'POST',
@@ -133,11 +135,12 @@ export const POST = createPOSTHandler(async (context) => {
   // Check resource limits
   const limits = await tenantIsolation.checkLimits(tenantId, 'workflows', 1);
   if (!limits.allowed) {
-    await securityMonitor.recordEvent({
+    await securityMonitor.logEvent({
       type: 'rate_limit',
       severity: 'low',
-      tenantId,
       userId,
+      ip: request.headers.get('x-forwarded-for') || 'unknown',
+      path: '/api/example-secure',
       ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
       endpoint: '/api/example-secure',
       method: 'POST',

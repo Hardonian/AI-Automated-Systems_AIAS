@@ -137,24 +137,28 @@ export function TestimonialCarousel() {
           >
             <Card className="border-2 border-primary/50 shadow-lg">
               <CardContent className="pt-6 pb-6 px-6">
-                <Quote className="h-8 w-8 text-primary/30 mb-4" aria-hidden="true" />
-                <div className="flex items-center gap-1 mb-3">
-                  {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" aria-hidden="true" />
-                  ))}
-                </div>
-                <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                  "{testimonials[currentIndex].text}"
-                </p>
-                <div className="flex items-center gap-3 pt-4 border-t border-border">
-                  <div className="text-3xl">{testimonials[currentIndex].image}</div>
-                  <div>
-                    <div className="font-bold text-sm">{testimonials[currentIndex].name}</div>
-                    <div className="text-xs text-muted-foreground">{testimonials[currentIndex].role}</div>
-                    <div className="text-xs text-muted-foreground">{testimonials[currentIndex].company}</div>
-                    <div className="text-xs text-primary font-medium mt-1">{testimonials[currentIndex].location}</div>
-                  </div>
-                </div>
+                {testimonials[currentIndex] && (
+                  <>
+                    <Quote className="h-8 w-8 text-primary/30 mb-4" aria-hidden="true" />
+                    <div className="flex items-center gap-1 mb-3">
+                      {[...Array(testimonials[currentIndex]!.rating)].map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" aria-hidden="true" />
+                      ))}
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                      "{testimonials[currentIndex]!.text}"
+                    </p>
+                    <div className="flex items-center gap-3 pt-4 border-t border-border">
+                      <div className="text-3xl">{testimonials[currentIndex]!.image}</div>
+                      <div>
+                        <div className="font-bold text-sm">{testimonials[currentIndex]!.name}</div>
+                        <div className="text-xs text-muted-foreground">{testimonials[currentIndex]!.role}</div>
+                        <div className="text-xs text-muted-foreground">{testimonials[currentIndex]!.company}</div>
+                        <div className="text-xs text-primary font-medium mt-1">{testimonials[currentIndex]!.location}</div>
+                      </div>
+                    </div>
+                  </>
+                )}
               </CardContent>
             </Card>
           </motion.div>

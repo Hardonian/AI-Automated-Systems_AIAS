@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Check, ArrowRight, Clock, TrendingUp, Zap } from "lucide-react";
+import { Check, ArrowRight, Clock, Zap } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "10 Automation Workflows That Save 10+ Hours Per Week | AIAS Platform",

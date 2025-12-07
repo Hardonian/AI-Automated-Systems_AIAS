@@ -28,7 +28,7 @@ export function ContentGate({
   showUpgrade = true,
 }: ContentGateProps) {
   const available = isFeatureAvailable(featureId, userTier);
-  const limit = getFeatureLimit(featureId, userTier);
+  const _limit = getFeatureLimit(featureId, userTier);
 
   if (available) {
     return <>{children}</>;
@@ -90,7 +90,7 @@ export function UsageGate({
   fallback,
 }: UsageGateProps) {
   const { checkUsageLimit } = require('@/lib/pricing/tiers');
-  const { allowed, limit, remaining } = checkUsageLimit(tier, feature, currentUsage);
+  const { allowed, limit, remaining: _remaining } = checkUsageLimit(tier, feature, currentUsage);
 
   if (allowed) {
     return <>{children}</>;

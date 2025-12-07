@@ -36,7 +36,6 @@ interface AgentContext {
 
 class UnifiedHardoniaAgent {
   private config: UnifiedAgentConfig;
-  private _supabase: any;
   private orchestrator: Orchestrator;
   private context: AgentContext;
   private artifactDir: string;
@@ -56,7 +55,8 @@ class UnifiedHardoniaAgent {
       vercelProjectId: process.env.VERCEL_PROJECT_ID || masterConfig.integrations?.vercel?.projectId,
     };
 
-    this._supabase = createClient(
+    // Supabase client initialization (not used directly, orchestrator handles it)
+    createClient(
       process.env.SUPABASE_URL || `https://${this.config.supabaseProjectRef}.supabase.co`,
       process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || ''
     );

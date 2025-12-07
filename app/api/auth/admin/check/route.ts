@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
  * GET /api/auth/admin/check
  * Check admin access
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const adminUser = await getAdminUser();
 

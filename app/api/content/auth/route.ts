@@ -2,22 +2,28 @@ import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logging/structured-logger";
 import { env } from "@/lib/env";
 import { cookies } from "next/headers";
-import { createClient } from "@supabase/supabase-js";
+import { createServerClient } from "@supabase/ssr";
 /**
  * GET /api/content/auth
  * Get Content Studio token for authenticated admin user
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Get Supabase client
     const supabaseUrl = env.supabase.url;
     const supabaseAnonKey = env.supabase.anonKey;
     
     const cookieStore = await cookies();
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
       cookies: {
         get(name: string) {
           return cookieStore.get(name)?.value;
+        },
+        set(_name: string, _value: string, _options: any) {
+          // Cookie setting handled by Next.js
+        },
+        remove(_name: string, _options: any) {
+          // Cookie removal handled by Next.js
         },
       },
     });
@@ -48,7 +54,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Get or create token
-    const supabaseAdmin = createClient(supabaseUrl, env.supabase.serviceRoleKey);
+    const supabaseAdmin = createServerClient(supabaseUrl, env.supabase.serviceRoleKey, {
+      cookies: {
+        get() { return undefined; },
+        set() {},
+        remove() {},
+      },
+    });
     const { data: tokenData, error: tokenError } = await supabaseAdmin.rpc(
       "get_or_create_content_studio_token",
       { _user_id: user.id }
@@ -96,7 +108,13 @@ export async function POST(request: NextRequest) {
 
     // Verify token exists and get user
     const supabaseUrl = env.supabase.url;
-    const supabaseAdmin = createClient(supabaseUrl, env.supabase.serviceRoleKey);
+    const supabaseAdmin = createServerClient(supabaseUrl, env.supabase.serviceRoleKey, {
+      cookies: {
+        get() { return undefined; },
+        set() {},
+        remove() {},
+      },
+    });
 
     const { data: profile, error } = await supabaseAdmin
       .from("profiles")

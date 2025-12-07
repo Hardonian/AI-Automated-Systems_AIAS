@@ -10,9 +10,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search, Plus, Play, Settings, Trash2 } from "lucide-react";
+import { Search, Plus, Play, Settings } from "lucide-react";
 import { AgentDefinition } from "@/lib/agents/schema";
-import { agentExecutor } from "@/lib/agents/executor";
 import Link from "next/link";
 
 interface AgentListProps {

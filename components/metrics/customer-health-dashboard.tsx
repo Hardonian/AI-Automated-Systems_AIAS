@@ -76,7 +76,7 @@ export function CustomerHealthDashboard() {
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const _getStatusColor = (status: string) => {
     switch (status) {
       case "green":
         return "bg-green-500";

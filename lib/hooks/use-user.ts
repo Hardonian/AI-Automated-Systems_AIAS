@@ -13,6 +13,7 @@ import { queryKeys } from "@/lib/data/queryKeys";
 import {
   getCurrentUser,
   onAuthStateChange,
+  getUserProfile,
   type UserProfile,
 } from "@/lib/data/api/user";
 

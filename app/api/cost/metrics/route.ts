@@ -18,7 +18,7 @@ export const dynamic = "force-dynamic";
  * GET /api/cost/metrics
  * Get aggregated cost metrics
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Get cost history from monitor
     const costHistory = costMonitor.getCostHistory(90); // Last 90 days

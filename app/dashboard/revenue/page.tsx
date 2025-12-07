@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-import { DollarSign, TrendingUp, Users, CreditCard } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface RevenueData {
   mrr: number;
@@ -34,10 +34,7 @@ export default function RevenuePage() {
         setRevenueData(data);
       }
     } catch (error) {
-      logger.error("Failed to fetch revenue data", error instanceof Error ? error : new Error(String(error)), {
-        component: "RevenuePage",
-        action: "fetchRevenueData",
-      });
+      console.error("Failed to fetch revenue data", error);
     } finally {
       setLoading(false);
     }

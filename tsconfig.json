@@ -41,6 +41,7 @@
     "out",
     "dist",
     "ai/aurora_prime.ts",
-    "scripts/generate-performance-report.ts"
+    "scripts/generate-performance-report.ts",
+    "supabase/functions/**/*"
   ]
 }

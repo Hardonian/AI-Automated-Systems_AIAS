@@ -58,7 +58,10 @@ export default function CommentSection({ postId }: { postId: number }) {
   const repliesByParent = comments.reduce((acc, c) => {
     if (c.parent_id) {
       if (!acc[c.parent_id]) acc[c.parent_id] = [];
-      acc[c.parent_id].push(c);
+      const parentId = c.parent_id;
+      if (acc[parentId]) {
+        acc[parentId].push(c);
+      }
     }
     return acc;
   }, {} as Record<number, Comment[]>);

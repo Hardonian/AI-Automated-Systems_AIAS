@@ -3,7 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { env } from "@/lib/env";
 import { track } from "@/lib/telemetry/track";
-import { extractPaginationParams } from "@/lib/performance/pagination";
+import { handleApiError } from "@/lib/api/route-handler";
+import { logger } from "@/lib/logging/structured-logger";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -168,7 +169,7 @@ export async function POST(request: NextRequest) {
       // Track funnel stage
       const { trackWorkflowCreate } = await import("@/lib/analytics/funnel-tracking");
       trackWorkflowCreate(user.id, workflow.id, {
-        templateId: validatedData.template_id,
+        templateId: (validatedData as any).template_id,
         timestamp: new Date().toISOString(),
       });
 

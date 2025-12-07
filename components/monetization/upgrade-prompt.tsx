@@ -75,7 +75,7 @@ export function UpgradePrompt({
         <span className="text-muted-foreground">
           {feature ? `Upgrade to unlock ${feature}` : "Upgrade to unlock this feature"}
         </span>
-        <Button variant="link" size="sm" className="h-auto p-0" asChild>
+        <Button variant="ghost" size="sm" className="h-auto p-0" asChild>
           <Link href="/pricing">
             Upgrade
             <ArrowRight className="ml-1 h-3 w-3" />

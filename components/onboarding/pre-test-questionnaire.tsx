@@ -11,7 +11,7 @@ import { Sparkles, ArrowRight, X } from "lucide-react";
 import { track } from "@/lib/telemetry/track";
 import { logger } from "@/lib/utils/logger";
 
-interface PreTestAnswers {
+export interface PreTestAnswers {
   goals: string;
   industry: string;
   listSize?: string;
@@ -173,6 +173,7 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
 
   const canProceed = () => {
     const step = steps[currentStep];
+    if (!step) return false;
     if (step.id === "goals") {
       return !!answers.goals;
     }
@@ -205,7 +206,7 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
           <CardTitle>Personalize Your Experience</CardTitle>
         </div>
         <CardDescription>
-          {steps[currentStep].description}
+          {steps[currentStep]?.description || ''}
         </CardDescription>
         <div className="mt-4">
           <Progress value={progress} className="h-2" />

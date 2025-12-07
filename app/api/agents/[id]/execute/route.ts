@@ -57,14 +57,14 @@ export async function POST(
       userId: user.id,
       tenantId: tenantId || undefined,
       status: logStatus,
-      startedAt: 'startedAt' in result && result.startedAt ? result.startedAt : undefined,
+      startedAt: 'startedAt' in result && result.startedAt ? result.startedAt : new Date().toISOString(),
       completedAt: 'completedAt' in result && result.completedAt ? result.completedAt : undefined,
       duration: 'metrics' in result ? result.metrics?.duration : undefined,
       tokenUsage: 'metrics' in result ? result.metrics?.tokenUsage : undefined,
       cost: 'metrics' in result ? result.metrics?.cost : undefined,
       input: context.input,
       output: 'output' in result ? (result.output as Record<string, unknown> | undefined) : undefined,
-      error: 'error' in result ? (result.error as Record<string, unknown> | undefined) : undefined,
+      error: 'error' in result ? (result.error && typeof result.error === 'object' ? result.error as { message: string; code?: string } : { message: String(result.error) }) : undefined,
     });
 
     // Save to database

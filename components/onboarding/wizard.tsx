@@ -396,9 +396,8 @@ function ChooseIntegrationStep({ onNext }: { onNext: () => void }) {
         onNext();
       }
     } catch (error) {
-      // Note: Using console.error here as this is a demo/fallback scenario
-      // In production, this should use structured logger
-      console.error("Failed to connect integration", error);
+      // Use structured logger for proper error tracking
+      logger.error("Failed to connect integration", error instanceof Error ? error : new Error(String(error)));
       // For demo purposes, continue anyway
       onNext();
     } finally {
@@ -530,7 +529,8 @@ function CreateWorkflowStep({ onNext }: { onNext: () => void }) {
 
       onNext();
     } catch (error) {
-      console.error("Failed to create workflow", error);
+      const { logger } = await import("@/lib/utils/logger");
+      logger.error("Failed to create workflow", error instanceof Error ? error : new Error(String(error)));
       // Continue anyway for demo
       onNext();
     } finally {
@@ -640,7 +640,8 @@ function TestWorkflowStep({ onNext }: { onNext: () => void }) {
         onNext();
       }, 2000);
     } catch (error) {
-      console.error("Test failed", error);
+      const { logger } = await import("@/lib/utils/logger");
+      logger.error("Test failed", error instanceof Error ? error : new Error(String(error)));
       setTesting(false);
     }
   }

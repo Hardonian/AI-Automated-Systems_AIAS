@@ -46,6 +46,10 @@ export function CommentsSection({ articleSlug }: CommentsSectionProps) {
 
       const data = await response.json();
 
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit comment');
+      }
+
       if (data.success) {
         setComments([...comments, data.comment]);
         setNewComment("");

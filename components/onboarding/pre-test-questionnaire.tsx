@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Sparkles, ArrowRight, X } from "lucide-react";
 import { track } from "@/lib/telemetry/track";
+import { logger } from "@/lib/utils/logger";
 
 interface PreTestAnswers {
   goals: string;
@@ -143,7 +144,7 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
         localStorage.setItem("pretest_completed", "true");
       }
     } catch (error) {
-      console.error("Failed to save pretest answers:", error);
+      logger.error("Failed to save pretest answers", error instanceof Error ? error : new Error(String(error)));
       // Still save to localStorage as fallback
       localStorage.setItem("pretest_answers", JSON.stringify(answers));
       localStorage.setItem("pretest_completed", "true");

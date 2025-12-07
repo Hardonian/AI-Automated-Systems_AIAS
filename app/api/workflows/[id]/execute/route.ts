@@ -1,82 +1,96 @@
-import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-import { env } from "@/lib/env";
-import { executeWorkflow } from "@/lib/workflows/executor";
-import { createPOSTHandler } from "@/lib/api/route-handler";
-
-const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
-
-export const runtime = "nodejs";
-
 /**
- * POST /api/workflows/[id]/execute
- * Execute a specific workflow by ID
+ * API Route: Execute Workflow
+ * Executes a workflow with provided input
  */
-export const POST = createPOSTHandler(
-  async (context) => {
-    const { request } = context;
-    
-    // Get workflow ID from URL
-    const workflowId = request.nextUrl.pathname.split("/").pop();
-    if (!workflowId) {
-      return NextResponse.json(
-        { error: "Workflow ID required" },
-        { status: 400 }
-      );
+
+import { NextRequest, NextResponse } from 'next/server';
+import { workflowExecutor } from '@/lib/workflows/executor';
+import { workflowExecutionContextSchema } from '@/lib/workflows/dsl';
+import { createClient } from '@/lib/supabase/server';
+import { observabilityService } from '@/lib/observability/telemetry';
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get user from auth header
-    const authHeader = request.headers.get("authorization");
-    const token = authHeader?.startsWith("Bearer ") 
-      ? authHeader.substring(7)
-      : request.cookies.get("sb-access-token")?.value;
+    const body = await request.json();
+    const { input, tenantId, sync } = body;
 
-    if (!token) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    const context = workflowExecutionContextSchema.parse({
+      workflowId: params.id,
+      userId: user.id,
+      tenantId: tenantId || null,
+      input: input || {},
+      priority: body.priority || 'normal',
+      sync: sync !== false,
+    });
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    // Log execution start
+    observabilityService.logWorkflowExecution({
+      workflowId: params.id,
+      userId: user.id,
+      tenantId: tenantId || undefined,
+      status: 'started',
+      startedAt: new Date().toISOString(),
+      stepsExecuted: 0,
+      stepsSucceeded: 0,
+      stepsFailed: 0,
+    });
 
-    const body = await request.json().catch(() => ({}));
-    const trigger = body.trigger || { type: "manual" };
+    const result = await workflowExecutor.execute(context);
 
-    try {
-      const execution = await executeWorkflow(
-        workflowId,
-        user.id,
-        trigger
-      );
+    // Log execution completion
+    observabilityService.logWorkflowExecution({
+      workflowId: params.id,
+      userId: user.id,
+      tenantId: tenantId || undefined,
+      status: result.status === 'completed' ? 'completed' : 'failed',
+      startedAt: result.startedAt,
+      completedAt: result.completedAt,
+      duration: result.metrics?.duration,
+      stepsExecuted: result.metrics?.stepsExecuted || 0,
+      stepsSucceeded: result.metrics?.stepsSucceeded || 0,
+      stepsFailed: result.metrics?.stepsFailed || 0,
+      input: context.input,
+      output: result.output,
+      error: result.error,
+    });
 
-      return NextResponse.json({
-        execution,
-        message: "Workflow executed successfully",
+    // Save to database
+    const { error: dbError } = await supabase
+      .from('workflow_executions')
+      .insert({
+        workflow_id: params.id,
+        user_id: user.id,
+        tenant_id: tenantId || null,
+        status: result.status,
+        input: context.input,
+        output: result.output || null,
+        error: result.error || null,
+        metrics: result.metrics || null,
+        state: result.state || null,
+        started_at: result.startedAt,
+        completed_at: result.completedAt || null,
       });
-    } catch (error) {
-      const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
-      logger.error("Workflow execution failed", errorObj, {
-        workflowId,
-        userId: user.id,
-      });
 
-      return NextResponse.json(
-        {
-          error: error instanceof Error ? error.message : "Workflow execution failed",
-        },
-        { status: 500 }
-      );
+    if (dbError) {
+      console.error('Error saving execution to database:', dbError);
     }
-  },
-  {
-    requireAuth: true,
+
+    return NextResponse.json({ result });
+  } catch (error) {
+    console.error('Error executing workflow:', error);
+    return NextResponse.json(
+      { error: 'Failed to execute workflow' },
+      { status: 500 }
+    );
   }
-);
+}

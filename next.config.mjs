@@ -12,15 +12,15 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
   
-  // Prevent ESLint from failing builds (run separately in CI)
+  // Enable ESLint during builds for production quality
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
+    dirs: ['app', 'components', 'lib', 'middleware'],
   },
   
-  // Keep TypeScript errors as failures (catch real bugs)
-  // Temporarily allow build errors for migration - fix critical issues first
+  // Enable TypeScript checking - catch real bugs before deployment
   typescript: {
-    ignoreBuildErrors: true, // TODO: Set to false after fixing all type errors
+    ignoreBuildErrors: false,
   },
   
   // Removed standalone output for faster builds

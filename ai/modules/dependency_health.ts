@@ -44,7 +44,7 @@ interface DependencyReport {
 export class DependencyHealthChecker {
   constructor(
     private supabase: any,
-    private octokit: Octokit,
+    private _octokit: Octokit,
     private config: any
   ) {}
 

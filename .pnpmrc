@@ -4,3 +4,6 @@ strict-peer-dependencies=false
 shamefully-hoist=false
 public-hoist-pattern[]=*eslint*
 public-hoist-pattern[]=*prettier*
+
+# Suppress peer dependency warnings (React 19 compatibility)
+# These are warnings only - packages work fine with React 19

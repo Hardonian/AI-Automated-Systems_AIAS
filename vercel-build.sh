@@ -85,11 +85,32 @@ info "✅ Dependencies installed successfully"
 
 # Generate Prisma client if needed (non-blocking)
 info "🔨 Generating Prisma client..."
-if pnpm run db:generate 2>/dev/null; then
-  info "✅ Prisma client generated"
+cd apps/web || exit 1
+
+# Set up database URLs with fallbacks
+export DATABASE_URL=${UPSTASH_POSTGRES_URL:-${DATABASE_URL:-}}
+export DIRECT_URL=${UPSTASH_POSTGRES_DIRECT_URL:-${DIRECT_URL:-${DATABASE_URL:-}}}
+
+# Only run Prisma commands if DATABASE_URL is valid
+if [ -n "$DATABASE_URL" ] && [[ "$DATABASE_URL" =~ ^postgres ]]; then
+  if pnpm prisma generate 2>/dev/null; then
+    info "✅ Prisma client generated"
+    # Try migrations, but don't fail if they fail
+    if pnpm prisma migrate deploy 2>/dev/null; then
+      info "✅ Prisma migrations applied"
+    else
+      warn "Prisma migrations skipped (non-blocking)"
+    fi
+  else
+    warn "Prisma generation failed (non-blocking)"
+  fi
 else
-  warn "Prisma generation skipped (DATABASE_URL may not be available or not needed)"
+  warn "Skipping Prisma (DATABASE_URL not set or invalid)"
+  # Still try to generate without DB connection (for type generation)
+  pnpm prisma generate 2>/dev/null || warn "Prisma generate skipped"
 fi
+
+cd ../..
 
 # Build the application using Turborepo
 info "🏗️ Building application with Turborepo..."

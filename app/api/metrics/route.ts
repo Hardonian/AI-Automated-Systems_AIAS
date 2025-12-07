@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+import { createGETHandler } from "@/lib/api/route-handler";
 import { logger } from "@/lib/logging/structured-logger";
+import { env } from "@/lib/env";
+import { SystemError } from "@/lib/errors";
+import { cacheService } from "@/lib/performance/cache";
+import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
 export const runtime = "nodejs"; // Use Node.js runtime for ioredis compatibility
 export const dynamic = "force-dynamic";
 export const revalidate = 60; // Cache for 60 seconds

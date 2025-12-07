@@ -129,12 +129,26 @@ export class DependencyHealthChecker {
       } catch (e) {
         // pnpm might not be available, try npm
         try {
-          const _outdatedOutput = execSync('npm outdated --json', {
+          const outdatedOutput = execSync('npm outdated --json', {
             cwd: dir,
             encoding: 'utf-8',
             stdio: 'pipe'
           });
           // npm outdated format is different, parse accordingly
+          const outdated = JSON.parse(outdatedOutput);
+          Object.entries(outdated).forEach(([name, info]: [string, any]) => {
+            if (info.current && info.wanted && info.latest) {
+              const type = this.getUpdateType(info.current, info.wanted, info.latest);
+              report.outdated.push({
+                name,
+                current: info.current,
+                wanted: info.wanted,
+                latest: info.latest,
+                type,
+                service
+              });
+            }
+          });
         } catch (e2) {
           console.warn(`Could not check outdated packages for ${service}:`, e2);
         }

@@ -27,7 +27,6 @@ const siteUrl = env.app.siteUrl || "https://aiautomatedsystems.ca";
 export const metadata: Metadata = generateSEOMetadata({
   title: "AI Automated Systems | Custom AI Platform Development | Transform Your Business",
   description: "We build custom AI platforms — not integrations. See TokPulse and Hardonia Suite. Save 10+ hours/week. 40% ROI increase. From strategy to deployment. Schedule a free strategy call. No credit card required.",
-  keywords: generateKeywords(['primary', 'benefits', 'location', 'features', 'trust']),
   canonical: "/",
   keywords: [
     "custom AI platforms",

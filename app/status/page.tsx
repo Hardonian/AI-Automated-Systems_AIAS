@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface StatusItem {
   service: string;
@@ -30,7 +31,10 @@ export default function Status() {
           }
         }
       } catch (error) {
-        console.error("Failed to fetch status:", error);
+        logger.error("Failed to fetch status", error instanceof Error ? error : new Error(String(error)), {
+          component: "StatusPage",
+          action: "fetchStatus",
+        });
       }
     }
     

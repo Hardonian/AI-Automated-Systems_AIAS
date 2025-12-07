@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import type { Database } from "@/src/integrations/supabase/types";
+import { logger } from "@/lib/logging/structured-logger";
 
 /**
  * Health Status Endpoint: "All-Cylinder Firing Check"
@@ -113,7 +114,10 @@ export async function GET() {
       status: allCylindersFiring ? 200 : 200, // Still 200, but status indicates health
     });
   } catch (error) {
-    console.error("Health check error:", error);
+    logger.error("Health check error", error instanceof Error ? error : new Error(String(error)), {
+      component: "HealthCheckAPI",
+      action: "GET",
+    });
     return NextResponse.json(
       {
         status: "needs_attention",

@@ -4,7 +4,7 @@
  * Tracks security events, suspicious activity, and potential threats.
  */
 
-import { logger } from "@/lib/utils/logger";
+import { logger } from "@/lib/logging/structured-logger";
 import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
 
 export interface SecurityEvent {
@@ -110,8 +110,12 @@ class SecurityMonitor {
     // - Log to external security monitoring service
 
     if (process.env.NODE_ENV === "production") {
-      // TODO: Integrate with alerting system
-      console.error("[CRITICAL SECURITY ALERT]", event);
+      // TODO: Integrate with external alerting system (PagerDuty, Opsgenie, etc.)
+      logger.fatal("CRITICAL SECURITY ALERT", new Error(event.type), {
+        event,
+        component: "SecurityMonitor",
+        action: "handleSecurityEvent",
+      });
     }
   }
 

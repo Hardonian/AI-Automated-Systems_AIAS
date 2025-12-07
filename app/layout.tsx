@@ -20,15 +20,15 @@ import { UTMTracker } from "@/components/analytics/utm-tracker";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { ReactQueryProvider } from "@/lib/data/react-query";
 import { env, getOptionalEnv } from "@/lib/env";
+import { generateMetadata as generateSEOMetadata, generateKeywords } from "@/lib/seo/metadata";
 
 const siteUrl = env.app.siteUrl || "https://aiautomatedsystems.ca";
 
-export const metadata: Metadata = {
-  title: {
-    default: "AI Automated Systems | Custom AI Platform Development | Transform Your Business",
-    template: "%s | AI Automated Systems",
-  },
+export const metadata: Metadata = generateSEOMetadata({
+  title: "AI Automated Systems | Custom AI Platform Development | Transform Your Business",
   description: "We build custom AI platforms — not integrations. See TokPulse and Hardonia Suite. Save 10+ hours/week. 40% ROI increase. From strategy to deployment. Schedule a free strategy call. No credit card required.",
+  keywords: generateKeywords(['primary', 'benefits', 'location', 'features', 'trust']),
+  canonical: "/",
   keywords: [
     "custom AI platforms",
     "AI development",

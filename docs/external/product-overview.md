@@ -1,277 +1,173 @@
-# Product Overview — AIAS Platform
+# AI Automated Systems - Product Overview
 
-**Status:** Public/External Document  
-**Last Updated:** 2025-02-01  
-**Audience:** Customers, Partners, Open Source Community
+**Version:** 2.0  
+**Last Updated:** 2025-01-XX
 
----
+## What We Do
 
-## What is AIAS Platform?
+AI Automated Systems builds **custom AI platforms** — not just integrations. We help businesses automate workflows, deploy AI agents, and transform operations through intelligent automation.
 
-AIAS Platform is an **API-first AI agent and automation platform** built exclusively for developers. We embody a **Resend-style** philosophy to simplify complex AI infrastructure, delivering **composability and exceptional DX** where complexity previously reigned supreme.
+## Our Products
 
-**Tagline:** "Automate Your Canadian Business in Minutes, Not Hours"
+### TokPulse
+AI-powered social media analytics and content generation platform for TikTok creators and businesses.
 
----
+### Hardonia Suite
+Comprehensive business automation platform with custom AI agents, workflow automation, and analytics.
 
-## Value Proposition
+### AIAS Platform
+Our flagship SaaS platform offering workflow automation, AI agents, and custom development services.
 
-Achieve reliable, modern AI tooling with minimal effort. AIAS Platform focuses on predictable endpoints and clear data streams to handle AI agents and automation workflows instantly.
+## Key Features
 
-### Key Benefits
+### Workflow Automation
+- Visual workflow builder
+- Pre-built templates for common tasks
+- Custom workflow creation
+- Multi-step automation chains
+- Integration with 20+ services
 
-- **API-First Design:** Clear, predictable, and fully documented RESTful endpoints for every workflow
-- **Composability:** Build and chain complex AI automation processes using simple API primitives
-- **Simplicity:** Minimal configuration, maximal AI capabilities and reliability
-- **Enterprise-Ready:** Multi-tenant architecture, SOC 2 compliance, and enterprise security built-in
+### AI Agents
+- Pre-built agents for common tasks
+- Custom agent creation
+- Natural language interaction
+- Multi-agent collaboration
+- Continuous learning
 
----
+### Analytics & Insights
+- Real-time dashboard
+- Usage analytics
+- ROI tracking
+- Performance metrics
+- Custom reports
 
-## Core Features
+### Integrations
+- Shopify (e-commerce)
+- Wave Accounting (Canadian accounting)
+- Email providers
+- CRM systems
+- Custom API integrations
 
-### 🤖 AI Agent Marketplace
+## Why Choose AIAS?
 
-Create custom AI agents tailored to your business needs. Deploy them instantly. Monetize them if you want.
+### Canadian-First
+- Data stored in Canada
+- PIPEDA compliant
+- Canadian support team
+- Local business hours
 
-**Key Capabilities:**
-- Drag-and-drop agent builder
-- Pre-built agent templates
-- Custom agent configuration
-- Agent marketplace for sharing and monetization
-
-### 🔄 Visual Workflow Builder
-
-No coding required. Drag, drop, connect. Build complex automations in minutes, not weeks.
-
-**Key Capabilities:**
-- Visual workflow editor
-- Pre-built workflow templates
-- Real-time workflow execution
-- Workflow versioning and rollback
-
-### 💰 Multiple Revenue Streams
-
-SaaS subscriptions, one-time apps, API usage, partnerships—monetize however makes sense for your business.
-
-**Pricing Tiers:**
-- **Free:** $0/month (lead generation)
-- **Starter:** $49/month (solo operators)
-- **Pro:** $149/month (small teams)
-- **Enterprise:** Custom pricing (larger organizations)
-
-### 🏢 Multi-Tenant Architecture
-
-Serve multiple customers from one platform. Complete isolation. Complete control.
-
-**Key Features:**
-- Row-level security (RLS) policies
-- Tenant data isolation
+### Custom Solutions
+- Not just integrations — full custom platforms
+- Tailored to your business needs
 - Scalable architecture
-- Per-tenant customization
+- White-label options available
 
-### 🔒 Enterprise Security Built-In
+### Proven Results
+- Save 10+ hours per week
+- 40% ROI increase average
+- 99.9% uptime SLA
+- Trusted by 500+ businesses
 
-SOC 2, GDPR, CCPA compliance isn't optional—it's included. Advanced threat detection. Data encryption. Audit logging.
+### Transparent Pricing
+- Free tier available
+- No hidden fees
+- Cancel anytime
+- Clear feature limits
 
-**Security Features:**
-- End-to-end encryption
-- CSRF protection
-- Rate limiting
-- Audit logging
-- Threat detection
-- Data encryption at rest and in transit
+## Use Cases
 
----
+### E-commerce Automation
+- Order processing
+- Inventory management
+- Customer service
+- Marketing automation
 
-## Canadian-First Integrations
+### Professional Services
+- Client onboarding
+- Document generation
+- Time tracking
+- Billing automation
 
-Built specifically for Canadian businesses with native integrations:
-
-- **E-Commerce:** Shopify, WooCommerce
-- **Accounting:** Wave Accounting, QuickBooks
-- **Banking:** RBC, TD Bank, Interac
-- **Payments:** Stripe CAD, PayPal Canada
-- **Email:** Gmail, Outlook
-- **CRM:** HubSpot, Salesforce
-- **And more:** 20+ Canadian integrations
-
----
-
-## Onboarding Flow
-
-### Step 1: Sign Up
-Create your account in seconds. No credit card required for free tier.
-
-### Step 2: Connect Integrations
-Connect your existing tools (Shopify, Wave, etc.) with one click.
-
-### Step 3: Create Your First Workflow
-Choose from pre-built templates or build your own workflow.
-
-### Step 4: Deploy & Monitor
-Deploy your workflow and monitor its performance in real-time.
-
-### Step 5: Scale
-Add more workflows, integrate more tools, and scale your automation.
-
-**Time to Value:** < 30 minutes from signup to first automated workflow
-
----
-
-## Partner Integration Narrative
-
-### For Integration Partners
-
-AIAS Platform provides a robust API and SDK for partners to integrate their services:
-
-- **RESTful API:** Well-documented, versioned API endpoints
-- **Webhooks:** Real-time event notifications
-- **SDK Support:** TypeScript/JavaScript SDKs
-- **Documentation:** Comprehensive integration guides
-- **Support:** Dedicated partner support team
-
-### For Marketplace Partners
-
-Monetize your workflows and agents in our marketplace:
-
-- **Revenue Share:** 70/30 split (you keep 70%)
-- **Marketing:** Featured placement in marketplace
-- **Analytics:** Track your workflow/agent performance
-- **Support:** Customer support handled by AIAS
-
----
-
-## Compliance & Security
-
-### Compliance
-
-- **SOC 2 Type II:** Certified
-- **GDPR:** Compliant
-- **CCPA:** Compliant
-- **PIPEDA:** Compliant (Canadian Privacy Act)
-- **CASL:** Compliant (Canadian Anti-Spam Legislation)
-
-### Security
-
-- **Data Encryption:** End-to-end encryption for all data
-- **Access Control:** Role-based access control (RBAC)
-- **Audit Logging:** Complete audit trail for all actions
-- **Threat Detection:** Real-time threat detection and prevention
-- **Data Residency:** Canadian data residency options available
-
----
-
-## Architecture Overview
-
-AIAS Platform is built with modern, scalable technologies:
-
-### Frontend
-- **Framework:** Next.js 15 (React 19)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **UI Components:** Radix UI
-- **Deployment:** Vercel (Edge Network, CDN)
-
-### Backend
-- **Database:** Supabase (PostgreSQL)
-- **Auth:** Supabase Auth
-- **API:** Next.js API Routes + Supabase Edge Functions
-- **Storage:** Supabase Storage
-- **Realtime:** Supabase Realtime
-
-### Infrastructure
-- **Hosting:** Vercel (serverless)
-- **CDN:** Vercel Edge Network (global)
-- **CI/CD:** GitHub Actions
-- **Monitoring:** Built-in metrics + optional external (Sentry, Datadog)
-
----
+### Content Creation
+- Social media scheduling
+- Content generation
+- Analytics tracking
+- Performance optimization
 
 ## Getting Started
 
-### Quick Start
+1. **Sign Up** - Free account, no credit card required
+2. **Explore Templates** - Browse pre-built workflows
+3. **Create Workflow** - Build your first automation
+4. **Deploy AI Agent** - Add intelligence to your workflows
+5. **Scale** - Upgrade as you grow
 
-```bash
-# 1. Clone the repository
-git clone https://github.com/shardie-github/aias.git
-cd aias
+## Support
 
-# 2. Install dependencies
-pnpm install
+- **Documentation** - Comprehensive guides and tutorials
+- **Community** - Active community forum
+- **Email Support** - Response within 24 hours (Pro)
+- **Priority Support** - Dedicated support (Enterprise)
 
-# 3. Set up environment variables
-cp .env.example .env.local
-# Edit .env.local with your configuration
+## Security & Compliance
 
-# 4. Run the development server
-pnpm dev
+- **Data Residency** - Canadian data centers
+- **Encryption** - End-to-end encryption
+- **Compliance** - PIPEDA, GDPR compliant
+- **Security** - SOC 2 Type II (in progress)
+- **Backups** - Daily automated backups
 
-# 5. Access the platform
-open http://localhost:3000
-```
+## Pricing
 
-For detailed setup instructions, see [Local Development Setup](./SETUP_LOCAL.md).
+- **Free** - $0/month - Perfect for trying out
+- **Pro** - $99/month - For growing businesses
+- **Enterprise** - Custom - For large organizations
 
----
+[View Full Pricing →](/pricing)
 
-## Documentation
+## Case Studies
 
-### For Developers
-- [API Documentation](./api/overview.md)
-- [Architecture Overview](./ARCHITECTURE.md)
-- [Integration Guides](./INTEGRATIONS.md)
-- [Quick Start Guide](./QUICK_START.md)
+### Case Study 1: E-commerce Automation
+**Client:** Canadian online retailer  
+**Challenge:** Manual order processing taking 15+ hours/week  
+**Solution:** Custom workflow automation  
+**Results:** 12 hours saved/week, 35% faster order fulfillment
 
-### For Users
-- [Getting Started Guide](./QUICK_START.md)
-- [Workflow Builder Tutorial](./content-studio.md)
-- [Integration Setup](./INTEGRATIONS.md)
-- [FAQ](./EXAMPLES.md)
+### Case Study 2: Professional Services
+**Client:** Accounting firm  
+**Challenge:** Client onboarding bottlenecks  
+**Solution:** Automated onboarding workflow with AI agent  
+**Results:** 50% faster onboarding, 40% client satisfaction increase
 
----
+## Technology
 
-## Support & Community
+- **Frontend:** Next.js, React, TypeScript
+- **Backend:** Node.js, Supabase, PostgreSQL
+- **AI:** OpenAI, Anthropic, Custom models
+- **Infrastructure:** Vercel, Supabase, Canadian data centers
 
-### Support Channels
-- **Email:** support@aiautomatedsystems.ca
-- **GitHub Issues:** [Report bugs or request features](https://github.com/shardie-github/aias/issues)
-- **Discussions:** [Community discussions](https://github.com/shardie-github/aias/discussions)
-- **Documentation:** [Full documentation](./README.md)
+## Roadmap
 
-### Community
-- **GitHub:** [@shardie-github/aias](https://github.com/shardie-github/aias)
-- **Website:** [aiautomatedsystems.ca](https://aiautomatedsystems.ca)
+### Coming Soon
+- Mobile apps (iOS/Android)
+- Marketplace for workflows
+- Advanced AI capabilities
+- More integrations
 
----
+### In Development
+- Team collaboration features
+- Advanced analytics
+- API platform
+- White-label solutions
 
-## Contributing
+## Contact
 
-We welcome contributions! Please see our [Contributing Guidelines](../CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feat/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: Add amazing feature'`)
-4. Push to the branch (`git push origin feat/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
-
----
-
-## Status
-
-- ✅ Core platform operational
-- ✅ API endpoints documented
-- ✅ Multi-tenant architecture
-- ✅ Enterprise security features
-- 🔄 Continuous improvements
+- **Website:** https://aiautomatedsystems.ca
+- **Email:** inquiries@aiautomatedsystems.ca
+- **Support:** support@aiautomatedsystems.ca
+- **Sales:** sales@aiautomatedsystems.ca
 
 ---
 
-**Last Updated:** 2025-02-01  
-**Website:** [aiautomatedsystems.ca](https://aiautomatedsystems.ca)  
-**Built in Canada 🇨🇦 • Serving the World 🌍**
+**Last Updated:** 2025-01-XX  
+**Version:** 2.0

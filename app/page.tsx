@@ -8,6 +8,7 @@ import { Features } from "@/components/home/features";
 import { StatsSection } from "@/components/home/stats-section";
 import { TrustBadges } from "@/components/home/trust-badges";
 import { ConversionCTA } from "@/components/home/conversion-cta";
+import { CTAEnhanced } from "@/components/home/cta-enhanced";
 import { SettlerShowcase } from "@/components/home/settler-showcase";
 import { SoftwareApplicationSchema } from "@/components/seo/structured-data";
 import { FAQSchema } from "@/components/seo/structured-data";
@@ -75,6 +76,10 @@ export default async function HomePage() {
         <FAQ />
       )}
       <ConversionCTA />
+      {/* Enhanced CTA with urgency and social proof */}
+      <div className="py-16">
+        <CTAEnhanced urgency="high" showSocialProof showUrgency />
+      </div>
     </>
   );
 }

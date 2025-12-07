@@ -1,202 +1,188 @@
-# 🚀 AI Automated Systems: API-First AI Agent Platform
+# AI Automated Systems Platform
 
-[![CI/CD Pipeline](https://github.com/shardie-github/aias/actions/workflows/ci.yml/badge.svg)](https://github.com/shardie-github/aias/actions/workflows/ci.yml)
-[![Security Scan](https://github.com/shardie-github/aias/actions/workflows/security.yml/badge.svg)](https://github.com/shardie-github/aias/actions/workflows/security.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Website](https://img.shields.io/badge/Website-aiautomatedsystems.ca-blue)](https://aiautomatedsystems.ca)
+**Enterprise-grade AI consultancy platform showcasing custom AI agents, workflow automation, and intelligent business solutions**
 
-**AI Automated Systems** is the **API-first AI agent and automation platform** built exclusively for developers. We embody a **Resend-style** philosophy to simplify complex AI infrastructure, delivering **composability and exceptional DX** where complexity previously reigned supreme.
+[![CI Pipeline](https://github.com/shardie-github/aias/actions/workflows/ci.yml/badge.svg)](https://github.com/shardie-github/aias/actions/workflows/ci.yml)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-## 💡 Why AI Automated Systems? The Developer Experience (DX) Advantage
-
-Achieve reliable, modern AI tooling with minimal effort. AI Automated Systems focuses on predictable endpoints and clear data streams to handle AI agents and automation workflows instantly.
-
-* **API-First Design:** Clear, predictable, and fully documented RESTful endpoints for every workflow.
-* **Composability:** Build and chain complex AI automation processes using simple API primitives.
-* **Simplicity:** Minimal configuration, maximal AI capabilities and reliability.
-* **Enterprise-Ready:** Multi-tenant architecture, SOC 2 compliance, and enterprise security built-in.
-
-## ⚡ Quick Start: Deploy AI Agents in Minutes
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/shardie-github/aias.git
-cd aias
-
-# 2. Install dependencies
-pnpm install
-
-# 3. Set up environment variables
-cp .env.example .env.local
-# Edit .env.local with your configuration (see .env.example for required variables)
-
-# 4. Run the development server
-pnpm dev
-
-# 5. Access the platform
-open http://localhost:3000
-```
-
-For detailed setup instructions, see [Local Development Setup](./docs/SETUP_LOCAL.md).
-
-## 🏗️ Architecture
-
-AI Automated Systems is built with:
-
-- **Next.js 15** - React framework with App Router
-- **TypeScript** - Type-safe development
-- **Supabase** - Backend-as-a-Service (PostgreSQL, Auth, Storage)
-- **Turborepo** - Monorepo build system
-- **Tailwind CSS** - Utility-first styling
-- **Framer Motion** - Smooth animations
-
-## 📚 Documentation & Support
-
-- **Documentation:** See [docs/README.md](./docs/README.md) for comprehensive documentation
-  - [Quick Start Guide](./docs/QUICK_START.md)
-  - [Local Development Setup](./docs/SETUP_LOCAL.md)
-  - [Architecture Overview](./docs/architecture/ARCHITECTURE.md)
-  - [API Documentation](./docs/api/overview.md)
-  - [Product Overview](./docs/external/product-overview.md)
-  - [Deployment Guide](./docs/operations/DEPLOYMENT.md)
-- **Website:** [aiautomatedsystems.ca](https://aiautomatedsystems.ca)
-- **GitHub Issues:** [Report a bug or request a feature](https://github.com/shardie-github/aias/issues)
-- **Discussions:** [Community discussions](https://github.com/shardie-github/aias/discussions)
-- **Email Support:** support@aiautomatedsystems.ca
-
-## 🔒 Security & Privacy
-
-- **Encrypted Documents:** Internal business and investor relations documents are secured in the `/archive/old_docs/INVESTOR-RELATIONS-PRIVATE` folder and are encrypted via Git-crypt.
-- **Enterprise Security:** SOC 2, GDPR, CCPA compliance built-in.
-- **Security Reporting:** Report security vulnerabilities to scottrmhardie@gmail.com
-- **Sensitive Data:** All sensitive files are properly handled and excluded from version control (see `.gitignore`)
-
-## 🛠️ Development
-
-### Prerequisites
-
-- **Node.js**: >=22 (see [.nvmrc](./.nvmrc))
-- **pnpm**: >=8.0.0 (see [package.json](./package.json))
-- **Git**: Latest version
-
-### Development Commands
+## 🚀 Quick Start
 
 ```bash
 # Install dependencies
 pnpm install
 
+# Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your values
+
 # Run development server
 pnpm dev
 
-# Run type checking
-pnpm typecheck
-
-# Run linting
-pnpm lint
-
-# Fix linting issues
-pnpm lint:fix
-
-# Check code formatting
-pnpm format:check
-
-# Format code
-pnpm format
+# Build for production
+pnpm build
 
 # Run tests
+pnpm test
+```
+
+## ✨ Features
+
+### 🤖 AI Automation
+- **Custom AI Platforms** - Not just integrations, full custom solutions
+- **Workflow Automation** - Visual builder with pre-built templates
+- **AI Agents** - Custom agents for specific business needs
+- **Edge AI** - Browser-based inference and device acceleration
+
+### 💼 Business Features
+- **Three-Tier Pricing** - Free, Pro, Enterprise
+- **Content Gating** - Premium features for paid users
+- **Analytics Dashboard** - Real-time insights and metrics
+- **Team Collaboration** - Work together on workflows
+
+### 🔒 Security & Compliance
+- **Canadian Data Residency** - PIPEDA compliant
+- **Row-Level Security** - Comprehensive RLS policies
+- **Input Sanitization** - XSS and SQL injection protection
+- **Rate Limiting** - Redis-backed rate limiting
+
+### 🎨 User Experience
+- **WCAG 2.1 AA** - Full accessibility compliance
+- **Mobile-First** - Responsive design
+- **Performance Optimized** - Fast load times
+- **SEO Optimized** - Comprehensive metadata
+
+## 📁 Project Structure
+
+```
+├── app/                    # Next.js app directory
+├── components/             # React components
+├── lib/                   # Utilities and libraries
+│   ├── api/               # API utilities and schemas
+│   ├── security/          # Security utilities
+│   ├── seo/               # SEO utilities
+│   ├── cro/               # Conversion optimization
+│   ├── pricing/           # Pricing system
+│   └── edge-ai/           # Edge AI foundations
+├── docs/                  # Documentation
+│   ├── internal/          # Internal documentation
+│   ├── external/          # External documentation
+│   ├── operations/        # Operational runbooks
+│   └── architecture/      # Architecture docs
+├── supabase/              # Supabase configuration
+│   ├── functions/         # Edge functions
+│   └── migrations/       # Database migrations
+└── tests/                 # Test suite
+```
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **Language:** TypeScript (strict mode)
+- **Database:** Supabase (PostgreSQL)
+- **Authentication:** Supabase Auth
+- **Payments:** Stripe
+- **Email:** Resend
+- **Styling:** Tailwind CSS
+- **UI Components:** Radix UI
+- **Validation:** Zod
+- **Testing:** Vitest, Playwright
+
+## 📚 Documentation
+
+- [API Documentation](/docs/architecture/api-endpoints.md)
+- [Business Strategy](/docs/internal/business-strategy.md)
+- [Product Overview](/docs/external/product-overview.md)
+- [Operational Runbooks](/docs/operations/runbooks.md)
+- [Architecture Guide](/docs/architecture/ARCHITECTURE.md)
+
+## 🔐 Environment Variables
+
+See [`.env.example`](.env.example) for all required environment variables.
+
+Key variables:
+- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
+- `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key
+- `STRIPE_SECRET_KEY` - Stripe secret key
+- `RESEND_API_KEY` - Resend API key
+
+## 🧪 Testing
+
+```bash
+# Run all tests
 pnpm test
 
 # Run E2E tests
 pnpm test:e2e
 
-# Build for production
+# Run with coverage
+pnpm test:coverage
+```
+
+## 🚢 Deployment
+
+### Vercel (Recommended)
+
+1. Connect your GitHub repository to Vercel
+2. Configure environment variables
+3. Deploy automatically on push to main
+
+### Manual Deployment
+
+```bash
+# Build
 pnpm build
+
+# Deploy
+vercel deploy --prod
 ```
 
-### Required Checks Before Committing
+## 📊 Performance
 
-All code must pass these checks:
+- **Lighthouse Score:** 95+ (Performance, Accessibility, Best Practices, SEO)
+- **First Contentful Paint:** < 1.5s
+- **Largest Contentful Paint:** < 2.5s
+- **Time to Interactive:** < 3.5s
 
-1. **Linting**: `pnpm lint` (no errors)
-2. **Type Checking**: `pnpm typecheck` (no errors)
-3. **Formatting**: `pnpm format:check` (must pass)
-4. **Tests**: `pnpm test` (must pass, if tests exist)
+## 🔄 CI/CD
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
-
-## 📦 Project Structure
-
-```
-/
-├── app/                    # Next.js App Router pages and API routes
-├── components/             # React components
-├── lib/                    # Shared utilities and libraries
-├── hooks/                  # Custom React hooks
-├── packages/               # Monorepo packages
-├── scripts/                # Development and automation scripts
-├── tests/                  # Test suite
-├── supabase/               # Supabase functions and migrations
-├── docs/                   # Canonical documentation
-│   ├── internal/          # Internal/private documentation
-│   ├── external/          # Public-facing documentation
-│   ├── product/           # Product documentation
-│   ├── architecture/      # Architecture documentation
-│   └── operations/        # Operations documentation
-└── archive/               # Archived/deprecated material
-    ├── deprecated_code/   # Unused code
-    ├── old_docs/          # Historical documentation
-    ├── legacy_designs/    # Legacy design files
-    ├── experiments/       # Experimental code
-    └── unused_assets/    # Unused assets
-```
+Automated CI/CD pipeline includes:
+- TypeScript type checking
+- ESLint linting
+- Unit and integration tests
+- E2E tests
+- Security audits
+- Accessibility checks
+- Performance monitoring
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feat/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: Add amazing feature'`)
-4. Push to the branch (`git push origin feat/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Run tests and linting
+5. Submit a pull request
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE) file for details
 
-## 🌟 Features
+## 🆘 Support
 
-### 🤖 AI Agent Marketplace
-Create custom AI agents tailored to your business needs. Deploy them instantly. Monetize them if you want.
+- **Email:** support@aiautomatedsystems.ca
+- **Documentation:** [/docs](/docs)
+- **Issues:** [GitHub Issues](https://github.com/shardie-github/aias/issues)
 
-### 🔄 Visual Workflow Builder
-No coding required. Drag, drop, connect. Build complex automations in minutes, not weeks.
+## 🎯 Roadmap
 
-### 💰 Multiple Revenue Streams
-SaaS subscriptions, one-time apps, API usage, partnerships—monetize however makes sense for your business.
-
-### 🏢 Multi-Tenant Architecture
-Serve multiple customers from one platform. Complete isolation. Complete control.
-
-### 🔒 Enterprise Security Built-In
-SOC 2, GDPR, CCPA compliance isn't optional—it's included. Advanced threat detection. Data encryption. Audit logging.
-
-## 🚦 Status
-
-- ✅ Core platform operational
-- ✅ API endpoints documented
-- ✅ Multi-tenant architecture
-- ✅ Enterprise security features
-- 🔄 Continuous improvements
-
-## 📞 Contact & Support
-
-- **Official Website:** [aiautomatedsystems.ca](https://aiautomatedsystems.ca)
-- **Help Center Support:** support@aiautomatedsystems.ca (for existing clients and technical support)
-- **Consulting & Inquiries:** inquiries@aiautomatedsystems.ca (for consulting, workflow services, and hiring)
-- **Feedback & Bug Reports:** scottrmhardie@gmail.com (for comments, feedback, bug reports, or general inquiries)
-- **GitHub:** [@shardie-github/aias](https://github.com/shardie-github/aias)
+- [ ] Mobile apps (iOS/Android)
+- [ ] Marketplace for workflows
+- [ ] Advanced AI capabilities
+- [ ] More integrations
+- [ ] White-label solutions
 
 ---
 
-**Built in Canada 🇨🇦 • Serving the World 🌍**
+**Built with ❤️ in Canada**

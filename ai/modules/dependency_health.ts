@@ -8,7 +8,6 @@
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
 import { join } from 'path';
-import { Octokit } from '@octokit/rest';
 import type { ModuleResult } from '../orchestrator';
 
 interface DependencyReport {
@@ -44,7 +43,6 @@ interface DependencyReport {
 export class DependencyHealthChecker {
   constructor(
     private supabase: any,
-    private _octokit: Octokit,
     private config: any
   ) {}
 

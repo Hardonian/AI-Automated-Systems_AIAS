@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ComplianceStatus {
@@ -37,7 +38,10 @@ export default function ComplianceDashboardPage() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Unknown error";
       setError(errorMessage);
-      console.error("Failed to fetch compliance status:", err);
+      logger.error("Failed to fetch compliance status", err instanceof Error ? err : new Error(String(err)), {
+        component: "CompliancePage",
+        action: "fetchStatus",
+      });
     } finally {
       setLoading(false);
     }

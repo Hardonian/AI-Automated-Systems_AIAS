@@ -7,10 +7,9 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { requireAdminRole, AdminRole } from "@/lib/auth/admin-auth";
 import { addSecurityHeaders } from "@/lib/middleware/security";
-import { readFile } from "fs/promises";
-import { join } from "path";
 
 export const dynamic = "force-dynamic";
 
@@ -31,12 +30,12 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const reportType = searchParams.get("type") || "monthly";
-    const year = searchParams.get("year");
-    const month = searchParams.get("month");
+    // const reportType = searchParams.get("type") || "monthly"; // TODO: Use when implementing report filtering
+    // const year = searchParams.get("year"); // TODO: Use when implementing report filtering
+    // const month = searchParams.get("month"); // TODO: Use when implementing report filtering
 
     // Construct file path (in production, this would read from database or secure storage)
-    const reportsDir = join(process.cwd(), "internal", "private", "financial", "aias");
+    // const reportsDir = join(process.cwd(), "internal", "private", "financial", "aias"); // TODO: Use when implementing file reading
     
     // In production, you would:
     // 1. Read from encrypted storage
@@ -55,7 +54,10 @@ export async function GET(request: NextRequest) {
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    console.error("Error accessing financial reports:", error);
+    logger.error("Error accessing financial reports", error instanceof Error ? error : new Error(String(error)), {
+      component: "FinancialReportsAPI",
+      action: "GET",
+    });
     return NextResponse.json(
       { error: "Failed to access financial reports" },
       { status: 500 }

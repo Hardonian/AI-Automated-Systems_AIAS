@@ -1,46 +1,36 @@
 #!/bin/bash
-
-# Branch Cleanup Script
-# Identifies and helps remove dead branches
+# Clean up merged git branches
+# Run: bash scripts/cleanup-branches.sh
 
 set -e
 
-echo "🌿 Analyzing git branches..."
+echo "Cleaning up merged branches..."
 
-# Get current branch
-CURRENT_BRANCH=$(git branch --show-current)
-echo "Current branch: $CURRENT_BRANCH"
+# Fetch latest from remote
+git fetch --prune
+
+# Get list of merged branches (excluding main/master)
+MERGED_BRANCHES=$(git branch -r --merged main | grep -v "main\|HEAD\|master" | sed 's/origin\///')
+
+if [ -z "$MERGED_BRANCHES" ]; then
+  echo "No merged branches found."
+  exit 0
+fi
+
+echo "Found merged branches:"
+echo "$MERGED_BRANCHES"
+echo ""
+read -p "Delete these branches? (y/N) " -n 1 -r
 echo ""
 
-# Find merged branches
-echo "✅ Branches merged into main:"
-git branch -r --merged origin/main | grep -v "HEAD\|main" | while read branch; do
-  echo "  $branch"
-done
-
-echo ""
-echo "⚠️  Branches not merged into main:"
-git branch -r --no-merged origin/main | while read branch; do
-  # Check last commit date
-  LAST_COMMIT=$(git log -1 --format="%ci" "$branch" 2>/dev/null || echo "unknown")
-  echo "  $branch (last commit: $LAST_COMMIT)"
-done
-
-echo ""
-echo "📋 Branch cleanup recommendations:"
-echo ""
-echo "1. Safe to delete (merged branches):"
-git branch -r --merged origin/main | grep -v "HEAD\|main" | head -10 | while read branch; do
-  echo "   git push origin --delete ${branch#origin/}"
-done
-
-echo ""
-echo "2. Review before deleting (not merged):"
-git branch -r --no-merged origin/main | head -10 | while read branch; do
-  echo "   Review: $branch"
-done
-
-echo ""
-echo "⚠️  IMPORTANT: Review branches before deleting!"
-echo "   Use: git log origin/main..<branch> to see commits"
-echo "   Use: git diff origin/main..<branch> to see changes"
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  echo "$MERGED_BRANCHES" | while read branch; do
+    if [ -n "$branch" ]; then
+      echo "Deleting: $branch"
+      git push origin --delete "$branch" || echo "  -> Failed to delete $branch (may not exist)"
+    fi
+  done
+  echo "Done."
+else
+  echo "Cancelled."
+fi

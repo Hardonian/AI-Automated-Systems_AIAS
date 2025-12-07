@@ -11,7 +11,6 @@ import { WhatsNextChecklist } from "@/components/onboarding/whats-next-checklist
 import { UsageProgressBanner } from "@/components/monetization/usage-progress-banner";
 import { TrialCountdownBanner } from "@/components/monetization/trial-countdown-banner";
 import { DashboardClient } from "./dashboard-client";
-
 /**
  * Public Dashboard: "Loud & High" Social Proof Metrics
  * 
@@ -58,7 +57,10 @@ async function getKPIData() {
       kpi3Met: kpi3.data?.threshold_met || false,
     };
   } catch (error) {
-    console.error("Error fetching KPI data:", error);
+    logger.error("Error fetching KPI data", error instanceof Error ? error : new Error(String(error)), {
+      component: "DashboardPage",
+      action: "getKPIData",
+    });
     // Return sample data on error
     return generateSampleMetrics();
   }

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
+import { createGETHandler, RouteContext } from "@/lib/api/route-handler";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { createGETHandler } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -13,7 +13,7 @@ export const runtime = "nodejs"; // Use Node.js runtime for route-handler compat
  * Get activation metrics for dashboard
  */
 export const GET = createGETHandler(
-  async (context) => {
+  async (context: RouteContext) => {
     const { request } = context;
 
     // Get date range from query params (default to last 30 days)
@@ -34,7 +34,11 @@ export const GET = createGETHandler(
         .gte("created_at", startDate.toISOString());
 
       if (signupsError) {
-        logger.warn("Failed to query signups", { error: signupsError });
+        logger.warn("Failed to query signups", {
+          component: "AdminMetricsAPI",
+          action: "GET",
+          error: signupsError.message,
+        });
       }
 
       // Get integration connections
@@ -45,7 +49,11 @@ export const GET = createGETHandler(
         .gte("created_at", startDate.toISOString());
 
       if (integrationsError) {
-        logger.warn("Failed to query integrations", { error: integrationsError });
+        logger.warn("Failed to query integrations", {
+          component: "AdminMetricsAPI",
+          action: "GET",
+          error: integrationsError.message,
+        });
       }
 
       // Get workflow creations
@@ -56,7 +64,11 @@ export const GET = createGETHandler(
         .gte("created_at", startDate.toISOString());
 
       if (workflowsError) {
-        logger.warn("Failed to query workflows", { error: workflowsError });
+        logger.warn("Failed to query workflows", {
+          component: "AdminMetricsAPI",
+          action: "GET",
+          error: workflowsError.message,
+        });
       }
 
       // Get activations
@@ -67,7 +79,11 @@ export const GET = createGETHandler(
         .gte("created_at", startDate.toISOString());
 
       if (activationsError) {
-        logger.warn("Failed to query activations", { error: activationsError });
+        logger.warn("Failed to query activations", {
+          component: "AdminMetricsAPI",
+          action: "GET",
+          error: activationsError.message,
+        });
       }
 
       // Get active users (for retention)
@@ -78,7 +94,11 @@ export const GET = createGETHandler(
         .gte("created_at", startDate.toISOString());
 
       if (activeUsersError) {
-        logger.warn("Failed to query active users", { error: activeUsersError });
+        logger.warn("Failed to query active users", {
+          component: "AdminMetricsAPI",
+          action: "GET",
+          error: activeUsersError.message,
+        });
       }
 
       // Calculate metrics
@@ -125,8 +145,8 @@ export const GET = createGETHandler(
       return NextResponse.json({
         metrics: {
           activation_rate: Math.round(activationRate * 100) / 100,
-          time_to_activation_ms: medianTimeToActivation,
-          time_to_activation_hours: Math.round((medianTimeToActivation / (1000 * 60 * 60)) * 100) / 100,
+          time_to_activation_ms: medianTimeToActivation ?? 0,
+          time_to_activation_hours: Math.round(((medianTimeToActivation ?? 0) / (1000 * 60 * 60)) * 100) / 100,
           day_7_retention: Math.round(day7Retention * 100) / 100,
           total_signups: totalSignups,
           total_integrations: totalIntegrations,
@@ -147,7 +167,10 @@ export const GET = createGETHandler(
         },
       });
     } catch (error) {
-      logger.error("Error calculating metrics", error instanceof Error ? error : undefined);
+      logger.error("Error calculating metrics", error instanceof Error ? error : new Error(String(error)), {
+        component: "AdminMetricsAPI",
+        action: "GET",
+      });
       return NextResponse.json(
         { error: "Failed to calculate metrics" },
         { status: 500 }

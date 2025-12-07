@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -270,9 +271,10 @@ function ChooseIntegrationStep({ onNext }: { onNext: () => void }) {
         onNext();
       }
     } catch (error) {
-      // Note: Using console.error here as this is a demo/fallback scenario
-      // In production, this should use structured logger
-      console.error("Failed to connect integration", error);
+      logger.error("Failed to connect integration", error instanceof Error ? error : new Error(String(error)), {
+        component: "OnboardingWizard",
+        action: "connectIntegration",
+      });
       // For demo purposes, continue anyway
       onNext();
     } finally {

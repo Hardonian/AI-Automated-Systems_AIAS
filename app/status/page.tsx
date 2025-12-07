@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
 interface StatusItem {
   service: string;
   status: "operational" | "degraded" | "outage" | "maintenance";
@@ -30,7 +29,10 @@ export default function Status() {
           }
         }
       } catch (error) {
-        console.error("Failed to fetch status:", error);
+        logger.error("Failed to fetch status", error instanceof Error ? error : new Error(String(error)), {
+          component: "StatusPage",
+          action: "fetchStatus",
+        });
       }
     }
     

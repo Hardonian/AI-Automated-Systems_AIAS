@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface FunnelData {
@@ -42,7 +43,10 @@ export default function PLGFunnelDashboard() {
       const data = await response.json();
       setFunnel(data);
     } catch (err) {
-      console.error("Failed to fetch funnel:", err);
+      logger.error("Failed to fetch funnel", err instanceof Error ? err : new Error(String(err)), {
+        component: "PLGFunnelPage",
+        action: "fetchFunnel",
+      });
       // Use mock data for now
       setFunnel({
         signups: 100,

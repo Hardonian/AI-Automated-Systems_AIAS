@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
-import { createGETHandler } from "@/lib/api/route-handler";
 
 export const runtime = "edge";
 

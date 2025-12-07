@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-// import { createClient } from '@supabase/supabase-js'; // Will be used for metrics queries
+import { logger } from "@/lib/logging/structured-logger";
 // import { env } from '@/lib/env'; // Will be used for env vars
 // import { cacheService } from '@/lib/cache/cache-service';
 
@@ -54,7 +54,10 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(metrics);
   } catch (error) {
-    console.error('Metrics API error:', error);
+    logger.error('Metrics API error', error instanceof Error ? error : new Error(String(error)), {
+      component: "AdminMetricsAPI",
+      action: "GET",
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

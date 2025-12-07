@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface KPIData {
@@ -41,7 +42,10 @@ export default function KPIDashboard() {
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Failed to fetch KPIs";
       setError(errorMessage);
-      console.error("Failed to fetch KPIs:", err);
+      logger.error("Failed to fetch KPIs", err instanceof Error ? err : new Error(String(err)), {
+        component: "KPIsPage",
+        action: "fetchKPIs",
+      });
     } finally {
       setLoading(false);
     }

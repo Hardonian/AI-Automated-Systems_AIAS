@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -27,7 +28,10 @@ export function WorkflowPreview({ workflowId, embedId }: WorkflowPreviewProps) {
       const data = await response.json();
       setWorkflow(data);
     } catch (err) {
-      console.error("Failed to fetch workflow:", err);
+      logger.error("Failed to fetch workflow", err instanceof Error ? err : new Error(String(err)), {
+        component: "WorkflowPreview",
+        action: "fetchWorkflow",
+      });
     } finally {
       setLoading(false);
     }
@@ -40,7 +44,10 @@ export function WorkflowPreview({ workflowId, embedId }: WorkflowPreviewProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ embedId, workflowId }),
-      }).catch(console.error);
+      }).catch((err) => logger.error("Failed to track embed view", err instanceof Error ? err : new Error(String(err)), {
+        component: "WorkflowPreview",
+        action: "trackEmbedView",
+      }));
     }
   }, [embedId, workflowId]);
 

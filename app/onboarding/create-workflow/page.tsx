@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { logger } from "@/lib/logging/structured-logger";
 import { WorkflowForm } from "@/components/workflows/WorkflowForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -48,8 +49,11 @@ export default function CreateWorkflowPage() {
       const data = await response.json();
       const foundTemplate = data.templates.find((t: WorkflowTemplate) => t.id === id);
       setTemplate(foundTemplate || null);
-    } catch (err) {
-      console.error("Failed to fetch template", err);
+      } catch (err) {
+        logger.error("Failed to fetch template", err instanceof Error ? err : new Error(String(err)), {
+          component: "CreateWorkflowPage",
+          action: "fetchTemplate",
+        });
     } finally {
       setLoading(false);
     }

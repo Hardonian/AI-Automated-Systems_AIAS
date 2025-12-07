@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { handleApiError } from "@/lib/api/route-handler";
 import { z } from "zod";
 import { trackSignup } from "@/lib/analytics/funnel-tracking";
 import { rateLimit, getClientIP } from "@/lib/utils/rate-limit";

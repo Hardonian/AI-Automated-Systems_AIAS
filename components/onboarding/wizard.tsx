@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -179,7 +180,10 @@ export function OnboardingWizard() {
           });
         }
       } catch (error) {
-        console.error("Failed to mark workflow created:", error);
+        logger.error("Failed to mark workflow created", error instanceof Error ? error : new Error(String(error)), {
+          component: "Wizard",
+          action: "markWorkflowCreated",
+        });
       }
     }
   };

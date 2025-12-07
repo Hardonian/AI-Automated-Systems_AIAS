@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { handleApiError } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -78,7 +77,13 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error) {
-    logger.error("Error in GET /api/analytics/execution-history", error instanceof Error ? error : undefined);
-    return handleApiError(error, "Failed to get execution history");
+    logger.error("Error in GET /api/analytics/execution-history", error instanceof Error ? error : new Error(String(error)), {
+      component: "ExecutionHistoryAPI",
+      action: "GET",
+    });
+    return NextResponse.json(
+      { error: "Failed to get execution history" },
+      { status: 500 }
+    );
   }
 }

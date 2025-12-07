@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -41,7 +42,10 @@ export default function GrowthExperimentsDashboard() {
       const data = await response.json();
       setExperiments(data.experiments || []);
     } catch (err) {
-      console.error("Failed to fetch experiments:", err);
+      logger.error("Failed to fetch experiments", err instanceof Error ? err : new Error(String(err)), {
+        component: "GrowthExperimentsPage",
+        action: "fetchExperiments",
+      });
       // Use mock data for now
       setExperiments([
         {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { useExperimentTracking } from "@/lib/experiments/tracking";
 import { getExperimentVariant } from "@/lib/experiments/feature-flags";
 
@@ -49,7 +50,10 @@ export function trackPlanSelection(
       },
       userId,
     }),
-  }).catch(console.error);
+  }).catch((err) => logger.error("Failed to track plan selection", err instanceof Error ? err : new Error(String(err)), {
+    component: "PricingAnalytics",
+    action: "trackPlanSelection",
+  }));
 }
 
 /**
@@ -76,5 +80,8 @@ export function trackCheckoutStarted(
       },
       userId,
     }),
-  }).catch(console.error);
+  }).catch((err) => logger.error("Failed to track plan selection", err instanceof Error ? err : new Error(String(err)), {
+    component: "PricingAnalytics",
+    action: "trackPlanSelection",
+  }));
 }

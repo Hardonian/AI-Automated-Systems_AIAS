@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { loadStripe } from "@stripe/stripe-js";
 import { supabase } from "@/lib/supabase/client";
 import { hapticTap } from "@/components/gamification/Haptics";
@@ -77,7 +78,10 @@ export default function SubscriptionPlans() {
       // Redirect to checkout session URL
       window.location.href = `/billing/checkout?session_id=${sessionId}`;
     } catch (error: any) {
-      console.error("Subscription error:", error);
+      logger.error("Subscription error", error instanceof Error ? error : new Error(String(error)), {
+        component: "SubscriptionPlans",
+        action: "handleSubscribe",
+      });
       alert("Failed to start checkout: " + error.message);
     } finally {
       setLoading(null);

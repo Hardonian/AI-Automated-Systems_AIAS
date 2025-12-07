@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -117,7 +118,10 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
       onSuccess?.();
     } catch (error) {
       toast.error("Failed to save LOI");
-      console.error(error);
+      logger.error("Failed to save LOI", error instanceof Error ? error : new Error(String(error)), {
+        component: "LOIForm",
+        action: "onSubmit",
+      });
     } finally {
       setLoading(false);
     }

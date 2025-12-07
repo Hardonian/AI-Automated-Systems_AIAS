@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { moderateComment, generateSystemsThinkingInsight, type Comment } from "@/lib/blog/comments";
 import { env } from "@/lib/env";
 
@@ -30,7 +31,10 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: true });
 
     if (error) {
-      console.error('Failed to fetch comments:', error);
+      logger.error('Failed to fetch comments', error instanceof Error ? error : new Error(String(error)), {
+        component: "RSSCommentsAPI",
+        action: "GET",
+      });
       return NextResponse.json(
         { error: "Failed to fetch comments" },
         { status: 500 }
@@ -106,7 +110,10 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (saveError) {
-      console.error('Failed to save comment:', saveError);
+      logger.error('Failed to save comment', saveError instanceof Error ? saveError : new Error(String(saveError)), {
+        component: "RSSCommentsAPI",
+        action: "POST",
+      });
       return NextResponse.json(
         { error: "Failed to save comment" },
         { status: 500 }

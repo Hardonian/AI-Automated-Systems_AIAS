@@ -5,10 +5,6 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { costMonitor } from "@/lib/cost-tracking/cost-monitor";
-import { CostThreshold } from "@/lib/cost-tracking/cost-monitor";
-import { addSecurityHeaders } from "@/lib/middleware/security";
-
 export const dynamic = "force-dynamic";
 
 /**
@@ -22,7 +18,7 @@ export async function GET() {
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    console.error("Error fetching thresholds:", error);
+    logger.error("Error fetching thresholds:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Failed to fetch thresholds" },
       { status: 500 }
@@ -59,7 +55,7 @@ export async function POST(request: NextRequest) {
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    console.error("Error adding threshold:", error);
+    logger.error("Error adding threshold:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Failed to add threshold" },
       { status: 500 }
@@ -82,7 +78,7 @@ export async function DELETE(request: NextRequest) {
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    console.error("Error removing threshold:", error);
+    logger.error("Error removing threshold:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Failed to remove threshold" },
       { status: 500 }

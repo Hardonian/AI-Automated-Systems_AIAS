@@ -55,10 +55,10 @@ AI Automated Systems is built with:
 - **Documentation:** See [docs/README.md](./docs/README.md) for comprehensive documentation
   - [Quick Start Guide](./docs/QUICK_START.md)
   - [Local Development Setup](./docs/SETUP_LOCAL.md)
-  - [Architecture Overview](./docs/ARCHITECTURE.md)
-  - [API Documentation](./docs/API.md)
-  - [Content Studio](./docs/content-studio.md)
-  - [Deployment Guide](./docs/DEPLOYMENT.md)
+  - [Architecture Overview](./docs/architecture/ARCHITECTURE.md)
+  - [API Documentation](./docs/api/overview.md)
+  - [Product Overview](./docs/external/product-overview.md)
+  - [Deployment Guide](./docs/operations/DEPLOYMENT.md)
 - **Website:** [aiautomatedsystems.ca](https://aiautomatedsystems.ca)
 - **GitHub Issues:** [Report a bug or request a feature](https://github.com/shardie-github/aias/issues)
 - **Discussions:** [Community discussions](https://github.com/shardie-github/aias/discussions)
@@ -66,9 +66,10 @@ AI Automated Systems is built with:
 
 ## 🔒 Security & Privacy
 
-- **Encrypted Documents:** Internal business and investor relations documents are secured in the `/INVESTOR-RELATIONS-PRIVATE` folder and are encrypted via Git-crypt.
+- **Encrypted Documents:** Internal business and investor relations documents are secured in the `/archive/old_docs/INVESTOR-RELATIONS-PRIVATE` folder and are encrypted via Git-crypt.
 - **Enterprise Security:** SOC 2, GDPR, CCPA compliance built-in.
 - **Security Reporting:** Report security vulnerabilities to scottrmhardie@gmail.com
+- **Sensitive Data:** All sensitive files are properly handled and excluded from version control (see `.gitignore`)
 
 ## 🛠️ Development
 
@@ -130,11 +131,23 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
 ├── app/                    # Next.js App Router pages and API routes
 ├── components/             # React components
 ├── lib/                    # Shared utilities and libraries
+├── hooks/                  # Custom React hooks
 ├── packages/               # Monorepo packages
+├── scripts/                # Development and automation scripts
+├── tests/                  # Test suite
 ├── supabase/               # Supabase functions and migrations
-├── docs/                   # Documentation
-├── INVESTOR-RELATIONS-PRIVATE/  # Encrypted investor documents (git-crypt)
-└── HISTORICAL-PLANNING-ARCHIVE/ # Archived planning documents
+├── docs/                   # Canonical documentation
+│   ├── internal/          # Internal/private documentation
+│   ├── external/          # Public-facing documentation
+│   ├── product/           # Product documentation
+│   ├── architecture/      # Architecture documentation
+│   └── operations/        # Operations documentation
+└── archive/               # Archived/deprecated material
+    ├── deprecated_code/   # Unused code
+    ├── old_docs/          # Historical documentation
+    ├── legacy_designs/    # Legacy design files
+    ├── experiments/       # Experimental code
+    └── unused_assets/    # Unused assets
 ```
 
 ## 🤝 Contributing

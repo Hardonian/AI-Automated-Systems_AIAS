@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-import { env } from "@/lib/env";
-import { cookies } from "next/headers";
-
+import { logger } from "@/lib/logging/structured-logger";
 /**
  * GET /api/content/auth
  * Get Content Studio token for authenticated admin user
@@ -55,7 +52,10 @@ export async function GET(request: NextRequest) {
     );
 
     if (tokenError) {
-      console.error("Token generation error:", tokenError);
+      logger.error("Token generation error", tokenError instanceof Error ? tokenError : new Error(String(tokenError)), {
+        component: "ContentAuthAPI",
+        action: "generateToken",
+      });
       return NextResponse.json(
         { error: "Failed to generate token" },
         { status: 500 }
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
       token: tokenData,
     });
   } catch (error: any) {
-    console.error("Auth error:", error);
+    logger.error("Auth error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: error.message || "Authentication failed" },
       { status: 500 }
@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error: any) {
-    console.error("Token verification error:", error);
+    logger.error("Token verification error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: error.message || "Verification failed" },
       { status: 500 }

@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { conversionTracker } from "@/lib/analytics/conversion-tracking";
 import { databasePMFTracker } from "@/lib/analytics/database-integration";
-import { logger } from "@/lib/logging/structured-logger";
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -25,7 +23,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Analytics tracking error:", error);
+    logger.error("Analytics tracking error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Failed to track event" },
       { status: 500 }
@@ -38,7 +36,7 @@ export async function GET(_request: NextRequest) {
     const funnelMetrics = conversionTracker.getFunnelMetrics();
     return NextResponse.json({ funnel: funnelMetrics });
   } catch (error) {
-    console.error("Analytics fetch error:", error);
+    logger.error("Analytics fetch error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Failed to fetch metrics" },
       { status: 500 }

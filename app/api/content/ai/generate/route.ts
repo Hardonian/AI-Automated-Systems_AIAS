@@ -1,8 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
-import { createClient } from "@supabase/supabase-js";
-import { env } from "@/lib/env";
-
 /**
  * POST /api/content/ai/generate
  * Uses GenAI to generate or optimize content
@@ -139,7 +135,7 @@ export async function POST(request: NextRequest) {
       content: generatedContent,
     });
   } catch (error: any) {
-    console.error("AI generation error:", error);
+    logger.error("AI generation error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: error.message || "Failed to generate content" },
       { status: 500 }

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { supabase } from "@/lib/supabase/client";
 import { hapticTap } from "./Haptics";
 
@@ -41,7 +42,10 @@ export async function subscribeToPush() {
     
     return true;
   } catch (error) {
-    console.error("Push subscription failed:", error);
+    logger.error("Push subscription failed", error instanceof Error ? error : new Error(String(error)), {
+      component: "PushNotificationButton",
+      action: "requestPushPermission",
+    });
     return false;
   }
 }

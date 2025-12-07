@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { ShopifyClient } from "@/lib/integrations/shopify-client";
 import { WaveClient } from "@/lib/integrations/wave-client";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);

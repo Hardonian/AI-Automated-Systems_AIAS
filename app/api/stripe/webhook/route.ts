@@ -2,12 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
 import { SystemError, ValidationError, formatError } from "@/lib/errors";
 import { recordError } from "@/lib/utils/error-detection";
 import { retry } from "@/lib/utils/retry";
 import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
-import { logger } from "@/lib/logging/structured-logger";
-import { z } from "zod";
 
 // Load environment variables dynamically - no hardcoded values
 const stripe = new Stripe(env.stripe.secretKey!, {
@@ -75,7 +74,12 @@ export async function POST(req: NextRequest): Promise<NextResponse<CheckoutRespo
         maxAttempts: 3,
         initialDelayMs: 1000,
         onRetry: (attempt, err) => {
-          console.warn(`Retrying Stripe checkout (attempt ${attempt})`, { error: err.message });
+          logger.warn(`Retrying Stripe checkout (attempt ${attempt})`, {
+            component: "StripeWebhookAPI",
+            action: "retry",
+            attempt,
+            error: err.message,
+          });
         },
       }
     );
@@ -87,7 +91,10 @@ export async function POST(req: NextRequest): Promise<NextResponse<CheckoutRespo
       error instanceof Error ? error : new Error(String(error))
     );
     recordError(systemError, { endpoint: '/api/stripe/webhook', action: 'checkout' });
-    console.error("Checkout error:", systemError);
+    logger.error("Checkout error", systemError, {
+      component: "StripeWebhookAPI",
+      action: "checkout",
+    });
     const formatted = formatError(systemError);
     return NextResponse.json(
       { error: formatted.message },
@@ -140,7 +147,10 @@ export async function PUT(req: NextRequest): Promise<NextResponse<WebhookRespons
       { originalError: err instanceof Error ? err.message : String(err) }
     );
     recordError(error, { endpoint: '/api/stripe/webhook', action: 'webhook_verification' });
-    console.error("Webhook signature verification failed:", error);
+    logger.error("Webhook signature verification failed", error instanceof Error ? error : new Error(String(error)), {
+      component: "StripeWebhookAPI",
+      action: "verifySignature",
+    });
     const formatted = formatError(error);
     return NextResponse.json(
       { error: formatted.message },
@@ -244,7 +254,10 @@ export async function PUT(req: NextRequest): Promise<NextResponse<WebhookRespons
       tags: { status: "error" },
     });
     
-    console.error("Webhook handler error:", systemError);
+    logger.error("Webhook handler error", systemError, {
+      component: "StripeWebhookAPI",
+      action: "handleWebhook",
+    });
     const formatted = formatError(systemError);
     return NextResponse.json(
       { error: formatted.message },

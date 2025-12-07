@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -69,7 +70,10 @@ export function LOIDashboardEnhanced() {
       setLOIs(data.lois || []);
       setSummary(data.summary || null);
     } catch (error) {
-      console.error("Error fetching LOIs:", error);
+      logger.error("Error fetching LOIs", error instanceof Error ? error : new Error(String(error)), {
+        component: "LOIDashboardEnhanced",
+        action: "fetchLOIs",
+      });
     } finally {
       setLoading(false);
     }

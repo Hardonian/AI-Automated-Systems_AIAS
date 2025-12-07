@@ -5,13 +5,6 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { CostAggregator } from "@/lib/cost-tracking/service-costs";
-import { costMonitor } from "@/lib/cost-tracking/cost-monitor";
-import { CostOptimizer } from "@/lib/cost-tracking/cost-optimizer";
-import { ServiceCost } from "@/lib/cost-tracking/service-costs";
-import { addSecurityHeaders } from "@/lib/middleware/security";
-import { addCacheHeaders } from "@/lib/middleware/cache";
-
 export const dynamic = "force-dynamic";
 
 /**
@@ -71,7 +64,7 @@ export async function GET(request: NextRequest) {
     addCacheHeaders(response, { maxAge: 300, private: true }); // Cache for 5 minutes
     return response;
   } catch (error) {
-    console.error("Error fetching cost metrics:", error);
+    logger.error("Error fetching cost metrics:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Failed to fetch cost metrics" },
       { status: 500 }
@@ -111,7 +104,7 @@ export async function POST(request: NextRequest) {
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    console.error("Error recording cost:", error);
+    logger.error("Error recording cost:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Failed to record cost" },
       { status: 500 }

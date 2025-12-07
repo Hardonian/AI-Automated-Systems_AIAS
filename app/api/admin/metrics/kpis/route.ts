@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { createServerClient } from "@/lib/supabase/server";
 
 export const dynamic = 'force-dynamic';
@@ -127,7 +128,10 @@ export async function GET() {
 
     return NextResponse.json(kpis);
   } catch (error) {
-    console.error("Error fetching KPIs:", error);
+    logger.error("Error fetching KPIs", error instanceof Error ? error : new Error(String(error)), {
+      component: "KPIsAPI",
+      action: "GET",
+    });
     return NextResponse.json(
       { error: "Failed to fetch KPIs" },
       { status: 500 }

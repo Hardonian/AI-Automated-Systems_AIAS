@@ -5,9 +5,6 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getAdminUser, hasAdminRole, AdminRole } from "@/lib/auth/admin-auth";
-import { addSecurityHeaders } from "@/lib/middleware/security";
-
 export const dynamic = "force-dynamic";
 
 /**
@@ -37,7 +34,7 @@ export async function GET(request: NextRequest) {
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    console.error("Error checking admin access:", error);
+    logger.error("Error checking admin access:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { isAdmin: false, hasFinancialAccess: false, error: "Internal server error" },
       { status: 500 }

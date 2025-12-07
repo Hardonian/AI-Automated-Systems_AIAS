@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { createGETHandler, RouteContext } from "@/lib/api/route-handler";
 import { requireAdmin } from "@/lib/auth/admin-auth";
 import { getAllNotifications } from "@/lib/notifications/seed-round-notifications";
@@ -39,7 +40,10 @@ export async function GET(request: NextRequest) {
         lastUpdated: new Date().toISOString(),
       });
     } catch (error) {
-      console.error("Error fetching notifications:", error);
+      logger.error("Error fetching notifications", error instanceof Error ? error : new Error(String(error)), {
+        component: "NotificationsAPI",
+        action: "GET",
+      });
       return NextResponse.json(
         { error: "Failed to fetch notifications" },
         { status: 500 }

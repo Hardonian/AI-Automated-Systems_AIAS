@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -74,7 +75,10 @@ export function CustomerHealthDashboardEnhanced() {
       setSummary(data.summary || null);
       setHistoricalTrend(data.historicalTrend || []);
     } catch (error) {
-      console.error("Error fetching health data:", error);
+      logger.error("Error fetching health data", error instanceof Error ? error : new Error(String(error)), {
+        component: "CustomerHealthDashboardEnhanced",
+        action: "fetchHealthData",
+      });
     } finally {
       setLoading(false);
     }

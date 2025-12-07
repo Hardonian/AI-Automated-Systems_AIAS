@@ -11,7 +11,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-
 interface UserSettings {
   id: string;
   user_id: string;
@@ -65,7 +64,10 @@ export default function SettingsPage() {
       const data = await response.json();
       setSettings(data.settings || {});
     } catch (error) {
-      console.error("Error loading settings:", error);
+      logger.error("Error loading settings", error instanceof Error ? error : new Error(String(error)), {
+        component: "SettingsPage",
+        action: "loadSettings",
+      });
       toast.error("Failed to load settings");
     } finally {
       setLoading(false);
@@ -100,7 +102,10 @@ export default function SettingsPage() {
       setSettings(data.settings || {});
       toast.success("Settings saved successfully");
     } catch (error) {
-      console.error("Error saving settings:", error);
+      logger.error("Error saving settings", error instanceof Error ? error : new Error(String(error)), {
+        component: "SettingsPage",
+        action: "saveSettings",
+      });
       toast.error("Failed to save settings");
     } finally {
       setSaving(false);

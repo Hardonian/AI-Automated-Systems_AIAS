@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { extractUTMParams, extractReferralCode, storeUTMParams } from "@/lib/analytics/utm-tracking";
 
 /**
@@ -36,7 +37,10 @@ export function UTMTracker() {
           },
         }),
       }).catch((error) => {
-        console.error("Failed to track page view:", error);
+        logger.error("Failed to track page view", error instanceof Error ? error : new Error(String(error)), {
+          component: "UTMTracker",
+          action: "trackPageView",
+        });
       });
     }
   }, []);

@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { markEmailConnected } from "@/lib/trial/user-plan";
-import { logger } from "@/lib/logging/structured-logger";
-
 /**
  * POST /api/trial/mark-email-connected
  * Mark user's email as connected

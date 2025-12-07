@@ -7,11 +7,10 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { requireAdminRole, AdminRole } from "@/lib/auth/admin-auth";
 import { addSecurityHeaders } from "@/lib/middleware/security";
 import { getBusinessPlanningDocument } from "@/lib/admin/business-planning-access";
-import { readFile } from "fs/promises";
-import { join } from "path";
 
 export const dynamic = "force-dynamic";
 
@@ -74,7 +73,10 @@ export async function GET(
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    console.error("Error accessing business planning document:", error);
+    logger.error("Error accessing business planning document", error instanceof Error ? error : new Error(String(error)), {
+      component: "BusinessPlanningAPI",
+      action: "GET",
+    });
     return NextResponse.json(
       { error: "Failed to access document" },
       { status: 500 }

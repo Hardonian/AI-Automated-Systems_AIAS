@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { createServerClient } from "@/lib/supabase/server";
 
 export const dynamic = 'force-dynamic';
@@ -29,7 +30,10 @@ export async function GET(
 
     return NextResponse.json(workflow);
   } catch (error) {
-    console.error("Error fetching workflow for embed:", error);
+    logger.error("Error fetching workflow for embed", error instanceof Error ? error : new Error(String(error)), {
+      component: "EmbedAPI",
+      action: "GET",
+    });
     return NextResponse.json(
       { error: "Failed to fetch workflow" },
       { status: 500 }

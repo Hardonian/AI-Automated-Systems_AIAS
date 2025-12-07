@@ -12,6 +12,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -59,7 +60,10 @@ export default function PerformanceDashboard() {
       setMetrics(data);
       setLoading(false);
     } catch (error) {
-      console.error('Failed to fetch metrics:', error);
+      logger.error('Failed to fetch metrics', error instanceof Error ? error : new Error(String(error)), {
+        component: "PerformancePage",
+        action: "fetchMetrics",
+      });
       setLoading(false);
     }
   }

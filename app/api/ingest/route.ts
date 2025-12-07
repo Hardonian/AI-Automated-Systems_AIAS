@@ -1,11 +1,5 @@
 import { NextResponse } from "next/server";
-import { env } from "@/lib/env";
-import { NetworkError } from "@/lib/errors";
-import { createPOSTHandler } from "@/lib/api/route-handler";
-import { retry } from "@/lib/utils/retry";
-import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
-import { z } from "zod";
-
+import { logger } from "@/lib/logging/structured-logger";
 export const runtime = "edge";
 
 // interface IngestResponse {
@@ -43,7 +37,7 @@ export const POST = createPOSTHandler(
       const parsed = JSON.parse(body);
       const validation = eventSchema.safeParse(parsed);
       if (!validation.success) {
-        console.warn("Event validation warnings:", validation.error.errors);
+        logger.warn("Event validation warnings:", { component: "route", ...validation.error.errors });
       }
     } catch {
       // Invalid JSON - will be caught by route handler
@@ -76,7 +70,12 @@ export const POST = createPOSTHandler(
         maxAttempts: 3,
         initialDelayMs: 1000,
         onRetry: (attempt, err) => {
-          console.warn(`Retrying ingest (attempt ${attempt})`, { error: err.message });
+          logger.warn(`Retrying ingest (attempt ${attempt})`, {
+            component: "IngestAPI",
+            action: "retry",
+            attempt,
+            error: err.message,
+          });
         },
       }
     );

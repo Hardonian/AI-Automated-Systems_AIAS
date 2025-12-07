@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
 import { createServerClient } from "@/lib/supabase/server";
 
 export const dynamic = 'force-dynamic';
@@ -78,7 +79,10 @@ export async function GET() {
 
     return NextResponse.json(funnel);
   } catch (error) {
-    console.error("Error fetching PLG funnel:", error);
+    logger.error("Error fetching PLG funnel", error instanceof Error ? error : new Error(String(error)), {
+      component: "PLGFunnelAPI",
+      action: "GET",
+    });
     return NextResponse.json(
       { error: "Failed to fetch PLG funnel" },
       { status: 500 }

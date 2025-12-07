@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -68,7 +69,10 @@ export function WorkflowForm({ template, onSuccess, onCancel }: WorkflowFormProp
       const data = await response.json();
       setTemplates(data.templates);
     } catch (err) {
-      console.error("Failed to fetch templates", err);
+      logger.error("Failed to fetch templates", err instanceof Error ? err : new Error(String(err)), {
+        component: "WorkflowForm",
+        action: "fetchTemplates",
+      });
     }
   }
 

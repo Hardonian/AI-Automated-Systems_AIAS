@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { logger } from "@/lib/logging/structured-logger";
 import { Bell, Check, Archive, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -68,7 +69,10 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       setNotifications(data.notifications || []);
       setUnreadCount(data.unread_count || 0);
     } catch (error) {
-      console.error("Error loading notifications:", error);
+      logger.error("Error loading notifications", error instanceof Error ? error : new Error(String(error)), {
+        component: "NotificationCenter",
+        action: "loadNotifications",
+      });
     } finally {
       setLoading(false);
     }
@@ -99,7 +103,10 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
     } catch (error) {
-      console.error("Error marking notification as read:", error);
+      logger.error("Error marking notification as read", error instanceof Error ? error : new Error(String(error)), {
+        component: "NotificationCenter",
+        action: "markAsRead",
+      });
       toast.error("Failed to mark notification as read");
     }
   };
@@ -128,7 +135,10 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       setUnreadCount(0);
       toast.success("All notifications marked as read");
     } catch (error) {
-      console.error("Error marking all as read:", error);
+      logger.error("Error marking all as read", error instanceof Error ? error : new Error(String(error)), {
+        component: "NotificationCenter",
+        action: "markAllAsRead",
+      });
       toast.error("Failed to mark all as read");
     }
   };
@@ -156,7 +166,10 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
       toast.success("Notification archived");
     } catch (error) {
-      console.error("Error archiving notification:", error);
+      logger.error("Error archiving notification", error instanceof Error ? error : new Error(String(error)), {
+        component: "NotificationCenter",
+        action: "archiveNotification",
+      });
       toast.error("Failed to archive notification");
     }
   };
@@ -182,7 +195,10 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
       toast.success("Notification deleted");
     } catch (error) {
-      console.error("Error deleting notification:", error);
+      logger.error("Error deleting notification", error instanceof Error ? error : new Error(String(error)), {
+        component: "NotificationCenter",
+        action: "deleteNotification",
+      });
       toast.error("Failed to delete notification");
     }
   };

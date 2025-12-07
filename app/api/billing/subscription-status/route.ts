@@ -1,8 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkPremiumSubscription } from "@/lib/billing/subscription-check";
-import { createClient } from "@supabase/supabase-js";
-import { env } from "@/lib/env";
-
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -34,7 +30,7 @@ export async function GET(request: NextRequest) {
       ...subscriptionStatus,
     });
   } catch (error) {
-    console.error("Failed to check subscription status:", error);
+    logger.error("Failed to check subscription status:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Failed to check subscription status" },
       { status: 500 }

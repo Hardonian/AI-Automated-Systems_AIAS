@@ -299,6 +299,8 @@ export class DashboardGenerator {
 
     const first = values[0];
     const last = values[values.length - 1];
+    if (first === undefined || last === undefined) return 'stable';
+    
     const diff = last - first;
 
     if (diff > 0.1) return 'improving';

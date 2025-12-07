@@ -129,7 +129,7 @@ export class DependencyHealthChecker {
       } catch (e) {
         // pnpm might not be available, try npm
         try {
-          const outdatedOutput = execSync('npm outdated --json', {
+          const _outdatedOutput = execSync('npm outdated --json', {
             cwd: dir,
             encoding: 'utf-8',
             stdio: 'pipe'

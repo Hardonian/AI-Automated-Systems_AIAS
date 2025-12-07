@@ -40,7 +40,7 @@ export function EnhancedHero() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(139,92,246,0.15),transparent_50%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px]" />
       
-      <div className="relative container text-center space-y-8 max-w-6xl mx-auto z-10 px-4">
+      <div className="relative container text-center space-y-6 md:space-y-8 max-w-6xl mx-auto z-10 px-4 sm:px-6">
         {/* Social proof bar - mobile optimized */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -67,14 +67,14 @@ export function EnhancedHero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 rounded-full bg-gradient-to-r from-primary/20 via-primary/10 to-accent/20 text-primary text-sm md:text-base font-bold border-2 border-primary/30 shadow-xl backdrop-blur-md"
+          className="inline-flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 rounded-full bg-gradient-to-r from-primary/20 via-primary/10 to-accent/20 text-primary text-sm md:text-base font-bold border-2 border-primary/30 shadow-xl backdrop-blur-md mb-6"
         >
           <Sparkles className="h-4 w-4 md:h-5 md:w-5 animate-pulse" aria-hidden="true" />
-          <span>Custom AI Platforms Built by AI Automated Systems</span>
+          <span>Custom AI Platforms by AI Automated Systems</span>
         </motion.div>
         
         {/* Main headline - mobile responsive with TextReveal */}
-        <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold tracking-tight leading-[1.1] px-2">
+        <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold tracking-tight leading-[1.1] px-2 mb-6">
           <TextReveal
             as="h1"
             className="block"
@@ -98,7 +98,7 @@ export function EnhancedHero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-muted-foreground max-w-4xl mx-auto leading-relaxed font-medium px-4"
+          className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-muted-foreground max-w-4xl mx-auto leading-relaxed font-medium px-4 mb-8"
         >
           Save 10+ hours per week with AI automation. Connect your tools, automate workflows, and focus on what matters.
         </motion.p>
@@ -201,7 +201,7 @@ export function EnhancedHero() {
         >
           <div className="inline-flex flex-col sm:flex-row items-center gap-2 md:gap-4 px-4 md:px-6 py-3 md:py-4 rounded-xl bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 border-2 border-primary/30 shadow-lg backdrop-blur-sm">
             <span className="text-xs md:text-sm font-semibold text-foreground">
-              🎁 Limited Time: Free Strategy Call + 30-Day Trial
+              🎁 Free Strategy Call + 30-Day Trial
             </span>
             <Button size="sm" variant="default" className="h-8 md:h-9 text-xs md:text-sm font-bold" asChild>
               <Link href="/signup">Claim Offer</Link>

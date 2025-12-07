@@ -22,7 +22,7 @@ export function Footer() {
               <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" />
               <h3 className="font-bold text-lg text-foreground">AI Automated Systems</h3>
             </div>
-            <p className="text-sm mb-6 leading-relaxed max-w-sm">
+            <p className="text-sm md:text-base mb-6 leading-relaxed max-w-sm">
               Custom AI platforms, workflow automation systems, and intelligent agents. AI Automated Systems builds complete solutions 
               (like TokPulse and Hardonia Suite) while the AIAS Platform powers business automation for our SaaS customers.
             </p>
@@ -74,13 +74,13 @@ export function Footer() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <h4 className="font-bold text-foreground mb-4">{section.title}</h4>
+              <h4 className="font-bold text-foreground mb-4 text-base">{section.title}</h4>
               <ul className="space-y-3" role="list">
                 {section.links.map((link) => (
                   <li key={link.href} role="listitem">
                     <Link
                       href={link.href}
-                      className="hover:text-foreground hover:underline transition-colors inline-block min-h-[44px] flex items-center"
+                      className="hover:text-foreground hover:underline transition-colors inline-block min-h-[44px] flex items-center text-sm md:text-base"
                       aria-label={`Navigate to ${link.label}`}
                     >
                       {link.label}
@@ -151,7 +151,7 @@ export function Footer() {
                 </svg>
               </a>
             </div>
-            <div className="text-center text-xs text-muted-foreground">
+            <div className="text-center text-xs md:text-sm text-muted-foreground leading-relaxed">
               © {new Date().getFullYear()} AI Automated Systems. All rights reserved.
               <br />
               <span className="mt-2 inline-block">Built in Canada 🇨🇦 • Serving the World 🌍</span>

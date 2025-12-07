@@ -125,10 +125,10 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="container py-8 max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Settings</h1>
-        <p className="text-muted-foreground mt-2">
+    <div className="container py-8 md:py-12 max-w-4xl px-4">
+      <div className="mb-8 md:mb-10">
+        <h1 className="text-3xl md:text-4xl font-bold mb-3">Settings</h1>
+        <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
           Manage your account preferences and notification settings
         </p>
       </div>
@@ -142,19 +142,19 @@ export default function SettingsPage() {
         </TabsList>
 
         {/* Notifications Tab */}
-        <TabsContent value="notifications" className="space-y-4">
+        <TabsContent value="notifications" className="space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle>Notification Preferences</CardTitle>
-              <CardDescription>
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl mb-2">Notification Preferences</CardTitle>
+              <CardDescription className="text-base">
                 Choose how you want to receive notifications
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="email-notifications">Email Notifications</Label>
-                  <p className="text-sm text-muted-foreground">
+            <CardContent className="space-y-6 pt-6">
+              <div className="flex items-center justify-between py-2">
+                <div className="space-y-1">
+                  <Label htmlFor="email-notifications" className="text-base">Email Notifications</Label>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Receive notifications via email
                   </p>
                 </div>
@@ -168,10 +168,10 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="push-notifications">Push Notifications</Label>
-                  <p className="text-sm text-muted-foreground">
+              <div className="flex items-center justify-between py-2">
+                <div className="space-y-1">
+                  <Label htmlFor="push-notifications" className="text-base">Push Notifications</Label>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Receive push notifications in your browser
                   </p>
                 </div>
@@ -185,10 +185,10 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="sms-notifications">SMS Notifications</Label>
-                  <p className="text-sm text-muted-foreground">
+              <div className="flex items-center justify-between py-2">
+                <div className="space-y-1">
+                  <Label htmlFor="sms-notifications" className="text-base">SMS Notifications</Label>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Receive notifications via SMS (requires phone number)
                   </p>
                 </div>
@@ -202,12 +202,12 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <div className="pt-4 border-t">
-                <Label className="mb-4 block">Notification Types</Label>
+              <div className="pt-6 border-t">
+                <Label className="mb-4 block text-base">Notification Types</Label>
                 <div className="space-y-4">
                   {Object.entries(settings.notification_types || {}).map(([type, enabled]) => (
-                    <div key={type} className="flex items-center justify-between">
-                      <Label htmlFor={`notification-${type}`} className="capitalize">
+                    <div key={type} className="flex items-center justify-between py-2">
+                      <Label htmlFor={`notification-${type}`} className="capitalize text-base">
                         {type.replace(/_/g, " ")}
                       </Label>
                       <Switch
@@ -230,17 +230,17 @@ export default function SettingsPage() {
         </TabsContent>
 
         {/* Appearance Tab */}
-        <TabsContent value="appearance" className="space-y-4">
+        <TabsContent value="appearance" className="space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle>Appearance</CardTitle>
-              <CardDescription>
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl mb-2">Appearance</CardTitle>
+              <CardDescription className="text-base">
                 Customize the look and feel of the application
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 pt-6">
               <div className="space-y-2">
-                <Label htmlFor="theme">Theme</Label>
+                <Label htmlFor="theme" className="text-base">Theme</Label>
                 <Select
                   value={settings.theme || "system"}
                   onValueChange={(value) =>
@@ -260,7 +260,7 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="language">Language</Label>
+                <Label htmlFor="language" className="text-base">Language</Label>
                 <Select
                   value={settings.language || "en"}
                   onValueChange={(value) => updateSetting("language", value)}
@@ -278,7 +278,7 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="timezone">Timezone</Label>
+                <Label htmlFor="timezone" className="text-base">Timezone</Label>
                 <Select
                   value={settings.timezone || "UTC"}
                   onValueChange={(value) => updateSetting("timezone", value)}
@@ -297,7 +297,7 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="time-format">Time Format</Label>
+                <Label htmlFor="time-format" className="text-base">Time Format</Label>
                 <Select
                   value={settings.time_format || "24h"}
                   onValueChange={(value) =>
@@ -319,17 +319,17 @@ export default function SettingsPage() {
         </TabsContent>
 
         {/* Privacy Tab */}
-        <TabsContent value="privacy" className="space-y-4">
+        <TabsContent value="privacy" className="space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle>Privacy Settings</CardTitle>
-              <CardDescription>
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl mb-2">Privacy Settings</CardTitle>
+              <CardDescription className="text-base">
                 Control your privacy and data sharing preferences
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 pt-6">
               <div className="space-y-2">
-                <Label htmlFor="profile-visibility">Profile Visibility</Label>
+                <Label htmlFor="profile-visibility" className="text-base">Profile Visibility</Label>
                 <Select
                   value={settings.profile_visibility || "private"}
                   onValueChange={(value) =>
@@ -348,10 +348,10 @@ export default function SettingsPage() {
                 </Select>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="analytics-opt-in">Analytics</Label>
-                  <p className="text-sm text-muted-foreground">
+              <div className="flex items-center justify-between py-2">
+                <div className="space-y-1">
+                  <Label htmlFor="analytics-opt-in" className="text-base">Analytics</Label>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Help us improve by sharing anonymous usage data
                   </p>
                 </div>
@@ -365,10 +365,10 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="data-sharing">Data Sharing</Label>
-                  <p className="text-sm text-muted-foreground">
+              <div className="flex items-center justify-between py-2">
+                <div className="space-y-1">
+                  <Label htmlFor="data-sharing" className="text-base">Data Sharing</Label>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Allow sharing of anonymized data with partners
                   </p>
                 </div>
@@ -386,19 +386,19 @@ export default function SettingsPage() {
         </TabsContent>
 
         {/* Features Tab */}
-        <TabsContent value="features" className="space-y-4">
+        <TabsContent value="features" className="space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle>Feature Preferences</CardTitle>
-              <CardDescription>
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl mb-2">Feature Preferences</CardTitle>
+              <CardDescription className="text-base">
                 Enable experimental and beta features
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="beta-features">Beta Features</Label>
-                  <p className="text-sm text-muted-foreground">
+            <CardContent className="space-y-6 pt-6">
+              <div className="flex items-center justify-between py-2">
+                <div className="space-y-1">
+                  <Label htmlFor="beta-features" className="text-base">Beta Features</Label>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Enable access to beta features
                   </p>
                 </div>
@@ -412,10 +412,10 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="experimental-features">Experimental Features</Label>
-                  <p className="text-sm text-muted-foreground">
+              <div className="flex items-center justify-between py-2">
+                <div className="space-y-1">
+                  <Label htmlFor="experimental-features" className="text-base">Experimental Features</Label>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Enable experimental features (may be unstable)
                   </p>
                 </div>

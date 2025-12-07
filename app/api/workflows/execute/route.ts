@@ -4,6 +4,7 @@ import { z } from "zod";
 import { env } from "@/lib/env";
 import { executeWorkflow } from "@/lib/workflows/executor-enhanced";
 import { trackWorkflowExecute } from "@/lib/analytics/funnel-tracking";
+import { createPOSTHandler } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 

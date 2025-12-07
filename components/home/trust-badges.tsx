@@ -91,7 +91,7 @@ export function TrustBadges() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-extrabold text-center mb-4"
+            {...({ className: "text-3xl md:text-4xl font-extrabold text-center mb-4" } as any)}
           >
             Proven Results
           </motion.h2>
@@ -100,7 +100,7 @@ export function TrustBadges() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-center text-muted-foreground mb-8 text-lg"
+            {...({ className: "text-center text-muted-foreground mb-8 text-lg" } as any)}
           >
             Real numbers from real businesses using our platforms
           </motion.p>
@@ -141,7 +141,7 @@ export function TrustBadges() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-2xl md:text-3xl font-bold text-center mb-8"
+            {...({ className: "text-2xl md:text-3xl font-bold text-center mb-8" } as any)}
           >
             Security & Compliance
           </motion.h3>
@@ -183,7 +183,7 @@ export function TrustBadges() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-2xl md:text-3xl font-bold mb-6"
+            {...({ className: "text-2xl md:text-3xl font-bold mb-6" } as any)}
           >
             Trusted By Industry Leaders
           </motion.h3>
@@ -192,7 +192,7 @@ export function TrustBadges() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex flex-wrap items-center justify-center gap-3 md:gap-4"
+            {...({ className: "flex flex-wrap items-center justify-center gap-3 md:gap-4" } as any)}
           >
             {clientTypes.map((type, index) => (
               <motion.div
@@ -202,7 +202,7 @@ export function TrustBadges() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.3, delay: 0.2 + index * 0.05 }}
                 whileHover={{ scale: 1.05 }}
-                className="px-4 py-2 md:px-5 md:py-2.5 rounded-full bg-card border-2 border-border hover:border-primary/50 text-sm md:text-base font-semibold transition-all hover:shadow-md"
+                {...({ className: "px-4 py-2 md:px-5 md:py-2.5 rounded-full bg-card border-2 border-border hover:border-primary/50 text-sm md:text-base font-semibold transition-all hover:shadow-md" } as any)}
               >
                 {type}
               </motion.div>
@@ -216,7 +216,7 @@ export function TrustBadges() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-12 pt-8 border-t border-border"
+          {...({ className: "mt-12 pt-8 border-t border-border" } as any)}
         >
           <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-sm md:text-base">
             <div className="flex items-center gap-2 text-foreground font-semibold">

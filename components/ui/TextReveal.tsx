@@ -68,7 +68,7 @@ export function TextReveal({
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
       variants={containerVariants}
-      className={cn("inline-block", className)}
+      {...({ className: cn("inline-block", className) } as any)}
     >
       {splitBy === "none" ? (
         <Component>{children}</Component>
@@ -78,7 +78,7 @@ export function TextReveal({
             <motion.span
               key={index}
               variants={itemVariants}
-              className="inline-block"
+              {...({ className: "inline-block" } as any)}
               style={splitBy === "words" && index < items.length - 1 ? { marginRight: "0.25em" } : {}}
             >
               {item}

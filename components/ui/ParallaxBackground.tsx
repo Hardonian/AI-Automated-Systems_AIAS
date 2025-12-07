@@ -33,7 +33,7 @@ function Blob({ className, speed = 0.5, initialX = 0 }: BlobProps) {
     <motion.div
       ref={ref}
       style={{ y, opacity, x: initialX }}
-      className={cn("absolute rounded-full blur-3xl", className)}
+      {...({ className: cn("absolute rounded-full blur-3xl", className) } as any)}
     />
   );
 }
@@ -86,7 +86,7 @@ export function ParallaxBackground({
       />
 
       {/* Parallax content wrapper */}
-      <motion.div style={{ y: backgroundY }} className="relative z-10">
+      <motion.div style={{ y: backgroundY }} {...({ className: "relative z-10" } as any)}>
         {children}
       </motion.div>
     </div>

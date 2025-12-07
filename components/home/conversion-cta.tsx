@@ -65,7 +65,7 @@ export function ConversionCTA() {
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ type: "spring", stiffness: 200 }}
-                  className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-primary to-accent mb-6 shadow-xl"
+                  {...({ className: "inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-primary to-accent mb-6 shadow-xl" } as any)}
                 >
                   <Sparkles className="h-8 w-8 md:h-10 md:w-10 text-white" aria-hidden="true" />
                 </motion.div>
@@ -90,7 +90,7 @@ export function ConversionCTA() {
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
                       whileHover={{ scale: 1.05 }}
-                      className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card/50 border border-border hover:border-primary/50 hover:shadow-lg transition-all"
+                      {...({ className: "flex flex-col items-center gap-2 p-4 rounded-xl bg-card/50 border border-border hover:border-primary/50 hover:shadow-lg transition-all" } as any)}
                     >
                       <Icon className={`h-6 w-6 md:h-8 md:w-8 ${benefit.color}`} aria-hidden="true" />
                       <span className="text-xs md:text-sm font-semibold text-center text-foreground">
@@ -107,7 +107,7 @@ export function ConversionCTA() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.4 }}
-                className="bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 p-6 rounded-xl border-2 border-primary/20 mb-8"
+                {...({ className: "bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 p-6 rounded-xl border-2 border-primary/20 mb-8" } as any)}
               >
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-2 mb-2">
@@ -141,7 +141,7 @@ export function ConversionCTA() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.5 }}
-                className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center mb-6"
+                {...({ className: "flex flex-col sm:flex-row gap-3 md:gap-4 justify-center mb-6" } as any)}
               >
                 <Button 
                   size="lg" 
@@ -173,7 +173,7 @@ export function ConversionCTA() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.6 }}
-                className="text-xs md:text-sm text-muted-foreground text-center font-medium space-x-2"
+                {...({ className: "text-xs md:text-sm text-muted-foreground text-center font-medium space-x-2" } as any)}
               >
                 <span>✨ No credit card required</span>
                 <span>•</span>

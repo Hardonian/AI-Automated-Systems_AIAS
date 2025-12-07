@@ -35,10 +35,10 @@ export function EmptyState({
       variants={motionVariants.fadeInUp}
       initial="hidden"
       animate="visible"
-      className={cn(
+      {...({ className: cn(
         "flex flex-col items-center justify-center py-12 px-4 text-center",
         className
-      )}
+      )} as any)}
       role="status"
       aria-live="polite"
     >

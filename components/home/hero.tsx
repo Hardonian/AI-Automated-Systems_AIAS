@@ -18,7 +18,7 @@ export function Hero() {
       
       {/* Floating orbs */}
       <motion.div
-        className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl"
+        {...({ className: "absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl" } as any)}
         animate={{
           x: [0, 100, 0],
           y: [0, 50, 0],
@@ -30,7 +30,7 @@ export function Hero() {
         }}
       />
       <motion.div
-        className="absolute bottom-20 right-10 w-96 h-96 bg-accent/20 rounded-full blur-3xl"
+        {...({ className: "absolute bottom-20 right-10 w-96 h-96 bg-accent/20 rounded-full blur-3xl" } as any)}
         animate={{
           x: [0, -80, 0],
           y: [0, -40, 0],
@@ -49,7 +49,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-primary/20 via-primary/10 to-accent/20 text-primary text-sm font-semibold border border-primary/30 shadow-lg backdrop-blur-sm"
+            {...({ className: "inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-primary/20 via-primary/10 to-accent/20 text-primary text-sm font-semibold border border-primary/30 shadow-lg backdrop-blur-sm" } as any)}
           >
             <Sparkles className="h-4 w-4 animate-pulse" />
             <span>Custom AI Platforms Built by AIAS Consultancy</span>
@@ -60,7 +60,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold tracking-tight leading-[1.1]"
+            {...({ className: "text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold tracking-tight leading-[1.1]" } as any)}
           >
             <span className="block">Custom AI Platforms</span>
             <span 
@@ -76,7 +76,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-xl md:text-2xl lg:text-3xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-medium"
+            {...({ className: "text-xl md:text-2xl lg:text-3xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-medium" } as any)}
           >
             We don't sell software. We architect, build, and deploy{" "}
             <span className="text-foreground font-semibold">custom AI solutions</span> — 
@@ -88,7 +88,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-wrap items-center justify-center gap-6 text-sm md:text-base pt-4"
+            {...({ className: "flex flex-wrap items-center justify-center gap-6 text-sm md:text-base pt-4" } as any)}
           >
             {[
               { icon: Zap, text: "Built TokPulse & Hardonia Suite" },
@@ -100,7 +100,7 @@ export function Hero() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: 0.3 + i * 0.1 }}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border shadow-sm hover:shadow-md transition-shadow"
+                {...({ className: "flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border shadow-sm hover:shadow-md transition-shadow" } as any)}
                 role="listitem"
               >
                 <item.icon className="h-4 w-4 text-primary" aria-hidden="true" />
@@ -114,7 +114,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center pt-8"
+            {...({ className: "flex flex-col sm:flex-row gap-4 justify-center pt-8" } as any)}
           >
             <Button 
               size="lg" 
@@ -153,7 +153,7 @@ export function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="pt-12 space-y-3"
+            {...({ className: "pt-12 space-y-3" } as any)}
           >
             <p className="text-sm md:text-base text-muted-foreground font-medium">
               Trusted by e-commerce brands, agencies, and enterprises worldwide

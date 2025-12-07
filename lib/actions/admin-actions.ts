@@ -32,14 +32,14 @@ export async function assignAdminRole(userId: string): Promise<{
     });
 
     // Assign admin role (trigger will auto-generate token)
-    const { error: roleError } = await supabase
+    const { error: roleError } = await ((supabase
       .from("user_roles")
       .insert({
         user_id: userId,
         role: "admin",
-      })
+      }) as any)
       .onConflict("user_id,role")
-      .ignore() as any;
+      .ignore() as any);
 
     if (roleError) {
       console.error("Role assignment error:", roleError);

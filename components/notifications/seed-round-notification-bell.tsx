@@ -99,7 +99,7 @@ export function SeedRoundNotificationBell() {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className={`absolute -top-1 -right-1 h-5 w-5 rounded-full ${getPriorityColor(criticalCount > 0 ? "critical" : "high")} flex items-center justify-center text-white text-xs font-bold`}
+              {...({ className: `absolute -top-1 -right-1 h-5 w-5 rounded-full ${getPriorityColor(criticalCount > 0 ? "critical" : "high")} flex items-center justify-center text-white text-xs font-bold` } as any)}
             >
               {totalUnread > 9 ? "9+" : totalUnread}
             </motion.div>

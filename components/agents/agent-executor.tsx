@@ -153,7 +153,7 @@ export function AgentExecutorComponent({ agentId, userId, tenantId }: AgentExecu
               <div>
                 <Label>Output</Label>
                 <pre className="mt-2 p-4 bg-muted rounded-md text-sm overflow-auto">
-                  {typeof result.output === 'string' ? result.output : String(JSON.stringify(result.output, null, 2))}
+                  {typeof result.output === 'string' ? result.output : JSON.stringify(result.output || {}, null, 2)}
                 </pre>
               </div>
             )}

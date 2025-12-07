@@ -366,7 +366,7 @@ export class CostAggregator {
     return {
       totalMonthly,
       totalDaily,
-      byService: serviceBreakdowns.map(s => ({ ...s, period: s.period || '' })).sort((a, b) => b.total - a.total),
+      byService: serviceBreakdowns.sort((a, b) => b.total - a.total),
       trends,
       forecast: {
         nextMonth,

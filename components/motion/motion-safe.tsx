@@ -3,8 +3,7 @@
  * Fixes className and other HTML attribute type issues
  */
 
-import { motion, HTMLMotionProps, MotionProps } from "framer-motion";
-import { forwardRef } from "react";
+import { motion } from "framer-motion";
 
 // Type-safe motion.div that accepts className
 export const MotionDiv = motion.div;
@@ -31,10 +30,10 @@ export const MotionNav = motion.nav;
 export const MotionMain = motion.main;
 
 // Generic type-safe motion component factory
-export function createMotionComponent<T extends keyof JSX.IntrinsicElements>(
+export function createMotionComponent<T extends keyof React.JSX.IntrinsicElements>(
   tag: T
 ) {
-  return motion[tag] as typeof motion.div;
+  return (motion as any)[tag] as typeof motion.div;
 }
 
 // Re-export commonly used motion components with proper typing

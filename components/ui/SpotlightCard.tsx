@@ -71,13 +71,13 @@ export function SpotlightCard({
         rotateY: isHovered ? rotateY : 0,
         transformStyle: "preserve-3d",
       }}
-      className={cn(
+      {...({ className: cn(
         "relative group rounded-2xl p-6 transition-all duration-300",
         "glass-morphism",
         "border border-white/10",
         "hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.3)]",
         className
-      )}
+      )} as any)}
     >
       {/* Spotlight gradient overlay */}
       <div

@@ -36,11 +36,11 @@ async function getKPIData() {
 
     // Fetch KPI views
     const [kpi1, kpi2, kpi3, profilesCount, postsCount] = await Promise.all([
-      (supabase.from("kpi_new_users_week").select("*").single() as any) as Promise<{ data: any; error: any }>,
-      (supabase.from("kpi_avg_post_views").select("*").single() as any) as Promise<{ data: any; error: any }>,
-      (supabase.from("kpi_actions_last_hour").select("*").single() as any) as Promise<{ data: any; error: any }>,
-      supabase.from("profiles").select("id", { count: "exact", head: true }),
-      supabase.from("posts").select("id", { count: "exact", head: true }),
+      (supabase.from("kpi_new_users_week").select("*").single() as any),
+      (supabase.from("kpi_avg_post_views").select("*").single() as any),
+      (supabase.from("kpi_actions_last_hour").select("*").single() as any),
+      (supabase.from("profiles").select("id", { count: "exact", head: true }) as any),
+      (supabase.from("posts").select("id", { count: "exact", head: true }) as any),
     ]);
 
     const kpi1Data = kpi1.data as any;
@@ -389,7 +389,7 @@ export default async function DashboardPage() {
               </div>
             ) : null}
             {'note' in techNews && techNews.note && typeof techNews.note === 'string' && (
-              <p className="text-xs text-muted-foreground mt-2">{String(techNews.note)}</p>
+              <p className="text-xs text-muted-foreground mt-2">{techNews.note}</p>
             )}
           </CardContent>
         </Card>

@@ -66,7 +66,7 @@ export function CTAEnhanced({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col items-center gap-4"
+        {...({ className: "flex flex-col items-center gap-4" } as any)}
       >
         {showUrgency && timeLeft !== null && timeLeft > 0 && (
           <Badge variant="destructive" className="animate-pulse">
@@ -115,7 +115,7 @@ export function CTAEnhanced({
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+            {...({ className: "fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" } as any)}
             onClick={() => setShowExitIntent(false)}
           >
             <div

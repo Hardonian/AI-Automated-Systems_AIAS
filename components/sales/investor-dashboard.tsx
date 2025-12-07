@@ -41,6 +41,7 @@ interface InvestorSummary {
   byType: {
     vc: number;
     angel: number;
+    strategic?: number;
   };
   byStatus: Record<string, number>;
 }
@@ -248,7 +249,7 @@ export function InvestorDashboard() {
                         data={[
                           { name: "VC", value: summary.byType.vc },
                           { name: "Angel", value: summary.byType.angel },
-                          { name: "Strategic", value: summary.byType.strategic || 0 },
+                          { name: "Strategic", value: (summary.byType as any).strategic || 0 },
                         ]}
                         cx="50%"
                         cy="50%"

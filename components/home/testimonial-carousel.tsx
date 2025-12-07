@@ -70,7 +70,7 @@ export function TestimonialCarousel() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          {...({ className: "text-center mb-12" } as any)}
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4">
             Loved by Businesses Worldwide
@@ -184,7 +184,7 @@ export function TestimonialCarousel() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mt-12 pt-8 border-t border-border"
+          {...({ className: "mt-12 pt-8 border-t border-border" } as any)}
         >
           <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-sm md:text-base">
             <div className="flex items-center gap-2 text-foreground font-semibold">

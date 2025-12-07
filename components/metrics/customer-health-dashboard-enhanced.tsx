@@ -120,7 +120,7 @@ export function CustomerHealthDashboardEnhanced() {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="rounded-full h-12 w-12 border-b-2 border-blue-600"
+          {...({ className: "rounded-full h-12 w-12 border-b-2 border-blue-600" } as any)}
         />
       </div>
     );
@@ -132,7 +132,7 @@ export function CustomerHealthDashboardEnhanced() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600 p-8 text-white shadow-2xl"
+        {...({ className: "relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600 p-8 text-white shadow-2xl" } as any)}
       >
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
         <div className="relative z-10">
@@ -152,7 +152,7 @@ export function CustomerHealthDashboardEnhanced() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="grid gap-4 md:grid-cols-4"
+          {...({ className: "grid gap-4 md:grid-cols-4" } as any)}
         >
           <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white shadow-lg hover:shadow-xl transition-all">
             <CardHeader className="pb-2">
@@ -171,7 +171,7 @@ export function CustomerHealthDashboardEnhanced() {
                   initial={{ width: 0 }}
                   animate={{ width: `${summary.avgHealthScore}%` }}
                   transition={{ duration: 1, delay: 0.3 }}
-                  className="h-full bg-gradient-to-r from-blue-500 to-blue-600"
+                  {...({ className: "h-full bg-gradient-to-r from-blue-500 to-blue-600" } as any)}
                 />
               </div>
             </CardContent>
@@ -313,7 +313,7 @@ export function CustomerHealthDashboardEnhanced() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="border-2 rounded-xl p-6 space-y-3 bg-gradient-to-br from-white to-gray-50 hover:shadow-lg transition-all"
+                    {...({ className: "border-2 rounded-xl p-6 space-y-3 bg-gradient-to-br from-white to-gray-50 hover:shadow-lg transition-all" } as any)}
                   >
                     <div className="flex items-center justify-between">
                       <div>

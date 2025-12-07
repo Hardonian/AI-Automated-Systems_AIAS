@@ -16,7 +16,7 @@ export function SettlerShowcase() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="max-w-6xl mx-auto"
+          {...({ className: "max-w-6xl mx-auto" } as any)}
         >
           <Card className="border-2 bg-gradient-to-br from-blue-50/80 to-purple-50/80 dark:from-blue-950/20 dark:to-purple-950/20">
             <CardHeader className="text-center pb-6">

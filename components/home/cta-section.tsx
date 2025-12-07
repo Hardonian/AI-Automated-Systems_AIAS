@@ -28,7 +28,7 @@ export function CTASection() {
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-                  className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent mb-6 shadow-xl"
+                  {...({ className: "inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent mb-6 shadow-xl" } as any)}
                 >
                   <Sparkles className="h-10 w-10 text-white" />
                 </motion.div>
@@ -55,7 +55,7 @@ export function CTASection() {
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
                       whileHover={{ scale: 1.05 }}
-                      className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition-all"
+                      {...({ className: "flex items-start gap-3 p-4 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition-all" } as any)}
                     >
                       <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
                         <item.icon className="h-5 w-5 text-white" />
@@ -73,7 +73,7 @@ export function CTASection() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.6 }}
-                  className="bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 p-6 rounded-xl border-2 border-primary/20"
+                  {...({ className: "bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 p-6 rounded-xl border-2 border-primary/20" } as any)}
                 >
                   <div className="flex items-center justify-center gap-2 mb-4">
                     <span className="text-3xl font-extrabold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
@@ -98,7 +98,7 @@ export function CTASection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.7 }}
-                  className="flex flex-col sm:flex-row gap-4 justify-center"
+                  {...({ className: "flex flex-col sm:flex-row gap-4 justify-center" } as any)}
                 >
                   <Button 
                     size="lg" 
@@ -125,7 +125,7 @@ export function CTASection() {
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.8 }}
-                  className="text-sm text-muted-foreground text-center font-medium"
+                  {...({ className: "text-sm text-muted-foreground text-center font-medium" } as any)}
                 >
                   ✨ No credit card required • 🎁 30-day free trial • 🔄 Cancel anytime
                 </motion.p>

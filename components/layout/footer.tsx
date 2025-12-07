@@ -96,7 +96,7 @@ export function Footer() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mt-12 pt-8 border-t border-border"
+          {...({ className: "mt-12 pt-8 border-t border-border" } as any)}
         >
           <div className="flex flex-wrap justify-center gap-4 text-xs text-muted-foreground mb-8">
             {[
@@ -130,7 +130,7 @@ export function Footer() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.3, delay: i * 0.1 }}
                 whileHover={{ scale: 1.05 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border shadow-sm hover:shadow-md transition-all"
+                {...({ className: "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border shadow-sm hover:shadow-md transition-all" } as any)}
               >
                 <span>{badge.icon}</span>
                 <span className="text-xs font-medium text-foreground">{badge.text}</span>

@@ -62,9 +62,9 @@ export async function GET() {
 
     // Fetch all 3 KPI views
     const [kpi1Result, kpi2Result, kpi3Result] = await Promise.all([
-      (supabase.from("kpi_new_users_week").select("*").single() as any) as Promise<{ data: any; error: any }>,
-      (supabase.from("kpi_avg_post_views").select("*").single() as any) as Promise<{ data: any; error: any }>,
-      (supabase.from("kpi_actions_last_hour").select("*").single() as any) as Promise<{ data: any; error: any }>,
+      (supabase.from("kpi_new_users_week").select("*").single() as any),
+      (supabase.from("kpi_avg_post_views").select("*").single() as any),
+      (supabase.from("kpi_actions_last_hour").select("*").single() as any),
     ]);
 
     // Handle KPI 1: New Users This Week

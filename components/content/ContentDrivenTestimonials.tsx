@@ -22,7 +22,7 @@ export function ContentDrivenTestimonials({ content }: ContentDrivenTestimonials
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16 relative z-10"
+          {...({ className: "text-center mb-16 relative z-10" } as any)}
         >
           <div className="inline-block mb-4">
             <span className="px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold border border-primary/20">
@@ -52,7 +52,7 @@ export function ContentDrivenTestimonials({ content }: ContentDrivenTestimonials
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -8 }}
-                className="h-full"
+                {...({ className: "h-full" } as any)}
               >
                 <Card className="h-full relative overflow-hidden card-hover border-2">
                   {testimonial.type === "consultancy" && (
@@ -60,7 +60,7 @@ export function ContentDrivenTestimonials({ content }: ContentDrivenTestimonials
                       initial={{ opacity: 0, scale: 0.9 }}
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
-                      className="absolute top-4 right-4 z-10"
+                      {...({ className: "absolute top-4 right-4 z-10" } as any)}
                     >
                       <span className="px-3 py-1.5 text-xs font-semibold bg-gradient-to-r from-primary to-accent text-white rounded-full shadow-lg">
                         Consultancy Build
@@ -84,13 +84,13 @@ export function ContentDrivenTestimonials({ content }: ContentDrivenTestimonials
                     {testimonial.hasVideo && (
                       <motion.div
                         whileHover={{ scale: 1.02 }}
-                        className="mb-6 rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-accent/10 aspect-video flex items-center justify-center border-2 border-primary/30 relative group cursor-pointer overflow-hidden"
+                        {...({ className: "mb-6 rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-accent/10 aspect-video flex items-center justify-center border-2 border-primary/30 relative group cursor-pointer overflow-hidden" } as any)}
                       >
                         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
                         <div className="absolute inset-0 flex items-center justify-center z-10">
                           <motion.div
                             whileHover={{ scale: 1.1 }}
-                            className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-shadow"
+                            {...({ className: "w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-shadow" } as any)}
                           >
                             <Play className="h-8 w-8 text-white ml-1" />
                           </motion.div>

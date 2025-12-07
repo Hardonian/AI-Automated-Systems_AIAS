@@ -56,7 +56,7 @@ export function EnhancedPricing() {
         {pricingTiers.map((tier) => {
           const price = billingPeriod === 'monthly' ? tier.price.monthly : tier.price.yearly / 12;
           const isPopular = tier.id === 'pro';
-          const _isEnterprise = tier.id === 'enterprise';
+          // const _isEnterprise = tier.id === 'enterprise';
 
           return (
             <Card

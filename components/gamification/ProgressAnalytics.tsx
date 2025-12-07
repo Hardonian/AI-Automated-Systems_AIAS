@@ -76,7 +76,7 @@ export default function ProgressAnalytics() {
             initial={{ height: 0 }}
             animate={{ height: `${(point.xp / maxXp) * 100}%` }}
             transition={{ delay: idx * 0.01 }}
-            className="flex-1 bg-accent rounded-t"
+            {...({ className: "flex-1 bg-accent rounded-t" } as any)}
             title={`${point.date}: ${point.xp} XP`}
           />
         ))}

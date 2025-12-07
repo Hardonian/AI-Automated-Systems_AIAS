@@ -27,7 +27,7 @@ export function PlanFeatureGate({
   showPreview = true,
 }: PlanFeatureGateProps) {
   const isPaid = currentPlan === "starter" || currentPlan === "pro" || currentPlan === "enterprise";
-  const hasAccess = isPaid || (requiredPlan === "starter" && (currentPlan === "starter" || currentPlan === "pro" || currentPlan === "enterprise"));
+  const hasAccess = isPaid || (requiredPlan === "starter" && isPaid);
 
   if (hasAccess) {
     return <>{children}</>;

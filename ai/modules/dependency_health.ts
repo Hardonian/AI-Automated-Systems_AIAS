@@ -229,7 +229,7 @@ export class DependencyHealthChecker {
 
   private getUpdateType(current: string, wanted: string, latest: string): 'patch' | 'minor' | 'major' {
     const [currMajor, currMinor, _currPatch] = current.split('.').map(Number);
-    const [_wantMajor, wantMinor, wantPatch] = wanted.split('.').map(Number);
+    const [_wantMajor, _wantMinor, _wantPatch] = wanted.split('.').map(Number);
     const [latMajor, latMinor, latPatch] = latest.split('.').map(Number);
 
     if (latMajor > currMajor) return 'major';

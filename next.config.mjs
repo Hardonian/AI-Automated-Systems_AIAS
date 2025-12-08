@@ -68,12 +68,14 @@ const nextConfig = {
     "recharts",
     "@tanstack/react-query",
     ],
+    // Reduce memory usage during build
+    webpackBuildWorker: true,
   },
   // Ensure proper file tracing for Vercel deployments (optimized for speed)
   outputFileTracingIncludes: {
     '/api/**': ['./lib/**', './components/**'],
   },
-  // Reduce file tracing overhead
+  // Reduce file tracing overhead (memory optimization for Vercel builds)
   outputFileTracingExcludes: {
     '/api/**': [
       '**/node_modules/**',
@@ -82,6 +84,12 @@ const nextConfig = {
       '**/*.test.ts',
       '**/*.spec.ts',
       '**/docs/**',
+      '**/archive/**',
+      '**/scripts/**',
+      '**/watchers/**',
+      '**/ops/**',
+      '**/ai/**',
+      '**/supabase/functions/**',
     ],
   },
   // Performance optimizations

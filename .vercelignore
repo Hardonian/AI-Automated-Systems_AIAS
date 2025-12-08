@@ -1,52 +1,66 @@
-# Vercel ignore file
-# Prevent unnecessary files from being deployed
+# Vercel Build Ignore Patterns
+# Files and directories to exclude from Vercel deployment
 
-# Development files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env.production
-.env
-
-# Build artifacts (handled by Vercel)
-# Note: We only ignore root .next, NOT apps/web/.next (which is the actual build output)
-.next
-out
-dist
-build
-# DO NOT ignore apps/web/.next - that's the build output Vercel needs!
-
-# Dependencies
-node_modules
-.pnp
-.pnp.js
-
-# Testing
-coverage
-.nyc_output
-*.log
-
-# IDE
-.vscode
-.idea
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Documentation (optional - remove if you want docs deployed)
-docs/
-*.md
-!README.md
-
-# Scripts that shouldn't be deployed (but Vercel needs vercel-*.sh for build)
-# Note: We don't ignore scripts/ entirely because Vercel needs vercel-ignore.sh and vercel-install.sh
+# Development and testing
 tests/
 *.test.ts
 *.test.tsx
 *.spec.ts
 *.spec.tsx
+__tests__/
+__mocks__/
+
+# Documentation
+docs/
+archive/
+*.md
+!README.md
+
+# Scripts and automation
+scripts/
+watchers/
+ops/
+ai/
+
+# Build artifacts (should be generated)
+.next/
+dist/
+out/
+build/
+coverage/
+.nyc_output/
+
+# Development tools
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment files (handled by Vercel)
+.env
+.env.local
+.env*.local
+
+# Supabase functions (deployed separately)
+supabase/functions/
+
+# Reports and diagnostics
+reports/
+*.log
+vercel-build-diagnostic.txt
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Git
+.git/
+.gitignore
+
+# Node modules (handled by Vercel)
+node_modules/
+
+# Prisma migrations (handled separately)
+prisma/migrations/

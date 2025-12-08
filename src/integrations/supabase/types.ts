@@ -253,9 +253,108 @@ export type Database = {
         }
         Relationships: []
       }
+      posts: {
+        Row: {
+          id: number
+          user_id: string
+          title: string | null
+          body: string
+          image_url: string | null
+          tags: string[] | null
+          is_pinned: boolean | null
+          view_count: number | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: number
+          user_id: string
+          title?: string | null
+          body: string
+          image_url?: string | null
+          tags?: string[] | null
+          is_pinned?: boolean | null
+          view_count?: number | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: number
+          user_id?: string
+          title?: string | null
+          body?: string
+          image_url?: string | null
+          tags?: string[] | null
+          is_pinned?: boolean | null
+          view_count?: number | null
+          created_at?: string | null
+        }
+        Relationships: []
+      }
+      activity_log: {
+        Row: {
+          id: number
+          user_id: string | null
+          session_id: string | null
+          activity_type: string
+          entity_type: string | null
+          entity_id: string | null
+          metadata: Json | null
+          ip_address: string | null
+          user_agent: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: number
+          user_id?: string | null
+          session_id?: string | null
+          activity_type: string
+          entity_type?: string | null
+          entity_id?: string | null
+          metadata?: Json | null
+          ip_address?: string | null
+          user_agent?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: number
+          user_id?: string | null
+          session_id?: string | null
+          activity_type?: string
+          entity_type?: string | null
+          entity_id?: string | null
+          metadata?: Json | null
+          ip_address?: string | null
+          user_agent?: string | null
+          created_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      kpi_new_users_week: {
+        Row: {
+          new_users_count: number | null
+          threshold_met: boolean | null
+          checked_at: string | null
+        }
+        Relationships: []
+      }
+      kpi_avg_post_views: {
+        Row: {
+          avg_post_views: number | null
+          threshold_met: boolean | null
+          total_posts: number | null
+          checked_at: string | null
+        }
+        Relationships: []
+      }
+      kpi_actions_last_hour: {
+        Row: {
+          actions_count: number | null
+          threshold_met: boolean | null
+          checked_at: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       check_rate_limit: {

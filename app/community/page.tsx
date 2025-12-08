@@ -53,7 +53,7 @@ export default function Community(){
     });
     
     // Create activity
-    await supabase.from("activities").insert({
+    await supabase.from("activity_log").insert({
       user_id: user.id,
       activity_type: "post_created",
       metadata: { title: newPostTitle || "Untitled" }

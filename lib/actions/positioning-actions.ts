@@ -82,7 +82,7 @@ export async function submitPositioningFeedback(
           impact_score: feedbackData.impact_score,
         },
         created_at: new Date().toISOString(),
-      })) as any);
+      });
 
     if (activityError) {
       console.error("Activity log error:", activityError);
@@ -151,7 +151,7 @@ export async function logActivity(
       entity_id: entityId || null,
       metadata: metadata || {},
       created_at: new Date().toISOString(),
-    })) as any);
+    });
 
     if (error) {
       console.error("Activity log error:", error);

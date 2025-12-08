@@ -61,12 +61,10 @@ export async function GET() {
     });
 
     // Fetch all 3 KPI views
-    // Note: These views exist in the database but aren't in the generated types
-    const supabaseAny = supabase as any;
     const [kpi1Result, kpi2Result, kpi3Result] = await Promise.all([
-      supabaseAny.from("kpi_new_users_week").select("*").single(),
-      supabaseAny.from("kpi_avg_post_views").select("*").single(),
-      supabaseAny.from("kpi_actions_last_hour").select("*").single(),
+      supabase.from("kpi_new_users_week").select("*").single(),
+      supabase.from("kpi_avg_post_views").select("*").single(),
+      supabase.from("kpi_actions_last_hour").select("*").single(),
     ]);
 
     // Handle KPI 1: New Users This Week

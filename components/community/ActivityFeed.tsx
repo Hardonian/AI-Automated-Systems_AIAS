@@ -16,8 +16,8 @@ export default function ActivityFeed({ limit = 20 }: { limit?: number }) {
   useEffect(() => {
     loadActivities();
     const channel = supabase
-      .channel("activities")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "activities" }, () => {
+      .channel("activity_log")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "activity_log" }, () => {
         loadActivities();
       })
       .subscribe();
@@ -26,7 +26,7 @@ export default function ActivityFeed({ limit = 20 }: { limit?: number }) {
 
   async function loadActivities() {
     const { data } = await supabase
-      .from("activities")
+      .from("activity_log")
       .select("*, profiles(display_name, avatar_url)")
       .order("created_at", { ascending: false })
       .limit(limit);

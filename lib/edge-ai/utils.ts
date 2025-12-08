@@ -173,7 +173,7 @@ export function getStatusColor(
 export function isFormatCompatibleWithDevice(
   format: EdgeAIModelFormat,
   deviceType: EdgeAIDeviceType,
-  runtime?: string
+  _runtime?: string
 ): boolean {
   // Basic compatibility matrix
   const compatibility: Record<EdgeAIModelFormat, EdgeAIDeviceType[]> = {

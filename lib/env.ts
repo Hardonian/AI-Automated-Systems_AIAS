@@ -64,8 +64,16 @@ function getEnvVar(key: string, required: boolean = true, defaultValue?: string)
     value = defaultValue;
   }
   
-  // During build, return placeholder for required vars if not set (before validation)
+  // During build, return valid placeholder values for required vars if not set (before validation)
+  // Use valid format placeholders that won't break URL validation
   if (required && !value && isBuildTime) {
+    // Return valid placeholder URLs/keys for Supabase and database
+    if (key.includes('URL') || key.includes('url')) {
+      return 'https://placeholder.example.com';
+    }
+    if (key.includes('KEY') || key.includes('SECRET') || key.includes('PASSWORD')) {
+      return 'placeholder-key-32-chars-long-exactly';
+    }
     return `placeholder-${key}`;
   }
   

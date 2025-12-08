@@ -6,8 +6,16 @@ import { env } from "@/lib/env";
 
 // Lazy initialization to avoid build-time errors when env vars are not set
 function getSupabaseClient() {
+  const url = env.supabase.url;
+  const key = env.supabase.serviceRoleKey;
+  
+  // Validate URLs are not placeholders (build-time safety)
+  if (url.includes('placeholder') || key.includes('placeholder')) {
+    throw new Error('Supabase credentials not configured. This route requires valid Supabase environment variables.');
+  }
+  
   try {
-    return createClient(env.supabase.url, env.supabase.serviceRoleKey);
+    return createClient(url, key);
   } catch (error) {
     logger.error("Failed to create Supabase client", error instanceof Error ? error : new Error(String(error)));
     throw error;
@@ -16,6 +24,7 @@ function getSupabaseClient() {
 
 export const runtime = "nodejs"; // Use Node.js runtime for route-handler compatibility
 export const dynamic = "force-dynamic"; // Force dynamic rendering to avoid build-time execution
+export const revalidate = 0; // Disable caching completely
 
 /**
  * GET /api/admin/metrics
@@ -23,6 +32,15 @@ export const dynamic = "force-dynamic"; // Force dynamic rendering to avoid buil
  */
 export const GET = createGETHandler(
   async (context: RouteContext) => {
+    // Build-time safety: Return early if this is being executed during build
+    if (process.env.NEXT_PHASE === 'phase-production-build' || 
+        (process.env.SKIP_ENV_VALIDATION === 'true' && !process.env.VERCEL)) {
+      return NextResponse.json(
+        { error: "This route is not available during build time" },
+        { status: 503 }
+      );
+    }
+
     const { request } = context;
 
     // Get date range from query params (default to last 30 days)

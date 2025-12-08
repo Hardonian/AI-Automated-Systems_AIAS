@@ -179,7 +179,7 @@ export class AgentMeshCoordinator {
   private async executeStep(
     step: WorkflowTemplate['steps'][0],
     input: unknown,
-    context: ExecutionContext
+    _context: ExecutionContext
   ): Promise<unknown> {
     // Implementation would handle different step types
     // This is a simplified version

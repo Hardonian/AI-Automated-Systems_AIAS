@@ -328,6 +328,39 @@ export type Database = {
         }
         Relationships: []
       }
+      positioning_feedback: {
+        Row: {
+          id: number
+          user_id: string | null
+          feedback_type: string
+          feedback_text: string
+          impact_score: number | null
+          metadata: Json | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: number
+          user_id?: string | null
+          feedback_type: string
+          feedback_text: string
+          impact_score?: number | null
+          metadata?: Json | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: number
+          user_id?: string | null
+          feedback_type?: string
+          feedback_text?: string
+          impact_score?: number | null
+          metadata?: Json | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       kpi_new_users_week: {

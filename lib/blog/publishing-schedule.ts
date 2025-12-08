@@ -45,7 +45,7 @@ export function getScheduleForDateRange(startDate: string, endDate: string): Pub
 
 // Get next scheduled article
 export function getNextScheduledArticle(): PublishingSchedule | undefined {
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split('T')[0]!;
   return publishingSchedule
     .filter(item => item.status === "scheduled" && item.date >= today)
     .sort((a, b) => a.date.localeCompare(b.date))[0];

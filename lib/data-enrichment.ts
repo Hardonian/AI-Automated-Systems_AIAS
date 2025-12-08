@@ -185,7 +185,7 @@ function getSampleMarketData() {
 /**
  * Enrich user profile with public data sources
  */
-export async function enrichUserProfile(userId: string, email: string) {
+export async function enrichUserProfile(_userId: string, email: string) {
   // Example: Use email domain to infer company info
   // Or use LinkedIn API (with proper auth) for professional data
   const domain = email.split("@")[1];

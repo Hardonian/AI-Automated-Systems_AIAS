@@ -130,6 +130,7 @@ export class BillingService {
       stripeCustomerId,
       currentPeriodStart: new Date().toISOString(),
       currentPeriodEnd: this.addDays(new Date(), 30).toISOString(),
+      cancelAtPeriodEnd: false,
       trialStart: new Date().toISOString(),
       trialEnd: this.addDays(new Date(), 14).toISOString(),
     };
@@ -228,7 +229,7 @@ export class BillingService {
       if (!usageByType[metric.metricType]) {
         usageByType[metric.metricType] = { current: 0, limit: 0 };
       }
-      usageByType[metric.metricType].current += metric.quantity;
+      usageByType[metric.metricType]!.current += metric.quantity;
     });
 
     // Get limits from subscription tier
@@ -326,8 +327,7 @@ export class BillingService {
   /**
    * Handle subscription deleted
    */
-  private async handleSubscriptionDeleted(stripeSubscription: Record<string, unknown>): Promise<void> {
-    const _subscriptionId = String(stripeSubscription.id);
+  private async handleSubscriptionDeleted(_stripeSubscription: Record<string, unknown>): Promise<void> {
     // Would update subscription status
   }
 

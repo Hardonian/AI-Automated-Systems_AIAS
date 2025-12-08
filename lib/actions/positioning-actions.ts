@@ -2,7 +2,7 @@
 
 import { createClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
-import type { Database } from "@/src/integrations/supabase/types";
+import type { Database, Json } from "@/src/integrations/supabase/types";
 
 /**
  * Server Action: Submit Positioning Feedback
@@ -49,18 +49,18 @@ export async function submitPositioningFeedback(
     });
 
     // Step 1: Insert feedback (impact score calculated by trigger)
-    const { data: feedbackData, error: feedbackError } = await ((supabase
+    const { data: feedbackData, error: feedbackError } = await supabase
       .from("positioning_feedback")
       .insert({
         user_id: userId,
         feedback_type: feedbackType,
         feedback_text: feedbackText,
-        metadata: metadata || {},
+        metadata: (metadata || {}) as Json,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
       .select("id, impact_score")
-      .single()) as any);
+      .single();
 
     if (feedbackError || !feedbackData) {
       return {
@@ -70,7 +70,7 @@ export async function submitPositioningFeedback(
     }
 
     // Step 2: Log feedback submission activity
-    const { error: activityError } = await ((supabase
+    const { error: activityError } = await supabase
       .from("activity_log")
       .insert({
         user_id: userId,
@@ -80,7 +80,7 @@ export async function submitPositioningFeedback(
         metadata: {
           feedback_type: feedbackType,
           impact_score: feedbackData.impact_score,
-        },
+        } as Json,
         created_at: new Date().toISOString(),
       });
 
@@ -94,9 +94,10 @@ export async function submitPositioningFeedback(
 
     // Generate personalized message based on impact score
     let message = "Thank you for your feedback!";
-    if (feedbackData.impact_score >= 70) {
+    const impactScore = feedbackData.impact_score ?? 0;
+    if (impactScore >= 70) {
       message = "🎉 Excellent feedback! Your input has high impact on our positioning clarity.";
-    } else if (feedbackData.impact_score >= 40) {
+    } else if (impactScore >= 40) {
       message = "✨ Great feedback! Your contribution helps us improve.";
     } else {
       message = "Thank you for your feedback! Every contribution matters.";
@@ -143,13 +144,13 @@ export async function logActivity(
 
     const supabase = createClient<Database>(supabaseUrl, supabaseServiceKey);
 
-    const { error } = await ((supabase.from("activity_log").insert({
+    const { error } = await supabase.from("activity_log").insert({
       user_id: userId || null,
       session_id: sessionId || null,
       activity_type: activityType,
       entity_type: entityType || null,
       entity_id: entityId || null,
-      metadata: metadata || {},
+      metadata: (metadata || {}) as Json,
       created_at: new Date().toISOString(),
     });
 

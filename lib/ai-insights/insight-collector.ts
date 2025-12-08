@@ -40,7 +40,6 @@ export async function collectInsights(): Promise<WeeklyInsights> {
 
     // 1. Usage pattern insights
     const usagePatterns = await analyzeUsagePatterns(30);
-    const _topFeatures = usagePatterns.slice(0, 5);
     const lowAdoptionFeatures = usagePatterns.filter((p) => p.adoptionRate < 10);
 
     if (lowAdoptionFeatures.length > 0) {

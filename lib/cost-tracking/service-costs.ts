@@ -234,7 +234,7 @@ export class OpenAICostCalculator {
  * Stripe Cost Calculator
  */
 export class StripeCostCalculator {
-  static calculateProcessingCost(amount: number, currency: string = "usd"): number {
+  static calculateProcessingCost(amount: number, _currency: string = "usd"): number {
     // Stripe charges 2.9% + $0.30 per transaction
     const percentage = 0.029;
     const fixed = 0.30;
@@ -349,7 +349,7 @@ export class CostAggregator {
         return sum;
       }, 0);
       trends.push({
-        period: new Date(periodStart).toISOString().split("T")[0],
+        period: new Date(periodStart).toISOString().split("T")[0]!,
         total: periodTotal,
       });
     }
@@ -357,7 +357,7 @@ export class CostAggregator {
     // Forecast (simple linear extrapolation)
     const avgDailyGrowth =
       trends.length > 1 && trends[trends.length - 1] && trends[0]
-        ? (trends[trends.length - 1].total - trends[0].total) / (trends.length - 1)
+        ? (trends[trends.length - 1]!.total - trends[0]!.total) / (trends.length - 1)
         : 0;
     const nextMonth = totalMonthly + avgDailyGrowth * 30;
     const nextQuarter = totalMonthly + avgDailyGrowth * 90;

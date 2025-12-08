@@ -253,6 +253,7 @@ export const defaultSettlerContent: SettlerContent = {
           "Handle millions of transactions with enterprise-grade infrastructure. Built for scale from day one.",
         icon: "zap",
         gradient: "text-blue-500",
+        highlight: false,
       },
       {
         title: "Bank-Grade Security",
@@ -260,6 +261,7 @@ export const defaultSettlerContent: SettlerContent = {
           "End-to-end encryption, PCI DSS compliance, fraud detection, and real-time monitoring.",
         icon: "shield",
         gradient: "text-green-500",
+        highlight: false,
       },
       {
         title: "Real-Time Settlement",
@@ -267,6 +269,7 @@ export const defaultSettlerContent: SettlerContent = {
           "Instant settlement capabilities with support for multiple payment methods and currencies.",
         icon: "database",
         gradient: "text-purple-500",
+        highlight: false,
       },
       {
         title: "Developer-First API",
@@ -274,6 +277,7 @@ export const defaultSettlerContent: SettlerContent = {
           "RESTful API with comprehensive documentation, webhooks, and SDK support for rapid integration.",
         icon: "code",
         gradient: "text-orange-500",
+        highlight: false,
       },
       {
         title: "Compliance Ready",
@@ -281,6 +285,7 @@ export const defaultSettlerContent: SettlerContent = {
           "Built for Canadian regulations (PIPEDA, FINTRAC) with audit trails and reporting built-in.",
         icon: "lock",
         gradient: "text-red-500",
+        highlight: false,
       },
       {
         title: "Advanced Analytics",
@@ -288,6 +293,7 @@ export const defaultSettlerContent: SettlerContent = {
           "Real-time dashboards, transaction insights, and customizable reporting for business intelligence.",
         icon: "trending-up",
         gradient: "text-cyan-500",
+        highlight: false,
       },
     ],
     layoutVariant: "grid",

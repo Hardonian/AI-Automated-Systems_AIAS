@@ -94,42 +94,60 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
 
   // Comparison operators
   if (trimmed.includes('==')) {
-    const [left, right] = trimmed.split('==').map(s => s.trim());
+    const parts = trimmed.split('==').map(s => s.trim());
+    if (parts.length !== 2) return false;
+    const [left, right] = parts;
+    if (!left || !right) return false;
     const leftValue = getNestedValue(variables, left) ?? left;
     const rightValue = getNestedValue(variables, right) ?? right;
     return leftValue == rightValue;
   }
 
   if (trimmed.includes('!=')) {
-    const [left, right] = trimmed.split('!=').map(s => s.trim());
+    const parts = trimmed.split('!=').map(s => s.trim());
+    if (parts.length !== 2) return false;
+    const [left, right] = parts;
+    if (!left || !right) return false;
     const leftValue = getNestedValue(variables, left) ?? left;
     const rightValue = getNestedValue(variables, right) ?? right;
     return leftValue != rightValue;
   }
 
   if (trimmed.includes('>=')) {
-    const [left, right] = trimmed.split('>=').map(s => s.trim());
+    const parts = trimmed.split('>=').map(s => s.trim());
+    if (parts.length !== 2) return false;
+    const [left, right] = parts;
+    if (!left || !right) return false;
     const leftValue = Number(getNestedValue(variables, left) ?? left);
     const rightValue = Number(getNestedValue(variables, right) ?? right);
     return leftValue >= rightValue;
   }
 
   if (trimmed.includes('<=')) {
-    const [left, right] = trimmed.split('<=').map(s => s.trim());
+    const parts = trimmed.split('<=').map(s => s.trim());
+    if (parts.length !== 2) return false;
+    const [left, right] = parts;
+    if (!left || !right) return false;
     const leftValue = Number(getNestedValue(variables, left) ?? left);
     const rightValue = Number(getNestedValue(variables, right) ?? right);
     return leftValue <= rightValue;
   }
 
   if (trimmed.includes('>')) {
-    const [left, right] = trimmed.split('>').map(s => s.trim());
+    const parts = trimmed.split('>').map(s => s.trim());
+    if (parts.length !== 2) return false;
+    const [left, right] = parts;
+    if (!left || !right) return false;
     const leftValue = Number(getNestedValue(variables, left) ?? left);
     const rightValue = Number(getNestedValue(variables, right) ?? right);
     return leftValue > rightValue;
   }
 
   if (trimmed.includes('<')) {
-    const [left, right] = trimmed.split('<').map(s => s.trim());
+    const parts = trimmed.split('<').map(s => s.trim());
+    if (parts.length !== 2) return false;
+    const [left, right] = parts;
+    if (!left || !right) return false;
     const leftValue = Number(getNestedValue(variables, left) ?? left);
     const rightValue = Number(getNestedValue(variables, right) ?? right);
     return leftValue < rightValue;

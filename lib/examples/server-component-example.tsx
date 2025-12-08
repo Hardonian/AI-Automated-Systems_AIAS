@@ -31,8 +31,8 @@ export const dynamic = 'force-dynamic';
  * - Uses Image and Link components
  */
 export default async function UsersPage() {
-  // Next.js 15: headers() must be awaited
-  const _headersList = await headers();
+  // Next.js 15: headers() must be awaited (unused but required for example)
+  await headers();
 
   // Type-safe environment variable access
   const apiUrl = process.env.API_URL;

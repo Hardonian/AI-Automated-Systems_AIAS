@@ -435,10 +435,11 @@ async function generateReport(results: AuditResult[]): Promise<string> {
   report += `## Domain Audits\n\n`;
 
   results.forEach((result) => {
-    const statusIcon = result.status === 'healthy' ? '✅' : 
-                      result.status === 'warning' ? '⚠️' : '🔴';
+    const status: 'healthy' | 'warning' | 'critical' = result.status;
+    const statusIcon = status === 'healthy' ? '✅' : 
+                      status === 'warning' ? '⚠️' : '🔴';
     report += `### ${statusIcon} ${result.domain}\n\n`;
-    report += `**Status:** ${result.status.toUpperCase()}\n\n`;
+    report += `**Status:** ${status.toUpperCase()}\n\n`;
 
     if (result.issues.length > 0) {
       report += `#### Issues (${result.issues.length})\n\n`;

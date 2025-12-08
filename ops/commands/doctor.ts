@@ -64,12 +64,13 @@ export async function doctor(options: { verbose?: boolean }): Promise<number> {
   // Print results
   console.log('\n📊 Health Check Results:\n');
   results.forEach((result) => {
-    const icon = result.status === 'pass' ? '✅' : result.status === 'warn' ? '⚠️' : '❌';
+    const status: 'pass' | 'fail' | 'warn' = result.status;
+    const icon = status === 'pass' ? '✅' : status === 'warn' ? '⚠️' : '❌';
     console.log(`${icon} ${result.name}: ${result.message}`);
     if (options.verbose && result.details) {
       console.log(`   ${result.details}`);
     }
-    if (result.status === 'fail') {
+    if (status === 'fail') {
       exitCode = 1;
     }
   });

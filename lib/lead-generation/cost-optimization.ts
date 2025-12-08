@@ -145,8 +145,7 @@ class CostOptimizationService {
       const sourceRevenue = sourceConversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
       const sourceCost = sourceCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
 
-      if (source) {
-        bySource[source] = {
+      bySource[source] = {
         cost: sourceCost,
         leads: sourceLeads.length,
         conversions: sourceConversions.length,
@@ -172,8 +171,7 @@ class CostOptimizationService {
       const campaignRevenue = campaignConversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
       const campaignCost = campaignCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
 
-      if (campaign) {
-        byCampaign[campaign] = {
+      byCampaign[campaign] = {
         cost: campaignCost,
         leads: campaignLeads.length,
         conversions: campaignConversions.length,

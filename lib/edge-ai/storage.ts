@@ -6,7 +6,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logging/structured-logger';
-import { uploadFileSecure, deleteFileSecure } from '@/lib/security/file-upload';
+import { deleteFileSecure } from '@/lib/security/file-upload';
 import type { EdgeAIModelFormat } from './types';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);

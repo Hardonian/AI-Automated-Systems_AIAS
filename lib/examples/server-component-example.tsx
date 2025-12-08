@@ -10,7 +10,7 @@
 
 import { headers } from 'next/headers';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
-import type { Database } from '@/types/supabase';
+// import type { Database } from '@/types/supabase'; // Unused
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -32,7 +32,7 @@ export const dynamic = 'force-dynamic';
  */
 export default async function UsersPage() {
   // Next.js 15: headers() must be awaited
-  const headersList = await headers();
+  const _headersList = await headers();
 
   // Type-safe environment variable access
   const apiUrl = process.env.API_URL;

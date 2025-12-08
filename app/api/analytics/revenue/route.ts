@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
     };
 
     // Count from subscriptions table
-    subscriptions?.forEach((sub) => {
+    subscriptions?.forEach((sub: { subscription_plans?: unknown }) => {
       const plan = sub.subscription_plans;
       if (plan && typeof plan === 'object' && !Array.isArray(plan)) {
         const planObj = plan as { tier?: string; price_monthly?: number };
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Count from profiles (fallback)
-    profiles?.forEach((profile) => {
+    profiles?.forEach((profile: { subscription_tier?: string }) => {
       const tier = profile.subscription_tier?.toLowerCase() || "starter";
       if (tier && tier in planCounts) {
         planCounts[tier]!.count++;

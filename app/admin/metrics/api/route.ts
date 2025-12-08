@@ -106,7 +106,7 @@ export const GET = createGETHandler(
       const totalIntegrations = integrations?.length || 0;
       const totalWorkflows = workflows?.length || 0;
       const totalActivations = activations?.length || 0;
-      const uniqueActiveUsers = new Set(activeUsers?.map((e) => e.user_id) || []).size;
+      const uniqueActiveUsers = new Set(activeUsers?.map((e: { user_id: string }) => e.user_id) || []).size;
 
       // Calculate activation rate
       const activationRate = totalSignups > 0 ? (totalActivations / totalSignups) * 100 : 0;
@@ -115,7 +115,7 @@ export const GET = createGETHandler(
       const activationTimes: number[] = [];
       if (signups && activations) {
         for (const activation of activations) {
-          const signup = signups.find((s) => s.user_id === activation.user_id);
+          const signup = signups.find((s: { user_id: string }) => s.user_id === activation.user_id);
           if (signup) {
             const signupTime = new Date(signup.created_at).getTime();
             const activationTime = new Date(activation.created_at).getTime();
@@ -137,8 +137,8 @@ export const GET = createGETHandler(
         .gte("created_at", sevenDaysAgo.toISOString())
         .lt("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
 
-      const signupUserIds = new Set(signups7DaysAgo?.map((e) => e.user_id) || []);
-      const activeUserIds = new Set(activeUsers?.map((e) => e.user_id) || []);
+      const signupUserIds = new Set(signups7DaysAgo?.map((e: { user_id: string }) => e.user_id) || []);
+      const activeUserIds = new Set(activeUsers?.map((e: { user_id: string }) => e.user_id) || []);
       const retainedUsers = Array.from(signupUserIds).filter((id) => activeUserIds.has(id));
       const day7Retention = signupUserIds.size > 0 ? (retainedUsers.length / signupUserIds.size) * 100 : 0;
 

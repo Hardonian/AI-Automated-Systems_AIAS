@@ -320,7 +320,7 @@ export function renderTemplate(
  * Load email template from file system
  * In production, this would read from the emails/ directory
  */
-export async function loadEmailTemplate(templatePath: string): Promise<string> {
+export async function loadEmailTemplate(_templatePath: string): Promise<string> {
   // This is a placeholder - in production, use fs or fetch to load templates
   // For now, templates are imported directly
   throw new Error('loadEmailTemplate not implemented - use template strings directly');

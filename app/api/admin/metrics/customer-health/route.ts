@@ -132,7 +132,7 @@ export async function GET(request: NextRequest) {
       let customers;
       try {
         const dbCustomers = await seedRoundDB.getCustomerHealthScores();
-        customers = (dbCustomers || []).map((c) => ({
+        customers = (dbCustomers || []).map((c: { id: string; company_name: string; tier: string; health_score: number; status: string; active_users_percentage: number; workflows_running: number; feature_adoption_percentage: number; support_tickets_per_month: number; qbr_attendance: number; response_time_hours: number; roi_achieved: number; goals_met: number; nps_score: number; csat_score: number; last_updated: string }) => ({
           id: c.id,
           company: c.company_name,
           tier: c.tier,
@@ -170,12 +170,12 @@ export async function GET(request: NextRequest) {
 
       // Calculate aggregate metrics
       const totalCustomers = customers.length;
-      const greenCustomers = customers.filter((c) => c.status === "green").length;
-      const yellowCustomers = customers.filter((c) => c.status === "yellow").length;
-      const redCustomers = customers.filter((c) => c.status === "red").length;
+      const greenCustomers = customers.filter((c: { status: string }) => c.status === "green").length;
+      const yellowCustomers = customers.filter((c: { status: string }) => c.status === "yellow").length;
+      const redCustomers = customers.filter((c: { status: string }) => c.status === "red").length;
 
       const avgHealthScore =
-        customers.reduce((sum, c) => sum + c.healthScore, 0) / totalCustomers;
+        customers.reduce((sum: number, c: { healthScore: number }) => sum + c.healthScore, 0) / totalCustomers;
 
       const distribution = {
         green: {

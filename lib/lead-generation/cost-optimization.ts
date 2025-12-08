@@ -158,11 +158,9 @@ class CostOptimizationService {
 
     // Calculate by campaign
     const byCampaign: Record<string, CostMetrics> = {};
-    const campaigns = new Set(costs?.map((c: { campaign?: string }) => c.campaign).filter((c: string | undefined): c is string => !!c) || []);
+    const campaigns = new Set<string>(costs?.map((c: { campaign?: string }) => c.campaign).filter((c: string | undefined): c is string => !!c) || []);
     
     for (const campaign of campaigns) {
-      if (!campaign) continue;
-
       const campaignCosts = costs?.filter((c: { campaign?: string }) => c.campaign === campaign) || [];
       const campaignLeads = leads?.filter((l: { campaign?: string }) => l.campaign === campaign) || [];
       const campaignConversions = conversions?.filter(
@@ -171,17 +169,15 @@ class CostOptimizationService {
       const campaignRevenue = campaignConversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
       const campaignCost = campaignCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
 
-      if (campaign) {
-        byCampaign[campaign] = {
-          cost: campaignCost,
-          leads: campaignLeads.length,
-          conversions: campaignConversions.length,
-          costPerLead: campaignLeads.length > 0 ? campaignCost / campaignLeads.length : 0,
-          costPerConversion: campaignConversions.length > 0 ? campaignCost / campaignConversions.length : 0,
-          roi: campaignCost > 0 ? ((campaignRevenue - campaignCost) / campaignCost) * 100 : 0,
-          roas: campaignCost > 0 ? campaignRevenue / campaignCost : 0,
-        };
-      }
+      byCampaign[campaign] = {
+        cost: campaignCost,
+        leads: campaignLeads.length,
+        conversions: campaignConversions.length,
+        costPerLead: campaignLeads.length > 0 ? campaignCost / campaignLeads.length : 0,
+        costPerConversion: campaignConversions.length > 0 ? campaignCost / campaignConversions.length : 0,
+        roi: campaignCost > 0 ? ((campaignRevenue - campaignCost) / campaignCost) * 100 : 0,
+        roas: campaignCost > 0 ? campaignRevenue / campaignCost : 0,
+      };
     }
 
     // Generate recommendations

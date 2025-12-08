@@ -134,7 +134,7 @@ class CostOptimizationService {
 
     // Calculate by source
     const bySource: Record<string, CostMetrics> = {};
-    const sources = new Set(costs?.map((c: { source: string }) => c.source).filter((s: string | undefined): s is string => !!s) || []);
+    const sources = new Set<string>(costs?.map((c: { source: string }) => c.source).filter((s: string | undefined): s is string => !!s) || []);
     
     for (const source of sources) {
       const sourceCosts = costs?.filter((c: { source: string }) => c.source === source) || [];
@@ -145,17 +145,15 @@ class CostOptimizationService {
       const sourceRevenue = sourceConversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
       const sourceCost = sourceCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
 
-      if (source) {
-        bySource[source] = {
-          cost: sourceCost,
-          leads: sourceLeads.length,
-          conversions: sourceConversions.length,
-          costPerLead: sourceLeads.length > 0 ? sourceCost / sourceLeads.length : 0,
-          costPerConversion: sourceConversions.length > 0 ? sourceCost / sourceConversions.length : 0,
-          roi: sourceCost > 0 ? ((sourceRevenue - sourceCost) / sourceCost) * 100 : 0,
-          roas: sourceCost > 0 ? sourceRevenue / sourceCost : 0,
-        };
-      }
+      bySource[source] = {
+        cost: sourceCost,
+        leads: sourceLeads.length,
+        conversions: sourceConversions.length,
+        costPerLead: sourceLeads.length > 0 ? sourceCost / sourceLeads.length : 0,
+        costPerConversion: sourceConversions.length > 0 ? sourceCost / sourceConversions.length : 0,
+        roi: sourceCost > 0 ? ((sourceRevenue - sourceCost) / sourceCost) * 100 : 0,
+        roas: sourceCost > 0 ? sourceRevenue / sourceCost : 0,
+      };
     }
 
     // Calculate by campaign

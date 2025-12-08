@@ -10,7 +10,7 @@ import { generateIdempotencyKey, checkIdempotencyKey, recordIdempotencyKey, reco
 // CTO Mode: Use centralized env module - never destructure process.env
 const stripe = env.stripe.secretKey
   ? new Stripe(env.stripe.secretKey, {
-      apiVersion: '2024-11-20.acacia',
+      apiVersion: '2023-10-16' as any, // Using latest compatible version
     })
   : null;
 

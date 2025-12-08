@@ -4,9 +4,18 @@ import { createGETHandler, RouteContext } from "@/lib/api/route-handler";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
 
-const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+// Lazy initialization to avoid build-time errors when env vars are not set
+function getSupabaseClient() {
+  try {
+    return createClient(env.supabase.url, env.supabase.serviceRoleKey);
+  } catch (error) {
+    logger.error("Failed to create Supabase client", error instanceof Error ? error : new Error(String(error)));
+    throw error;
+  }
+}
 
 export const runtime = "nodejs"; // Use Node.js runtime for route-handler compatibility
+export const dynamic = "force-dynamic"; // Force dynamic rendering to avoid build-time execution
 
 /**
  * GET /api/admin/metrics
@@ -25,6 +34,8 @@ export const GET = createGETHandler(
       // Query telemetry events for activation funnel
       // Note: This assumes telemetry events are stored in a 'telemetry_events' table
       // Adjust table name based on your actual schema
+
+      const supabase = getSupabaseClient();
 
       // Get signups
       const { data: signups, error: signupsError } = await supabase

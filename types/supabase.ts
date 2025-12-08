@@ -1,5 +1,12 @@
 // Supabase Database Types
 // This file provides type definitions for Supabase database operations
+// 
+// NOTE: For production, regenerate types using:
+//   pnpm tsx scripts/regenerate-supabase-types.ts
+//   Or: supabase gen types typescript --project-id <PROJECT_REF> > types/supabase.ts
+//
+// This is a workaround type definition that allows Supabase operations to work
+// without strict schema types. For full type safety, regenerate from your schema.
 
 export type Json =
   | string
@@ -9,30 +16,30 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-// Table definition - Insert must not be 'never' for Supabase's type system
-// Using a union type that includes both object and array forms
+// Generic table definition - using 'any' for Insert/Update to allow flexible operations
+// This is a workaround until proper types are regenerated from the schema
 type TableDef = {
-  Row: { [key: string]: unknown }
-  Insert: { [key: string]: unknown } | { [key: string]: unknown }[]
-  Update: { [key: string]: unknown }
+  Row: Record<string, unknown>
+  Insert: Record<string, unknown>
+  Update: Record<string, unknown>
 }
 
-// Database interface - using index signature to allow any table name
-// The key is that this structure allows Supabase's .from() to work
-// with any string literal table name
-export interface Database {
+// Database interface - permissive structure that works with Supabase's type system
+// The key is that Supabase uses conditional types that return 'never' if a table
+// doesn't exist. By defining all possible tables, we avoid the 'never' type.
+export type Database = {
   public: {
     Tables: {
       [tableName: string]: TableDef
     }
     Views: {
       [viewName: string]: {
-        Row: { [key: string]: unknown }
+        Row: Record<string, unknown>
       }
     }
     Functions: {
       [functionName: string]: {
-        Args: { [key: string]: unknown }
+        Args: Record<string, unknown>
         Returns: unknown
       }
     }

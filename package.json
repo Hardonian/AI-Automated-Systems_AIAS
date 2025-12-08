@@ -353,7 +353,11 @@
       "react": "$react",
       "react-dom": "$react-dom",
       "@types/react": "$@types/react",
-      "@types/react-dom": "$@types/react-dom"
+      "@types/react-dom": "$@types/react-dom",
+      "next": "^15.5.7",
+      "@babel/core": "^7.28.5",
+      "@playwright/test": "^1.57.0",
+      "playwright": "^1.57.0"
     },
     "peerDependencyRules": {
       "ignoreMissing": [

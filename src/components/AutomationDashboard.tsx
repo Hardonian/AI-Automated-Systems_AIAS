@@ -336,7 +336,7 @@ export const AutomationDashboard: React.FC = () => {
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex flex-wrap gap-1">
-                      {workflow.tags.map(tag => (
+                      {workflow.tags.map((tag: string) => (
                         <Badge key={tag} variant="outline" className="text-xs">
                           {tag}
                         </Badge>

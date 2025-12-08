@@ -233,7 +233,7 @@ export async function checkAndSendStreakReminders() {
   if (!streaks) return { sent: 0, errors: [] };
 
   const results = await Promise.allSettled(
-    streaks.map((streak) => sendStreakReminderEmail(streak.user_id, streak.days))
+    streaks.map((streak: { user_id: string; days: number }) => sendStreakReminderEmail(streak.user_id, streak.days))
   );
 
   const sent = results.filter((r) => r.status === "fulfilled" && r.value.success).length;

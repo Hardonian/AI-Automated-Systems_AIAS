@@ -167,12 +167,14 @@ export async function validateMigrations(): Promise<{
   pending: string[];
   applied: string[];
   errors: string[];
+  warnings?: string[];
 }> {
   const result = {
     valid: true,
     pending: [] as string[],
     applied: [] as string[],
     errors: [] as string[],
+    warnings: [] as string[],
   };
 
   try {

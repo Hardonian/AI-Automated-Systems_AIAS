@@ -114,8 +114,10 @@ export class GuardianService {
       // Read last hash from ledger
       const lines = readFileSync(this.ledgerPath, 'utf-8').trim().split('\n');
       if (lines.length > 0) {
-        const lastEntry = JSON.parse(lines[lines.length - 1]);
-        this.lastHash = lastEntry.sha256;
+        const lastEntry = JSON.parse(lines[lines.length - 1]) as { sha256?: string };
+        if (lastEntry.sha256) {
+          this.lastHash = lastEntry.sha256;
+        }
       }
     }
   }

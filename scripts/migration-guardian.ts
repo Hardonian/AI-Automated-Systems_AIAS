@@ -327,7 +327,7 @@ function checkMigrationStatus(dbUrl: string): MigrationStatus {
     const lines = output.split('\n');
     for (const line of lines) {
       const match = line.match(/(\d{14}_\w+)/);
-      if (match) {
+      if (match && match[1]) {
         pending.push(match[1]);
       }
     }

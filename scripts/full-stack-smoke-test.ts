@@ -163,7 +163,7 @@ function checkEnvLocal(): Record<string, string> {
                 else if (key === "SUPABASE_PROJECT_ID") mappedKey = "SUPABASE_PROJECT_REF";
               }
               
-              if (EXPECTED_ENV_VARS.includes(mappedKey) || EXPECTED_ENV_VARS.includes(key)) {
+              if (mappedKey && (EXPECTED_ENV_VARS.includes(mappedKey) || EXPECTED_ENV_VARS.includes(key))) {
                 env[mappedKey] = value;
               }
             }
@@ -218,7 +218,7 @@ async function checkVercelEnv(): Promise<{ prod: Record<string, string>; preview
           const lines = content.split("\n");
           for (const line of lines) {
             const match = line.match(/^([A-Z_]+)=(.*)$/);
-            if (match) {
+            if (match && match[1] && match[2]) {
               const key = match[1];
               const value = match[2].replace(/^["']|["']$/g, "");
               if (EXPECTED_ENV_VARS.includes(key)) {
@@ -558,8 +558,9 @@ async function testLocalDevelopment(): Promise<TestResult[]> {
   try {
     const nodeVersion = process.version;
     const requiredVersion = "18.17.0";
-    const majorVersion = parseInt(nodeVersion.slice(1).split(".")[0]);
-    const requiredMajor = parseInt(requiredVersion.split(".")[0]);
+    const versionStr = nodeVersion.slice(1);
+    const majorVersion = versionStr ? parseInt(versionStr.split(".")[0] || '0') : 0;
+    const requiredMajor = parseInt(requiredVersion.split(".")[0] || '0');
     
     results.push({
       name: "Node Version",

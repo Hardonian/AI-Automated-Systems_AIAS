@@ -11,7 +11,7 @@ Sentry.init({
   tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1.0,
   replaysOnErrorSampleRate: 1.0,
   replaysSessionSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1.0,
-  beforeSend(event, hint) {
+  beforeSend(event: unknown, hint: unknown) {
     // Filter out sensitive data
     if (event.request) {
       delete event.request.cookies;

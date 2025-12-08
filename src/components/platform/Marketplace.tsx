@@ -309,7 +309,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onItemSelect, onPurcha
   const filteredItems = items.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         item.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+                         item.tags.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     
     const matchesCategory = selectedCategory === 'all' || item.type === selectedCategory;
     const matchesPrice = item.price >= priceRange[0] && item.price <= priceRange[1];
@@ -494,7 +494,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onItemSelect, onPurcha
                         </div>
 
                         <div className="flex flex-wrap gap-1">
-                          {item.tags.slice(0, 3).map(tag => (
+                          {item.tags.slice(0, 3).map((tag: string) => (
                             <Badge key={tag} variant="secondary" className="text-xs">
                               {tag}
                             </Badge>
@@ -592,7 +592,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onItemSelect, onPurcha
                         </div>
 
                         <div className="flex flex-wrap gap-1">
-                          {item.tags.slice(0, 3).map(tag => (
+                          {item.tags.slice(0, 3).map((tag: string) => (
                             <Badge key={tag} variant="secondary" className="text-xs">
                               {tag}
                             </Badge>

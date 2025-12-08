@@ -73,7 +73,7 @@ export async function calculateTimeToActivation(days: number = 30): Promise<numb
   const activationTimes: number[] = [];
 
   for (const activation of activations || []) {
-    const signup = signups?.find((s) => s.user_id === activation.user_id);
+    const signup = signups?.find((s: { user_id: string }) => s.user_id === activation.user_id);
     if (signup) {
       const signupTime = new Date(signup.created_at).getTime();
       const activationTime = new Date(activation.created_at).getTime();

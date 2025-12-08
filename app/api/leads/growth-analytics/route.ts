@@ -63,21 +63,21 @@ export const GET = createGETHandler(
 
     // Calculate lead metrics
     const totalLeads = leads?.length || 0;
-    const qualifiedLeads = leads?.filter(l => l.qualified).length || 0;
+    const qualifiedLeads = leads?.filter((l: { qualified?: boolean }) => l.qualified).length || 0;
     const averageScore = leads && leads.length > 0
-      ? leads.reduce((sum, l) => sum + (l.score || 0), 0) / leads.length
+      ? leads.reduce((sum: number, l: { score?: number }) => sum + (l.score || 0), 0) / leads.length
       : 0;
 
     // Lead sources breakdown
     const leadsBySource: Record<string, number> = {};
-    leads?.forEach(lead => {
+    leads?.forEach((lead: { source?: string }) => {
       const source = lead.source || 'unknown';
       leadsBySource[source] = (leadsBySource[source] || 0) + 1;
     });
 
     // Lead status breakdown
     const leadsByStatus: Record<string, number> = {};
-    leads?.forEach(lead => {
+    leads?.forEach((lead: { status?: string }) => {
       const status = lead.status || 'new';
       leadsByStatus[status] = (leadsByStatus[status] || 0) + 1;
     });

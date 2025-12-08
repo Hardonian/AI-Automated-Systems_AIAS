@@ -350,7 +350,13 @@ export class BillingService {
 
     if (error) {
       console.error('Failed to get usage metrics:', error);
-      return {};
+      return {
+        workflows: 0,
+        executions: 0,
+        storage: 0,
+        apiCalls: 0,
+        users: 0
+      };
     }
 
     // Aggregate metrics
@@ -362,9 +368,10 @@ export class BillingService {
       users: 0
     };
 
-    data?.forEach((record: any) => {
-      if (record.metric_type in metrics) {
-        metrics[record.metric_type as keyof UsageMetrics] += record.amount;
+    data?.forEach((record: { metric_type: string; amount: number }) => {
+      const metricType = record.metric_type as keyof UsageMetrics;
+      if (metricType in metrics) {
+        metrics[metricType] += record.amount;
       }
     });
 

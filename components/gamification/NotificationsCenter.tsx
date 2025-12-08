@@ -42,7 +42,7 @@ export default function NotificationsCenter() {
     
     if (data) {
       setNotifications(data);
-      setUnreadCount(data.filter(n => !n.read_at).length);
+      setUnreadCount(data.filter((n: { read_at?: string | null }) => !n.read_at).length);
     }
   }
 

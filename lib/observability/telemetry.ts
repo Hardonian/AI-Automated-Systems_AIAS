@@ -235,9 +235,10 @@ export class ObservabilityService {
    * Log workflow execution
    */
   logWorkflowExecution(log: Omit<WorkflowExecutionLog, 'executionId'>): void {
+    const executionId = this.generateId();
     const workflowLog: WorkflowExecutionLog = {
       ...log,
-      executionId: log.executionId || this.generateId(),
+      executionId,
     };
 
     this.workflowLogs.push(workflowLog);
@@ -259,9 +260,10 @@ export class ObservabilityService {
    * Log agent execution
    */
   logAgentExecution(log: Omit<AgentExecutionLog, 'executionId'>): void {
+    const executionId = this.generateId();
     const agentLog: AgentExecutionLog = {
       ...log,
-      executionId: log.executionId || this.generateId(),
+      executionId,
     };
 
     this.agentLogs.push(agentLog);

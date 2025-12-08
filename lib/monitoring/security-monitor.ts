@@ -69,7 +69,7 @@ class SecurityMonitor {
 
     // Alert on critical events
     if (event.severity === "critical") {
-      this.alertCritical(event);
+      this.alertCritical(fullEvent);
     }
   }
 

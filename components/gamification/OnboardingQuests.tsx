@@ -38,7 +38,7 @@ export default function OnboardingQuests() {
     
     if (data) {
       setQuests(data);
-      setCompletedCount(data.filter(q => q.completed_at).length);
+      setCompletedCount(data.filter((q: { completed_at?: string | null }) => q.completed_at).length);
     }
   }
 

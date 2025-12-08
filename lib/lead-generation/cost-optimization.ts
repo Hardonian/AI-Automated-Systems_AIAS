@@ -122,10 +122,10 @@ class CostOptimizationService {
     const { data: conversions } = await conversionQuery;
 
     // Calculate totals
-    const totalCost = costs?.reduce((sum, c) => sum + c.amount, 0) || 0;
+    const totalCost = costs?.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0) || 0;
     const totalLeads = leads?.length || 0;
     const totalConversions = conversions?.length || 0;
-    const totalRevenue = conversions?.reduce((sum, c) => sum + (c.value || 0), 0) || 0;
+    const totalRevenue = conversions?.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0) || 0;
 
     const costPerLead = totalLeads > 0 ? totalCost / totalLeads : 0;
     const costPerConversion = totalConversions > 0 ? totalCost / totalConversions : 0;
@@ -134,16 +134,16 @@ class CostOptimizationService {
 
     // Calculate by source
     const bySource: Record<string, CostMetrics> = {};
-    const sources = new Set(costs?.map(c => c.source) || []);
+    const sources = new Set(costs?.map((c: { source: string }) => c.source) || []);
     
     for (const source of sources) {
-      const sourceCosts = costs?.filter(c => c.source === source) || [];
-      const sourceLeads = leads?.filter(l => l.source === source) || [];
+      const sourceCosts = costs?.filter((c: { source: string }) => c.source === source) || [];
+      const sourceLeads = leads?.filter((l: { source?: string }) => l.source === source) || [];
       const sourceConversions = conversions?.filter(
-        c => c.attribution?.source === source
+        (c: { attribution?: { source?: string }; value?: number }) => c.attribution?.source === source
       ) || [];
-      const sourceRevenue = sourceConversions.reduce((sum, c) => sum + (c.value || 0), 0);
-      const sourceCost = sourceCosts.reduce((sum, c) => sum + c.amount, 0);
+      const sourceRevenue = sourceConversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
+      const sourceCost = sourceCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
 
       bySource[source] = {
         cost: sourceCost,
@@ -158,18 +158,18 @@ class CostOptimizationService {
 
     // Calculate by campaign
     const byCampaign: Record<string, CostMetrics> = {};
-    const campaigns = new Set(costs?.map(c => c.campaign).filter(Boolean) || []);
+    const campaigns = new Set(costs?.map((c: { campaign?: string }) => c.campaign).filter(Boolean) || []);
     
     for (const campaign of campaigns) {
       if (!campaign) continue;
 
-      const campaignCosts = costs?.filter(c => c.campaign === campaign) || [];
-      const campaignLeads = leads?.filter(l => l.campaign === campaign) || [];
+      const campaignCosts = costs?.filter((c: { campaign?: string }) => c.campaign === campaign) || [];
+      const campaignLeads = leads?.filter((l: { campaign?: string }) => l.campaign === campaign) || [];
       const campaignConversions = conversions?.filter(
-        c => c.attribution?.campaign === campaign
+        (c: { attribution?: { campaign?: string }; value?: number }) => c.attribution?.campaign === campaign
       ) || [];
-      const campaignRevenue = campaignConversions.reduce((sum, c) => sum + (c.value || 0), 0);
-      const campaignCost = campaignCosts.reduce((sum, c) => sum + c.amount, 0);
+      const campaignRevenue = campaignConversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
+      const campaignCost = campaignCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
 
       byCampaign[campaign] = {
         cost: campaignCost,
@@ -286,7 +286,7 @@ class CostOptimizationService {
     // Group by date
     const trends: Record<string, { cost: number; leads: number; conversions: number }> = {};
 
-    costs?.forEach(cost => {
+    costs?.forEach((cost: { date: string; amount: number }) => {
       const date = cost.date.split('T')[0];
       if (!trends[date]) {
         trends[date] = { cost: 0, leads: 0, conversions: 0 };
@@ -294,7 +294,7 @@ class CostOptimizationService {
       trends[date].cost += cost.amount;
     });
 
-    leads?.forEach(lead => {
+    leads?.forEach((lead: { created_at: string }) => {
       const date = lead.created_at.split('T')[0];
       if (!trends[date]) {
         trends[date] = { cost: 0, leads: 0, conversions: 0 };
@@ -302,7 +302,7 @@ class CostOptimizationService {
       trends[date].leads += 1;
     });
 
-    conversions?.forEach(conversion => {
+    conversions?.forEach((conversion: { converted_at: string }) => {
       const date = conversion.converted_at.split('T')[0];
       if (!trends[date]) {
         trends[date] = { cost: 0, leads: 0, conversions: 0 };

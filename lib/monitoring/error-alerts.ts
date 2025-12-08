@@ -85,7 +85,7 @@ export async function checkIntegrationFailures(): Promise<ErrorAlert[]> {
 
     // Group by integration
     const integrationCounts: Record<string, number> = {};
-    integrationErrors?.forEach((event) => {
+    integrationErrors?.forEach((event: { meta?: Record<string, unknown> }) => {
       const integration = (event.meta as Record<string, unknown>)?.integration as string;
       if (integration) {
         integrationCounts[integration] = (integrationCounts[integration] || 0) + 1;

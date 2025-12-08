@@ -43,7 +43,7 @@ async function findUnusedExports(): Promise<UnusedExport[]> {
     const lines = tsPruneOutput.split('\n').filter(line => line.trim());
     for (const line of lines) {
       const match = line.match(/^(.+):(\d+) - (.+)$/);
-      if (match) {
+      if (match && match[1] && match[2] && match[3]) {
         const [, file, lineNum, exportName] = match;
         unused.push({
           file: file.trim(),
@@ -113,7 +113,7 @@ ${unused
   }, {} as Record<string, UnusedExport[]>)
   .entries()
   .map(([file, items]) => {
-    return `### ${file}\n\n${items.map(item => `- \`${item.export}\` (line ${item.line}): ${item.reason}`).join('\n')}\n`;
+    return `### ${file}\n\n${items.map((item: UnusedExport) => `- \`${item.export}\` (line ${item.line}): ${item.reason}`).join('\n')}\n`;
   })
   .join('\n')}
 

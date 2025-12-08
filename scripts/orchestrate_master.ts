@@ -103,14 +103,17 @@ async function orchestrateMaster(): Promise<void> {
         .sort()
         .slice(-1);
 
-      if (migrationFiles.length > 0) {
+      if (migrationFiles.length > 0 && migrationFiles[0]) {
         const migrationPath = path.join(
           process.cwd(),
           'supabase',
           'migrations',
           migrationFiles[0]
         );
-        const dbUrl = process.env.SUPABASE_DB_URL;
+        const dbUrl = process.env.SUPABASE_DB_URL || '';
+        if (!dbUrl) {
+          throw new Error('SUPABASE_DB_URL is required');
+        }
         if (dbUrl) {
           await runCommand(
             `psql "${dbUrl}" -f "${migrationPath}"`,
@@ -269,8 +272,8 @@ function getCreatedFiles(): string[] {
   // Check for reports
   const reportsDir = path.join(process.cwd(), 'reports');
   if (fs.existsSync(reportsDir)) {
-    const reports = fs.readdirSync(reportsDir, { recursive: true }).filter((f) =>
-      f.endsWith('.md')
+    const reports = fs.readdirSync(reportsDir, { recursive: true }).filter((f): f is string =>
+      typeof f === 'string' && f.endsWith('.md')
     );
     files.push(...reports.map((f) => `reports/${f}`));
   }

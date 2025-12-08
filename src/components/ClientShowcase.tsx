@@ -175,7 +175,7 @@ export const ClientShowcase = () => {
                       <h5 className="font-semibold text-sm mb-3 text-muted-foreground">Results</h5>
                       <div className="space-y-2">
                         {study.results.map((result, idx) => (
-                          <div key={`${study.title}-result-${idx}`} className="flex items-center gap-2">
+                          <div key={`${study.client}-result-${idx}`} className="flex items-center gap-2">
                             <CheckCircle className={`w-4 h-4 ${study.color} flex-shrink-0`} />
                             <span className="text-sm">{result}</span>
                           </div>

@@ -308,28 +308,28 @@ export class AutomationManager {
     try {
       switch (step.type) {
         case 'ai_analysis':
-          stepExecution.output = await this.executeAIAnalysis(step.config, execution.context);
+          stepExecution.output = await this.executeAIAnalysis(step.config as AIAnalysisConfig, execution.context);
           break;
         case 'data_extraction':
-          stepExecution.output = await this.executeDataExtraction(step.config, execution.context);
+          stepExecution.output = await this.executeDataExtraction(step.config as DataExtractionConfig, execution.context);
           break;
         case 'notification':
-          stepExecution.output = await this.executeNotification(step.config, execution.context);
+          stepExecution.output = await this.executeNotification(step.config as NotificationConfig, execution.context);
           break;
         case 'api_call':
-          stepExecution.output = await this.executeAPICall(step.config, execution.context);
+          stepExecution.output = await this.executeAPICall(step.config as APICallConfig, execution.context);
           break;
         case 'database_update':
-          stepExecution.output = await this.executeDatabaseUpdate(step.config, execution.context);
+          stepExecution.output = await this.executeDatabaseUpdate(step.config as DatabaseUpdateConfig, execution.context);
           break;
         case 'ai_generation':
-          stepExecution.output = await this.executeAIGeneration(step.config, execution.context);
+          stepExecution.output = await this.executeAIGeneration(step.config as AIGenerationConfig, execution.context);
           break;
         case 'scheduling':
-          stepExecution.output = await this.executeScheduling(step.config, execution.context);
+          stepExecution.output = await this.executeScheduling(step.config as SchedulingConfig, execution.context);
           break;
         case 'integration':
-          stepExecution.output = await this.executeIntegration(step.config, execution.context);
+          stepExecution.output = await this.executeIntegration(step.config as IntegrationConfig, execution.context);
           break;
         default:
           throw new Error(`Unknown step type: ${step.type}`);
@@ -701,7 +701,7 @@ export class AutomationManager {
     // Simulate notification sending
     return {
       sent: true,
-      channels: config.channels,
+      type: config.type,
       recipients: config.recipients,
       messageId: 'msg_' + Date.now()
     };

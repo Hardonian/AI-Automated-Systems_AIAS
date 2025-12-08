@@ -386,7 +386,7 @@ export class SecurityManager {
 
   private async sendSecurityAlert(event: SecurityEvent): Promise<void> {
     // In production, integrate with alerting system
-    if (import.meta.env.DEV) {
+    if (process.env.NODE_ENV === 'development') {
       console.warn(`[SECURITY ALERT] ${event.severity.toUpperCase()}: ${event.type}`, event);
     }
     // TODO: Integrate with actual alerting system (Slack, email, etc.)
@@ -423,9 +423,9 @@ export class SecurityManager {
   private getTopThreats(events: SecurityEvent[]): Array<{ type: string; count: number; severity: string }> {
     const threatCounts = new Map<string, number>();
     
-    events.forEach(event => {
+    events.forEach((event: { type: string; details?: { threats?: { type?: string } } }) => {
       if (event.type === 'security_violation') {
-        const threat = event.details?.threats?.type || 'unknown';
+        const threat = (event.details?.threats as { type?: string })?.type || 'unknown';
         threatCounts.set(threat, (threatCounts.get(threat) || 0) + 1);
       }
     });

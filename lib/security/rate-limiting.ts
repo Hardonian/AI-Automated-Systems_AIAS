@@ -169,7 +169,7 @@ export async function rateLimit(
     maxRequests = 100,
     keyGenerator = (req) => {
       // Default: IP address + path
-      const ip = req.ip || req.headers.get('x-forwarded-for') || 'unknown';
+      const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
       const path = req.nextUrl.pathname;
       return `${ip}:${path}`;
     },

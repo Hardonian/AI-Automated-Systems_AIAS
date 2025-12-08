@@ -408,7 +408,9 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
                     </span>
                   </div>
                   <Progress 
-                    value={getUsagePercentage(billingData.usage.storage, billingData.usage.storage)} 
+                    value={typeof billingData.usage.storage === 'object' && 'used' in billingData.usage.storage && 'limit' in billingData.usage.storage
+                      ? getUsagePercentage(billingData.usage.storage.used, billingData.usage.storage.limit)
+                      : 0} 
                     className="h-2"
                   />
                 </div>
@@ -489,8 +491,9 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
                 {Object.entries(billingData.usage).map(([key, value]) => {
                   if (key === 'period') return null;
                   
-                  const limit = value.limit;
-                  const used = value.used;
+                  if (typeof value === 'string') return null;
+                  const limit = typeof value === 'object' && 'limit' in value ? value.limit : 0;
+                  const used = typeof value === 'object' && 'used' in value ? value.used : 0;
                   const percentage = getUsagePercentage(used, limit);
                   
                   return (

@@ -184,12 +184,12 @@ class ABTestingService {
       const { data: conversions } = await conversionQuery;
 
       // Calculate results per variation
-      const variationResults = test.variations.map(variation => {
-        const visitors = assignments?.filter(a => a.variation_id === variation.id).length || 0;
-        const variationConversions = conversions?.filter(c => c.variation_id === variation.id) || [];
+      const variationResults = test.variations.map((variation: { id: string }) => {
+        const visitors = assignments?.filter((a: { variation_id: string }) => a.variation_id === variation.id).length || 0;
+        const variationConversions = conversions?.filter((c: { variation_id: string; value?: number }) => c.variation_id === variation.id) || [];
         const conversionCount = variationConversions.length;
         const conversionRate = visitors > 0 ? (conversionCount / visitors) * 100 : 0;
-        const revenue = variationConversions.reduce((sum, c) => sum + (c.value || 0), 0);
+        const revenue = variationConversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
 
         return {
           variationId: variation.id,

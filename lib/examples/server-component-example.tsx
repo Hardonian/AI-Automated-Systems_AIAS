@@ -79,7 +79,7 @@ export default async function UsersPage() {
         <p>No users found.</p>
       ) : (
         <ul className="space-y-2">
-          {users.map((user) => (
+          {users.map((user: { id: string; email?: string; name?: string }) => (
             <li key={user.id} className="border p-2 rounded">
               <Link
                 href={`/users/${user.id}`}

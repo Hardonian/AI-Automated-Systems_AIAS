@@ -130,7 +130,7 @@ export const PrivacyCompliance: React.FC = () => {
   const handleConsentChange = (category: keyof PrivacySettings, enabled: boolean) => {
     if (category === 'necessary') return; // Cannot disable necessary cookies
     
-    setPrivacySettings(prev => ({
+    setPrivacySettings((prev: PrivacySettings) => ({
       ...prev,
       [category]: enabled
     }));

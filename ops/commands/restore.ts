@@ -31,8 +31,12 @@ export async function restore(options: {
       throw new Error('No snapshot files found');
     }
 
-    snapshotFile = path.join(snapshotDir, files[0]);
-    console.log(`📂 Using latest snapshot: ${files[0]}`);
+    const latestFile = files[0];
+    if (!latestFile) {
+      throw new Error('No snapshot files found');
+    }
+    snapshotFile = path.join(snapshotDir, latestFile);
+    console.log(`📂 Using latest snapshot: ${latestFile}`);
   }
 
   if (!fs.existsSync(snapshotFile)) {

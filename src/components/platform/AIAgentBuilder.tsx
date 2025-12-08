@@ -152,18 +152,18 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
   ];
 
   const updateAgent = (updates: Partial<AIAgent>) => {
-    setAgent(prev => ({ ...prev, ...updates }));
+    setAgent((prev: AIAgent) => ({ ...prev, ...updates }));
   };
 
   const updatePersonality = (updates: Partial<AgentPersonality>) => {
-    setAgent(prev => ({
+    setAgent((prev: AIAgent) => ({
       ...prev,
       personality: { ...prev.personality, ...updates }
     }));
   };
 
   const updatePricing = (updates: Partial<AgentPricing>) => {
-    setAgent(prev => ({
+    setAgent((prev: AIAgent) => ({
       ...prev,
       pricing: { ...prev.pricing, ...updates }
     }));
@@ -179,7 +179,7 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
 
   const removeCapability = (capability: string) => {
     updateAgent({
-      capabilities: agent.capabilities.filter(c => c !== capability)
+      capabilities: agent.capabilities.filter((c: string) => c !== capability)
     });
   };
 
@@ -193,7 +193,7 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
 
   const removeExpertise = (expertise: string) => {
     updatePersonality({
-      expertise: agent.personality.expertise.filter(e => e !== expertise)
+      expertise: agent.personality.expertise.filter((e: string) => e !== expertise)
     });
   };
 
@@ -249,7 +249,7 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
 
       if (response.ok) {
         const result = await response.json();
-        setAgent(prev => ({ ...prev, id: result.agent.id, status: 'draft' }));
+        setAgent((prev: AIAgent) => ({ ...prev, id: result.agent.id, status: 'draft' }));
         if (onSave) {
           onSave(agent);
         }
@@ -274,7 +274,7 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
       });
 
       if (response.ok) {
-        setAgent(prev => ({ ...prev, status: 'training' }));
+        setAgent((prev: AIAgent) => ({ ...prev, status: 'training' }));
         if (onDeploy) {
           onDeploy(agent);
         }
@@ -423,7 +423,7 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
                     <Label>Areas of Expertise</Label>
                     <div className="mt-2">
                       <div className="flex flex-wrap gap-2 mb-3">
-                        {agent.personality.expertise.map(expertise => (
+                        {agent.personality.expertise.map((expertise: string) => (
                           <Badge key={expertise} variant="secondary" className="flex items-center gap-1">
                             {expertise}
                             <button
@@ -507,7 +507,7 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
                     <Label>Select Capabilities</Label>
                     <div className="mt-2">
                       <div className="flex flex-wrap gap-2 mb-3">
-                        {agent.capabilities.map(capability => (
+                        {agent.capabilities.map((capability: string) => (
                           <Badge key={capability} variant="secondary" className="flex items-center gap-1">
                             {capability}
                             <button

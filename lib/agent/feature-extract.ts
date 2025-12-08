@@ -11,11 +11,11 @@ export async function computeSignalsForUser(userId: string, window: "1d"|"7d"|"3
   const signals: { k: string; v: number; meta?: Record<string, unknown> }[] = [];
   if (!events || !events.length) return signals;
 
-  const clicks = events.filter(e => e.type === "click");
-  const errors = events.filter(e => e.type === "error");
+  const clicks = events.filter((e: { type: string }) => e.type === "click");
+  const errors = events.filter((e: { type: string }) => e.type === "error");
   const rageClicks = countRageClicks(clicks);
-  const checkoutDrops = events.filter(e => e.type === "page_view" && e.path?.includes("checkout")).length > 0
-    && !events.find(e => e.type === "purchase") ? 1 : 0;
+  const checkoutDrops = events.filter((e: { type: string; path?: string }) => e.type === "page_view" && e.path?.includes("checkout")).length > 0
+    && !events.find((e: { type: string }) => e.type === "purchase") ? 1 : 0;
 
   signals.push({ k: "rage_clicks", v: rageClicks });
   signals.push({ k: "error_count", v: errors.length });

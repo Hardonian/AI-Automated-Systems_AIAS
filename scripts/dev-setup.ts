@@ -42,7 +42,9 @@ class DevSetup {
 
   private checkNodeVersion(): void {
     const nodeVersion = process.version;
-    const majorVersion = parseInt(nodeVersion.slice(1).split('.')[0]);
+    const versionStr = nodeVersion.slice(1);
+    if (!versionStr) return;
+    const majorVersion = parseInt(versionStr.split('.')[0] || '0');
     
     if (majorVersion < 18) {
       throw new Error(`Node.js 18+ required. Current: ${nodeVersion}`);

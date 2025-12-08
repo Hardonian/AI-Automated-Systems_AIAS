@@ -177,14 +177,21 @@ export abstract class BaseAdapter implements IntegrationAdapter {
     const body = options.body ? JSON.stringify(options.body) : undefined;
 
     let attempt = 0;
-    const retryConfig = options.retry !== false ? (this.config.retry || {
+    const retryConfig: RetryConfig = options.retry !== false ? (this.config.retry || {
       enabled: true,
       maxAttempts: 3,
       backoff: 'exponential',
       initialDelay: 1000,
       maxDelay: 60000,
       retryableStatusCodes: [500, 502, 503, 504],
-    }) : { enabled: false, maxAttempts: 1 };
+    }) : {
+      enabled: false,
+      maxAttempts: 1,
+      backoff: 'fixed',
+      initialDelay: 1000,
+      maxDelay: 60000,
+      retryableStatusCodes: [],
+    };
 
     while (attempt < retryConfig.maxAttempts) {
       try {

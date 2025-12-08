@@ -298,7 +298,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
       ...prev,
       name: template.name,
       description: template.description,
-      nodes: template.nodes.map(node => ({
+      nodes: template.nodes.map((node: { [key: string]: unknown }) => ({
         ...node,
         id: `node-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
       })),

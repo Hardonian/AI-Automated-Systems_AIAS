@@ -117,7 +117,7 @@ export async function analyzeErrors(days: number = 7): Promise<ErrorSummary> {
       meta: Record<string, unknown>[];
     }> = {};
 
-    errors?.forEach((error) => {
+    errors?.forEach((error: { meta: Record<string, unknown>; user_id?: string; created_at?: string }) => {
       const errorMessage = (error.meta as Record<string, unknown>)?.error as string || 
                            (error.meta as Record<string, unknown>)?.message as string || 
                            "Unknown error";
@@ -136,7 +136,9 @@ export async function analyzeErrors(days: number = 7): Promise<ErrorSummary> {
       if (error.user_id) {
         errorGroups[errorMessage].users.add(error.user_id);
       }
-      errorGroups[errorMessage].timestamps.push(new Date(error.created_at));
+      if (error.created_at) {
+        errorGroups[errorMessage].timestamps.push(new Date(error.created_at));
+      }
       errorGroups[errorMessage].meta.push(error.meta as Record<string, unknown>);
     });
 

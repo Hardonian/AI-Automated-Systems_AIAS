@@ -36,11 +36,11 @@ async function getKPIData() {
 
     // Fetch KPI views
     const [kpi1, kpi2, kpi3, profilesCount, postsCount] = await Promise.all([
-      (supabase.from("kpi_new_users_week").select("*").single() as any),
-      (supabase.from("kpi_avg_post_views").select("*").single() as any),
-      (supabase.from("kpi_actions_last_hour").select("*").single() as any),
-      (supabase.from("profiles").select("id", { count: "exact", head: true }) as any),
-      (supabase.from("posts").select("id", { count: "exact", head: true }) as any),
+      supabase.from("kpi_new_users_week").select("*").single(),
+      supabase.from("kpi_avg_post_views").select("*").single(),
+      supabase.from("kpi_actions_last_hour").select("*").single(),
+      supabase.from("profiles").select("id", { count: "exact", head: true }),
+      supabase.from("posts").select("id", { count: "exact", head: true }),
     ]);
 
     const kpi1Data = kpi1.data as any;
@@ -79,11 +79,11 @@ async function getRecentActivity() {
       },
     });
 
-    const { data } = await ((supabase
+    const { data } = await supabase
       .from("activity_log")
       .select("activity_type, created_at, metadata")
       .order("created_at", { ascending: false })
-      .limit(10)) as any);
+      .limit(10);
 
     return data || [];
   } catch {
@@ -107,11 +107,11 @@ async function getTopPosts() {
       },
     });
 
-    const { data } = await ((supabase
+    const { data } = await supabase
       .from("posts")
       .select("id, title, view_count, created_at")
       .order("view_count", { ascending: false })
-      .limit(5)) as any);
+      .limit(5);
 
     return data || [];
   } catch {

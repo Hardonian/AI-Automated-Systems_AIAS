@@ -71,7 +71,7 @@ describe('BillingService', () => {
 
   describe('getUsageSummary', () => {
     it('should get usage summary', async () => {
-      const subscription = await billingService.createSubscription(
+      const _subscription = await billingService.createSubscription(
         'user-5',
         'pro' as SubscriptionTier
       );
@@ -91,7 +91,7 @@ describe('BillingService', () => {
 
   describe('checkUsageLimit', () => {
     it('should check usage limits', async () => {
-      const subscription = await billingService.createSubscription(
+      const _subscription = await billingService.createSubscription(
         'user-6',
         'free' as SubscriptionTier
       );

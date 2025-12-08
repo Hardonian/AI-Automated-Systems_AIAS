@@ -4,9 +4,9 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { execSync } from 'child_process';
+// import { execSync } from 'child_process';
 
-export async function docs(options: { rebuild?: boolean } = {}) {
+export async function docs(_options: { rebuild?: boolean } = {}) {
   console.log('📚 Generating documentation...\n');
 
   const docsDir = path.join(process.cwd(), 'ops', 'docs');
@@ -61,7 +61,7 @@ async function generateMermaidDiagrams(outputDir: string) {
   }
 }
 
-async function generateRunbooks(outputDir: string) {
+async function generateRunbooks(_outputDir: string) {
   const runbooksDir = path.join(process.cwd(), 'ops', 'runbooks');
   if (!fs.existsSync(runbooksDir)) {
     fs.mkdirSync(runbooksDir, { recursive: true });

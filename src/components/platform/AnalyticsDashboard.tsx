@@ -630,7 +630,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {cohortData.map((cohort, index) => (
+                    {cohortData.map((cohort) => (
                       <tr key={cohort.cohort} className="border-b">
                         <td className="p-2 font-medium">{cohort.cohort}</td>
                         <td className="p-2 text-right">{cohort.users}</td>

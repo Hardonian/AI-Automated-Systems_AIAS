@@ -209,7 +209,7 @@ export const SubscriptionEnforcement: React.FC = () => {
     return Math.min((used / limit) * 100, 100);
   };
 
-  const getUsageColor = (percentage: number) => {
+  const _getUsageColor = (percentage: number) => {
     if (percentage >= 90) return 'text-red-600';
     if (percentage >= 75) return 'text-yellow-600';
     return 'text-green-600';
@@ -245,7 +245,7 @@ export const SubscriptionEnforcement: React.FC = () => {
     }, 2000);
   };
 
-  const formatBytes = (bytes: number) => {
+  const _formatBytes = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];

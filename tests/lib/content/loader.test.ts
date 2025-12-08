@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { readFile, writeFile, mkdir, rm } from "fs/promises";
+import { readFile, writeFile, mkdir } from "fs/promises";
+// import { rm } from "fs/promises";
 import { join } from "path";
 import {
   loadAIASContent,
@@ -15,7 +16,7 @@ const TEST_AIAS_PATH = join(TEST_CONTENT_DIR, "aias.json");
 const TEST_SETTLER_PATH = join(TEST_CONTENT_DIR, "settler.json");
 
 describe("Content Loader", () => {
-  beforeEach(async () => {
+  beforeEach(async (_) => {
     // Clean up test directory
     try {
       await rm(TEST_CONTENT_DIR, { recursive: true, force: true });

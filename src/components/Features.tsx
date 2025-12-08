@@ -1,4 +1,5 @@
-import { Bot, Zap, Shield, Clock, BarChart, Code, Brain, Workflow, Database, Globe, Lock, TrendingUp } from 'lucide-react';
+import { Bot, Zap, Shield, Clock, BarChart, Code, Brain, Workflow, Database, TrendingUp } from 'lucide-react';
+// import { Globe, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 

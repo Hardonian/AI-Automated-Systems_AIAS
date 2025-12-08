@@ -678,7 +678,7 @@ export class AutomationManager {
   }
 
   // Private helper methods
-  private async executeAIAnalysis(config: AIAnalysisConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeAIAnalysis(_config: AIAnalysisConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate AI analysis
     return {
       analysis: 'AI analysis completed',
@@ -688,7 +688,7 @@ export class AutomationManager {
     };
   }
 
-  private async executeDataExtraction(config: DataExtractionConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeDataExtraction(_config: DataExtractionConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate data extraction
     return {
       extractedData: { field1: 'value1', field2: 'value2' },
@@ -697,7 +697,7 @@ export class AutomationManager {
     };
   }
 
-  private async executeNotification(config: NotificationConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeNotification(_config: NotificationConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate notification sending
     return {
       sent: true,
@@ -707,7 +707,7 @@ export class AutomationManager {
     };
   }
 
-  private async executeAPICall(config: APICallConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeAPICall(_config: APICallConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate API call
     return {
       success: true,
@@ -717,7 +717,7 @@ export class AutomationManager {
     };
   }
 
-  private async executeDatabaseUpdate(config: DatabaseUpdateConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeDatabaseUpdate(_config: DatabaseUpdateConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate database update
     return {
       success: true,
@@ -726,7 +726,7 @@ export class AutomationManager {
     };
   }
 
-  private async executeAIGeneration(config: AIGenerationConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeAIGeneration(_config: AIGenerationConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate AI generation
     return {
       generated: true,
@@ -736,7 +736,7 @@ export class AutomationManager {
     };
   }
 
-  private async executeScheduling(config: SchedulingConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeScheduling(_config: SchedulingConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate scheduling
     return {
       scheduled: true,
@@ -745,7 +745,7 @@ export class AutomationManager {
     };
   }
 
-  private async executeIntegration(config: IntegrationConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeIntegration(_config: IntegrationConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate integration
     return {
       integrated: true,

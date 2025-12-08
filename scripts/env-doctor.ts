@@ -180,7 +180,7 @@ function scanCodebase(): Map<string, EnvVarUsage> {
     if (!existsSync(filePath)) continue;
 
     const content = readFileSync(filePath, "utf-8");
-    const lines = content.split("\n");
+    const _lines = content.split("\n");
 
     // Pattern 1: process.env.VAR_NAME
     const processEnvPattern = /process\.env\.([A-Z_][A-Z0-9_]*)/g;
@@ -241,7 +241,7 @@ function checkHardcodedSecrets(): { file: string; line: number; content: string 
     if (!existsSync(filePath)) continue;
 
     const content = readFileSync(filePath, "utf-8");
-    const lines = content.split("\n");
+    const _lines = content.split("\n");
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
@@ -294,7 +294,7 @@ export function runEnvDoctor(): DoctorResult {
   };
 
   // Find unused variables (in .env.example but not used)
-  for (const [key, def] of definitions) {
+  for (const [key, _def] of definitions) {
     if (!usage.has(key)) {
       result.unused.push(key);
       result.summary.unusedCount++;

@@ -134,7 +134,7 @@ export async function validateSchema(): Promise<SchemaValidationResult> {
     }
 
     // Check for RLS policies
-    const { data: policies, error: policiesError } = await supabase
+    const { error: policiesError } = await supabase
       .from("pg_policies")
       .select("*")
       .limit(100);

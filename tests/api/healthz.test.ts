@@ -6,7 +6,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { GET } from "@/app/api/healthz/route";
 import { NextRequest } from "next/server";
 
-// Mock dependencies
+// Mock dependencies - no unused imports
 vi.mock("@/lib/env", () => ({
   env: {
     supabase: {

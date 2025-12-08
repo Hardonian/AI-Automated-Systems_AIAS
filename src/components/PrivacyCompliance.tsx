@@ -21,7 +21,7 @@ import {
   Trash2, 
   CheckCircle,
   AlertTriangle,
-  Info
+  // Info
 } from 'lucide-react';
 import { privacyManager, PrivacySettings } from '@/lib/privacy';
 
@@ -47,7 +47,7 @@ export const PrivacyCompliance: React.FC = () => {
   });
   const [showConsentBanner, setShowConsentBanner] = useState(false);
   const [jurisdiction, setJurisdiction] = useState('EU');
-  const [consentVersion, setConsentVersion] = useState('2.1');
+  const [consentVersion] = useState('2.1');
 
   const cookieCategories: CookieCategory[] = [
     {
@@ -127,7 +127,7 @@ export const PrivacyCompliance: React.FC = () => {
     }
   }, []);
 
-  const handleConsentChange = (category: keyof PrivacySettings, enabled: boolean) => {
+  const _handleConsentChange = (category: keyof PrivacySettings, enabled: boolean) => {
     if (category === 'necessary') return; // Cannot disable necessary cookies
     
     setPrivacySettings((prev: PrivacySettings) => ({
@@ -187,7 +187,7 @@ export const PrivacyCompliance: React.FC = () => {
 
   const handleDataSubjectRequest = async (requestType: 'access' | 'portability' | 'erasure') => {
     try {
-      const result = await privacyManager.handleDataSubjectRequest('current_user', requestType);
+      const _result = await privacyManager.handleDataSubjectRequest('current_user', requestType);
       toast({
         title: "Data Subject Request Processed",
         description: `Your ${requestType} request has been processed successfully.`,

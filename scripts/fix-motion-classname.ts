@@ -10,10 +10,10 @@ const files = glob.sync('apps/web/components/**/*.tsx');
 
 for (const file of files) {
   let content = readFileSync(file, 'utf-8');
-  let modified = false;
+  let _modified = false;
 
   // Pattern: motion.div, motion.span, etc. with className
-  const motionPattern = /(motion\.(?:div|span|section|article|header|footer|nav|main|p|h[1-6]|button|a|ul|ol|li|form|input|textarea|select|label|img|svg|path|g|circle|rect|line|polyline|polygon|ellipse)\s*\([^)]*className:\s*[^,}]+)/g;
+  const _motionPattern = /(motion\.(?:div|span|section|article|header|footer|nav|main|p|h[1-6]|button|a|ul|ol|li|form|input|textarea|select|label|img|svg|path|g|circle|rect|line|polyline|polygon|ellipse)\s*\([^)]*className:\s*[^,}]+)/g;
   
   // Replace motion components with className using spread operator
   content = content.replace(

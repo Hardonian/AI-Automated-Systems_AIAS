@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+// import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -145,7 +146,7 @@ const mockBillingPeriods: BillingPeriod[] = [
 ];
 
 export const UsageBasedBilling: React.FC = () => {
-  const [currentPeriod, setCurrentPeriod] = useState<BillingPeriod>(() => {
+  const [currentPeriod] = useState<BillingPeriod>(() => {
     if (mockBillingPeriods[0]) return mockBillingPeriods[0];
     return {
       id: 'current',
@@ -158,7 +159,7 @@ export const UsageBasedBilling: React.FC = () => {
       metrics: []
     };
   });
-  const [billingProjection, setBillingProjection] = useState<BillingProjection>({
+  const [billingProjection] = useState<BillingProjection>({
     currentMonth: 127.50,
     projectedMonth: 145.30,
     projectedYear: 1680.00,

@@ -740,7 +740,7 @@ async function storeExecution(execution: WorkflowExecution): Promise<void> {
 /**
  * Delay helper for retries
  */
-function delay(ms: number): Promise<void> {
+function _delay(ms: number): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });

@@ -2,7 +2,8 @@
  * Tests for Plugin Ecosystem
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
+// import { beforeEach } from 'vitest';
 import { PluginRegistry, PluginPublisher } from '@/lib/plugins/ecosystem';
 import { pluginManifestSchema } from '@/lib/plugins/ecosystem';
 

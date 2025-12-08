@@ -10,8 +10,8 @@ function generateVAPIDKeys() {
   const curve = crypto.createECDH("prime256v1");
   curve.generateKeys();
 
-  const publicKey = curve.getPublicKey("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
-  const privateKey = curve.getPrivateKey("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+  const _publicKey = curve.getPublicKey("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+  const _privateKey = curve.getPrivateKey("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 
   // Convert to URL-safe base64
   const publicKeyBase64 = Buffer.from(curve.getPublicKey()).toString("base64url");

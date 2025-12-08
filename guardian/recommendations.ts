@@ -3,7 +3,8 @@
  * Adaptive recommendations based on user behavior
  */
 
-import { guardianService, type GuardianEvent } from './core';
+import { type GuardianEvent } from './core';
+// import { guardianService } from './core';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 

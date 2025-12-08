@@ -718,7 +718,7 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {leaderboard.map((entry, index) => (
+                {leaderboard.map((entry) => (
                   <div key={entry.user.id} className="flex items-center gap-4 p-4 rounded-lg hover:bg-gray-50">
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white font-bold">
                       {entry.rank}

@@ -8,7 +8,8 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import * as fs from 'fs';
 import * as path from 'path';
-import { info, error, getLogs, writeLogsToMarkdown } from './lib/logger.js';
+import { info, error, writeLogsToMarkdown } from './lib/logger.js';
+// import { getLogs } from './lib/logger.js';
 import { notify } from './agents/notify.js';
 
 const execAsync = promisify(exec);
@@ -135,7 +136,7 @@ async function orchestrateMaster(): Promise<void> {
   }
 
   // Phase 6: Smoke Test ETL (dry-run)
-  const dryRunOk = await runCommand(
+  const _dryRunOk = await runCommand(
     'tsx scripts/etl/pull_events.ts --dry-run',
     'ETL Smoke Test (Dry-Run)'
   );
@@ -155,13 +156,13 @@ async function orchestrateMaster(): Promise<void> {
   }
 
   // Phase 8: Data Quality Checks
-  const dqOk = await runCommand(
+  const _dqOk = await runCommand(
     'tsx scripts/agents/run_data_quality.ts',
     'Data Quality Checks'
   );
 
   // Phase 9: System Doctor
-  const doctorOk = await runCommand(
+  const _doctorOk = await runCommand(
     'tsx scripts/agents/system_doctor.ts',
     'System Doctor'
   );

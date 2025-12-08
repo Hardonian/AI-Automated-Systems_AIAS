@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
+// import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -11,7 +12,7 @@ import {
   Search, 
   Filter, 
   Download, 
-  Calendar,
+  // Calendar,
   User,
   Activity,
   Shield,
@@ -20,7 +21,7 @@ import {
   Eye,
   Clock,
   Globe,
-  AlertTriangle,
+  // AlertTriangle,
   CheckCircle,
   XCircle,
   RefreshCw,
@@ -189,14 +190,14 @@ const mockAuditLogs: AuditLog[] = [
 ];
 
 export const AuditLoggingDashboard: React.FC = () => {
-  const [auditLogs, setAuditLogs] = useState<AuditLog[]>(mockAuditLogs);
+  const [auditLogs] = useState<AuditLog[]>(mockAuditLogs);
   const [filters, setFilters] = useState<AuditFilter>({
     dateRange: {
       start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       end: new Date().toISOString().split('T')[0]
     }
   });
-  const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
+  const [selectedLog] = useState<AuditLog | null>(null);
   const [expandedLogs, setExpandedLogs] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState<'timestamp' | 'severity' | 'action'>('timestamp');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');

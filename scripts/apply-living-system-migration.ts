@@ -42,7 +42,7 @@ async function applyMigration() {
     const migrationSQL = readFileSync(migrationPath, "utf-8");
 
     // Create Supabase client with service role key
-    const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+    const _supabase = createClient(supabaseUrl, supabaseServiceKey, {
       auth: {
         autoRefreshToken: false,
         persistSession: false,

@@ -5,7 +5,8 @@
  * Finds and reports all instances of "Hardonia" that should be "AIAS Platform"
  */
 
-import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs';
+import { readFileSync, readdirSync, statSync } from 'fs';
+// import { writeFileSync } from 'fs';
 import { join, extname } from 'path';
 
 interface BrandIssue {

@@ -7,7 +7,7 @@
 
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { PrismaClient } from '@prisma/client';
+// import { PrismaClient } from '@prisma/client';
 
 interface SchemaValidationResult {
   table: string;

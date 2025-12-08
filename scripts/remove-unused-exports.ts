@@ -14,8 +14,9 @@
  */
 
 import { execSync } from 'child_process';
-import { readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { writeFileSync } from 'fs';
+// import { readFileSync } from 'fs';
+// import { join } from 'path';
 
 const DRY_RUN = process.argv.includes('--dry-run') || process.argv.includes('--check');
 

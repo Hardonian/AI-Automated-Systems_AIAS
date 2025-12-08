@@ -448,7 +448,7 @@ export class PartnershipService {
     return 'aias_' + Math.random().toString(36).substr(2, 9);
   }
 
-  private async getCompanySize(companyName: string): Promise<number> {
+  private async getCompanySize(_companyName: string): Promise<number> {
     // This would typically integrate with a company data API like Clearbit or ZoomInfo
     // For now, return a mock value
     return Math.floor(Math.random() * 5000) + 10;

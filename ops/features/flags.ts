@@ -24,7 +24,7 @@ export async function getFeatureFlag(key: string, orgId?: string): Promise<boole
   return flag?.enabled || false;
 }
 
-export async function getABVariant(key: string, userId: string): Promise<string> {
+export async function getABVariant(_key: string, userId: string): Promise<string> {
   const hash = userId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   return hash % 2 === 0 ? 'A' : 'B';
 }

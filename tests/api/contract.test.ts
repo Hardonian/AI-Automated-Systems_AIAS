@@ -12,7 +12,7 @@ import yaml from "js-yaml";
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3000/api";
 
 // Load OpenAPI spec
-let openApiSpec: any;
+let _openApiSpec: any;
 try {
   const specPath = join(process.cwd(), "docs", "openapi.yaml");
   const specContent = readFileSync(specPath, "utf-8");

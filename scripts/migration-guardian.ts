@@ -7,8 +7,10 @@
  */
 
 import { execSync } from 'child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, cpSync } from 'fs';
-import { join, dirname } from 'path';
+import { existsSync, mkdirSync, readFileSync, writeFileSync, cpSync } from 'fs';
+import { join } from 'path';
+// import { copyFileSync } from 'fs';
+// import { dirname } from 'path';
 // Parse .env files manually to avoid dependency on dotenv package
 function parseEnvFile(content: string): Record<string, string> {
   const result: Record<string, string> = {};
@@ -242,7 +244,7 @@ async function testDatabaseConnectivity(url: string): Promise<boolean> {
   try {
     // Use Prisma's migrate status as a connectivity test (doesn't require generated client)
     process.env.DATABASE_URL = url;
-    const result = execCommand('npx prisma db execute --stdin', join(process.cwd(), 'apps', 'web'));
+    const _result = execCommand('npx prisma db execute --stdin', join(process.cwd(), 'apps', 'web'));
     
     // Alternative: try a simple psql command if available
     try {
@@ -270,7 +272,7 @@ async function testDatabaseConnectivity(url: string): Promise<boolean> {
 function detectPrisma(): { exists: boolean; schemaPath: string; migrationsPath: string } {
   const schemaExists = existsSync(SCHEMA_PATH);
   // Migrations directory may not exist if no migrations have been created yet
-  const migrationsExists = existsSync(MIGRATIONS_DIR);
+  const _migrationsExists = existsSync(MIGRATIONS_DIR);
   
   return {
     exists: schemaExists,
@@ -316,7 +318,7 @@ function checkMigrationStatus(dbUrl: string): MigrationStatus {
   const pending: string[] = [];
   const applied: string[] = [];
   let status: 'up-to-date' | 'pending' | 'drift' | 'error' = 'error';
-  let message = output;
+  const _message = output;
   
   if (output.includes('Database schema is up to date') || 
       output.includes('following migration') && output.includes('have already been applied')) {
@@ -371,7 +373,7 @@ function applyMigrations(dbUrl: string): { success: boolean; output: string; err
 // Step 4: Archive Migrations
 // ============================================
 
-function archiveMigrations(migrationIds: string[], runId: string): { path: string; migrations: string[] } {
+function archiveMigrations(migrationIds: string[], _runId: string): { path: string; migrations: string[] } {
   if (migrationIds.length === 0) {
     return { path: '', migrations: [] };
   }
@@ -499,7 +501,7 @@ async function performRealityVerification(dbUrl: string): Promise<{
   try {
     // Try to use Prisma db execute to query tables
     process.env.DATABASE_URL = dbUrl;
-    const tablesQuery = execCommand(
+    const _tablesQuery = execCommand(
       `echo "SELECT tablename FROM pg_tables WHERE schemaname = 'public' LIMIT 10;" | npx prisma db execute --stdin`,
       join(process.cwd(), 'apps', 'web')
     );

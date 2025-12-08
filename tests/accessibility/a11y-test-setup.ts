@@ -90,7 +90,7 @@ export const a11yChecklist = {
     check: (element: HTMLElement) => {
       const hasHeader = element.querySelector('header, [role="banner"]');
       const hasMain = element.querySelector('main, [role="main"]');
-      const hasFooter = element.querySelector('footer, [role="contentinfo"]');
+      const _hasFooter = element.querySelector('footer, [role="contentinfo"]');
       return !!(hasHeader && hasMain);
     },
   },
@@ -107,7 +107,7 @@ export const a11yChecklist = {
 /**
  * Run accessibility checks (for use with axe-core or similar)
  */
-export async function runA11yChecks(page: any): Promise<void> {
+export async function runA11yChecks(_page: any): Promise<void> {
   // This would integrate with axe-core or pa11y
   // Example implementation:
   // const results = await page.evaluate(() => {

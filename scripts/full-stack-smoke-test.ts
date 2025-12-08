@@ -266,7 +266,7 @@ async function checkGitHubSecrets(): Promise<Record<string, string>> {
       // Note: GitHub API doesn't allow reading secret values directly
       // We can only check if they exist
       const repo = process.env.GITHUB_REPOSITORY || "unknown/unknown";
-      const [owner, repoName] = repo.split("/");
+      const [_owner, _repoName] = repo.split("/");
       
       // We can't read secret values via API, only list them
       // This is a limitation - we'll mark them as "[EXISTS]" if found
@@ -333,7 +333,7 @@ async function testSupabase(): Promise<TestResult[]> {
   if (supabaseServiceKey) {
     try {
       const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
-      const { data, error } = await supabaseService.rpc("now");
+      const { error } = await supabaseService.rpc("now");
       
       results.push({
         name: "Supabase Service Role Connection",

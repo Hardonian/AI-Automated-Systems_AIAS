@@ -55,7 +55,7 @@ export class SecurityManager {
   private static instance: SecurityManager;
   private securityEvents: Map<string, SecurityEvent> = new Map();
   private failedAttempts: Map<string, { count: number; lastAttempt: number }> = new Map();
-  private threatPatterns: Map<string, Record<string, unknown>> = new Map();
+  private _threatPatterns: Map<string, Record<string, unknown>> = new Map();
   private config: SecurityConfig;
 
   constructor() {
@@ -118,7 +118,7 @@ export class SecurityManager {
    * Decrypt sensitive data
    */
   decryptData(encryptedData: { encrypted: string; iv: string; tag: string }, key?: string): string {
-    const encryptionKey = key ? Buffer.from(key, 'hex') : randomBytes(this.config.encryption.keyLength);
+    const _encryptionKey = key ? Buffer.from(key, 'hex') : randomBytes(this.config.encryption.keyLength);
     const iv = Buffer.from(encryptedData.iv, 'hex');
     const tag = Buffer.from(encryptedData.tag, 'hex');
     

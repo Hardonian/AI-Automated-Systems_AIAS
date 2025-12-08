@@ -4,8 +4,9 @@
  * Safely removes unused files identified by knip
  */
 
-import { readFileSync, existsSync, unlinkSync, rmdirSync, readdirSync, statSync } from 'fs';
-import { join } from 'path';
+import { readFileSync, existsSync, unlinkSync } from 'fs';
+// import { rmdirSync, readdirSync, statSync } from 'fs';
+// import { join } from 'path';
 
 interface RemovalPlan {
   safeToRemove: string[];

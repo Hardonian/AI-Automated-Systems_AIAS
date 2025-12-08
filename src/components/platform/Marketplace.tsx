@@ -37,7 +37,7 @@ interface MarketplaceProps {
   onPurchase?: (item: MarketplaceItem) => void;
 }
 
-export const Marketplace: React.FC<MarketplaceProps> = ({ onItemSelect, onPurchase }) => {
+export const Marketplace: React.FC<MarketplaceProps> = ({ onItemSelect: _onItemSelect, onPurchase: _onPurchase }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('popular');

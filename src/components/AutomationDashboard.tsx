@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
+// import { Progress } from '@/components/ui/progress';
 import { 
   Bot, 
   Calendar, 
@@ -18,9 +18,9 @@ import {
   Zap, 
   BarChart3, 
   Settings,
-  Play,
-  Pause,
-  RotateCcw,
+  // Play,
+  // Pause,
+  // RotateCcw,
   Eye,
   TrendingUp,
   Clock,
@@ -28,7 +28,8 @@ import {
   AlertTriangle,
   Activity
 } from 'lucide-react';
-import { automationManager, AutomationWorkflow, LeadGenerationConfig, AppointmentBookingConfig, NoteTakingConfig, SketchingConfig } from '@/lib/automation';
+import { AutomationWorkflow } from '@/lib/automation';
+// import { automationManager, LeadGenerationConfig, AppointmentBookingConfig, NoteTakingConfig, SketchingConfig } from '@/lib/automation';
 
 interface AutomationMetrics {
   totalWorkflows: number;

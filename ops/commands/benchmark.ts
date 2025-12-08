@@ -9,7 +9,7 @@ import { execSync } from 'child_process';
 export async function benchmark(options: { output?: string }) {
   console.log('⚡ Running performance benchmarks...\n');
 
-  const outputFormat = options.output || 'html';
+  const _outputFormat = options.output || 'html';
 
   try {
     // Run Lighthouse CI

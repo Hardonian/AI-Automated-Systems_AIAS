@@ -7,7 +7,7 @@
 import { readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { Pool } from 'pg';
-import { execSync } from 'child_process';
+// import { execSync } from 'child_process';
 
 const SUPABASE_DB_URL = process.env.SUPABASE_DB_URL;
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');

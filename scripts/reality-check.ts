@@ -67,7 +67,7 @@ async function main() {
   const supabaseUrl = env.supabase.url;
   const supabaseAnonKey = env.supabase.anonKey;
   const supabaseServiceKey = env.supabase.serviceRoleKey;
-  const databaseUrl = env.database.url;
+  const _databaseUrl = env.database.url;
 
   // 2. Supabase REST API
   console.log("\n🌐 Checking Supabase REST API...");
@@ -93,7 +93,7 @@ async function main() {
   console.log("\n🔐 Checking Supabase Auth...");
   try {
     const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
-    const { data: { users }, error } = await supabaseService.auth.admin.listUsers({
+    const { error } = await supabaseService.auth.admin.listUsers({
       page: 1,
       perPage: 1,
     });
@@ -167,7 +167,7 @@ async function main() {
       check("RLS (Service Role Write)", true, "Can write as service role");
 
       // Try to read as anon (should fail if RLS is working)
-      const { data: readData, error: readError } = await supabaseAnon
+      const { error: readError } = await supabaseAnon
         .from("api_logs")
         .select("*")
         .eq("id", insertData.id)

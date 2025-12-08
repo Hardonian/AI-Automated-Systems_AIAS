@@ -4,7 +4,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { execSync } from 'child_process';
+// import { execSync } from 'child_process';
 
 export async function init(options: { force?: boolean }) {
   console.log('🚀 Initializing production framework...\n');

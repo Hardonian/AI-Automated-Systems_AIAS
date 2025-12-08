@@ -3,7 +3,8 @@
  * Create and configure custom AI agents for the platform
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+// import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,7 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
+// import { Switch } from '@/components/ui/switch';
 import { 
   Bot, 
   Settings, 
@@ -34,8 +35,8 @@ import {
   CheckCircle,
   AlertTriangle,
   Clock,
-  Star,
-  TrendingUp
+  Star
+  // TrendingUp
 } from 'lucide-react';
 import { AIAgent, AgentPersonality, AgentPricing, AgentMetrics } from '@/types/platform';
 

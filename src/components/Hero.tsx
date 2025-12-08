@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Sparkles, Calculator, Play } from 'lucide-react';
+import { ArrowRight, Sparkles, Calculator } from 'lucide-react';
+// import { Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useRef } from 'react';

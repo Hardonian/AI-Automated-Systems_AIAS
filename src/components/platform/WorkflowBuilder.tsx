@@ -513,7 +513,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
 
             {/* Connections */}
             <svg className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }}>
-              {workflow.connections.map((connection, index) => {
+              {workflow.connections.map((connection) => {
                 const fromNode = workflow.nodes.find(n => n.id === connection.from);
                 const toNode = workflow.nodes.find(n => n.id === connection.to);
                 

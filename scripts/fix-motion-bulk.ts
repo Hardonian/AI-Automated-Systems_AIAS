@@ -27,7 +27,7 @@ for (const file of allFiles) {
   ];
   
   for (const pattern of patterns) {
-    content = content.replace(pattern, (match, component, before, className, after = '') => {
+    content = content.replace(pattern, (_match, component, before, className, after = '') => {
       const classNameValue = className.trim();
       const restBefore = (before || '').trim().replace(/,\s*$/, '');
       const restAfter = (after || '').trim().replace(/^,\s*/, '');
@@ -40,7 +40,7 @@ for (const file of allFiles) {
   // Also handle multiline patterns
   content = content.replace(
     /(motion\.(?:div|span|section|article|header|footer|nav|main|p|h[1-6]|button|a|ul|ol|li|form|input|textarea|select|label|img|svg|path|g|circle|rect|line|polyline|polygon|ellipse))\s*\(\s*\{([^}]*className:\s*([^}]+))([^}]*)\}\s*\)/gs,
-    (match, component, before, className, after) => {
+    (_match, component, before, className, after) => {
       const classNameValue = className.trim();
       const restBefore = before.replace(/className:\s*[^}]+/, '').replace(/,\s*,/g, ',').trim().replace(/,\s*$/, '');
       const restAfter = after.trim().replace(/^,\s*/, '');

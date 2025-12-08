@@ -445,7 +445,6 @@ export class GuardianService {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i]?.trim();
       if (!line) continue;
-      if (!line) continue;
       
       try {
         const entry = JSON.parse(line) as TrustLedgerEntry;

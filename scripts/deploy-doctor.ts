@@ -276,16 +276,17 @@ function runDiagnostics() {
   let hasWarnings = false;
 
   for (const result of results) {
-    const emoji = statusEmoji[result.status];
+    const status: 'pass' | 'fail' | 'warn' = result.status;
+    const emoji = statusEmoji[status];
     console.log(`${emoji} ${result.check}: ${result.message}`);
     
     if (result.fix) {
       console.log(`   💡 Fix: ${result.fix}`);
     }
 
-    if (result.status === 'fail') {
+    if (status === 'fail') {
       hasFailures = true;
-    } else if (result.status === 'warn') {
+    } else if (status === 'warn') {
       hasWarnings = true;
     }
   }

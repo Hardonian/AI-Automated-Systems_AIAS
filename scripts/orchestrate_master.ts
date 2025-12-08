@@ -216,10 +216,11 @@ async function generateSummary(): Promise<void> {
 
 ${results
   .map((r) => {
-    const icon = r.status === 'pass' ? '✅' : r.status === 'fail' ? '❌' : '⏭️';
+    const status: 'pass' | 'fail' | 'skip' = r.status;
+    const icon = status === 'pass' ? '✅' : status === 'fail' ? '❌' : '⏭️';
     return `### ${icon} ${r.phase}
 
-**Status:** ${r.status.toUpperCase()}
+**Status:** ${status.toUpperCase()}
 **Duration:** ${r.duration ? `${r.duration}ms` : 'N/A'}
 **Message:** ${r.message.substring(0, 200)}${r.message.length > 200 ? '...' : ''}
 `;

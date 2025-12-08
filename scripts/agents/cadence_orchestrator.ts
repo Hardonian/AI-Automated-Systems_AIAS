@@ -39,7 +39,7 @@ function runTask(t:string){ const wrap=(cmd:string,args:string[],label:string)=>
   } else { L.push("- Unable to parse GH runs."); }
   L.push("");
 
-  const buckets:{[k:string]:string[]}={FIND:c.phases.find,FIX:c.phases.fix,DEPLOY:c.phases.deploy};
+  const buckets:{[k:string]:string[]}={FIND:c.phases.find||[],FIX:c.phases.fix||[],DEPLOY:c.phases.deploy||[]};
   for(const [k,tasks] of Object.entries(buckets)){
     L.push(`## ${k}`); for(const t of tasks){ const r=runTask(t); L.push(`- **${t}** → ${r.code===0?"OK":"FAIL"}`); if(r.note) L.push("```",r.note,"```"); if(r.code!==0) pass=false; } L.push("");
   }

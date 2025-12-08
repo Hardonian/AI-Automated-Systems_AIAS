@@ -50,6 +50,7 @@ export async function findUnique<T>(
   const client = getSupabaseClient();
   
   const key = Object.keys(where)[0];
+  if (!key) throw new Error('where clause must have at least one key');
   const value = where[key];
   
   const { data, error } = await client

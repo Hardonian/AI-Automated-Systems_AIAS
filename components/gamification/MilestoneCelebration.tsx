@@ -39,12 +39,12 @@ export default function MilestoneCelebration({ milestoneType }: { milestoneType:
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      {...({ className: "fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" } as any)}
     >
       <motion.div
         initial={{ y: 50 }}
         animate={{ y: 0 }}
-        className="rounded-3xl border bg-card p-8 max-w-md mx-4 text-center space-y-4 shadow-2xl"
+        {...({ className: "rounded-3xl border bg-card p-8 max-w-md mx-4 text-center space-y-4 shadow-2xl" } as any)}
       >
         <div className="text-6xl">{milestone.icon}</div>
         <div className="text-2xl font-bold">Milestone Achieved!</div>

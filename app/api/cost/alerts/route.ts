@@ -5,6 +5,9 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { costMonitor } from "@/lib/cost-tracking/cost-monitor";
+import { addSecurityHeaders } from "@/lib/middleware/security";
+import { logger } from "@/lib/logging/structured-logger";
 export const dynamic = "force-dynamic";
 
 /**

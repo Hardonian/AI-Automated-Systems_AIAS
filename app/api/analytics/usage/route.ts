@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
+import { handleApiError } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -57,8 +59,9 @@ export async function GET(request: NextRequest) {
         .single();
 
       let plan = "free";
-      if (subscription?.subscription_plans?.tier) {
-        plan = subscription.subscription_plans.tier as string;
+      const plans = subscription?.subscription_plans;
+      if (plans && !Array.isArray(plans) && typeof plans === 'object' && 'tier' in plans) {
+        plan = (plans as { tier: string }).tier;
       }
 
       // Normalize plan

@@ -319,7 +319,7 @@ export class BillingService {
   /**
    * Sync Stripe subscription
    */
-  private async syncStripeSubscription(stripeSubscription: Record<string, unknown>): Promise<void> {
+  private async syncStripeSubscription(_stripeSubscription: Record<string, unknown>): Promise<void> {
     // Would sync with database
   }
 
@@ -327,21 +327,21 @@ export class BillingService {
    * Handle subscription deleted
    */
   private async handleSubscriptionDeleted(stripeSubscription: Record<string, unknown>): Promise<void> {
-    const subscriptionId = String(stripeSubscription.id);
+    const _subscriptionId = String(stripeSubscription.id);
     // Would update subscription status
   }
 
   /**
    * Handle payment succeeded
    */
-  private async handlePaymentSucceeded(invoice: Record<string, unknown>): Promise<void> {
+  private async handlePaymentSucceeded(_invoice: Record<string, unknown>): Promise<void> {
     // Would update subscription and send confirmation
   }
 
   /**
    * Handle payment failed
    */
-  private async handlePaymentFailed(invoice: Record<string, unknown>): Promise<void> {
+  private async handlePaymentFailed(_invoice: Record<string, unknown>): Promise<void> {
     // Would update subscription status and send notification
   }
 

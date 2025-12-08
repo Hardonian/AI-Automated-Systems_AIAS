@@ -81,7 +81,7 @@ export function checkContrastRatio(foreground: string, background: string): numb
   // Simplified contrast calculation - use a library for production
   const getLuminance = (color: string): number => {
     const rgb = color.match(/\d+/g)?.map(Number) || [0, 0, 0];
-    const [r, g, b] = rgb.map((val) => {
+    const [r = 0, g = 0, b = 0] = rgb.map((val) => {
       val = val / 255;
       return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
     });

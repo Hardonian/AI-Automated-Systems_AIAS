@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
+import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
 import { SystemError, ValidationError, formatError } from "@/lib/errors";
@@ -156,7 +158,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       if (linkHeader && linkHeader.includes('rel="next"')) {
         const nextMatch = linkHeader.match(/<([^>]+)>; rel="next"/);
         if (nextMatch) {
-          const nextUrl = new URL(nextMatch[1]);
+          const nextUrl = new URL(nextMatch[1] || '');
           pageInfo = nextUrl.searchParams.get("page_info");
           hasNextPage = true;
         } else {

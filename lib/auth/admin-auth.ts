@@ -83,7 +83,7 @@ export async function getAdminUser(): Promise<AdminUser | null> {
  * Require admin access middleware
  */
 export async function requireAdmin(
-  request: NextRequest
+  _request: NextRequest
 ): Promise<{ authorized: boolean; user?: AdminUser; response?: NextResponse }> {
   const adminUser = await getAdminUser();
 

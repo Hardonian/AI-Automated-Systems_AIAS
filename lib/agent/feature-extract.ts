@@ -52,7 +52,9 @@ function countRageClicks(clicks: ClickEvent[]) {
   for (const arr of Object.values(byPath)) {
     arr.sort((a,b)=>a-b);
     for (let i=3;i<arr.length;i++){
-      if (arr[i] - arr[i-3] <= 2000) { rage++; }
+      const current = arr[i];
+      const prev = arr[i-3];
+      if (current && prev && current - prev <= 2000) { rage++; }
     }
   }
   return rage;

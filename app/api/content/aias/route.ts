@@ -1,4 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
+import { env } from "@/lib/env";
+import { loadAIASContent, saveAIASContent } from "@/lib/content/loader";
+import type { AIASContent } from "@/lib/content/schemas";
 /**
  * GET /api/content/aias
  * Returns the current AIAS content

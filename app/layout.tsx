@@ -20,7 +20,7 @@ import { UTMTracker } from "@/components/analytics/utm-tracker";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { ReactQueryProvider } from "@/lib/data/react-query";
 import { env, getOptionalEnv } from "@/lib/env";
-import { generateMetadata as generateSEOMetadata, generateKeywords } from "@/lib/seo/metadata";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
 
 const siteUrl = env.app.siteUrl || "https://aiautomatedsystems.ca";
 

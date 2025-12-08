@@ -315,7 +315,7 @@ function calculateTrends(metrics: TrendMetric[]): Record<string, {
     if (!sourceGroups[metric.source]) {
       sourceGroups[metric.source] = [];
     }
-    sourceGroups[metric.source].push(metric);
+    sourceGroups[metric.source]!.push(metric);
   }
 
     // Calculate 7-day moving averages

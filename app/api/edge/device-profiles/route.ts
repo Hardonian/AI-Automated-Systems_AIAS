@@ -3,6 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { env } from "@/lib/env";
 import { isValidDeviceType } from "@/lib/edge-ai/utils";
+import { logger } from "@/lib/logging/structured-logger";
+import { handleApiError } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 

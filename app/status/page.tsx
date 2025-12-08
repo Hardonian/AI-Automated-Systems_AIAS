@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { logger } from "@/lib/logging/structured-logger";
 interface StatusItem {
   service: string;
   status: "operational" | "degraded" | "outage" | "maintenance";

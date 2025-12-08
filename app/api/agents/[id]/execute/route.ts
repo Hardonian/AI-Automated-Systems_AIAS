@@ -49,19 +49,22 @@ export async function POST(
     }
 
     // Log execution completion
+    const isCompleted = result.status === 'completed';
+    const isFailed = result.status === 'failed';
+    const logStatus = isCompleted ? 'completed' as const : isFailed ? 'failed' as const : 'started' as const;
     observabilityService.logAgentExecution({
       agentId: params.id,
       userId: user.id,
       tenantId: tenantId || undefined,
-      status: result.status === 'completed' ? 'completed' : 'failed',
-      startedAt: result.startedAt,
-      completedAt: result.completedAt,
-      duration: result.metrics?.duration,
-      tokenUsage: result.metrics?.tokenUsage,
-      cost: result.metrics?.cost,
+      status: logStatus,
+      startedAt: 'startedAt' in result && result.startedAt ? result.startedAt : new Date().toISOString(),
+      completedAt: 'completedAt' in result && result.completedAt ? result.completedAt : undefined,
+      duration: 'metrics' in result ? result.metrics?.duration : undefined,
+      tokenUsage: 'metrics' in result ? result.metrics?.tokenUsage : undefined,
+      cost: 'metrics' in result ? result.metrics?.cost : undefined,
       input: context.input,
-      output: result.output,
-      error: result.error,
+      output: 'output' in result ? (result.output as Record<string, unknown> | undefined) : undefined,
+      error: 'error' in result ? (result.error && typeof result.error === 'object' ? result.error as { message: string; code?: string } : { message: String(result.error) }) : undefined,
     });
 
     // Save to database
@@ -73,11 +76,11 @@ export async function POST(
         tenant_id: tenantId || null,
         status: result.status,
         input: context.input,
-        output: result.output || null,
-        error: result.error || null,
-        metrics: result.metrics || null,
-        started_at: result.startedAt,
-        completed_at: result.completedAt || null,
+        output: 'output' in result ? result.output || null : null,
+        error: 'error' in result ? result.error || null : null,
+        metrics: 'metrics' in result ? result.metrics || null : null,
+        started_at: 'startedAt' in result ? result.startedAt : null,
+        completed_at: 'completedAt' in result ? result.completedAt : null,
       });
 
     if (dbError) {

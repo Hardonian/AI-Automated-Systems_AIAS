@@ -7,13 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, Loader2, Wand2, TrendingUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface AIAssistantProps {
   type: "hero-title" | "hero-description" | "feature-description" | "testimonial" | "faq-answer" | "optimize";
@@ -149,14 +142,14 @@ export function AIAssistant({
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label>Generate {typeLabels[type]}</Label>
+          <Label>Generate {typeLabels[type] || type}</Label>
           <Textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder={
               type === "optimize"
                 ? "Describe how you'd like to improve the content..."
-                : `Describe what you want for the ${typeLabels[type].toLowerCase()}...`
+                : `Describe what you want for the ${(typeLabels[type] || type).toLowerCase()}...`
             }
             rows={3}
           />

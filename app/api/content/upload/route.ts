@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
 /**
  * POST /api/content/upload
  * Uploads an image to Supabase storage
@@ -105,7 +108,7 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(arrayBuffer);
 
     // Upload to Supabase storage
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from("public")
       .upload(fileName, buffer, {
         contentType: file.type,

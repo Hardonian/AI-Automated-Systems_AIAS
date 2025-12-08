@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Sparkles, Zap, Target, Check, ArrowRight, Users, Clock } from "lucide-react";
+import { Sparkles, Zap, Target, ArrowRight, Users, Clock } from "lucide-react";
 import type { PlanTier } from "@/config/plans";
 
 interface WelcomeDashboardProps {
@@ -19,11 +19,11 @@ interface WelcomeDashboardProps {
 export function WelcomeDashboardEnhanced({
   userPlan = "trial",
   trialDaysRemaining,
-  hasCompletedPretest = false,
-  hasConnectedEmail = false,
+  hasCompletedPretest: _hasCompletedPretest = false,
+  hasConnectedEmail: _hasConnectedEmail = false,
   hasCreatedWorkflow = false,
-  workflowCount = 0,
-  integrationCount = 0,
+  workflowCount: _workflowCount = 0,
+  integrationCount: _integrationCount = 0,
 }: WelcomeDashboardProps) {
   return (
     <Card className="mb-8 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 border-2">

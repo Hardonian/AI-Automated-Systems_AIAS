@@ -5,13 +5,20 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { costMonitor } from "@/lib/cost-tracking/cost-monitor";
+import { CostAggregator } from "@/lib/cost-tracking/service-costs";
+import { CostOptimizer } from "@/lib/cost-tracking/cost-optimizer";
+import { addSecurityHeaders } from "@/lib/middleware/security";
+import { addCacheHeaders } from "@/lib/middleware/cache";
+import { logger } from "@/lib/logging/structured-logger";
+import type { ServiceCost } from "@/lib/cost-tracking/service-costs";
 export const dynamic = "force-dynamic";
 
 /**
  * GET /api/cost/metrics
  * Get aggregated cost metrics
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Get cost history from monitor
     const costHistory = costMonitor.getCostHistory(90); // Last 90 days

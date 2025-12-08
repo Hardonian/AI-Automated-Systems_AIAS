@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import { track } from "@/lib/telemetry/track";
+import { logger } from "@/lib/logging/structured-logger";
 export default function ResultsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();

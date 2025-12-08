@@ -7,7 +7,6 @@
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { execSync } from 'child_process';
-import { Octokit } from '@octokit/rest';
 import type { ModuleResult } from '../orchestrator';
 
 interface SecurityAudit {
@@ -88,9 +87,7 @@ export class SecurityAuditor {
   ];
 
   constructor(
-    private supabase: any,
-    private octokit: Octokit,
-    private config: any
+    private supabase: any
   ) {}
 
   async audit(): Promise<ModuleResult> {
@@ -162,7 +159,7 @@ export class SecurityAuditor {
                 exposed.push({
                   file,
                   pattern: name,
-                  severity
+                  severity: severity as 'low' | 'medium' | 'high' | 'critical'
                 });
               }
             });
@@ -583,12 +580,12 @@ ${audit.recommendations.map(r => `- ${r}`).join('\n')}
 `;
   }
 
-  private globFiles(pattern: string): string[] {
+  private globFiles(_pattern: string): string[] {
     // Simplified glob - would use proper glob library
     return [];
   }
 
-  private findRoutes(dir: string): string[] {
+  private findRoutes(_dir: string): string[] {
     const routes: string[] = [];
     // Simplified - would recursively find route.ts files
     return routes;

@@ -3,6 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
 import { SystemError, formatError } from "@/lib/errors";
 import { validateEnvOnStartup } from "@/lib/env-validation";
+import { logger } from "@/lib/logging/structured-logger";
+import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
 
 // Load environment variables dynamically
 const supabaseUrl = env.supabase.url;

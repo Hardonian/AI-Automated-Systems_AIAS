@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar, LineChart, Line } from 'recharts';
 interface FunnelData {
   period: string;
   stages: {
@@ -43,7 +45,7 @@ export default function FunnelPage() {
         setFunnelData(data);
       }
     } catch (error) {
-      logger.error("Failed to fetch funnel data", error instanceof Error ? error : new Error(String(error)), { component: "page", action: "unknown" });
+      console.error("Failed to fetch funnel data", error);
     } finally {
       setLoading(false);
     }

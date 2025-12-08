@@ -124,7 +124,7 @@ export async function predictActivation(userId: string): Promise<ActivationPredi
 /**
  * Get users at risk of not activating
  */
-export async function getAtRiskUsers(threshold: number = 30): Promise<ActivationPrediction[]> {
+export async function getAtRiskUsers(_threshold: number = 30): Promise<ActivationPrediction[]> {
   try {
     // This would query all users and predict activation
     // For now, return empty - would need to implement user enumeration

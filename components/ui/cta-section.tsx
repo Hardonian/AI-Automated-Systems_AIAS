@@ -44,11 +44,11 @@ export function CTASection({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.6 }}
-      className={cn(
+      {...({ className: cn(
         "relative overflow-hidden rounded-2xl border border-border bg-card p-8 md:p-12",
         gradient && "bg-gradient-to-br from-card via-card/95 to-card/90",
         className
-      )}
+      )} as any)}
     >
       {/* Trust Badge */}
       {trustSignals.length > 0 && (
@@ -77,7 +77,7 @@ export function CTASection({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="text-3xl md:text-4xl font-bold tracking-tight mb-4 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent"
+          {...({ className: "text-3xl md:text-4xl font-bold tracking-tight mb-4 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent" } as any)}
         >
           {title}
         </motion.h2>
@@ -87,7 +87,7 @@ export function CTASection({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="text-lg text-muted-foreground mb-8 max-w-2xl"
+          {...({ className: "text-lg text-muted-foreground mb-8 max-w-2xl" } as any)}
         >
           {description}
         </motion.p>
@@ -99,7 +99,7 @@ export function CTASection({
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"
+            {...({ className: "grid grid-cols-1 md:grid-cols-3 gap-4 mb-8" } as any)}
           >
             {valueProps.map((prop, i) => (
               <motion.div
@@ -108,7 +108,7 @@ export function CTASection({
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.5 + i * 0.1 }}
-                className="flex items-start gap-3"
+                {...({ className: "flex items-start gap-3" } as any)}
               >
                 <div className="text-primary mt-0.5">{prop.icon}</div>
                 <p className="text-sm text-muted-foreground">{prop.text}</p>
@@ -123,7 +123,7 @@ export function CTASection({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
-          className="flex flex-col sm:flex-row gap-4"
+          {...({ className: "flex flex-col sm:flex-row gap-4" } as any)}
         >
           <Button
             asChild

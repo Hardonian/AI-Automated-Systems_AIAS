@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Check, ArrowRight, ArrowLeft, ExternalLink, AlertCircle } from "lucide-react";
+import { ArrowRight, ArrowLeft, ExternalLink, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface SetupStep {
@@ -117,7 +117,9 @@ export function IntegrationSetupWizard({ integration, onComplete, onCancel }: In
   const progress = ((currentStep + 1) / steps.length) * 100;
 
   const handleNext = () => {
-    const stepId = steps[currentStep].id;
+    const step = steps[currentStep];
+    if (!step) return;
+    const stepId = step.id;
     if (!completedSteps.includes(stepId)) {
       setCompletedSteps([...completedSteps, stepId]);
     }
@@ -164,6 +166,7 @@ export function IntegrationSetupWizard({ integration, onComplete, onCancel }: In
   };
 
   const currentStepData = steps[currentStep];
+  if (!currentStepData) return null;
   const totalTime = steps.reduce((sum, step) => sum + step.estimatedTime, 0);
 
   return (

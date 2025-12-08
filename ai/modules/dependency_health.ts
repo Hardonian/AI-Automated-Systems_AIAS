@@ -230,10 +230,10 @@ export class DependencyHealthChecker {
   private getUpdateType(current: string, wanted: string, latest: string): 'patch' | 'minor' | 'major' {
     const [currMajor, currMinor, _currPatch] = current.split('.').map(Number);
     const [_wantMajor, _wantMinor, _wantPatch] = wanted.split('.').map(Number);
-    const [latMajor, latMinor, latPatch] = latest.split('.').map(Number);
+    const [latMajor, latMinor] = latest.split('.').map(Number);
 
-    if (latMajor > currMajor) return 'major';
-    if (latMinor > currMinor) return 'minor';
+    if (latMajor !== undefined && currMajor !== undefined && latMajor > currMajor) return 'major';
+    if (latMinor !== undefined && currMinor !== undefined && latMinor > currMinor) return 'minor';
     return 'patch';
   }
 
@@ -247,12 +247,12 @@ export class DependencyHealthChecker {
 
   private identifySafeUpdates(report: DependencyReport): Array<{ name: string; from: string; to: string; type: 'patch' | 'minor' }> {
     return report.outdated
-      .filter(pkg => pkg.type === 'patch' || pkg.type === 'minor')
+      .filter((pkg): pkg is typeof pkg & { type: 'patch' | 'minor' } => pkg.type === 'patch' || pkg.type === 'minor')
       .map(pkg => ({
         name: pkg.name,
         from: pkg.current,
         to: pkg.type === 'patch' ? pkg.wanted : pkg.latest,
-        type: pkg.type
+        type: pkg.type as 'patch' | 'minor'
       }));
   }
 

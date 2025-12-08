@@ -131,10 +131,13 @@ export async function getUserLimits(userId: string): Promise<{
     .in('status', ['pending', 'queued', 'running', 'completed']);
 
   return {
-    ...limits,
+    maxModels: limits.maxModels,
     currentModels: modelCount || 0,
+    maxOptimizations: limits.maxOptimizations,
     currentOptimizations: optimizationCount || 0,
+    maxBenchmarks: limits.maxBenchmarks,
     currentBenchmarks: benchmarkCount || 0,
+    maxModelSizeBytes: limits.maxModelSizeBytes,
   };
 }
 

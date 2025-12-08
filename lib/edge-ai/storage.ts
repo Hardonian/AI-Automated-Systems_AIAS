@@ -341,7 +341,7 @@ export async function getFileSize(filePath: string, bucket: keyof typeof EDGE_AI
       return null;
     }
 
-    return data[0].metadata?.size || null;
+    return data[0]?.metadata?.size || null;
   } catch (error) {
     logger.error('Error getting file size', error instanceof Error ? error : new Error(String(error)), { filePath });
     return null;

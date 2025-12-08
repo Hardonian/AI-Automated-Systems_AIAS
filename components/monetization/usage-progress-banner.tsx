@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { AlertCircle, X, TrendingUp } from "lucide-react";
+import { AlertCircle, X } from "lucide-react";
 import Link from "next/link";
 
 interface UsageProgressBannerProps {

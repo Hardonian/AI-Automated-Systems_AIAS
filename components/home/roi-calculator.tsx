@@ -13,7 +13,7 @@ export function ROICalculator() {
   const [hourlyRate, setHourlyRate] = useState(50);
   const [employees, setEmployees] = useState(1);
 
-  const hoursSaved = hoursPerWeek[0];
+  const hoursSaved = hoursPerWeek[0] || 0;
   const weeklySavings = hoursSaved * hourlyRate * employees;
   const monthlySavings = weeklySavings * 4.33;
   const yearlySavings = monthlySavings * 12;
@@ -87,7 +87,7 @@ export function ROICalculator() {
                     max={10}
                     step={1}
                     value={[employees]}
-                    onValueChange={(val) => setEmployees(val[0])}
+                    onValueChange={(val) => setEmployees(val[0] || 1)}
                     className="mt-2"
                   />
                 </div>

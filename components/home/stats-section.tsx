@@ -47,7 +47,7 @@ export function StatsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8"
+          {...({ className: "grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8" } as any)}
         >
           {stats.map((stat, index) => {
             const Icon = stat.icon;
@@ -59,12 +59,12 @@ export function StatsSection() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -5 }}
-                className="text-center group"
+                {...({ className: "text-center group" } as any)}
               >
                 <motion.div
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   transition={{ type: "spring", stiffness: 300 }}
-                  className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.gradient} mb-4 shadow-lg group-hover:shadow-xl transition-shadow`}
+                  {...({ className: `inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.gradient} mb-4 shadow-lg group-hover:shadow-xl transition-shadow` } as any)}
                 >
                   <Icon className="h-8 w-8 text-white" />
                 </motion.div>

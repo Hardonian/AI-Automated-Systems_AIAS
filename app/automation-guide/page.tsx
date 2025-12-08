@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Check, ArrowRight, Zap, Target, TrendingUp, Clock, Users, BookOpen } from "lucide-react";
+import { Check, ArrowRight, Zap, Target, TrendingUp, Clock, BookOpen } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Business Automation: Complete Guide | AIAS Platform",

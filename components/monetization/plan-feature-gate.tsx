@@ -26,8 +26,8 @@ export function PlanFeatureGate({
   upgradeCTA = "Upgrade to Unlock",
   showPreview = true,
 }: PlanFeatureGateProps) {
-  const isPaid = currentPlan === "starter" || currentPlan === "pro";
-  const hasAccess = isPaid || (requiredPlan === "starter" && currentPlan === "starter");
+  const isPaid = currentPlan === "starter" || currentPlan === "pro" || currentPlan === "enterprise";
+  const hasAccess = isPaid || (requiredPlan === "starter" && isPaid);
 
   if (hasAccess) {
     return <>{children}</>;

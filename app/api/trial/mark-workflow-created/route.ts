@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { markWorkflowCreated } from "@/lib/trial/user-plan";
+import { logger } from "@/lib/logging/structured-logger";
 /**
  * POST /api/trial/mark-workflow-created
  * Mark user's first workflow as created
  */
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
     

@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { LOIForm } from "./loi-form";
-import { TrendingUp, FileText, CheckCircle2, Clock, Sparkles, ArrowUpRight } from "lucide-react";
+import { TrendingUp, FileText, CheckCircle2, Clock, Sparkles, ArrowUpRight, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface LOI {
@@ -103,13 +103,13 @@ export function LOIDashboardEnhanced() {
       },
     };
 
-    const variant = variants[status] || variants.draft;
-    const Icon = variant.icon;
+    const variant = (status && variants[status]) || variants.draft;
+    const Icon = variant?.icon || AlertCircle;
 
     return (
-      <Badge className={variant.className}>
+      <Badge className={variant?.className || ''}>
         <Icon className="mr-1 h-3 w-3" />
-        {variant.label}
+        {variant?.label || status}
       </Badge>
     );
   };
@@ -130,11 +130,11 @@ export function LOIDashboardEnhanced() {
       },
     };
 
-    const variant = variants[tier] || variants.Starter;
+    const variant = (tier && variants[tier]) || variants.Starter;
 
     return (
-      <Badge variant="outline" className={variant.className}>
-        {variant.label}
+      <Badge variant="outline" className={variant?.className || ''}>
+        {variant?.label || tier}
       </Badge>
     );
   };
@@ -153,7 +153,7 @@ export function LOIDashboardEnhanced() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-8 text-white shadow-2xl"
+        {...({ className: "relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-8 text-white shadow-2xl" } as any)}
       >
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
         <div className="relative z-10">
@@ -178,7 +178,7 @@ export function LOIDashboardEnhanced() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="grid gap-4 md:grid-cols-4"
+          {...({ className: "grid gap-4 md:grid-cols-4" } as any)}
         >
           <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white shadow-lg hover:shadow-xl transition-all">
             <CardHeader className="pb-2">
@@ -195,7 +195,7 @@ export function LOIDashboardEnhanced() {
                   initial={{ width: 0 }}
                   animate={{ width: `${(summary.total / 5) * 100}%` }}
                   transition={{ duration: 1, delay: 0.3 }}
-                  className="h-full bg-gradient-to-r from-blue-500 to-blue-600"
+                  {...({ className: "h-full bg-gradient-to-r from-blue-500 to-blue-600" } as any)}
                 />
               </div>
             </CardContent>
@@ -268,7 +268,7 @@ export function LOIDashboardEnhanced() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: loiIndex * 0.1 }}
-                    className="border-2 rounded-xl p-6 space-y-4 bg-gradient-to-br from-white to-gray-50 hover:shadow-lg transition-all"
+                    {...({ className: "border-2 rounded-xl p-6 space-y-4 bg-gradient-to-br from-white to-gray-50 hover:shadow-lg transition-all" } as any)}
                   >
                     <div className="flex items-center justify-between">
                       <div>

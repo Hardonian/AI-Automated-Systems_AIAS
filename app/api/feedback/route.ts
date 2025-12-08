@@ -1,5 +1,7 @@
 // [STAKE+TRUST:BEGIN:feedback_api]
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logging/structured-logger";
+import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
 import { createClient } from "@supabase/supabase-js";
 import { createValidatedRoute } from "@/lib/api/validation-middleware";
 import { z } from "zod";

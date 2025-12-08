@@ -24,6 +24,7 @@
       "@/*": ["./*"]
     },
     "baseUrl": ".",
+    "typeRoots": ["./node_modules/@types", "./types"],
     "forceConsistentCasingInFileNames": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitAny": true,
@@ -41,6 +42,7 @@
     "out",
     "dist",
     "ai/aurora_prime.ts",
-    "scripts/generate-performance-report.ts"
+    "scripts/generate-performance-report.ts",
+    "supabase/functions/**/*"
   ]
 }

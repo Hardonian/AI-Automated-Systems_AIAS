@@ -31,7 +31,7 @@ export function TrustBadge({ type, label, icon, pulse = false, className }: Trus
       animate={{ opacity: 1, scale: 1 }}
       whileHover={{ scale: 1.05 }}
       transition={{ duration: 0.3 }}
-      className={cn("inline-flex", className)}
+      {...({ className: cn("inline-flex", className) } as any)}
     >
       <Badge
         variant="trust"

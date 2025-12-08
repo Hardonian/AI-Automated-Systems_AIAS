@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { logger } from "@/lib/logging/structured-logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, TrendingDown, DollarSign, Users, Target, AlertCircle } from "lucide-react";
+import { TrendingUp, TrendingDown, DollarSign, Target, AlertCircle } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 interface UnitEconomics {

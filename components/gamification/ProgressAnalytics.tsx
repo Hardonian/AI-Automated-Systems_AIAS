@@ -40,7 +40,7 @@ export default function ProgressAnalytics() {
         const date = new Date(startDate);
         date.setDate(date.getDate() + i);
         chartData.push({
-          date: date.toISOString().split("T")[0],
+          date: date.toISOString().split("T")[0] || '',
           xp: dailyXP + Math.floor(Math.random() * 20),
         });
       }
@@ -76,7 +76,7 @@ export default function ProgressAnalytics() {
             initial={{ height: 0 }}
             animate={{ height: `${(point.xp / maxXp) * 100}%` }}
             transition={{ delay: idx * 0.01 }}
-            className="flex-1 bg-accent rounded-t"
+            {...({ className: "flex-1 bg-accent rounded-t" } as any)}
             title={`${point.date}: ${point.xp} XP`}
           />
         ))}

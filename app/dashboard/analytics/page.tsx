@@ -1,6 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { TrendingUp, TrendingDown } from 'lucide-react';
+import { ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line } from 'recharts';
+import { UsageProgressBanner } from '@/components/monetization/usage-progress-banner';
+import { TrialCountdownBanner } from '@/components/monetization/trial-countdown-banner';
 interface UsageData {
   plan: string;
   month: string;
@@ -79,7 +86,7 @@ export default function AnalyticsPage() {
         }
       }
     } catch (error) {
-      logger.error("Failed to fetch analytics", error instanceof Error ? error : new Error(String(error)), { component: "page", action: "unknown" });
+      console.error("Failed to fetch analytics", error);
     } finally {
       setLoading(false);
     }

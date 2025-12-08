@@ -260,10 +260,10 @@ export async function detectFrictionPoints(): Promise<FrictionPoint[]> {
       };
 
       Object.values(userProgress).forEach((progress) => {
-        if (progress.steps.length >= index) {
+        if (progress && progress.steps && progress.steps.length >= index) {
           stepStats[step].reached++;
         }
-        if (progress.steps.includes(step)) {
+        if (progress && progress.steps && progress.steps.includes(step)) {
           stepStats[step].completed++;
         }
       });
@@ -327,7 +327,7 @@ export async function analyzeConversionSignals(): Promise<{
       }
     });
 
-    const churnedUsers = Object.entries(userLastActivity)
+    const _churnedUsers = Object.entries(userLastActivity)
       .filter(([_, lastActivity]) => lastActivity < thirtyDaysAgo)
       .map(([userId]) => userId);
 
@@ -335,7 +335,7 @@ export async function analyzeConversionSignals(): Promise<{
     const activationSignals: Array<{ signal: string; correlation: number; impact: "high" | "medium" | "low" }> = [];
 
     // Signal 1: Onboarding completion speed
-    const fastOnboarders = activatedUsers?.filter((user) => {
+    const fastOnboarders = activatedUsers?.filter((_user) => {
       // Users who completed onboarding quickly (heuristic)
       return true; // Simplified
     }).length || 0;

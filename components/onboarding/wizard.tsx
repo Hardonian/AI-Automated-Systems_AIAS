@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { logger } from "@/lib/logging/structured-logger";
-import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -21,7 +20,6 @@ interface Step {
 }
 
 export function OnboardingWizard() {
-  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
   const startTimeRef = useRef<number>(Date.now());
@@ -103,7 +101,9 @@ export function OnboardingWizard() {
   ];
 
   const goToNext = async () => {
-    const currentStepId = steps[currentStep].id;
+    const step = steps[currentStep];
+    if (!step) return;
+    const currentStepId = step.id;
     const stepStartTime = Date.now() - startTimeRef.current;
     
     if (!completedSteps.includes(currentStepId)) {
@@ -273,21 +273,23 @@ export function OnboardingWizard() {
       </div>
 
       {/* Current Step Content */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{steps[currentStep].title}</CardTitle>
-          <CardDescription>{steps[currentStep].description}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {steps[currentStep].component}
-          {/* Show success celebration after workflow creation step */}
-          {steps[currentStep].id === "test-workflow" && completedSteps.includes("create-workflow") && (
-            <div className="mt-4">
-              <SuccessCelebration />
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {steps[currentStep] && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{steps[currentStep]!.title}</CardTitle>
+            <CardDescription>{steps[currentStep]!.description}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {steps[currentStep]!.component}
+            {/* Show success celebration after workflow creation step */}
+            {steps[currentStep]!.id === "test-workflow" && completedSteps.includes("create-workflow") && (
+              <div className="mt-4">
+                <SuccessCelebration />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Navigation */}
       {currentStep < steps.length - 1 && (
@@ -351,7 +353,7 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
 function ChooseIntegrationStep({ onNext }: { onNext: () => void }) {
   const [selectedIntegration, setSelectedIntegration] = useState<string | null>(null);
   const [connecting, setConnecting] = useState(false);
-  const [skipped, setSkipped] = useState(false);
+  const [_skipped, setSkipped] = useState(false);
 
   const integrations = [
     { name: "Shopify", icon: "🛍️", description: "E-commerce automation", provider: "shopify", popular: true },
@@ -457,7 +459,6 @@ function ChooseIntegrationStep({ onNext }: { onNext: () => void }) {
 }
 
 function CreateWorkflowStep({ onNext }: { onNext: () => void }) {
-  const router = useRouter();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
 

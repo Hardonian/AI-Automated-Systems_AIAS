@@ -2,7 +2,6 @@
 
 import { ReactNode, useEffect, useState } from "react";
 import { logger } from "@/lib/logging/structured-logger";
-import { FeatureLockBadge } from "./feature-lock-badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Lock } from "lucide-react";

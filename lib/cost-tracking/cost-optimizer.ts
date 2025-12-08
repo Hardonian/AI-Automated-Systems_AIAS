@@ -4,7 +4,7 @@
  * Analyzes costs and provides optimization recommendations.
  */
 
-import { CostMetrics, CostBreakdown } from "./service-costs";
+import { CostMetrics } from "./service-costs";
 
 export interface OptimizationRecommendation {
   id: string;

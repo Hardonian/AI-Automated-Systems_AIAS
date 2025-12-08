@@ -5,7 +5,7 @@
  */
 
 import { cookies } from "next/headers";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const CSRF_TOKEN_COOKIE = "csrf-token";
 const CSRF_TOKEN_HEADER = "x-csrf-token";

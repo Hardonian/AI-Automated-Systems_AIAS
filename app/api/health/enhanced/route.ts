@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
-import { WaveClient } from "@/lib/integrations/wave-client";
+import { logger } from "@/lib/logging/structured-logger";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -112,11 +112,12 @@ export async function GET() {
       .select("id", { count: "exact", head: true })
       .is("workflow_id", null);
 
+    const orphanedCountNum = typeof orphanedCount === 'number' ? orphanedCount : 0;
     checks.push({
       name: "database_consistency",
-      status: error ? "unhealthy" : orphanedCount && orphanedCount > 100 ? "degraded" : "healthy",
+      status: error ? "unhealthy" : orphanedCountNum > 100 ? "degraded" : "healthy",
       error: error?.message,
-      details: { orphanedExecutions: orphanedCount || 0 },
+      details: { orphanedExecutions: orphanedCountNum },
     });
   } catch (error) {
     checks.push({
@@ -128,7 +129,7 @@ export async function GET() {
 
   // 5. Rate limiter check
   try {
-    const { rateLimiter } = await import("@/lib/performance/rate-limiter");
+    await import("@/lib/performance/rate-limiter");
     // Just check if rate limiter is initialized
     checks.push({
       name: "rate_limiter",

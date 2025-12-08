@@ -103,7 +103,7 @@ export class SupabaseCostCalculator {
    */
   static calculateEdgeFunctionsCost(
     invocations: number,
-    executionTimeMs: number
+    _executionTimeMs: number
   ): number {
     // Similar to regular functions but different pricing
     const freeInvocations = 500000;
@@ -222,6 +222,7 @@ export class OpenAICostCalculator {
     };
 
     const modelPricing = pricing[model] || pricing["gpt-3.5-turbo"];
+    if (!modelPricing) return 0;
     const promptCost = promptTokens * modelPricing.prompt;
     const completionCost = completionTokens * modelPricing.completion;
 
@@ -355,7 +356,7 @@ export class CostAggregator {
 
     // Forecast (simple linear extrapolation)
     const avgDailyGrowth =
-      trends.length > 1
+      trends.length > 1 && trends[trends.length - 1] && trends[0]
         ? (trends[trends.length - 1].total - trends[0].total) / (trends.length - 1)
         : 0;
     const nextMonth = totalMonthly + avgDailyGrowth * 30;

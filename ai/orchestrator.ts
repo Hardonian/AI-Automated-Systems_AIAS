@@ -8,8 +8,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { Octokit } from '@octokit/rest';
-import { execSync } from 'child_process';
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { DependencyHealthChecker } from './modules/dependency_health';
 import { CostForecaster } from './modules/cost_forecaster';
@@ -95,11 +94,11 @@ class Orchestrator {
     );
 
     this.octokit = new Octokit({
-      auth: process.env.GITHUB_TOKEN,
+      auth: process.env.GITHUB_TOKEN || undefined,
     });
 
     // Initialize audit directory
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split('T')[0] || new Date().toISOString().substring(0, 10);
     this.auditDir = join(process.cwd(), 'compliance', 'audits', today);
     if (!existsSync(this.auditDir)) {
       mkdirSync(this.auditDir, { recursive: true });
@@ -108,7 +107,7 @@ class Orchestrator {
     // Initialize modules
     this.dependencyHealth = new DependencyHealthChecker(this.supabase);
     this.costForecaster = new CostForecaster(this.supabase, this.octokit, this.config);
-    this.securityAuditor = new SecurityAuditor(this.supabase, this.octokit, this.config);
+    this.securityAuditor = new SecurityAuditor(this.supabase);
     this.uptimeMonitor = new UptimeMonitor(this.supabase, this.config);
     this.dashboardGenerator = new DashboardGenerator(this.supabase, this.config);
     this.prAutomation = new PRAutomation(this.octokit, this.config);

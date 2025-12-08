@@ -26,7 +26,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     
     return (
       <motion.div
-        className="relative w-full"
+        {...({ className: "relative w-full" } as any)}
         {...motionProps}
       >
         {icon && iconPosition === "left" && (

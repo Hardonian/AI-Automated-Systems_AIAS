@@ -4,7 +4,6 @@
  */
 
 import { readFile, readdir } from 'fs/promises';
-import { join } from 'path';
 
 export interface AuditResult {
   category: string;
@@ -68,31 +67,31 @@ export async function auditCodebase(rootDir: string = process.cwd()): Promise<Au
   };
 }
 
-async function auditConsoleLogs(rootDir: string): Promise<AuditResult[]> {
+async function auditConsoleLogs(_rootDir: string): Promise<AuditResult[]> {
   const results: AuditResult[] = [];
   // Implementation would scan files for console.log
   return results;
 }
 
-async function auditTODOs(rootDir: string): Promise<AuditResult[]> {
+async function auditTODOs(_rootDir: string): Promise<AuditResult[]> {
   const results: AuditResult[] = [];
   // Implementation would scan for TODO comments
   return results;
 }
 
-async function auditUnusedImports(rootDir: string): Promise<AuditResult[]> {
+async function auditUnusedImports(_rootDir: string): Promise<AuditResult[]> {
   const results: AuditResult[] = [];
   // Implementation would use ESLint to find unused imports
   return results;
 }
 
-async function auditAccessibility(rootDir: string): Promise<AuditResult[]> {
+async function auditAccessibility(_rootDir: string): Promise<AuditResult[]> {
   const results: AuditResult[] = [];
   // Implementation would check for accessibility issues
   return results;
 }
 
-async function auditPerformance(rootDir: string): Promise<AuditResult[]> {
+async function auditPerformance(_rootDir: string): Promise<AuditResult[]> {
   const results: AuditResult[] = [];
   // Implementation would check for performance issues
   return results;

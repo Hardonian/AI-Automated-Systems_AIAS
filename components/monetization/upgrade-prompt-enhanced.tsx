@@ -18,7 +18,7 @@ export function UpgradePromptEnhanced({
   currentPlan,
   trialDaysRemaining,
   workflowCount = 0,
-  integrationCount = 0,
+  integrationCount: _integrationCount = 0,
   variant = "card",
 }: UpgradePromptEnhancedProps) {
   if (currentPlan === "starter" || currentPlan === "pro" || currentPlan === "enterprise") {

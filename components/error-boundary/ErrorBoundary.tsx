@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { errorTracker } from "@/lib/monitoring/error-tracker";
+import { logger } from "@/lib/logging/structured-logger";
 interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;

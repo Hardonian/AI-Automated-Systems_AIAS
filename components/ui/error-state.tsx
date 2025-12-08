@@ -28,7 +28,7 @@ export function ErrorState({
       variants={motionVariants.fadeIn}
       initial="hidden"
       animate="visible"
-      className={className}
+      {...({ className: className } as any)}
     >
       <Card 
         className={cn("border-destructive")}
@@ -51,7 +51,7 @@ export function ErrorState({
             <Button 
               onClick={onRetry} 
               variant="outline" 
-              size="default"
+              size="md"
               aria-label="Retry loading content"
             >
               <RefreshCw className="h-4 w-4 mr-2" aria-hidden="true" />

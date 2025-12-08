@@ -46,6 +46,7 @@ export function WorkflowExecutorComponent({ workflowId, userId, tenantId }: Work
         tenantId,
         input: parsedInput,
         sync: true,
+        priority: 'normal',
       };
 
       const executionResult = await workflowExecutor.execute(context);

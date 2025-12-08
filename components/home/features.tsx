@@ -61,7 +61,7 @@ export function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="inline-block mb-4"
+            {...({ className: "inline-block mb-4" } as any)}
           >
             <span className="px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold border border-primary/20">
               Powerful Features
@@ -80,7 +80,7 @@ export function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
+            {...({ className: "text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto leading-relaxed" } as any)}
           >
             Connect your tools, automate repetitive tasks, and get insights that help you make better decisions. 
             No coding required. Start in minutes.
@@ -113,7 +113,7 @@ export function Features() {
                         <motion.div
                           whileHover={{ scale: 1.1, rotate: 5 }}
                           transition={{ type: "spring", stiffness: 300 }}
-                          className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${feature.gradient} mb-4 shadow-lg`}
+                          {...({ className: `inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${feature.gradient} mb-4 shadow-lg` } as any)}
                         >
                           <Icon className="h-7 w-7 text-white" />
                         </motion.div>

@@ -96,7 +96,7 @@ export async function signUpUser(
     // The trigger will handle it automatically when admin role is assigned
 
     // Step 3: Log sign-up activity
-    const { error: activityError } = await supabase
+    const { error: activityError } = await ((supabase
       .from("activity_log")
       .insert({
         user_id: userId,
@@ -109,7 +109,7 @@ export async function signUpUser(
           source: "server_action",
         },
         created_at: new Date().toISOString(),
-      });
+      })) as any);
 
     if (activityError) {
       // Log error but don't fail the sign-up

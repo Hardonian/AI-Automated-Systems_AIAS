@@ -33,7 +33,7 @@ export function SocialProof({ stats, testimonials, badges, className }: SocialPr
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12"
+          {...({ className: "grid grid-cols-2 md:grid-cols-4 gap-6 mb-12" } as any)}
         >
           {stats.map((stat, i) => (
             <motion.div
@@ -42,7 +42,7 @@ export function SocialProof({ stats, testimonials, badges, className }: SocialPr
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="text-center"
+              {...({ className: "text-center" } as any)}
             >
               <div className="text-primary mb-2 flex justify-center">{stat.icon}</div>
               <div className="text-3xl font-bold mb-1">{stat.value}</div>
@@ -58,7 +58,7 @@ export function SocialProof({ stats, testimonials, badges, className }: SocialPr
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="flex flex-wrap justify-center gap-3 mb-12"
+          {...({ className: "flex flex-wrap justify-center gap-3 mb-12" } as any)}
         >
           {badges.map((badge, i) => (
             <Badge key={i} variant="trust" size="lg">
@@ -78,7 +78,7 @@ export function SocialProof({ stats, testimonials, badges, className }: SocialPr
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="p-6 rounded-xl border border-border bg-card"
+              {...({ className: "p-6 rounded-xl border border-border bg-card" } as any)}
             >
               {testimonial.rating && (
                 <div className="flex gap-1 mb-4">

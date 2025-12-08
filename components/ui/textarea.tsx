@@ -25,7 +25,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     
     return (
       <motion.div
-        className="relative w-full"
+        {...({ className: "relative w-full" } as any)}
         {...motionProps}
       >
         <textarea

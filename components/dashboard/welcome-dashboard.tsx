@@ -22,11 +22,12 @@ export function WelcomeDashboard({
   userPlan = "trial",
   trialDaysRemaining = 30,
   hasCompletedPretest = false,
-  hasConnectedEmail = false,
+  hasConnectedEmail: initialHasConnectedEmail = false,
   hasCreatedWorkflow = false,
 }: WelcomeDashboardProps) {
   const [showPretest, setShowPretest] = useState(!hasCompletedPretest);
   const [pretestCompleted, setPretestCompleted] = useState(hasCompletedPretest);
+  const [hasConnectedEmail, setHasConnectedEmail] = useState(initialHasConnectedEmail);
 
   useEffect(() => {
     // Check if pretest was completed
@@ -35,7 +36,7 @@ export function WelcomeDashboard({
     setShowPretest(!completed);
   }, []);
 
-  const handlePretestComplete = async (answers: PreTestAnswers) => {
+  const handlePretestComplete = async (_answers: PreTestAnswers) => {
     setPretestCompleted(true);
     setShowPretest(false);
     // Already saved via API in pre-test component

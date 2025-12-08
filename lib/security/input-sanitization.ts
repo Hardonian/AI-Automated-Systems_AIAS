@@ -12,7 +12,7 @@ export function sanitizeHTML(html: string, options?: {
   allowTags?: string[];
   allowAttributes?: string[];
 }): string {
-  const config: DOMPurify.Config = {
+  const config: any = {
     ALLOWED_TAGS: options?.allowTags || [
       'p', 'br', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li',
       'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'code', 'pre',

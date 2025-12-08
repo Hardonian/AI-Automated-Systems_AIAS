@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 import { logger } from "@/lib/logging/structured-logger";
 // import { createServerClient } from "@/lib/supabase/server"; // Will be used for tracking
 
-export async function POST(request: Request) {
+export async function POST(_request: Request) {
   try {
     // const supabase = await createServerClient(); // Will be used for tracking
-    const body = await request.json();
-    const { embedId, workflowId } = body;
+    const body = await _request.json();
+    const { embedId: _embedId, workflowId: _workflowId } = body as { embedId?: string; workflowId?: string };
 
     // Track embed view
     // TODO: Create embed_views table if it doesn't exist

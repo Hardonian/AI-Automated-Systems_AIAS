@@ -4,7 +4,6 @@
  */
 
 import { AgentDefinition, AgentExecutionContext, AgentExecutionResult } from './schema';
-import { z } from 'zod';
 
 export interface ExecutionState {
   step: number;
@@ -215,7 +214,7 @@ export class AgentExecutor {
 
     const results = await Promise.allSettled(toolPromises);
     
-    results.forEach((result, index) => {
+    results.forEach((result) => {
       if (result.status === 'fulfilled') {
         state.data = { ...state.data, [result.value.toolId]: result.value.result };
       }

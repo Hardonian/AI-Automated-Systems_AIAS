@@ -9,7 +9,6 @@
 import { useEffect, useState } from "react";
 import { logger } from "@/lib/logging/structured-logger";
 import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, Shield, AlertTriangle } from "lucide-react";
 

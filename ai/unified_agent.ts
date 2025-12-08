@@ -7,7 +7,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { execSync } from 'child_process';
-import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { Orchestrator } from './orchestrator';
 
@@ -36,7 +36,6 @@ interface AgentContext {
 
 class UnifiedHardoniaAgent {
   private config: UnifiedAgentConfig;
-  private supabase: any;
   private orchestrator: Orchestrator;
   private context: AgentContext;
   private artifactDir: string;
@@ -56,7 +55,8 @@ class UnifiedHardoniaAgent {
       vercelProjectId: process.env.VERCEL_PROJECT_ID || masterConfig.integrations?.vercel?.projectId,
     };
 
-    this.supabase = createClient(
+    // Supabase client initialization (not used directly, orchestrator handles it)
+    createClient(
       process.env.SUPABASE_URL || `https://${this.config.supabaseProjectRef}.supabase.co`,
       process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || ''
     );
@@ -259,7 +259,7 @@ class UnifiedHardoniaAgent {
 
 ## Recommendations
 ${reliability.recommendations.length > 0
-  ? reliability.recommendations.map(r => `- ${r}`).join('\n')
+  ? reliability.recommendations.map((r: string) => `- ${r}`).join('\n')
   : '- No recommendations at this time'
 }
 `;
@@ -321,7 +321,7 @@ ${reliability.recommendations.length > 0
       const licenses = JSON.parse(licenseChecker);
       for (const [name, info] of Object.entries(licenses)) {
         const pkgName = name.split('@')[0];
-        if (dependencies[pkgName]) {
+        if (pkgName && dependencies[pkgName]) {
           dependencies[pkgName].license = (info as any).licenses;
         }
       }
@@ -381,7 +381,7 @@ This file tracks the reasoning and intent behind each commit and change.
       recentCommits = gitLog.split('\n').map(line => {
         const [hash, date, ...messageParts] = line.split('|');
         return {
-          hash: hash.substring(0, 8),
+          hash: hash ? hash.substring(0, 8) : '',
           date: date || new Date().toISOString(),
           message: messageParts.join('|'),
         };

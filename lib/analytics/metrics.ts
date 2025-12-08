@@ -84,7 +84,8 @@ export async function calculateTimeToActivation(days: number = 30): Promise<numb
   if (activationTimes.length === 0) return 0;
 
   activationTimes.sort((a, b) => a - b);
-  return activationTimes[Math.floor(activationTimes.length / 2)];
+  const median = activationTimes[Math.floor(activationTimes.length / 2)];
+  return median ?? 0;
 }
 
 /**

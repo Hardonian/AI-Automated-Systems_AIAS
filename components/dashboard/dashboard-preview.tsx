@@ -58,7 +58,7 @@ export function DashboardPreview({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
-      className="relative"
+      {...({ className: "relative" } as any)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -98,7 +98,7 @@ export function DashboardPreview({
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="relative"
+                  {...({ className: "relative" } as any)}
                 >
                   <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
                     <div className="flex items-center justify-between mb-2">
@@ -159,13 +159,13 @@ export function DashboardPreview({
                               whileInView={{ height: `${height}%` }}
                               viewport={{ once: true }}
                               transition={{ duration: 0.8, delay: index * 0.2 + i * 0.1 }}
-                              className={`flex-1 rounded-t opacity-80 ${
+                              {...({ className: `flex-1 rounded-t opacity-80 ${
                                 accentColor === "blue"
                                   ? "bg-gradient-to-t from-blue-500 to-blue-400"
                                   : accentColor === "green"
                                   ? "bg-gradient-to-t from-green-500 to-green-400"
                                   : "bg-gradient-to-t from-primary to-primary/80"
-                              }`}
+                              }`} as any)}
                             />
                           ))}
                         </div>
@@ -218,7 +218,7 @@ export function DashboardPreview({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.4 }}
-                className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50"
+                {...({ className: "bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50" } as any)}
               >
                 <div className="flex items-center gap-2 mb-3">
                   <Activity className="h-4 w-4 text-blue-500" />
@@ -256,7 +256,7 @@ export function DashboardPreview({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.5 }}
-                className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50"
+                {...({ className: "bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50" } as any)}
               >
                 <div className="flex items-center gap-2 mb-3">
                   <BarChart3 className="h-4 w-4 text-purple-500" />
@@ -272,7 +272,7 @@ export function DashboardPreview({
                         whileInView={{ height: `${height}%` }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.5 + i * 0.05 }}
-                        className="flex-1 bg-gradient-to-t from-purple-500 to-blue-400 rounded-t opacity-70"
+                        {...({ className: "flex-1 bg-gradient-to-t from-purple-500 to-blue-400 rounded-t opacity-70" } as any)}
                       />
                     ))}
                   </div>
@@ -286,12 +286,12 @@ export function DashboardPreview({
             initial={{ opacity: 0 }}
             animate={{ opacity: isHovered ? 1 : 0.7 }}
             transition={{ duration: 0.3 }}
-            className="absolute inset-0 bg-background/95 backdrop-blur-md flex items-center justify-center flex-col gap-4 p-8"
+            {...({ className: "absolute inset-0 bg-background/95 backdrop-blur-md flex items-center justify-center flex-col gap-4 p-8" } as any)}
           >
             <motion.div
               animate={{ scale: isHovered ? 1.1 : 1 }}
               transition={{ type: "spring", stiffness: 300 }}
-              className="flex flex-col items-center gap-4"
+              {...({ className: "flex flex-col items-center gap-4" } as any)}
             >
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full" />

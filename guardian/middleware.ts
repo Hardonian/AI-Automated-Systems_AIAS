@@ -4,7 +4,7 @@
  */
 
 import { guardianService, type GuardianEvent, type DataScope, type DataClass } from './core';
-import { monitoringService } from '../src/lib/monitoring';
+import { monitoringService, type ErrorInfo } from '../src/lib/monitoring';
 
 // Extend monitoring service to emit guardian events
 const originalTrackEvent = monitoringService.trackEvent.bind(monitoringService);
@@ -39,7 +39,7 @@ monitoringService.trackPageView = function(path: string) {
   return originalTrackPageView(path);
 };
 
-monitoringService.trackError = function(error: Error, errorInfo?: Record<string, unknown>) {
+monitoringService.trackError = function(error: Error, errorInfo?: ErrorInfo) {
   guardianService.recordEvent(
     'error',
     'app',
@@ -51,7 +51,7 @@ monitoringService.trackError = function(error: Error, errorInfo?: Record<string,
     }
   );
   
-  return originalTrackError(error, errorInfo as any);
+  return originalTrackError(error, errorInfo);
 };
 
 /**

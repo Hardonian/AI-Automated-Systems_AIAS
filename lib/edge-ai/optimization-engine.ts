@@ -154,7 +154,7 @@ export async function processBenchmarkJob(
   powerConsumptionWatts?: number;
   accuracyMetrics?: Record<string, number>;
 }> {
-  const { benchmarkId, modelId, optimizationJobId, deviceProfileId, batchSize, numIterations, warmupIterations } = data;
+  const { benchmarkId, modelId, optimizationJobId, deviceProfileId, batchSize, numIterations, warmupIterations: _warmupIterations } = data;
 
   logger.info('Starting benchmark job', {
     benchmarkId,

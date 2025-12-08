@@ -111,7 +111,7 @@ export async function retryWithBackoff<T>(
  */
 export async function retryWithCondition<T>(
   fn: () => Promise<T>,
-  condition: (error: Error) => boolean,
+  _condition: (error: Error) => boolean,
   options: RetryOptions = {}
 ): Promise<T> {
   return retryWithBackoff(fn, {

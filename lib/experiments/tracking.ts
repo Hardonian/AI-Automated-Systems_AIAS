@@ -230,7 +230,9 @@ export function getExperimentVariant(
   
   // Assign to variant based on hash
   const variantIndex = Math.abs(hash) % variants.length;
-  return variants[variantIndex];
+  const variant = variants[variantIndex];
+  if (!variant) throw new Error('No variant available');
+  return variant;
 }
 
 /**

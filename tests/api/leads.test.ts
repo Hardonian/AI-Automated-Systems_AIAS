@@ -64,6 +64,7 @@ describe("POST /api/leads/capture", () => {
     const { leadCaptureService } = await import("@/lib/lead-generation/lead-capture");
     vi.mocked(leadCaptureService.captureLead).mockResolvedValue({
       success: false,
+      leadId: null,
       error: "Database error",
     });
 

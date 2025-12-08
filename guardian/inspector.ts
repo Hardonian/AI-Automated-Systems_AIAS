@@ -5,7 +5,8 @@
 
 import { readFileSync, existsSync, readdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import { guardianService, type GuardianEvent, type TrustLedgerEntry } from './core';
+import { guardianService, type GuardianEvent } from './core';
+// import type { TrustLedgerEntry } from './core';
 
 export interface TrustReport {
   generated_at: string;

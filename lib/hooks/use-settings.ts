@@ -11,7 +11,7 @@ import { queryKeys } from "@/lib/data/queryKeys";
 import {
   getCurrentUserSettings,
   updateUserSettings,
-  type UserSettings,
+  // type UserSettings,
 } from "@/lib/data/api/settings";
 
 /**

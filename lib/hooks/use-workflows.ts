@@ -16,7 +16,7 @@ import {
   updateWorkflow,
   deleteWorkflow,
   type Workflow,
-  type WorkflowTemplate,
+  // type WorkflowTemplate,
 } from "@/lib/data/api/workflows";
 
 /**

@@ -685,7 +685,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                           <Checkbox
                             id={category}
                             checked={settings.categories.includes(category)}
-                            onCheckedChange={(checked) => {
+                            onCheckedChange={(checked: boolean) => {
                               const newCategories = checked
                                 ? [...settings.categories, category]
                                 : settings.categories.filter(c => c !== category);

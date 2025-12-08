@@ -114,7 +114,7 @@ export class WorkflowExecutor {
         }
       }
 
-      const duration = Date.now() - startTime;
+      const _duration = Date.now() - startTime;
       const metrics = this.calculateMetrics(graph);
 
       return {
@@ -128,7 +128,7 @@ export class WorkflowExecutor {
         completedAt: new Date().toISOString(),
       };
     } catch (error) {
-      const duration = Date.now() - startTime;
+      const _duration = Date.now() - startTime;
       const metrics = this.calculateMetrics(graph);
 
       return {
@@ -172,7 +172,10 @@ export class WorkflowExecutor {
     // Build edges (simplified - would need proper graph building)
     workflow.steps.forEach((step, index) => {
       if (index < workflow.steps.length - 1) {
-        edges.set(step.id, [workflow.steps[index + 1].id]);
+        const nextStep = workflow.steps[index + 1];
+        if (nextStep) {
+          edges.set(step.id, [nextStep.id]);
+        }
       } else {
         edges.set(step.id, []);
       }
@@ -251,7 +254,7 @@ export class WorkflowExecutor {
    */
   private async executeMatch(
     step: WorkflowStep,
-    state: Record<string, unknown>
+    _state: Record<string, unknown>
   ): Promise<unknown> {
     if (step.type !== 'match') throw new Error('Invalid step type');
     
@@ -319,7 +322,7 @@ export class WorkflowExecutor {
    */
   private async executeDatabase(
     step: WorkflowStep,
-    state: Record<string, unknown>
+    _state: Record<string, unknown>
   ): Promise<unknown> {
     if (step.type !== 'database' || step.config.type !== 'database') {
       throw new Error('Invalid step type');
@@ -335,7 +338,7 @@ export class WorkflowExecutor {
    */
   private async executeGenerate(
     step: WorkflowStep,
-    state: Record<string, unknown>
+    _state: Record<string, unknown>
   ): Promise<unknown> {
     if (step.type !== 'generate' || step.config.type !== 'generate') {
       throw new Error('Invalid step type');

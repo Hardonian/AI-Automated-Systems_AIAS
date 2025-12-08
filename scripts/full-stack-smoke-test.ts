@@ -163,8 +163,8 @@ function checkEnvLocal(): Record<string, string> {
                 else if (key === "SUPABASE_PROJECT_ID") mappedKey = "SUPABASE_PROJECT_REF";
               }
               
-              if (mappedKey && (EXPECTED_ENV_VARS.includes(mappedKey) || EXPECTED_ENV_VARS.includes(key))) {
-                env[mappedKey] = value;
+              if (mappedKey && value && (EXPECTED_ENV_VARS.includes(mappedKey) || (key && EXPECTED_ENV_VARS.includes(key)))) {
+                env[mappedKey] = value as string;
               }
             }
           }

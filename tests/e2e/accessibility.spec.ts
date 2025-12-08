@@ -95,7 +95,9 @@ test.describe("Accessibility Tests", () => {
     
     for (const heading of headings) {
       const tagName = await heading.evaluate((el) => el.tagName);
-      const level = parseInt(tagName[1]);
+      const levelStr = tagName[1];
+      if (!levelStr) continue;
+      const level = parseInt(levelStr);
       
       // Headings should not skip levels
       expect(level).toBeLessThanOrEqual(lastLevel + 1);

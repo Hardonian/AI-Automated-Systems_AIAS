@@ -52,7 +52,9 @@ export const a11yChecklist = {
       const headings = element.querySelectorAll('h1, h2, h3, h4, h5, h6');
       let lastLevel = 0;
       for (const heading of Array.from(headings)) {
-        const level = parseInt(heading.tagName[1]);
+        const levelStr = heading.tagName[1];
+        if (!levelStr) continue;
+        const level = parseInt(levelStr);
         if (level > lastLevel + 1) {
           return false; // Skipped a level
         }

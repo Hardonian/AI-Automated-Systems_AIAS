@@ -34,7 +34,7 @@ export async function getUserActivityMetrics(userId: string): Promise<ActivityMe
       .single();
 
     // Get workflow count
-    const { data: workflows, count: workflowCount } = await supabase
+    const { data: _workflows, count: workflowCount } = await supabase
       .from("workflows")
       .select("id", { count: "exact", head: true })
       .eq("user_id", userId);
@@ -48,7 +48,7 @@ export async function getUserActivityMetrics(userId: string): Promise<ActivityMe
       .limit(1)
       .single();
 
-    const { data: executions, count: executionCount } = await supabase
+    const { data: _executions, count: executionCount } = await supabase
       .from("workflow_executions")
       .select("id", { count: "exact", head: true })
       .eq("user_id", userId);

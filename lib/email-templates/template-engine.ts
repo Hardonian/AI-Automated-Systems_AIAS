@@ -180,7 +180,11 @@ export function renderComponents(
         let componentVariables = { ...variables };
         let varMatch;
         while ((varMatch = varRegex.exec(componentVars)) !== null) {
-          componentVariables[varMatch[1]] = varMatch[2];
+          const varName = varMatch[1];
+          const varValue = varMatch[2];
+          if (varName) {
+            componentVariables[varName] = varValue || '';
+          }
         }
         componentTemplate = renderTemplate(componentTemplate, componentVariables, components);
       } else {

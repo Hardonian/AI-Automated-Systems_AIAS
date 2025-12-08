@@ -147,7 +147,11 @@ const subscriptionPlans: SubscriptionPlan[] = [
 ];
 
 export const SubscriptionEnforcement: React.FC = () => {
-  const [currentPlan, setCurrentPlan] = useState<SubscriptionPlan>(subscriptionPlans[1] || subscriptionPlans[0]); // Professional
+  const [currentPlan, setCurrentPlan] = useState<SubscriptionPlan>(() => {
+    const plan = subscriptionPlans[1] || subscriptionPlans[0];
+    if (!plan) throw new Error('No subscription plans available');
+    return plan;
+  }); // Professional
   const [usageMetrics, setUsageMetrics] = useState<UsageMetrics>({
     workflows: { used: 18, limit: 25 },
     executions: { used: 7500, limit: 10000 },

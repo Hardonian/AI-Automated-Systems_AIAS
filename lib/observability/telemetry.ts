@@ -429,7 +429,7 @@ export class ObservabilityService {
     const totalCost = logs.reduce((sum, log) => sum + (log.cost || 0), 0);
 
     const byTenant: Record<string, number> = {};
-    const byWorkflow: Record<string, number> = {};
+    const _byWorkflow: Record<string, number> = {};
     const byAgent: Record<string, number> = {};
 
     logs.forEach(log => {

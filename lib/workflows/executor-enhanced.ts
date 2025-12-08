@@ -67,7 +67,7 @@ async function checkRateLimit(userId: string, plan: string): Promise<{ allowed: 
     pro: { monthly: 50000 },
   };
 
-  const limit = limits[plan]?.monthly || limits.free.monthly;
+  const limit = limits[plan]?.monthly || limits.free?.monthly || 0;
   const monthKey = new Date().toISOString().slice(0, 7); // YYYY-MM
   const identifier = `${userId}:${monthKey}`;
 
@@ -741,5 +741,7 @@ async function storeExecution(execution: WorkflowExecution): Promise<void> {
  * Delay helper for retries
  */
 function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }

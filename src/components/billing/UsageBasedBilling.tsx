@@ -145,12 +145,18 @@ const mockBillingPeriods: BillingPeriod[] = [
 ];
 
 export const UsageBasedBilling: React.FC = () => {
-  const [currentPeriod, setCurrentPeriod] = useState<BillingPeriod>(mockBillingPeriods[0] || {
-    period: 'current',
-    startDate: new Date(),
-    endDate: new Date(),
-    totalCost: 0,
-    breakdown: {}
+  const [currentPeriod, setCurrentPeriod] = useState<BillingPeriod>(() => {
+    if (mockBillingPeriods[0]) return mockBillingPeriods[0];
+    return {
+      id: 'current',
+      startDate: '2024-01-01',
+      endDate: '2024-01-31',
+      status: 'current' as const,
+      totalCost: 0,
+      baseCost: 0,
+      overageCost: 0,
+      metrics: []
+    };
   });
   const [billingProjection, setBillingProjection] = useState<BillingProjection>({
     currentMonth: 127.50,

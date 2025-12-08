@@ -145,7 +145,8 @@ class CostOptimizationService {
       const sourceRevenue = sourceConversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
       const sourceCost = sourceCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
 
-      bySource[source] = {
+      if (source) {
+        bySource[source] = {
         cost: sourceCost,
         leads: sourceLeads.length,
         conversions: sourceConversions.length,
@@ -171,7 +172,8 @@ class CostOptimizationService {
       const campaignRevenue = campaignConversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
       const campaignCost = campaignCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
 
-      byCampaign[campaign] = {
+      if (campaign) {
+        byCampaign[campaign] = {
         cost: campaignCost,
         leads: campaignLeads.length,
         conversions: campaignConversions.length,
@@ -288,26 +290,32 @@ class CostOptimizationService {
 
     costs?.forEach((cost: { date: string; amount: number }) => {
       const date = cost.date.split('T')[0];
-      if (!trends[date]) {
-        trends[date] = { cost: 0, leads: 0, conversions: 0 };
+      if (date) {
+        if (!trends[date]) {
+          trends[date] = { cost: 0, leads: 0, conversions: 0 };
+        }
+        trends[date].cost += cost.amount;
       }
-      trends[date].cost += cost.amount;
     });
 
     leads?.forEach((lead: { created_at: string }) => {
       const date = lead.created_at.split('T')[0];
-      if (!trends[date]) {
-        trends[date] = { cost: 0, leads: 0, conversions: 0 };
+      if (date) {
+        if (!trends[date]) {
+          trends[date] = { cost: 0, leads: 0, conversions: 0 };
+        }
+        trends[date].leads += 1;
       }
-      trends[date].leads += 1;
     });
 
     conversions?.forEach((conversion: { converted_at: string }) => {
       const date = conversion.converted_at.split('T')[0];
-      if (!trends[date]) {
-        trends[date] = { cost: 0, leads: 0, conversions: 0 };
+      if (date) {
+        if (!trends[date]) {
+          trends[date] = { cost: 0, leads: 0, conversions: 0 };
+        }
+        trends[date].conversions += 1;
       }
-      trends[date].conversions += 1;
     });
 
     return Object.entries(trends)

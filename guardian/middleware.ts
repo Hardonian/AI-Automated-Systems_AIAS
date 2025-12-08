@@ -51,7 +51,7 @@ monitoringService.trackError = function(error: Error, errorInfo?: Record<string,
     }
   );
   
-  return originalTrackError(error, errorInfo as Record<string, unknown> | undefined);
+  return originalTrackError(error, errorInfo as unknown as Parameters<typeof originalTrackError>[1]);
 };
 
 /**

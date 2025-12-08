@@ -14,7 +14,7 @@ interface RateLimitStore {
 
 class RateLimiter {
   private store: RateLimitStore = {};
-  private cleanupInterval: NodeJS.Timeout | null = null;
+  private _cleanupInterval: NodeJS.Timeout | null = null;
 
   constructor() {
     // Clean up expired entries every 5 minutes
@@ -76,7 +76,8 @@ class RateLimiter {
   private cleanup(): void {
     const now = Date.now();
     Object.keys(this.store).forEach((key) => {
-      if (this.store[key].resetTime < now) {
+      const entry = this.store[key];
+      if (entry && entry.resetTime < now) {
         delete this.store[key];
       }
     });
@@ -136,7 +137,8 @@ export function getClientIP(request: Request): string {
   // Check various headers for IP (Vercel, Cloudflare, etc.)
   const forwardedFor = request.headers.get('x-forwarded-for');
   if (forwardedFor) {
-    return forwardedFor.split(',')[0].trim();
+    const firstIp = forwardedFor.split(',')[0];
+    return firstIp ? firstIp.trim() : 'unknown';
   }
   
   const realIP = request.headers.get('x-real-ip');

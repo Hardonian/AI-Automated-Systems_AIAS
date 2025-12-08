@@ -38,7 +38,7 @@ describe('PluginRegistry', () => {
         deprecated: false,
       };
 
-      registry.registerPlugin(manifest);
+      registry.registerPlugin(manifest as any);
       const plugin = registry.getPlugin('plugin-1');
       expect(plugin).toBeDefined();
       expect(plugin?.name).toBe('Test Plugin');
@@ -68,7 +68,7 @@ describe('PluginRegistry', () => {
         published: true,
         verified: false,
         deprecated: false,
-      };
+      } as const;
 
       const manifest2 = {
         id: 'plugin-2',
@@ -93,8 +93,8 @@ describe('PluginRegistry', () => {
         deprecated: false,
       };
 
-      registry.registerPlugin(manifest1);
-      registry.registerPlugin(manifest2);
+      registry.registerPlugin(manifest1 as any);
+      registry.registerPlugin(manifest2 as any);
 
       const published = registry.listPlugins({ published: true });
       expect(published.length).toBe(1);

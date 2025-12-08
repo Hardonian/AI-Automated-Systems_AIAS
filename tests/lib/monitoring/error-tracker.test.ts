@@ -17,13 +17,13 @@ describe('Error Tracker', () => {
 
   it('should capture messages', () => {
     expect(() => {
-      errorTracker.captureMessage('Test message', { level: 'error' });
+      errorTracker.captureMessage('Test message', 'error');
     }).not.toThrow();
   });
 
   it('should set user context', () => {
     expect(() => {
-      errorTracker.setUser({ id: 'test-user', email: 'test@example.com' });
+      errorTracker.setUser('test-user');
     }).not.toThrow();
   });
 });

@@ -160,6 +160,7 @@ class ROITrackingService {
     // Calculate metrics for each source
     for (const source of Object.keys(attributionMap)) {
       const attribution = attributionMap[source];
+      if (!attribution) continue;
       const sourceCosts = costs?.filter((c: { source: string }) => c.source === source) || [];
       const sourceCost = sourceCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
 
@@ -252,18 +253,22 @@ class ROITrackingService {
 
     conversions?.forEach((conversion: { converted_at: string; value?: number }) => {
       const date = conversion.converted_at.split('T')[0];
-      if (!trends[date]) {
-        trends[date] = { revenue: 0, cost: 0 };
+      if (date) {
+        if (!trends[date]) {
+          trends[date] = { revenue: 0, cost: 0 };
+        }
+        trends[date].revenue += conversion.value || 0;
       }
-      trends[date].revenue += conversion.value || 0;
     });
 
     costs?.forEach((cost: { date: string; amount: number }) => {
       const date = cost.date.split('T')[0];
-      if (!trends[date]) {
-        trends[date] = { revenue: 0, cost: 0 };
+      if (date) {
+        if (!trends[date]) {
+          trends[date] = { revenue: 0, cost: 0 };
+        }
+        trends[date].cost += cost.amount;
       }
-      trends[date].cost += cost.amount;
     });
 
     return Object.entries(trends)

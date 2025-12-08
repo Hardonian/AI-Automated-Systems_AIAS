@@ -251,7 +251,7 @@ export function getFeatureLimit(featureId: string, tier: SubscriptionTier): numb
  */
 export function getTierLimits(tier: SubscriptionTier) {
   const tierConfig = pricingTiers.find(t => t.id === tier);
-  return tierConfig?.limits ?? pricingTiers[0].limits;
+  return tierConfig?.limits ?? pricingTiers[0]?.limits ?? { workflows: 0, executions: 0, storage: 0, users: 0, apiCalls: 0 };
 }
 
 /**

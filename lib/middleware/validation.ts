@@ -29,8 +29,8 @@ export function validationErrorResponse(errors: z.ZodError): NextResponse {
  * Validate request body with Zod schema
  */
 export function validateBody<T extends z.ZodTypeAny>(
-  request: NextRequest,
-  schema: T
+  _request: NextRequest,
+  _schema: T
 ): { success: true; data: z.infer<T> } | { success: false; response: NextResponse } {
   try {
     // This is a placeholder - in actual usage, you'd parse the body
@@ -54,8 +54,8 @@ export function validateBody<T extends z.ZodTypeAny>(
  * Validate query parameters
  */
 export function validateQuery<T extends z.ZodTypeAny>(
-  request: NextRequest,
-  schema: T
+  _request: NextRequest,
+  _schema: T
 ): { success: true; data: z.infer<T> } | { success: false; response: NextResponse } {
   try {
     const query = Object.fromEntries(request.nextUrl.searchParams.entries());

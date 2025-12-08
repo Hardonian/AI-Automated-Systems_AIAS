@@ -171,13 +171,13 @@ export class PredictiveIntelligenceService {
    * Recommend automations based on patterns
    */
   async recommendAutomations(
-    userId: string,
-    tenantId?: string
+    _userId: string,
+    _tenantId?: string
   ): Promise<AutomationRecommendation[]> {
     const recommendations: AutomationRecommendation[] = [];
 
     // Analyze friction points
-    const userFrictionPoints = this.frictionPoints.filter(fp => {
+    const userFrictionPoints = this.frictionPoints.filter(_fp => {
       // Would filter by user/tenant
       return true;
     });
@@ -225,7 +225,7 @@ export class PredictiveIntelligenceService {
    */
   async detectAnomalies(
     metric: string,
-    period: { start: Date; end: Date },
+    _period: { start: Date; end: Date },
     baseline?: { avg: number; stdDev: number }
   ): Promise<Anomaly[]> {
     const anomalies: Anomaly[] = [];

@@ -366,7 +366,7 @@ export abstract class BaseAdapter implements IntegrationAdapter {
   /**
    * Parse pagination from response
    */
-  private parsePagination(response: Response, data: unknown): APIResponse['pagination'] {
+  private parsePagination(_response: Response, _data: unknown): APIResponse['pagination'] {
     const pagination = this.config.pagination;
     if (!pagination) return undefined;
 

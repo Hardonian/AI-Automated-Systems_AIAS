@@ -239,11 +239,14 @@ class ABTestingService {
     for (let i = 0; i < variations.length; i++) {
       cumulative += trafficSplit[i] || 0;
       if (random < cumulative) {
-        return variations[i];
+        const variation = variations[i];
+        if (variation) return variation;
       }
     }
 
-    return variations[0];
+    const firstVariation = variations[0];
+    if (!firstVariation) throw new Error('No variations available');
+    return firstVariation;
   }
 
   /**
@@ -268,7 +271,8 @@ class ABTestingService {
     if (results.length < 2) return undefined;
 
     const sorted = [...results].sort((a, b) => b.conversionRate - a.conversionRate);
-    return sorted[0].variationId;
+    const winner = sorted[0];
+    return winner?.variationId;
   }
 
   /**

@@ -279,6 +279,11 @@ export function getEmailsToSend(trialStartDate: Date, currentDate: Date = new Da
  */
 export function renderEmailTemplate(template: EmailTemplate, userName: string = "there"): string {
   const { greeting, body, cta, footer } = template.content;
+  
+  // Personalize greeting with userName if provided
+  const personalizedGreeting = userName !== "there" 
+    ? greeting.replace(/^(Hi |Hello |Welcome )/i, `Hi ${userName}, `).replace(/^Hi there, /i, `Hi ${userName}, `)
+    : greeting;
 
   return `
     <!DOCTYPE html>
@@ -290,7 +295,7 @@ export function renderEmailTemplate(template: EmailTemplate, userName: string = 
     </head>
     <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
-        <h1 style="color: white; margin: 0;">${greeting}</h1>
+        <h1 style="color: white; margin: 0;">${personalizedGreeting}</h1>
       </div>
       <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px;">
         ${body.map((paragraph) => `<p style="margin: 0 0 15px 0;">${paragraph || "<br>"}</p>`).join("")}

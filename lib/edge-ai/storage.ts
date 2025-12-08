@@ -102,7 +102,7 @@ export async function uploadModelFile(
     }
 
     // Upload to Supabase Storage
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from(EDGE_AI_BUCKETS.models)
       .upload(storagePath, fileBuffer, {
         contentType: mimeType,
@@ -186,7 +186,7 @@ export async function uploadArtifact(
     }
 
     // Upload to Supabase Storage
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from(EDGE_AI_BUCKETS.artifacts)
       .upload(storagePath, fileBuffer, {
         contentType: 'application/octet-stream',

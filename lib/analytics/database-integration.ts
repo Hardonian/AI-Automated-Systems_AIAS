@@ -1,16 +1,40 @@
 // Database Integration for PMF Metrics
 // Connects PMF tracker to Supabase database
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { PMFMetrics } from "./pmf-metrics";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+// Lazy initialization to avoid build-time errors
+function getSupabaseClient(): SupabaseClient | null {
+  // Build-time safety: Don't create client during build
+  if (process.env.NEXT_PHASE === 'phase-production-build' || 
+      (process.env.SKIP_ENV_VALIDATION === 'true' && !process.env.VERCEL && !process.env.GITHUB_ACTIONS)) {
+    return null;
+  }
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+
+  // Validate URLs are not placeholders or empty
+  if (!supabaseUrl || supabaseUrl.includes('placeholder') || !supabaseKey || supabaseKey.includes('placeholder')) {
+    return null;
+  }
+
+  try {
+    return createClient(supabaseUrl, supabaseKey);
+  } catch (error) {
+    console.error("Failed to create Supabase client:", error);
+    return null;
+  }
+}
 
 export class DatabasePMFTracker {
   async getMetricsFromDatabase(): Promise<PMFMetrics> {
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      return this.getDefaultMetrics();
+    }
+
     try {
       // Call the update function first to ensure latest metrics
       await supabase.rpc("update_pmf_metrics_snapshot");
@@ -50,6 +74,11 @@ export class DatabasePMFTracker {
     userId?: string,
     properties?: Record<string, any>
   ) {
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      return; // Silently fail during build or when client unavailable
+    }
+
     try {
       const { error } = await supabase.from("conversion_events").insert({
         event_type: eventType,
@@ -67,6 +96,11 @@ export class DatabasePMFTracker {
   }
 
   async trackUserActivation(userId: string, signupDate: Date) {
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      return; // Silently fail during build or when client unavailable
+    }
+
     try {
       const { error } = await supabase.from("user_activations").insert({
         user_id: userId,
@@ -83,6 +117,11 @@ export class DatabasePMFTracker {
   }
 
   async trackFirstWorkflow(userId: string, workflowCreatedAt: Date) {
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      return; // Silently fail during build or when client unavailable
+    }
+
     try {
       // Get signup date
       const { data: activation } = await supabase
@@ -122,6 +161,11 @@ export class DatabasePMFTracker {
     userId?: string,
     referrerUrl?: string
   ) {
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      return; // Silently fail during build or when client unavailable
+    }
+
     try {
       const { error } = await supabase.from("affiliate_clicks").insert({
         affiliate_id: affiliateId,
@@ -140,6 +184,11 @@ export class DatabasePMFTracker {
   }
 
   async submitNPSSurvey(userId: string, score: number, feedback?: string) {
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      return; // Silently fail during build or when client unavailable
+    }
+
     try {
       const { error } = await supabase.from("nps_surveys").insert({
         user_id: userId,

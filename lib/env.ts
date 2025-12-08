@@ -34,12 +34,11 @@ function getRuntimeEnv(): 'vercel' | 'github' | 'local' | 'unknown' {
  */
 function getEnvVar(key: string, required: boolean = true, defaultValue?: string): string {
   // Check if we're in build mode and should skip validation
-  // Next.js sets NODE_ENV during build, and we check for SKIP_ENV_VALIDATION flag
+  // In GitHub Actions/Vercel, env vars should be available, so only skip if explicitly set
   const isBuildTime = typeof process !== 'undefined' && (
-    process.env.SKIP_ENV_VALIDATION === 'true' || 
-    process.env.SKIP_ENV_VALIDATION === '1' ||
-    (process.env.NEXT_PHASE === 'phase-production-build') ||
-    (process.env.NODE_ENV === 'production' && typeof window === 'undefined' && !process.env.VERCEL)
+    (process.env.SKIP_ENV_VALIDATION === 'true' || process.env.SKIP_ENV_VALIDATION === '1') &&
+    !process.env.GITHUB_ACTIONS &&
+    !process.env.VERCEL
   );
   
   // Check process.env (Node.js/Next.js)
@@ -66,7 +65,10 @@ function getEnvVar(key: string, required: boolean = true, defaultValue?: string)
   
   // During build, return valid placeholder values for required vars if not set (before validation)
   // Use valid format placeholders that won't break URL validation
-  if (required && !value && isBuildTime) {
+  // BUT: In GitHub Actions/Vercel, env vars should be available, so don't use placeholders there
+  const shouldUsePlaceholder = isBuildTime && !process.env.GITHUB_ACTIONS && !process.env.VERCEL;
+  
+  if (required && !value && shouldUsePlaceholder) {
     // Return valid placeholder URLs/keys for Supabase and database
     if (key.includes('URL') || key.includes('url')) {
       return 'https://placeholder.example.com';
@@ -77,8 +79,8 @@ function getEnvVar(key: string, required: boolean = true, defaultValue?: string)
     return `placeholder-${key}`;
   }
   
-  // Validate required variables (skip during build)
-  if (required && !value && !isBuildTime) {
+  // Validate required variables (skip during build only if using placeholders)
+  if (required && !value && !shouldUsePlaceholder) {
     const runtime = getRuntimeEnv();
     throw new Error(
       `Missing required environment variable: ${key}\n` +

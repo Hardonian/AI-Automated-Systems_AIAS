@@ -3,8 +3,6 @@
  * Supports nested dynamic fields, conditional rendering, and component includes
  */
 
-import dynamicFields from '../../emails/fields/dynamic_fields.json';
-
 export interface TemplateVariables {
   [key: string]: any;
 }

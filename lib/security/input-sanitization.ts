@@ -86,7 +86,7 @@ export function detectSQLInjection(input: string): boolean {
     /(--|#|\/\*|\*\/)/,
     /(\b(UNION|OR|AND)\b.*\b(SELECT|INSERT|UPDATE|DELETE)\b)/i,
     /(;|\||&)/,
-    /(\b(CHAR|CONCAT|CAST|CONVERT)\s*\(/i,
+    /(\b(CHAR|CONCAT|CAST|CONVERT)\s*\()/i,
   ];
 
   return sqlPatterns.some(pattern => pattern.test(input));

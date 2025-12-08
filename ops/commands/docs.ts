@@ -24,7 +24,7 @@ export async function docs(_options: { rebuild?: boolean } = {}) {
 
   // Generate runbooks
   console.log('📋 Generating runbooks...');
-  await generateRunbooks(docsDir);
+  await generateRunbooks(docsDir, _options);
 
   // Generate HTML index
   console.log('🌐 Generating HTML index...');
@@ -61,7 +61,7 @@ async function generateMermaidDiagrams(outputDir: string) {
   }
 }
 
-async function generateRunbooks(_outputDir: string) {
+async function generateRunbooks(_outputDir: string, options: { rebuild?: boolean } = {}) {
   const runbooksDir = path.join(process.cwd(), 'ops', 'runbooks');
   if (!fs.existsSync(runbooksDir)) {
     fs.mkdirSync(runbooksDir, { recursive: true });

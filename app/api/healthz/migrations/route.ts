@@ -9,6 +9,7 @@
 
 import { NextResponse } from 'next/server';
 import { getMigrationFiles, getAppliedMigrations, validateSchemaAfterMigrations } from '@/lib/database/migrations';
+import { isError, isString } from '@/lib/utils/type-guards';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -41,11 +42,16 @@ export async function GET() {
     let appliedMigrations: string[] = [];
     try {
       appliedMigrations = await getAppliedMigrations(dbUrl);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = isError(error) 
+        ? error.message 
+        : isString(error) 
+          ? error 
+          : 'Unknown error occurred';
       return NextResponse.json(
         {
           status: 'error',
-          message: `Failed to check migrations: ${error.message}`,
+          message: `Failed to check migrations: ${errorMessage}`,
           migrations: {
             total: migrationFiles.length,
             applied: 0,
@@ -83,11 +89,16 @@ export async function GET() {
       },
       timestamp: new Date().toISOString(),
     }, { status: httpStatus });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = isError(error) 
+      ? error.message 
+      : isString(error) 
+        ? error 
+        : 'Unknown error occurred';
     return NextResponse.json(
       {
         status: 'error',
-        message: error.message,
+        message: errorMessage,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

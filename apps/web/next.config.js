@@ -135,12 +135,12 @@ const nextConfig = {
   // Build optimizations
   // swcMinify is default in Next.js 15, no need to specify
   
-  // TypeScript and ESLint (handled in CI)
+  // TypeScript and ESLint - strict enforcement for production builds
   typescript: {
-    ignoreBuildErrors: true, // Allow build to proceed, type checking done in CI
+    ignoreBuildErrors: false, // Enforce type checking during build
   },
   eslint: {
-    ignoreDuringBuilds: true, // Linting done separately in CI
+    ignoreDuringBuilds: false, // Enforce linting during build
   },
 };
 

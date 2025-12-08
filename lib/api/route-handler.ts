@@ -16,6 +16,7 @@ function getCacheService() {
 }
 import { z } from 'zod';
 import { SystemError, ValidationError, AuthenticationError, AuthorizationError, formatError } from '@/lib/errors';
+import { isDefined, isError, isObject } from '@/lib/utils/type-guards';
 
 export interface RouteHandlerOptions {
   requireAuth?: boolean;
@@ -26,7 +27,7 @@ export interface RouteHandlerOptions {
     maxRequests: number;
   };
   maxBodySize?: number;
-  validateBody?: z.ZodSchema<any>;
+  validateBody?: z.ZodSchema<unknown>;
   cache?: {
     enabled: boolean;
     ttl?: number;
@@ -40,7 +41,7 @@ export interface RouteContext {
   request: NextRequest;
   userId: string | null;
   tenantId: string | null;
-  tenantContext?: any;
+  tenantContext?: Record<string, unknown>;
 }
 
 /**
@@ -154,9 +155,20 @@ export function createRouteHandler(
           const validation = validateInput(normalizedOptions.validateBody, body);
           
           if (!validation.success) {
+            const errorDetails = isObject(validation.error) && 'issues' in validation.error && Array.isArray(validation.error.issues)
+              ? validation.error.issues.map((issue: unknown) => {
+                  if (isObject(issue) && 'path' in issue && 'message' in issue) {
+                    return { 
+                      path: Array.isArray(issue.path) ? issue.path : [String(issue.path)], 
+                      message: String(issue.message) 
+                    };
+                  }
+                  return { path: [], message: String(issue) };
+                })
+              : [];
             const error = new ValidationError(
               'Invalid request body',
-              Array.isArray(validation.error) ? validation.error.map((e: any) => ({ path: e.path, message: e.message })) : []
+              errorDetails
             );
             const formatted = formatError(error);
             return NextResponse.json(
@@ -183,14 +195,14 @@ export function createRouteHandler(
         const bodyText = await getBodyText();
         const cacheKey = `api:${request.nextUrl.pathname}:${bodyText}`;
         const cache = getCacheService();
-        if (cache) {
-          const cached = await (cache as any).get(cacheKey, {
-          ttl: normalizedOptions.cache.ttl,
-          tenantId: tenantId || undefined,
-          tags: normalizedOptions.cache.tags,
-        });
+        if (cache && isObject(cache) && typeof cache.get === 'function') {
+          const cached = await cache.get(cacheKey, {
+            ttl: normalizedOptions.cache.ttl,
+            tenantId: tenantId || undefined,
+            tags: normalizedOptions.cache.tags,
+          });
           
-          if (cached) {
+          if (isDefined(cached)) {
             const response = NextResponse.json(cached);
             response.headers.set('X-Cache', 'HIT');
             response.headers.set('X-Response-Time', `${Date.now() - startTime}ms`);
@@ -222,8 +234,8 @@ export function createRouteHandler(
           const bodyText = await getBodyText();
           const cacheKey = `api:${request.nextUrl.pathname}:${bodyText}`;
           const cache = getCacheService();
-          if (cache) {
-            await (cache as any).set(cacheKey, body, {
+          if (cache && isObject(cache) && typeof cache.set === 'function') {
+            await cache.set(cacheKey, body, {
               ttl: normalizedOptions.cache.ttl,
               tenantId: tenantId || undefined,
               tags: normalizedOptions.cache.tags,
@@ -258,7 +270,7 @@ export function createRouteHandler(
       
       const systemError = new SystemError(
         'Internal server error',
-        error instanceof Error ? error : new Error(String(error))
+        isError(error) ? error : new Error(String(error))
       );
       const formatted = formatError(systemError);
       
@@ -266,7 +278,7 @@ export function createRouteHandler(
         {
           error: formatted.message,
           message: process.env.NODE_ENV === 'development' 
-            ? (error instanceof Error ? error.message : String(error))
+            ? (isError(error) ? error.message : String(error))
             : 'An error occurred processing your request',
         },
         { 
@@ -313,7 +325,7 @@ export function createPOSTHandler(
 export function handleApiError(error: unknown, message: string): NextResponse {
   const systemError = new SystemError(
     message,
-    error instanceof Error ? error : new Error(String(error))
+    isError(error) ? error : new Error(String(error))
   );
   const formatted = formatError(systemError);
   return NextResponse.json(

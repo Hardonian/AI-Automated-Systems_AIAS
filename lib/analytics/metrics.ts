@@ -3,10 +3,32 @@
  * Calculates activation metrics from telemetry events
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
 
-const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+// Lazy initialization to avoid build-time errors
+function getSupabaseClient(): SupabaseClient | null {
+  // Build-time safety: Don't create client during build
+  if (process.env.NEXT_PHASE === 'phase-production-build' || 
+      (process.env.SKIP_ENV_VALIDATION === 'true' && !process.env.VERCEL && !process.env.GITHUB_ACTIONS)) {
+    return null;
+  }
+
+  const url = env.supabase.url;
+  const key = env.supabase.serviceRoleKey;
+
+  // Validate URLs are not placeholders or empty
+  if (!url || url.includes('placeholder') || !key || key.includes('placeholder')) {
+    return null;
+  }
+
+  try {
+    return createClient(url, key);
+  } catch (error) {
+    console.error("Failed to create Supabase client:", error);
+    return null;
+  }
+}
 
 export interface ActivationMetrics {
   activationRate: number;
@@ -30,6 +52,9 @@ export interface FunnelMetrics {
  * Calculate activation rate
  */
 export async function calculateActivationRate(days: number = 30): Promise<number> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return 0;
+
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);
 
@@ -55,6 +80,9 @@ export async function calculateActivationRate(days: number = 30): Promise<number
  * Calculate time to activation (median)
  */
 export async function calculateTimeToActivation(days: number = 30): Promise<number> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return 0;
+
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);
 
@@ -92,6 +120,9 @@ export async function calculateTimeToActivation(days: number = 30): Promise<numb
  * Calculate Day 7 retention
  */
 export async function calculateDay7Retention(): Promise<number> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return 0;
+
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
   const fourteenDaysAgo = new Date();
@@ -124,6 +155,11 @@ export async function calculateDay7Retention(): Promise<number> {
  * Get funnel metrics
  */
 export async function getFunnelMetrics(days: number = 30): Promise<FunnelMetrics> {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return { signups: 0, integrations: 0, workflows: 0, activations: 0 };
+  }
+
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);
 
@@ -170,6 +206,20 @@ export async function getAllActivationMetrics(days: number = 30): Promise<Activa
   ]);
 
   // Get unique active users
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return {
+      activationRate,
+      timeToActivation,
+      day7Retention,
+      totalSignups: funnel.signups,
+      totalIntegrations: funnel.integrations,
+      totalWorkflows: funnel.workflows,
+      totalActivations: funnel.activations,
+      uniqueActiveUsers: 0,
+    };
+  }
+
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);
   const { data: activeUsers } = await supabase

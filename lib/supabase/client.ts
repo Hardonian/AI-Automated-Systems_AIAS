@@ -18,9 +18,11 @@ export function createClient() {
   const supabaseKey: string | undefined = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   
   // Build-safe check: Skip validation during build
-  const isBuildTime = process.env.SKIP_ENV_VALIDATION === 'true' || 
-                      process.env.SKIP_ENV_VALIDATION === '1' ||
-                      (typeof window === 'undefined' && process.env.NODE_ENV !== 'production');
+  // In GitHub Actions, env vars should be available, so only skip if explicitly set
+  const isBuildTime = (process.env.SKIP_ENV_VALIDATION === 'true' || 
+                       process.env.SKIP_ENV_VALIDATION === '1') &&
+                      !process.env.GITHUB_ACTIONS &&
+                      !process.env.VERCEL;
   
   // Hard error at runtime if missing (production safety)
   if (!supabaseUrl || !supabaseKey) {
@@ -46,6 +48,15 @@ export function createClient() {
   );
 }
 
-// Backward compatibility: Export a default client instance
+// Backward compatibility: Export a lazy client getter to avoid build-time execution
 // Note: For better performance in client components, use createClient() directly
-export const supabase = createClient();
+let _supabaseInstance: ReturnType<typeof createClient> | null = null;
+export const supabase = new Proxy({} as ReturnType<typeof createClient>, {
+  get(_target, prop) {
+    if (!_supabaseInstance) {
+      _supabaseInstance = createClient();
+    }
+    const value = _supabaseInstance[prop as keyof typeof _supabaseInstance];
+    return typeof value === 'function' ? value.bind(_supabaseInstance) : value;
+  }
+});

@@ -4,16 +4,55 @@ import { createGETHandler, RouteContext } from "@/lib/api/route-handler";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
 
-const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+// Lazy initialization to avoid build-time errors when env vars are not set
+function getSupabaseClient() {
+  // Build-time safety: Return null during build to prevent errors
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return null;
+  }
+
+  const url = env.supabase.url;
+  const key = env.supabase.serviceRoleKey;
+  
+  // Validate URLs are not placeholders (build-time safety)
+  if (!url || !key || url.includes('placeholder') || key.includes('placeholder')) {
+    return null;
+  }
+  
+  try {
+    return createClient(url, key);
+  } catch (error) {
+    logger.error("Failed to create Supabase client", error instanceof Error ? error : new Error(String(error)));
+    return null;
+  }
+}
 
 export const runtime = "nodejs"; // Use Node.js runtime for route-handler compatibility
+export const dynamic = "force-dynamic"; // Force dynamic rendering to avoid build-time execution
+export const revalidate = 0; // Disable caching completely
+
+// Build-time safety: Prevent route execution during build
+// Next.js may try to execute routes during build for static generation
+// This wrapper ensures the handler only runs at request time
+function createBuildSafeHandler(handler: (context: RouteContext) => Promise<NextResponse>) {
+  return async (context: RouteContext) => {
+    // Only execute during actual requests, not during build
+    if (process.env.NEXT_PHASE === 'phase-production-build') {
+      return NextResponse.json(
+        { error: "Route not available during build" },
+        { status: 503 }
+      );
+    }
+    return handler(context);
+  };
+}
 
 /**
  * GET /api/admin/metrics
  * Get activation metrics for dashboard
  */
 export const GET = createGETHandler(
-  async (context: RouteContext) => {
+  createBuildSafeHandler(async (context: RouteContext) => {
     const { request } = context;
 
     // Get date range from query params (default to last 30 days)
@@ -25,6 +64,36 @@ export const GET = createGETHandler(
       // Query telemetry events for activation funnel
       // Note: This assumes telemetry events are stored in a 'telemetry_events' table
       // Adjust table name based on your actual schema
+
+      const supabase = getSupabaseClient();
+      
+      // Build-time safety: Return empty metrics if client unavailable
+      if (!supabase) {
+        return NextResponse.json({
+          metrics: {
+            activation_rate: 0,
+            time_to_activation_ms: 0,
+            time_to_activation_hours: 0,
+            day_7_retention: 0,
+            total_signups: 0,
+            total_integrations: 0,
+            total_workflows: 0,
+            total_activations: 0,
+            unique_active_users: 0,
+          },
+          funnel: {
+            signups: 0,
+            integrations: 0,
+            workflows: 0,
+            activations: 0,
+          },
+          period: {
+            days,
+            start_date: startDate.toISOString(),
+            end_date: new Date().toISOString(),
+          },
+        });
+      }
 
       // Get signups
       const { data: signups, error: signupsError } = await supabase
@@ -176,7 +245,7 @@ export const GET = createGETHandler(
         { status: 500 }
       );
     }
-  },
+  }),
   {
     requireAuth: true,
     cache: { enabled: true, ttl: 300 }, // Cache for 5 minutes

@@ -3,7 +3,7 @@
  */
 
 import { NodeSDK } from '@opentelemetry/sdk-node';
-// import { Resource } from '@opentelemetry/resources';
+import * as resources from '@opentelemetry/resources';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
 import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-http';
@@ -19,7 +19,7 @@ export function initObservability() {
   }
 
   const sdk = new NodeSDK({
-    resource: new Resource({
+    resource: new resources.Resource({
       [SemanticResourceAttributes.SERVICE_NAME]: process.env.OTEL_SERVICE_NAME || 'aias-platform',
       [SemanticResourceAttributes.SERVICE_VERSION]: process.env.npm_package_version || '1.0.0',
     }),

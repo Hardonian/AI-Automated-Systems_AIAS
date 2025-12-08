@@ -59,14 +59,14 @@ export function renderConditionals(template: string, variables: TemplateVariable
 
   // Handle {{#if}}...{{else}}...{{/if}} blocks
   const ifElseRegex = /\{\{#if\s+([^}]+)\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
-  result = result.replace(ifElseRegex, (match, condition, trueBlock, falseBlock) => {
+  result = result.replace(ifElseRegex, (_match, condition, trueBlock, falseBlock) => {
     const conditionValue = evaluateCondition(condition, variables);
     return conditionValue ? trueBlock : falseBlock;
   });
 
   // Handle {{#if}}...{{/if}} blocks (without else)
   const ifRegex = /\{\{#if\s+([^}]+)\}\}([\s\S]*?)\{\{\/if\}\}/g;
-  result = result.replace(ifRegex, (match, condition, block) => {
+  result = result.replace(ifRegex, (_match, condition, block) => {
     const conditionValue = evaluateCondition(condition, variables);
     return conditionValue ? block : '';
   });

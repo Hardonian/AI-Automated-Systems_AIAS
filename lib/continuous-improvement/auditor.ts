@@ -3,8 +3,6 @@
  * Automatically identifies and fixes issues
  */
 
-import { readFile, readdir } from 'fs/promises';
-
 export interface AuditResult {
   category: string;
   severity: 'low' | 'medium' | 'high' | 'critical';

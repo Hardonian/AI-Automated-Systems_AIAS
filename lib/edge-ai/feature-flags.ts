@@ -67,7 +67,7 @@ export async function getUserLimits(userId: string): Promise<{
   maxModelSizeBytes: number;
 }> {
   // Get user's subscription plan
-  const { data: profile } = await supabase
+  const { data: _profile } = await supabase
     .from('profiles')
     .select('id')
     .eq('id', userId)
@@ -109,7 +109,7 @@ export async function getUserLimits(userId: string): Promise<{
 
   // Default to free plan if no subscription found
   const plan = 'free'; // TODO: Get from subscription
-  const limits = planLimits[plan] || planLimits.free;
+  const limits = planLimits[plan] ?? planLimits.free;
 
   // Get current usage
   const { count: modelCount } = await supabase
@@ -131,13 +131,13 @@ export async function getUserLimits(userId: string): Promise<{
     .in('status', ['pending', 'queued', 'running', 'completed']);
 
   return {
-    maxModels: limits.maxModels,
+    maxModels: limits!.maxModels,
     currentModels: modelCount || 0,
-    maxOptimizations: limits.maxOptimizations,
+    maxOptimizations: limits!.maxOptimizations,
     currentOptimizations: optimizationCount || 0,
-    maxBenchmarks: limits.maxBenchmarks,
+    maxBenchmarks: limits!.maxBenchmarks,
     currentBenchmarks: benchmarkCount || 0,
-    maxModelSizeBytes: limits.maxModelSizeBytes,
+    maxModelSizeBytes: limits!.maxModelSizeBytes,
   };
 }
 

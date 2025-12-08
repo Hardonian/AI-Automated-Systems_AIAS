@@ -149,14 +149,19 @@ export function AgentExecutorComponent({ agentId, userId, tenantId }: AgentExecu
               </div>
             )}
 
-            {result.output && (
-              <div>
-                <Label>Output</Label>
-                <pre className="mt-2 p-4 bg-muted rounded-md text-sm overflow-auto">
-                  {typeof result.output === 'string' ? result.output : JSON.stringify(result.output || {}, null, 2)}
-                </pre>
-              </div>
-            )}
+            {(() => {
+              const output = result.output;
+              if (output === undefined || output === null) return null;
+              const outputString = typeof output === 'string' ? output : JSON.stringify(output, null, 2);
+              return (
+                <div>
+                  <Label>Output</Label>
+                  <pre className="mt-2 p-4 bg-muted rounded-md text-sm overflow-auto">
+                    {outputString}
+                  </pre>
+                </div>
+              );
+            })()}
 
             {result.error && (
               <div>

@@ -261,10 +261,10 @@ export async function detectFrictionPoints(): Promise<FrictionPoint[]> {
 
       Object.values(userProgress).forEach((progress) => {
         if (progress && progress.steps && progress.steps.length >= index) {
-          stepStats[step].reached++;
+          stepStats[step]!.reached++;
         }
         if (progress && progress.steps && progress.steps.includes(step)) {
-          stepStats[step].completed++;
+          stepStats[step]!.completed++;
         }
       });
     });
@@ -326,10 +326,6 @@ export async function analyzeConversionSignals(): Promise<{
         userLastActivity[userId] = eventDate;
       }
     });
-
-    const _churnedUsers = Object.entries(userLastActivity)
-      .filter(([_, lastActivity]) => lastActivity < thirtyDaysAgo)
-      .map(([userId]) => userId);
 
     // Analyze signals for activated users
     const activationSignals: Array<{ signal: string; correlation: number; impact: "high" | "medium" | "low" }> = [];

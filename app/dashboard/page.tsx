@@ -388,8 +388,8 @@ export default async function DashboardPage() {
                 ))}
               </div>
             ) : null}
-            {'note' in techNews && techNews.note && typeof techNews.note === 'string' && (
-              <p className="text-xs text-muted-foreground mt-2">{techNews.note}</p>
+            {'note' in techNews && typeof techNews.note === 'string' && techNews.note && (
+              <p className="text-xs text-muted-foreground mt-2">{techNews.note as string}</p>
             )}
           </CardContent>
         </Card>

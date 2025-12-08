@@ -1,6 +1,7 @@
 import pino from 'pino';
 import { config } from '@ai-consultancy/config';
 import { register, collectDefaultMetrics, Counter, Histogram, Gauge } from 'prom-client';
+import { prisma } from './database';
 
 // Initialize Prometheus metrics
 collectDefaultMetrics({ register });
@@ -163,6 +164,9 @@ export class ObservabilityService {
     try {
       // Check database connection
       const dbStart = Date.now();
+      if (!prisma) {
+        throw new Error('Prisma client not initialized');
+      }
       await prisma.$queryRaw`SELECT 1`;
       const dbDuration = Date.now() - dbStart;
 
@@ -199,6 +203,9 @@ export class ObservabilityService {
   static async getReadinessStatus() {
     try {
       // Check if all required services are available
+      if (!prisma) {
+        throw new Error('Prisma client not initialized');
+      }
       await prisma.$queryRaw`SELECT 1`;
       // Check Redis
       // Check other services

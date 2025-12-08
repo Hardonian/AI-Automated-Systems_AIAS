@@ -362,7 +362,7 @@ export async function trackEvent<T extends BaseEventPayload>(
         ...enriched,
         // Ensure event name is included
         event: eventName,
-      } as Record<string, unknown>,
+      } as unknown as Record<string, unknown>,
       app: 'web',
     });
   } catch (error) {

@@ -50,8 +50,9 @@ async function applySupabaseMigrations() {
 
     let command = 'npx supabase db push';
     
-    const env: Record<string, string> = {
+    const env: NodeJS.ProcessEnv = {
       ...process.env,
+      NODE_ENV: process.env.NODE_ENV || 'development',
     };
 
     if (SUPABASE_PROJECT_REF) {

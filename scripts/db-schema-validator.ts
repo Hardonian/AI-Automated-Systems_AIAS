@@ -151,10 +151,10 @@ export async function validateSchema(): Promise<SchemaValidationResult> {
     });
 
     return result;
-  } catch (error) {
-    logger.error("Schema validation failed", { error });
+  } catch (err) {
+    logger.error("Schema validation failed", err instanceof Error ? err : new Error(String(err)));
     result.valid = false;
-    result.errors.push(`Validation error: ${error instanceof Error ? error.message : String(error)}`);
+    result.errors.push(`Validation error: ${err instanceof Error ? err.message : String(err)}`);
     return result;
   }
 }
@@ -251,5 +251,3 @@ if (require.main === module) {
       process.exit(1);
     });
 }
-
-export { validateMigrations };

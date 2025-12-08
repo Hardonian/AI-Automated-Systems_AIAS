@@ -133,7 +133,7 @@ function parseEnvExample(): Map<string, EnvVarDefinition> {
     // Category headers
     if (trimmed.startsWith("# ====") && trimmed.includes("===")) {
       const match = trimmed.match(/#\s*====\s*(.+?)\s*====/);
-      if (match) {
+      if (match && match[1]) {
         currentCategory = match[1].trim();
       }
       continue;
@@ -241,7 +241,7 @@ function checkHardcodedSecrets(): { file: string; line: number; content: string 
     if (!existsSync(filePath)) continue;
 
     const content = readFileSync(filePath, "utf-8");
-    const _lines = content.split("\n");
+    const lines = content.split("\n");
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];

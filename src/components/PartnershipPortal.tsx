@@ -13,7 +13,7 @@ import {
   TrendingUp, 
   Award, 
   Target, 
-  BarChart3,
+  // BarChart3,
   ExternalLink,
   Copy,
   CheckCircle,
@@ -25,7 +25,7 @@ import { PARTNERSHIP_TIERS, createReferralLink } from '@/lib/partnerships';
 
 const PartnershipPortal: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [referralCode, setReferralCode] = useState('aias_partner_12345');
+  const [referralCode] = useState('aias_partner_12345');
   const [copied, setCopied] = useState(false);
 
   // Mock partner data

@@ -129,7 +129,9 @@ describe('lib/security/api-security', () => {
       const result = validateInput(schema, input);
       
       expect(result.success).toBe(true);
-      expect(result.data).toBe('test@example.com');
+      if (result.success) {
+        expect(result.data).toBe('test@example.com');
+      }
     });
 
     it('should reject invalid input', () => {
@@ -139,7 +141,9 @@ describe('lib/security/api-security', () => {
       const result = validateInput(schema, input);
       
       expect(result.success).toBe(false);
-      expect(result.error).toBeDefined();
+      if (!result.success) {
+        expect(result.error).toBeDefined();
+      }
     });
 
     it('should validate UUID', () => {

@@ -4,7 +4,7 @@
  */
 
 import { type GuardianEvent } from './core';
-import { guardianInspector, type TrustReport } from './inspector';
+import { type TrustReport } from './inspector';
 
 export interface Explanation {
   question: string;
@@ -213,7 +213,7 @@ ${this.getUserFriendlyExplanation(event)}`;
     }
 
     if (questionLower.includes('what rules') || questionLower.includes('which rules')) {
-      if (context?.events && context.events.length > 0) {
+      if (context?.events && context.events.length > 0 && context.events[0]) {
         return this.explainRules(context.events[0]);
       }
     }
@@ -222,7 +222,7 @@ ${this.getUserFriendlyExplanation(event)}`;
       return this.explainDisableMonitoring();
     }
 
-    if (context?.events && context.events.length > 0) {
+    if (context?.events && context.events.length > 0 && context.events[0]) {
       return this.explainEvent(context.events[0]);
     }
 

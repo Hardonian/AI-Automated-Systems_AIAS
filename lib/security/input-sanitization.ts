@@ -23,7 +23,7 @@ export function sanitizeHTML(html: string, options?: {
     FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover'],
   };
 
-  return DOMPurify.sanitize(html, config);
+  return DOMPurify.sanitize(html, config) as unknown as string;
 }
 
 /**

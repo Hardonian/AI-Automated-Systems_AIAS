@@ -309,20 +309,20 @@ export class PluginRegistry {
 
     // Only expose APIs for granted permissions
     if (context.permissions.includes('read_data')) {
-      api.readData = async (path: string) => {
+      api.readData = async (_path: string) => {
         // Sandboxed data access
         return {};
       };
     }
 
     if (context.permissions.includes('write_data')) {
-      api.writeData = async (path: string, data: unknown) => {
+      api.writeData = async (_path: string, _data: unknown) => {
         // Sandboxed data write
       };
     }
 
     if (context.permissions.includes('execute_workflows')) {
-      api.executeWorkflow = async (workflowId: string, input: Record<string, unknown>) => {
+      api.executeWorkflow = async (_workflowId: string, _input: Record<string, unknown>) => {
         // Would call workflow executor
         return {};
       };
@@ -357,13 +357,13 @@ export class PluginRegistry {
   /**
    * Load plugin module (would dynamically import)
    */
-  private async loadPluginModule(manifest: PluginManifest): Promise<{
+  private async loadPluginModule(_manifest: PluginManifest): Promise<{
     execute: (input: Record<string, unknown>, api: PluginAPI) => Promise<unknown>;
   }> {
     // Would dynamically import plugin code
     // For now, return mock
     return {
-      execute: async (input: Record<string, unknown>, api: PluginAPI) => {
+      execute: async (input: Record<string, unknown>, _api: PluginAPI) => {
         return { executed: true, input };
       },
     };
@@ -377,7 +377,7 @@ export class PluginPublisher {
   /**
    * Publish plugin
    */
-  async publishPlugin(manifest: PluginManifest): Promise<void> {
+  async publishPlugin(_manifest: PluginManifest): Promise<void> {
     // Validate plugin
     // Upload to marketplace
     // Set published flag
@@ -386,7 +386,7 @@ export class PluginPublisher {
   /**
    * Verify plugin
    */
-  async verifyPlugin(pluginId: string): Promise<boolean> {
+  async verifyPlugin(_pluginId: string): Promise<boolean> {
     // Security scan
     // Code review
     // Test execution
@@ -397,9 +397,9 @@ export class PluginPublisher {
    * Version plugin
    */
   async versionPlugin(
-    pluginId: string,
-    newVersion: string,
-    changelog: string
+    _pluginId: string,
+    _newVersion: string,
+    _changelog: string
   ): Promise<void> {
     // Create new version
     // Update manifest

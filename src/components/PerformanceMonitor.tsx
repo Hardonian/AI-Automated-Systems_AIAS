@@ -32,7 +32,7 @@ const PerformanceMonitor = () => {
         tti: null
       };
 
-      metrics.forEach(metric => {
+      metrics.forEach((metric: { name: string; value: number }) => {
         switch (metric.name) {
           case 'lcp':
             performanceData.lcp = metric.value;

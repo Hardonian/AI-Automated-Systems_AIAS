@@ -44,7 +44,9 @@ export class I18n {
     const keys: string[] = [];
     let match;
     while ((match = keyPattern.exec(source)) !== null) {
-      keys.push(match[1]);
+      if (match[1]) {
+        keys.push(match[1]);
+      }
     }
     return keys;
   }

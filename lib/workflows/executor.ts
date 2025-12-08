@@ -114,7 +114,7 @@ export class WorkflowExecutor {
         }
       }
 
-      const duration = Date.now() - startTime;
+      const _duration = Date.now() - startTime;
       const metrics = this.calculateMetrics(graph);
 
       return {
@@ -128,7 +128,7 @@ export class WorkflowExecutor {
         completedAt: new Date().toISOString(),
       };
     } catch (error) {
-      const duration = Date.now() - startTime;
+      const _duration = Date.now() - startTime;
       const metrics = this.calculateMetrics(graph);
 
       return {
@@ -172,7 +172,10 @@ export class WorkflowExecutor {
     // Build edges (simplified - would need proper graph building)
     workflow.steps.forEach((step, index) => {
       if (index < workflow.steps.length - 1) {
-        edges.set(step.id, [workflow.steps[index + 1].id]);
+        const nextStep = workflow.steps[index + 1];
+        if (nextStep) {
+          edges.set(step.id, [nextStep.id]);
+        }
       } else {
         edges.set(step.id, []);
       }
@@ -232,13 +235,15 @@ export class WorkflowExecutor {
     step: WorkflowStep,
     state: Record<string, unknown>
   ): Promise<unknown> {
-    if (step.type !== 'transform') throw new Error('Invalid step type');
+    if (step.type !== 'transform' || step.config.type !== 'transform') {
+      throw new Error('Invalid step type');
+    }
     
     const mapping = step.config.mapping;
     const result: Record<string, unknown> = {};
 
     for (const [target, source] of Object.entries(mapping)) {
-      result[target] = this.resolvePath(source, state);
+      result[target] = this.resolvePath(source as string, state);
     }
 
     return result;
@@ -249,7 +254,7 @@ export class WorkflowExecutor {
    */
   private async executeMatch(
     step: WorkflowStep,
-    state: Record<string, unknown>
+    _state: Record<string, unknown>
   ): Promise<unknown> {
     if (step.type !== 'match') throw new Error('Invalid step type');
     
@@ -264,7 +269,9 @@ export class WorkflowExecutor {
     step: WorkflowStep,
     state: Record<string, unknown>
   ): Promise<unknown> {
-    if (step.type !== 'reconcile') throw new Error('Invalid step type');
+    if (step.type !== 'reconcile' || step.config.type !== 'reconcile') {
+      throw new Error('Invalid step type');
+    }
     
     const sourceA = this.resolvePath(step.config.sourceA, state);
     const sourceB = this.resolvePath(step.config.sourceB, state);
@@ -285,7 +292,9 @@ export class WorkflowExecutor {
     step: WorkflowStep,
     state: Record<string, unknown>
   ): Promise<unknown> {
-    if (step.type !== 'api') throw new Error('Invalid step type');
+    if (step.type !== 'api' || step.config.type !== 'api') {
+      throw new Error('Invalid step type');
+    }
     
     const url = this.interpolateString(step.config.endpoint, state);
     const body = step.config.body 
@@ -313,9 +322,11 @@ export class WorkflowExecutor {
    */
   private async executeDatabase(
     step: WorkflowStep,
-    state: Record<string, unknown>
+    _state: Record<string, unknown>
   ): Promise<unknown> {
-    if (step.type !== 'database') throw new Error('Invalid step type');
+    if (step.type !== 'database' || step.config.type !== 'database') {
+      throw new Error('Invalid step type');
+    }
     
     // Would integrate with Supabase client
     // For now, return mock data
@@ -327,9 +338,11 @@ export class WorkflowExecutor {
    */
   private async executeGenerate(
     step: WorkflowStep,
-    state: Record<string, unknown>
+    _state: Record<string, unknown>
   ): Promise<unknown> {
-    if (step.type !== 'generate') throw new Error('Invalid step type');
+    if (step.type !== 'generate' || step.config.type !== 'generate') {
+      throw new Error('Invalid step type');
+    }
     
     // Would use template engine
     return { generated: true, format: step.config.format };
@@ -342,12 +355,15 @@ export class WorkflowExecutor {
     step: WorkflowStep,
     state: Record<string, unknown>
   ): Promise<unknown> {
-    if (step.type !== 'agent') throw new Error('Invalid step type');
+    if (step.type !== 'agent' || step.config.type !== 'agent') {
+      throw new Error('Invalid step type');
+    }
     
     const result = await agentExecutor.executeSync({
       agentId: step.config.agentId,
       userId: 'system', // Would come from context
-      input: { ...step.config.input, ...state },
+      input: { ...step.config.input, ...state } as Record<string, unknown>,
+      priority: 'normal',
     });
 
     if (result.status !== 'completed') {
@@ -364,7 +380,9 @@ export class WorkflowExecutor {
     step: WorkflowStep,
     state: Record<string, unknown>
   ): Promise<boolean> {
-    if (step.type !== 'condition') throw new Error('Invalid step type');
+    if (step.type !== 'condition' || step.config.type !== 'condition') {
+      throw new Error('Invalid step type');
+    }
     
     // Evaluate conditions
     let result = true;
@@ -389,7 +407,9 @@ export class WorkflowExecutor {
     step: WorkflowStep,
     state: Record<string, unknown>
   ): Promise<unknown[]> {
-    if (step.type !== 'loop') throw new Error('Invalid step type');
+    if (step.type !== 'loop' || step.config.type !== 'loop') {
+      throw new Error('Invalid step type');
+    }
     
     const items = this.resolvePath(step.config.items, state) as unknown[];
     if (!Array.isArray(items)) {
@@ -400,10 +420,10 @@ export class WorkflowExecutor {
     const maxIterations = step.config.maxIterations || items.length;
 
     for (let i = 0; i < Math.min(items.length, maxIterations); i++) {
-      const itemState = { ...state, item: items[i], index: i };
+      const _itemState = { ...state, item: items[i], index: i };
       
       // Execute steps for each item
-      for (const stepId of step.config.stepIds) {
+      for (const _stepId of step.config.stepIds) {
         // Would execute nested steps
         results.push({ item: items[i], index: i });
       }
@@ -417,9 +437,11 @@ export class WorkflowExecutor {
    */
   private async executeDelay(
     step: WorkflowStep,
-    state: Record<string, unknown>
+    _state: Record<string, unknown>
   ): Promise<void> {
-    if (step.type !== 'delay') throw new Error('Invalid step type');
+    if (step.type !== 'delay' || step.config.type !== 'delay') {
+      throw new Error('Invalid step type');
+    }
     
     await this.sleep(step.config.duration);
   }
@@ -429,9 +451,11 @@ export class WorkflowExecutor {
    */
   private async executeHuman(
     step: WorkflowStep,
-    state: Record<string, unknown>
+    _state: Record<string, unknown>
   ): Promise<unknown> {
-    if (step.type !== 'human') throw new Error('Invalid step type');
+    if (step.type !== 'human' || step.config.type !== 'human') {
+      throw new Error('Invalid step type');
+    }
     
     // Would create a human task and wait for approval
     // For now, return mock approval
@@ -443,9 +467,11 @@ export class WorkflowExecutor {
    */
   private async executeNotification(
     step: WorkflowStep,
-    state: Record<string, unknown>
+    _state: Record<string, unknown>
   ): Promise<unknown> {
-    if (step.type !== 'notification') throw new Error('Invalid step type');
+    if (step.type !== 'notification' || step.config.type !== 'notification') {
+      throw new Error('Invalid step type');
+    }
     
     // Would send notification via appropriate channel
     return { sent: true, channel: step.config.channel };
@@ -458,7 +484,9 @@ export class WorkflowExecutor {
     step: WorkflowStep,
     state: Record<string, unknown>
   ): Promise<unknown> {
-    if (step.type !== 'webhook') throw new Error('Invalid step type');
+    if (step.type !== 'webhook' || step.config.type !== 'webhook') {
+      throw new Error('Invalid step type');
+    }
     
     const url = this.interpolateString(step.config.url, state);
     const body = step.config.body

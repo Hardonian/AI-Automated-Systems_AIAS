@@ -16,7 +16,7 @@ export interface UTMData {
   landing_page?: string;
 }
 
-export async function trackUTM(userId: string, data: UTMData) {
+export async function trackUTM(userId: string, _data: UTMData) {
   await prisma.user.update({
     where: { id: userId },
     data: {},

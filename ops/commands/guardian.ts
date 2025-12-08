@@ -9,7 +9,7 @@ import { trustFabricAI } from '../../guardian/recommendations';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
-export async function verify(options: { verbose?: boolean }): Promise<number> {
+export async function verify(_options: { verbose?: boolean }): Promise<number> {
   console.log('🔍 Verifying Guardian ledger integrity...\n');
 
   const result = guardianService.verifyLedgerIntegrity();

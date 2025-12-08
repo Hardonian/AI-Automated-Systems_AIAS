@@ -84,7 +84,10 @@ export class ObservabilityService {
       new PerformanceObserver((list) => {
         const entries = list.getEntries();
         entries.forEach((entry) => {
-          this.recordPerformanceMetric('fid', entry.processingStart - entry.startTime, 'ms');
+          const fidEntry = entry as PerformanceEventTiming & { processingStart?: number };
+          if (fidEntry.processingStart) {
+            this.recordPerformanceMetric('fid', fidEntry.processingStart - entry.startTime, 'ms');
+          }
         });
       }).observe({ entryTypes: ['first-input'] });
 
@@ -220,7 +223,7 @@ export class ObservabilityService {
     }
 
     // Console output for development
-    if (import.meta.env.DEV) {
+    if (process.env.NODE_ENV === 'development') {
       const logMethod = level === 'error' ? 'error' : level === 'warn' ? 'warn' : 'log';
       console[logMethod](`[${level.toUpperCase()}] ${message}`, context);
     }

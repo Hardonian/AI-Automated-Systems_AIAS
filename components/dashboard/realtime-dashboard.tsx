@@ -71,7 +71,7 @@ export function RealtimeDashboard() {
         .select("activity_type, created_at, metadata, user_id")
         .order("created_at", { ascending: false })
         .limit(10)
-        .then(({ data, error }) => {
+        .then(({ data, error }: { data: any; error: any }) => {
           if (!error && data) {
             setActivities(data);
           }

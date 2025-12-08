@@ -76,7 +76,7 @@ class LoadTester {
   private config: LoadTestConfig;
   private metrics: RequestMetrics[] = [];
   private startTime: number = 0;
-  private activeUsers: number = 0;
+  private _activeUsers: number = 0;
   private isRunning: boolean = false;
 
   constructor(config: LoadTestConfig) {
@@ -120,7 +120,7 @@ class LoadTester {
     return this.generateReport();
   }
 
-  private async simulateUser(userId: number): Promise<void> {
+  private async simulateUser(_userId: number): Promise<void> {
     while (this.isRunning) {
       const endpoint = this.selectEndpoint();
       await this.makeRequest(endpoint.path, endpoint.method, endpoint.body);

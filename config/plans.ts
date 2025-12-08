@@ -86,10 +86,10 @@ export const plans: Record<PlanTier, PlanFeatures> = {
   starter: {
     newsFeedPersonalized: true,
     newsFeedArticlesPerDay: 50,
-    emailAnalysisCampaignsPerMonth: null, // unlimited
+    emailAnalysisCampaignsPerMonth: -1, // unlimited
     emailAnalysisAdvanced: true,
     emailAnalysisDiagnostics: true,
-    workflowsMax: null, // unlimited
+    workflowsMax: -1, // unlimited
     automationsPerMonth: null, // unlimited
     templatesAccess: "all",
     integrationsAccess: "all",
@@ -106,10 +106,10 @@ export const plans: Record<PlanTier, PlanFeatures> = {
   pro: {
     newsFeedPersonalized: true,
     newsFeedArticlesPerDay: 100,
-    emailAnalysisCampaignsPerMonth: null, // unlimited
+    emailAnalysisCampaignsPerMonth: -1, // unlimited
     emailAnalysisAdvanced: true,
     emailAnalysisDiagnostics: true,
-    workflowsMax: null, // unlimited
+    workflowsMax: -1, // unlimited
     automationsPerMonth: null, // unlimited
     templatesAccess: "all",
     integrationsAccess: "all",

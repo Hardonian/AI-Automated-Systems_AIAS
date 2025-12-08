@@ -63,7 +63,7 @@ export async function analyzeUsagePatterns(
       timestamps: Date[];
     }> = {};
 
-    events?.forEach((event) => {
+    events?.forEach((event: { event_type?: string; created_at: string; user_id?: string }) => {
       const feature = event.event_type || "unknown";
       if (!featureUsage[feature]) {
         featureUsage[feature] = {
@@ -219,7 +219,7 @@ export async function detectFrictionPoints(): Promise<FrictionPoint[]> {
       completed: boolean;
     }> = {};
 
-    onboardingEvents.forEach((event) => {
+    onboardingEvents.forEach((event: { user_id?: string; event_type?: string; created_at: string; meta?: Record<string, unknown> }) => {
       const userId = event.user_id || "unknown";
       if (!userProgress[userId]) {
         userProgress[userId] = {
@@ -319,7 +319,7 @@ export async function analyzeConversionSignals(): Promise<{
       .order("created_at", { ascending: false });
 
     const userLastActivity: Record<string, Date> = {};
-    allUsers?.forEach((event) => {
+    allUsers?.forEach((event: { user_id?: string; created_at: string }) => {
       const userId = event.user_id || "unknown";
       const eventDate = new Date(event.created_at);
       if (!userLastActivity[userId] || eventDate > userLastActivity[userId]) {
@@ -331,7 +331,7 @@ export async function analyzeConversionSignals(): Promise<{
     const activationSignals: Array<{ signal: string; correlation: number; impact: "high" | "medium" | "low" }> = [];
 
     // Signal 1: Onboarding completion speed
-    const fastOnboarders = activatedUsers?.filter((_user) => {
+    const fastOnboarders = activatedUsers?.filter((_user: { [key: string]: unknown }) => {
       // Users who completed onboarding quickly (heuristic)
       return true; // Simplified
     }).length || 0;

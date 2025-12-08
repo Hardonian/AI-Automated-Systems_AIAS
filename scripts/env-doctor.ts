@@ -148,16 +148,18 @@ function parseEnvExample(): Map<string, EnvVarDefinition> {
     const match = trimmed.match(/^([A-Z_][A-Z0-9_]*)\s*=\s*(.*)$/);
     if (match) {
       const key = match[1];
-      const value = match[2].trim();
+      const value = match[2]?.trim() || "";
       const isRequired = !value || value === "" || value.includes("required");
       const hasDefault = value && !value.includes("required") && value !== "";
 
-      definitions.set(key, {
-        key,
-        required: isRequired,
-        category: currentCategory,
-        defaultValue: hasDefault ? value : undefined,
-      });
+      if (key) {
+        definitions.set(key, {
+          key,
+          required: isRequired,
+          category: currentCategory,
+          defaultValue: hasDefault ? value : undefined,
+        });
+      }
     }
   }
 
@@ -178,14 +180,15 @@ function scanCodebase(): Map<string, EnvVarUsage> {
     if (!existsSync(filePath)) continue;
 
     const content = readFileSync(filePath, "utf-8");
-    const lines = content.split("\n");
+    const _lines = content.split("\n");
 
     // Pattern 1: process.env.VAR_NAME
     const processEnvPattern = /process\.env\.([A-Z_][A-Z0-9_]*)/g;
     let match;
     while ((match = processEnvPattern.exec(content)) !== null) {
       const key = match[1];
-      const lineNum = content.substring(0, match.index).split("\n").length;
+      if (!key) continue;
+      const lineNum = match.index !== undefined ? content.substring(0, match.index).split("\n").length : 1;
 
       if (!usage.has(key)) {
         usage.set(key, {
@@ -210,6 +213,7 @@ function scanCodebase(): Map<string, EnvVarUsage> {
     const githubSecretsPattern = /\$\{\{\s*secrets\.([A-Z_][A-Z0-9_]*)\s*\}\}/g;
     while ((match = githubSecretsPattern.exec(content)) !== null) {
       const key = match[1];
+      if (!key) continue;
       if (!usage.has(key)) {
         usage.set(key, {
           key,
@@ -237,12 +241,12 @@ function checkHardcodedSecrets(): { file: string; line: number; content: string 
     if (!existsSync(filePath)) continue;
 
     const content = readFileSync(filePath, "utf-8");
-    const lines = content.split("\n");
+    const _lines = content.split("\n");
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       for (const pattern of HARDCODED_SECRET_PATTERNS) {
-        if (pattern.test(line)) {
+        if (line && pattern.test(line)) {
           // Skip if it's in a comment or string that says "example" or "placeholder"
           if (
             line.includes("example") ||
@@ -290,7 +294,7 @@ export function runEnvDoctor(): DoctorResult {
   };
 
   // Find unused variables (in .env.example but not used)
-  for (const [key, def] of definitions) {
+  for (const [key, _def] of definitions) {
     if (!usage.has(key)) {
       result.unused.push(key);
       result.summary.unusedCount++;

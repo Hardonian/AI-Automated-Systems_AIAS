@@ -13,7 +13,7 @@ export interface AICallOptions {
 }
 
 export class AIGuardrail {
-  private circuitBreakers: Map<string, any> = new Map();
+  private _circuitBreakers: Map<string, any> = new Map();
 
   constructor(
     private defaultTimeout: number = 30000,
@@ -22,7 +22,7 @@ export class AIGuardrail {
   ) {}
 
   async call<T>(
-    provider: string,
+    _provider: string,
     fn: () => Promise<T>,
     options: AICallOptions = {}
   ): Promise<T> {

@@ -9,8 +9,10 @@
  * - Generates missing documentation
  */
 
-import { readFileSync, writeFileSync, existsSync, readdirSync } from "fs";
-import { join, relative } from "path";
+import { readFileSync, writeFileSync, existsSync } from "fs";
+import { join } from "path";
+// import { readdirSync } from "fs";
+// import { relative } from "path";
 import { glob } from "glob";
 
 interface DocSyncResult {

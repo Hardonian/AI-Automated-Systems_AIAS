@@ -12,7 +12,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Critical User Flows', () => {
   const baseURL = process.env.BASE_URL || 'http://localhost:3000';
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page: _page }) => {
     // Set longer timeout for E2E tests
     test.setTimeout(30000);
   });

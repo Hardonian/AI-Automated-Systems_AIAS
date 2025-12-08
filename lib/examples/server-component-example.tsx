@@ -10,7 +10,7 @@
 
 import { headers } from 'next/headers';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
-import type { Database } from '@/types/supabase';
+// import type { Database } from '@/types/supabase'; // Unused
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -31,8 +31,8 @@ export const dynamic = 'force-dynamic';
  * - Uses Image and Link components
  */
 export default async function UsersPage() {
-  // Next.js 15: headers() must be awaited
-  const headersList = await headers();
+  // Next.js 15: headers() must be awaited (unused but required for example)
+  await headers();
 
   // Type-safe environment variable access
   const apiUrl = process.env.API_URL;
@@ -79,7 +79,7 @@ export default async function UsersPage() {
         <p>No users found.</p>
       ) : (
         <ul className="space-y-2">
-          {users.map((user) => (
+          {users.map((user: { id: string; email?: string; name?: string }) => (
             <li key={user.id} className="border p-2 rounded">
               <Link
                 href={`/users/${user.id}`}

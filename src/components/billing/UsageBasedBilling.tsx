@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+// import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -145,8 +146,20 @@ const mockBillingPeriods: BillingPeriod[] = [
 ];
 
 export const UsageBasedBilling: React.FC = () => {
-  const [currentPeriod, setCurrentPeriod] = useState<BillingPeriod>(mockBillingPeriods[0]);
-  const [billingProjection, setBillingProjection] = useState<BillingProjection>({
+  const [currentPeriod] = useState<BillingPeriod>(() => {
+    if (mockBillingPeriods[0]) return mockBillingPeriods[0];
+    return {
+      id: 'current',
+      startDate: '2024-01-01',
+      endDate: '2024-01-31',
+      status: 'current' as const,
+      totalCost: 0,
+      baseCost: 0,
+      overageCost: 0,
+      metrics: []
+    };
+  });
+  const [billingProjection] = useState<BillingProjection>({
     currentMonth: 127.50,
     projectedMonth: 145.30,
     projectedYear: 1680.00,

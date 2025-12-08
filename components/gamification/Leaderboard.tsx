@@ -38,7 +38,7 @@ export default function Leaderboard({ period = "weekly" }: { period?: "weekly" |
       .limit(10);
     
     if (data) {
-      const ranked = data.map((entry, idx) => ({ ...entry, rank: idx + 1 }));
+      const ranked = data.map((entry: { [key: string]: unknown }, idx: number) => ({ ...entry, rank: idx + 1 }));
       setEntries(ranked);
     }
     setLoading(false);

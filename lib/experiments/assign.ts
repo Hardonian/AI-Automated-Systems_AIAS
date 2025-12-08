@@ -25,7 +25,7 @@ export async function assignExperimentVariant(
   userId: string
 ): Promise<string> {
   const variant = getExperimentVariant(experimentKey, userId);
-  const experiment = getExperiment(experimentKey);
+  const _experiment = getExperiment(experimentKey);
   
   // Track assignment event
   try {
@@ -67,7 +67,7 @@ export function isInExperiment(
 /**
  * Get all experiments user is in
  */
-export function getUserExperiments(userId?: string): Record<string, string> {
+export function getUserExperiments(_userId?: string): Record<string, string> {
   const experiments: Record<string, string> = {};
   
   // This would need access to experiment config

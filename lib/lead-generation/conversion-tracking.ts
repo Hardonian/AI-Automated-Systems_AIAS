@@ -114,7 +114,7 @@ class ConversionTrackingService {
       campaign: lead.campaign,
       firstTouch: touchpoints?.[0]?.source || lead.source,
       lastTouch: touchpoints?.[touchpoints.length - 1]?.source || lead.source,
-      touchpoints: touchpoints?.map(tp => ({
+      touchpoints: touchpoints?.map((tp: { created_at: string; source: string; type: string }) => ({
         timestamp: tp.created_at,
         source: tp.source,
         type: tp.type,
@@ -253,7 +253,7 @@ class ConversionTrackingService {
       };
     }
 
-    const totalRevenue = conversions.reduce((sum, c) => sum + (c.value || 0), 0);
+    const totalRevenue = conversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
     const averageValue = totalRevenue / conversions.length;
 
     const byType: Record<string, number> = {};

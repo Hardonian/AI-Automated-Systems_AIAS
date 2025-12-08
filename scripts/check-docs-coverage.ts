@@ -3,7 +3,8 @@
  * Identifies undocumented areas
  */
 
-import { readdir, readFile, stat } from "fs/promises";
+import { stat } from "fs/promises";
+// import { readdir, readFile } from "fs/promises";
 import { join } from "path";
 import { writeFile } from "fs/promises";
 
@@ -46,7 +47,7 @@ async function checkApiDocsCoverage(): Promise<CoverageIssue[]> {
 /**
  * Scan API routes (simplified version)
  */
-async function scanApiRoutes(dir: string): Promise<Array<{ path: string }>> {
+async function scanApiRoutes(_dir: string): Promise<Array<{ path: string }>> {
   const routes: Array<{ path: string }> = [];
   // Simplified - would need full implementation
   return routes;

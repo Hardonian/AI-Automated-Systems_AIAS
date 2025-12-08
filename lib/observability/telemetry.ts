@@ -235,9 +235,10 @@ export class ObservabilityService {
    * Log workflow execution
    */
   logWorkflowExecution(log: Omit<WorkflowExecutionLog, 'executionId'>): void {
+    const executionId = this.generateId();
     const workflowLog: WorkflowExecutionLog = {
       ...log,
-      executionId: log.executionId || this.generateId(),
+      executionId,
     };
 
     this.workflowLogs.push(workflowLog);
@@ -259,9 +260,10 @@ export class ObservabilityService {
    * Log agent execution
    */
   logAgentExecution(log: Omit<AgentExecutionLog, 'executionId'>): void {
+    const executionId = this.generateId();
     const agentLog: AgentExecutionLog = {
       ...log,
-      executionId: log.executionId || this.generateId(),
+      executionId,
     };
 
     this.agentLogs.push(agentLog);
@@ -294,6 +296,7 @@ export class ObservabilityService {
       },
       context,
       severity: this.determineSeverity(error),
+      resolved: false,
     };
 
     this.errorLogs.push(errorLog);
@@ -427,7 +430,7 @@ export class ObservabilityService {
     const totalCost = logs.reduce((sum, log) => sum + (log.cost || 0), 0);
 
     const byTenant: Record<string, number> = {};
-    const byWorkflow: Record<string, number> = {};
+    const _byWorkflow: Record<string, number> = {};
     const byAgent: Record<string, number> = {};
 
     logs.forEach(log => {

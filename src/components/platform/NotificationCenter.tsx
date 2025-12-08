@@ -547,7 +547,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                                       {new Date(notification.createdAt).toLocaleString()}
                                     </span>
                                     <div className="flex items-center gap-1">
-                                      {notification.channels.map(channel => (
+                                      {notification.channels.map((channel: string) => (
                                         <Badge key={channel} variant="secondary" className="text-xs">
                                           {channel}
                                         </Badge>
@@ -662,7 +662,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                       <Label htmlFor="frequency">How often should we send notifications?</Label>
                       <Select
                         value={settings.frequency}
-                        onValueChange={(value) => updateSettings({ frequency: value as any })}
+                        onValueChange={(value: string) => updateSettings({ frequency: value })}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -685,7 +685,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                           <Checkbox
                             id={category}
                             checked={settings.categories.includes(category)}
-                            onCheckedChange={(checked) => {
+                            onCheckedChange={(checked: boolean) => {
                               const newCategories = checked
                                 ? [...settings.categories, category]
                                 : settings.categories.filter(c => c !== category);

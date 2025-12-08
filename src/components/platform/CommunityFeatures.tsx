@@ -425,10 +425,10 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
     const matchesSearch = !searchQuery || 
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+      post.tags.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     
     const matchesCategory = selectedCategory === 'all' || 
-      post.tags.some(tag => tag.toLowerCase().includes(selectedCategory.toLowerCase()));
+      post.tags.some((tag: string) => tag.toLowerCase().includes(selectedCategory.toLowerCase()));
 
     return matchesSearch && matchesCategory;
   });
@@ -615,7 +615,7 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
                         </div>
 
                         <div className="flex items-center gap-2">
-                          {post.tags.map(tag => (
+                          {post.tags.map((tag: string) => (
                             <Badge key={tag} variant="secondary" className="text-xs">
                               #{tag}
                             </Badge>
@@ -679,7 +679,7 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
                   <div className="mt-4 space-y-2">
                     <h4 className="text-sm font-medium">Expertise</h4>
                     <div className="flex flex-wrap gap-1">
-                      {expert.expertise.slice(0, 3).map(skill => (
+                      {expert.expertise.slice(0, 3).map((skill: string) => (
                         <Badge key={skill} variant="outline" className="text-xs">
                           {skill}
                         </Badge>
@@ -718,7 +718,7 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {leaderboard.map((entry, index) => (
+                {leaderboard.map((entry) => (
                   <div key={entry.user.id} className="flex items-center gap-4 p-4 rounded-lg hover:bg-gray-50">
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white font-bold">
                       {entry.rank}

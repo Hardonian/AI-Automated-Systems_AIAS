@@ -12,7 +12,7 @@
 
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import { join } from 'path';
-import { createClient } from '@supabase/supabase-js';
+// import { createClient } from '@supabase/supabase-js';
 
 interface AuditResult {
   domain: string;
@@ -65,7 +65,7 @@ async function auditEnvironment(): Promise<AuditResult> {
   const envLines = envExample.split('\n');
   envLines.forEach((line) => {
     const match = line.match(/^([A-Z_][A-Z0-9_]*)=/);
-    if (match) {
+    if (match && match[1]) {
       envVars.add(match[1]);
     }
   });
@@ -377,8 +377,8 @@ async function auditAgentMesh(): Promise<AuditResult> {
   // Check for API routes that might be used by agents
   const apiRoutesDir = join(process.cwd(), 'app', 'api');
   if (existsSync(apiRoutesDir)) {
-    const apiRoutes = readdirSync(apiRoutesDir, { recursive: true })
-      .filter((f) => f.endsWith('route.ts') || f.endsWith('route.js'));
+    const _apiRoutes = readdirSync(apiRoutesDir, { recursive: true })
+      .filter((f): f is string => typeof f === 'string' && (f.endsWith('route.ts') || f.endsWith('route.js')));
 
     // Check for ETL routes (mentioned in zapier_spec.json)
     const etlRoutes = ['etl/meta-ads', 'etl/tiktok-ads', 'etl/shopify-orders', 'etl/compute-metrics'];

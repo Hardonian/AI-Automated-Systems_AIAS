@@ -3,7 +3,8 @@
  * Identifies unused files, functions, and components
  */
 
-import { readdir, readFile, stat } from "fs/promises";
+import { readdir, readFile } from "fs/promises";
+// import { stat } from "fs/promises";
 import { join } from "path";
 import { writeFile } from "fs/promises";
 
@@ -50,8 +51,8 @@ async function detectDeadCode(): Promise<DeadCodeReport> {
 async function checkFileUsage(filePath: string): Promise<boolean> {
   // In production, would use more sophisticated analysis
   // For now, check if file is imported outside src/
-  const content = await readFile(filePath, "utf-8");
-  const fileName = filePath.split("/").pop()?.replace(/\.(ts|tsx)$/, "");
+  const _content = await readFile(filePath, "utf-8");
+  const _fileName = filePath.split("/").pop()?.replace(/\.(ts|tsx)$/, "");
 
   // Search for imports of this file
   // This is simplified - would need full AST parsing

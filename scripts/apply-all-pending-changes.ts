@@ -118,7 +118,7 @@ function checkForMissingWorkflows() {
   // Find scripts that might need workflows
   const scripts: ScriptInfo[] = [];
   const scriptFiles = readdirSync(scriptsDir, { recursive: true })
-    .filter((f: string) => f.endsWith('.ts') || f.endsWith('.js') || f.endsWith('.mjs'))
+    .filter((f): f is string => typeof f === 'string' && (f.endsWith('.ts') || f.endsWith('.js') || f.endsWith('.mjs')))
     .map((f: string) => join(scriptsDir, f));
 
   for (const scriptPath of scriptFiles) {

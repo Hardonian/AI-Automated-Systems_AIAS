@@ -82,7 +82,7 @@ export class RateLimiter {
     const now = Date.now();
     const windowStart = now - this.config.windowMs;
     
-    let data = await this.getRedisValue(key);
+    let _data = await this.getRedisValue(key);
     
     if (!data || data.resetTime < now) {
       // Create new window
@@ -277,7 +277,7 @@ export const createRateLimiter = (config: RateLimitConfig, redis?: any): RateLim
 
 // Rate limit decorator for functions
 export const rateLimit = (limiter: RateLimiter) => {
-  return (target: any, propertyName: string, descriptor: PropertyDescriptor) => {
+  return (target: any, _propertyName: string, descriptor: PropertyDescriptor) => {
     const method = descriptor.value;
     
     descriptor.value = async function (...args: any[]) {

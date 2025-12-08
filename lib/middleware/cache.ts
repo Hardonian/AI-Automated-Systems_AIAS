@@ -101,11 +101,11 @@ export function addCacheHeaders(
  */
 class MemoryCache {
   private store: Map<string, { data: any; expires: number }> = new Map();
-  private cleanupInterval: NodeJS.Timeout;
+  private _cleanupInterval: NodeJS.Timeout;
 
   constructor() {
     // Clean up expired entries every 5 minutes
-    this.cleanupInterval = setInterval(() => {
+    this._cleanupInterval = setInterval(() => {
       this.cleanup();
     }, 5 * 60 * 1000);
   }

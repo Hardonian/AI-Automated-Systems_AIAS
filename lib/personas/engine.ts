@@ -289,7 +289,7 @@ export class PersonaEngine {
     layout: 'compact' | 'standard' | 'detailed';
   } {
     const persona = this.personas.get(personaType);
-    const config = this.getAdaptiveContentConfig(personaType);
+    const _config = this.getAdaptiveContentConfig(personaType);
 
     let layout: 'compact' | 'standard' | 'detailed' = 'standard';
     if (persona?.characteristics.preferredDetailLevel === 'high-level') {

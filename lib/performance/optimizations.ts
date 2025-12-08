@@ -3,6 +3,8 @@
  * Bundle size, loading, and runtime optimizations
  */
 
+import React from 'react';
+
 /**
  * Lazy load heavy components
  */

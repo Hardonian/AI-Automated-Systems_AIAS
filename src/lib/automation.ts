@@ -308,28 +308,28 @@ export class AutomationManager {
     try {
       switch (step.type) {
         case 'ai_analysis':
-          stepExecution.output = await this.executeAIAnalysis(step.config, execution.context);
+          stepExecution.output = await this.executeAIAnalysis(step.config as AIAnalysisConfig, execution.context);
           break;
         case 'data_extraction':
-          stepExecution.output = await this.executeDataExtraction(step.config, execution.context);
+          stepExecution.output = await this.executeDataExtraction(step.config as DataExtractionConfig, execution.context);
           break;
         case 'notification':
-          stepExecution.output = await this.executeNotification(step.config, execution.context);
+          stepExecution.output = await this.executeNotification(step.config as NotificationConfig, execution.context);
           break;
         case 'api_call':
-          stepExecution.output = await this.executeAPICall(step.config, execution.context);
+          stepExecution.output = await this.executeAPICall(step.config as APICallConfig, execution.context);
           break;
         case 'database_update':
-          stepExecution.output = await this.executeDatabaseUpdate(step.config, execution.context);
+          stepExecution.output = await this.executeDatabaseUpdate(step.config as DatabaseUpdateConfig, execution.context);
           break;
         case 'ai_generation':
-          stepExecution.output = await this.executeAIGeneration(step.config, execution.context);
+          stepExecution.output = await this.executeAIGeneration(step.config as AIGenerationConfig, execution.context);
           break;
         case 'scheduling':
-          stepExecution.output = await this.executeScheduling(step.config, execution.context);
+          stepExecution.output = await this.executeScheduling(step.config as SchedulingConfig, execution.context);
           break;
         case 'integration':
-          stepExecution.output = await this.executeIntegration(step.config, execution.context);
+          stepExecution.output = await this.executeIntegration(step.config as IntegrationConfig, execution.context);
           break;
         default:
           throw new Error(`Unknown step type: ${step.type}`);
@@ -678,7 +678,7 @@ export class AutomationManager {
   }
 
   // Private helper methods
-  private async executeAIAnalysis(config: AIAnalysisConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeAIAnalysis(_config: AIAnalysisConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate AI analysis
     return {
       analysis: 'AI analysis completed',
@@ -688,7 +688,7 @@ export class AutomationManager {
     };
   }
 
-  private async executeDataExtraction(config: DataExtractionConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeDataExtraction(_config: DataExtractionConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate data extraction
     return {
       extractedData: { field1: 'value1', field2: 'value2' },
@@ -697,17 +697,17 @@ export class AutomationManager {
     };
   }
 
-  private async executeNotification(config: NotificationConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeNotification(_config: NotificationConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate notification sending
     return {
       sent: true,
-      channels: config.channels,
+      type: config.type,
       recipients: config.recipients,
       messageId: 'msg_' + Date.now()
     };
   }
 
-  private async executeAPICall(config: APICallConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeAPICall(_config: APICallConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate API call
     return {
       success: true,
@@ -717,7 +717,7 @@ export class AutomationManager {
     };
   }
 
-  private async executeDatabaseUpdate(config: DatabaseUpdateConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeDatabaseUpdate(_config: DatabaseUpdateConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate database update
     return {
       success: true,
@@ -726,7 +726,7 @@ export class AutomationManager {
     };
   }
 
-  private async executeAIGeneration(config: AIGenerationConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeAIGeneration(_config: AIGenerationConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate AI generation
     return {
       generated: true,
@@ -736,7 +736,7 @@ export class AutomationManager {
     };
   }
 
-  private async executeScheduling(config: SchedulingConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeScheduling(_config: SchedulingConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate scheduling
     return {
       scheduled: true,
@@ -745,7 +745,7 @@ export class AutomationManager {
     };
   }
 
-  private async executeIntegration(config: IntegrationConfig, context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeIntegration(_config: IntegrationConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
     // Simulate integration
     return {
       integrated: true,

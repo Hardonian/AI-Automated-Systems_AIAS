@@ -12,7 +12,7 @@
 
 import { execSync } from 'child_process';
 import { writeFileSync } from 'fs';
-import { join } from 'path';
+// import { join } from 'path';
 
 const TYPES_OUTPUT_PATH = 'src/integrations/supabase/types.ts';
 const PROJECT_REF = process.env.SUPABASE_PROJECT_REF;

@@ -114,8 +114,14 @@ export class GuardianService {
       // Read last hash from ledger
       const lines = readFileSync(this.ledgerPath, 'utf-8').trim().split('\n');
       if (lines.length > 0) {
-        const lastEntry = JSON.parse(lines[lines.length - 1]);
-        this.lastHash = lastEntry.sha256;
+        const lastLine = lines[lines.length - 1];
+        if (lastLine) {
+          const lastEntry = JSON.parse(lastLine) as { sha256?: string };
+          const hash = lastEntry.sha256;
+          if (hash) {
+            this.lastHash = hash;
+          }
+        }
       }
     }
   }
@@ -305,7 +311,7 @@ export class GuardianService {
       scope,
       user_decision: fullEvent.user_decision || 'pending',
       guardian_action: action,
-      sha256: this.computeHash(JSON.stringify(fullEvent) + this.lastHash),
+      sha256: this.computeHash(JSON.stringify(fullEvent) + (this.lastHash || '')),
       previous_hash: this.lastHash,
     };
 
@@ -437,7 +443,8 @@ export class GuardianService {
     let previousHash = '';
     
     for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
+      const line = lines[i]?.trim();
+      if (!line) continue;
       if (!line) continue;
       
       try {

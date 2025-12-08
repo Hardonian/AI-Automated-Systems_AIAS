@@ -19,7 +19,7 @@ const phoneSchema = z.string()
   .optional();
 
 const urlSchema = z.string().url('Invalid URL format');
-const cuidSchema = z.string().cuid('Invalid ID format');
+const _cuidSchema = z.string().cuid('Invalid ID format');
 
 // User validation schemas
 export const userSchemas = {

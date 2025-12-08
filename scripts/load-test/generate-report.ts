@@ -215,6 +215,9 @@ async function main() {
   }
 
   const latestReport = files[0];
+  if (!latestReport) {
+    throw new Error('No report files found');
+  }
   const reportPath = join(reportsDir, latestReport);
   const report: TestReport = JSON.parse(readFileSync(reportPath, 'utf-8'));
 

@@ -76,7 +76,7 @@ async function collectSupabaseMetrics(): Promise<MetricSource | null> {
 
     // Test query performance
     const startTime = Date.now();
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("metrics_log")
       .select("id")
       .limit(1);

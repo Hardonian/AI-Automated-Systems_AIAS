@@ -3,7 +3,8 @@
  * Adaptive recommendations based on user behavior
  */
 
-import { guardianService, type GuardianEvent } from './core';
+import { type GuardianEvent } from './core';
+// import { guardianService } from './core';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
@@ -87,7 +88,7 @@ export class TrustFabricAI {
     // Learn from user decisions
     if (userDecision) {
       const key = `${event.scope}:${event.data_class}`;
-      const current = this.model.comfort_zones.average_trust_responses[key] || 'allow';
+      const _current = this.model.comfort_zones.average_trust_responses[key] || 'allow';
       
       // Update preference based on pattern
       if (userDecision === 'blocked') {

@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
     }
 
     const total = workflows?.length || 0;
-    const active = workflows?.filter((w) => w.enabled && w.status === "active").length || 0;
+    const active = workflows?.filter((w: { enabled?: boolean; status?: string }) => w.enabled && w.status === "active").length || 0;
 
     if (executionsError) {
       logger.error("Failed to get executions", executionsError instanceof Error ? executionsError : new Error(String(executionsError)), {
@@ -74,8 +74,8 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const completed = executions?.filter((e) => e.status === "completed").length || 0;
-    const failed = executions?.filter((e) => e.status === "failed").length || 0;
+    const completed = executions?.filter((e: { status?: string }) => e.status === "completed").length || 0;
+    const failed = executions?.filter((e: { status?: string }) => e.status === "failed").length || 0;
     const totalExecutions = completed + failed;
     const successRate = totalExecutions > 0 ? (completed / totalExecutions) * 100 : 0;
 

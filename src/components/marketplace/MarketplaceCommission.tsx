@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
+// import { Progress } from '@/components/ui/progress';
 import { 
   ShoppingCart, 
   DollarSign, 
@@ -11,11 +11,11 @@ import {
   Users, 
   Star,
   Download,
-  Upload,
+  // Upload,
   Settings,
   BarChart3,
   PieChart,
-  Calendar,
+  // Calendar,
   CreditCard,
   Award,
   Target,
@@ -211,9 +211,9 @@ const mockPayouts: Payout[] = [
 ];
 
 export const MarketplaceCommission: React.FC = () => {
-  const [marketplaceItems, setMarketplaceItems] = useState<MarketplaceItem[]>(mockMarketplaceItems);
-  const [payouts, setPayouts] = useState<Payout[]>(mockPayouts);
-  const [selectedPeriod, setSelectedPeriod] = useState('2024-01');
+  const [marketplaceItems] = useState<MarketplaceItem[]>(mockMarketplaceItems);
+  const [payouts] = useState<Payout[]>(mockPayouts);
+  const [selectedPeriod] = useState('2024-01');
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [totalCommissions, setTotalCommissions] = useState(0);
   const [platformRevenue, setPlatformRevenue] = useState(0);

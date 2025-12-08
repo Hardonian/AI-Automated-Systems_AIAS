@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     // Group by date
     const grouped: Record<string, { completed: number; failed: number }> = {};
 
-    executions?.forEach((execution) => {
+    executions?.forEach((execution: { started_at?: string; status?: string }) => {
       if (!execution.started_at) return;
       const dateStr = new Date(execution.started_at).toISOString().split("T")[0]; // YYYY-MM-DD
       if (!dateStr) return;

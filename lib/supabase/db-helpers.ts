@@ -147,6 +147,7 @@ export async function update<T>(
   const client = getSupabaseClient();
   
   const key = Object.keys(where)[0];
+  if (!key) throw new Error('where clause must have at least one key');
   const value = where[key];
   
   const { data: result, error } = await (client
@@ -176,6 +177,7 @@ export async function deleteRecord<T>(
   const client = getSupabaseClient();
   
   const key = Object.keys(where)[0];
+  if (!key) throw new Error('where clause must have at least one key');
   const value = where[key];
   
   const { data: result, error } = await client

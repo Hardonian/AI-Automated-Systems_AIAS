@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+// import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+// import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   Shield, 
@@ -20,7 +21,7 @@ import {
   Eye,
   Trash2,
   Edit,
-  Send,
+  // Send,
   Search,
   Filter,
   Calendar
@@ -141,9 +142,9 @@ const mockComplianceReports: ComplianceReport[] = [
 ];
 
 export const GDPRComplianceUI: React.FC = () => {
-  const [dataSubjects, setDataSubjects] = useState<DataSubject[]>(mockDataSubjects);
+  const [dataSubjects] = useState<DataSubject[]>(mockDataSubjects);
   const [requests, setRequests] = useState<DataSubjectRequest[]>(mockRequests);
-  const [complianceReports, setComplianceReports] = useState<ComplianceReport[]>(mockComplianceReports);
+  const [complianceReports] = useState<ComplianceReport[]>(mockComplianceReports);
   const [consentSettings, setConsentSettings] = useState<ConsentSettings>({
     necessary: true,
     functional: true,
@@ -154,9 +155,9 @@ export const GDPRComplianceUI: React.FC = () => {
     social: false
   });
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedRequest, setSelectedRequest] = useState<DataSubjectRequest | null>(null);
+  const [selectedRequest] = useState<DataSubjectRequest | null>(null);
 
-  const handleConsentChange = (category: keyof ConsentSettings, value: boolean) => {
+  const _handleConsentChange = (category: keyof ConsentSettings, value: boolean) => {
     setConsentSettings(prev => ({
       ...prev,
       [category]: value

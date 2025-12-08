@@ -171,13 +171,13 @@ export class PredictiveIntelligenceService {
    * Recommend automations based on patterns
    */
   async recommendAutomations(
-    userId: string,
-    tenantId?: string
+    _userId: string,
+    _tenantId?: string
   ): Promise<AutomationRecommendation[]> {
     const recommendations: AutomationRecommendation[] = [];
 
     // Analyze friction points
-    const userFrictionPoints = this.frictionPoints.filter(fp => {
+    const userFrictionPoints = this.frictionPoints.filter(_fp => {
       // Would filter by user/tenant
       return true;
     });
@@ -207,7 +207,8 @@ export class PredictiveIntelligenceService {
           category: 'optimization',
           estimatedValue: {
             timeSaved: frictionPoint.estimatedImpact.timeSaved,
-            errorReduction: frictionPoint.estimatedImpact.errorReduction,
+            costReduction: frictionPoint.estimatedImpact.costReduction,
+            efficiencyGain: frictionPoint.estimatedImpact.errorReduction ? Math.round((1 - (frictionPoint.estimatedImpact.errorReduction || 0)) * 100) : undefined,
           },
           complexity: 'low',
           confidence: frictionPoint.confidence,
@@ -225,7 +226,7 @@ export class PredictiveIntelligenceService {
    */
   async detectAnomalies(
     metric: string,
-    period: { start: Date; end: Date },
+    _period: { start: Date; end: Date },
     baseline?: { avg: number; stdDev: number }
   ): Promise<Anomaly[]> {
     const anomalies: Anomaly[] = [];

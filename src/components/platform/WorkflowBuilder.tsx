@@ -298,7 +298,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
       ...prev,
       name: template.name,
       description: template.description,
-      nodes: template.nodes.map(node => ({
+      nodes: template.nodes.map((node: { [key: string]: unknown }) => ({
         ...node,
         id: `node-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
       })),
@@ -513,7 +513,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
 
             {/* Connections */}
             <svg className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }}>
-              {workflow.connections.map((connection, index) => {
+              {workflow.connections.map((connection) => {
                 const fromNode = workflow.nodes.find(n => n.id === connection.from);
                 const toNode = workflow.nodes.find(n => n.id === connection.to);
                 

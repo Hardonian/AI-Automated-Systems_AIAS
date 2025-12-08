@@ -461,6 +461,9 @@ export const DemoEnvironment: React.FC = () => {
 
   if (selectedDemo) {
     const currentStepData = selectedDemo.steps[currentStep];
+    if (!currentStepData) {
+      return <div>No step data available</div>;
+    }
     
     return (
       <div className="space-y-6">

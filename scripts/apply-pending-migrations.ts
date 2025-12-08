@@ -73,7 +73,7 @@ function extractMigrationName(filename: string): string {
   return filename.replace('.sql', '');
 }
 
-async function applyMigrationViaSupabaseCLI(migrationPath: string): Promise<boolean> {
+async function applyMigrationViaSupabaseCLI(_migrationPath: string): Promise<boolean> {
   try {
     if (!SUPABASE_PROJECT_REF) {
       throw new Error('SUPABASE_PROJECT_REF not set');

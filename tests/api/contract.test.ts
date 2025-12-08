@@ -12,7 +12,7 @@ import yaml from "js-yaml";
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3000/api";
 
 // Load OpenAPI spec
-let openApiSpec: any;
+let _openApiSpec: any;
 try {
   const specPath = join(process.cwd(), "docs", "openapi.yaml");
   const specContent = readFileSync(specPath, "utf-8");
@@ -25,7 +25,7 @@ describe("API Contract Validation", () => {
   describe("Health Endpoints", () => {
     it("GET /api/healthz should return health check", async () => {
       const response = await fetch(`${API_BASE}/healthz`);
-      expect(response.status).toBeOneOf([200, 503]); // Can be healthy or unhealthy
+      expect([200, 503]).toContain(response.status); // Can be healthy or unhealthy
 
       const data = await response.json();
       expect(data).toHaveProperty("ok");
@@ -37,7 +37,7 @@ describe("API Contract Validation", () => {
 
     it("GET /api/status should return system status", async () => {
       const response = await fetch(`${API_BASE}/status`);
-      expect(response.status).toBeOneOf([200, 503]);
+      expect([200, 503]).toContain(response.status);
 
       const data = await response.json();
       expect(data).toHaveProperty("status");
@@ -91,7 +91,7 @@ describe("API Contract Validation", () => {
       });
 
       // Should be 401 (unauthorized) or 400 (validation error)
-      expect(response.status).toBeOneOf([400, 401]);
+      expect([400, 401]).toContain(response.status);
       const data = await response.json();
       expect(data).toHaveProperty("error");
     });

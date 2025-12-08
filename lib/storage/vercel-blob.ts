@@ -39,7 +39,7 @@ export async function uploadToBlob(
 ): Promise<BlobUploadResult> {
   try {
     const blob = await put(filename, file, {
-      access: options.access || 'public',
+      access: (options.access === 'private' ? 'private' : 'public') as 'public',
       addRandomSuffix: options.addRandomSuffix ?? true,
       contentType: options.contentType,
       cacheControlMaxAge: options.cacheControlMaxAge,
@@ -47,17 +47,18 @@ export async function uploadToBlob(
 
     logger.info('File uploaded to Vercel Blob', {
       pathname: blob.pathname,
-      size: blob.size,
       contentType: blob.contentType,
     });
 
+    // Map PutBlobResult to our interface
+    // Note: PutBlobResult may not have size/uploadedAt, so we use defaults
     return {
       url: blob.url,
       pathname: blob.pathname,
       contentType: blob.contentType,
-      contentDisposition: blob.contentDisposition,
-      size: blob.size,
-      uploadedAt: blob.uploadedAt,
+      contentDisposition: blob.contentDisposition || '',
+      size: (blob as unknown as { size?: number }).size || 0,
+      uploadedAt: (blob as unknown as { uploadedAt?: Date }).uploadedAt || new Date(),
     };
   } catch (error) {
     logger.error('Vercel Blob upload failed', error instanceof Error ? error : new Error(String(error)), {

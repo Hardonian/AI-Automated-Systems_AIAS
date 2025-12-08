@@ -45,8 +45,8 @@ export async function calculateActivationRate(days: number = 30): Promise<number
     .eq("type", "user_activated")
     .gte("created_at", startDate.toISOString());
 
-  const signupCount = new Set(signups?.map((e) => e.user_id) || []).size;
-  const activationCount = new Set(activations?.map((e) => e.user_id) || []).size;
+  const signupCount = new Set(signups?.map((e: { user_id: string }) => e.user_id) || []).size;
+  const activationCount = new Set(activations?.map((e: { user_id: string }) => e.user_id) || []).size;
 
   return signupCount > 0 ? (activationCount / signupCount) * 100 : 0;
 }
@@ -73,7 +73,7 @@ export async function calculateTimeToActivation(days: number = 30): Promise<numb
   const activationTimes: number[] = [];
 
   for (const activation of activations || []) {
-    const signup = signups?.find((s) => s.user_id === activation.user_id);
+    const signup = signups?.find((s: { user_id: string }) => s.user_id === activation.user_id);
     if (signup) {
       const signupTime = new Date(signup.created_at).getTime();
       const activationTime = new Date(activation.created_at).getTime();
@@ -112,8 +112,8 @@ export async function calculateDay7Retention(): Promise<number> {
     .eq("type", "user_active")
     .gte("created_at", sevenDaysAgo.toISOString());
 
-  const signupUserIds = new Set(signups?.map((e) => e.user_id) || []);
-  const activeUserIds = new Set(activeUsers?.map((e) => e.user_id) || []);
+  const signupUserIds = new Set(signups?.map((e: { user_id: string }) => e.user_id) || []);
+  const activeUserIds = new Set(activeUsers?.map((e: { user_id: string }) => e.user_id) || []);
 
   const retainedUsers = Array.from(signupUserIds).filter((id) => activeUserIds.has(id));
 
@@ -151,10 +151,10 @@ export async function getFunnelMetrics(days: number = 30): Promise<FunnelMetrics
   ]);
 
   return {
-    signups: new Set(signups.data?.map((e) => e.user_id) || []).size,
-    integrations: new Set(integrations.data?.map((e) => e.user_id) || []).size,
-    workflows: new Set(workflows.data?.map((e) => e.user_id) || []).size,
-    activations: new Set(activations.data?.map((e) => e.user_id) || []).size,
+    signups: new Set(signups.data?.map((e: { user_id: string }) => e.user_id) || []).size,
+    integrations: new Set(integrations.data?.map((e: { user_id: string }) => e.user_id) || []).size,
+    workflows: new Set(workflows.data?.map((e: { user_id: string }) => e.user_id) || []).size,
+    activations: new Set(activations.data?.map((e: { user_id: string }) => e.user_id) || []).size,
   };
 }
 
@@ -186,6 +186,6 @@ export async function getAllActivationMetrics(days: number = 30): Promise<Activa
     totalIntegrations: funnel.integrations,
     totalWorkflows: funnel.workflows,
     totalActivations: funnel.activations,
-    uniqueActiveUsers: new Set(activeUsers?.map((e) => e.user_id) || []).size,
+    uniqueActiveUsers: new Set(activeUsers?.map((e: { user_id: string }) => e.user_id) || []).size,
   };
 }

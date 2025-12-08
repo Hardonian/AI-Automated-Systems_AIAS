@@ -47,7 +47,7 @@ class ROITrackingService {
       .lte('converted_at', endDate.toISOString())
       .eq('tenant_id', tenantId || '');
 
-    const totalRevenue = conversions?.reduce((sum, c) => sum + (c.value || 0), 0) || 0;
+    const totalRevenue = conversions?.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0) || 0;
 
     // Get costs
     const { data: costs } = await this.supabase
@@ -57,7 +57,7 @@ class ROITrackingService {
       .lte('date', endDate.toISOString())
       .eq('tenant_id', tenantId || '');
 
-    const totalCost = costs?.reduce((sum, c) => sum + c.amount, 0) || 0;
+    const totalCost = costs?.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0) || 0;
 
     // Calculate ROI and ROAS
     const roi = totalCost > 0 ? ((totalRevenue - totalCost) / totalCost) * 100 : 0;
@@ -126,7 +126,7 @@ class ROITrackingService {
     const attributionMap: Record<string, RevenueAttribution> = {};
 
     // Initialize sources from costs
-    costs?.forEach(cost => {
+    costs?.forEach((cost: { source: string }) => {
       if (!attributionMap[cost.source]) {
         attributionMap[cost.source] = {
           source: cost.source,
@@ -140,7 +140,7 @@ class ROITrackingService {
     });
 
     // Add revenue from conversions
-    conversions?.forEach(conversion => {
+    conversions?.forEach((conversion: { attribution?: { source?: string }; value?: number }) => {
       const source = conversion.attribution?.source || 'unknown';
       if (!attributionMap[source]) {
         attributionMap[source] = {
@@ -160,8 +160,9 @@ class ROITrackingService {
     // Calculate metrics for each source
     for (const source of Object.keys(attributionMap)) {
       const attribution = attributionMap[source];
-      const sourceCosts = costs?.filter(c => c.source === source) || [];
-      const sourceCost = sourceCosts.reduce((sum, c) => sum + c.amount, 0);
+      if (!attribution) continue;
+      const sourceCosts = costs?.filter((c: { source: string }) => c.source === source) || [];
+      const sourceCost = sourceCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
 
       attribution.averageOrderValue = attribution.customers > 0 
         ? attribution.revenue / attribution.customers 
@@ -250,20 +251,24 @@ class ROITrackingService {
     // Group by date
     const trends: Record<string, { revenue: number; cost: number }> = {};
 
-    conversions?.forEach(conversion => {
+    conversions?.forEach((conversion: { converted_at: string; value?: number }) => {
       const date = conversion.converted_at.split('T')[0];
-      if (!trends[date]) {
-        trends[date] = { revenue: 0, cost: 0 };
+      if (date) {
+        if (!trends[date]) {
+          trends[date] = { revenue: 0, cost: 0 };
+        }
+        trends[date].revenue += conversion.value || 0;
       }
-      trends[date].revenue += conversion.value || 0;
     });
 
-    costs?.forEach(cost => {
+    costs?.forEach((cost: { date: string; amount: number }) => {
       const date = cost.date.split('T')[0];
-      if (!trends[date]) {
-        trends[date] = { revenue: 0, cost: 0 };
+      if (date) {
+        if (!trends[date]) {
+          trends[date] = { revenue: 0, cost: 0 };
+        }
+        trends[date].cost += cost.amount;
       }
-      trends[date].cost += cost.amount;
     });
 
     return Object.entries(trends)

@@ -380,7 +380,7 @@ export const TenantDashboard: React.FC<TenantDashboardProps> = ({ tenantId }) =>
                   <div className="space-y-2">
                     <h4 className="font-medium text-sm">Plan Features:</h4>
                     <ul className="space-y-1">
-                      {tenant.plan.features.map((feature, index) => (
+                      {tenant.plan.features.map((feature: string, index: number) => (
                         <li key={`feature-${index}`} className="flex items-center gap-2 text-sm">
                           <CheckCircle className="h-4 w-4 text-green-500" />
                           {feature}

@@ -8,7 +8,8 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import * as fs from 'fs';
 import * as path from 'path';
-import { info, error, getLogs, writeLogsToMarkdown } from './lib/logger.js';
+import { info, error, writeLogsToMarkdown } from './lib/logger.js';
+// import { getLogs } from './lib/logger.js';
 import { notify } from './agents/notify.js';
 
 const execAsync = promisify(exec);
@@ -103,14 +104,17 @@ async function orchestrateMaster(): Promise<void> {
         .sort()
         .slice(-1);
 
-      if (migrationFiles.length > 0) {
+      if (migrationFiles.length > 0 && migrationFiles[0]) {
         const migrationPath = path.join(
           process.cwd(),
           'supabase',
           'migrations',
           migrationFiles[0]
         );
-        const dbUrl = process.env.SUPABASE_DB_URL;
+        const dbUrl = process.env.SUPABASE_DB_URL || '';
+        if (!dbUrl) {
+          throw new Error('SUPABASE_DB_URL is required');
+        }
         if (dbUrl) {
           await runCommand(
             `psql "${dbUrl}" -f "${migrationPath}"`,
@@ -132,7 +136,7 @@ async function orchestrateMaster(): Promise<void> {
   }
 
   // Phase 6: Smoke Test ETL (dry-run)
-  const dryRunOk = await runCommand(
+  const _dryRunOk = await runCommand(
     'tsx scripts/etl/pull_events.ts --dry-run',
     'ETL Smoke Test (Dry-Run)'
   );
@@ -152,13 +156,13 @@ async function orchestrateMaster(): Promise<void> {
   }
 
   // Phase 8: Data Quality Checks
-  const dqOk = await runCommand(
+  const _dqOk = await runCommand(
     'tsx scripts/agents/run_data_quality.ts',
     'Data Quality Checks'
   );
 
   // Phase 9: System Doctor
-  const doctorOk = await runCommand(
+  const _doctorOk = await runCommand(
     'tsx scripts/agents/system_doctor.ts',
     'System Doctor'
   );
@@ -269,8 +273,8 @@ function getCreatedFiles(): string[] {
   // Check for reports
   const reportsDir = path.join(process.cwd(), 'reports');
   if (fs.existsSync(reportsDir)) {
-    const reports = fs.readdirSync(reportsDir, { recursive: true }).filter((f) =>
-      f.endsWith('.md')
+    const reports = fs.readdirSync(reportsDir, { recursive: true }).filter((f): f is string =>
+      typeof f === 'string' && f.endsWith('.md')
     );
     files.push(...reports.map((f) => `reports/${f}`));
   }

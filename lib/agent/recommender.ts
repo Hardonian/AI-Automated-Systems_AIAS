@@ -10,7 +10,7 @@ export async function makeRecommendations(userId: string) {
 
   const { data: signals } = await supabase.from("signals").select("*").eq("user_id", userId).order("computed_at", { ascending: false }).limit(50);
   const byK: Record<string, number> = {};
-  (signals||[]).forEach(s => { byK[s.k] = Math.max(byK[s.k] || 0, Number(s.v)); });
+  (signals||[]).forEach((s: { k: string; v: unknown }) => { byK[s.k] = Math.max(byK[s.k] || 0, Number(s.v)); });
 
   const recs: Reco[] = [];
   // Simple rule-based seed (explainable), then optional bandit tuning later

@@ -4,7 +4,8 @@
  */
 
 import { readFileSync, existsSync } from 'fs';
-import { join, resolve } from 'path';
+import { join } from 'path';
+// import { resolve } from 'path';
 import { execSync } from 'child_process';
 
 interface CompatibilityReport {

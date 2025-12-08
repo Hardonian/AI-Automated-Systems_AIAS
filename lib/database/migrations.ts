@@ -70,7 +70,7 @@ export async function getAppliedMigrations(_dbUrl: string): Promise<string[]> {
       .from('supabase_migrations')
       .select('name')
       .order('version', { ascending: true });
-    return data?.map(m => m.name) || [];
+    return data?.map((m: { name: string }) => m.name) || [];
   } catch {
     // Fallback: return empty array if migrations table doesn't exist
     return [];

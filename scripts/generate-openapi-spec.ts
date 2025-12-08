@@ -4,8 +4,10 @@
  * Scans all API routes and generates comprehensive OpenAPI 3.0 spec
  */
 
-import { readFileSync, writeFileSync, readdirSync, existsSync, statSync } from "fs";
-import { join, relative } from "path";
+import { readFileSync, writeFileSync, readdirSync, existsSync } from "fs";
+import { join } from "path";
+// import { statSync } from "fs";
+// import { relative } from "path";
 
 interface RouteInfo {
   path: string;
@@ -75,7 +77,7 @@ function extractMethods(content: string): string[] {
   return methods.length > 0 ? methods : ["get"];
 }
 
-function extractRouteInfo(content: string, path: string): Partial<RouteInfo> {
+function extractRouteInfo(content: string, _path: string): Partial<RouteInfo> {
   const info: Partial<RouteInfo> = {};
   
   // Extract description from comments

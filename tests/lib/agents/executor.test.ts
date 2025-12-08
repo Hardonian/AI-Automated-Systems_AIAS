@@ -108,6 +108,7 @@ describe('AgentExecutor', () => {
         agentId: 'test-agent-2',
         userId: 'user-1',
         input: { test: 'data' },
+        priority: 'normal' as const,
       };
 
       const result = await executor.executeSync(context);
@@ -121,6 +122,7 @@ describe('AgentExecutor', () => {
         agentId: 'non-existent',
         userId: 'user-1',
         input: {},
+        priority: 'normal' as const,
       };
 
       await expect(executor.executeSync(context)).rejects.toThrow();
@@ -175,6 +177,7 @@ describe('AgentExecutor', () => {
         agentId: 'test-agent-3',
         userId: 'user-1',
         input: {},
+        priority: 'normal' as const,
       };
 
       const result = await executor.executeAsync(context);

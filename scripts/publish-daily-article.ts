@@ -7,8 +7,8 @@
  * Updates RSS feed with new articles
  */
 
-import { getNextScheduledArticle, publishingSchedule } from "@/lib/blog/publishing-schedule";
-import { getLatestArticles } from "@/lib/blog/articles";
+// import { getNextScheduledArticle, publishingSchedule } from "@/lib/blog/publishing-schedule";
+// import { getLatestArticles } from "@/lib/blog/articles";
 
 async function publishDailyArticle() {
   console.log("📰 Daily Article Publishing System");

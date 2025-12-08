@@ -34,7 +34,7 @@ class MonitoringService {
     this.events.push(event);
     
     // In production, send to monitoring service
-    if (import.meta.env.PROD) {
+    if (process.env.NODE_ENV === 'production') {
       // TODO: Implement actual monitoring service integration
       console.log("Event tracked:", event);
     } else {

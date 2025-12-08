@@ -42,6 +42,6 @@ export const partnerContracts: IntegrationContract[] = [
   },
 ];
 
-export function validateContractPayload(contract: IntegrationContract, event: string, payload: any): boolean {
+export function validateContractPayload(_contract: IntegrationContract, _event: string, _payload: any): boolean {
   return true;
 }

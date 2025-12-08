@@ -40,8 +40,8 @@ describe("POST /api/workflows/execute", () => {
       error: null,
     });
 
-    const { executeWorkflow } = await import("@/lib/workflows/executor");
-    vi.mocked(executeWorkflow).mockResolvedValue({
+    const { workflowExecutor } = await import("@/lib/workflows/executor");
+    vi.spyOn(workflowExecutor, 'execute').mockResolvedValue({
       id: "exec-123",
       workflow_id: "workflow-123",
       status: "completed",

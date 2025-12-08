@@ -65,7 +65,7 @@ class Logger {
     // Send to telemetry in production
     if (!isDevelopment && typeof window !== 'undefined') {
       try {
-        telemetry.trackEvent({
+        telemetry.track({
           name: 'warning',
           category: 'error',
           properties: {
@@ -98,7 +98,7 @@ class Logger {
             ...context,
           });
         } else {
-          telemetry.trackEvent({
+          telemetry.track({
             name: 'error',
             category: 'error',
             properties: {

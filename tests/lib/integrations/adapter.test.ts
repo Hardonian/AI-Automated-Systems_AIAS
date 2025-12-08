@@ -2,7 +2,8 @@
  * Tests for Integration Adapter Framework
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
+// import { beforeEach } from 'vitest';
 import { AdapterFactory, BaseAdapter } from '@/lib/integrations/adapter-framework';
 import { adapterConfigSchema } from '@/lib/integrations/adapter-framework';
 
@@ -23,6 +24,7 @@ describe('AdapterFactory', () => {
           type: 'apiKey' as const,
           key: 'test-key',
           location: 'header' as const,
+          headerName: 'X-API-Key',
         },
         timeout: 30000,
       };
@@ -61,7 +63,7 @@ describe('AdapterFactory', () => {
         id: 'adapter-1',
         name: 'Adapter 1',
         baseUrl: 'https://api1.example.com',
-        auth: { type: 'apiKey' as const, key: 'key1' },
+        auth: { type: 'apiKey' as const, key: 'key1', location: 'header' as const, headerName: 'X-API-Key' },
         timeout: 30000,
       };
 
@@ -69,7 +71,7 @@ describe('AdapterFactory', () => {
         id: 'adapter-2',
         name: 'Adapter 2',
         baseUrl: 'https://api2.example.com',
-        auth: { type: 'apiKey' as const, key: 'key2' },
+        auth: { type: 'apiKey' as const, key: 'key2', location: 'header' as const, headerName: 'X-API-Key' },
         timeout: 30000,
       };
 

@@ -4,7 +4,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { execSync } from 'child_process';
+// import { execSync } from 'child_process';
 
 interface RLSResult {
   table: string;
@@ -34,7 +34,9 @@ export async function sbGuard(options: {
   const tables: string[] = [];
 
   for (const match of tableMatches) {
-    tables.push(match[1]);
+    if (match[1]) {
+      tables.push(match[1]);
+    }
   }
 
   console.log(`📋 Found ${tables.length} tables to check\n`);

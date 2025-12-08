@@ -46,10 +46,14 @@ export async function middleware(request: NextRequest) {
       getAll() {
         return request.cookies.getAll();
       },
-      setAll(cookiesToSet) {
+      setAll(cookiesToSet: Array<{ name: string; value: string; options?: unknown }>) {
         // CRITICAL: Set cookies on the specific response instance
         cookiesToSet.forEach(({ name, value, options }) => {
-          response.cookies.set(name, value, options);
+          if (options) {
+            response.cookies.set(name, value, options as { [key: string]: unknown });
+          } else {
+            response.cookies.set(name, value);
+          }
         });
       },
     },

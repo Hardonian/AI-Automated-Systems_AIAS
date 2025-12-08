@@ -60,7 +60,7 @@ class SecurityMonitor {
     }
 
     // Log to server logger
-    logger.warn(`Security event: ${event.type}`, undefined, {
+    logger.warn(`Security event: ${event.type}`, {
       severity: event.severity,
       ip: event.ip,
       path: event.path,
@@ -69,7 +69,7 @@ class SecurityMonitor {
 
     // Alert on critical events
     if (event.severity === "critical") {
-      this.alertCritical(event);
+      this.alertCritical(fullEvent);
     }
   }
 

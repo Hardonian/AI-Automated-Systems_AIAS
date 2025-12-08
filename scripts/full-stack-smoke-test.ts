@@ -163,8 +163,8 @@ function checkEnvLocal(): Record<string, string> {
                 else if (key === "SUPABASE_PROJECT_ID") mappedKey = "SUPABASE_PROJECT_REF";
               }
               
-              if (EXPECTED_ENV_VARS.includes(mappedKey) || EXPECTED_ENV_VARS.includes(key)) {
-                env[mappedKey] = value;
+              if (mappedKey && value && (EXPECTED_ENV_VARS.includes(mappedKey) || (key && EXPECTED_ENV_VARS.includes(key)))) {
+                env[mappedKey] = value as string;
               }
             }
           }
@@ -218,7 +218,7 @@ async function checkVercelEnv(): Promise<{ prod: Record<string, string>; preview
           const lines = content.split("\n");
           for (const line of lines) {
             const match = line.match(/^([A-Z_]+)=(.*)$/);
-            if (match) {
+            if (match && match[1] && match[2]) {
               const key = match[1];
               const value = match[2].replace(/^["']|["']$/g, "");
               if (EXPECTED_ENV_VARS.includes(key)) {
@@ -266,7 +266,7 @@ async function checkGitHubSecrets(): Promise<Record<string, string>> {
       // Note: GitHub API doesn't allow reading secret values directly
       // We can only check if they exist
       const repo = process.env.GITHUB_REPOSITORY || "unknown/unknown";
-      const [owner, repoName] = repo.split("/");
+      const [_owner, _repoName] = repo.split("/");
       
       // We can't read secret values via API, only list them
       // This is a limitation - we'll mark them as "[EXISTS]" if found
@@ -333,7 +333,7 @@ async function testSupabase(): Promise<TestResult[]> {
   if (supabaseServiceKey) {
     try {
       const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
-      const { data, error } = await supabaseService.rpc("now");
+      const { error } = await supabaseService.rpc("now");
       
       results.push({
         name: "Supabase Service Role Connection",
@@ -558,8 +558,9 @@ async function testLocalDevelopment(): Promise<TestResult[]> {
   try {
     const nodeVersion = process.version;
     const requiredVersion = "18.17.0";
-    const majorVersion = parseInt(nodeVersion.slice(1).split(".")[0]);
-    const requiredMajor = parseInt(requiredVersion.split(".")[0]);
+    const versionStr = nodeVersion.slice(1);
+    const majorVersion = versionStr ? parseInt(versionStr.split(".")[0] || '0') : 0;
+    const requiredMajor = parseInt(requiredVersion.split(".")[0] || '0');
     
     results.push({
       name: "Node Version",

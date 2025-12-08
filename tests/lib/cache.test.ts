@@ -2,7 +2,8 @@
  * Tests for Cache Service
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+// import { vi } from 'vitest';
 import { cacheService } from '@/lib/performance/cache';
 
 describe('lib/performance/cache', () => {

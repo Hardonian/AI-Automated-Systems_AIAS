@@ -5,7 +5,8 @@
  */
 
 import { execSync } from 'child_process';
-import { existsSync, readdirSync, renameSync, mkdirSync, readFileSync } from 'fs';
+import { existsSync, readdirSync, renameSync, mkdirSync } from 'fs';
+// import { readFileSync } from 'fs';
 import { join } from 'path';
 
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');

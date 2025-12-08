@@ -147,7 +147,11 @@ const subscriptionPlans: SubscriptionPlan[] = [
 ];
 
 export const SubscriptionEnforcement: React.FC = () => {
-  const [currentPlan, setCurrentPlan] = useState<SubscriptionPlan>(subscriptionPlans[1]); // Professional
+  const [currentPlan, setCurrentPlan] = useState<SubscriptionPlan>(() => {
+    const plan = subscriptionPlans[1] || subscriptionPlans[0];
+    if (!plan) throw new Error('No subscription plans available');
+    return plan;
+  }); // Professional
   const [usageMetrics, setUsageMetrics] = useState<UsageMetrics>({
     workflows: { used: 18, limit: 25 },
     executions: { used: 7500, limit: 10000 },
@@ -205,7 +209,7 @@ export const SubscriptionEnforcement: React.FC = () => {
     return Math.min((used / limit) * 100, 100);
   };
 
-  const getUsageColor = (percentage: number) => {
+  const _getUsageColor = (percentage: number) => {
     if (percentage >= 90) return 'text-red-600';
     if (percentage >= 75) return 'text-yellow-600';
     return 'text-green-600';
@@ -241,7 +245,7 @@ export const SubscriptionEnforcement: React.FC = () => {
     }, 2000);
   };
 
-  const formatBytes = (bytes: number) => {
+  const _formatBytes = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];

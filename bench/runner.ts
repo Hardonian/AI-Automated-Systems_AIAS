@@ -76,8 +76,8 @@ export async function benchmark<T>(
   // Calculate statistics
   const sortedTimes = [...times].sort((a, b) => a - b);
   const averageTime = times.reduce((a, b) => a + b, 0) / times.length;
-  const minTime = sortedTimes[0];
-  const maxTime = sortedTimes[sortedTimes.length - 1];
+  const minTime = sortedTimes[0] ?? 0;
+  const maxTime = sortedTimes[sortedTimes.length - 1] ?? 0;
   const opsPerSecond = (iterations / totalTime) * 1000;
 
   return {

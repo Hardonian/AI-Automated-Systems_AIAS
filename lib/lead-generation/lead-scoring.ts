@@ -138,12 +138,12 @@ class LeadScoringService {
     score += Math.min(activityCount * 2, 10);
 
     // Activity types
-    const activityTypes = new Set(activities.map(a => a.activity_type));
+    const activityTypes = new Set(activities.map((a: { activity_type: string }) => a.activity_type));
     score += Math.min(activityTypes.size * 2, 10);
 
     // Recent activity bonus
     const recentActivity = activities.filter(
-      a => new Date(a.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000
+      (a: { created_at: string }) => new Date(a.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000
     );
     if (recentActivity.length > 0) {
       score += 5;
@@ -151,7 +151,7 @@ class LeadScoringService {
 
     // High-value activities
     const highValueActivities = ['demo_requested', 'pricing_viewed', 'trial_started'];
-    const hasHighValue = activities.some(a => highValueActivities.includes(a.activity_type));
+    const hasHighValue = activities.some((a: { activity_type: string }) => highValueActivities.includes(a.activity_type));
     if (hasHighValue) {
       score += 5;
     }
@@ -172,9 +172,9 @@ class LeadScoringService {
       .eq('lead_id', leadId);
 
     if (emails && emails.length > 0) {
-      const opened = emails.filter(e => e.opened).length;
-      const clicked = emails.filter(e => e.clicked).length;
-      const replied = emails.filter(e => e.replied).length;
+      const opened = emails.filter((e: { opened?: boolean }) => e.opened).length;
+      const clicked = emails.filter((e: { clicked?: boolean }) => e.clicked).length;
+      const replied = emails.filter((e: { replied?: boolean }) => e.replied).length;
 
       score += Math.min(opened * 2, 8);
       score += Math.min(clicked * 3, 6);
@@ -188,8 +188,8 @@ class LeadScoringService {
       .eq('lead_id', leadId);
 
     if (sessions && sessions.length > 0) {
-      const totalTime = sessions.reduce((sum, s) => sum + (s.duration || 0), 0);
-      const pageViews = sessions.reduce((sum, s) => sum + (s.page_views || 0), 0);
+      const totalTime = sessions.reduce((sum: number, s: { duration?: number }) => sum + (s.duration || 0), 0);
+      const pageViews = sessions.reduce((sum: number, s: { page_views?: number }) => sum + (s.page_views || 0), 0);
 
       if (totalTime > 300) score += 3; // 5+ minutes
       if (pageViews > 5) score += 3; // 5+ pages

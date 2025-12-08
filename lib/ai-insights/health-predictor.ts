@@ -41,7 +41,7 @@ async function detectPerformanceDegradation(): Promise<HealthSignal[]> {
 
     // Calculate average response time
     const responseTimes: number[] = [];
-    recentEvents.forEach((event) => {
+    recentEvents.forEach((event: { meta: Record<string, unknown> }) => {
       const duration = (event.meta as Record<string, unknown>)?.duration_ms as number;
       if (duration) {
         responseTimes.push(duration);
@@ -143,7 +143,7 @@ async function detectIntegrationIssues(): Promise<HealthSignal[]> {
     // Group by integration
     const integrationErrorCounts: Record<string, number> = {};
 
-    integrationErrors?.forEach((error) => {
+    integrationErrors?.forEach((error: { meta: Record<string, unknown> }) => {
       const integration = (error.meta as Record<string, unknown>)?.integration as string;
       if (integration) {
         integrationErrorCounts[integration] = (integrationErrorCounts[integration] || 0) + 1;
@@ -191,7 +191,7 @@ async function detectAnomalies(): Promise<HealthSignal[]> {
 
     // Group by user
     const userActivity: Record<string, number> = {};
-    recentActivity?.forEach((event) => {
+    recentActivity?.forEach((event: { user_id?: string }) => {
       const userId = event.user_id || "unknown";
       userActivity[userId] = (userActivity[userId] || 0) + 1;
     });

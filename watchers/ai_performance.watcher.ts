@@ -210,10 +210,14 @@ class AIPerformanceWatcher {
    */
   private groupMetricsByModel(metrics: AIPerformanceMetrics[]): Record<string, AIPerformanceMetrics[]> {
     return metrics.reduce((groups, metric) => {
-      if (!groups[metric.model]) {
-        groups[metric.model] = [];
+      const model = metric.model;
+      if (!groups[model]) {
+        groups[model] = [];
       }
-      groups[metric.model].push(metric);
+      const modelGroup = groups[model];
+      if (modelGroup) {
+        modelGroup.push(metric);
+      }
       return groups;
     }, {} as Record<string, AIPerformanceMetrics[]>);
   }

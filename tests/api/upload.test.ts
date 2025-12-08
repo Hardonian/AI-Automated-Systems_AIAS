@@ -2,7 +2,8 @@
  * File Upload API Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+// import { vi } from 'vitest';
 import { POST, GET } from '@/app/api/upload/route';
 import { NextRequest } from 'next/server';
 

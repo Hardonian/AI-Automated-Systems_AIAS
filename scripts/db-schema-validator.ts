@@ -134,7 +134,7 @@ export async function validateSchema(): Promise<SchemaValidationResult> {
     }
 
     // Check for RLS policies
-    const { data: policies, error: policiesError } = await supabase
+    const { error: policiesError } = await supabase
       .from("pg_policies")
       .select("*")
       .limit(100);
@@ -167,12 +167,14 @@ export async function validateMigrations(): Promise<{
   pending: string[];
   applied: string[];
   errors: string[];
+  warnings?: string[];
 }> {
   const result = {
     valid: true,
     pending: [] as string[],
     applied: [] as string[],
     errors: [] as string[],
+    warnings: [] as string[],
   };
 
   try {

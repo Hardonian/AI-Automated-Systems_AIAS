@@ -52,7 +52,9 @@ export const a11yChecklist = {
       const headings = element.querySelectorAll('h1, h2, h3, h4, h5, h6');
       let lastLevel = 0;
       for (const heading of Array.from(headings)) {
-        const level = parseInt(heading.tagName[1]);
+        const levelStr = heading.tagName[1];
+        if (!levelStr) continue;
+        const level = parseInt(levelStr);
         if (level > lastLevel + 1) {
           return false; // Skipped a level
         }
@@ -88,7 +90,7 @@ export const a11yChecklist = {
     check: (element: HTMLElement) => {
       const hasHeader = element.querySelector('header, [role="banner"]');
       const hasMain = element.querySelector('main, [role="main"]');
-      const hasFooter = element.querySelector('footer, [role="contentinfo"]');
+      const _hasFooter = element.querySelector('footer, [role="contentinfo"]');
       return !!(hasHeader && hasMain);
     },
   },
@@ -105,7 +107,7 @@ export const a11yChecklist = {
 /**
  * Run accessibility checks (for use with axe-core or similar)
  */
-export async function runA11yChecks(page: any): Promise<void> {
+export async function runA11yChecks(_page: any): Promise<void> {
   // This would integrate with axe-core or pa11y
   // Example implementation:
   // const results = await page.evaluate(() => {

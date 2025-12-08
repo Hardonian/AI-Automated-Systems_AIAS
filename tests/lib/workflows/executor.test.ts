@@ -2,7 +2,8 @@
  * Tests for Workflow Executor
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
+// import { beforeEach } from 'vitest';
 import { WorkflowExecutor } from '@/lib/workflows/executor';
 import { workflowDefinitionSchema } from '@/lib/workflows/dsl';
 
@@ -85,6 +86,7 @@ describe('WorkflowExecutor', () => {
         userId: 'user-1',
         input: { test: 'data' },
         sync: true,
+        priority: 'normal' as const,
       };
 
       const result = await executor.execute(context);
@@ -99,6 +101,7 @@ describe('WorkflowExecutor', () => {
         userId: 'user-1',
         input: {},
         sync: true,
+        priority: 'normal' as const,
       };
 
       await expect(executor.execute(context)).rejects.toThrow();
@@ -141,6 +144,7 @@ describe('WorkflowExecutor', () => {
         workflowId: 'test-workflow-delay',
         userId: 'user-1',
         input: {},
+        priority: 'normal' as const,
         sync: true,
       });
       const duration = Date.now() - startTime;

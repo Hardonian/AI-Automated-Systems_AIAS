@@ -1,6 +1,25 @@
 import { createServerClient as createSupabaseServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import type { Database } from '@/types/supabase';
+import type { SupabaseClient as TypedSupabaseClient } from '@supabase/supabase-js';
+
+// Less strictly typed client that works with any table
+type PermissiveDatabase = {
+  public: {
+    Tables: {
+      [key: string]: {
+        Row: Record<string, unknown>
+        Insert: Record<string, unknown> | Record<string, unknown>[]
+        Update: Record<string, unknown>
+      }
+    }
+    Views: Record<string, { Row: Record<string, unknown> }>
+    Functions: Record<string, { Args: Record<string, unknown>; Returns: unknown }>
+    Enums: Record<string, string>
+  }
+}
+
+type PermissiveClient = TypedSupabaseClient<PermissiveDatabase>
 
 /**
  * Create Supabase server client for use in Server Components and API routes
@@ -36,7 +55,7 @@ export async function createServerSupabaseClient() {
       );
     }
     // Build-time: Return placeholder to prevent build failures
-    return createSupabaseServerClient<Database>(
+    const placeholderClient = createSupabaseServerClient<Database>(
       'https://placeholder.supabase.co',
       'placeholder-key',
       {
@@ -55,9 +74,10 @@ export async function createServerSupabaseClient() {
         },
       }
     );
+    return placeholderClient as unknown as PermissiveClient;
   }
   
-  return createSupabaseServerClient<Database>(
+  const client = createSupabaseServerClient<Database>(
     supabaseUrl,
     supabaseKey,
     {
@@ -76,6 +96,8 @@ export async function createServerSupabaseClient() {
       },
     }
   );
+  // Return a less strictly typed client that works with any table name
+  return client as unknown as PermissiveClient;
 }
 
 // Legacy export for backwards compatibility - renamed to avoid conflict

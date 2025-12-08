@@ -155,7 +155,13 @@ class EnhancedErrorTracker {
       if (!grouped[error.fingerprint]) {
         grouped[error.fingerprint] = [];
       }
-      grouped[error.fingerprint].push(error);
+      const fingerprint = error.fingerprint;
+      if (fingerprint) {
+        if (!grouped[fingerprint]) {
+          grouped[fingerprint] = [];
+        }
+        grouped[fingerprint].push(error);
+      }
     }
 
     return grouped;

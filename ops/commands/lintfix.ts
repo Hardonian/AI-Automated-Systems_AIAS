@@ -4,7 +4,7 @@
 
 import { execSync } from 'child_process';
 
-export async function lintfix(options: { all?: boolean }) {
+export async function lintfix(_options: { all?: boolean }) {
   console.log('🔧 Auto-fixing linting issues...\n');
 
   try {

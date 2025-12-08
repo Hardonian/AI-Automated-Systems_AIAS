@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       .eq("status", "active")
       .gte("created_at", new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString());
 
-    const mrr = subscriptions?.reduce((sum, s) => sum + (s.amount || 0), 0) || 0;
+    const mrr = subscriptions?.reduce((sum: number, s: { amount?: number }) => sum + (s.amount || 0), 0) || 0;
     const payingCustomers = subscriptions?.length || 0;
     const arpu = payingCustomers > 0 ? mrr / payingCustomers : 0;
 
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
       .gte("created_at", new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString());
 
     const channels: Record<string, number> = {};
-    signupEvents?.forEach((event) => {
+    signupEvents?.forEach((event: { properties?: { signup_source?: string } }) => {
       const source = event.properties?.signup_source || "direct";
       channels[source] = (channels[source] || 0) + 1;
     });

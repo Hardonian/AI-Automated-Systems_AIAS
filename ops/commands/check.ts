@@ -4,14 +4,21 @@
 
 // Import check functions from doctor
 // Note: These will be refactored to a shared module
-async function checkEnvVars() {
-  return { status: 'pass' as const, name: 'Env', message: 'OK' };
+
+type CheckResult = {
+  status: 'pass' | 'fail';
+  name: string;
+  message: string;
+};
+
+async function checkEnvVars(): Promise<CheckResult> {
+  return { status: 'pass', name: 'Env', message: 'OK' };
 }
-async function checkDatabase() {
-  return { status: 'pass' as const, name: 'DB', message: 'OK' };
+async function checkDatabase(): Promise<CheckResult> {
+  return { status: 'pass', name: 'DB', message: 'OK' };
 }
-async function checkRLSPolicies() {
-  return { status: 'pass' as const, name: 'RLS', message: 'OK' };
+async function checkRLSPolicies(): Promise<CheckResult> {
+  return { status: 'pass', name: 'RLS', message: 'OK' };
 }
 
 export async function check(options: { type?: string }): Promise<number> {

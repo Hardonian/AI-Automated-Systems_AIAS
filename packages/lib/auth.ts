@@ -31,9 +31,9 @@ export class AuthService {
     return {
       id: user.id,
       email: user.email,
-      name: user.name,
-      avatar: user.avatar,
-      supabaseId: user.supabaseId,
+      name: user.name ?? undefined,
+      avatar: user.avatar ?? undefined,
+      supabaseId: user.supabaseId ?? undefined,
     };
   }
 
@@ -47,9 +47,9 @@ export class AuthService {
     return {
       id: user.id,
       email: user.email,
-      name: user.name,
-      avatar: user.avatar,
-      supabaseId: user.supabaseId,
+      name: user.name ?? undefined,
+      avatar: user.avatar ?? undefined,
+      supabaseId: user.supabaseId ?? undefined,
     };
   }
 
@@ -63,9 +63,9 @@ export class AuthService {
     return {
       id: user.id,
       email: user.email,
-      name: user.name,
-      avatar: user.avatar,
-      supabaseId: user.supabaseId,
+      name: user.name ?? undefined,
+      avatar: user.avatar ?? undefined,
+      supabaseId: user.supabaseId ?? undefined,
     };
   }
 
@@ -79,9 +79,9 @@ export class AuthService {
     return {
       id: user.id,
       email: user.email,
-      name: user.name,
-      avatar: user.avatar,
-      supabaseId: user.supabaseId,
+      name: user.name ?? undefined,
+      avatar: user.avatar ?? undefined,
+      supabaseId: user.supabaseId ?? undefined,
     };
   }
 
@@ -99,9 +99,9 @@ export class AuthService {
     return {
       id: user.id,
       email: user.email,
-      name: user.name,
-      avatar: user.avatar,
-      supabaseId: user.supabaseId,
+      name: user.name ?? undefined,
+      avatar: user.avatar ?? undefined,
+      supabaseId: user.supabaseId ?? undefined,
     };
   }
 

@@ -15,7 +15,6 @@ export async function typedInsert<T extends Record<string, unknown>>(
   table: string,
   values: T | T[]
 ) {
-  // @ts-expect-error - Supabase types are too strict for dynamic table names
   return client.from(table).insert(values as any)
 }
 

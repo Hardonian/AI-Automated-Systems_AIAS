@@ -29,20 +29,23 @@ export async function check(options: { type?: string }): Promise<number> {
 
   if (type === 'all' || type === 'env') {
     const result = await checkEnvVars();
-    console.log(`${result.status === 'pass' ? '✅' : '❌'} ${result.name}: ${result.message}`);
-    if (result.status === 'fail') exitCode = 1;
+    const status: 'pass' | 'fail' = result.status;
+    console.log(`${status === 'pass' ? '✅' : '❌'} ${result.name}: ${result.message}`);
+    if (status === 'fail') exitCode = 1;
   }
 
   if (type === 'all' || type === 'db') {
     const result = await checkDatabase();
-    console.log(`${result.status === 'pass' ? '✅' : '❌'} ${result.name}: ${result.message}`);
-    if (result.status === 'fail') exitCode = 1;
+    const status: 'pass' | 'fail' = result.status;
+    console.log(`${status === 'pass' ? '✅' : '❌'} ${result.name}: ${result.message}`);
+    if (status === 'fail') exitCode = 1;
   }
 
   if (type === 'all' || type === 'api') {
     const result = await checkRLSPolicies();
-    console.log(`${result.status === 'pass' ? '✅' : '⚠️'} ${result.name}: ${result.message}`);
-    if (result.status === 'fail') exitCode = 1;
+    const status: 'pass' | 'fail' = result.status;
+    console.log(`${status === 'pass' ? '✅' : '⚠️'} ${result.name}: ${result.message}`);
+    if (status === 'fail') exitCode = 1;
   }
 
   return exitCode;

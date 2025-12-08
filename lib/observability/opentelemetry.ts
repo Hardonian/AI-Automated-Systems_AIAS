@@ -7,7 +7,7 @@
 
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
-import * as resources from "@opentelemetry/resources";
+import { Resource } from "@opentelemetry/resources";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
@@ -29,7 +29,7 @@ export function initializeOpenTelemetry(): NodeSDK | null {
 
   try {
     const sdk = new NodeSDK({
-      resource: new resources.Resource({
+      resource: new Resource({
         [SemanticResourceAttributes.SERVICE_NAME]: SERVICE_NAME,
         [SemanticResourceAttributes.SERVICE_VERSION]: process.env.npm_package_version || "1.0.0",
         [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: process.env.NODE_ENV || "development",

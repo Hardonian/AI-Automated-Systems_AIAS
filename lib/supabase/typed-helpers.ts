@@ -26,7 +26,6 @@ export async function typedUpdate<T extends Record<string, unknown>>(
   table: string,
   values: Partial<T>
 ) {
-  // @ts-expect-error - Supabase types are too strict for dynamic table names
   return client.from(table).update(values as any)
 }
 
@@ -38,6 +37,5 @@ export async function typedUpsert<T extends Record<string, unknown>>(
   table: string,
   values: T | T[]
 ) {
-  // @ts-expect-error - Supabase types are too strict for dynamic table names
   return client.from(table).upsert(values as any)
 }

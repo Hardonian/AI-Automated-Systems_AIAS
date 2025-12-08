@@ -123,6 +123,26 @@ export const plans: Record<PlanTier, PlanFeatures> = {
     frameworksFull: true,
     playbooksFull: true,
   },
+  enterprise: {
+    newsFeedPersonalized: true,
+    newsFeedArticlesPerDay: -1, // unlimited
+    emailAnalysisCampaignsPerMonth: -1, // unlimited
+    emailAnalysisAdvanced: true,
+    emailAnalysisDiagnostics: true,
+    workflowsMax: -1, // unlimited
+    automationsPerMonth: null, // unlimited
+    templatesAccess: "all",
+    integrationsAccess: "all",
+    aiAgentsMax: -1, // unlimited
+    aiAgentsCustom: true,
+    consultingTimeMinutes: 120,
+    supportLevel: "priority",
+    supportResponseTime: "4 hours",
+    analyticsLevel: "advanced",
+    caseStudiesFull: true,
+    frameworksFull: true,
+    playbooksFull: true,
+  },
 };
 
 /**
@@ -162,5 +182,5 @@ export function isFreeOrTrial(plan: PlanTier): boolean {
  * Check if user is on paid plan
  */
 export function isPaid(plan: PlanTier): boolean {
-  return plan === "starter" || plan === "pro";
+  return plan === "starter" || plan === "pro" || plan === "enterprise";
 }

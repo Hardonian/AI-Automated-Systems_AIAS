@@ -22,12 +22,12 @@ export class GuardianGPT {
     const dataClasses = Object.keys(report.summary.by_data_class);
 
     const answer = `Based on the Guardian report, your data was accessed by:
-${scopes.map(scope => `- **${scope}**: ${report.summary.by_scope[scope]} events`).join('\n')}
+${scopes.map(scope => `- **${scope}**: ${report.summary.by_scope[scope] ?? 0} events`).join('\n')}
 
 The following types of data were accessed:
-${dataClasses.map(cls => `- **${cls}**: ${report.summary.by_data_class[cls]} times`).join('\n')}
+${dataClasses.map(cls => `- **${cls}**: ${report.summary.by_data_class[cls] ?? 0} times`).join('\n')}
 
-All events were classified as ${Object.keys(report.summary.by_risk_level).filter(l => report.summary.by_risk_level[l] > 0).join(' or ')} risk, and Guardian ${report.violations_prevented > 0 ? 'prevented ' + report.violations_prevented + ' violations' : 'allowed all necessary operations'}.
+All events were classified as ${Object.keys(report.summary.by_risk_level).filter(l => (report.summary.by_risk_level[l] ?? 0) > 0).join(' or ')} risk, and Guardian ${report.violations_prevented > 0 ? 'prevented ' + report.violations_prevented + ' violations' : 'allowed all necessary operations'}.
 
 No data left your device without your explicit consent.`;
 

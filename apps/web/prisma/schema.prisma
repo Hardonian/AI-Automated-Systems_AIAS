@@ -4,7 +4,7 @@
 generator client {
   provider        = "prisma-client-js"
   engineType      = "library"
-  binaryTargets   = ["native", "rhel-openssl-3.0.x", "rhel-openssl-1.0.x"]
+  // Removed binaryTargets for Vercel Edge/Serverless WASM compatibility
   previewFeatures = ["driverAdapters"]
 }
 

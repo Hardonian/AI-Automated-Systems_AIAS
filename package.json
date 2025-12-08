@@ -112,11 +112,14 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "turbo run build",
-    "build:next": "next build",
+    "prebuild": "rm -rf .next dist out && echo '✓ Cleaned build cache directories'",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' next build",
+    "build:turbo": "turbo run build",
+    "build:next": "NODE_OPTIONS='--max-old-space-size=4096' next build",
+    "build:diagnostic": "tsx scripts/vercel-build-diagnostic.ts",
     "postinstall": "patch-package --error-on-fail=false || true",
     "type-check": "tsc --noEmit",
-    "vercel-build": "cd apps/web && export DATABASE_URL=${UPSTASH_POSTGRES_URL:-${DATABASE_URL:-}} && export DIRECT_URL=${UPSTASH_POSTGRES_DIRECT_URL:-${DIRECT_URL:-${DATABASE_URL:-}}} && (if [ -n \"$DATABASE_URL\" ] && [[ \"$DATABASE_URL\" =~ ^postgres ]]; then prisma generate && (prisma migrate deploy || echo 'Migration skipped'); else echo 'Skipping Prisma migrations (DATABASE_URL not set or invalid)'; prisma generate || echo 'Prisma generate skipped'; fi) && cd ../.. && next build",
+    "vercel-build": "npm run build:diagnostic || true && cd apps/web && export DATABASE_URL=${UPSTASH_POSTGRES_URL:-${DATABASE_URL:-}} && export DIRECT_URL=${UPSTASH_POSTGRES_DIRECT_URL:-${DIRECT_URL:-${DATABASE_URL:-}}} && (if [ -n \"$DATABASE_URL\" ] && [[ \"$DATABASE_URL\" =~ ^postgres ]]; then NODE_OPTIONS='--max-old-space-size=4096' prisma generate && (prisma migrate deploy || echo 'Migration skipped'); else echo 'Skipping Prisma migrations (DATABASE_URL not set or invalid)'; NODE_OPTIONS='--max-old-space-size=4096' prisma generate || echo 'Prisma generate skipped'; fi) && cd ../.. && NODE_OPTIONS='--max-old-space-size=4096' next build",
     "build:analyze": "ANALYZE=true vite build",
     "preview": "next start",
     "start": "next start",
@@ -344,7 +347,7 @@
     "zod": "^3.25.76"
   },
   "engines": {
-    "node": ">=22",
+    "node": "^20.18.0 || ^22.0.0",
     "pnpm": ">=8.0.0"
   },
   "packageManager": "pnpm@8.15.0",

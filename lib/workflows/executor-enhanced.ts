@@ -338,7 +338,7 @@ async function executeStepWithRetry(
           delay,
           error: lastError.message,
         });
-        await delay(delay);
+        await _delay(delay);
       }
     }
   }
@@ -732,7 +732,7 @@ async function storeExecution(execution: WorkflowExecution): Promise<void> {
       results: execution.results,
     });
   } catch (error) {
-    const errorObj: Error = (error as any) instanceof Error ? error : new Error(String(error));
+    const errorObj: Error = error instanceof Error ? error : new Error(String(error));
     logger.error("Failed to store workflow execution", errorObj, { executionId: execution.id });
   }
 }

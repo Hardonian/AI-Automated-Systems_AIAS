@@ -3,6 +3,7 @@
  * Handles background processing for optimization and benchmarking jobs
  */
 
+// @ts-ignore - bullmq types may not be available
 import { Queue, Worker, Job } from 'bullmq';
 import IORedis from 'ioredis';
 import { createClient } from '@supabase/supabase-js';

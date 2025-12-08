@@ -39,7 +39,7 @@ export async function uploadToBlob(
 ): Promise<BlobUploadResult> {
   try {
     const blob = await put(filename, file, {
-      access: options.access || 'public',
+      access: (options.access === 'private' ? 'private' : 'public') as 'public',
       addRandomSuffix: options.addRandomSuffix ?? true,
       contentType: options.contentType,
       cacheControlMaxAge: options.cacheControlMaxAge,

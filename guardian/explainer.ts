@@ -4,7 +4,7 @@
  */
 
 import { type GuardianEvent } from './core';
-// import { guardianInspector, type TrustReport } from './inspector';
+import { type TrustReport } from './inspector';
 
 export interface Explanation {
   question: string;

@@ -296,6 +296,7 @@ export class ObservabilityService {
       },
       context,
       severity: this.determineSeverity(error),
+      resolved: false,
     };
 
     this.errorLogs.push(errorLog);

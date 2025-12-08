@@ -75,7 +75,7 @@ export function generateMetadata(config: SEOConfig): Metadata {
       },
     },
     openGraph: {
-      type,
+      type: type === 'product' ? 'website' : type,
       title: fullTitle,
       description: description.substring(0, 200),
       url: canonicalUrl,
@@ -202,9 +202,9 @@ export function generateStructuredData(type: 'Organization' | 'WebSite' | 'Artic
           url: data.url,
           priceCurrency: 'CAD',
           availability: 'https://schema.org/InStock',
-          ...data.offers,
+          ...(data.offers || {}),
         },
-        ...data,
+        ...(data || {}),
       };
     default:
       return { ...base, ...data };

@@ -134,7 +134,7 @@ class CostOptimizationService {
 
     // Calculate by source
     const bySource: Record<string, CostMetrics> = {};
-    const sources = new Set(costs?.map((c: { source: string }) => c.source) || []);
+    const sources = new Set(costs?.map((c: { source: string }) => c.source).filter((s: string | undefined): s is string => !!s) || []);
     
     for (const source of sources) {
       const sourceCosts = costs?.filter((c: { source: string }) => c.source === source) || [];
@@ -145,20 +145,22 @@ class CostOptimizationService {
       const sourceRevenue = sourceConversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
       const sourceCost = sourceCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
 
-      bySource[source] = {
-        cost: sourceCost,
-        leads: sourceLeads.length,
-        conversions: sourceConversions.length,
-        costPerLead: sourceLeads.length > 0 ? sourceCost / sourceLeads.length : 0,
-        costPerConversion: sourceConversions.length > 0 ? sourceCost / sourceConversions.length : 0,
-        roi: sourceCost > 0 ? ((sourceRevenue - sourceCost) / sourceCost) * 100 : 0,
-        roas: sourceCost > 0 ? sourceRevenue / sourceCost : 0,
-      };
+      if (source) {
+        bySource[source] = {
+          cost: sourceCost,
+          leads: sourceLeads.length,
+          conversions: sourceConversions.length,
+          costPerLead: sourceLeads.length > 0 ? sourceCost / sourceLeads.length : 0,
+          costPerConversion: sourceConversions.length > 0 ? sourceCost / sourceConversions.length : 0,
+          roi: sourceCost > 0 ? ((sourceRevenue - sourceCost) / sourceCost) * 100 : 0,
+          roas: sourceCost > 0 ? sourceRevenue / sourceCost : 0,
+        };
+      }
     }
 
     // Calculate by campaign
     const byCampaign: Record<string, CostMetrics> = {};
-    const campaigns = new Set(costs?.map((c: { campaign?: string }) => c.campaign).filter(Boolean) || []);
+    const campaigns = new Set(costs?.map((c: { campaign?: string }) => c.campaign).filter((c: string | undefined): c is string => !!c) || []);
     
     for (const campaign of campaigns) {
       if (!campaign) continue;
@@ -171,15 +173,17 @@ class CostOptimizationService {
       const campaignRevenue = campaignConversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
       const campaignCost = campaignCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
 
-      byCampaign[campaign] = {
-        cost: campaignCost,
-        leads: campaignLeads.length,
-        conversions: campaignConversions.length,
-        costPerLead: campaignLeads.length > 0 ? campaignCost / campaignLeads.length : 0,
-        costPerConversion: campaignConversions.length > 0 ? campaignCost / campaignConversions.length : 0,
-        roi: campaignCost > 0 ? ((campaignRevenue - campaignCost) / campaignCost) * 100 : 0,
-        roas: campaignCost > 0 ? campaignRevenue / campaignCost : 0,
-      };
+      if (campaign) {
+        byCampaign[campaign] = {
+          cost: campaignCost,
+          leads: campaignLeads.length,
+          conversions: campaignConversions.length,
+          costPerLead: campaignLeads.length > 0 ? campaignCost / campaignLeads.length : 0,
+          costPerConversion: campaignConversions.length > 0 ? campaignCost / campaignConversions.length : 0,
+          roi: campaignCost > 0 ? ((campaignRevenue - campaignCost) / campaignCost) * 100 : 0,
+          roas: campaignCost > 0 ? campaignRevenue / campaignCost : 0,
+        };
+      }
     }
 
     // Generate recommendations

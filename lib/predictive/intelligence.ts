@@ -207,7 +207,8 @@ export class PredictiveIntelligenceService {
           category: 'optimization',
           estimatedValue: {
             timeSaved: frictionPoint.estimatedImpact.timeSaved,
-            errorReduction: frictionPoint.estimatedImpact.errorReduction,
+            costReduction: frictionPoint.estimatedImpact.costReduction,
+            efficiencyGain: frictionPoint.estimatedImpact.errorReduction ? Math.round((1 - (frictionPoint.estimatedImpact.errorReduction || 0)) * 100) : undefined,
           },
           complexity: 'low',
           confidence: frictionPoint.confidence,

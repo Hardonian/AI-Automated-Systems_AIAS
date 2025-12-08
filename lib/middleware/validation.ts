@@ -54,8 +54,8 @@ export function validateBody<T extends z.ZodTypeAny>(
  * Validate query parameters
  */
 export function validateQuery<T extends z.ZodTypeAny>(
-  _request: NextRequest,
-  _schema: T
+  request: NextRequest,
+  schema: T
 ): { success: true; data: z.infer<T> } | { success: false; response: NextResponse } {
   try {
     const query = Object.fromEntries(request.nextUrl.searchParams.entries());

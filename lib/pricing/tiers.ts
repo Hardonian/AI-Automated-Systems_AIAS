@@ -251,7 +251,8 @@ export function getFeatureLimit(featureId: string, tier: SubscriptionTier): numb
  */
 export function getTierLimits(tier: SubscriptionTier) {
   const tierConfig = pricingTiers.find(t => t.id === tier);
-  return tierConfig?.limits ?? pricingTiers[0]?.limits ?? { workflows: 0, executions: 0, storage: 0, users: 0, apiCalls: 0 };
+  const defaultLimits = { workflows: 0, agents: 0, apiCalls: 0, storage: 0, teamMembers: 0, integrations: 0 };
+  return tierConfig?.limits ?? pricingTiers[0]?.limits ?? defaultLimits;
 }
 
 /**
@@ -263,7 +264,7 @@ export function checkUsageLimit(
   currentUsage: number
 ): { allowed: boolean; limit: number; remaining: number } {
   const limits = getTierLimits(tier);
-  const limit = limits[feature];
+  const limit = (limits as Record<string, number>)[feature] ?? 0;
   
   if (limit === -1) {
     return { allowed: true, limit: -1, remaining: -1 };

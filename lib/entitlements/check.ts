@@ -106,8 +106,8 @@ export async function checkFeatureAccess(
     }
 
     // Normalize plan
-    if (plan === "professional") plan = "pro";
-    if (plan === "standard") plan = "starter";
+    if (plan === "professional" as any) plan = "pro";
+    if (plan === "standard" as any) plan = "starter";
 
     const featureConfig = FEATURES[feature];
     const planAccess = featureConfig[plan];

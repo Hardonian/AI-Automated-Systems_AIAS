@@ -235,7 +235,7 @@ export async function processBenchmarkJob(
  * Simulate optimization (placeholder for actual implementation)
  */
 async function simulateOptimization(
-  sourceFormat: EdgeAIModelFormat,
+  _sourceFormat: EdgeAIModelFormat,
   targetFormat: EdgeAIModelFormat,
   quantizationType: EdgeAIQuantizationType | undefined,
   optimizationLevel: OptimizationLevel,

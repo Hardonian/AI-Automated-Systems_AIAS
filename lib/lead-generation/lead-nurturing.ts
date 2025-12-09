@@ -254,14 +254,14 @@ class LeadNurturingService {
   /**
    * Personalize email (for database templates)
    */
-  private personalizeEmail(template: EmailTemplate, lead: { name?: string; email?: string; company?: string }): { subject: string; body: string } {
+  private personalizeEmail(template: EmailTemplate, lead: { name?: string; email?: string; company?: string; first_name?: string; last_name?: string }): { subject: string; body: string } {
     let subject = template.subject || '';
     let body = template.body || '';
 
     // Replace placeholders
     const replacements: Record<string, string> = {
-      '{{firstName}}': lead.first_name || 'there',
-      '{{lastName}}': lead.last_name || '',
+      '{{firstName}}': lead.first_name || lead.name?.split(' ')[0] || 'there',
+      '{{lastName}}': lead.last_name || lead.name?.split(' ').slice(1).join(' ') || '',
       '{{company}}': lead.company || 'your company',
       '{{email}}': lead.email || '',
     };

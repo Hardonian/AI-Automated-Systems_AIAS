@@ -119,7 +119,7 @@ class MemoryCache {
       return null;
     }
 
-    return entry.data;
+    return entry.data as T;
   }
 
   set(key: string, data: unknown, ttl: number): void {

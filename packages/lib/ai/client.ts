@@ -1,4 +1,4 @@
-import { logger } from '../observability';
+import { logger } from '../observability.js';
 
 import { createAIProvider, createFallbackAIProvider } from './providers.js';
 import { ChatRequest, AuditRequest, EstimateRequest, ContentGenerationRequest, WorkflowGenerationRequest , AIProvider } from './types.js';

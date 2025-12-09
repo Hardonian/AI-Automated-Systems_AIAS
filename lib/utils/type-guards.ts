@@ -69,7 +69,7 @@ export function hasProperties<K extends string>(
   value: unknown,
   ...props: K[]
 ): value is Record<K, unknown> {
-  if (!isObject(value)) return false;
+  if (!isObject(value)) {return false;}
   return props.every(prop => prop in value);
 }
 
@@ -84,7 +84,7 @@ export function isNonEmptyString(value: unknown): value is string {
  * Type guard to check if a value is a valid email
  */
 export function isEmail(value: unknown): value is string {
-  if (!isString(value)) return false;
+  if (!isString(value)) {return false;}
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(value);
 }
@@ -93,7 +93,7 @@ export function isEmail(value: unknown): value is string {
  * Type guard to check if a value is a valid URL
  */
 export function isUrl(value: unknown): value is string {
-  if (!isString(value)) return false;
+  if (!isString(value)) {return false;}
   try {
     new URL(value);
     return true;
@@ -113,7 +113,7 @@ export function isDate(value: unknown): value is Date {
  * Type guard to check if a value is a valid date string (ISO format)
  */
 export function isDateString(value: unknown): value is string {
-  if (!isString(value)) return false;
+  if (!isString(value)) {return false;}
   const date = new Date(value);
   return !isNaN(date.getTime());
 }
@@ -122,7 +122,7 @@ export function isDateString(value: unknown): value is string {
  * Type guard to check if a value is a valid UUID
  */
 export function isUuid(value: unknown): value is string {
-  if (!isString(value)) return false;
+  if (!isString(value)) {return false;}
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   return uuidRegex.test(value);
 }
@@ -155,7 +155,7 @@ export function getProperty<T, K extends keyof T>(
   obj: T | null | undefined,
   key: K
 ): T[K] | undefined {
-  if (!isDefined(obj) || !isObject(obj)) return undefined;
+  if (!isDefined(obj) || !isObject(obj)) {return undefined;}
   return obj[key];
 }
 
@@ -166,7 +166,7 @@ export function getNestedProperty<T>(
   obj: unknown,
   ...keys: string[]
 ): T | undefined {
-  if (!isObject(obj)) return undefined;
+  if (!isObject(obj)) {return undefined;}
   
   let current: unknown = obj;
   for (const key of keys) {

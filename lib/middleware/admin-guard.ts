@@ -5,8 +5,10 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/auth/admin-auth";
+
 import { addSecurityHeaders } from "./security";
+
+import { requireAdmin } from "@/lib/auth/admin-auth";
 
 /**
  * Admin route guard middleware

@@ -5,6 +5,7 @@
 "use client";
 
 import React, { Component, ErrorInfo, ReactNode } from "react";
+
 import { telemetry } from "../monitoring/enhanced-telemetry";
 
 interface Props {
@@ -132,14 +133,14 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
             )}
             <div className="flex gap-2">
               <button
-                onClick={this.resetErrorBoundary}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={this.resetErrorBoundary}
               >
                 Try again
               </button>
               <button
-                onClick={() => window.location.reload()}
                 className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+                onClick={() => window.location.reload()}
               >
                 Reload page
               </button>

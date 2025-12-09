@@ -2,6 +2,7 @@
 
 import { motion, Variants } from "framer-motion";
 import { ReactNode } from "react";
+
 import { cn } from "@/lib/utils";
 
 interface TextRevealProps {
@@ -65,9 +66,9 @@ export function TextReveal({
   return (
     <motion.div
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
       variants={containerVariants}
+      viewport={{ once: true, margin: "-100px" }}
+      whileInView="visible"
       {...({ className: cn("inline-block", className) } as any)}
     >
       {splitBy === "none" ? (

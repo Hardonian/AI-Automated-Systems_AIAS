@@ -5,6 +5,7 @@
  */
 
 import { ServiceCost } from "./service-costs";
+
 import { logger } from "@/lib/utils/logger";
 
 export interface CostAlert {
@@ -73,8 +74,8 @@ class CostMonitor {
 
     for (const threshold of this.thresholds) {
       // Check if threshold applies to this service/category
-      if (threshold.service && threshold.service !== cost.service) continue;
-      if (threshold.category && threshold.category !== cost.category) continue;
+      if (threshold.service && threshold.service !== cost.service) {continue;}
+      if (threshold.category && threshold.category !== cost.category) {continue;}
 
       // Calculate current costs
       const dailyCosts = this.costHistory.filter(
@@ -92,16 +93,16 @@ class CostMonitor {
       );
 
       const dailyTotal = dailyCosts.reduce((sum, c) => {
-        if (c.period === "daily") return sum + c.amount;
-        if (c.period === "monthly") return sum + c.amount / 30;
-        if (c.period === "yearly") return sum + c.amount / 365;
+        if (c.period === "daily") {return sum + c.amount;}
+        if (c.period === "monthly") {return sum + c.amount / 30;}
+        if (c.period === "yearly") {return sum + c.amount / 365;}
         return sum;
       }, 0);
 
       const monthlyTotal = monthlyCosts.reduce((sum, c) => {
-        if (c.period === "monthly") return sum + c.amount;
-        if (c.period === "daily") return sum + c.amount * 30;
-        if (c.period === "yearly") return sum + c.amount / 12;
+        if (c.period === "monthly") {return sum + c.amount;}
+        if (c.period === "daily") {return sum + c.amount * 30;}
+        if (c.period === "yearly") {return sum + c.amount / 12;}
         return sum;
       }, 0);
 

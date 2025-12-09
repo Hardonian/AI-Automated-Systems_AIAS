@@ -1,7 +1,8 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Shield, Award, CheckCircle2, Users, TrendingUp, Clock, Globe, Lock } from "lucide-react";
+
+import { Card, CardContent } from "@/components/ui/card";
 
 const metrics = [
   {
@@ -82,24 +83,24 @@ const clientTypes = [
 
 export function TrustBadges() {
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-b from-background to-muted/20" aria-label="Trust signals and social proof">
+    <section aria-label="Trust signals and social proof" className="py-16 md:py-24 bg-gradient-to-b from-background to-muted/20">
       <div className="container max-w-7xl mx-auto px-4">
         {/* Metrics */}
         <div className="mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
             transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            whileInView={{ opacity: 1, y: 0 }}
             {...({ className: "text-3xl md:text-4xl font-extrabold text-center mb-4" } as any)}
           >
             Proven Results
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true }}
+            whileInView={{ opacity: 1, y: 0 }}
             {...({ className: "text-center text-muted-foreground mb-8 text-lg" } as any)}
           >
             Real numbers from real businesses using our platforms
@@ -111,15 +112,15 @@ export function TrustBadges() {
                 <motion.div
                   key={metric.label}
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+                  viewport={{ once: true }}
                   whileHover={{ y: -4, scale: 1.02 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                 >
                   <Card className="h-full text-center border-2 hover:border-primary/50 transition-all hover:shadow-lg">
                     <CardContent className="pt-6 pb-6 px-4">
                       <div className={`w-12 h-12 md:w-14 md:h-14 rounded-lg ${metric.bgColor} flex items-center justify-center mx-auto mb-4`}>
-                        <Icon className={`h-6 w-6 md:h-7 md:w-7 ${metric.color}`} aria-hidden="true" />
+                        <Icon aria-hidden="true" className={`h-6 w-6 md:h-7 md:w-7 ${metric.color}`} />
                       </div>
                       <div className={`text-3xl md:text-4xl font-extrabold ${metric.color} mb-2`}>
                         {metric.value}
@@ -138,9 +139,9 @@ export function TrustBadges() {
         <div className="mb-16">
           <motion.h3
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
             transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            whileInView={{ opacity: 1, y: 0 }}
             {...({ className: "text-2xl md:text-3xl font-bold text-center mb-8" } as any)}
           >
             Security & Compliance
@@ -152,16 +153,16 @@ export function TrustBadges() {
                 <motion.div
                   key={cert.name}
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
+                  viewport={{ once: true }}
                   whileHover={{ y: -4, scale: 1.02 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                 >
                   <Card className="h-full border-2 hover:border-primary/50 transition-all hover:shadow-lg">
                     <CardContent className="pt-6 pb-6 px-4">
                       <div className="flex items-center gap-4">
                         <div className={`w-12 h-12 md:w-14 md:h-14 rounded-lg ${cert.bgColor} flex items-center justify-center flex-shrink-0`}>
-                          <Icon className={`h-6 w-6 md:h-7 md:w-7 ${cert.color}`} aria-hidden="true" />
+                          <Icon aria-hidden="true" className={`h-6 w-6 md:h-7 md:w-7 ${cert.color}`} />
                         </div>
                         <div className="flex-1">
                           <div className="font-bold text-sm md:text-base mb-1">{cert.name}</div>
@@ -180,28 +181,28 @@ export function TrustBadges() {
         <div className="text-center">
           <motion.h3
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
             transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            whileInView={{ opacity: 1, y: 0 }}
             {...({ className: "text-2xl md:text-3xl font-bold mb-6" } as any)}
           >
             Trusted By Industry Leaders
           </motion.h3>
           <motion.div
             initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+            whileInView={{ opacity: 1 }}
             {...({ className: "flex flex-wrap items-center justify-center gap-3 md:gap-4" } as any)}
           >
             {clientTypes.map((type, index) => (
               <motion.div
                 key={type}
                 initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
                 transition={{ duration: 0.3, delay: 0.2 + index * 0.05 }}
+                viewport={{ once: true }}
                 whileHover={{ scale: 1.05 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 {...({ className: "px-4 py-2 md:px-5 md:py-2.5 rounded-full bg-card border-2 border-border hover:border-primary/50 text-sm md:text-base font-semibold transition-all hover:shadow-md" } as any)}
               >
                 {type}
@@ -213,26 +214,26 @@ export function TrustBadges() {
         {/* Additional trust indicators */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
           {...({ className: "mt-12 pt-8 border-t border-border" } as any)}
         >
           <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-sm md:text-base">
             <div className="flex items-center gap-2 text-foreground font-semibold">
-              <Globe className="h-5 w-5 text-primary" aria-hidden="true" />
+              <Globe aria-hidden="true" className="h-5 w-5 text-primary" />
               <span>🇨🇦 Built in Canada</span>
             </div>
             <div className="flex items-center gap-2 text-foreground font-semibold">
-              <Globe className="h-5 w-5 text-primary" aria-hidden="true" />
+              <Globe aria-hidden="true" className="h-5 w-5 text-primary" />
               <span>🌍 Serving Global Clients</span>
             </div>
             <div className="flex items-center gap-2 text-foreground font-semibold">
-              <Shield className="h-5 w-5 text-primary" aria-hidden="true" />
+              <Shield aria-hidden="true" className="h-5 w-5 text-primary" />
               <span>🔒 Enterprise Security</span>
             </div>
             <div className="flex items-center gap-2 text-foreground font-semibold">
-              <CheckCircle2 className="h-5 w-5 text-primary" aria-hidden="true" />
+              <CheckCircle2 aria-hidden="true" className="h-5 w-5 text-primary" />
               <span>⭐ 4.9/5 Customer Rating</span>
             </div>
           </div>

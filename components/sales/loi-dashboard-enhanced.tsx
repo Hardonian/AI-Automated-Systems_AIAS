@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { logger } from "@/lib/logging/structured-logger";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import { LOIForm } from "./loi-form";
-import { TrendingUp, FileText, CheckCircle2, Clock, Sparkles, ArrowUpRight, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { TrendingUp, FileText, CheckCircle2, Clock, Sparkles, ArrowUpRight, AlertCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
+
+import { LOIForm } from "./loi-form";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface LOI {
   id: string;
@@ -133,7 +135,7 @@ export function LOIDashboardEnhanced() {
     const variant = (tier && variants[tier]) || variants.Starter;
 
     return (
-      <Badge variant="outline" className={variant?.className || ''}>
+      <Badge className={variant?.className || ''} variant="outline">
         {variant?.label || tier}
       </Badge>
     );
@@ -142,7 +144,7 @@ export function LOIDashboardEnhanced() {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
       </div>
     );
   }
@@ -151,11 +153,11 @@ export function LOIDashboardEnhanced() {
     <div className="space-y-6">
       {/* Hero Section with Gradient */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: -20 }}
         {...({ className: "relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-8 text-white shadow-2xl" } as any)}
       >
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div>
@@ -175,8 +177,8 @@ export function LOIDashboardEnhanced() {
       {/* Enhanced Summary Cards with Animations */}
       {summary && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20 }}
           transition={{ delay: 0.1 }}
           {...({ className: "grid gap-4 md:grid-cols-4" } as any)}
         >
@@ -192,8 +194,8 @@ export function LOIDashboardEnhanced() {
               <p className="text-xs text-muted-foreground mt-1">Target: 5</p>
               <div className="mt-2 h-2 bg-blue-100 rounded-full overflow-hidden">
                 <motion.div
-                  initial={{ width: 0 }}
                   animate={{ width: `${(summary.total / 5) * 100}%` }}
+                  initial={{ width: 0 }}
                   transition={{ duration: 1, delay: 0.3 }}
                   {...({ className: "h-full bg-gradient-to-r from-blue-500 to-blue-600" } as any)}
                 />
@@ -248,13 +250,13 @@ export function LOIDashboardEnhanced() {
         </motion.div>
       )}
 
-      <Tabs defaultValue="list" className="space-y-4">
+      <Tabs className="space-y-4" defaultValue="list">
         <TabsList className="bg-white shadow-md">
           <TabsTrigger value="list">LOI List</TabsTrigger>
           <TabsTrigger value="summary">Summary</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="list" className="space-y-4">
+        <TabsContent className="space-y-4" value="list">
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle>Letters of Intent</CardTitle>
@@ -265,8 +267,8 @@ export function LOIDashboardEnhanced() {
                 {lois.map((loi, loiIndex) => (
                   <motion.div
                     key={loi.id}
-                    initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, x: -20 }}
                     transition={{ delay: loiIndex * 0.1 }}
                     {...({ className: "border-2 rounded-xl p-6 space-y-4 bg-gradient-to-br from-white to-gray-50 hover:shadow-lg transition-all" } as any)}
                   >
@@ -309,7 +311,7 @@ export function LOIDashboardEnhanced() {
                         <p className="text-sm font-medium text-muted-foreground mb-2">Requirements:</p>
                         <div className="flex flex-wrap gap-2">
                           {loi.requirements.map((req, idx) => (
-                            <Badge key={idx} variant="secondary" className="bg-blue-100 text-blue-700">
+                            <Badge key={idx} className="bg-blue-100 text-blue-700" variant="secondary">
                               {req}
                             </Badge>
                           ))}
@@ -333,7 +335,7 @@ export function LOIDashboardEnhanced() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="summary" className="space-y-4">
+        <TabsContent className="space-y-4" value="summary">
           {summary && (
             <>
               <Card className="shadow-lg">
@@ -341,7 +343,7 @@ export function LOIDashboardEnhanced() {
                   <CardTitle>LOIs by Tier</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
+                  <ResponsiveContainer height={300} width="100%">
                     <BarChart data={[
                       { tier: "Starter", count: summary.byTier.Starter },
                       { tier: "Pro", count: summary.byTier.Pro },
@@ -366,7 +368,7 @@ export function LOIDashboardEnhanced() {
                   <CardTitle>LOIs by Status</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
+                  <ResponsiveContainer height={300} width="100%">
                     <BarChart data={[
                       { status: "Draft", count: summary.byStatus.draft },
                       { status: "Sent", count: summary.byStatus.sent },

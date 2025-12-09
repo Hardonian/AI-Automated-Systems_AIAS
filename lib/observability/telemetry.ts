@@ -340,7 +340,7 @@ export class ObservabilityService {
     period: { start: Date; end: Date }
   ): WorkflowHeatmap {
     const logs = this.workflowLogs.filter(log => {
-      if (log.workflowId !== workflowId) return false;
+      if (log.workflowId !== workflowId) {return false;}
       const startedAt = new Date(log.startedAt);
       return startedAt >= period.start && startedAt <= period.end;
     });
@@ -378,7 +378,7 @@ export class ObservabilityService {
     period: { start: Date; end: Date }
   ): AgentEfficiency {
     const logs = this.agentLogs.filter(log => {
-      if (log.agentId !== agentId) return false;
+      if (log.agentId !== agentId) {return false;}
       const startedAt = new Date(log.startedAt);
       return startedAt >= period.start && startedAt <= period.end;
     });

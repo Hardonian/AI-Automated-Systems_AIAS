@@ -95,9 +95,9 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
   // Comparison operators
   if (trimmed.includes('==')) {
     const parts = trimmed.split('==').map(s => s.trim());
-    if (parts.length !== 2) return false;
+    if (parts.length !== 2) {return false;}
     const [left, right] = parts;
-    if (!left || !right) return false;
+    if (!left || !right) {return false;}
     const leftValue = getNestedValue(variables, left) ?? left;
     const rightValue = getNestedValue(variables, right) ?? right;
     return leftValue == rightValue;
@@ -105,9 +105,9 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
 
   if (trimmed.includes('!=')) {
     const parts = trimmed.split('!=').map(s => s.trim());
-    if (parts.length !== 2) return false;
+    if (parts.length !== 2) {return false;}
     const [left, right] = parts;
-    if (!left || !right) return false;
+    if (!left || !right) {return false;}
     const leftValue = getNestedValue(variables, left) ?? left;
     const rightValue = getNestedValue(variables, right) ?? right;
     return leftValue != rightValue;
@@ -115,9 +115,9 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
 
   if (trimmed.includes('>=')) {
     const parts = trimmed.split('>=').map(s => s.trim());
-    if (parts.length !== 2) return false;
+    if (parts.length !== 2) {return false;}
     const [left, right] = parts;
-    if (!left || !right) return false;
+    if (!left || !right) {return false;}
     const leftValue = Number(getNestedValue(variables, left) ?? left);
     const rightValue = Number(getNestedValue(variables, right) ?? right);
     return leftValue >= rightValue;
@@ -125,9 +125,9 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
 
   if (trimmed.includes('<=')) {
     const parts = trimmed.split('<=').map(s => s.trim());
-    if (parts.length !== 2) return false;
+    if (parts.length !== 2) {return false;}
     const [left, right] = parts;
-    if (!left || !right) return false;
+    if (!left || !right) {return false;}
     const leftValue = Number(getNestedValue(variables, left) ?? left);
     const rightValue = Number(getNestedValue(variables, right) ?? right);
     return leftValue <= rightValue;
@@ -135,9 +135,9 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
 
   if (trimmed.includes('>')) {
     const parts = trimmed.split('>').map(s => s.trim());
-    if (parts.length !== 2) return false;
+    if (parts.length !== 2) {return false;}
     const [left, right] = parts;
-    if (!left || !right) return false;
+    if (!left || !right) {return false;}
     const leftValue = Number(getNestedValue(variables, left) ?? left);
     const rightValue = Number(getNestedValue(variables, right) ?? right);
     return leftValue > rightValue;
@@ -145,9 +145,9 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
 
   if (trimmed.includes('<')) {
     const parts = trimmed.split('<').map(s => s.trim());
-    if (parts.length !== 2) return false;
+    if (parts.length !== 2) {return false;}
     const [left, right] = parts;
-    if (!left || !right) return false;
+    if (!left || !right) {return false;}
     const leftValue = Number(getNestedValue(variables, left) ?? left);
     const rightValue = Number(getNestedValue(variables, right) ?? right);
     return leftValue < rightValue;
@@ -177,7 +177,7 @@ export function renderComponents(
       if (componentVars) {
         // Simple variable passing (e.g., {{> button button_url="/pricing" button_text="Upgrade"}})
         const varRegex = /(\w+)=["']([^"']+)["']/g;
-        let componentVariables = { ...variables };
+        const componentVariables = { ...variables };
         let varMatch;
         while ((varMatch = varRegex.exec(componentVars)) !== null) {
           const varName = varMatch[1];
@@ -221,11 +221,11 @@ export function formatDate(date: string | Date, format: 'short' | 'long' | 'rela
       const diffMs = now.getTime() - dateObj.getTime();
       const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
       
-      if (diffDays === 0) return 'today';
-      if (diffDays === 1) return 'yesterday';
-      if (diffDays < 7) return `${diffDays} days ago`;
-      if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
-      if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+      if (diffDays === 0) {return 'today';}
+      if (diffDays === 1) {return 'yesterday';}
+      if (diffDays < 7) {return `${diffDays} days ago`;}
+      if (diffDays < 30) {return `${Math.floor(diffDays / 7)} weeks ago`;}
+      if (diffDays < 365) {return `${Math.floor(diffDays / 30)} months ago`;}
       return `${Math.floor(diffDays / 365)} years ago`;
     case 'short':
     default:

@@ -9,7 +9,7 @@ export async function computeSignalsForUser(userId: string, window: "1d"|"7d"|"3
     .gte("ts", new Date(Date.now() - windowMs(window)).toISOString());
 
   const signals: { k: string; v: number; meta?: Record<string, unknown> }[] = [];
-  if (!events || !events.length) return signals;
+  if (!events || !events.length) {return signals;}
 
   const clicks = events.filter((e: { type: string }) => e.type === "click");
   const errors = events.filter((e: { type: string }) => e.type === "error");
@@ -26,7 +26,7 @@ export async function computeSignalsForUser(userId: string, window: "1d"|"7d"|"3
 
 export async function persistSignals(userId: string, signals: { k: string; v: number; meta?: Record<string, unknown> }[], window: "1d"|"7d"|"30d" = "7d") {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
-  if (!signals.length) return;
+  if (!signals.length) {return;}
   const rows = signals.map(s => ({ user_id: userId, window, ...s }));
   await supabase.from("signals").insert(rows);
 }
@@ -50,7 +50,7 @@ function countRageClicks(clicks: ClickEvent[]) {
   });
   let rage = 0;
   for (const arr of Object.values(byPath)) {
-    arr.sort((a,b)=>a-b);
+    arr.sort((a,b) => a-b);
     for (let i=3;i<arr.length;i++){
       const current = arr[i];
       const prev = arr[i-3];

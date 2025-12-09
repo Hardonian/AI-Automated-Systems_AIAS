@@ -9,7 +9,7 @@ import { useEffect } from "react";
  */
 export function PerformanceBeacon() {
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined") {return;}
 
     // Collect Web Vitals
     const vitals: Record<string, number> = {};

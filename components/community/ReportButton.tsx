@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
-import { supabase } from "@/lib/supabase/client";
+
 import { hapticTap } from "@/components/gamification/Haptics";
+import { supabase } from "@/lib/supabase/client";
 
 export default function ReportButton({ postId, commentId }: { postId?: number; commentId?: number }) {
   const [reported, setReported] = useState(false);
@@ -11,13 +12,13 @@ export default function ReportButton({ postId, commentId }: { postId?: number; c
   async function submitReport() {
     hapticTap();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user || !reason.trim()) return;
+    if (!user || !reason.trim()) {return;}
     
     await supabase.from("moderation_flags").insert({
       flagged_by: user.id,
       post_id: postId || null,
       comment_id: commentId || null,
-      reason: reason,
+      reason,
       status: "pending"
     } as Record<string, unknown>);
     
@@ -34,8 +35,8 @@ export default function ReportButton({ postId, commentId }: { postId?: number; c
   if (!showForm) {
     return (
       <button
-        onClick={() => setShowForm(true)}
         className="text-xs text-muted-foreground hover:text-foreground"
+        onClick={() => setShowForm(true)}
       >
         Report
       </button>
@@ -45,9 +46,9 @@ export default function ReportButton({ postId, commentId }: { postId?: number; c
   return (
     <div className="space-y-2">
       <select
+        className="w-full rounded-lg border border-border p-2 text-sm"
         value={reason}
         onChange={e => setReason(e.target.value)}
-        className="w-full rounded-lg border border-border p-2 text-sm"
       >
         <option value="">Select reason...</option>
         <option value="spam">Spam</option>
@@ -58,15 +59,15 @@ export default function ReportButton({ postId, commentId }: { postId?: number; c
       </select>
       <div className="flex gap-2">
         <button
-          onClick={submitReport}
-          disabled={!reason}
           className="flex-1 h-8 rounded-lg bg-primary text-primary-fg text-xs disabled:opacity-50"
+          disabled={!reason}
+          onClick={submitReport}
         >
           Submit
         </button>
         <button
-          onClick={() => { setShowForm(false); setReason(""); }}
           className="flex-1 h-8 rounded-lg bg-muted text-xs"
+          onClick={() => { setShowForm(false); setReason(""); }}
         >
           Cancel
         </button>

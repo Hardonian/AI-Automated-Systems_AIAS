@@ -44,12 +44,12 @@ export async function makeRecommendations(userId: string) {
       cta: { label: "Enable Stability", action: "enable:stability" }
     });
   }
-  return recs.sort((a,b)=>b.score - a.score);
+  return recs.sort((a,b) => b.score - a.score);
 }
 
 export async function persistRecommendations(userId: string, recs: Reco[]) {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
-  if (!recs.length) return;
+  if (!recs.length) {return;}
   const rows = recs.map(r => ({ user_id: userId, ...r }));
   await supabase.from("recommendations").insert(rows);
 }

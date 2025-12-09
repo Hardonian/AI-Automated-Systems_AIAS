@@ -24,8 +24,8 @@ export function DashboardPreviewWrapper({
 
   return (
     <DashboardPreview
-      title={title}
       description={description}
+      title={title}
       variant={variant}
       onRequestPreview={handleRequestPreview}
     />

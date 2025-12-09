@@ -112,7 +112,7 @@ class MemoryCache {
 
   get(key: string): any | null {
     const entry = this.store.get(key);
-    if (!entry) return null;
+    if (!entry) {return null;}
 
     if (Date.now() > entry.expires) {
       this.store.delete(key);
@@ -157,7 +157,7 @@ export function generateCacheKey(
   query?: Record<string, string>
 ): string {
   const queryString = query
-    ? "?" + new URLSearchParams(query).toString()
+    ? `?${  new URLSearchParams(query).toString()}`
     : "";
   return `cache:${path}${queryString}`;
 }

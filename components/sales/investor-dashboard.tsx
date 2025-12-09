@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { logger } from "@/lib/logging/structured-logger";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { logger } from "@/lib/logging/structured-logger";
+
 
 interface Investor {
   id: string;
@@ -92,11 +94,11 @@ export function InvestorDashboard() {
   const getTypeBadge = (type: string) => {
     switch (type) {
       case "vc":
-        return <Badge variant="outline" className="border-blue-500 text-blue-700">VC</Badge>;
+        return <Badge className="border-blue-500 text-blue-700" variant="outline">VC</Badge>;
       case "angel":
-        return <Badge variant="outline" className="border-purple-500 text-purple-700">Angel</Badge>;
+        return <Badge className="border-purple-500 text-purple-700" variant="outline">Angel</Badge>;
       case "strategic":
-        return <Badge variant="outline" className="border-green-500 text-green-700">Strategic</Badge>;
+        return <Badge className="border-green-500 text-green-700" variant="outline">Strategic</Badge>;
       default:
         return <Badge variant="outline">{type}</Badge>;
     }
@@ -157,13 +159,13 @@ export function InvestorDashboard() {
         </div>
       )}
 
-      <Tabs defaultValue="list" className="space-y-4">
+      <Tabs className="space-y-4" defaultValue="list">
         <TabsList>
           <TabsTrigger value="list">Investor List</TabsTrigger>
           <TabsTrigger value="summary">Summary</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="list" className="space-y-4">
+        <TabsContent className="space-y-4" value="list">
           <Card>
             <CardHeader>
               <CardTitle>Investor Outreach</CardTitle>
@@ -202,7 +204,7 @@ export function InvestorDashboard() {
                         <p className="text-sm text-muted-foreground mb-1">Focus:</p>
                         <div className="flex flex-wrap gap-2">
                           {investor.focus.map((f, idx) => (
-                            <Badge key={idx} variant="outline" className="text-xs">
+                            <Badge key={idx} className="text-xs" variant="outline">
                               {f}
                             </Badge>
                           ))}
@@ -235,7 +237,7 @@ export function InvestorDashboard() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="summary" className="space-y-4">
+        <TabsContent className="space-y-4" value="summary">
           {summary && (
             <>
               <Card>
@@ -243,21 +245,21 @@ export function InvestorDashboard() {
                   <CardTitle>Investors by Type</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
+                  <ResponsiveContainer height={300} width="100%">
                     <PieChart>
                       <Pie
+                        cx="50%"
+                        cy="50%"
                         data={[
                           { name: "VC", value: summary.byType.vc },
                           { name: "Angel", value: summary.byType.angel },
                           { name: "Strategic", value: (summary.byType as any).strategic || 0 },
                         ]}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                        outerRadius={80}
-                        fill="#8884d8"
                         dataKey="value"
+                        fill="#8884d8"
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        labelLine={false}
+                        outerRadius={80}
                       >
                         {[summary.byType.vc, summary.byType.angel, (summary.byType as any).strategic || 0].map((_entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -274,13 +276,13 @@ export function InvestorDashboard() {
                   <CardTitle>Investors by Status</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
+                  <ResponsiveContainer height={300} width="100%">
                     <BarChart data={Object.entries(summary.byStatus).map(([status, count]) => ({
                       status: status.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
                       count,
                     }))}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="status" angle={-45} textAnchor="end" height={100} />
+                      <XAxis angle={-45} dataKey="status" height={100} textAnchor="end" />
                       <YAxis />
                       <Tooltip />
                       <Bar dataKey="count" fill="#3b82f6" />

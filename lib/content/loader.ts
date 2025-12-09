@@ -1,14 +1,15 @@
 import { readFile, writeFile, mkdir } from "fs/promises";
 import { join } from "path";
+
+import {
+  defaultAIASContent,
+  defaultSettlerContent,
+} from "./defaults";
 import type { AIASContent, SettlerContent } from "./schemas";
 import {
   aiasContentSchema,
   settlerContentSchema,
 } from "./schemas";
-import {
-  defaultAIASContent,
-  defaultSettlerContent,
-} from "./defaults";
 
 const CONTENT_DIR = join(process.cwd(), "content");
 const AIAS_CONFIG_PATH = join(CONTENT_DIR, "aias.json");

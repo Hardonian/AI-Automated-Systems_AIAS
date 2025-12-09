@@ -3,11 +3,12 @@
  * Automated email sequences and workflow automation
  */
 
-import { logger } from '@/lib/logging/structured-logger';
 import { createClient } from '@supabase/supabase-js';
-import { env } from '@/lib/env';
+
 import { emailService } from '@/lib/email/email-service';
 import { getTemplateById } from '@/lib/email-templates';
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 export interface NurturingSequence {
   id: string;
@@ -150,7 +151,7 @@ class LeadNurturingService {
     tenantId?: string
   ): Promise<void> {
     // Try to get template from our template library first
-    let template = getTemplateById(templateId);
+    const template = getTemplateById(templateId);
     
     // If not found, try database (for custom templates)
     if (!template) {
@@ -258,7 +259,7 @@ class LeadNurturingService {
     const sequence = await this.getSequence(sequenceId);
     const step = sequence?.steps[stepOrder];
 
-    if (!step) return;
+    if (!step) {return;}
 
     const scheduledAt = new Date();
     scheduledAt.setDate(scheduledAt.getDate() + step.delay);

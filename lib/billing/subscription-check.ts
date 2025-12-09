@@ -4,6 +4,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logging/structured-logger';
 

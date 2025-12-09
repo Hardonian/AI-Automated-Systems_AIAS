@@ -2,6 +2,7 @@
 // Connects PMF tracker to Supabase database
 
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+
 import { PMFMetrics } from "./pmf-metrics";
 
 // Lazy initialization to avoid build-time errors
@@ -130,7 +131,7 @@ export class DatabasePMFTracker {
         .eq("user_id", userId)
         .single();
 
-      if (!activation) return;
+      if (!activation) {return;}
 
       const signupDate = new Date(activation.signup_date);
       const timeToActivationHours =

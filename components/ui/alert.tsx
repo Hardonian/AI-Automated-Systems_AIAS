@@ -1,10 +1,11 @@
 "use client";
 
-import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { AlertCircle, CheckCircle2, Info, AlertTriangle, X } from "lucide-react";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
 
 const alertVariants = cva(
   "relative w-full rounded-xl border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
@@ -48,18 +49,18 @@ const Alert = React.forwardRef<
   return (
     <motion.div
       ref={ref}
-      role="alert"
-      initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
       className={cn(alertVariants({ variant }), className)}
+      exit={{ opacity: 0, y: -10 }}
+      initial={{ opacity: 0, y: -10 }}
+      role="alert"
       {...(props as any)}
     >
       <Icon className="h-4 w-4" />
       {dismissible && (
         <button
-          onClick={onDismiss}
           className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          onClick={onDismiss}
         >
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>

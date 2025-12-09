@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+
 import { cn } from "@/lib/utils";
 
 interface PerformanceMetrics {
@@ -13,7 +14,7 @@ export function PerformanceHUD() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (process.env.NODE_ENV !== "development") return;
+    if (process.env.NODE_ENV !== "development") {return;}
 
     setVisible(true);
 
@@ -37,7 +38,7 @@ export function PerformanceHUD() {
     return () => observer.disconnect();
   }, []);
 
-  if (!visible || process.env.NODE_ENV !== "development") return null;
+  if (!visible || process.env.NODE_ENV !== "development") {return null;}
 
   const lcpGood = !metrics.lcp || metrics.lcp <= 2500;
   const clsGood = !metrics.cls || metrics.cls <= 0.05;

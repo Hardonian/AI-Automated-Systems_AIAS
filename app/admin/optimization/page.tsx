@@ -27,7 +27,7 @@ export default function OptimizationPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadImprovements();
+    void loadImprovements();
   }, []);
 
   async function loadImprovements() {

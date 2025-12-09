@@ -120,7 +120,7 @@ export function getRecommendedOptimizationLevel(
  * Format file size in human-readable format
  */
 export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 B';
+  if (bytes === 0) {return '0 B';}
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
@@ -131,8 +131,8 @@ export function formatFileSize(bytes: number): string {
  * Format duration in human-readable format
  */
 export function formatDuration(seconds: number): string {
-  if (seconds < 60) return `${Math.round(seconds)}s`;
-  if (seconds < 3600) return `${Math.round(seconds / 60)}m`;
+  if (seconds < 60) {return `${Math.round(seconds)}s`;}
+  if (seconds < 3600) {return `${Math.round(seconds / 60)}m`;}
   return `${Math.round(seconds / 3600)}h`;
 }
 
@@ -143,7 +143,7 @@ export function calculateCompressionRatio(
   originalSize: number,
   optimizedSize: number
 ): number {
-  if (originalSize === 0) return 0;
+  if (originalSize === 0) {return 0;}
   return (1 - optimizedSize / originalSize) * 100;
 }
 
@@ -228,7 +228,7 @@ export function validateFileExtension(
   };
 
   const validExtensions = extensions[format] || [];
-  if (validExtensions.length === 0) return true; // 'other' format accepts any extension
+  if (validExtensions.length === 0) {return true;} // 'other' format accepts any extension
 
   const fileExt = filename.toLowerCase().substring(filename.lastIndexOf('.'));
   return validExtensions.some((ext) => fileExt === ext);

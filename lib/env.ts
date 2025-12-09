@@ -20,9 +20,9 @@
  */
 function getRuntimeEnv(): 'vercel' | 'github' | 'local' | 'unknown' {
   if (typeof process !== 'undefined') {
-    if (process.env.VERCEL) return 'vercel';
-    if (process.env.GITHUB_ACTIONS) return 'github';
-    if (process.env.NODE_ENV === 'development') return 'local';
+    if (process.env.VERCEL) {return 'vercel';}
+    if (process.env.GITHUB_ACTIONS) {return 'github';}
+    if (process.env.NODE_ENV === 'development') {return 'local';}
   }
   return 'unknown';
 }

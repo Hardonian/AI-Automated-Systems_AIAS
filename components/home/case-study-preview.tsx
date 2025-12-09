@@ -1,10 +1,11 @@
 "use client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 import { ArrowRight, Clock, Rocket, TrendingUp } from "lucide-react";
+import Link from "next/link";
+
 import FadeIn from "@/components/motion/fade-in";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const featuredCaseStudies = [
   {
@@ -76,7 +77,7 @@ export function CaseStudyPreview() {
                       </CardDescription>
                     </div>
                     {study.type === "consultancy" && (
-                      <Badge variant="default" className="ml-2">Consultancy Build</Badge>
+                      <Badge className="ml-2" variant="default">Consultancy Build</Badge>
                     )}
                   </div>
                 </CardHeader>
@@ -116,7 +117,7 @@ export function CaseStudyPreview() {
                     <p className="text-sm italic mb-2">"{study.testimonial}"</p>
                     <p className="text-xs text-muted-foreground">— {study.author}, {study.role}</p>
                   </div>
-                  <Button variant="outline" className="w-full" asChild>
+                  <Button asChild className="w-full" variant="outline">
                     <Link href={study.type === "consultancy" ? "/tasks" : "/case-studies"}>
                       {study.type === "consultancy" ? "View Build Details" : "Read Full Case Study"} <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
@@ -128,12 +129,12 @@ export function CaseStudyPreview() {
 
           <div className="text-center space-y-4">
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="outline" asChild>
+              <Button asChild size="lg" variant="outline">
                 <Link href="/case-studies">
                   View All Case Studies <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button asChild size="lg" variant="outline">
                 <Link href="/tasks">
                   See Upcoming Builds <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>

@@ -1,15 +1,17 @@
 "use client";
+import { Moon, Sun } from "lucide-react";
+
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun } from "lucide-react";
 
 export function ThemeToggle() {
   const { theme, setTheme, resolvedTheme } = useTheme();
 
   return (
     <Button
-      variant="ghost"
+      aria-label={`Switch to ${resolvedTheme === "light" ? "dark" : "light"} mode`}
       size="sm"
+      variant="ghost"
       onClick={() => {
         if (theme === "light") {
           setTheme("dark");
@@ -19,7 +21,6 @@ export function ThemeToggle() {
           setTheme("light");
         }
       }}
-      aria-label={`Switch to ${resolvedTheme === "light" ? "dark" : "light"} mode`}
     >
       {resolvedTheme === "light" ? (
         <Moon className="h-5 w-5" />

@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { logger } from "@/lib/logging/structured-logger";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 import { Sparkles, Zap, Mail, ArrowRight, Check, Clock, TrendingUp, Lock } from "lucide-react";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+
 import { PreTestQuestionnaire } from "@/components/onboarding/pre-test-questionnaire";
 import type { PreTestAnswers } from "@/components/onboarding/pre-test-questionnaire";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface WelcomeDashboardProps {
   userPlan?: "free" | "trial" | "starter" | "pro";
@@ -54,9 +55,9 @@ export function WelcomeDashboard({
     return (
       <div className="container py-8">
         <PreTestQuestionnaire
+          canDismiss={false}
           onComplete={handlePretestComplete}
           onSkip={handlePretestSkip}
-          canDismiss={false}
         />
       </div>
     );
@@ -75,7 +76,7 @@ export function WelcomeDashboard({
           Save 10+ hours per week with AI automation. Connect your tools, automate workflows, and focus on what matters.
         </p>
         {isTrial && (
-          <Badge variant="outline" className="text-base px-4 py-2">
+          <Badge className="text-base px-4 py-2" variant="outline">
             <Clock className="h-4 w-4 mr-2" />
             {trialDaysRemaining} days left in your free trial
           </Badge>
@@ -111,8 +112,8 @@ export function WelcomeDashboard({
               </div>
             ) : (
               <Button
-                variant="outline"
                 className="w-full"
+                variant="outline"
                 onClick={() => setShowPretest(true)}
               >
                 Take Pre-Test
@@ -149,8 +150,8 @@ export function WelcomeDashboard({
               </div>
             ) : (
               <Button
-                variant="outline"
                 className="w-full"
+                variant="outline"
                 onClick={async () => {
                   // Mark as connected in database
                   try {
@@ -200,7 +201,7 @@ export function WelcomeDashboard({
                 )}
               </div>
             ) : (
-              <Button variant="outline" className="w-full" asChild>
+              <Button asChild className="w-full" variant="outline">
                 <Link href="/onboarding">
                   <Zap className="mr-2 h-4 w-4" />
                   Get Started
@@ -260,7 +261,7 @@ export function WelcomeDashboard({
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button variant="outline" asChild>
+              <Button asChild variant="outline">
                 <Link href="/dashboard">Continue with Trial</Link>
               </Button>
             </div>

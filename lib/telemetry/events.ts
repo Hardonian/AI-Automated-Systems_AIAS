@@ -294,11 +294,11 @@ export interface IntegrationSyncedPayload extends BaseEventPayload {
  * Get current user ID (from session/auth)
  */
 function getUserId(): string | undefined {
-  if (typeof window === 'undefined') return undefined;
+  if (typeof window === 'undefined') {return undefined;}
   
   // Try to get from session storage or auth context
   const sessionUserId = sessionStorage.getItem('user_id');
-  if (sessionUserId) return sessionUserId;
+  if (sessionUserId) {return sessionUserId;}
   
   // Fallback to session ID if no user ID
   return sessionStorage.getItem('analytics_session_id') || undefined;
@@ -308,11 +308,11 @@ function getUserId(): string | undefined {
  * Get current session ID
  */
 function getSessionId(): string {
-  if (typeof window === 'undefined') return '';
+  if (typeof window === 'undefined') {return '';}
   
   let sessionId = sessionStorage.getItem('analytics_session_id');
   if (!sessionId) {
-    sessionId = 'session_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+    sessionId = `session_${  Math.random().toString(36).substr(2, 9)  }_${  Date.now()}`;
     sessionStorage.setItem('analytics_session_id', sessionId);
   }
   return sessionId;
@@ -322,7 +322,7 @@ function getSessionId(): string {
  * Get current route
  */
 function getCurrentRoute(): string {
-  if (typeof window === 'undefined') return '/';
+  if (typeof window === 'undefined') {return '/';}
   return window.location.pathname;
 }
 

@@ -111,7 +111,7 @@ export class ConversionTracker {
   }
 
   private getSessionId(): string {
-    if (typeof window === "undefined") return "server";
+    if (typeof window === "undefined") {return "server";}
     
     let sessionId = sessionStorage.getItem("analytics_session_id");
     if (!sessionId) {

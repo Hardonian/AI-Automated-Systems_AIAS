@@ -4,6 +4,7 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
+
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logging/structured-logger";
 
@@ -106,8 +107,8 @@ export async function checkFeatureAccess(
     }
 
     // Normalize plan
-    if (plan === "professional" as any) plan = "pro";
-    if (plan === "standard" as any) plan = "starter";
+    if (plan === "professional" as any) {plan = "pro";}
+    if (plan === "standard" as any) {plan = "starter";}
 
     const featureConfig = FEATURES[feature];
     const planAccess = featureConfig[plan];

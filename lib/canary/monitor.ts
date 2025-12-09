@@ -102,7 +102,7 @@ export class CanaryMonitor {
           p95,
           threshold: this.config.latencyThreshold,
         });
-        return;
+        
       }
     }
   }

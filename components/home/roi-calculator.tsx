@@ -1,12 +1,13 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+import FadeIn from "@/components/motion/fade-in";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import Link from "next/link";
-import FadeIn from "@/components/motion/fade-in";
 
 export function ROICalculator() {
   const [hoursPerWeek, setHoursPerWeek] = useState([10]);
@@ -50,13 +51,13 @@ export function ROICalculator() {
                     Hours saved per week: <strong>{hoursSaved}</strong>
                   </Label>
                   <Slider
+                    className="mt-2"
                     id="hours"
-                    min={1}
                     max={40}
+                    min={1}
                     step={1}
                     value={hoursPerWeek}
                     onValueChange={setHoursPerWeek}
-                    className="mt-2"
                   />
                 </div>
 
@@ -66,13 +67,13 @@ export function ROICalculator() {
                   </Label>
                   <div className="mt-2">
                     <Input
+                      className="max-w-xs"
                       id="rate"
-                      type="number"
-                      min={20}
                       max={200}
+                      min={20}
+                      type="number"
                       value={hourlyRate}
                       onChange={(e) => setHourlyRate(Number(e.target.value))}
-                      className="max-w-xs"
                     />
                   </div>
                 </div>
@@ -82,13 +83,13 @@ export function ROICalculator() {
                     Number of employees: <strong>{employees}</strong>
                   </Label>
                   <Slider
+                    className="mt-2"
                     id="employees"
-                    min={1}
                     max={10}
+                    min={1}
                     step={1}
                     value={[employees]}
                     onValueChange={(val) => setEmployees(val[0] || 1)}
-                    className="mt-2"
                   />
                 </div>
               </div>
@@ -136,7 +137,7 @@ export function ROICalculator() {
                     {' '}with a monthly cost of only CAD ${monthlyCost}/month.
                   </p>
                 </div>
-                <Button size="lg" className="w-full" asChild>
+                <Button asChild className="w-full" size="lg">
                   <Link href="/signup">Start Free Trial — Save {hoursSaved} Hours/Week</Link>
                 </Button>
               </div>

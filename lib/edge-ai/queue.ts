@@ -4,12 +4,15 @@
  */
 
 // @ts-ignore - bullmq types may not be available
+import { createClient } from '@supabase/supabase-js';
 import { Queue, Worker, Job } from 'bullmq';
 import IORedis from 'ioredis';
-import { createClient } from '@supabase/supabase-js';
+
+import { processOptimizationJob, processBenchmarkJob } from './optimization-engine';
+
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logging/structured-logger';
-import { processOptimizationJob, processBenchmarkJob } from './optimization-engine';
+
 
 // Redis connection (use existing or create new)
 const getRedisConnection = () => {

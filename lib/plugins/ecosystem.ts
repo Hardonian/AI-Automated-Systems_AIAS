@@ -280,7 +280,7 @@ export class PluginRegistry {
    * Check dependencies
    */
   private async checkDependencies(manifest: PluginManifest): Promise<void> {
-    if (!manifest.dependencies) return;
+    if (!manifest.dependencies) {return;}
 
     for (const dep of manifest.dependencies) {
       const depManifest = this.plugins.get(dep.pluginId);

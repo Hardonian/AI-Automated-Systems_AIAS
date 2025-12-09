@@ -1,8 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
+
+import { hapticTap } from "@/components/gamification/Haptics";
 import { supabase } from "@/lib/supabase/client";
 // import { awardXp } from "@/components/gamification/GamificationProvider"; // Will be used for XP rewards
-import { hapticTap } from "@/components/gamification/Haptics";
 
 export default function ReferralWidget() {
   const [referralCode, setReferralCode] = useState("");
@@ -15,13 +16,13 @@ export default function ReferralWidget() {
 
   async function loadData() {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {return;}
     
     const { data: profile } = await supabase.from("profiles").select("referral_code").eq("id", user.id).single();
-    if (profile?.referral_code) setReferralCode(profile.referral_code);
+    if (profile?.referral_code) {setReferralCode(profile.referral_code);}
     
     const { data: refs } = await supabase.from("referrals").select("*").eq("referrer_id", user.id).order("created_at", { ascending: false });
-    if (refs) setReferrals(refs);
+    if (refs) {setReferrals(refs);}
   }
 
   async function copyCode() {
@@ -47,10 +48,10 @@ export default function ReferralWidget() {
           <div className="flex gap-2">
             <input
               readOnly
-              value={`${window.location.origin}/signup?ref=${referralCode}`}
               className="flex-1 rounded-xl border border-border p-2 text-sm bg-muted"
+              value={`${window.location.origin}/signup?ref=${referralCode}`}
             />
-            <button onClick={copyCode} className="h-10 px-4 rounded-xl bg-primary text-primary-fg text-sm">
+            <button className="h-10 px-4 rounded-xl bg-primary text-primary-fg text-sm" onClick={copyCode}>
               {copied ? "Copied!" : "Copy"}
             </button>
           </div>

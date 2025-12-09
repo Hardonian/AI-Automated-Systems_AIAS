@@ -1,9 +1,10 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Sparkles, Lock, ArrowRight, TrendingUp, Clock } from "lucide-react";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { PlanTier } from "@/config/plans";
 
 interface UpgradePromptProps {
@@ -51,7 +52,7 @@ export function UpgradePrompt({
           </p>
         )}
       </div>
-      <Button size="sm" asChild>
+      <Button asChild size="sm">
         <Link href="/pricing">
           Upgrade Now
           <ArrowRight className="ml-2 h-4 w-4" />
@@ -75,7 +76,7 @@ export function UpgradePrompt({
         <span className="text-muted-foreground">
           {feature ? `Upgrade to unlock ${feature}` : "Upgrade to unlock this feature"}
         </span>
-        <Button variant="ghost" size="sm" className="h-auto p-0" asChild>
+        <Button asChild className="h-auto p-0" size="sm" variant="ghost">
           <Link href="/pricing">
             Upgrade
             <ArrowRight className="ml-1 h-3 w-3" />
@@ -138,7 +139,7 @@ export function UpgradePrompt({
             </div>
           </div>
         </div>
-        <Button className="w-full" size="lg" asChild>
+        <Button asChild className="w-full" size="lg">
           <Link href="/pricing">
             Upgrade Now
             <ArrowRight className="ml-2 h-4 w-4" />

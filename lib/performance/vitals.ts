@@ -47,7 +47,7 @@ export function trackWebVitals(metric: WebVital): void {
  * Initialize Core Web Vitals tracking
  */
 export function initWebVitalsTracking(): void {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") {return;}
 
   // LCP - Largest Contentful Paint
   if ("PerformanceObserver" in window) {

@@ -3,9 +3,10 @@
  * Track conversions, attribution, and ROI
  */
 
-import { logger } from '@/lib/logging/structured-logger';
 import { createClient } from '@supabase/supabase-js';
+
 import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 export interface ConversionEvent {
   leadId: string;
@@ -51,7 +52,7 @@ class ConversionTrackingService {
         value: event.value || 0,
         currency: event.currency || 'USD',
         metadata: event.metadata || {},
-        attribution: attribution,
+        attribution,
         converted_at: new Date().toISOString(),
         tenant_id: tenantId,
       });
@@ -167,7 +168,7 @@ class ConversionTrackingService {
    * Get campaign cost
    */
   private async getCampaignCost(campaign?: string, tenantId?: string): Promise<number> {
-    if (!campaign) return 0;
+    if (!campaign) {return 0;}
 
     const { data } = await this.supabase
       .from('campaign_costs')

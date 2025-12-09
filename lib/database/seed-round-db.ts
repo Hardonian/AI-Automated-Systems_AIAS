@@ -4,6 +4,7 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
+
 import { env } from "@/lib/env";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
@@ -16,7 +17,7 @@ export const seedRoundDB = {
       .select("*")
       .order("health_score", { ascending: false });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data || [];
   },
 
@@ -27,7 +28,7 @@ export const seedRoundDB = {
       .eq("id", id)
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -38,7 +39,7 @@ export const seedRoundDB = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -49,7 +50,7 @@ export const seedRoundDB = {
       .select("*")
       .order("date_created", { ascending: false });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data || [];
   },
 
@@ -60,7 +61,7 @@ export const seedRoundDB = {
       .eq("id", id)
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -71,7 +72,7 @@ export const seedRoundDB = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -83,7 +84,7 @@ export const seedRoundDB = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -94,7 +95,7 @@ export const seedRoundDB = {
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data || [];
   },
 
@@ -105,7 +106,7 @@ export const seedRoundDB = {
       .eq("id", id)
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -116,7 +117,7 @@ export const seedRoundDB = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -128,7 +129,7 @@ export const seedRoundDB = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -139,7 +140,7 @@ export const seedRoundDB = {
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data || [];
   },
 
@@ -150,7 +151,7 @@ export const seedRoundDB = {
       .eq("id", id)
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -161,7 +162,7 @@ export const seedRoundDB = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -173,7 +174,7 @@ export const seedRoundDB = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 };

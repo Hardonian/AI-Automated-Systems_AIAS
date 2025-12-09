@@ -1,14 +1,14 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import FadeIn from "@/components/motion/fade-in";
+import { FAQSchema } from "@/components/seo/structured-data";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import FadeIn from "@/components/motion/fade-in";
-import { FAQSchema } from "@/components/seo/structured-data";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { FAQSection } from "@/lib/content/schemas";
 
 interface ContentDrivenFAQProps {
@@ -49,7 +49,7 @@ export function ContentDrivenFAQ({ content }: ContentDrivenFAQProps) {
                   <CardTitle className="text-xl">{category.category}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Accordion type="single" collapsible className="w-full">
+                  <Accordion collapsible className="w-full" type="single">
                     {category.questions.map((faq, index) => (
                       <AccordionItem key={index} value={`item-${categoryIndex}-${index}`}>
                         <AccordionTrigger className="text-left">
@@ -72,14 +72,14 @@ export function ContentDrivenFAQ({ content }: ContentDrivenFAQProps) {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="/demo"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
+                href="/demo"
               >
                 Schedule Strategy Call
               </a>
               <a
-                href="mailto:support@aiautomatedsystems.ca"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-border hover:bg-muted transition-colors"
+                href="mailto:support@aiautomatedsystems.ca"
               >
                 Email Support
               </a>

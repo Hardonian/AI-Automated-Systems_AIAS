@@ -11,9 +11,11 @@ import 'server-only';
 
 import { readdirSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+
 // Note: This file uses Supabase client for migrations
 // Direct PostgreSQL (pg) connections are not used to avoid build-time dependencies
 import { createClient } from '@supabase/supabase-js';
+
 import { env } from '@/lib/env';
 
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');
@@ -302,7 +304,7 @@ export async function runMigrationsInCI(): Promise<MigrationResult> {
 
   const result = await runMigrationsOnStartup();
 
-  console.log('\n' + '='.repeat(60));
+  console.log(`\n${  '='.repeat(60)}`);
   console.log('📊 Migration Summary:');
   console.log(`   ✅ Applied: ${result.applied}`);
   console.log(`   ⏭️  Skipped: ${result.skipped}`);
@@ -313,7 +315,7 @@ export async function runMigrationsInCI(): Promise<MigrationResult> {
     result.errors.forEach(error => console.log(`   - ${error}`));
   }
 
-  console.log('='.repeat(60) + '\n');
+  console.log(`${'='.repeat(60)  }\n`);
 
   if (!result.success) {
     throw new Error(`Migration failed: ${result.errors.join('; ')}`);

@@ -1,9 +1,10 @@
 "use client";
 
-import * as React from "react";
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import * as React from "react";
+
 import { motionTransitions, prefersReducedMotion } from "@/lib/style/motion";
+import { cn } from "@/lib/utils";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
@@ -35,7 +36,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </div>
         )}
         <input
-          type={type}
+          ref={ref}
+          aria-describedby={error ? `${props.id || 'input'}-error` : undefined}
+          aria-invalid={error ? "true" : undefined}
           className={cn(
             "flex h-11 w-full rounded-xl border border-border bg-card px-4 py-3 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200",
             icon && iconPosition === "left" && "pl-10",
@@ -45,11 +48,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             focused && "shadow-md border-primary/50",
             className
           )}
-          ref={ref}
-          onFocus={() => setFocused(true)}
+          type={type}
           onBlur={() => setFocused(false)}
-          aria-invalid={error ? "true" : undefined}
-          aria-describedby={error ? `${props.id || 'input'}-error` : undefined}
+          onFocus={() => setFocused(true)}
           {...props}
         />
         {icon && iconPosition === "right" && (

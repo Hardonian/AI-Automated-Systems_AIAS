@@ -113,12 +113,12 @@ export function analyzeRSSItemWithSystemsThinking(item: RSSFeedItem): {
     systemsThinkingAngle = "AI/automation topic - systems thinking perspective can be applied";
     
     // Determine which perspectives apply
-    if (title.includes("process") || description.includes("workflow")) perspectives.push("Process");
-    if (title.includes("tool") || description.includes("platform")) perspectives.push("Technology");
-    if (title.includes("team") || description.includes("people")) perspectives.push("People");
-    if (title.includes("data") || description.includes("analytics")) perspectives.push("Data");
-    if (title.includes("system") || description.includes("architecture")) perspectives.push("Systems");
-    if (title.includes("automate") || description.includes("automation")) perspectives.push("Automation");
+    if (title.includes("process") || description.includes("workflow")) {perspectives.push("Process");}
+    if (title.includes("tool") || description.includes("platform")) {perspectives.push("Technology");}
+    if (title.includes("team") || description.includes("people")) {perspectives.push("People");}
+    if (title.includes("data") || description.includes("analytics")) {perspectives.push("Data");}
+    if (title.includes("system") || description.includes("architecture")) {perspectives.push("Systems");}
+    if (title.includes("automate") || description.includes("automation")) {perspectives.push("Automation");}
   }
 
   return {

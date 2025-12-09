@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
 import Lenis from "lenis";
-import { ReactNode } from "react";
+import { useEffect , ReactNode } from "react";
 
 interface SmoothScrollProps {
   children: ReactNode;

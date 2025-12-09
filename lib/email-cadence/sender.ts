@@ -3,7 +3,6 @@
  * Sends trial emails based on day and user actions
  */
 
-import { emailService } from "@/lib/email/email-service";
 import { getEmailTemplate, renderEmailTemplate } from "./templates";
 import { day1EmailTemplate } from "./templates-day1";
 import { day3EmailTemplate } from "./templates-day3";
@@ -13,9 +12,11 @@ import {
   trialExpiration1DayTemplate, 
   trialExpiredTemplate 
 } from "./templates-trial-expiration";
-import { getUserPlanData } from "@/lib/trial/user-plan";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+
+import { emailService } from "@/lib/email/email-service";
 import { logger } from "@/lib/logging/structured-logger";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { getUserPlanData } from "@/lib/trial/user-plan";
 
 /**
  * Send trial email for specific day
@@ -106,7 +107,7 @@ export async function processTrialEmailsForUser(userId: string): Promise<void> {
 
     // Determine which email to send
     let emailTemplate: typeof day1EmailTemplate | null = null;
-    let emailDay = daysSinceStart;
+    const emailDay = daysSinceStart;
 
     // Day 1: Integration reminder
     if (daysSinceStart === 1) {

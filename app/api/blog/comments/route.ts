@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
       success: true,
       comments: comments || [],
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch comments" },
       { status: 500 }
@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
         systemsThinkingInsight: insight,
       },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to post comment" },
       { status: 500 }

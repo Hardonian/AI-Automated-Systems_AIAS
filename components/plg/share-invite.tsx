@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { logger } from "@/lib/logging/structured-logger";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Copy, Share2 } from "lucide-react";
+import { useState, useEffect } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { logger } from "@/lib/logging/structured-logger";
 import { track } from "@/lib/telemetry/track";
 
 interface ShareInviteProps {
@@ -92,16 +93,16 @@ export function ShareInvite({ userId, referralCode }: ShareInviteProps) {
       <CardContent className="space-y-4">
         <div className="flex gap-2">
           <Input
-            value={inviteLink}
             readOnly
             className="flex-1"
             placeholder="Generating invite link..."
+            value={inviteLink}
           />
-          <Button onClick={handleCopy} variant="outline" size="icon">
+          <Button size="icon" variant="outline" onClick={handleCopy}>
             <Copy className="h-4 w-4" />
           </Button>
           {typeof navigator !== "undefined" && "share" in navigator && (
-            <Button onClick={handleShare} variant="outline" size="icon">
+            <Button size="icon" variant="outline" onClick={handleShare}>
               <Share2 className="h-4 w-4" />
             </Button>
           )}

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+
 import { supabase } from "@/lib/supabase/client";
 
 interface LeaderboardEntry {
@@ -50,20 +51,20 @@ export default function Leaderboard({ period = "weekly" }: { period?: "weekly" |
     <div className="space-y-4">
       <div className="flex gap-2">
         <button
-          onClick={() => loadLeaderboard()}
           className={`px-3 py-1 rounded-lg text-sm ${period === "weekly" ? "bg-primary text-primary-fg" : "bg-muted"}`}
+          onClick={() => loadLeaderboard()}
         >
           Weekly
         </button>
         <button
-          onClick={() => loadLeaderboard()}
           className={`px-3 py-1 rounded-lg text-sm ${period === "monthly" ? "bg-primary text-primary-fg" : "bg-muted"}`}
+          onClick={() => loadLeaderboard()}
         >
           Monthly
         </button>
         <button
-          onClick={() => loadLeaderboard()}
           className={`px-3 py-1 rounded-lg text-sm ${period === "all_time" ? "bg-primary text-primary-fg" : "bg-muted"}`}
+          onClick={() => loadLeaderboard()}
         >
           All Time
         </button>

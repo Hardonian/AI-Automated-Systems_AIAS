@@ -118,7 +118,7 @@ export async function PUT(request: NextRequest) {
                      validatedData.tenant_id;
 
     // Remove tenant_id from update data
-    const { tenant_id, ...updateData } = validatedData;
+    const { tenant_id: _tenant_id, ...updateData } = validatedData;
 
     // Ensure settings exist
     await supabase.rpc("get_or_create_user_settings", {

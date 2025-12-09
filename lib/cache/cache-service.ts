@@ -6,6 +6,7 @@
  */
 
 import Redis from 'ioredis';
+
 import { logger } from '@/lib/logging/structured-logger';
 
 interface CacheConfig {
@@ -295,7 +296,7 @@ class CacheService {
    */
   async set(key: string, value: any, config: CacheConfig): Promise<void> {
     const cacheKey = this.getCacheKey(key, config.keyPrefix);
-    const ttlSeconds = config.ttlSeconds;
+    const {ttlSeconds} = config;
 
     // Try Redis first
     if (this.useRedis && this.redis) {

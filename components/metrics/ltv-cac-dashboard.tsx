@@ -1,11 +1,13 @@
 "use client";
 
+import { TrendingUp, TrendingDown, DollarSign, Target, AlertCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { logger } from "@/lib/logging/structured-logger";
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, TrendingDown, DollarSign, Target, AlertCircle } from "lucide-react";
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { logger } from "@/lib/logging/structured-logger";
+
 
 interface UnitEconomics {
   cac: number;
@@ -205,14 +207,14 @@ export function LTVCACDashboard() {
         </Card>
       )}
 
-      <Tabs defaultValue="overview" className="space-y-4">
+      <Tabs className="space-y-4" defaultValue="overview">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="channels">By Channel</TabsTrigger>
           <TabsTrigger value="historical">Historical Trends</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-4">
+        <TabsContent className="space-y-4" value="overview">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
               <CardHeader>
@@ -274,7 +276,7 @@ export function LTVCACDashboard() {
           </div>
         </TabsContent>
 
-        <TabsContent value="channels" className="space-y-4">
+        <TabsContent className="space-y-4" value="channels">
           <Card>
             <CardHeader>
               <CardTitle>LTV:CAC by Channel</CardTitle>
@@ -315,22 +317,22 @@ export function LTVCACDashboard() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="historical" className="space-y-4">
+        <TabsContent className="space-y-4" value="historical">
           <Card>
             <CardHeader>
               <CardTitle>Historical Trends (12 Months)</CardTitle>
               <CardDescription>LTV:CAC ratio and key metrics over time</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer height={300} width="100%">
                 <LineChart data={historicalData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line type="monotone" dataKey="ltvCacRatio" stroke="#3b82f6" name="LTV:CAC Ratio" />
-                  <Line type="monotone" dataKey="customers" stroke="#10b981" name="Customers" />
+                  <Line dataKey="ltvCacRatio" name="LTV:CAC Ratio" stroke="#3b82f6" type="monotone" />
+                  <Line dataKey="customers" name="Customers" stroke="#10b981" type="monotone" />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -342,7 +344,7 @@ export function LTVCACDashboard() {
               <CardDescription>CAC and LTV evolution over time</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer height={300} width="100%">
                 <BarChart data={historicalData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />

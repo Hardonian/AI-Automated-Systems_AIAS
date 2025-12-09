@@ -1,11 +1,12 @@
 "use client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Building2, ArrowRight, Zap, Shield, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
+import { Building2, ArrowRight, Zap, Shield, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
+
 import { DashboardPreview } from "@/components/dashboard/dashboard-preview";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function SettlerShowcase() {
   return (
@@ -13,16 +14,16 @@ export function SettlerShowcase() {
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
           {...({ className: "max-w-6xl mx-auto" } as any)}
         >
           <Card className="border-2 bg-gradient-to-br from-blue-50/80 to-purple-50/80 dark:from-blue-950/20 dark:to-purple-950/20">
             <CardHeader className="text-center pb-6">
               <div className="flex items-center justify-center gap-3 mb-4">
                 <Building2 className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                <Badge variant="secondary" className="text-sm">
+                <Badge className="text-sm" variant="secondary">
                   Partner Product
                 </Badge>
               </div>
@@ -65,13 +66,13 @@ export function SettlerShowcase() {
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4 border-t">
-                <Button size="lg" asChild>
+                <Button asChild size="lg">
                   <Link href="/settler">
                     Explore Settler
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild>
+                <Button asChild size="lg" variant="outline">
                   <Link href="/services">View All Services</Link>
                 </Button>
               </div>
@@ -83,8 +84,8 @@ export function SettlerShowcase() {
       {/* Dashboard Preview */}
       <div className="container mt-12">
         <DashboardPreview
-          title="Settler Analytics Dashboard"
           description="Request access to view live transaction analytics and settlement insights"
+          title="Settler Analytics Dashboard"
           variant="settler"
           onRequestPreview={() => {
             window.location.href = "/settler#demo-cta";

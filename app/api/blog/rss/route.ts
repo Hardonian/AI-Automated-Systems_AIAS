@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
       errors: errors.length > 0 ? errors : undefined,
       count: items.length,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch RSS feeds" },
       { status: 500 }
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
       success: true,
       analysis,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to analyze RSS item" },
       { status: 500 }

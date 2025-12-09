@@ -38,9 +38,11 @@ export default function ActivationMetricsDashboard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchMetrics();
+    void fetchMetrics();
     // Refresh every 5 minutes
-    const interval = setInterval(fetchMetrics, 5 * 60 * 1000);
+    const interval = setInterval(() => {
+      void fetchMetrics();
+    }, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 

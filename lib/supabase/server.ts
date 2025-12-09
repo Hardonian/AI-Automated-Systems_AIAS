@@ -1,7 +1,8 @@
 import { createServerClient as createSupabaseServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
-import type { Database } from '@/types/supabase';
 import type { SupabaseClient as TypedSupabaseClient } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
+
+import type { Database } from '@/types/supabase';
 
 // Less strictly typed client that works with any table
 type PermissiveDatabase = {

@@ -1,11 +1,12 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { StaggerList, StaggerItem } from "@/components/motion/stagger-list";
-import FadeIn from "@/components/motion/fade-in";
 import { motion } from "framer-motion";
 import { Sparkles, Zap, DollarSign, Lock, FileText } from "lucide-react";
+
+import FadeIn from "@/components/motion/fade-in";
+import { StaggerList, StaggerItem } from "@/components/motion/stagger-list";
 import { BentoGrid, BentoGridItem } from "@/components/ui/BentoGrid";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { TextReveal } from "@/components/ui/TextReveal";
 import type { FeatureSection } from "@/lib/content/schemas";
@@ -32,9 +33,9 @@ export function ContentDrivenFeatures({ content }: ContentDrivenFeaturesProps) {
         <div className="text-center mb-16 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
             transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            whileInView={{ opacity: 1, y: 0 }}
             {...({ className: "inline-block mb-4" } as any)}
           >
             <span className="px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold border border-primary/20">
@@ -54,9 +55,9 @@ export function ContentDrivenFeatures({ content }: ContentDrivenFeaturesProps) {
           {content.sectionSubtitle && (
             <motion.p
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              whileInView={{ opacity: 1, y: 0 }}
               {...({ className: "text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto leading-relaxed" } as any)}
             >
               {content.sectionSubtitle}
@@ -66,7 +67,7 @@ export function ContentDrivenFeatures({ content }: ContentDrivenFeaturesProps) {
       </FadeIn>
       
       <StaggerList>
-        <BentoGrid columns={3} className="relative z-10">
+        <BentoGrid className="relative z-10" columns={3}>
           {content.items.map((feature) => {
             const Icon = feature.icon ? iconMap[feature.icon.toLowerCase()] || Sparkles : Sparkles;
             const isWide = feature.highlight;
@@ -90,8 +91,8 @@ export function ContentDrivenFeatures({ content }: ContentDrivenFeaturesProps) {
                     }`}>
                       <CardHeader className="pb-4">
                         <motion.div
-                          whileHover={{ scale: 1.1, rotate: 5 }}
                           transition={{ type: "spring", stiffness: 300 }}
+                          whileHover={{ scale: 1.1, rotate: 5 }}
                           {...({ className: `inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${gradient} mb-4 shadow-lg` } as any)}
                         >
                           <Icon className="h-7 w-7 text-white" />

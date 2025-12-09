@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { logger } from "@/lib/logging/structured-logger";
 
 interface CaseStudy {
@@ -99,11 +100,11 @@ export function CaseStudyDashboard() {
   const getTierBadge = (tier: string) => {
     switch (tier) {
       case "Enterprise":
-        return <Badge variant="outline" className="border-purple-500 text-purple-700">Enterprise</Badge>;
+        return <Badge className="border-purple-500 text-purple-700" variant="outline">Enterprise</Badge>;
       case "Pro":
-        return <Badge variant="outline" className="border-blue-500 text-blue-700">Pro</Badge>;
+        return <Badge className="border-blue-500 text-blue-700" variant="outline">Pro</Badge>;
       case "Starter":
-        return <Badge variant="outline" className="border-gray-500 text-gray-700">Starter</Badge>;
+        return <Badge className="border-gray-500 text-gray-700" variant="outline">Starter</Badge>;
       default:
         return <Badge variant="outline">{tier}</Badge>;
     }
@@ -174,13 +175,13 @@ export function CaseStudyDashboard() {
         </div>
       )}
 
-      <Tabs defaultValue="list" className="space-y-4">
+      <Tabs className="space-y-4" defaultValue="list">
         <TabsList>
           <TabsTrigger value="list">Case Studies</TabsTrigger>
           <TabsTrigger value="summary">Summary</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="list" className="space-y-4">
+        <TabsContent className="space-y-4" value="list">
           <Card>
             <CardHeader>
               <CardTitle>Customer Success Stories</CardTitle>
@@ -242,7 +243,7 @@ export function CaseStudyDashboard() {
                     {cs.metadata.tags && cs.metadata.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2">
                         {cs.metadata.tags.map((tag, idx) => (
-                          <Badge key={idx} variant="outline" className="text-xs">
+                          <Badge key={idx} className="text-xs" variant="outline">
                             {tag}
                           </Badge>
                         ))}
@@ -259,7 +260,7 @@ export function CaseStudyDashboard() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="summary" className="space-y-4">
+        <TabsContent className="space-y-4" value="summary">
           {summary && (
             <>
               <Card>
@@ -267,7 +268,7 @@ export function CaseStudyDashboard() {
                   <CardTitle>Case Studies by Tier</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
+                  <ResponsiveContainer height={300} width="100%">
                     <BarChart data={[
                       { tier: "Starter", count: summary.byTier.Starter },
                       { tier: "Pro", count: summary.byTier.Pro },
@@ -288,7 +289,7 @@ export function CaseStudyDashboard() {
                   <CardTitle>Case Studies by Industry</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
+                  <ResponsiveContainer height={300} width="100%">
                     <BarChart data={Object.entries(summary.byIndustry).map(([industry, count]) => ({
                       industry,
                       count,

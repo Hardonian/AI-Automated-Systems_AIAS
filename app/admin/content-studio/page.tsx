@@ -94,14 +94,14 @@ export default function ContentStudioPage() {
             
           }
         }
-      } catch (error) {
+      } catch {
         // Silent fail - user can still use manual token
         // Admin session auth not available - using fallback token method
       }
     };
     
     if (authenticated === false) {
-      tryAdminAuth();
+      void tryAdminAuth();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authenticated]);
@@ -198,7 +198,7 @@ export default function ContentStudioPage() {
         const settler = await settlerRes.json();
         setSettlerContent(settler);
       }
-    } catch (error) {
+    } catch {
       toast({
         title: "Error loading content",
         description: "Failed to load content. Using defaults.",
@@ -307,7 +307,9 @@ export default function ContentStudioPage() {
             <Button
               className="w-full"
               disabled={loading || !password}
-              onClick={handleLogin}
+              onClick={() => {
+                void handleLogin();
+              }}
             >
               {loading ? (
                 <>
@@ -324,14 +326,15 @@ export default function ContentStudioPage() {
             <Button
               className="w-full"
               variant="outline"
-              onClick={async () => {
-                // Try to get token from admin session
-                try {
-                  const response = await fetch("/api/content/auth");
-                  if (response.ok) {
-                    const data = await response.json();
-                    if (data.token) {
-                      setPassword(data.token);
+              onClick={() => {
+                void (async () => {
+                  // Try to get token from admin session
+                  try {
+                    const response = await fetch("/api/content/auth");
+                    if (response.ok) {
+                      const data = await response.json();
+                      if (data.token) {
+                        setPassword(data.token);
                       setToken(data.token);
                       await handleLogin();
                     } else {
@@ -348,13 +351,14 @@ export default function ContentStudioPage() {
                       variant: "destructive",
                     });
                   }
-                } catch (error) {
+                } catch {
                   toast({
                     title: "Error",
                     description: "Could not verify admin status. Please sign in first.",
                     variant: "destructive",
                   });
                 }
+              })();
               }}
             >
               Sign In as Admin
@@ -409,7 +413,9 @@ export default function ContentStudioPage() {
               <Button
                 disabled={(!hasChanges && !saving) || saving}
                 size="sm"
-                onClick={() => handleSave()}
+                onClick={() => {
+                  void handleSave();
+                }}
               >
                 {saving ? (
                   <>

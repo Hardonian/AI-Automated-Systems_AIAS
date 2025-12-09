@@ -1,9 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
-import { awardXp } from "../gamification/GamificationProvider";
+
 import Confetti from "../gamification/Confetti";
+import { awardXp } from "../gamification/GamificationProvider";
 import { hapticTap } from "../gamification/Haptics";
+
+import { supabase } from "@/lib/supabase/client";
 
 interface OnboardingQuest {
   quest_type: string;
@@ -29,7 +31,7 @@ export default function OnboardingQuests() {
 
   async function loadQuests() {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {return;}
     
     const { data } = await supabase
       .from("onboarding_quests")
@@ -45,10 +47,10 @@ export default function OnboardingQuests() {
   async function completeQuest(questType: string) {
     hapticTap();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {return;}
     
     const quest = ONBOARDING_QUESTS.find(q => q.type === questType);
-    if (!quest) return;
+    if (!quest) {return;}
     
     const { data: existing } = await supabase
       .from("onboarding_quests")
@@ -57,7 +59,7 @@ export default function OnboardingQuests() {
       .eq("quest_type", questType)
       .single();
     
-    if (existing?.completed_at) return;
+    if (existing?.completed_at) {return;}
     
     await supabase.from("onboarding_quests").upsert({
       user_id: user.id,
@@ -98,8 +100,8 @@ export default function OnboardingQuests() {
                 <div className="text-lg">✓</div>
               ) : (
                 <button
-                  onClick={() => completeQuest(quest.type)}
                   className="h-8 px-3 rounded-lg bg-primary text-primary-fg text-xs"
+                  onClick={() => completeQuest(quest.type)}
                 >
                   Complete
                 </button>

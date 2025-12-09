@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+
+import { supabase } from "@/lib/supabase/client";
 
 interface ProgressData {
   date: string;
@@ -18,7 +19,7 @@ export default function ProgressAnalytics() {
 
   async function loadData() {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {return;}
     
     const days = period === "7d" ? 7 : period === "30d" ? 30 : 90;
     const startDate = new Date();
@@ -58,10 +59,10 @@ export default function ProgressAnalytics() {
           {(["7d", "30d", "90d"] as const).map((p) => (
             <button
               key={p}
-              onClick={() => setPeriod(p)}
               className={`px-2 py-1 rounded text-xs ${
                 period === p ? "bg-primary text-primary-fg" : "bg-muted"
               }`}
+              onClick={() => setPeriod(p)}
             >
               {p}
             </button>
@@ -73,8 +74,8 @@ export default function ProgressAnalytics() {
         {data.map((point, idx) => (
           <motion.div
             key={idx}
-            initial={{ height: 0 }}
             animate={{ height: `${(point.xp / maxXp) * 100}%` }}
+            initial={{ height: 0 }}
             transition={{ delay: idx * 0.01 }}
             {...({ className: "flex-1 bg-accent rounded-t" } as any)}
             title={`${point.date}: ${point.xp} XP`}

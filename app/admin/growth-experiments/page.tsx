@@ -31,7 +31,7 @@ export default function GrowthExperimentsDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchExperiments();
+    void fetchExperiments();
   }, []);
 
   async function fetchExperiments() {

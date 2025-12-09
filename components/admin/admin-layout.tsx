@@ -6,11 +6,13 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
-import { logger } from "@/lib/logging/structured-logger";
-import { useRouter } from "next/navigation";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, Shield, AlertTriangle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+import { logger } from "@/lib/logging/structured-logger";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -36,7 +38,7 @@ export function AdminLayout({ children, requireFinancialAccess = false }: AdminL
       if (!response.ok) {
         setIsAuthorized(false);
         setIsLoading(false);
-        router.push("/signin?redirect=" + encodeURIComponent(window.location.pathname));
+        router.push(`/signin?redirect=${  encodeURIComponent(window.location.pathname)}`);
         return;
       }
 

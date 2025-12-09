@@ -5,13 +5,15 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
 import { ArrowRight, Users, Clock } from 'lucide-react';
 import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { trackCTAClick, detectExitIntent } from '@/lib/cro/optimization';
-import { motion } from 'framer-motion';
+
 
 interface CTAEnhancedProps {
   variant?: 'primary' | 'secondary';
@@ -63,13 +65,13 @@ export function CTAEnhanced({
   return (
     <div className="relative">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5 }}
         {...({ className: "flex flex-col items-center gap-4" } as any)}
       >
         {showUrgency && timeLeft !== null && timeLeft > 0 && (
-          <Badge variant="destructive" className="animate-pulse">
+          <Badge className="animate-pulse" variant="destructive">
             <Clock className="h-3 w-3 mr-1" />
             Limited time: {formatTime(timeLeft)} left
           </Badge>
@@ -85,8 +87,8 @@ export function CTAEnhanced({
         <div className="flex flex-col sm:flex-row gap-4 items-center">
           <Button
             asChild
-            size="lg"
             className="group relative overflow-hidden"
+            size="lg"
             onClick={handleClick}
           >
             <Link href="/signup">
@@ -97,8 +99,8 @@ export function CTAEnhanced({
 
           <Button
             asChild
-            variant="outline"
             size="lg"
+            variant="outline"
             onClick={() => trackCTAClick('schedule-call', 'homepage', 'medium')}
           >
             <Link href="/contact">
@@ -113,8 +115,8 @@ export function CTAEnhanced({
 
         {showExitIntent && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             {...({ className: "fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" } as any)}
             onClick={() => setShowExitIntent(false)}
           >

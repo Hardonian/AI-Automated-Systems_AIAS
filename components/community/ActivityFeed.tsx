@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+
 import { supabase } from "@/lib/supabase/client";
 
 interface Activity {
@@ -31,7 +32,7 @@ export default function ActivityFeed({ limit = 20 }: { limit?: number }) {
       .order("created_at", { ascending: false })
       .limit(limit);
     
-    if (data) setActivities(data);
+    if (data) {setActivities(data);}
   }
 
   const activityIcons: Record<string, string> = {

@@ -118,10 +118,10 @@ export class ShopifyClient {
   } = {}): Promise<ShopifyOrderResponse> {
     const params = new URLSearchParams();
     
-    if (options.status) params.append("status", options.status);
-    if (options.created_at_min) params.append("created_at_min", options.created_at_min);
-    if (options.limit) params.append("limit", options.limit.toString());
-    else params.append("limit", "250"); // Shopify max
+    if (options.status) {params.append("status", options.status);}
+    if (options.created_at_min) {params.append("created_at_min", options.created_at_min);}
+    if (options.limit) {params.append("limit", options.limit.toString());}
+    else {params.append("limit", "250");} // Shopify max
 
     const query = params.toString();
     const endpoint = `/orders.json${query ? `?${query}` : ""}`;
@@ -189,8 +189,8 @@ export class ShopifyClient {
    */
   async getProducts(options: { limit?: number } = {}): Promise<{ products: unknown[] }> {
     const params = new URLSearchParams();
-    if (options.limit) params.append("limit", options.limit.toString());
-    else params.append("limit", "250");
+    if (options.limit) {params.append("limit", options.limit.toString());}
+    else {params.append("limit", "250");}
 
     const query = params.toString();
     return await this.request<{ products: unknown[] }>(`/products.json${query ? `?${query}` : ""}`);

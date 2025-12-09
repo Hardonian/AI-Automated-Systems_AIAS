@@ -1,13 +1,14 @@
 "use client";
 
+import { Sparkles, ArrowRight, X } from "lucide-react";
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Sparkles, ArrowRight, X } from "lucide-react";
 import { track } from "@/lib/telemetry/track";
 import { logger } from "@/lib/utils/logger";
 
@@ -173,7 +174,7 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
 
   const canProceed = () => {
     const step = steps[currentStep];
-    if (!step) return false;
+    if (!step) {return false;}
     if (step.id === "goals") {
       return !!answers.goals;
     }
@@ -190,11 +191,11 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
       {canDismiss && (
         <div className="absolute top-4 right-4">
           <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleSkip}
-            className="h-8 w-8"
             aria-label="Close questionnaire"
+            className="h-8 w-8"
+            size="icon"
+            variant="ghost"
+            onClick={handleSkip}
           >
             <X className="h-4 w-4" />
           </Button>
@@ -209,7 +210,7 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
           {steps[currentStep]?.description || ''}
         </CardDescription>
         <div className="mt-4">
-          <Progress value={progress} className="h-2" />
+          <Progress className="h-2" value={progress} />
           <p className="text-xs text-muted-foreground mt-2">
             Step {currentStep + 1} of {steps.length}
           </p>
@@ -225,8 +226,8 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
             <div className="space-y-3">
               {GOALS.map((goal) => (
                 <div key={goal.value} className="flex items-center space-x-2">
-                  <RadioGroupItem value={goal.value} id={goal.value} />
-                  <Label htmlFor={goal.value} className="cursor-pointer flex-1">
+                  <RadioGroupItem id={goal.value} value={goal.value} />
+                  <Label className="cursor-pointer flex-1" htmlFor={goal.value}>
                     {goal.label}
                   </Label>
                 </div>
@@ -244,8 +245,8 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
             <div className="space-y-3">
               {INDUSTRIES.map((industry) => (
                 <div key={industry.value} className="flex items-center space-x-2">
-                  <RadioGroupItem value={industry.value} id={industry.value} />
-                  <Label htmlFor={industry.value} className="cursor-pointer flex-1">
+                  <RadioGroupItem id={industry.value} value={industry.value} />
+                  <Label className="cursor-pointer flex-1" htmlFor={industry.value}>
                     {industry.label}
                   </Label>
                 </div>
@@ -268,8 +269,8 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
                 <div className="space-y-2">
                   {LIST_SIZES.map((size) => (
                     <div key={size.value} className="flex items-center space-x-2">
-                      <RadioGroupItem value={size.value} id={size.value} />
-                      <Label htmlFor={size.value} className="cursor-pointer flex-1 text-sm">
+                      <RadioGroupItem id={size.value} value={size.value} />
+                      <Label className="cursor-pointer flex-1 text-sm" htmlFor={size.value}>
                         {size.label}
                       </Label>
                     </div>
@@ -288,8 +289,8 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
                 <div className="space-y-2">
                   {EMAIL_FREQUENCIES.map((freq) => (
                     <div key={freq.value} className="flex items-center space-x-2">
-                      <RadioGroupItem value={freq.value} id={freq.value} />
-                      <Label htmlFor={freq.value} className="cursor-pointer flex-1 text-sm">
+                      <RadioGroupItem id={freq.value} value={freq.value} />
+                      <Label className="cursor-pointer flex-1 text-sm" htmlFor={freq.value}>
                         {freq.label}
                       </Label>
                     </div>
@@ -305,8 +306,8 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
                 {CONTENT_TYPES.map((type) => (
                   <div key={type.value} className="flex items-center space-x-2">
                     <Checkbox
-                      id={type.value}
                       checked={(answers.contentTypes || []).includes(type.value)}
+                      id={type.value}
                       onCheckedChange={(checked) => {
                         const current = answers.contentTypes || [];
                         if (checked) {
@@ -316,7 +317,7 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
                         }
                       }}
                     />
-                    <Label htmlFor={type.value} className="cursor-pointer flex-1 text-sm">
+                    <Label className="cursor-pointer flex-1 text-sm" htmlFor={type.value}>
                       {type.label}
                     </Label>
                   </div>
@@ -332,8 +333,8 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
             {PAIN_POINTS.map((point) => (
               <div key={point.value} className="flex items-center space-x-2">
                 <Checkbox
-                  id={point.value}
                   checked={(answers.painPoints || []).includes(point.value)}
+                  id={point.value}
                   onCheckedChange={(checked) => {
                     const current = answers.painPoints || [];
                     if (checked) {
@@ -343,7 +344,7 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
                     }
                   }}
                 />
-                <Label htmlFor={point.value} className="cursor-pointer flex-1">
+                <Label className="cursor-pointer flex-1" htmlFor={point.value}>
                   {point.label}
                 </Label>
               </div>
@@ -371,7 +372,7 @@ export function PreTestQuestionnaire({ onComplete, onSkip, canDismiss = false }:
                 Skip
               </Button>
             )}
-            <Button onClick={handleNext} disabled={!canProceed()}>
+            <Button disabled={!canProceed()} onClick={handleNext}>
               {currentStep === steps.length - 1 ? "Complete" : "Next"}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>

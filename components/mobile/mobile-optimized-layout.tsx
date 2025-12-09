@@ -1,10 +1,12 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { Menu, X, Home, Workflow, Settings } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ReactNode, useEffect, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+
 
 interface MobileOptimizedLayoutProps {
   children: ReactNode;
@@ -45,18 +47,18 @@ export function MobileOptimizedLayout({ children }: MobileOptimizedLayoutProps) 
       {/* Mobile Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between px-4">
-          <Link href="/" className="flex items-center space-x-2">
+          <Link className="flex items-center space-x-2" href="/">
             <span className="font-bold text-xl">AIAS</span>
           </Link>
           
           {/* Mobile Menu Button */}
           <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
+            aria-label="Toggle menu"
+            className="md:hidden"
+            size="icon"
+            variant="ghost"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? (
               <X className="h-6 w-6" />
@@ -73,12 +75,12 @@ export function MobileOptimizedLayout({ children }: MobileOptimizedLayoutProps) 
               return (
                 <Link
                   key={item.name}
-                  href={item.href}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     isActive
                       ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   }`}
+                  href={item.href}
                 >
                   <Icon className="h-4 w-4" />
                   <span>{item.name}</span>
@@ -98,12 +100,12 @@ export function MobileOptimizedLayout({ children }: MobileOptimizedLayoutProps) 
                 return (
                   <Link
                     key={item.name}
-                    href={item.href}
                     className={`flex items-center space-x-3 px-4 py-3 rounded-md text-base font-medium transition-colors ${
                       isActive
                         ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:text-foreground hover:bg-accent"
                     }`}
+                    href={item.href}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <Icon className="h-5 w-5" />
@@ -133,12 +135,12 @@ export function MobileOptimizedLayout({ children }: MobileOptimizedLayoutProps) 
               return (
                 <Link
                   key={item.name}
-                  href={item.href}
                   className={`flex flex-col items-center justify-center space-y-1 text-xs transition-colors ${
                     isActive
                       ? "text-primary"
                       : "text-muted-foreground"
                   }`}
+                  href={item.href}
                 >
                   <Icon className="h-5 w-5" />
                   <span className="font-medium">{item.name}</span>

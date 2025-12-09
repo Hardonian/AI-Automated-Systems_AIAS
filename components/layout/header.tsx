@@ -1,10 +1,11 @@
 "use client";
-import Link from "next/link";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { MobileNav } from "@/components/layout/mobile-nav";
-import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
+import Link from "next/link";
+
+import { MobileNav } from "@/components/layout/mobile-nav";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
 
 export function Header() {
   return (
@@ -14,18 +15,18 @@ export function Header() {
     >
       <div className="container flex items-center justify-between h-16">
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.3 }}
         >
           <Link 
-            href="/" 
+            aria-label="AI Automated Systems - Home" 
             className="font-bold text-xl flex items-center gap-2 hover:opacity-80 transition-opacity group"
-            aria-label="AI Automated Systems - Home"
+            href="/"
           >
             <Sparkles 
-              className="h-5 w-5 text-primary group-hover:rotate-12 transition-transform" 
-              aria-hidden="true"
+              aria-hidden="true" 
+              className="h-5 w-5 text-primary group-hover:rotate-12 transition-transform"
             />
             <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               AI Automated Systems
@@ -48,35 +49,35 @@ export function Header() {
           ].map((item, index) => (
             <motion.div
               key={item.href}
-              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3, delay: index * 0.05 }}
             >
               <Link
-                href={item.href}
-                className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-muted/50 transition-all relative group min-h-[44px] min-w-[44px] flex items-center justify-center"
                 aria-label={`Navigate to ${item.label}`}
+                className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-muted/50 transition-all relative group min-h-[44px] min-w-[44px] flex items-center justify-center"
+                href={item.href}
               >
                 {item.label}
                 <span 
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left" 
-                  aria-hidden="true"
+                  aria-hidden="true" 
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
                 />
               </Link>
             </motion.div>
           ))}
           
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.3, delay: 0.4 }}
           >
             <Button 
-              size="sm" 
+              asChild 
               className="ml-2 font-semibold shadow-md hover:shadow-lg transition-all hover:scale-105 min-h-[44px]" 
-              asChild
+              size="sm"
             >
-              <Link href="/signup" aria-label="Start your free trial">Start Free Trial</Link>
+              <Link aria-label="Start your free trial" href="/signup">Start Free Trial</Link>
             </Button>
           </motion.div>
           

@@ -4,15 +4,17 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import { env } from '@/lib/env';
-import { logger } from '@/lib/logging/structured-logger';
+
+import type { EdgeAIOptimizationJobData, EdgeAIBenchmarkJobData } from './queue';
 import { getModelDownloadUrl, uploadArtifact } from './storage';
 import type {
   EdgeAIModelFormat,
   EdgeAIQuantizationType,
   OptimizationLevel,
 } from './types';
-import type { EdgeAIOptimizationJobData, EdgeAIBenchmarkJobData } from './queue';
+
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 

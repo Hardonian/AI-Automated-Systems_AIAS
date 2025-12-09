@@ -30,7 +30,7 @@ export interface ABTest {
  * Track conversion events
  */
 export function trackConversion(event: ConversionEvent): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {return;}
   
   // Send to analytics
   if (window.gtag) {
@@ -61,7 +61,7 @@ export function trackConversion(event: ConversionEvent): void {
  * Get or assign AB test variant
  */
 export function getABTestVariant(testId: string, userId?: string): string | null {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === 'undefined') {return null;}
   
   const storageKey = `ab_test_${testId}`;
   const stored = localStorage.getItem(storageKey);
@@ -117,7 +117,7 @@ export function calculateConversionRate(
   conversions: number,
   visitors: number
 ): number {
-  if (visitors === 0) return 0;
+  if (visitors === 0) {return 0;}
   return (conversions / visitors) * 100;
 }
 
@@ -125,7 +125,7 @@ export function calculateConversionRate(
  * Detect exit intent (user about to leave)
  */
 export function detectExitIntent(callback: () => void): () => void {
-  if (typeof window === 'undefined') return () => {};
+  if (typeof window === 'undefined') {return () => {};}
   
   const handleMouseLeave = (e: MouseEvent) => {
     if (e.clientY <= 0) {
@@ -177,7 +177,7 @@ export function showUrgencyIndicator(
  */
 export function optimizeForm(formId: string): void {
   const form = document.getElementById(formId);
-  if (!form) return;
+  if (!form) {return;}
   
   // Add progress indicator
   const fields = form.querySelectorAll<HTMLInputElement>('input, textarea, select');
@@ -200,7 +200,7 @@ export function optimizeForm(formId: string): void {
   });
   
   // Track form abandonment
-  let startTime = Date.now();
+  const startTime = Date.now();
   window.addEventListener('beforeunload', () => {
     const timeSpent = Date.now() - startTime;
     if (timeSpent > 5000) { // Only track if user spent > 5 seconds

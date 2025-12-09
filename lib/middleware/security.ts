@@ -6,8 +6,9 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { rateLimit, getClientIP } from "@/lib/utils/rate-limit";
+
 import { logger } from "@/lib/utils/logger";
+import { rateLimit, getClientIP } from "@/lib/utils/rate-limit";
 
 /**
  * Security configuration

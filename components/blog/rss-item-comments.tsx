@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 interface Comment {
@@ -73,41 +74,41 @@ export function RSSItemComments({ itemId, itemTitle }: RSSItemCommentsProps) {
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Comment Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm font-medium mb-2">Name</label>
               <Input
-                value={author}
-                onChange={(e) => setAuthor(e.target.value)}
                 required
                 placeholder="Your name"
+                value={author}
+                onChange={(e) => setAuthor(e.target.value)}
               />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Email</label>
               <Input
+                required
+                placeholder="your@email.com"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="your@email.com"
               />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Your Take</label>
               <textarea
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
                 required
-                rows={4}
                 className="w-full px-4 py-2 border rounded-md"
                 placeholder="Share your perspective on this news... What's your systems thinking take? (AI moderation ensures quality discussions)"
+                rows={4}
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
               />
               <p className="text-xs text-muted-foreground mt-1">
                 💡 Tip: Comments that demonstrate systems thinking, multiple perspectives, or constructive dialogue are highly valued!
               </p>
             </div>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button disabled={isSubmitting} type="submit">
               {isSubmitting ? "Submitting..." : "Post Comment"}
             </Button>
           </form>

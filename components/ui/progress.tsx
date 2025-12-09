@@ -1,9 +1,11 @@
 "use client";
 
-import * as React from "react";
 import * as ProgressPrimitive from "@radix-ui/react-progress";
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
 
 interface ProgressProps extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
   variant?: "default" | "success" | "warning" | "destructive" | "gradient";
@@ -40,8 +42,8 @@ const Progress = React.forwardRef<
         {...props}
       >
         <motion.div
-          initial={{ width: 0 }}
           animate={{ width: `${value || 0}%` }}
+          initial={{ width: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
           <ProgressPrimitive.Indicator

@@ -11,6 +11,7 @@
  */
 
 import Redis from 'ioredis';
+
 import { logger } from '@/lib/logging/structured-logger';
 
 interface CacheEntry {
@@ -92,7 +93,7 @@ class CacheService {
 
     try {
       const value = await this.redis.get(key);
-      if (!value) return null;
+      if (!value) {return null;}
 
       const entry: CacheEntry = JSON.parse(value);
       if (Date.now() > entry.expiresAt) {
@@ -168,7 +169,7 @@ class CacheService {
       }
 
       const data = await response.json();
-      if (!data.result) return null;
+      if (!data.result) {return null;}
 
       const entry: CacheEntry = JSON.parse(data.result);
       if (Date.now() > entry.expiresAt) {
@@ -265,7 +266,7 @@ class CacheService {
     const kvUrl = process.env.KV_REST_API_URL;
     const kvToken = process.env.KV_REST_API_TOKEN;
 
-    if (!kvUrl || !kvToken) return;
+    if (!kvUrl || !kvToken) {return;}
 
     try {
       await fetch(`${kvUrl}/delete/${encodeURIComponent(key)}`, {
@@ -363,7 +364,7 @@ class CacheService {
    */
   private getFromMemory<T>(key: string): T | null {
     const entry = this.inMemoryCache.get(key);
-    if (!entry) return null;
+    if (!entry) {return null;}
 
     if (Date.now() > entry.expiresAt) {
       this.inMemoryCache.delete(key);

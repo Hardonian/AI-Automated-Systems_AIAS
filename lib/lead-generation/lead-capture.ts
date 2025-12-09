@@ -3,12 +3,15 @@
  * Automated lead capture, validation, and enrichment
  */
 
-import { z } from 'zod';
-import { logger } from '@/lib/logging/structured-logger';
 import { createClient } from '@supabase/supabase-js';
-import { env } from '@/lib/env';
-import { cacheService } from '@/lib/performance/cache';
+import { z } from 'zod';
+
 import { autopilotWorkflowService } from './autopilot-workflows';
+
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
+import { cacheService } from '@/lib/performance/cache';
+
 
 export interface LeadData {
   email: string;
@@ -81,7 +84,7 @@ class LeadCaptureService {
           source: enriched.source || 'website',
           campaign: enriched.campaign,
           metadata: enriched.metadata || {},
-          score: score,
+          score,
           qualified: score >= 70, // Qualified if score >= 70
           tenant_id: tenantId,
           status: 'new',
@@ -143,7 +146,7 @@ class LeadCaptureService {
   private async checkDuplicate(email: string, tenantId?: string): Promise<{ id: string } | null> {
     const cacheKey = `lead:duplicate:${email}:${tenantId || 'global'}`;
     const cached = await cacheService.get<{ id: string }>(cacheKey);
-    if (cached) return cached;
+    if (cached) {return cached;}
 
     let query = this.supabase
       .from('leads')
@@ -172,7 +175,7 @@ class LeadCaptureService {
     // Check cache first
     const cacheKey = `lead:enrichment:${data.email}`;
     const cached = await cacheService.get<LeadData>(cacheKey);
-    if (cached) return { ...data, ...cached };
+    if (cached) {return { ...data, ...cached };}
 
     const enriched: LeadData = { ...data };
 
@@ -209,14 +212,14 @@ class LeadCaptureService {
     }
 
     // Name completeness (15 points)
-    if (data.firstName) score += 7;
-    if (data.lastName) score += 8;
+    if (data.firstName) {score += 7;}
+    if (data.lastName) {score += 8;}
 
     // Company information (20 points)
-    if (data.company) score += 20;
+    if (data.company) {score += 20;}
 
     // Phone number (15 points)
-    if (data.phone) score += 15;
+    if (data.phone) {score += 15;}
 
     // Source quality (20 points)
     if (data.source) {
@@ -229,7 +232,7 @@ class LeadCaptureService {
     }
 
     // Campaign tracking (10 points)
-    if (data.campaign) score += 10;
+    if (data.campaign) {score += 10;}
 
     return Math.min(score, 100);
   }

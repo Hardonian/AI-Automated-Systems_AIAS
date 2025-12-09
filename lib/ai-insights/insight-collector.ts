@@ -3,9 +3,10 @@
  * Aggregates insights from various sources and generates improvement suggestions
  */
 
-import { analyzeUsagePatterns, detectIncompleteWorkflows, detectFrictionPoints } from "./usage-patterns";
 import { analyzeErrors } from "./error-analyzer";
 import { getPredictiveHealthSignals } from "./health-predictor";
+import { analyzeUsagePatterns, detectIncompleteWorkflows, detectFrictionPoints } from "./usage-patterns";
+
 import { logger } from "@/lib/logging/structured-logger";
 
 export interface Insight {

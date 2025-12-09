@@ -10,8 +10,8 @@
 
 "use server";
 
-import type { Database } from '@/types/supabase';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import type { Database } from '@/types/supabase';
 
 /**
  * Server Action Response Type

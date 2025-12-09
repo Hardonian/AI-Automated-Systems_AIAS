@@ -2,6 +2,7 @@
 
 import { useScroll, useTransform, motion } from "framer-motion";
 import { useRef, ReactNode } from "react";
+
 import { cn } from "@/lib/utils";
 
 interface ParallaxBackgroundProps {
@@ -62,27 +63,27 @@ export function ParallaxBackground({
       {/* Animated blobs for depth */}
       <Blob
         className="w-96 h-96 bg-cyan-500/20 -top-48 -left-48"
-        speed={0.3}
         initialX={-192}
         initialY={-192}
+        speed={0.3}
       />
       <Blob
         className="w-80 h-80 bg-purple-500/20 top-1/4 right-1/4"
-        speed={0.4}
         initialX={0}
         initialY={0}
+        speed={0.4}
       />
       <Blob
         className="w-72 h-72 bg-pink-500/20 bottom-1/4 left-1/3"
-        speed={0.5}
         initialX={0}
         initialY={0}
+        speed={0.5}
       />
       <Blob
         className="w-64 h-64 bg-blue-500/20 top-1/2 right-1/3"
-        speed={0.35}
         initialX={0}
         initialY={0}
+        speed={0.35}
       />
 
       {/* Parallax content wrapper */}

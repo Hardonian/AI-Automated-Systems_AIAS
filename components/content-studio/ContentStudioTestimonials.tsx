@@ -1,14 +1,16 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+
+import { AIAssistant } from "./AIAssistant";
 import { DraggableList } from "./DraggableList";
 import { RichTextEditor } from "./RichTextEditor";
-import { AIAssistant } from "./AIAssistant";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import type { TestimonialSection } from "@/lib/content/schemas";
 
 interface ContentStudioTestimonialsProps {
@@ -80,18 +82,18 @@ export function ContentStudioTestimonials({
           </Label>
           <Textarea
             id="testimonials-subtitle"
+            rows={2}
             value={content.sectionSubtitle || ""}
             onChange={(e) =>
               updateField("sectionSubtitle", e.target.value || undefined)
             }
-            rows={2}
           />
         </div>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Label>Testimonials (drag to reorder)</Label>
-            <Button type="button" size="sm" onClick={addItem}>
+            <Button size="sm" type="button" onClick={addItem}>
               <Plus className="mr-2 h-4 w-4" />
               Add Testimonial
             </Button>
@@ -99,23 +101,21 @@ export function ContentStudioTestimonials({
 
           <DraggableList
             items={content.items}
-            onReorder={(items) => updateField("items", items)}
-            onRemove={removeItem}
             renderItem={(item, index) => (
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>Quote</Label>
                   <RichTextEditor
+                    rows={4}
                     value={item.quote}
                     onChange={(value) => updateItem(index, "quote", value)}
-                    rows={4}
                   />
                   <AIAssistant
-                    type="testimonial"
-                    currentContent={item.quote}
                     context="Customer testimonial"
-                    onGenerate={(generated) => updateItem(index, "quote", generated)}
+                    currentContent={item.quote}
                     token={token}
+                    type="testimonial"
+                    onGenerate={(generated) => updateItem(index, "quote", generated)}
                   />
                 </div>
 
@@ -155,9 +155,9 @@ export function ContentStudioTestimonials({
                   <div className="space-y-2">
                     <Label>Rating (1-5)</Label>
                     <Input
-                      type="number"
-                      min="1"
                       max="5"
+                      min="1"
+                      type="number"
                       value={item.rating}
                       onChange={(e) =>
                         updateItem(index, "rating", parseInt(e.target.value) || 5)
@@ -167,6 +167,8 @@ export function ContentStudioTestimonials({
                 </div>
               </div>
             )}
+            onRemove={removeItem}
+            onReorder={(items) => updateField("items", items)}
           />
         </div>
       </CardContent>

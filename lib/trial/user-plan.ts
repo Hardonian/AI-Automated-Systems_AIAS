@@ -3,8 +3,8 @@
  * Get user plan, trial status, and related data from Supabase
  */
 
-import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { PlanTier } from "@/config/plans";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export interface UserPlanData {
   plan: PlanTier;
@@ -127,7 +127,7 @@ export async function savePretestAnswers(
       .from("pretest_answers") as any)
       .upsert({
         user_id: userId,
-        answers: answers,
+        answers,
         completed_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       });

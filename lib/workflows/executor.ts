@@ -3,13 +3,14 @@
  * Node-based execution system with branching, retries, and error handling
  */
 
+import { agentExecutor } from '../agents/executor';
+
 import {
   WorkflowDefinition,
   WorkflowExecutionContext,
   WorkflowExecutionResult,
   WorkflowStep,
 } from './dsl';
-import { agentExecutor } from '../agents/executor';
 
 export interface ExecutionNode {
   stepId: string;
@@ -239,7 +240,7 @@ export class WorkflowExecutor {
       throw new Error('Invalid step type');
     }
     
-    const mapping = step.config.mapping;
+    const {mapping} = step.config;
     const result: Record<string, unknown> = {};
 
     for (const [target, source] of Object.entries(mapping)) {
@@ -256,7 +257,7 @@ export class WorkflowExecutor {
     step: WorkflowStep,
     _state: Record<string, unknown>
   ): Promise<unknown> {
-    if (step.type !== 'match') throw new Error('Invalid step type');
+    if (step.type !== 'match') {throw new Error('Invalid step type');}
     
     // Simplified matching logic
     return { matched: true, matches: [] };
@@ -530,7 +531,7 @@ export class WorkflowExecutor {
     state: Record<string, unknown>,
     retryConfig: WorkflowStep['retry']
   ): Promise<unknown | null> {
-    if (!retryConfig) return null;
+    if (!retryConfig) {return null;}
 
     let delay = retryConfig.initialDelay;
 

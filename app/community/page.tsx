@@ -7,8 +7,8 @@ import ReportButton from "@/components/community/ReportButton";
 import FollowButton from "@/components/social/FollowButton";
 import ReactionBar from "@/components/social/ReactionBar";
 import ShareButton from "@/components/social/ShareButton";
-import { logger } from "@/lib/utils/logger";
 import { supabase } from "@/lib/supabase/client";
+import { logger } from "@/lib/utils/logger";
 
 interface Post {
   id: number;

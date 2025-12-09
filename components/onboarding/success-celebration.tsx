@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import confetti from "canvas-confetti";
 import { CheckCircle, Sparkles, Zap, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import confetti from "canvas-confetti";
+import { useEffect, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface SuccessCelebrationProps {
   onDismiss?: () => void;

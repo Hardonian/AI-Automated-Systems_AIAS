@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import { useEffect, ReactNode } from "react";
+
 import { telemetry } from "./enhanced-telemetry";
 
 export function TelemetryProvider({ children }: { children: ReactNode }) {

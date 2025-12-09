@@ -60,7 +60,7 @@ export class SupabaseCostCalculator {
     computeHours: number,
     plan: "free" | "pro" | "team" | "enterprise" = "pro"
   ): number {
-    if (plan === "free") return 0;
+    if (plan === "free") {return 0;}
 
     const baseCost = plan === "pro" ? 25 : plan === "team" ? 599 : 0; // Base monthly
     const storageCost = Math.max(0, storageGB - 8) * 0.125; // $0.125/GB over 8GB
@@ -73,7 +73,7 @@ export class SupabaseCostCalculator {
    * Calculate storage costs
    */
   static calculateStorageCost(storageGB: number, plan: string = "pro"): number {
-    if (plan === "free") return 0;
+    if (plan === "free") {return 0;}
     const freeTier = 1; // 1GB free
     return Math.max(0, storageGB - freeTier) * 0.021; // $0.021/GB/month
   }
@@ -127,7 +127,7 @@ export class UpstashCostCalculator {
     if (plan === "free") {
       const freeRequests = 10000; // 10k requests/day free
       const freeData = 0.1; // 100MB free
-      if (requests <= freeRequests && dataSizeGB <= freeData) return 0;
+      if (requests <= freeRequests && dataSizeGB <= freeData) {return 0;}
     }
 
     // Pay-as-you-go pricing
@@ -166,7 +166,7 @@ export class VercelCostCalculator {
     functionExecutionTimeMs: number,
     plan: "hobby" | "pro" | "enterprise" = "pro"
   ): number {
-    if (plan === "hobby") return 0; // Free for hobby
+    if (plan === "hobby") {return 0;} // Free for hobby
 
     const baseCost = plan === "pro" ? 20 : 0; // $20/month base for Pro
 
@@ -192,7 +192,7 @@ export class ResendCostCalculator {
   static calculateEmailCost(emailsSent: number, plan: "free" | "pro" = "pro"): number {
     if (plan === "free") {
       const freeEmails = 3000; // 3k emails/month free
-      if (emailsSent <= freeEmails) return 0;
+      if (emailsSent <= freeEmails) {return 0;}
     }
 
     const baseCost = plan === "pro" ? 20 : 0; // $20/month base
@@ -222,7 +222,7 @@ export class OpenAICostCalculator {
     };
 
     const modelPricing = pricing[model] || pricing["gpt-3.5-turbo"];
-    if (!modelPricing) return 0;
+    if (!modelPricing) {return 0;}
     const promptCost = promptTokens * modelPricing.prompt;
     const completionCost = completionTokens * modelPricing.completion;
 
@@ -255,9 +255,9 @@ export class CostAggregator {
 
     // Calculate totals
     const totalMonthly = recentCosts.reduce((sum, cost) => {
-      if (cost.period === "monthly") return sum + cost.amount;
-      if (cost.period === "daily") return sum + cost.amount * 30;
-      if (cost.period === "yearly") return sum + cost.amount / 12;
+      if (cost.period === "monthly") {return sum + cost.amount;}
+      if (cost.period === "daily") {return sum + cost.amount * 30;}
+      if (cost.period === "yearly") {return sum + cost.amount / 12;}
       return sum;
     }, 0);
 
@@ -274,9 +274,9 @@ export class CostAggregator {
     const serviceBreakdowns: CostBreakdown[] = Array.from(byService.entries()).map(
       ([service, serviceCosts]) => {
         const total = serviceCosts.reduce((sum, cost) => {
-          if (cost.period === "monthly") return sum + cost.amount;
-          if (cost.period === "daily") return sum + cost.amount * 30;
-          if (cost.period === "yearly") return sum + cost.amount / 12;
+          if (cost.period === "monthly") {return sum + cost.amount;}
+          if (cost.period === "daily") {return sum + cost.amount * 30;}
+          if (cost.period === "yearly") {return sum + cost.amount / 12;}
           return sum;
         }, 0);
 
@@ -307,20 +307,20 @@ export class CostAggregator {
         );
 
         const recentTotal = recent.reduce((sum, cost) => {
-          if (cost.period === "monthly") return sum + cost.amount;
-          if (cost.period === "daily") return sum + cost.amount * 15;
+          if (cost.period === "monthly") {return sum + cost.amount;}
+          if (cost.period === "daily") {return sum + cost.amount * 15;}
           return sum;
         }, 0);
 
         const previousTotal = previous.reduce((sum, cost) => {
-          if (cost.period === "monthly") return sum + cost.amount;
-          if (cost.period === "daily") return sum + cost.amount * 15;
+          if (cost.period === "monthly") {return sum + cost.amount;}
+          if (cost.period === "daily") {return sum + cost.amount * 15;}
           return sum;
         }, 0);
 
         let trend: "up" | "down" | "stable" = "stable";
-        if (recentTotal > previousTotal * 1.1) trend = "up";
-        else if (recentTotal < previousTotal * 0.9) trend = "down";
+        if (recentTotal > previousTotal * 1.1) {trend = "up";}
+        else if (recentTotal < previousTotal * 0.9) {trend = "down";}
 
         // Simple forecast (extrapolate trend)
         const forecast = trend === "up" ? total * 1.2 : trend === "down" ? total * 0.9 : total;
@@ -344,8 +344,8 @@ export class CostAggregator {
         (c) => c.timestamp >= periodStart && c.timestamp < periodEnd
       );
       const periodTotal = periodCosts.reduce((sum, cost) => {
-        if (cost.period === "monthly") return sum + cost.amount / 6; // Pro-rate
-        if (cost.period === "daily") return sum + cost.amount * 5;
+        if (cost.period === "monthly") {return sum + cost.amount / 6;} // Pro-rate
+        if (cost.period === "daily") {return sum + cost.amount * 5;}
         return sum;
       }, 0);
       trends.push({

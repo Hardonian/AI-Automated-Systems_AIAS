@@ -3,9 +3,10 @@
  * Sync leads and deals with external CRM systems
  */
 
-import { logger } from '@/lib/logging/structured-logger';
 import { createClient } from '@supabase/supabase-js';
+
 import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 import { withCircuitBreaker } from '@/lib/resilience/circuit-breaker';
 
 export interface CRMConfig {
@@ -288,7 +289,7 @@ class CRMIntegrationService {
     }
 
     const { data, error } = await query.single();
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   }
 

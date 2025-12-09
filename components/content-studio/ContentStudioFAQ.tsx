@@ -1,13 +1,15 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
-import { RichTextEditor } from "./RichTextEditor";
+
 import { AIAssistant } from "./AIAssistant";
+import { RichTextEditor } from "./RichTextEditor";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import type { FAQSection } from "@/lib/content/schemas";
 
 interface ContentStudioFAQProps {
@@ -48,7 +50,7 @@ export function ContentStudioFAQ({
   ) => {
     const newCategories = [...content.categories];
     const category = newCategories[categoryIndex];
-    if (!category) return;
+    if (!category) {return;}
     const questions = [...category.questions];
     const existingQuestion = questions[questionIndex];
     if (existingQuestion) {
@@ -125,18 +127,18 @@ export function ContentStudioFAQ({
           <Label htmlFor="faq-subtitle">Section Subtitle (optional)</Label>
           <Textarea
             id="faq-subtitle"
+            rows={2}
             value={content.sectionSubtitle || ""}
             onChange={(e) =>
               updateField("sectionSubtitle", e.target.value || undefined)
             }
-            rows={2}
           />
         </div>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Label>FAQ Categories</Label>
-            <Button type="button" size="sm" onClick={addCategory}>
+            <Button size="sm" type="button" onClick={addCategory}>
               <Plus className="mr-2 h-4 w-4" />
               Add Category
             </Button>
@@ -147,16 +149,16 @@ export function ContentStudioFAQ({
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <Input
+                    className="font-semibold"
                     value={category.category}
                     onChange={(e) =>
                       updateCategory(categoryIndex, "category", e.target.value)
                     }
-                    className="font-semibold"
                   />
                   <Button
+                    size="sm"
                     type="button"
                     variant="ghost"
-                    size="sm"
                     onClick={() => removeCategory(categoryIndex)}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -167,9 +169,9 @@ export function ContentStudioFAQ({
                   <div className="flex items-center justify-between">
                     <Label>Questions</Label>
                     <Button
+                      size="sm"
                       type="button"
                       variant="outline"
-                      size="sm"
                       onClick={() => addQuestion(categoryIndex)}
                     >
                       <Plus className="mr-2 h-4 w-4" />
@@ -185,9 +187,9 @@ export function ContentStudioFAQ({
                             Q{questionIndex + 1}
                           </span>
                           <Button
+                            size="sm"
                             type="button"
                             variant="ghost"
-                            size="sm"
                             onClick={() =>
                               removeQuestion(categoryIndex, questionIndex)
                             }
@@ -208,6 +210,8 @@ export function ContentStudioFAQ({
                           }
                         />
                         <RichTextEditor
+                          placeholder="Answer"
+                          rows={3}
                           value={faq.answer}
                           onChange={(value) =>
                             updateQuestion(
@@ -217,13 +221,12 @@ export function ContentStudioFAQ({
                               value
                             )
                           }
-                          placeholder="Answer"
-                          rows={3}
                         />
                         <AIAssistant
-                          type="faq-answer"
-                          currentContent={faq.answer}
                           context={`FAQ question: ${faq.question}`}
+                          currentContent={faq.answer}
+                          token={token}
+                          type="faq-answer"
                           onGenerate={(generated) =>
                             updateQuestion(
                               categoryIndex,
@@ -232,7 +235,6 @@ export function ContentStudioFAQ({
                               generated
                             )
                           }
-                          token={token}
                         />
                       </div>
                     </Card>

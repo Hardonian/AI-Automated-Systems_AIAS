@@ -1,14 +1,15 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { logger } from "@/lib/logging/structured-logger";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { logger } from "@/lib/logging/structured-logger";
 import { track } from "@/lib/telemetry/track";
 
 interface WorkflowTemplate {
@@ -65,7 +66,7 @@ export function WorkflowForm({ template, onSuccess, onCancel }: WorkflowFormProp
   async function fetchTemplates() {
     try {
       const response = await fetch("/api/workflows/templates");
-      if (!response.ok) throw new Error("Failed to fetch templates");
+      if (!response.ok) {throw new Error("Failed to fetch templates");}
       const data = await response.json();
       setTemplates(data.templates);
     } catch (err) {
@@ -179,16 +180,16 @@ export function WorkflowForm({ template, onSuccess, onCancel }: WorkflowFormProp
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form className="space-y-6" onSubmit={handleSubmit}>
       <div className="space-y-4">
         <div>
           <Label htmlFor="workflow-name">Workflow Name</Label>
           <Input
+            required
             id="workflow-name"
+            placeholder="My Workflow"
             value={workflowName}
             onChange={(e) => setWorkflowName(e.target.value)}
-            required
-            placeholder="My Workflow"
           />
         </div>
 
@@ -196,10 +197,10 @@ export function WorkflowForm({ template, onSuccess, onCancel }: WorkflowFormProp
           <Label htmlFor="workflow-description">Description</Label>
           <Textarea
             id="workflow-description"
-            value={workflowDescription}
-            onChange={(e) => setWorkflowDescription(e.target.value)}
             placeholder="Describe what this workflow does"
             rows={3}
+            value={workflowDescription}
+            onChange={(e) => setWorkflowDescription(e.target.value)}
           />
         </div>
 
@@ -219,10 +220,10 @@ export function WorkflowForm({ template, onSuccess, onCancel }: WorkflowFormProp
                     </Label>
                     <Input
                       id={`${step.id}-${field}`}
+                      placeholder={`Enter ${field}`}
+                      required={step.requiredFields?.includes(field)}
                       value={(config[step.id]?.[field] as string) || ""}
                       onChange={(e) => updateStepConfig(step.id, field, e.target.value)}
-                      required={step.requiredFields?.includes(field)}
-                      placeholder={`Enter ${field}`}
                     />
                   </div>
                 ))}
@@ -238,7 +239,7 @@ export function WorkflowForm({ template, onSuccess, onCancel }: WorkflowFormProp
         )}
 
         <div className="flex gap-4">
-          <Button type="submit" disabled={loading}>
+          <Button disabled={loading} type="submit">
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

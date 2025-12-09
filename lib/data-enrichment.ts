@@ -192,7 +192,7 @@ export async function enrichUserProfile(_userId: string, email: string) {
   
   return {
     inferredCompany: domain?.split(".")[0] || "Unknown",
-    domain: domain,
+    domain,
     enrichedAt: new Date().toISOString(),
   };
 }

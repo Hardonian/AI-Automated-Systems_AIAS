@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { GripVertical, Trash2 } from "lucide-react";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -68,26 +69,26 @@ export function DraggableList<T>({
         <Card
           key={index}
           draggable
-          onDragStart={() => handleDragStart(index)}
-          onDragOver={(e) => handleDragOver(e, index)}
-          onDragLeave={handleDragLeave}
-          onDrop={(e) => handleDrop(e, index)}
-          onDragEnd={handleDragEnd}
           className={cn(
             "p-4 cursor-move transition-all",
             draggedIndex === index && "opacity-50",
             dragOverIndex === index && "border-primary border-2"
           )}
+          onDragEnd={handleDragEnd}
+          onDragLeave={handleDragLeave}
+          onDragOver={(e) => handleDragOver(e, index)}
+          onDragStart={() => handleDragStart(index)}
+          onDrop={(e) => handleDrop(e, index)}
         >
           <div className="flex items-start gap-4">
             <div className="flex flex-col items-center gap-2 pt-1">
               <GripVertical className="h-5 w-5 text-muted-foreground" />
               <Button
+                className="h-8 w-8 p-0"
+                size="sm"
                 type="button"
                 variant="ghost"
-                size="sm"
                 onClick={() => onRemove(index)}
-                className="h-8 w-8 p-0"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>

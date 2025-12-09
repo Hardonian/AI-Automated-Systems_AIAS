@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { Bold, Italic, List, Link as LinkIcon } from "lucide-react";
+import { useRef } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface RichTextEditorProps {
   value: string;
@@ -25,7 +26,7 @@ export function RichTextEditor({
 
   const applyFormat = (command: string, value?: string) => {
     const textarea = textareaRef.current;
-    if (!textarea) return;
+    if (!textarea) {return;}
 
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
@@ -73,52 +74,52 @@ export function RichTextEditor({
       <div className="border rounded-lg">
         <div className="flex items-center gap-1 p-2 border-b bg-muted/50">
           <Button
+            size="sm"
+            title="Bold"
             type="button"
             variant="ghost"
-            size="sm"
             onClick={() => applyFormat("bold")}
-            title="Bold"
           >
             <Bold className="h-4 w-4" />
           </Button>
           <Button
+            size="sm"
+            title="Italic"
             type="button"
             variant="ghost"
-            size="sm"
             onClick={() => applyFormat("italic")}
-            title="Italic"
           >
             <Italic className="h-4 w-4" />
           </Button>
           <Button
+            size="sm"
+            title="Bullet List"
             type="button"
             variant="ghost"
-            size="sm"
             onClick={() => applyFormat("list")}
-            title="Bullet List"
           >
             <List className="h-4 w-4" />
           </Button>
           <Button
+            size="sm"
+            title="Add Link"
             type="button"
             variant="ghost"
-            size="sm"
             onClick={() => {
               const url = prompt("Enter URL:");
-              if (url) applyFormat("link", url);
+              if (url) {applyFormat("link", url);}
             }}
-            title="Add Link"
           >
             <LinkIcon className="h-4 w-4" />
           </Button>
         </div>
         <Textarea
           ref={textareaRef}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+          className="border-0 focus-visible:ring-0 resize-none"
           placeholder={placeholder}
           rows={rows}
-          className="border-0 focus-visible:ring-0 resize-none"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
         />
       </div>
       <p className="text-xs text-muted-foreground">

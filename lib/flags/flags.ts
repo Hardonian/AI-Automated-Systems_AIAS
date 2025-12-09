@@ -75,9 +75,9 @@ export interface FlagsConfig {
 function getCurrentEnv(): 'development' | 'staging' | 'production' {
   if (typeof process !== 'undefined') {
     const env = process.env.NODE_ENV || process.env.NEXT_PUBLIC_APP_ENV || 'production';
-    if (env === 'development') return 'development';
+    if (env === 'development') {return 'development';}
     const envStr = env as string;
-    if (envStr === 'staging' || envStr === 'preview') return 'staging';
+    if (envStr === 'staging' || envStr === 'preview') {return 'staging';}
   }
   return 'production';
 }
@@ -117,7 +117,7 @@ function getStableBucket(userId: string, experimentKey: string): number {
  * Override this function to integrate with your user segmentation system
  */
 function getUserSegments(userId?: string): string[] {
-  if (!userId) return [];
+  if (!userId) {return [];}
   
   // Check for segment indicators
   const segments: string[] = [];
@@ -179,19 +179,21 @@ export function isFeatureEnabled(
     case 'static':
       return flag.enabled;
       
-    case 'percentage':
+    case 'percentage': {
       if (!userId || !flag.rolloutPercentage) {
         return false; // Require userId for percentage rollouts
       }
       const bucket = stableHash(`${userId}:${flagKey}`) % 100;
       return bucket < flag.rolloutPercentage;
+    }
       
-    case 'segment':
+    case 'segment': {
       if (!userId || !flag.rolloutSegments) {
         return false;
       }
       const userSegments = getUserSegments(userId);
       return flag.rolloutSegments.some(seg => userSegments.includes(seg));
+    }
       
     case 'experiment':
       // If flag is tied to an experiment, check experiment variant
@@ -327,7 +329,7 @@ export function getActiveExperiments(userId?: UserId): Record<string, Variant> {
   const config = flagsConfig as FlagsConfig;
   const result: Record<string, Variant> = {};
   
-  if (!config.experiments) return result;
+  if (!config.experiments) {return result;}
   
   for (const key of Object.keys(config.experiments)) {
     const variant = getExperimentVariant(key, userId);

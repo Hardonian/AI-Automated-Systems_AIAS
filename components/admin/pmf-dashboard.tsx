@@ -1,8 +1,9 @@
 "use client";
+import { TrendingUp, TrendingDown, Users, Clock, Target, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { TrendingUp, TrendingDown, Users, Clock, Target, Heart } from "lucide-react";
 import { pmfTracker, pmfThresholds } from "@/lib/analytics/pmf-metrics";
 
 interface PMFMetrics {
@@ -63,7 +64,7 @@ export function PMFDashboard() {
                   {pmfScore.status.toUpperCase()}
                 </span>
               </div>
-              <Progress value={pmfScore.score} className="h-3" />
+              <Progress className="h-3" value={pmfScore.score} />
               <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
                 <div>
                   <div className="text-muted-foreground">Activation</div>
@@ -122,8 +123,8 @@ export function PMFDashboard() {
               </span>
             </div>
             <Progress 
-              value={metrics.activationRate} 
-              className="mt-2 h-2"
+              className="mt-2 h-2" 
+              value={metrics.activationRate}
             />
           </CardContent>
         </Card>
@@ -147,8 +148,8 @@ export function PMFDashboard() {
               </span>
             </div>
             <Progress 
-              value={metrics.sevenDayRetention} 
-              className="mt-2 h-2"
+              className="mt-2 h-2" 
+              value={metrics.sevenDayRetention}
             />
           </CardContent>
         </Card>
@@ -172,8 +173,8 @@ export function PMFDashboard() {
               </span>
             </div>
             <Progress 
-              value={(metrics.nps + 100) / 2} 
-              className="mt-2 h-2"
+              className="mt-2 h-2" 
+              value={(metrics.nps + 100) / 2}
             />
           </CardContent>
         </Card>

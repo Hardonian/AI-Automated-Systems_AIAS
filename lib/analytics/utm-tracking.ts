@@ -43,7 +43,7 @@ export function extractReferralCode(url: string | URL): string | undefined {
  * Store UTM parameters in localStorage (for client-side tracking)
  */
 export function storeUTMParams(params: UTMParams): void {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") {return;}
 
   const stored = {
     ...params,
@@ -57,10 +57,10 @@ export function storeUTMParams(params: UTMParams): void {
  * Get stored UTM parameters from localStorage
  */
 export function getStoredUTMParams(): UTMParams | null {
-  if (typeof window === "undefined") return null;
+  if (typeof window === "undefined") {return null;}
 
   const stored = localStorage.getItem("utm_params");
-  if (!stored) return null;
+  if (!stored) {return null;}
 
   try {
     const parsed = JSON.parse(stored);

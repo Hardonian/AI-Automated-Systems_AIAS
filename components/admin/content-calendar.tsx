@@ -1,10 +1,12 @@
 "use client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calendar, CheckCircle, Clock, FileText } from "lucide-react";
+import Link from "next/link";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, CheckCircle, Clock, FileText } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getUpcomingPosts, getPublishedPosts } from "@/lib/blog/content-calendar";
-import Link from "next/link";
+
 
 export function ContentCalendarView() {
   const upcomingPosts = getUpcomingPosts(14);
@@ -111,7 +113,7 @@ export function ContentCalendarView() {
                     <h4 className="font-semibold mb-1">{post.title}</h4>
                     <div className="flex flex-wrap gap-2 mt-2">
                       {post.affiliateProducts.map((product) => (
-                        <Badge key={product} variant="outline" className="text-xs">
+                        <Badge key={product} className="text-xs" variant="outline">
                           {product}
                         </Badge>
                       ))}
@@ -163,8 +165,8 @@ export function ContentCalendarView() {
                   </div>
                   <h4 className="font-semibold mb-1">{post.title}</h4>
                   <Link
-                    href={`/blog/${post.title.toLowerCase().replace(/\s+/g, "-")}`}
                     className="text-sm text-primary hover:underline"
+                    href={`/blog/${post.title.toLowerCase().replace(/\s+/g, "-")}`}
                   >
                     View Post →
                   </Link>
@@ -181,7 +183,7 @@ export function ContentCalendarView() {
         <Button asChild>
           <Link href="/admin/content-calendar/new">Create New Post</Link>
         </Button>
-        <Button variant="outline" asChild>
+        <Button asChild variant="outline">
           <Link href="/genai-content-engine">Use GenAI Content Engine</Link>
         </Button>
       </div>

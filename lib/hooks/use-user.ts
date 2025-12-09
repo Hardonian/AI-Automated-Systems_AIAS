@@ -9,13 +9,14 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { queryKeys } from "@/lib/data/queryKeys";
+
 import {
   getCurrentUser,
   onAuthStateChange,
   getUserProfile,
   type UserProfile,
 } from "@/lib/data/api/user";
+import { queryKeys } from "@/lib/data/queryKeys";
 
 /**
  * Hook to get current authenticated user
@@ -72,7 +73,7 @@ export function useUserProfile(userId: string | null) {
   return useQuery({
     queryKey: queryKeys.user.byId(userId ?? ""),
     queryFn: () => {
-      if (!userId) throw new Error("User ID is required");
+      if (!userId) {throw new Error("User ID is required");}
       return getUserProfile(userId);
     },
     enabled: !!userId,

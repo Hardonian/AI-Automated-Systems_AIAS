@@ -263,7 +263,7 @@ export abstract class BaseAdapter implements IntegrationAdapter {
    * Authenticate with OAuth
    */
   private async authenticateOAuth(): Promise<void> {
-    if (this.config.auth.type !== 'oauth') return;
+    if (this.config.auth.type !== 'oauth') {return;}
 
     const response = await fetch(this.config.auth.tokenUrl, {
       method: 'POST',
@@ -367,8 +367,8 @@ export abstract class BaseAdapter implements IntegrationAdapter {
    * Parse pagination from response
    */
   private parsePagination(_response: Response, _data: unknown): APIResponse['pagination'] {
-    const pagination = this.config.pagination;
-    if (!pagination) return undefined;
+    const {pagination} = this.config;
+    if (!pagination) {return undefined;}
 
     // Simplified - would parse based on pagination type
     return {

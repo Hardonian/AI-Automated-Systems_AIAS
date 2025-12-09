@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -36,12 +37,12 @@ export function ROICalculator() {
             <Label htmlFor="hours">Hours Saved Per Week</Label>
             <Input
               id="hours"
-              type="number"
-              min="1"
               max="40"
+              min="1"
+              placeholder="10"
+              type="number"
               value={hoursPerWeek}
               onChange={(e) => setHoursPerWeek(e.target.value)}
-              placeholder="10"
             />
             <p className="text-xs text-muted-foreground">
               How many hours per week do you spend on repetitive tasks?
@@ -52,11 +53,11 @@ export function ROICalculator() {
             <Label htmlFor="rate">Your Hourly Rate (CAD)</Label>
             <Input
               id="rate"
-              type="number"
               min="0"
+              placeholder="50"
+              type="number"
               value={hourlyRate}
               onChange={(e) => setHourlyRate(e.target.value)}
-              placeholder="50"
             />
             <p className="text-xs text-muted-foreground">
               What's your hourly rate or the value of your time?
@@ -68,16 +69,16 @@ export function ROICalculator() {
           <Label>Select Plan</Label>
           <div className="flex gap-4">
             <Button
+              className="flex-1"
               variant={plan === "starter" ? "default" : "outline"}
               onClick={() => setPlan("starter")}
-              className="flex-1"
             >
               Starter ($49/month)
             </Button>
             <Button
+              className="flex-1"
               variant={plan === "pro" ? "default" : "outline"}
               onClick={() => setPlan("pro")}
-              className="flex-1"
             >
               Pro ($149/month)
             </Button>
@@ -133,7 +134,7 @@ export function ROICalculator() {
         )}
 
         <div className="text-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <a href="/signup">Start Your Free Trial</a>
           </Button>
           <p className="text-xs text-muted-foreground mt-2">

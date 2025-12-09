@@ -3,8 +3,8 @@
  * Comprehensive error tracking with context, grouping, and analytics
  */
 
-import { logger } from '@/lib/logging/structured-logger';
 import { formatError } from '@/lib/errors';
+import { logger } from '@/lib/logging/structured-logger';
 
 export interface ErrorContext {
   userId?: string;
@@ -155,7 +155,7 @@ class EnhancedErrorTracker {
       if (!grouped[error.fingerprint]) {
         grouped[error.fingerprint] = [];
       }
-      const fingerprint = error.fingerprint;
+      const {fingerprint} = error;
       if (fingerprint) {
         if (!grouped[fingerprint]) {
           grouped[fingerprint] = [];

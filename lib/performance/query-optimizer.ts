@@ -4,8 +4,10 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import { env } from '@/lib/env';
+
 import { cacheService } from './cache';
+
+import { env } from '@/lib/env';
 
 export interface QueryOptions {
   cache?: boolean;
@@ -197,7 +199,7 @@ export class QueryOptimizer {
       // Cache and add to results
       if (data) {
         for (const item of data) {
-          const id = (item as any).id;
+          const {id} = (item as any);
           results.set(id, item as T);
           
           if (options.cache !== false) {

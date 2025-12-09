@@ -5,11 +5,12 @@
 
 'use client';
 
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { LucideIcon, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import React from 'react';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface EmptyStateEnhancedProps {
   icon?: LucideIcon;
@@ -59,7 +60,7 @@ export function EmptyStateEnhanced({
             </Button>
           )}
           {secondaryAction && (
-            <Button variant="outline" asChild>
+            <Button asChild variant="outline">
               <Link href={secondaryAction.href}>
                 {secondaryAction.label}
               </Link>
@@ -77,17 +78,17 @@ export function EmptyStateEnhanced({
 export function WorkflowsEmptyState() {
   return (
     <EmptyStateEnhanced
-      icon={Sparkles}
-      title="No workflows yet"
-      description="Create your first workflow to start automating your business processes. Workflows help you connect multiple agents and tools together."
       action={{
         label: "Create Workflow",
         href: "/onboarding/create-workflow",
       }}
+      description="Create your first workflow to start automating your business processes. Workflows help you connect multiple agents and tools together."
+      icon={Sparkles}
       secondaryAction={{
         label: "Browse Templates",
         href: "/templates",
       }}
+      title="No workflows yet"
     />
   );
 }

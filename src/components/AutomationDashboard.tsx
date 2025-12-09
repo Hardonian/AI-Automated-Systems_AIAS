@@ -29,8 +29,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 // import { Progress } from '@/components/ui/progress';
-import { AutomationWorkflow } from '@/lib/automation';
-// import { automationManager, LeadGenerationConfig, AppointmentBookingConfig, NoteTakingConfig, SketchingConfig } from '@/lib/automation';
+import { AutomationWorkflow } from '@/src/lib/automation';
+// import { automationManager, LeadGenerationConfig, AppointmentBookingConfig, NoteTakingConfig, SketchingConfig } from '@/src/lib/automation';
 
 interface AutomationMetrics {
   totalWorkflows: number;
@@ -69,7 +69,7 @@ export const AutomationDashboard: React.FC = () => {
         id: 'wf_1',
         name: 'Intelligent Lead Generation',
         description: 'AI-powered lead capture, qualification, and nurturing',
-        trigger: { type: 'webhook', config: {} },
+        trigger: { type: 'webhook' as const, config: { url: '', method: 'POST' as const } },
         steps: [],
         status: 'active',
         createdAt: '2024-01-01T00:00:00Z',
@@ -82,7 +82,7 @@ export const AutomationDashboard: React.FC = () => {
         id: 'wf_2',
         name: 'Smart Appointment Booking',
         description: 'Intelligent scheduling with conflict resolution',
-        trigger: { type: 'webhook', config: {} },
+        trigger: { type: 'webhook' as const, config: { url: '', method: 'POST' as const } },
         steps: [],
         status: 'active',
         createdAt: '2024-01-02T00:00:00Z',
@@ -95,7 +95,7 @@ export const AutomationDashboard: React.FC = () => {
         id: 'wf_3',
         name: 'AI Note Taking',
         description: 'Real-time transcription and insight extraction',
-        trigger: { type: 'event', config: {} },
+        trigger: { type: 'event' as const, config: { eventType: '', source: '' } },
         steps: [],
         status: 'active',
         createdAt: '2024-01-03T00:00:00Z',
@@ -108,7 +108,7 @@ export const AutomationDashboard: React.FC = () => {
         id: 'wf_4',
         name: 'AI-Enhanced Sketching',
         description: 'Intelligent design assistance and collaboration',
-        trigger: { type: 'manual', config: {} },
+        trigger: { type: 'manual' as const, config: { url: '', method: 'POST' as const } },
         steps: [],
         status: 'active',
         createdAt: '2024-01-04T00:00:00Z',

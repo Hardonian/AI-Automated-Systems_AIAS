@@ -66,22 +66,24 @@ export const LiveActivityFeed = () => {
           </div>
 
           {/* Activity stream */}
-          <motion.div
-            key={currentActivity}
-            animate={{ x: 0, opacity: 1 }}
-            className="flex items-start gap-3 pt-4 border-t border-border"
-            exit={{ x: -20, opacity: 0 }}
-            initial={{ x: 20, opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <activity.icon className="w-4 h-4 text-primary" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm text-foreground/80 line-clamp-2">{activity.text}</p>
-              <p className="text-xs text-accent font-semibold mt-1">{activity.value}</p>
-            </div>
-          </motion.div>
+          {activity && (
+            <motion.div
+              key={currentActivity}
+              animate={{ x: 0, opacity: 1 }}
+              className="flex items-start gap-3 pt-4 border-t border-border"
+              exit={{ x: -20, opacity: 0 }}
+              initial={{ x: 20, opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="p-2 bg-primary/10 rounded-lg">
+                {activity.icon && <activity.icon className="w-4 h-4 text-primary" />}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-foreground/80 line-clamp-2">{activity.text}</p>
+                <p className="text-xs text-accent font-semibold mt-1">{activity.value}</p>
+              </div>
+            </motion.div>
+          )}
         </div>
       </div>
     </motion.div>

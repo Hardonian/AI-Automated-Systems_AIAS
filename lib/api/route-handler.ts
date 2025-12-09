@@ -9,7 +9,12 @@ import { tenantIsolation } from '../security/tenant-isolation';
 // Lazy import cacheService to support Edge runtime
 // Cache is only available in Node.js runtime, not Edge
 // In Edge runtime, caching is disabled
-function getCacheService() {
+interface CacheService {
+  get(key: string, options?: { ttl?: number; tenantId?: string; tags?: string[] }): Promise<unknown>;
+  set(key: string, value: unknown, options?: { ttl?: number; tenantId?: string; tags?: string[] }): Promise<void>;
+}
+
+function getCacheService(): CacheService | null {
   // Cache service uses ioredis which requires Node.js runtime
   // Return null to disable caching in Edge runtime
   return null;
@@ -228,7 +233,7 @@ export function createRouteHandler(
         const bodyText = await getBodyText();
         const cacheKey = `api:${request.nextUrl.pathname}:${bodyText}`;
         const cache = getCacheService();
-        if (cache && isObject(cache) && typeof cache.get === 'function') {
+        if (cache) {
           const cached = await cache.get(cacheKey, {
             ttl: normalizedOptions.cache.ttl,
             tenantId: tenantId || undefined,
@@ -267,7 +272,7 @@ export function createRouteHandler(
           const bodyText = await getBodyText();
           const cacheKey = `api:${request.nextUrl.pathname}:${bodyText}`;
           const cache = getCacheService();
-          if (cache && isObject(cache) && typeof cache.set === 'function') {
+          if (cache) {
             await cache.set(cacheKey, body, {
               ttl: normalizedOptions.cache.ttl,
               tenantId: tenantId || undefined,
@@ -326,6 +331,7 @@ export function createRouteHandler(
             },
           }
         );
+      }
     };
     
     // Execute with timeout

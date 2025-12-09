@@ -6,8 +6,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-import { costMonitor } from "@/lib/cost-tracking/cost-monitor";
-import type { CostThreshold } from "@/lib/cost-tracking/cost-monitor";
+import { costMonitor, type CostThreshold } from "@/lib/cost-tracking/cost-monitor";
 import { logger } from "@/lib/logging/structured-logger";
 import { addSecurityHeaders } from "@/lib/middleware/security";
 export const dynamic = "force-dynamic";

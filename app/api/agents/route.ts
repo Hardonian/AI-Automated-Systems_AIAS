@@ -6,7 +6,7 @@
 import { NextResponse } from 'next/server';
 
 import { agentDefinitionSchema } from '@/lib/agents/schema';
-import { createGETHandler, RouteContext } from '@/lib/api/route-handler';
+import { createGETHandler, createPOSTHandler, RouteContext } from '@/lib/api/route-handler';
 import { createClient } from '@/lib/supabase/server';
 
 const createAgentSchema = agentDefinitionSchema.omit({ id: true, createdAt: true, updatedAt: true });
@@ -49,8 +49,6 @@ export const GET = createGETHandler(
     cache: { enabled: true, ttl: 60 }, // Cache for 1 minute
   }
 );
-
-import { createPOSTHandler } from '@/lib/api/route-handler';
 
 export const POST = createPOSTHandler(
   async (context: RouteContext) => {

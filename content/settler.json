@@ -1,0 +1,159 @@
+{
+  "hero": {
+    "title": "Settler",
+    "description": "Enterprise-grade settlement and payment processing platform. Built for scale, security, and seamless integration.",
+    "badgeText": "Enterprise Payment Platform",
+    "primaryCta": {
+      "label": "Schedule Demo",
+      "href": "/demo",
+      "variant": "default",
+      "visible": true
+    },
+    "secondaryCta": {
+      "label": "Explore Features",
+      "href": "#features",
+      "variant": "outline",
+      "visible": true
+    },
+    "backgroundVariant": "gradient",
+    "trustBadges": [
+      {
+        "icon": "check",
+        "text": "Enterprise Ready"
+      },
+      {
+        "icon": "globe",
+        "text": "🇨🇦 Canadian Built"
+      },
+      {
+        "icon": "shield",
+        "text": "Bank-Grade Security"
+      }
+    ]
+  },
+  "features": {
+    "sectionTitle": "Built for Enterprise Scale",
+    "sectionSubtitle": "Everything you need for high-volume payment processing, settlement, and financial operations.",
+    "items": [
+      {
+        "title": "High-Volume Processing",
+        "description": "Handle millions of transactions with enterprise-grade infrastructure. Built for scale from day one.",
+        "icon": "zap",
+        "gradient": "text-blue-500",
+        "highlight": false
+      },
+      {
+        "title": "Bank-Grade Security",
+        "description": "End-to-end encryption, PCI DSS compliance, fraud detection, and real-time monitoring.",
+        "icon": "shield",
+        "gradient": "text-green-500",
+        "highlight": false
+      },
+      {
+        "title": "Real-Time Settlement",
+        "description": "Instant settlement capabilities with support for multiple payment methods and currencies.",
+        "icon": "database",
+        "gradient": "text-purple-500",
+        "highlight": false
+      },
+      {
+        "title": "Developer-First API",
+        "description": "RESTful API with comprehensive documentation, webhooks, and SDK support for rapid integration.",
+        "icon": "code",
+        "gradient": "text-orange-500",
+        "highlight": false
+      },
+      {
+        "title": "Compliance Ready",
+        "description": "Built for Canadian regulations (PIPEDA, FINTRAC) with audit trails and reporting built-in.",
+        "icon": "lock",
+        "gradient": "text-red-500",
+        "highlight": false
+      },
+      {
+        "title": "Advanced Analytics",
+        "description": "Real-time dashboards, transaction insights, and customizable reporting for business intelligence.",
+        "icon": "trending-up",
+        "gradient": "text-cyan-500",
+        "highlight": false
+      }
+    ],
+    "layoutVariant": "grid"
+  },
+  "useCases": [
+    {
+      "title": "Marketplace Platforms",
+      "description": "Split payments, escrow services, and automated payouts for multi-vendor marketplaces."
+    },
+    {
+      "title": "SaaS Subscriptions",
+      "description": "Recurring billing, prorated charges, and subscription management with flexible pricing models."
+    },
+    {
+      "title": "Financial Services",
+      "description": "Settlement for trading platforms, investment apps, and fintech services with regulatory compliance."
+    },
+    {
+      "title": "E-Commerce",
+      "description": "Multi-currency support, international payments, and automated refund processing."
+    }
+  ],
+  "partnership": {
+    "title": "Built by AI Automated Systems",
+    "description": "Settler is a product of AI Automated Systems, leveraging our expertise in enterprise platform development, payment systems, and financial technology.",
+    "whyItems": [
+      {
+        "text": "Enterprise-grade infrastructure from day one"
+      },
+      {
+        "text": "Canadian compliance built-in (PIPEDA, FINTRAC)"
+      },
+      {
+        "text": "Developer-first API and documentation"
+      }
+    ],
+    "synergyItems": [
+      {
+        "text": "Seamless integration with AIAS automation workflows"
+      },
+      {
+        "text": "Shared infrastructure and security standards"
+      },
+      {
+        "text": "Unified support and enterprise services"
+      }
+    ],
+    "ctas": [
+      {
+        "label": "Schedule Settler Demo",
+        "href": "/demo",
+        "variant": "default",
+        "visible": true
+      },
+      {
+        "label": "View All Services",
+        "href": "/services",
+        "variant": "outline",
+        "visible": true
+      }
+    ]
+  },
+  "cta": {
+    "title": "Ready to Scale Your Payment Operations?",
+    "description": "Get in touch to learn how Settler can transform your settlement and payment processing.",
+    "ctas": [
+      {
+        "label": "Schedule Demo",
+        "href": "/demo",
+        "variant": "secondary",
+        "visible": true
+      },
+      {
+        "label": "Contact Sales",
+        "href": "/contact",
+        "variant": "outline",
+        "visible": true
+      }
+    ]
+  }
+}

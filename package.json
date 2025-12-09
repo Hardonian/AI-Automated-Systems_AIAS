@@ -128,6 +128,7 @@
     "typecheck": "turbo run typecheck",
     "typecheck:root": "tsc --noEmit",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "lint:build": "eslint . --report-unused-disable-directives --max-warnings 1000",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

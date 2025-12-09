@@ -1,23 +1,34 @@
 /**
  * Sentry Server Configuration
  * Initialize Sentry for server-side error tracking
+ * Optional: Only initializes if @sentry/nextjs is installed and DSN is configured
  */
 
-import * as Sentry from "@sentry/nextjs";
-
-Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  environment: process.env.NODE_ENV || "development",
-  tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1.0,
-  beforeSend(event: unknown, hint: unknown) {
-    // Filter out sensitive data
-    if (event.request) {
-      delete event.request.cookies;
-      if (event.request.headers) {
-        delete event.request.headers["authorization"];
-        delete event.request.headers["cookie"];
-      }
-    }
-    return event;
-  },
-});
+try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const Sentry = require("@sentry/nextjs");
+  
+  if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+    Sentry.init({
+      dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+      environment: process.env.NODE_ENV || "development",
+      tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1.0,
+      beforeSend(event: unknown) {
+        // Filter out sensitive data
+        if (event && typeof event === 'object' && 'request' in event) {
+          const req = (event as { request?: { cookies?: unknown; headers?: Record<string, unknown> } }).request;
+          if (req) {
+            delete req.cookies;
+            if (req.headers) {
+              delete req.headers["authorization"];
+              delete req.headers["cookie"];
+            }
+          }
+        }
+        return event;
+      },
+    });
+  }
+} catch {
+  // @sentry/nextjs not installed, skip initialization
+}

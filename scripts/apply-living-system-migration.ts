@@ -65,7 +65,7 @@ async function applyMigration() {
 
     for (let i = 0; i < statements.length; i++) {
       const statement = statements[i];
-      if (statement.length < 10) {continue;} // Skip very short statements
+      if (!statement || statement.length < 10) {continue;} // Skip very short statements
 
       try {
         // Use RPC or direct query

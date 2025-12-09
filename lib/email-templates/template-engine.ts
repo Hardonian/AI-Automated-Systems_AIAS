@@ -43,8 +43,8 @@ export function replaceTemplateVariables(
  */
 function getNestedValue(obj: unknown, path: string): unknown {
   return path.split('.').reduce((current, key) => {
-    if (current && typeof current === 'object' && key in current) {
-      return current[key];
+    if (current && typeof current === 'object' && current !== null && key in current) {
+      return (current as Record<string, unknown>)[key];
     }
     return undefined;
   }, obj);

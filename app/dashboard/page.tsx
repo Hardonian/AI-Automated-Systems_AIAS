@@ -19,13 +19,32 @@ import type { Database } from "@/src/integrations/supabase/types";
  * Now includes Supabase Realtime subscriptions for live updates.
  */
 
-async function getKPIData() {
+async function getKPIData(): Promise<{
+  newUsersThisWeek: number;
+  totalUsers: number;
+  avgPostViews: number;
+  actionsLastHour: number;
+  totalPosts: number;
+  engagementRate: string;
+  periodStart: string;
+  periodEnd: string;
+  note: string;
+  kpi1Met: boolean;
+  kpi2Met: boolean;
+  kpi3Met: boolean;
+}> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !supabaseServiceKey) {
     // Return sample data if Supabase not configured
-    return generateSampleMetrics();
+    const sample = generateSampleMetrics();
+    return {
+      ...sample,
+      kpi1Met: false,
+      kpi2Met: false,
+      kpi3Met: false,
+    };
   }
 
   try {
@@ -54,20 +73,32 @@ async function getKPIData() {
     const kpi1Data = kpi1.data as KPIResult | null;
     const kpi2Data = kpi2.data as KPIResult | null;
     const kpi3Data = kpi3.data as KPIResult | null;
+    const now = new Date();
+    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     return {
       newUsersThisWeek: kpi1Data?.new_users_count || 0,
       avgPostViews: Number(kpi2Data?.avg_post_views || 0),
       actionsLastHour: kpi3Data?.actions_count || 0,
       totalUsers: profilesCount.count || 0,
       totalPosts: postsCount.count || 0,
+      engagementRate: "0.00",
+      periodStart: oneWeekAgo.toISOString(),
+      periodEnd: now.toISOString(),
+      note: "Live metrics from Supabase",
       kpi1Met: kpi1Data?.threshold_met || false,
       kpi2Met: kpi2Data?.threshold_met || false,
       kpi3Met: kpi3Data?.threshold_met || false,
     };
   } catch (error) {
     console.error("Error fetching KPI data", error);
-    // Return sample data on error
-    return generateSampleMetrics();
+    // Return sample data on error with KPI met flags
+    const sample = generateSampleMetrics();
+    return {
+      ...sample,
+      kpi1Met: false,
+      kpi2Met: false,
+      kpi3Met: false,
+    };
   }
 }
 
@@ -379,7 +410,7 @@ export default async function DashboardPage() {
           <CardContent className="pt-6">
             {techNews.articles && techNews.articles.length > 0 ? (
               <div className="space-y-2">
-                {techNews.articles.slice(0, 3).map((article: { title?: string; url?: string; description?: string }, idx: number) => (
+                {techNews.articles.slice(0, 3).map((article: { title?: string; url?: string; description?: string; author?: string }, idx: number) => (
                   <div key={idx} className="text-sm">
                     <a
                       className="text-primary hover:underline"

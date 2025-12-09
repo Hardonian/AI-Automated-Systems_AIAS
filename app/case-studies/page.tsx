@@ -186,6 +186,7 @@ export default async function CaseStudiesPage() {
             />
           )})}
           {/* Original consultancy builds code kept for reference but replaced above */}
+          {/* eslint-disable-next-line no-constant-binary-expression */}
           {false && consultancyBuilds.map((build) => (
             <Card key={build.title} className="overflow-hidden border-2 border-primary/20">
               <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5">

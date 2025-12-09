@@ -2,6 +2,7 @@
 
 import { createClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
+
 import type { Database, Json } from "@/src/integrations/supabase/types";
 
 /**

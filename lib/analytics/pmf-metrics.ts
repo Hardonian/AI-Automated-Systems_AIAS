@@ -90,7 +90,7 @@ export class PMFTracker {
       nps: { score: number; status: string };
     };
   } {
-    const metrics = this.metrics;
+    const {metrics} = this;
     
     const activationStatus = metrics.activationRate >= pmfThresholds.activationRate.great 
       ? "great" 

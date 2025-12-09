@@ -1,12 +1,13 @@
 "use client";
 
-import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
+import * as React from "react";
+
 import { motionTransitions, motionScale, prefersReducedMotion } from "@/lib/style/motion";
+import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-semibold ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 active:scale-95 min-h-[44px] min-w-[44px] relative overflow-hidden group",
@@ -84,10 +85,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp
         ref={ref}
-        className={cn(buttonVariants({ variant, size }), className)}
-        disabled={isDisabled}
         aria-busy={loading}
         aria-disabled={isDisabled}
+        className={cn(buttonVariants({ variant, size }), className)}
+        disabled={isDisabled}
         {...motionProps}
         {...(props as any)}
       >

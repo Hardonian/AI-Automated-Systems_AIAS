@@ -5,7 +5,12 @@ import SubscriptionPlans from "@/components/billing/SubscriptionPlans";
 import { supabase } from "@/lib/supabase/client";
 
 export default function BillingPage() {
-  const [currentTier, setCurrentTier] = useState<any>(null);
+  interface SubscriptionTier {
+    tier: string;
+    xp_multiplier: number;
+    expires_at: string;
+  }
+  const [currentTier, setCurrentTier] = useState<SubscriptionTier | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

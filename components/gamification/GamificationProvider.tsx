@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+
 import flags from "@/config/flags.gamify.json";
 import { supabase } from "@/lib/supabase/client";
 
@@ -30,7 +31,7 @@ export function GamificationProvider({ children }: { children: React.ReactNode }
   
   async function loadSubscriptionTier() {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {return;}
     
     const { data: tier } = await (supabase
       .from("subscription_tiers") as any)
@@ -71,7 +72,7 @@ export function GamificationProvider({ children }: { children: React.ReactNode }
 
 export const useGamify = () => {
   const v = useContext(Ctx);
-  if(!v) throw new Error("GamificationProvider missing");
+  if(!v) {throw new Error("GamificationProvider missing");}
   return v;
 };
 

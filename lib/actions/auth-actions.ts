@@ -2,6 +2,7 @@
 
 import { createClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
+
 import type { Database } from "@/src/integrations/supabase/types";
 
 /**
@@ -75,7 +76,7 @@ export async function signUpUser(
       .from("profiles")
       .insert({
         id: userId,
-        email: email,
+        email,
         display_name: displayName || email.split("@")[0],
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -104,7 +105,7 @@ export async function signUpUser(
         entity_type: "user",
         entity_id: userId,
         metadata: {
-          email: email,
+          email,
           display_name: displayName || email.split("@")[0],
           source: "server_action",
         },

@@ -1,7 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
+
 import { hapticTap } from "./Haptics";
+
+import { supabase } from "@/lib/supabase/client";
 
 interface Notification {
   id: number;
@@ -31,7 +33,7 @@ export default function NotificationsCenter() {
 
   async function loadNotifications() {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {return;}
     
     const { data } = await supabase
       .from("notifications")
@@ -55,7 +57,7 @@ export default function NotificationsCenter() {
   async function markAllAsRead() {
     hapticTap();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {return;}
     
     await supabase
       .from("notifications")
@@ -70,9 +72,9 @@ export default function NotificationsCenter() {
   return (
     <div className="relative">
       <button
-        onClick={() => setOpen(!open)}
-        className="relative h-10 w-10 rounded-xl bg-muted flex items-center justify-center"
         aria-label="Notifications"
+        className="relative h-10 w-10 rounded-xl bg-muted flex items-center justify-center"
+        onClick={() => setOpen(!open)}
       >
         🔔
         {unreadCount > 0 && (
@@ -89,7 +91,7 @@ export default function NotificationsCenter() {
             <div className="flex items-center justify-between mb-2">
               <div className="text-sm font-semibold">Notifications</div>
               {unread.length > 0 && (
-                <button onClick={markAllAsRead} className="text-xs text-muted-foreground hover:text-foreground">
+                <button className="text-xs text-muted-foreground hover:text-foreground" onClick={markAllAsRead}>
                   Mark all read
                 </button>
               )}
@@ -101,10 +103,10 @@ export default function NotificationsCenter() {
               notifications.map((notif) => (
                 <div
                   key={notif.id}
-                  onClick={() => { markAsRead(notif.id); if (notif.link) window.location.href = notif.link; }}
                   className={`rounded-xl border p-3 cursor-pointer hover:bg-muted/50 ${
                     !notif.read_at ? "bg-primary/5 border-primary/20" : ""
                   }`}
+                  onClick={() => { markAsRead(notif.id); if (notif.link) {window.location.href = notif.link;} }}
                 >
                   <div className="text-sm font-semibold">{notif.title}</div>
                   {notif.body && <div className="text-xs text-muted-foreground mt-1">{notif.body}</div>}

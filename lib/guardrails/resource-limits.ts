@@ -48,7 +48,12 @@ export function checkResourceLimit(
   size: number = 0,
   customLimit?: Partial<ResourceLimit>
 ): { allowed: boolean; remaining: number; resetAt: number } {
-  const limit = { ...DEFAULT_LIMITS[resourceType], ...customLimit };
+  const defaultLimit = DEFAULT_LIMITS[resourceType] || {
+    maxSize: 10 * 1024 * 1024,
+    maxCount: 100,
+    windowMs: 60000,
+  };
+  const limit: ResourceLimit = { ...defaultLimit, ...customLimit };
   const now = Date.now();
   
   let usage = resourceTrackers.get(resourceType);

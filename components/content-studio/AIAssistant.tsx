@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, Loader2, Wand2, TrendingUp } from "lucide-react";
+import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 
 interface AIAssistantProps {
@@ -144,22 +145,22 @@ export function AIAssistant({
         <div className="space-y-2">
           <Label>Generate {typeLabels[type] || type}</Label>
           <Textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
             placeholder={
               type === "optimize"
                 ? "Describe how you'd like to improve the content..."
                 : `Describe what you want for the ${(typeLabels[type] || type).toLowerCase()}...`
             }
             rows={3}
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
           />
         </div>
 
         <div className="flex gap-2">
           <Button
-            onClick={handleGenerate}
-            disabled={generating || !prompt.trim()}
             className="flex-1"
+            disabled={generating || !prompt.trim()}
+            onClick={handleGenerate}
           >
             {generating ? (
               <>
@@ -175,9 +176,9 @@ export function AIAssistant({
           </Button>
           {currentContent && (
             <Button
-              onClick={handleSEOAnalysis}
               disabled={seoAnalyzing}
               variant="outline"
+              onClick={handleSEOAnalysis}
             >
               {seoAnalyzing ? (
                 <>

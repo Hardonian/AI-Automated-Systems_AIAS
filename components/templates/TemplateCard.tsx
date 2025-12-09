@@ -1,9 +1,11 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 
 interface WorkflowTemplate {
   id: string;
@@ -49,10 +51,10 @@ export function TemplateCard({ template, onSelect, selected }: TemplateCardProps
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2 mb-4">
-          <Badge variant="outline" className={difficultyColors[template.difficulty]}>
+          <Badge className={difficultyColors[template.difficulty]} variant="outline">
             {template.difficulty}
           </Badge>
-          <Badge variant="outline" className="flex items-center gap-1">
+          <Badge className="flex items-center gap-1" variant="outline">
             <Clock className="h-3 w-3" />
             {template.estimatedTimeMinutes} min
           </Badge>
@@ -62,7 +64,7 @@ export function TemplateCard({ template, onSelect, selected }: TemplateCardProps
           <div className="text-sm font-medium">Required Integrations:</div>
           <div className="flex flex-wrap gap-2">
             {template.requiredIntegrations.map((integration) => (
-              <Badge key={integration} variant="secondary" className="text-xs">
+              <Badge key={integration} className="text-xs" variant="secondary">
                 {integration}
               </Badge>
             ))}

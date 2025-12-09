@@ -4,10 +4,12 @@
  * Provides utilities for checking admin access and protecting admin routes.
  */
 
-import { cookies } from "next/headers";
 import { createClient } from "@supabase/supabase-js";
-import { env } from "@/lib/env";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+
+import { env } from "@/lib/env";
+
 
 const supabase = createClient(env.supabase.url, env.supabase.anonKey);
 
@@ -22,7 +24,7 @@ export interface AdminUser {
  * Check if user is admin
  */
 export async function isAdmin(userId?: string): Promise<boolean> {
-  if (!userId) return false;
+  if (!userId) {return false;}
 
   try {
     const { data, error } = await supabase
@@ -31,7 +33,7 @@ export async function isAdmin(userId?: string): Promise<boolean> {
       .eq("id", userId)
       .single();
 
-    if (error || !data) return false;
+    if (error || !data) {return false;}
 
     // Check if user has admin role
     return data.role === "admin" || data.role === "super_admin";
@@ -49,16 +51,16 @@ export async function getAdminUser(): Promise<AdminUser | null> {
     const cookieStore = await cookies();
     const authToken = cookieStore.get("sb-access-token")?.value;
 
-    if (!authToken) return null;
+    if (!authToken) {return null;}
 
     // Verify token and get user
     const { data: { user }, error } = await supabase.auth.getUser(authToken);
 
-    if (error || !user) return null;
+    if (error || !user) {return null;}
 
     // Check admin status
     const adminStatus = await isAdmin(user.id);
-    if (!adminStatus) return null;
+    if (!adminStatus) {return null;}
 
     // Get profile
     const { data: profile } = await supabase
@@ -144,7 +146,7 @@ export async function hasAdminRole(
   requiredRole: AdminRole
 ): Promise<boolean> {
   const user = await getAdminUser();
-  if (!user || user.id !== userId) return false;
+  if (!user || user.id !== userId) {return false;}
 
   const roleHierarchy: Record<AdminRole, number> = {
     [AdminRole.ADMIN]: 1,

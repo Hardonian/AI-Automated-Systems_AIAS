@@ -1,7 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
+
 import { hapticTap } from "../gamification/Haptics";
+
+import { supabase } from "@/lib/supabase/client";
 
 export default function FollowButton({ userId }: { userId: string }) {
   const [following, setFollowing] = useState(false);
@@ -14,7 +16,7 @@ export default function FollowButton({ userId }: { userId: string }) {
 
   async function checkFollowStatus() {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user || user.id === userId) return;
+    if (!user || user.id === userId) {return;}
     
     const { data } = await supabase
       .from("user_follows")
@@ -32,13 +34,13 @@ export default function FollowButton({ userId }: { userId: string }) {
       .select("*", { count: "exact", head: true })
       .eq("following_id", userId);
     
-    if (count !== null) setFollowerCount(count);
+    if (count !== null) {setFollowerCount(count);}
   }
 
   async function toggleFollow() {
     hapticTap();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user || user.id === userId) return;
+    if (!user || user.id === userId) {return;}
     
     if (following) {
       await supabase
@@ -58,10 +60,10 @@ export default function FollowButton({ userId }: { userId: string }) {
   return (
     <div className="flex items-center gap-2">
       <button
-        onClick={toggleFollow}
         className={`h-10 px-4 rounded-xl text-sm font-medium ${
           following ? "bg-secondary" : "bg-primary text-primary-fg"
         }`}
+        onClick={toggleFollow}
       >
         {following ? "Following" : "Follow"}
       </button>

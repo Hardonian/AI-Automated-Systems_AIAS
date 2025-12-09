@@ -15,6 +15,7 @@
  */
 
 import { get } from '@vercel/edge-config';
+
 import { logger } from '@/lib/logging/structured-logger';
 
 /**

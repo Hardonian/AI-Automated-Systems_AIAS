@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
           updated_at: new Date().toISOString(),
         })
         .eq("user_id", user.id);
-    } catch (error) {
+    } catch {
       // Table might not exist, that's OK
       logger.warn("Failed to update subscription record", {
         userId: user.id,

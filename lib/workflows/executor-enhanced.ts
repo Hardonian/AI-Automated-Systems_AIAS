@@ -4,14 +4,16 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { track } from "@/lib/telemetry/track";
+
 import { getTemplate, validateTemplateConfig } from "./templates";
-import { rateLimiter } from "@/lib/performance/rate-limiter";
-import { CircuitBreaker } from "@/lib/resilience/circuit-breaker";
+
+import { env } from "@/lib/env";
 import { ShopifyClient } from "@/lib/integrations/shopify-client";
 import { WaveClient } from "@/lib/integrations/wave-client";
+import { logger } from "@/lib/logging/structured-logger";
+import { rateLimiter } from "@/lib/performance/rate-limiter";
+import { CircuitBreaker } from "@/lib/resilience/circuit-breaker";
+import { track } from "@/lib/telemetry/track";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -178,8 +180,8 @@ export async function executeWorkflow(
     }
 
     // Normalize plan name
-    if (plan === "professional") plan = "pro";
-    if (plan === "starter" || plan === "standard") plan = "starter";
+    if (plan === "professional") {plan = "pro";}
+    if (plan === "starter" || plan === "standard") {plan = "starter";}
 
     // Check rate limits
     const rateLimitResult = await checkRateLimit(userId, plan);
@@ -664,7 +666,7 @@ async function evaluateCondition(
 ): Promise<boolean> {
   const field = config.field as string;
   const operator = (config.operator as string) || "equals";
-  const value = config.value;
+  const {value} = config;
 
   // Process template variables
   const processedField = processTemplateVariables(field, previousResults) as string;

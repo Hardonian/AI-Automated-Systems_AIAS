@@ -4,6 +4,7 @@
  */
 
 import { Metadata } from 'next';
+
 import { env } from '@/lib/env';
 
 const siteUrl = env.app.siteUrl || 'https://aiautomatedsystems.ca';

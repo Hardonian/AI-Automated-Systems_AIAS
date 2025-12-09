@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { logger } from "@/lib/logging/structured-logger";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { X, Plus, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,7 +27,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -32,9 +34,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { X, Plus, Sparkles } from "lucide-react";
-import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
+import { logger } from "@/lib/logging/structured-logger";
 
 const loiSchema = z.object({
   companyName: z.string().min(1, "Company name is required"),
@@ -109,7 +110,7 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
         }),
       });
 
-      if (!response.ok) throw new Error("Failed to save LOI");
+      if (!response.ok) {throw new Error("Failed to save LOI");}
 
       toast.success(loi ? "LOI updated successfully" : "LOI created successfully");
       setOpen(false);
@@ -149,7 +150,7 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -187,7 +188,7 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
                 <FormItem>
                   <FormLabel>Contact Email *</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="john@acme.com" {...field} />
+                    <Input placeholder="john@acme.com" type="email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -201,7 +202,7 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Industry *</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select defaultValue={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select industry" />
@@ -226,7 +227,7 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Company Size *</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select defaultValue={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select size" />
@@ -253,7 +254,7 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Tier *</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select defaultValue={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue />
@@ -332,7 +333,7 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Status *</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select defaultValue={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue />
@@ -365,19 +366,19 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
                     }
                   }}
                 />
-                <Button type="button" onClick={addRequirement} variant="outline">
+                <Button type="button" variant="outline" onClick={addRequirement}>
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
               {requirements.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
                   {requirements.map((req, idx) => (
-                    <Badge key={idx} variant="secondary" className="gap-1">
+                    <Badge key={idx} className="gap-1" variant="secondary">
                       {req}
                       <button
+                        className="ml-1 hover:text-red-500"
                         type="button"
                         onClick={() => removeRequirement(idx)}
-                        className="ml-1 hover:text-red-500"
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -395,8 +396,8 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
                   <FormLabel>Notes</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Additional notes about this LOI..."
                       className="min-h-[100px]"
+                      placeholder="Additional notes about this LOI..."
                       {...field}
                     />
                   </FormControl>
@@ -409,7 +410,7 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={loading} className="bg-gradient-to-r from-blue-600 to-purple-600">
+              <Button className="bg-gradient-to-r from-blue-600 to-purple-600" disabled={loading} type="submit">
                 {loading ? "Saving..." : loi ? "Update LOI" : "Create LOI"}
               </Button>
             </DialogFooter>

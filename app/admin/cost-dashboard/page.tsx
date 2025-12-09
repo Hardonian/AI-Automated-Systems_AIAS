@@ -38,9 +38,11 @@ export default function CostDashboard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchCostData();
+    void fetchCostData();
     // Refresh every 5 minutes
-    const interval = setInterval(fetchCostData, 5 * 60 * 1000);
+    const interval = setInterval(() => {
+      void fetchCostData();
+    }, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -118,7 +120,9 @@ export default function CostDashboard() {
             Monitor and optimize infrastructure costs across all services
           </p>
         </div>
-        <Button variant="outline" onClick={fetchCostData}>
+        <Button variant="outline" onClick={() => {
+          void fetchCostData();
+        }}>
           <Calendar className="h-4 w-4 mr-2" />
           Refresh
         </Button>

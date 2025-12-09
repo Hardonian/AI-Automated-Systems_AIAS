@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 
 import ChallengeCard from "@/components/gamification/ChallengeCard";
-import { logger } from "@/lib/utils/logger";
 import { supabase } from "@/lib/supabase/client";
+import { logger } from "@/lib/utils/logger";
 
 interface ChallengeRequirements {
   min_level?: number;

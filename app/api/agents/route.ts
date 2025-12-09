@@ -6,7 +6,7 @@
 import { NextResponse } from 'next/server';
 
 import { agentDefinitionSchema } from '@/lib/agents/schema';
-import { createGETHandler, RouteContext } from '@/lib/api/route-handler';
+import { createGETHandler, createPOSTHandler, RouteContext } from '@/lib/api/route-handler';
 import { createClient } from '@/lib/supabase/server';
 
 const createAgentSchema = agentDefinitionSchema.omit({ id: true, createdAt: true, updatedAt: true });
@@ -26,8 +26,8 @@ export const GET = createGETHandler(
     const { searchParams } = new URL(request.url);
     const tenantId = searchParams.get('tenantId');
 
-    let query = (supabase
-      .from('agents') as any)
+    let query = supabase
+      .from('agents')
       .select('*')
       .eq('enabled', true)
       .eq('deprecated', false);
@@ -50,8 +50,6 @@ export const GET = createGETHandler(
   }
 );
 
-import { createPOSTHandler } from '@/lib/api/route-handler';
-
 export const POST = createPOSTHandler(
   async (context: RouteContext) => {
     const { request } = context;
@@ -67,8 +65,8 @@ export const POST = createPOSTHandler(
     const body = await request.json();
     const validated = createAgentSchema.parse(body);
 
-    const { data: agent, error } = await (supabase
-      .from('agents') as any)
+    const { data: agent, error } = await supabase
+      .from('agents')
       .insert({
         ...validated,
         created_by: user.id,

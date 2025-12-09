@@ -1,10 +1,11 @@
 "use client";
 
-import { ReactNode } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Lock, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { ReactNode } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { PlanTier } from "@/config/plans";
 
 interface PlanFeatureGateProps {
@@ -75,7 +76,7 @@ export function PlanFeatureGate({
                   )}
                 </ul>
               </div>
-              <Button size="lg" className="w-full" asChild>
+              <Button asChild className="w-full" size="lg">
                 <Link href="/pricing">
                   <Sparkles className="h-4 w-4 mr-2" />
                   {upgradeCTA}
@@ -100,7 +101,7 @@ export function PlanFeatureGate({
         <CardDescription>{featureDescription}</CardDescription>
       </CardHeader>
       <CardContent>
-        <Button size="lg" className="w-full" asChild>
+        <Button asChild className="w-full" size="lg">
           <Link href="/pricing">{upgradeCTA}</Link>
         </Button>
       </CardContent>

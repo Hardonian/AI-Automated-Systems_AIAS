@@ -3,13 +3,14 @@
  * Node-based execution system with branching, retries, and error handling
  */
 
+import { agentExecutor } from '../agents/executor';
+
 import {
   WorkflowDefinition,
   WorkflowExecutionContext,
   WorkflowExecutionResult,
   WorkflowStep,
 } from './dsl';
-import { agentExecutor } from '../agents/executor';
 
 export interface ExecutionNode {
   stepId: string;
@@ -224,7 +225,7 @@ export class WorkflowExecutor {
       case 'webhook':
         return this.executeWebhook(step, state);
       default:
-        throw new Error(`Unknown step type: ${(step as any).type}`);
+        throw new Error(`Unknown step type: ${'type' in step ? String(step.type) : 'unknown'}`);
     }
   }
 
@@ -239,7 +240,7 @@ export class WorkflowExecutor {
       throw new Error('Invalid step type');
     }
     
-    const mapping = step.config.mapping;
+    const {mapping} = step.config;
     const result: Record<string, unknown> = {};
 
     for (const [target, source] of Object.entries(mapping)) {
@@ -256,7 +257,7 @@ export class WorkflowExecutor {
     step: WorkflowStep,
     _state: Record<string, unknown>
   ): Promise<unknown> {
-    if (step.type !== 'match') throw new Error('Invalid step type');
+    if (step.type !== 'match') {throw new Error('Invalid step type');}
     
     // Simplified matching logic
     return { matched: true, matches: [] };
@@ -512,9 +513,10 @@ export class WorkflowExecutor {
   ): string | null {
     if (step.type === 'condition') {
       const conditionResult = result as boolean;
+      const config = step.config as Record<string, unknown>;
       const nextSteps = conditionResult 
-        ? (step.config as any).then 
-        : (step.config as any).else;
+        ? (config.then as unknown[] | undefined)
+        : (config.else as unknown[] | undefined);
       return nextSteps?.[0] || null;
     }
 
@@ -530,7 +532,7 @@ export class WorkflowExecutor {
     state: Record<string, unknown>,
     retryConfig: WorkflowStep['retry']
   ): Promise<unknown | null> {
-    if (!retryConfig) return null;
+    if (!retryConfig) {return null;}
 
     let delay = retryConfig.initialDelay;
 
@@ -639,7 +641,7 @@ export class WorkflowExecutor {
    * Evaluate condition
    */
   private evaluateCondition(
-    condition: any,
+    condition: Record<string, unknown> | string,
     value: unknown
   ): boolean {
     switch (condition.operator) {

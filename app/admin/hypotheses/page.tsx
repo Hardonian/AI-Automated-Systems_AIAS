@@ -22,7 +22,7 @@ export default function HypothesesDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchHypotheses();
+    void fetchHypotheses();
   }, []);
 
   async function fetchHypotheses() {

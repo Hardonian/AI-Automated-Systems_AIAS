@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { AlertCircle, X } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 interface UsageProgressBannerProps {
   used: number;
@@ -59,22 +60,22 @@ export function UsageProgressBanner({ used, limit, plan }: UsageProgressBannerPr
                 <span>{used.toLocaleString()} used</span>
                 <span>{limit.toLocaleString()} limit</span>
               </div>
-              <Progress value={percentage} className="h-2" />
+              <Progress className="h-2" value={percentage} />
             </div>
             <div className="mt-3 flex gap-2">
               <Button asChild size="sm">
                 <Link href="/pricing">Upgrade Plan</Link>
               </Button>
-              <Button variant="outline" size="sm" onClick={handleDismiss}>
+              <Button size="sm" variant="outline" onClick={handleDismiss}>
                 Dismiss
               </Button>
             </div>
           </div>
           <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleDismiss}
             className="h-6 w-6 p-0"
+            size="sm"
+            variant="ghost"
+            onClick={handleDismiss}
           >
             <X className="h-4 w-4" />
           </Button>

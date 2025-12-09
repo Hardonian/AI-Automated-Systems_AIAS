@@ -16,7 +16,8 @@ export const metadata: Metadata = {
 };
 
 // Icon mapping for features
-const iconMap: Record<string, any> = {
+import type { LucideIcon } from "lucide-react";
+const iconMap: Record<string, LucideIcon> = {
   zap: Zap,
   shield: Shield,
   database: Database,
@@ -229,7 +230,7 @@ export default async function SettlerPage() {
                       <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         {content.partnership.ctas.map((cta, i) => (
                           cta.visible && (
-                            <Button key={i} asChild size="lg" variant={cta.variant as any}>
+                            <Button key={i} asChild size="lg" variant={cta.variant as "default" | "secondary" | "outline" | "ghost" | "destructive" | "cta" | "trust" | "premium"}>
                               <Link href={cta.href}>
                                 {cta.label}
                                 {i === 0 && <ArrowRight className="ml-2 h-5 w-5" />}
@@ -263,7 +264,7 @@ export default async function SettlerPage() {
                   <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                     {content.cta.ctas.map((cta, i) => (
                       cta.visible && (
-                        <Button key={i} asChild className="text-lg px-8" size="lg" variant={cta.variant as any}>
+                        <Button key={i} asChild className="text-lg px-8" size="lg" variant={cta.variant as "default" | "secondary" | "outline" | "ghost" | "destructive" | "cta" | "trust" | "premium"}>
                           <Link href={cta.href}>
                             {cta.label}
                             {i === 0 && <ArrowRight className="ml-2 h-5 w-5" />}

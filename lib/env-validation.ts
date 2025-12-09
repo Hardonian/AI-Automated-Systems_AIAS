@@ -1,4 +1,4 @@
-/* eslint-disable no-process-env */
+ 
 /**
  * Build-safe environment variable validation using Zod
  * 

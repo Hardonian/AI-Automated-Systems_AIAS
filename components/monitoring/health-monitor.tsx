@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Activity, CheckCircle2, XCircle, RefreshCw } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 /**
  * Health Monitor Component
@@ -100,7 +101,7 @@ export function HealthMonitor({ autoRefresh = true, refreshInterval = 60000 }: {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-destructive mb-4">{error}</p>
-          <Button onClick={fetchHealth} size="sm" variant="outline">
+          <Button size="sm" variant="outline" onClick={fetchHealth}>
             <RefreshCw className="w-4 h-4 mr-2" />
             Retry
           </Button>
@@ -183,14 +184,14 @@ export function HealthMonitor({ autoRefresh = true, refreshInterval = 60000 }: {
           <div className="pt-4 border-t">
             <div className="flex items-center justify-between">
               <span className="font-medium">Overall Status</span>
-              <Badge variant={allMet ? "default" : "secondary"} className="text-lg px-3 py-1">
+              <Badge className="text-lg px-3 py-1" variant={allMet ? "default" : "secondary"}>
                 {allMet ? "Loud and High ✓" : "Needs Attention"}
               </Badge>
             </div>
           </div>
 
           {/* Refresh Button */}
-          <Button onClick={fetchHealth} variant="outline" className="w-full" size="sm">
+          <Button className="w-full" size="sm" variant="outline" onClick={fetchHealth}>
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh Status
           </Button>

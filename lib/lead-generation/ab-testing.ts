@@ -3,9 +3,10 @@
  * Test variations of landing pages, emails, and campaigns
  */
 
-import { logger } from '@/lib/logging/structured-logger';
 import { createClient } from '@supabase/supabase-js';
+
 import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 export interface ABTest {
   id: string;
@@ -240,12 +241,12 @@ class ABTestingService {
       cumulative += trafficSplit[i] || 0;
       if (random < cumulative) {
         const variation = variations[i];
-        if (variation) return variation;
+        if (variation) {return variation;}
       }
     }
 
     const firstVariation = variations[0];
-    if (!firstVariation) throw new Error('No variations available');
+    if (!firstVariation) {throw new Error('No variations available');}
     return firstVariation;
   }
 
@@ -268,7 +269,7 @@ class ABTestingService {
   private determineWinner(
     results: Array<{ variationId: string; conversionRate: number }>
   ): string | undefined {
-    if (results.length < 2) return undefined;
+    if (results.length < 2) {return undefined;}
 
     const sorted = [...results].sort((a, b) => b.conversionRate - a.conversionRate);
     const winner = sorted[0];
@@ -281,7 +282,7 @@ class ABTestingService {
   private calculateSignificance(
     results: Array<{ visitors: number; conversions: number }>
   ): 'high' | 'medium' | 'low' {
-    if (results.length < 2) return 'low';
+    if (results.length < 2) {return 'low';}
 
     // Simple chi-square test approximation
     const totalVisitors = results.reduce((sum, r) => sum + r.visitors, 0);
@@ -313,7 +314,7 @@ class ABTestingService {
     const totalVisitors = results.reduce((sum, r) => sum + r.visitors, 0);
     const totalConversions = results.reduce((sum, r) => sum + r.conversions, 0);
 
-    if (totalVisitors === 0) return 0;
+    if (totalVisitors === 0) {return 0;}
 
     // Base confidence on sample size
     const baseConfidence = Math.min((totalVisitors / 1000) * 100, 95);

@@ -3,9 +3,10 @@
  * Sync leads and deals with external CRM systems
  */
 
-import { logger } from '@/lib/logging/structured-logger';
 import { createClient } from '@supabase/supabase-js';
+
 import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 import { withCircuitBreaker } from '@/lib/resilience/circuit-breaker';
 
 export interface CRMConfig {
@@ -264,7 +265,17 @@ class CRMIntegrationService {
   /**
    * Convert lead to CRM format
    */
-  private convertToCRMFormat(lead: any): CRMLead {
+  interface LeadRecord {
+    email?: string;
+    first_name?: string;
+    last_name?: string;
+    company?: string;
+    phone?: string;
+    source?: string;
+    score?: number;
+    status?: string;
+  }
+  private convertToCRMFormat(lead: LeadRecord): CRMLead {
     return {
       email: lead.email,
       firstName: lead.first_name,
@@ -280,7 +291,7 @@ class CRMIntegrationService {
   /**
    * Get lead
    */
-  private async getLead(leadId: string, tenantId?: string): Promise<any> {
+  private async getLead(leadId: string, tenantId?: string): Promise<LeadRecord | null> {
     let query = this.supabase.from('leads').select('*').eq('id', leadId);
 
     if (tenantId) {
@@ -288,7 +299,7 @@ class CRMIntegrationService {
     }
 
     const { data, error } = await query.single();
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   }
 

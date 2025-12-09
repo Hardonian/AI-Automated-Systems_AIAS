@@ -1,10 +1,11 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { StaggerList, StaggerItem } from "@/components/motion/stagger-list";
-import FadeIn from "@/components/motion/fade-in";
-import { Play, Star, Quote } from "lucide-react";
 import { motion } from "framer-motion";
+import { Play, Star, Quote } from "lucide-react";
+
+import FadeIn from "@/components/motion/fade-in";
+import { StaggerList, StaggerItem } from "@/components/motion/stagger-list";
+import { Card, CardContent } from "@/components/ui/card";
 import type { TestimonialSection } from "@/lib/content/schemas";
 
 interface ContentDrivenTestimonialsProps {
@@ -19,9 +20,9 @@ export function ContentDrivenTestimonials({ content }: ContentDrivenTestimonials
       <FadeIn>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
           {...({ className: "text-center mb-16 relative z-10" } as any)}
         >
           <div className="inline-block mb-4">
@@ -48,18 +49,18 @@ export function ContentDrivenTestimonials({ content }: ContentDrivenTestimonials
             <StaggerItem key={`${testimonial.author}-${index}`}>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
                 whileHover={{ y: -8 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 {...({ className: "h-full" } as any)}
               >
                 <Card className="h-full relative overflow-hidden card-hover border-2">
                   {testimonial.type === "consultancy" && (
                     <motion.div
                       initial={{ opacity: 0, scale: 0.9 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
+                      whileInView={{ opacity: 1, scale: 1 }}
                       {...({ className: "absolute top-4 right-4 z-10" } as any)}
                     >
                       <span className="px-3 py-1.5 text-xs font-semibold bg-gradient-to-r from-primary to-accent text-white rounded-full shadow-lg">

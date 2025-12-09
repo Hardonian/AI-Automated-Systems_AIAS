@@ -30,7 +30,7 @@ export const GET = createGETHandler(
       let oauthUrl: string;
 
       switch (provider) {
-        case "shopify":
+        case "shopify": {
           const shop = request.nextUrl.searchParams.get("shop");
           if (!shop) {
             return NextResponse.json(
@@ -40,6 +40,7 @@ export const GET = createGETHandler(
           }
           oauthUrl = `https://${shop}.myshopify.com/admin/oauth/authorize?client_id=${process.env.SHOPIFY_CLIENT_ID}&scope=read_orders,write_orders&redirect_uri=${encodeURIComponent(callbackUrl)}`;
           break;
+        }
 
         case "wave":
           oauthUrl = `https://api.waveapps.com/oauth2/authorize/?client_id=${process.env.WAVE_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(callbackUrl)}&scope=accounting:read,accounting:write`;

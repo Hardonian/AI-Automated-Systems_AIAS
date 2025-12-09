@@ -1,12 +1,13 @@
 "use client";
 
-import * as React from "react";
+import { motion } from "framer-motion";
 import { AlertCircle, RefreshCw } from "lucide-react";
-import { cn } from "@/lib/utils";
+import * as React from "react";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { motion } from "framer-motion";
 import { motionVariants } from "@/lib/style/motion";
+import { cn } from "@/lib/utils";
 
 interface ErrorStateProps {
   title?: string;
@@ -25,22 +26,22 @@ export function ErrorState({
 }: ErrorStateProps) {
   return (
     <motion.div
-      variants={motionVariants.fadeIn}
-      initial="hidden"
       animate="visible"
-      {...({ className: className } as any)}
+      initial="hidden"
+      variants={motionVariants.fadeIn}
+      {...({ className } as any)}
     >
       <Card 
+        aria-label={ariaLabel || title}
+        aria-live="assertive"
         className={cn("border-destructive")}
         role="alert"
-        aria-live="assertive"
-        aria-label={ariaLabel || title}
       >
         <CardHeader>
           <div className="flex items-center gap-3">
             <AlertCircle 
-              className="h-5 w-5 text-destructive flex-shrink-0" 
-              aria-hidden="true"
+              aria-hidden="true" 
+              className="h-5 w-5 text-destructive flex-shrink-0"
             />
             <CardTitle className="text-destructive">{title}</CardTitle>
           </div>
@@ -49,12 +50,12 @@ export function ErrorState({
         {onRetry && (
           <CardContent>
             <Button 
-              onClick={onRetry} 
-              variant="outline" 
-              size="md"
-              aria-label="Retry loading content"
+              aria-label="Retry loading content" 
+              size="md" 
+              variant="outline"
+              onClick={onRetry}
             >
-              <RefreshCw className="h-4 w-4 mr-2" aria-hidden="true" />
+              <RefreshCw aria-hidden="true" className="h-4 w-4 mr-2" />
               Try Again
             </Button>
           </CardContent>

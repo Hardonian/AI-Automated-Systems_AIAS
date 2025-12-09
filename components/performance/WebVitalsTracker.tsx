@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+
 import { initWebVitalsTracking } from "@/lib/performance/vitals";
 
 /**

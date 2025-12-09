@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useState, MouseEvent, ReactNode } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useRef, useState, MouseEvent, ReactNode } from "react";
+
 import { cn } from "@/lib/utils";
 
 interface SpotlightCardProps {
@@ -33,11 +34,11 @@ export function SpotlightCard({
   });
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
+    if (!cardRef.current) {return;}
 
     const rect = cardRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
+    const {width} = rect;
+    const {height} = rect;
     const mouseXRelative = (e.clientX - rect.left) / width;
     const mouseYRelative = (e.clientY - rect.top) / height;
 
@@ -63,14 +64,14 @@ export function SpotlightCard({
   return (
     <motion.div
       ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={handleMouseLeave}
       style={{
         rotateX: isHovered ? rotateX : 0,
         rotateY: isHovered ? rotateY : 0,
         transformStyle: "preserve-3d",
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
       {...({ className: cn(
         "relative group rounded-2xl p-6 transition-all duration-300",
         "glass-morphism",

@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { supabase } from "@/src/integrations/supabase/client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Activity, Radio } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { supabase } from "@/src/integrations/supabase/client";
 
 /**
  * Realtime Dashboard Component
@@ -96,12 +97,12 @@ export function RealtimeDashboard() {
           <Activity className="w-5 h-5" />
           Live Activity Feed
           {isConnected ? (
-            <Badge variant="default" className="ml-auto">
+            <Badge className="ml-auto" variant="default">
               <Radio className="w-3 h-3 mr-1 animate-pulse" />
               Live
             </Badge>
           ) : (
-            <Badge variant="secondary" className="ml-auto">
+            <Badge className="ml-auto" variant="secondary">
               Offline
             </Badge>
           )}
@@ -138,7 +139,7 @@ export function RealtimeDashboard() {
                     {new Date(activity.created_at).toLocaleTimeString()}
                   </p>
                   {idx === 0 && isConnected && (
-                    <Badge variant="outline" className="mt-1 text-xs">
+                    <Badge className="mt-1 text-xs" variant="outline">
                       New
                     </Badge>
                   )}

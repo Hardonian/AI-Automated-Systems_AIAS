@@ -44,7 +44,7 @@ export default function InsightsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadInsights();
+    void loadInsights();
   }, []);
 
   async function loadInsights() {

@@ -1,8 +1,9 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ExecutionResult {
   id: string;
@@ -51,10 +52,10 @@ export function ExecutionResults({ execution, loading }: ExecutionResultsProps) 
         <div className="flex items-center justify-between">
           <CardTitle>Execution Results</CardTitle>
           <Badge
+            className="flex items-center gap-1"
             variant={
               isSuccess ? "default" : isFailed ? "destructive" : "secondary"
             }
-            className="flex items-center gap-1"
           >
             {isSuccess && <CheckCircle2 className="h-3 w-3" />}
             {isFailed && <XCircle className="h-3 w-3" />}

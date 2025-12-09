@@ -3,9 +3,10 @@
  * Track and optimize marketing and acquisition costs
  */
 
-import { logger } from '@/lib/logging/structured-logger';
 import { createClient } from '@supabase/supabase-js';
+
 import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 export interface CostEntry {
   source: string;

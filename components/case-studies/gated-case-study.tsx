@@ -1,10 +1,11 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Lock, ArrowRight } from "lucide-react";
+import Link from "next/link";
+
 import { PlanFeatureGate } from "@/components/monetization/plan-feature-gate";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { PlanTier } from "@/config/plans";
 
 interface CaseStudy {
@@ -74,7 +75,7 @@ export function GatedCaseStudy({ study, userPlan, showFull = false }: GatedCaseS
                     Read full case study with detailed solution and metrics
                   </span>
                 </div>
-                <Button size="sm" variant="outline" asChild>
+                <Button asChild size="sm" variant="outline">
                   <Link href="/pricing">
                     Upgrade to Read
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -139,10 +140,10 @@ export function GatedCaseStudy({ study, userPlan, showFull = false }: GatedCaseS
   if (showFull || isPaid) {
     return (
       <PlanFeatureGate
-        requiredPlan="starter"
         currentPlan={userPlan}
-        featureName="Full Case Study"
         featureDescription="Read complete case studies with detailed solutions, metrics, and testimonials"
+        featureName="Full Case Study"
+        requiredPlan="starter"
         showPreview={false}
       >
         {fullContent}

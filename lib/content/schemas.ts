@@ -10,7 +10,7 @@ export const ctaSchema = z.object({
   href: z.string().refine(
     (val) => {
       // Allow absolute URLs, paths starting with /, or hash links starting with #
-      if (val.startsWith("/") || val.startsWith("#")) return true;
+      if (val.startsWith("/") || val.startsWith("#")) {return true;}
       try {
         new URL(val);
         return true;

@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Check, X } from "lucide-react";
+import React from "react";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const features = [
   {
@@ -63,7 +64,7 @@ function FeatureValue({ value }: { value: string | boolean | undefined }) {
     return <X className="h-5 w-5 text-muted-foreground" />;
   }
   if (typeof value === "string" && value.includes("Coming Soon")) {
-    return <Badge variant="secondary" className="text-xs">Coming Soon</Badge>;
+    return <Badge className="text-xs" variant="secondary">Coming Soon</Badge>;
   }
   return <span className="text-sm font-medium">{value}</span>;
 }
@@ -92,7 +93,7 @@ export function FeatureComparison() {
               {features.map((category, categoryIdx) => (
                 <React.Fragment key={categoryIdx}>
                   <tr className="bg-muted/50">
-                    <td colSpan={4} className="p-3 font-semibold text-sm">
+                    <td className="p-3 font-semibold text-sm" colSpan={4}>
                       {category.category}
                     </td>
                   </tr>

@@ -3,9 +3,9 @@
  * Provides resilient OpenAI API calls with automatic retry and fallback
  */
 
-import { withCircuitBreaker } from '@/lib/resilience/circuit-breaker';
-import { logger } from '@/lib/logging/structured-logger';
 import { NetworkError } from '@/lib/errors';
+import { logger } from '@/lib/logging/structured-logger';
+import { withCircuitBreaker } from '@/lib/resilience/circuit-breaker';
 
 export interface OpenAIRequest {
   model?: string;

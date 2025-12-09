@@ -20,9 +20,9 @@
  */
 function getRuntimeEnv(): 'vercel' | 'github' | 'local' | 'unknown' {
   if (typeof process !== 'undefined') {
-    if (process.env.VERCEL) return 'vercel';
-    if (process.env.GITHUB_ACTIONS) return 'github';
-    if (process.env.NODE_ENV === 'development') return 'local';
+    if (process.env.VERCEL) {return 'vercel';}
+    if (process.env.GITHUB_ACTIONS) {return 'github';}
+    if (process.env.NODE_ENV === 'development') {return 'local';}
   }
   return 'unknown';
 }
@@ -240,8 +240,8 @@ export function validateEnv(): { valid: boolean; errors: string[] } {
     if (!env.database.url) {
       errors.push('DATABASE_URL is required');
     }
-  } catch (error: any) {
-    errors.push(error.message);
+  } catch (error: unknown) {
+    errors.push(error instanceof Error ? error.message : String(error));
   }
   
   return {

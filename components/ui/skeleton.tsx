@@ -1,8 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+
 import { motionTransitions, prefersReducedMotion } from "@/lib/style/motion";
+import { cn } from "@/lib/utils";
 
 function Skeleton({
   className,
@@ -24,17 +25,17 @@ function Skeleton({
   
   return (
     <motion.div
-      initial={shouldAnimate ? { opacity: 0 } : { opacity: 1 }}
       animate={{ opacity: 1 }}
-      transition={shouldAnimate ? motionTransitions.standard : { duration: 0.01 }}
+      aria-hidden="true"
       className={cn(
         baseClasses,
         variantClasses[variant],
         shouldAnimate && "shimmer", // Add shimmer effect if motion is enabled
         className
       )}
-      aria-hidden="true"
+      initial={shouldAnimate ? { opacity: 0 } : { opacity: 1 }}
       role="presentation"
+      transition={shouldAnimate ? motionTransitions.standard : { duration: 0.01 }}
       {...(props as any)}
     />
   );

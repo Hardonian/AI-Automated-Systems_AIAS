@@ -3,9 +3,10 @@
  * Comprehensive ROI analysis and revenue attribution
  */
 
-import { logger } from '@/lib/logging/structured-logger';
 import { createClient } from '@supabase/supabase-js';
+
 import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 export interface ROIMetrics {
   totalRevenue: number;
@@ -160,7 +161,7 @@ class ROITrackingService {
     // Calculate metrics for each source
     for (const source of Object.keys(attributionMap)) {
       const attribution = attributionMap[source];
-      if (!attribution) continue;
+      if (!attribution) {continue;}
       const sourceCosts = costs?.filter((c: { source: string }) => c.source === source) || [];
       const sourceCost = sourceCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
 

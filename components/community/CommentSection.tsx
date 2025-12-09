@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
+
 import { hapticTap } from "@/components/gamification/Haptics";
+import { supabase } from "@/lib/supabase/client";
 
 interface Comment {
   id: number;
@@ -35,20 +36,20 @@ export default function CommentSection({ postId }: { postId: number }) {
       .select("*, profiles(display_name, avatar_url)")
       .eq("post_id", postId)
       .order("created_at", { ascending: true });
-    if (data) setComments(data);
+    if (data) {setComments(data);}
   }
 
   async function addComment(parentId?: number) {
     hapticTap();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user || !newComment.trim()) return;
+    if (!user || !newComment.trim()) {return;}
     await supabase.from("comments").insert({ post_id: postId, user_id: user.id, body: newComment, parent_id: parentId } as Record<string, unknown>);
     setNewComment("");
     setReplyingTo(null);
   }
 
   async function addReply() {
-    if (!replyingTo || !replyText.trim()) return;
+    if (!replyingTo || !replyText.trim()) {return;}
     await addComment(replyingTo);
     setReplyText("");
     setReplyingTo(null);
@@ -57,7 +58,7 @@ export default function CommentSection({ postId }: { postId: number }) {
   const topLevelComments = comments.filter(c => !c.parent_id);
   const repliesByParent = comments.reduce((acc, c) => {
     if (c.parent_id) {
-      if (!acc[c.parent_id]) acc[c.parent_id] = [];
+      if (!acc[c.parent_id]) {acc[c.parent_id] = [];}
       const parentId = c.parent_id;
       if (acc[parentId]) {
         acc[parentId].push(c);
@@ -72,13 +73,13 @@ export default function CommentSection({ postId }: { postId: number }) {
       
       <div className="flex gap-2">
         <input
+          className="flex-1 rounded-xl border border-border p-2 text-sm"
+          placeholder="Add a comment..."
           value={newComment}
           onChange={e => setNewComment(e.target.value)}
-          placeholder="Add a comment..."
-          className="flex-1 rounded-xl border border-border p-2 text-sm"
           onKeyDown={e => e.key === "Enter" && !e.shiftKey && addComment()}
         />
-        <button onClick={() => addComment()} className="h-10 px-4 rounded-xl bg-primary text-primary-fg text-sm">Post</button>
+        <button className="h-10 px-4 rounded-xl bg-primary text-primary-fg text-sm" onClick={() => addComment()}>Post</button>
       </div>
 
       <div className="space-y-4">
@@ -92,21 +93,21 @@ export default function CommentSection({ postId }: { postId: number }) {
                 <div className="text-sm font-semibold">{comment.profiles?.display_name || "Anonymous"}</div>
                 <div className="text-xs text-muted-foreground">{new Date(comment.created_at).toLocaleDateString()}</div>
               </div>
-              <button onClick={() => setReplyingTo(comment.id)} className="text-xs text-muted-foreground hover:text-foreground">Reply</button>
+              <button className="text-xs text-muted-foreground hover:text-foreground" onClick={() => setReplyingTo(comment.id)}>Reply</button>
             </div>
             <div className="text-sm mb-2">{comment.body}</div>
             
             {replyingTo === comment.id && (
               <div className="flex gap-2 mt-2">
                 <input
+                  className="flex-1 rounded-lg border border-border p-2 text-sm"
+                  placeholder="Write a reply..."
                   value={replyText}
                   onChange={e => setReplyText(e.target.value)}
-                  placeholder="Write a reply..."
-                  className="flex-1 rounded-lg border border-border p-2 text-sm"
                   onKeyDown={e => e.key === "Enter" && !e.shiftKey && addReply()}
                 />
-                <button onClick={addReply} className="h-8 px-3 rounded-lg bg-secondary text-sm">Reply</button>
-                <button onClick={() => { setReplyingTo(null); setReplyText(""); }} className="h-8 px-3 rounded-lg bg-muted text-sm">Cancel</button>
+                <button className="h-8 px-3 rounded-lg bg-secondary text-sm" onClick={addReply}>Reply</button>
+                <button className="h-8 px-3 rounded-lg bg-muted text-sm" onClick={() => { setReplyingTo(null); setReplyText(""); }}>Cancel</button>
               </div>
             )}
 

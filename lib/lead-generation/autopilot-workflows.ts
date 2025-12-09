@@ -3,13 +3,15 @@
  * Automated workflows for lead generation and nurturing
  */
 
-import { logger } from '@/lib/logging/structured-logger';
 import { createClient } from '@supabase/supabase-js';
-import { env } from '@/lib/env';
-import { leadScoringService } from './lead-scoring';
-import { leadNurturingService } from './lead-nurturing';
+
 import { crmIntegrationService } from './crm-integration';
+import { leadNurturingService } from './lead-nurturing';
+import { leadScoringService } from './lead-scoring';
+
 import { emailService } from '@/lib/email/email-service';
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 export interface AutopilotWorkflow {
   id: string;
@@ -146,7 +148,13 @@ class AutopilotWorkflowService {
     }
 
     // Get lead if leadId provided
-    let lead: any = null;
+    interface Lead {
+      id: string;
+      email?: string;
+      name?: string;
+      company?: string;
+    }
+    let lead: Lead | null = null;
     if (leadId) {
       const { data } = await this.supabase
         .from('leads')
@@ -246,7 +254,7 @@ class AutopilotWorkflowService {
 
     await crmIntegrationService.syncLeadToCRM(
       leadId,
-      { provider: provider as any, apiKey, apiUrl },
+      { provider: provider as 'salesforce' | 'hubspot' | 'pipedrive' | 'custom', apiKey, apiUrl },
       tenantId
     );
   }
@@ -357,7 +365,7 @@ class AutopilotWorkflowService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data.id;
   }
 
@@ -379,7 +387,7 @@ class AutopilotWorkflowService {
     }
 
     const { error } = await query;
-    if (error) throw error;
+    if (error) {throw error;}
   }
 }
 

@@ -1,6 +1,7 @@
 "use client";
-import { getAffiliateLink, trackAffiliateClick } from "@/lib/monetization/affiliate";
 import Link from "next/link";
+
+import { getAffiliateLink, trackAffiliateClick } from "@/lib/monetization/affiliate";
 
 interface AffiliateLinkProps {
   product: string;
@@ -23,10 +24,10 @@ export function AffiliateLink({ product, children, className, showDisclosure = t
   return (
     <>
       <Link
-        href={affiliate.url}
         className={`${className || ""} affiliate-link`}
         data-affiliate-id={affiliate.id}
         data-product={affiliate.product}
+        href={affiliate.url}
         rel="sponsored nofollow"
         target="_blank"
         onClick={handleClick}

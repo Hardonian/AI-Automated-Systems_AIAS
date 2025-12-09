@@ -1,8 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
+
+import { hapticTap } from "./Haptics";
+
 import { logger } from "@/lib/logging/structured-logger";
 import { supabase } from "@/lib/supabase/client";
-import { hapticTap } from "./Haptics";
 
 export async function requestPushPermission() {
   if (!("Notification" in window) || !("serviceWorker" in navigator)) {
@@ -19,10 +21,10 @@ export async function requestPushPermission() {
 
 export async function subscribeToPush() {
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return false;
+  if (!user) {return false;}
   
   const permission = await requestPushPermission();
-  if (!permission) return false;
+  if (!permission) {return false;}
   
   try {
     const registration = await navigator.serviceWorker.ready;
@@ -72,7 +74,7 @@ export default function PushNotificationButton() {
 
   async function checkSubscription() {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {return;}
     
     const { data } = await supabase
       .from("push_subscriptions")
@@ -97,10 +99,10 @@ export default function PushNotificationButton() {
 
   return (
     <button
-      onClick={handleSubscribe}
       className={`h-10 px-4 rounded-xl text-sm font-medium ${
         subscribed ? "bg-secondary" : "bg-primary text-primary-fg"
       }`}
+      onClick={handleSubscribe}
     >
       {subscribed ? "🔔 Notifications On" : "🔕 Enable Notifications"}
     </button>

@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
-import { logger } from "@/lib/logging/structured-logger";
 import { loadStripe } from "@stripe/stripe-js";
-import { supabase } from "@/lib/supabase/client";
+import { useState } from "react";
+
 import { hapticTap } from "@/components/gamification/Haptics";
+import { logger } from "@/lib/logging/structured-logger";
+import { supabase } from "@/lib/supabase/client";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -82,7 +83,7 @@ export default function SubscriptionPlans() {
         component: "SubscriptionPlans",
         action: "handleSubscribe",
       });
-      alert("Failed to start checkout: " + error.message);
+      alert(`Failed to start checkout: ${  error.message}`);
     } finally {
       setLoading(null);
     }
@@ -113,9 +114,9 @@ export default function SubscriptionPlans() {
           </ul>
 
           <button
-            onClick={() => handleSubscribe(tier)}
-            disabled={loading === tier.id}
             className="w-full h-10 rounded-xl bg-primary text-primary-fg font-medium disabled:opacity-50"
+            disabled={loading === tier.id}
+            onClick={() => handleSubscribe(tier)}
           >
             {loading === tier.id ? "Processing..." : "Subscribe"}
           </button>

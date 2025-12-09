@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 export function PWARegistration() {
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined") {return;}
 
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker

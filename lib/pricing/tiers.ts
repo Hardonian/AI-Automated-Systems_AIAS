@@ -230,7 +230,7 @@ export function isFeatureAvailable(featureId: string, tier: SubscriptionTier): b
     .flatMap(t => t.features)
     .find(f => f.id === featureId);
   
-  if (!feature) return false;
+  if (!feature) {return false;}
   return feature.availableIn.includes(tier);
 }
 
@@ -242,7 +242,7 @@ export function getFeatureLimit(featureId: string, tier: SubscriptionTier): numb
     .flatMap(t => t.features)
     .find(f => f.id === featureId);
   
-  if (!feature || !feature.availableIn.includes(tier)) return null;
+  if (!feature || !feature.availableIn.includes(tier)) {return null;}
   return feature.limit ?? null;
 }
 

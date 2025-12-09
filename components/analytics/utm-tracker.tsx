@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { logger } from "@/lib/logging/structured-logger";
+
 import { extractUTMParams, extractReferralCode, storeUTMParams } from "@/lib/analytics/utm-tracking";
+import { logger } from "@/lib/logging/structured-logger";
 
 /**
  * UTM Tracker Component
@@ -10,7 +11,7 @@ import { extractUTMParams, extractReferralCode, storeUTMParams } from "@/lib/ana
  */
 export function UTMTracker() {
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined") {return;}
 
     // Extract UTM parameters from current URL
     const utmParams = extractUTMParams(window.location.href);

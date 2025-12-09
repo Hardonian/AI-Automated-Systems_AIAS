@@ -13,7 +13,16 @@ export default function ResultsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const workflowId = searchParams.get("workflow");
-  const [execution, setExecution] = useState<any>(null);
+  interface ExecutionResult {
+    id: string;
+    workflowId: string;
+    status: "pending" | "running" | "completed" | "failed";
+    startedAt: string;
+    completedAt?: string;
+    error?: string;
+    results?: Record<string, unknown>;
+  }
+  const [execution, setExecution] = useState<ExecutionResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [executed, setExecuted] = useState(false);
 

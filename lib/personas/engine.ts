@@ -321,7 +321,7 @@ export class PersonaEngine {
    */
   adaptReportDepth(personaType: PersonaType): 'summary' | 'standard' | 'detailed' {
     const persona = this.personas.get(personaType);
-    if (!persona) return 'standard';
+    if (!persona) {return 'standard';}
 
     switch (persona.characteristics.preferredDetailLevel) {
       case 'high-level':
@@ -338,7 +338,7 @@ export class PersonaEngine {
    */
   getAutomationSuggestions(personaType: PersonaType): string[] {
     const persona = this.personas.get(personaType);
-    if (!persona) return [];
+    if (!persona) {return [];}
 
     const suggestions: string[] = [];
 

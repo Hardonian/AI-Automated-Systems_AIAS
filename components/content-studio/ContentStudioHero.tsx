@@ -1,14 +1,16 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { ImageUpload } from "./ImageUpload";
-import { RichTextEditor } from "./RichTextEditor";
+
 import { AIAssistant } from "./AIAssistant";
 import { DraggableList } from "./DraggableList";
+import { ImageUpload } from "./ImageUpload";
+import { RichTextEditor } from "./RichTextEditor";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import type { Hero } from "@/lib/content/schemas";
 
 interface ContentStudioHeroProps {
@@ -40,11 +42,11 @@ export function ContentStudioHero({
             onChange={(e) => updateField("title", e.target.value)}
           />
           <AIAssistant
-            type="hero-title"
-            currentContent={content.title}
             context="AIAS platform hero section"
-            onGenerate={(generated) => updateField("title", generated)}
+            currentContent={content.title}
             token={token}
+            type="hero-title"
+            onGenerate={(generated) => updateField("title", generated)}
           />
         </div>
 
@@ -62,17 +64,17 @@ export function ContentStudioHero({
         <div className="space-y-2">
           <Label htmlFor="hero-description">Description (optional)</Label>
           <RichTextEditor
-            value={content.description || ""}
-            onChange={(value) => updateField("description", value || undefined)}
             placeholder="Enter hero description..."
             rows={3}
+            value={content.description || ""}
+            onChange={(value) => updateField("description", value || undefined)}
           />
           <AIAssistant
-            type="hero-description"
-            currentContent={content.description}
             context="AIAS platform hero section"
-            onGenerate={(generated) => updateField("description", generated)}
+            currentContent={content.description}
             token={token}
+            type="hero-description"
+            onGenerate={(generated) => updateField("description", generated)}
           />
         </div>
 
@@ -88,10 +90,10 @@ export function ContentStudioHero({
         </div>
 
         <ImageUpload
-          value={content.imageUrl}
-          onChange={(url) => updateField("imageUrl", url || undefined)}
           label="Hero Image (optional)"
           token={token}
+          value={content.imageUrl}
+          onChange={(url) => updateField("imageUrl", url || undefined)}
         />
 
         <div className="grid grid-cols-2 gap-4">
@@ -161,11 +163,6 @@ export function ContentStudioHero({
             <Label>Social Proof Items</Label>
             <DraggableList
               items={content.socialProof}
-              onReorder={(items) => updateField("socialProof", items)}
-              onRemove={(index) => {
-                const newItems = content.socialProof!.filter((_, i) => i !== index);
-                updateField("socialProof", newItems.length > 0 ? newItems : undefined);
-              }}
               renderItem={(item, index) => (
                 <div className="space-y-2">
                   <Input
@@ -188,11 +185,16 @@ export function ContentStudioHero({
                   />
                 </div>
               )}
+              onRemove={(index) => {
+                const newItems = content.socialProof!.filter((_, i) => i !== index);
+                updateField("socialProof", newItems.length > 0 ? newItems : undefined);
+              }}
+              onReorder={(items) => updateField("socialProof", items)}
             />
             <Button
+              size="sm"
               type="button"
               variant="outline"
-              size="sm"
               onClick={() => {
                 updateField("socialProof", [
                   ...(content.socialProof || []),

@@ -36,9 +36,9 @@ export function OrganizationSchema({
 
   return (
     <Script
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="organization-schema"
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
     />
   );
 }
@@ -85,9 +85,9 @@ export function SoftwareApplicationSchema({
 
   return (
     <Script
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="software-application-schema"
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
     />
   );
 }
@@ -121,9 +121,9 @@ export function WebSiteSchema({
 
   return (
     <Script
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="website-schema"
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
     />
   );
 }
@@ -149,9 +149,9 @@ export function BreadcrumbSchema({ items }: BreadcrumbSchemaProps) {
 
   return (
     <Script
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="breadcrumb-schema"
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
     />
   );
 }
@@ -193,9 +193,9 @@ export function ServiceSchema({
 
   return (
     <Script
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="service-schema"
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
     />
   );
 }
@@ -223,9 +223,9 @@ export function FAQSchema({ faqs }: FAQSchemaProps) {
 
   return (
     <Script
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="faq-schema"
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
     />
   );
 }

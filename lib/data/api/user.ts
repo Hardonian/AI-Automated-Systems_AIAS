@@ -98,7 +98,7 @@ export async function updateUserProfile(
     id: profileData.id,
     email: profileData.email,
     name: profileData.name || profileData.full_name || '',
-    avatar_url: profileData.avatar_url,
+    avatar_url: profileData.avatar_url || undefined,
     created_at: profileData.created_at,
     updated_at: profileData.updated_at,
   };

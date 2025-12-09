@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
       url: urlData.publicUrl,
       fileName,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error("Upload error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: error.message || "Failed to upload file" },

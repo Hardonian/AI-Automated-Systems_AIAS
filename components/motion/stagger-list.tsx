@@ -11,8 +11,6 @@ export function StaggerList({ children, delay = 0, staggerDelay = 0.1 }: Stagger
   return (
     <motion.div
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-10% 0px" }}
       variants={{
         visible: {
           transition: {
@@ -21,6 +19,8 @@ export function StaggerList({ children, delay = 0, staggerDelay = 0.1 }: Stagger
           },
         },
       }}
+      viewport={{ once: true, margin: "-10% 0px" }}
+      whileInView="visible"
     >
       {children}
     </motion.div>

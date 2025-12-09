@@ -94,7 +94,7 @@ export function sanitizeHTML(html: string): string {
   }
 
   // Sanitize the body content
-  const body = doc.body;
+  const {body} = doc;
   const sanitizedDiv = document.createElement('div');
   
   for (const child of Array.from(body.childNodes)) {

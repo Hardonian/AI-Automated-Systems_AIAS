@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Menu } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -12,138 +13,138 @@ export function MobileNav() {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button 
-          variant="ghost" 
-          size="sm" 
+          aria-controls="mobile-navigation" 
+          aria-expanded={open} 
           aria-label="Open navigation menu"
-          aria-expanded={open}
-          aria-controls="mobile-navigation"
           className="min-h-[44px] min-w-[44px]"
+          size="sm"
+          variant="ghost"
         >
-          <Menu className="h-5 w-5" aria-hidden="true" />
+          <Menu aria-hidden="true" className="h-5 w-5" />
         </Button>
       </SheetTrigger>
       <SheetContent 
-        side="right" 
+        aria-label="Mobile navigation" 
         className="w-64"
-        aria-label="Mobile navigation"
         id="mobile-navigation"
+        side="right"
       >
         <nav 
+          aria-label="Mobile navigation menu"
           className="flex flex-col gap-4 mt-8"
           role="navigation"
-          aria-label="Mobile navigation menu"
         >
           <Link 
-            href="/services" 
-            onClick={() => setOpen(false)} 
-            className="text-lg font-medium hover:underline min-h-[44px] flex items-center"
-            aria-label="Navigate to Services"
+            aria-label="Navigate to Services" 
+            className="text-lg font-medium hover:underline min-h-[44px] flex items-center" 
+            href="/services"
+            onClick={() => setOpen(false)}
           >
             Services
           </Link>
           <Link 
-            href="/settler" 
-            onClick={() => setOpen(false)} 
-            className="text-lg font-medium hover:underline min-h-[44px] flex items-center"
-            aria-label="Navigate to Settler Payment Platform"
+            aria-label="Navigate to Settler Payment Platform" 
+            className="text-lg font-medium hover:underline min-h-[44px] flex items-center" 
+            href="/settler"
+            onClick={() => setOpen(false)}
           >
             Settler
           </Link>
           <Link 
-            href="/edge-ai" 
-            onClick={() => setOpen(false)} 
-            className="text-lg font-medium hover:underline min-h-[44px] flex items-center"
-            aria-label="Navigate to Edge AI Accelerator Studio"
+            aria-label="Navigate to Edge AI Accelerator Studio" 
+            className="text-lg font-medium hover:underline min-h-[44px] flex items-center" 
+            href="/edge-ai"
+            onClick={() => setOpen(false)}
           >
             Edge AI
           </Link>
           <Link 
-            href="/portfolio" 
-            onClick={() => setOpen(false)} 
-            className="text-lg font-medium hover:underline min-h-[44px] flex items-center"
-            aria-label="Navigate to Portfolio"
+            aria-label="Navigate to Portfolio" 
+            className="text-lg font-medium hover:underline min-h-[44px] flex items-center" 
+            href="/portfolio"
+            onClick={() => setOpen(false)}
           >
             Portfolio
           </Link>
           <Link 
-            href="/tasks" 
-            onClick={() => setOpen(false)} 
-            className="text-lg font-medium hover:underline min-h-[44px] flex items-center"
-            aria-label="Navigate to Our Builds"
+            aria-label="Navigate to Our Builds" 
+            className="text-lg font-medium hover:underline min-h-[44px] flex items-center" 
+            href="/tasks"
+            onClick={() => setOpen(false)}
           >
             Our Builds
           </Link>
           <Link 
-            href="/case-studies" 
-            onClick={() => setOpen(false)} 
-            className="text-lg font-medium hover:underline min-h-[44px] flex items-center"
-            aria-label="Navigate to Case Studies"
+            aria-label="Navigate to Case Studies" 
+            className="text-lg font-medium hover:underline min-h-[44px] flex items-center" 
+            href="/case-studies"
+            onClick={() => setOpen(false)}
           >
             Case Studies
           </Link>
           <Link 
-            href="/pricing" 
-            onClick={() => setOpen(false)} 
-            className="text-lg font-medium hover:underline min-h-[44px] flex items-center"
-            aria-label="Navigate to Platform Pricing"
+            aria-label="Navigate to Platform Pricing" 
+            className="text-lg font-medium hover:underline min-h-[44px] flex items-center" 
+            href="/pricing"
+            onClick={() => setOpen(false)}
           >
             Platform Pricing
           </Link>
           <Link 
-            href="/features" 
-            onClick={() => setOpen(false)} 
-            className="text-lg font-medium hover:underline min-h-[44px] flex items-center"
-            aria-label="Navigate to Features"
+            aria-label="Navigate to Features" 
+            className="text-lg font-medium hover:underline min-h-[44px] flex items-center" 
+            href="/features"
+            onClick={() => setOpen(false)}
           >
             Features
           </Link>
           <Link 
-            href="/systems-thinking" 
-            onClick={() => setOpen(false)} 
-            className="text-lg font-medium hover:underline text-primary min-h-[44px] flex items-center"
-            aria-label="Navigate to Systems Thinking"
+            aria-label="Navigate to Systems Thinking" 
+            className="text-lg font-medium hover:underline text-primary min-h-[44px] flex items-center" 
+            href="/systems-thinking"
+            onClick={() => setOpen(false)}
           >
             Systems Thinking
           </Link>
           <Link 
-            href="/blog" 
-            onClick={() => setOpen(false)} 
-            className="text-lg font-medium hover:underline min-h-[44px] flex items-center"
-            aria-label="Navigate to Blog"
+            aria-label="Navigate to Blog" 
+            className="text-lg font-medium hover:underline min-h-[44px] flex items-center" 
+            href="/blog"
+            onClick={() => setOpen(false)}
           >
             Blog
           </Link>
           <Link 
-            href="/about" 
-            onClick={() => setOpen(false)} 
-            className="text-lg font-medium hover:underline min-h-[44px] flex items-center"
-            aria-label="Navigate to About"
+            aria-label="Navigate to About" 
+            className="text-lg font-medium hover:underline min-h-[44px] flex items-center" 
+            href="/about"
+            onClick={() => setOpen(false)}
           >
             About
           </Link>
           <Link 
-            href="/demo" 
-            onClick={() => setOpen(false)} 
-            className="text-lg font-medium hover:underline min-h-[44px] flex items-center"
-            aria-label="Navigate to Demo"
+            aria-label="Navigate to Demo" 
+            className="text-lg font-medium hover:underline min-h-[44px] flex items-center" 
+            href="/demo"
+            onClick={() => setOpen(false)}
           >
             Demo
           </Link>
           <div className="pt-4 border-t space-y-3">
-            <Button className="w-full min-h-[48px] font-bold text-base shadow-lg" asChild>
+            <Button asChild className="w-full min-h-[48px] font-bold text-base shadow-lg">
               <Link 
-                href="/signup" 
+                aria-label="Start your 30-day free trial - no credit card required" 
+                href="/signup"
                 onClick={() => setOpen(false)}
-                aria-label="Start your 30-day free trial - no credit card required"
               >
                 Start Free Trial
               </Link>
             </Button>
-            <Button variant="outline" className="w-full min-h-[48px] font-semibold text-base" asChild>
+            <Button asChild className="w-full min-h-[48px] font-semibold text-base" variant="outline">
               <Link 
-                href="/demo" 
+                aria-label="Schedule a free strategy call" 
+                href="/demo"
                 onClick={() => setOpen(false)}
-                aria-label="Schedule a free strategy call"
               >
                 Schedule Call
               </Link>

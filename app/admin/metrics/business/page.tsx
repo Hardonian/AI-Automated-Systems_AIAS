@@ -56,8 +56,10 @@ export default function BusinessMetricsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchMetrics();
-    const interval = setInterval(fetchMetrics, 60000); // Refresh every minute
+    void fetchMetrics();
+    const interval = setInterval(() => {
+      void fetchMetrics();
+    }, 60000); // Refresh every minute
     return () => clearInterval(interval);
   }, []);
 

@@ -24,8 +24,10 @@ export default function ComplianceDashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchCompliance();
-    const interval = setInterval(fetchCompliance, 60000);
+    void fetchCompliance();
+    const interval = setInterval(() => {
+      void fetchCompliance();
+    }, 60000);
     return () => clearInterval(interval);
   }, []);
 

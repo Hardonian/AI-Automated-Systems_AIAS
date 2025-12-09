@@ -4,6 +4,7 @@
  */
 
 import { Insight, collectInsights } from "./insight-collector";
+
 import { logger } from "@/lib/logging/structured-logger";
 
 export interface ImprovementCandidate {

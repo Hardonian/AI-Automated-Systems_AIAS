@@ -32,7 +32,7 @@ export default function PLGFunnelDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchFunnel();
+    void fetchFunnel();
   }, []);
 
   async function fetchFunnel() {

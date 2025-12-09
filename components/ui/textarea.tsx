@@ -1,7 +1,8 @@
 "use client";
 
-import * as React from "react"
 import { motion } from "framer-motion";
+import * as React from "react"
+
 import { motionTransitions, prefersReducedMotion } from "@/lib/style/motion";
 import { cn } from "@/lib/utils"
 
@@ -29,6 +30,9 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         {...motionProps}
       >
         <textarea
+          ref={ref}
+          aria-describedby={error ? `${props.id || 'textarea'}-error` : undefined}
+          aria-invalid={error ? "true" : undefined}
           className={cn(
             "flex min-h-[80px] w-full rounded-xl border border-border bg-card px-4 py-3 text-sm ring-offset-background placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200",
             error && "border-destructive focus-visible:ring-destructive",
@@ -36,11 +40,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             focused && "shadow-md border-primary/50",
             className
           )}
-          ref={ref}
-          onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          aria-invalid={error ? "true" : undefined}
-          aria-describedby={error ? `${props.id || 'textarea'}-error` : undefined}
+          onFocus={() => setFocused(true)}
           {...props}
         />
       </motion.div>

@@ -116,7 +116,7 @@ Provide suggestions in a structured format with specific recommendations.`;
       success: true,
       suggestions,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error("SEO analysis error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: error.message || "Failed to analyze SEO" },

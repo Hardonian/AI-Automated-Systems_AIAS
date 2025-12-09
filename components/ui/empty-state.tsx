@@ -1,10 +1,11 @@
 "use client";
 
-import * as React from "react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import * as React from "react";
+
+import { Button } from "@/components/ui/button";
 import { motionVariants } from "@/lib/style/motion";
+import { cn } from "@/lib/utils";
 
 interface EmptyStateProps {
   icon?: React.ReactNode;
@@ -32,20 +33,20 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <motion.div
-      variants={motionVariants.fadeInUp}
-      initial="hidden"
       animate="visible"
+      initial="hidden"
+      variants={motionVariants.fadeInUp}
       {...({ className: cn(
         "flex flex-col items-center justify-center py-12 px-4 text-center",
         className
       )} as any)}
-      role="status"
       aria-live="polite"
+      role="status"
     >
       {icon && (
         <div 
-          className="mb-6 text-muted-foreground" 
-          aria-hidden="true"
+          aria-hidden="true" 
+          className="mb-6 text-muted-foreground"
         >
           {icon}
         </div>
@@ -59,18 +60,18 @@ export function EmptyState({
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
         {action && (
           <Button 
-            onClick={action.onClick} 
+            aria-label={action.label} 
             variant={action.variant || "default"}
-            aria-label={action.label}
+            onClick={action.onClick}
           >
             {action.label}
           </Button>
         )}
         {secondaryAction && (
           <Button 
-            onClick={secondaryAction.onClick} 
+            aria-label={secondaryAction.label} 
             variant="outline"
-            aria-label={secondaryAction.label}
+            onClick={secondaryAction.onClick}
           >
             {secondaryAction.label}
           </Button>

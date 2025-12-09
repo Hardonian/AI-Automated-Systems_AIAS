@@ -1,12 +1,13 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Sparkles } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sparkles } from "lucide-react";
-import { heroTemplates, featureTemplates } from "@/lib/content/templates";
 import type { AIASContent, SettlerContent } from "@/lib/content/schemas";
+import { heroTemplates, featureTemplates } from "@/lib/content/templates";
 
 interface ContentTemplatesProps {
   content: AIASContent | SettlerContent;

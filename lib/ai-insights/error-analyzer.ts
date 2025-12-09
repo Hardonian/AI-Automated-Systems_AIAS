@@ -4,6 +4,7 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
+
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logging/structured-logger";
 
@@ -312,7 +313,7 @@ function findRelatedErrors(message: string, allMessages: string[]): string[] {
   const related: string[] = [];
 
   allMessages.forEach((otherMessage) => {
-    if (otherMessage === message) return;
+    if (otherMessage === message) {return;}
 
     const otherWords = otherMessage.toLowerCase().split(/\s+/);
     const commonWords = messageWords.filter((word) => otherWords.includes(word));

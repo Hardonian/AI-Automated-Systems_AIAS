@@ -3,10 +3,10 @@
  * Handles email sending with multiple provider support
  */
 
-import { logger } from '@/lib/logging/structured-logger';
-import { env } from '@/lib/env';
 import { getTemplateById, replaceTemplateVariables } from '@/lib/email-templates';
 import { renderTemplate } from '@/lib/email-templates/template-engine';
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 export interface EmailOptions {
   to: string;

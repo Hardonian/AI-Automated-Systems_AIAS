@@ -1,15 +1,17 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
-import { logger } from "@/lib/logging/structured-logger";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { Check, ArrowRight, ArrowLeft, Sparkles, Zap, Target, Clock } from "lucide-react";
-import { conversionTracker } from "@/lib/analytics/conversion-tracking";
-import { track } from "@/lib/telemetry/track";
-import { trackWorkflowCreate, trackActivation } from "@/lib/analytics/funnel-tracking";
-import { SuccessCelebration } from "@/components/onboarding/success-celebration";
 import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
+
+import { SuccessCelebration } from "@/components/onboarding/success-celebration";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { conversionTracker } from "@/lib/analytics/conversion-tracking";
+import { trackWorkflowCreate, trackActivation } from "@/lib/analytics/funnel-tracking";
+import { logger } from "@/lib/logging/structured-logger";
+import { track } from "@/lib/telemetry/track";
+
 
 interface Step {
   id: string;
@@ -102,7 +104,7 @@ export function OnboardingWizard() {
 
   const goToNext = async () => {
     const step = steps[currentStep];
-    if (!step) return;
+    if (!step) {return;}
     const currentStepId = step.id;
     const stepStartTime = Date.now() - startTimeRef.current;
     
@@ -234,7 +236,7 @@ export function OnboardingWizard() {
           <span className="font-medium">Step {currentStep + 1} of {steps.length}</span>
           <span className="text-muted-foreground">{Math.round(progress)}% Complete</span>
         </div>
-        <Progress value={progress} className="h-2" />
+        <Progress className="h-2" value={progress} />
       </div>
 
       {/* Step Indicator */}
@@ -295,9 +297,9 @@ export function OnboardingWizard() {
       {currentStep < steps.length - 1 && (
         <div className="flex justify-between">
           <Button
+            disabled={currentStep === 0}
             variant="outline"
             onClick={goToPrevious}
-            disabled={currentStep === 0}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Previous
@@ -342,7 +344,7 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
           <div className="text-sm text-muted-foreground">Use pre-built templates</div>
         </div>
       </div>
-      <Button onClick={onNext} className="w-full" size="lg">
+      <Button className="w-full" size="lg" onClick={onNext}>
         Get Started - It's Free
         <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
@@ -385,7 +387,7 @@ function ChooseIntegrationStep({ onNext }: { onNext: () => void }) {
     try {
       // Get OAuth URL
       const response = await fetch(`/api/integrations/${provider}/oauth`);
-      if (!response.ok) throw new Error("Failed to initiate OAuth");
+      if (!response.ok) {throw new Error("Failed to initiate OAuth");}
 
       const data = await response.json();
       
@@ -424,8 +426,7 @@ function ChooseIntegrationStep({ onNext }: { onNext: () => void }) {
         {integrations.map((integration) => (
           <button
             key={integration.name}
-            onClick={() => handleIntegrationClick(integration.provider)}
-            disabled={connecting}
+            aria-label={`Connect ${integration.name}`}
             className={`p-4 border rounded-lg transition-colors text-left relative ${
               selectedIntegration === integration.provider
                 ? "border-primary bg-primary/10"
@@ -433,7 +434,8 @@ function ChooseIntegrationStep({ onNext }: { onNext: () => void }) {
             } ${connecting ? "opacity-50 cursor-not-allowed" : ""} ${
               integration.popular ? "ring-2 ring-primary/20" : ""
             }`}
-            aria-label={`Connect ${integration.name}`}
+            disabled={connecting}
+            onClick={() => handleIntegrationClick(integration.provider)}
           >
             {integration.popular && (
               <span className="absolute top-2 right-2 text-xs bg-primary text-primary-foreground px-2 py-0.5 rounded">
@@ -447,11 +449,11 @@ function ChooseIntegrationStep({ onNext }: { onNext: () => void }) {
         ))}
       </div>
       <div className="flex flex-col sm:flex-row gap-3">
-        <Button onClick={handleSkip} variant="outline" className="flex-1">
+        <Button className="flex-1" variant="outline" onClick={handleSkip}>
           Skip for Now
         </Button>
         <p className="text-sm text-muted-foreground text-center sm:text-left sm:flex-1 sm:flex sm:items-center">
-          Don't see your tool? <Link href="/integrations" className="text-primary hover:underline ml-1">Browse all</Link>
+          Don't see your tool? <Link className="text-primary hover:underline ml-1" href="/integrations">Browse all</Link>
         </p>
       </div>
     </div>
@@ -557,8 +559,6 @@ function CreateWorkflowStep({ onNext }: { onNext: () => void }) {
         {templates.map((template) => (
           <button
             key={template.id}
-            onClick={() => handleCreateWorkflow(template.id)}
-            disabled={creating}
             className={`w-full p-4 border rounded-lg text-left transition-colors ${
               selectedTemplate === template.id
                 ? "border-primary bg-primary/10"
@@ -566,6 +566,8 @@ function CreateWorkflowStep({ onNext }: { onNext: () => void }) {
             } ${creating ? "opacity-50 cursor-not-allowed" : ""} ${
               template.recommended ? "ring-2 ring-primary/20" : ""
             }`}
+            disabled={creating}
+            onClick={() => handleCreateWorkflow(template.id)}
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">
@@ -664,7 +666,7 @@ function TestWorkflowStep({ onNext }: { onNext: () => void }) {
 
       {testing && !testComplete && (
         <div className="p-6 bg-muted/50 rounded-lg text-center">
-          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
           <div className="font-semibold mb-2">Running your workflow...</div>
           <div className="text-sm text-muted-foreground">This is what automation looks like!</div>
         </div>
@@ -699,7 +701,7 @@ function TestWorkflowStep({ onNext }: { onNext: () => void }) {
       )}
 
       {!testComplete && (
-        <Button onClick={handleTest} className="w-full" size="lg" disabled={testing}>
+        <Button className="w-full" disabled={testing} size="lg" onClick={handleTest}>
           {testing ? "Testing..." : "Test Workflow Now"}
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
@@ -741,23 +743,23 @@ function CompleteStep() {
             <CardTitle>Resources</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-left">
-            <Link href="/help" className="block text-sm text-primary hover:underline">
+            <Link className="block text-sm text-primary hover:underline" href="/help">
               Help Center
             </Link>
-            <Link href="/case-studies" className="block text-sm text-primary hover:underline">
+            <Link className="block text-sm text-primary hover:underline" href="/case-studies">
               Case Studies
             </Link>
-            <Link href="/blog" className="block text-sm text-primary hover:underline">
+            <Link className="block text-sm text-primary hover:underline" href="/blog">
               Blog & Tutorials
             </Link>
           </CardContent>
         </Card>
       </div>
       <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-        <Button size="lg" asChild>
+        <Button asChild size="lg">
           <Link href="/dashboard">Go to Dashboard</Link>
         </Button>
-        <Button size="lg" variant="outline" asChild>
+        <Button asChild size="lg" variant="outline">
           <Link href="/templates">Browse Templates</Link>
         </Button>
       </div>

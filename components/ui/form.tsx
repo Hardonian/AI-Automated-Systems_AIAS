@@ -1,8 +1,8 @@
 "use client"
 
-import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
 import { Slot } from "@radix-ui/react-slot"
+import * as React from "react"
 import {
   Controller,
   ControllerProps,
@@ -12,8 +12,8 @@ import {
   useFormContext,
 } from "react-hook-form"
 
-import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
+import { cn } from "@/lib/utils"
 
 const Form = FormProvider
 
@@ -74,8 +74,8 @@ const FormDescription = React.forwardRef<
   return (
     <p
       ref={ref}
-      id={descriptionId}
       className={cn("text-sm text-muted-foreground mt-1", className)}
+      id={descriptionId}
       {...props}
     />
   )
@@ -105,10 +105,10 @@ const FormMessage = React.forwardRef<
   return (
     <p
       ref={ref}
-      id={fieldId}
-      className={cn("text-sm font-medium text-destructive mt-2", className)}
-      role="alert"
       aria-live="polite"
+      className={cn("text-sm font-medium text-destructive mt-2", className)}
+      id={fieldId}
+      role="alert"
       {...props}
     >
       {fieldError?.message as React.ReactNode}

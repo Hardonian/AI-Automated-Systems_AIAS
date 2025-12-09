@@ -14,10 +14,7 @@
     }
   },
   "functions": {
-    "app/**": {
-      "maxDuration": 30
-    },
-    "api/**": {
+    "app/api/**": {
       "maxDuration": 30
     }
   },

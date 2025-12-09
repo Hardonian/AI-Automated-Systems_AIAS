@@ -1,8 +1,9 @@
 "use client";
 
-import { UpgradePrompt } from "@/components/monetization/upgrade-prompt";
-import { WelcomeDashboard } from "@/components/dashboard/welcome-dashboard";
 import { useEffect, useState } from "react";
+
+import { WelcomeDashboard } from "@/components/dashboard/welcome-dashboard";
+import { UpgradePrompt } from "@/components/monetization/upgrade-prompt";
 import type { PlanTier } from "@/config/plans";
 
 interface UserPlanData {
@@ -79,11 +80,11 @@ export function DashboardUpgradeSection({
   if (userData.isFirstVisit && (userData.plan === "trial" || userData.plan === "free")) {
     return (
       <WelcomeDashboard
-        userPlan={userData.plan}
-        trialDaysRemaining={userData.trialDaysRemaining || undefined}
         hasCompletedPretest={userData.hasCompletedPretest}
         hasConnectedEmail={userData.hasConnectedEmail}
         hasCreatedWorkflow={userData.hasCreatedWorkflow}
+        trialDaysRemaining={userData.trialDaysRemaining || undefined}
+        userPlan={userData.plan}
       />
     );
   }

@@ -42,7 +42,7 @@ export async function GET() {
           status.status = "degraded";
         }
       }
-    } catch (error) {
+    } catch {
       const dbService = status.services.find(s => s.service === "Database");
       if (dbService) {
         dbService.status = "outage";

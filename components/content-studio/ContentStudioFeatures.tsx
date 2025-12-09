@@ -1,14 +1,16 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+
+import { AIAssistant } from "./AIAssistant";
 import { DraggableList } from "./DraggableList";
 import { RichTextEditor } from "./RichTextEditor";
-import { AIAssistant } from "./AIAssistant";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import type { FeatureSection } from "@/lib/content/schemas";
 
 interface ContentStudioFeaturesProps {
@@ -77,18 +79,18 @@ export function ContentStudioFeatures({
           <Label htmlFor="features-subtitle">Section Subtitle (optional)</Label>
           <Textarea
             id="features-subtitle"
+            rows={2}
             value={content.sectionSubtitle || ""}
             onChange={(e) =>
               updateField("sectionSubtitle", e.target.value || undefined)
             }
-            rows={2}
           />
         </div>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Label>Feature Items (drag to reorder)</Label>
-            <Button type="button" size="sm" onClick={addItem}>
+            <Button size="sm" type="button" onClick={addItem}>
               <Plus className="mr-2 h-4 w-4" />
               Add Feature
             </Button>
@@ -96,8 +98,6 @@ export function ContentStudioFeatures({
 
           <DraggableList
             items={content.items}
-            onReorder={(items) => updateField("items", items)}
-            onRemove={removeItem}
             renderItem={(item, index) => (
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -107,27 +107,27 @@ export function ContentStudioFeatures({
                     onChange={(e) => updateItem(index, "title", e.target.value)}
                   />
                   <AIAssistant
-                    type="hero-title"
-                    currentContent={item.title}
                     context="Feature title"
-                    onGenerate={(generated) => updateItem(index, "title", generated)}
+                    currentContent={item.title}
                     token={token}
+                    type="hero-title"
+                    onGenerate={(generated) => updateItem(index, "title", generated)}
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label>Description</Label>
                   <RichTextEditor
+                    rows={3}
                     value={item.description}
                     onChange={(value) => updateItem(index, "description", value)}
-                    rows={3}
                   />
                   <AIAssistant
-                    type="feature-description"
-                    currentContent={item.description}
                     context="Feature description"
-                    onGenerate={(generated) => updateItem(index, "description", generated)}
+                    currentContent={item.description}
                     token={token}
+                    type="feature-description"
+                    onGenerate={(generated) => updateItem(index, "description", generated)}
                   />
                 </div>
 
@@ -135,17 +135,18 @@ export function ContentStudioFeatures({
                   <div className="space-y-2">
                     <Label>Icon (optional)</Label>
                     <Input
+                      placeholder="sparkles, zap, etc."
                       value={item.icon || ""}
                       onChange={(e) =>
                         updateItem(index, "icon", e.target.value || undefined)
                       }
-                      placeholder="sparkles, zap, etc."
                     />
                   </div>
 
                   <div className="space-y-2">
                     <Label>Gradient (optional)</Label>
                     <Input
+                      placeholder="from-blue-500 to-cyan-500"
                       value={item.gradient || ""}
                       onChange={(e) =>
                         updateItem(
@@ -154,12 +155,13 @@ export function ContentStudioFeatures({
                           e.target.value || undefined
                         )
                       }
-                      placeholder="from-blue-500 to-cyan-500"
                     />
                   </div>
                 </div>
               </div>
             )}
+            onRemove={removeItem}
+            onReorder={(items) => updateField("items", items)}
           />
         </div>
       </CardContent>

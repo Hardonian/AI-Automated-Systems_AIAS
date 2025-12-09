@@ -20,10 +20,10 @@ export async function GET(_request: NextRequest) {
         get(name: string) {
           return cookieStore.get(name)?.value;
         },
-        set(_name: string, _value: string, _options: any) {
+        set(_name: string, _value: string, _options?: { path?: string; maxAge?: number; domain?: string; sameSite?: 'lax' | 'strict' | 'none'; secure?: boolean }) {
           // Cookie setting handled by Next.js
         },
-        remove(_name: string, _options: any) {
+        remove(_name: string, _options?: { path?: string; domain?: string }) {
           // Cookie removal handled by Next.js
         },
       },
@@ -82,10 +82,10 @@ export async function GET(_request: NextRequest) {
       success: true,
       token: tokenData,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error("Auth error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
-      { error: error.message || "Authentication failed" },
+      { error: error instanceof Error ? error.message : "Authentication failed" },
       { status: 500 }
     );
   }
@@ -153,10 +153,10 @@ export async function POST(request: NextRequest) {
         name: profile.display_name,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error("Token verification error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
-      { error: error.message || "Verification failed" },
+      { error: error instanceof Error ? error.message : "Verification failed" },
       { status: 500 }
     );
   }

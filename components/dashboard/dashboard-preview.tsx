@@ -1,9 +1,10 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Eye, Lock, BarChart3, TrendingUp, PieChart, Activity } from "lucide-react";
 import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface DashboardPreviewProps {
   title?: string;
@@ -55,9 +56,9 @@ export function DashboardPreview({
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
       transition={{ duration: 0.6 }}
+      viewport={{ once: true }}
+      whileInView={{ opacity: 1, y: 0 }}
       {...({ className: "relative" } as any)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -95,9 +96,9 @@ export function DashboardPreview({
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileInView={{ opacity: 1, scale: 1 }}
                   {...({ className: "relative" } as any)}
                 >
                   <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
@@ -126,26 +127,26 @@ export function DashboardPreview({
                       
                       {/* Animated chart lines/bars */}
                       {chart.type === "line" && (
-                        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 100" preserveAspectRatio="none">
+                        <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 200 100">
                           <motion.path
                             d="M 10 80 Q 50 60, 90 50 T 170 30"
-                            stroke={`rgb(59, 130, 246)`}
-                            strokeWidth="2"
                             fill="none"
                             initial={{ pathLength: 0 }}
-                            whileInView={{ pathLength: 1 }}
-                            viewport={{ once: true }}
+                            stroke={`rgb(59, 130, 246)`}
+                            strokeWidth="2"
                             transition={{ duration: 1.5, delay: index * 0.2 }}
+                            viewport={{ once: true }}
+                            whileInView={{ pathLength: 1 }}
                           />
                           <motion.path
                             d="M 10 90 Q 50 70, 90 60 T 170 40"
-                            stroke={`rgb(139, 92, 246)`}
-                            strokeWidth="2"
                             fill="none"
                             initial={{ pathLength: 0 }}
-                            whileInView={{ pathLength: 1 }}
-                            viewport={{ once: true }}
+                            stroke={`rgb(139, 92, 246)`}
+                            strokeWidth="2"
                             transition={{ duration: 1.5, delay: index * 0.2 + 0.3 }}
+                            viewport={{ once: true }}
+                            whileInView={{ pathLength: 1 }}
                           />
                         </svg>
                       )}
@@ -156,9 +157,9 @@ export function DashboardPreview({
                             <motion.div
                               key={i}
                               initial={{ height: 0 }}
-                              whileInView={{ height: `${height}%` }}
-                              viewport={{ once: true }}
                               transition={{ duration: 0.8, delay: index * 0.2 + i * 0.1 }}
+                              viewport={{ once: true }}
+                              whileInView={{ height: `${height}%` }}
                               {...({ className: `flex-1 rounded-t opacity-80 ${
                                 accentColor === "blue"
                                   ? "bg-gradient-to-t from-blue-500 to-blue-400"
@@ -173,34 +174,34 @@ export function DashboardPreview({
                       
                       {chart.type === "pie" && (
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <svg viewBox="0 0 100 100" className="w-20 h-20">
+                          <svg className="w-20 h-20" viewBox="0 0 100 100">
                             <motion.circle
                               cx="50"
                               cy="50"
-                              r="40"
                               fill="none"
+                              initial={{ rotate: -90 }}
+                              r="40"
                               stroke={`rgb(59, 130, 246)`}
-                              strokeWidth="8"
                               strokeDasharray={`${2 * Math.PI * 40 * 0.6} ${2 * Math.PI * 40}`}
                               strokeDashoffset={2 * Math.PI * 40 * 0.25}
-                              initial={{ rotate: -90 }}
-                              whileInView={{ rotate: 0 }}
-                              viewport={{ once: true }}
+                              strokeWidth="8"
                               transition={{ duration: 1, delay: index * 0.2 }}
+                              viewport={{ once: true }}
+                              whileInView={{ rotate: 0 }}
                             />
                             <motion.circle
                               cx="50"
                               cy="50"
-                              r="40"
                               fill="none"
+                              initial={{ rotate: -90 }}
+                              r="40"
                               stroke={`rgb(139, 92, 246)`}
-                              strokeWidth="8"
                               strokeDasharray={`${2 * Math.PI * 40 * 0.4} ${2 * Math.PI * 40}`}
                               strokeDashoffset={2 * Math.PI * 40 * 0.6}
-                              initial={{ rotate: -90 }}
-                              whileInView={{ rotate: 0 }}
-                              viewport={{ once: true }}
+                              strokeWidth="8"
                               transition={{ duration: 1, delay: index * 0.2 + 0.3 }}
+                              viewport={{ once: true }}
+                              whileInView={{ rotate: 0 }}
                             />
                           </svg>
                         </div>
@@ -215,9 +216,9 @@ export function DashboardPreview({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.4 }}
+                viewport={{ once: true }}
+                whileInView={{ opacity: 1, y: 0 }}
                 {...({ className: "bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50" } as any)}
               >
                 <div className="flex items-center gap-2 mb-3">
@@ -226,26 +227,26 @@ export function DashboardPreview({
                 </div>
                 <div className="h-32 relative overflow-hidden rounded">
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/5" />
-                  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 300 120" preserveAspectRatio="none">
+                  <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 300 120">
                     <motion.path
                       d="M 0 100 Q 75 80, 150 60 T 300 40"
-                      stroke="rgb(59, 130, 246)"
-                      strokeWidth="2"
                       fill="none"
                       initial={{ pathLength: 0 }}
-                      whileInView={{ pathLength: 1 }}
-                      viewport={{ once: true }}
+                      stroke="rgb(59, 130, 246)"
+                      strokeWidth="2"
                       transition={{ duration: 2 }}
+                      viewport={{ once: true }}
+                      whileInView={{ pathLength: 1 }}
                     />
                     <motion.path
                       d="M 0 110 Q 75 90, 150 70 T 300 50"
-                      stroke="rgb(139, 92, 246)"
-                      strokeWidth="2"
                       fill="none"
                       initial={{ pathLength: 0 }}
-                      whileInView={{ pathLength: 1 }}
-                      viewport={{ once: true }}
+                      stroke="rgb(139, 92, 246)"
+                      strokeWidth="2"
                       transition={{ duration: 2, delay: 0.3 }}
+                      viewport={{ once: true }}
+                      whileInView={{ pathLength: 1 }}
                     />
                   </svg>
                 </div>
@@ -253,9 +254,9 @@ export function DashboardPreview({
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.5 }}
+                viewport={{ once: true }}
+                whileInView={{ opacity: 1, y: 0 }}
                 {...({ className: "bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50" } as any)}
               >
                 <div className="flex items-center gap-2 mb-3">
@@ -269,9 +270,9 @@ export function DashboardPreview({
                       <motion.div
                         key={i}
                         initial={{ height: 0 }}
-                        whileInView={{ height: `${height}%` }}
-                        viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.5 + i * 0.05 }}
+                        viewport={{ once: true }}
+                        whileInView={{ height: `${height}%` }}
                         {...({ className: "flex-1 bg-gradient-to-t from-purple-500 to-blue-400 rounded-t opacity-70" } as any)}
                       />
                     ))}
@@ -283,8 +284,8 @@ export function DashboardPreview({
 
           {/* Preview Upon Request Overlay */}
           <motion.div
-            initial={{ opacity: 0 }}
             animate={{ opacity: isHovered ? 1 : 0.7 }}
+            initial={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             {...({ className: "absolute inset-0 bg-background/95 backdrop-blur-md flex items-center justify-center flex-col gap-4 p-8" } as any)}
           >
@@ -313,9 +314,9 @@ export function DashboardPreview({
 
               {onRequestPreview && (
                 <Button 
-                  size="lg" 
+                  className="mt-4" 
+                  size="lg"
                   onClick={onRequestPreview}
-                  className="mt-4"
                 >
                   Request Preview Access
                   <Eye className="ml-2 h-5 w-5" />

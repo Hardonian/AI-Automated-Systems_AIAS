@@ -1,11 +1,12 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
 import { Check, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface ChecklistItem {
   id: string;
@@ -93,8 +94,8 @@ export function WhatsNextChecklist() {
             >
               <Checkbox
                 checked={item.completed}
-                onCheckedChange={() => handleToggle(item.id)}
                 className="h-5 w-5"
+                onCheckedChange={() => handleToggle(item.id)}
               />
               <label
                 className={`flex-1 cursor-pointer ${
@@ -105,7 +106,7 @@ export function WhatsNextChecklist() {
                 {item.label}
               </label>
               {!item.completed && (
-                <Button variant="ghost" size="sm" asChild>
+                <Button asChild size="sm" variant="ghost">
                   <Link href={item.href}>
                     Go
                     <ArrowRight className="ml-1 h-3 w-3" />

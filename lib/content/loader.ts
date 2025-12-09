@@ -1,14 +1,15 @@
 import { readFile, writeFile, mkdir } from "fs/promises";
 import { join } from "path";
+
+import {
+  defaultAIASContent,
+  defaultSettlerContent,
+} from "./defaults";
 import type { AIASContent, SettlerContent } from "./schemas";
 import {
   aiasContentSchema,
   settlerContentSchema,
 } from "./schemas";
-import {
-  defaultAIASContent,
-  defaultSettlerContent,
-} from "./defaults";
 
 const CONTENT_DIR = join(process.cwd(), "content");
 const AIAS_CONFIG_PATH = join(CONTENT_DIR, "aias.json");
@@ -20,8 +21,8 @@ const SETTLER_CONFIG_PATH = join(CONTENT_DIR, "settler.json");
 async function ensureContentDir(): Promise<void> {
   try {
     await mkdir(CONTENT_DIR, { recursive: true });
-  } catch (error: any) {
-    if (error.code !== "EEXIST") {
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'code' in error && error.code !== "EEXIST") {
       throw error;
     }
   }
@@ -37,9 +38,11 @@ export async function loadAIASContent(): Promise<AIASContent> {
     const parsed = JSON.parse(fileContent);
     const validated = aiasContentSchema.parse(parsed);
     return validated;
-  } catch (error: any) {
+  } catch (error: unknown) {
     // If file doesn't exist or is invalid, return defaults
-    if (error.code === "ENOENT" || error.name === "ZodError") {
+    const isFileNotFound = error && typeof error === 'object' && 'code' in error && error.code === "ENOENT";
+    const isZodError = error && typeof error === 'object' && 'name' in error && error.name === "ZodError";
+    if (isFileNotFound || isZodError) {
       // Write defaults to file for first-time setup
       await saveAIASContent(defaultAIASContent);
       return defaultAIASContent;
@@ -60,9 +63,11 @@ export async function loadSettlerContent(): Promise<SettlerContent> {
     const parsed = JSON.parse(fileContent);
     const validated = settlerContentSchema.parse(parsed);
     return validated;
-  } catch (error: any) {
+  } catch (error: unknown) {
     // If file doesn't exist or is invalid, return defaults
-    if (error.code === "ENOENT" || error.name === "ZodError") {
+    const isFileNotFound = error && typeof error === 'object' && 'code' in error && error.code === "ENOENT";
+    const isZodError = error && typeof error === 'object' && 'name' in error && error.name === "ZodError";
+    if (isFileNotFound || isZodError) {
       // Write defaults to file for first-time setup
       await saveSettlerContent(defaultSettlerContent);
       return defaultSettlerContent;
@@ -88,10 +93,10 @@ export async function saveAIASContent(
       JSON.stringify(validated, null, 2),
       "utf-8"
     );
-  } catch (error: any) {
-    if (error.name === "ZodError") {
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'name' in error && error.name === "ZodError" && 'errors' in error && Array.isArray(error.errors)) {
       throw new Error(
-        `Invalid content: ${error.errors.map((e: any) => e.message).join(", ")}`
+        `Invalid content: ${error.errors.map((e: unknown) => e && typeof e === 'object' && 'message' in e ? String(e.message) : String(e)).join(", ")}`
       );
     }
     throw error;
@@ -113,10 +118,10 @@ export async function saveSettlerContent(
       JSON.stringify(validated, null, 2),
       "utf-8"
     );
-  } catch (error: any) {
-    if (error.name === "ZodError") {
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'name' in error && error.name === "ZodError" && 'errors' in error && Array.isArray(error.errors)) {
       throw new Error(
-        `Invalid content: ${error.errors.map((e: any) => e.message).join(", ")}`
+        `Invalid content: ${error.errors.map((e: unknown) => e && typeof e === 'object' && 'message' in e ? String(e.message) : String(e)).join(", ")}`
       );
     }
     throw error;

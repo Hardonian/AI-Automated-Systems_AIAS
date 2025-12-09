@@ -1,10 +1,13 @@
 "use client";
 
-import * as React from "react";
-import { Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import * as React from "react";
+
 import { motionVariants } from "@/lib/style/motion";
+import { cn } from "@/lib/utils";
+
+
 
 interface LoadingStateProps {
   message?: string;
@@ -27,20 +30,20 @@ export function LoadingState({
 }: LoadingStateProps) {
   return (
     <motion.div
-      variants={motionVariants.fadeIn}
-      initial="hidden"
       animate="visible"
+      initial="hidden"
+      variants={motionVariants.fadeIn}
       {...({ className: cn(
         "flex flex-col items-center justify-center py-12 px-4",
         className
       )} as any)}
-      role="status"
-      aria-live="polite"
       aria-label={ariaLabel || message}
+      aria-live="polite"
+      role="status"
     >
       <Loader2 
-        className={cn("animate-spin text-muted-foreground", sizeMap[size])} 
-        aria-hidden="true"
+        aria-hidden="true" 
+        className={cn("animate-spin text-muted-foreground", sizeMap[size])}
       />
       {message && (
         <p className="mt-4 text-sm text-muted-foreground">{message}</p>

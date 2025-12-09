@@ -3,10 +3,12 @@
  * Multi-factor lead scoring with machine learning capabilities
  */
 
-import { logger } from '@/lib/logging/structured-logger';
 import { createClient } from '@supabase/supabase-js';
-import { env } from '@/lib/env';
+
 import { autopilotWorkflowService } from './autopilot-workflows';
+
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 export interface LeadScoringFactors {
   demographic: number; // 0-30
@@ -82,7 +84,7 @@ class LeadScoringService {
   /**
    * Calculate demographic score
    */
-  private async calculateDemographicScore(lead: any): Promise<number> {
+  private async calculateDemographicScore(lead: { email?: string; name?: string; company?: string; phone?: string; job_title?: string }): Promise<number> {
     let score = 0;
 
     // Email quality
@@ -96,8 +98,8 @@ class LeadScoringService {
     }
 
     // Name completeness
-    if (lead.first_name) score += 3;
-    if (lead.last_name) score += 3;
+    if (lead.first_name) {score += 3;}
+    if (lead.last_name) {score += 3;}
 
     // Company information
     if (lead.company) {
@@ -112,7 +114,7 @@ class LeadScoringService {
     }
 
     // Phone number
-    if (lead.phone) score += 5;
+    if (lead.phone) {score += 5;}
 
     return Math.min(score, 30);
   }
@@ -131,7 +133,7 @@ class LeadScoringService {
       .order('created_at', { ascending: false })
       .limit(50);
 
-    if (!activities || activities.length === 0) return 0;
+    if (!activities || activities.length === 0) {return 0;}
 
     // Activity frequency
     const activityCount = activities.length;
@@ -191,8 +193,8 @@ class LeadScoringService {
       const totalTime = sessions.reduce((sum: number, s: { duration?: number }) => sum + (s.duration || 0), 0);
       const pageViews = sessions.reduce((sum: number, s: { page_views?: number }) => sum + (s.page_views || 0), 0);
 
-      if (totalTime > 300) score += 3; // 5+ minutes
-      if (pageViews > 5) score += 3; // 5+ pages
+      if (totalTime > 300) {score += 3;} // 5+ minutes
+      if (pageViews > 5) {score += 3;} // 5+ pages
     }
 
     return Math.min(score, 20);
@@ -201,7 +203,7 @@ class LeadScoringService {
   /**
    * Calculate fit score
    */
-  private async calculateFitScore(lead: any, _tenantId?: string): Promise<number> {
+  private async calculateFitScore(lead: { email?: string; source?: string; company?: string }, _tenantId?: string): Promise<number> {
     let score = 0;
 
     // Source quality
@@ -241,8 +243,8 @@ class LeadScoringService {
    * Determine priority
    */
   private determinePriority(score: number): 'hot' | 'warm' | 'cold' {
-    if (score >= 80) return 'hot';
-    if (score >= 50) return 'warm';
+    if (score >= 80) {return 'hot';}
+    if (score >= 50) {return 'warm';}
     return 'cold';
   }
 
@@ -282,7 +284,19 @@ class LeadScoringService {
   /**
    * Get lead data
    */
-  private async getLead(leadId: string, tenantId?: string): Promise<any> {
+  interface Lead {
+    id: string;
+    email?: string;
+    name?: string;
+    company?: string;
+    phone?: string;
+    job_title?: string;
+    source?: string;
+    score?: number;
+    status?: string;
+    qualified?: boolean;
+  }
+  private async getLead(leadId: string, tenantId?: string): Promise<Lead | null> {
     let query = this.supabase.from('leads').select('*').eq('id', leadId);
 
     if (tenantId) {
@@ -291,7 +305,7 @@ class LeadScoringService {
 
     const { data, error } = await query.single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   }
 

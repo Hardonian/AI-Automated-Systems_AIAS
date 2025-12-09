@@ -25,9 +25,11 @@ export default function KPIDashboard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchKPIs();
+    void fetchKPIs();
     // Refresh every 60 seconds
-    const interval = setInterval(fetchKPIs, 60000);
+    const interval = setInterval(() => {
+      void fetchKPIs();
+    }, 60000);
     return () => clearInterval(interval);
   }, []);
 

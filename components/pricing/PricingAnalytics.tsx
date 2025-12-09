@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import { logger } from "@/lib/logging/structured-logger";
-import { useExperimentTracking } from "@/lib/experiments/tracking";
+
 import { getExperimentVariant } from "@/lib/experiments/feature-flags";
+import { useExperimentTracking } from "@/lib/experiments/tracking";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface PricingAnalyticsProps {
   userId?: string;
@@ -33,7 +34,7 @@ export function trackPlanSelection(
   billingPeriod: "month" | "year",
   userId?: string
 ) {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") {return;}
 
   const variant = getExperimentVariant("exp_price_starter", userId) || "control";
 
@@ -64,7 +65,7 @@ export function trackCheckoutStarted(
   price: number,
   userId?: string
 ) {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") {return;}
 
   const variant = getExperimentVariant("exp_price_starter", userId) || "control";
 

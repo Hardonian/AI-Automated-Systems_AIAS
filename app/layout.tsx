@@ -5,8 +5,6 @@ import type { Metadata } from "next";
 import { ReactNode } from "react";
 
 import AgentProvider from "@/components/agent/AgentProvider";
-import { EnhancedErrorBoundary } from "@/lib/error-handling/error-boundary-enhanced";
-import { TelemetryProvider } from "@/lib/monitoring/telemetry-provider";
 import { UTMTracker } from "@/components/analytics/utm-tracker";
 import { PerformanceHUD } from "@/components/dev/performance-hud";
 import { EnhancedStickyCTA } from "@/components/layout/enhanced-sticky-cta";
@@ -21,6 +19,8 @@ import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { Toaster } from "@/components/ui/toaster";
 import { ReactQueryProvider } from "@/lib/data/react-query";
 import { env, getOptionalEnv } from "@/lib/env";
+import { EnhancedErrorBoundary } from "@/lib/error-handling/error-boundary-enhanced";
+import { TelemetryProvider } from "@/lib/monitoring/telemetry-provider";
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
 
 const siteUrl = env.app.siteUrl || "https://aiautomatedsystems.ca";

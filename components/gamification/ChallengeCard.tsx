@@ -1,9 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
+
+import Confetti from "./Confetti";
 import { awardXp } from "./GamificationProvider";
 import { hapticTap } from "./Haptics";
-import Confetti from "./Confetti";
+
+import { supabase } from "@/lib/supabase/client";
 
 interface Challenge {
   id: number;
@@ -28,7 +30,7 @@ export default function ChallengeCard({ challenge }: { challenge: Challenge }) {
 
   async function checkParticipation() {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {return;}
     
     const { data } = await (supabase
       .from("challenge_participants") as any)
@@ -48,7 +50,7 @@ export default function ChallengeCard({ challenge }: { challenge: Challenge }) {
   async function joinChallenge() {
     hapticTap();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {return;}
     
     await (supabase.from("challenge_participants") as any).insert({
       challenge_id: challenge.id,
@@ -61,7 +63,7 @@ export default function ChallengeCard({ challenge }: { challenge: Challenge }) {
   async function completeChallenge() {
     hapticTap();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {return;}
     
     await (supabase
       .from("challenge_participants") as any)
@@ -92,7 +94,7 @@ export default function ChallengeCard({ challenge }: { challenge: Challenge }) {
       </div>
 
       {!participating ? (
-        <button onClick={joinChallenge} className="w-full h-10 rounded-xl bg-primary text-primary-fg text-sm font-medium">
+        <button className="w-full h-10 rounded-xl bg-primary text-primary-fg text-sm font-medium" onClick={joinChallenge}>
           Join Challenge
         </button>
       ) : completed ? (
@@ -100,7 +102,7 @@ export default function ChallengeCard({ challenge }: { challenge: Challenge }) {
           ✓ Completed
         </div>
       ) : (
-        <button onClick={completeChallenge} className="w-full h-10 rounded-xl bg-accent text-accent-foreground text-sm font-medium">
+        <button className="w-full h-10 rounded-xl bg-accent text-accent-foreground text-sm font-medium" onClick={completeChallenge}>
           Mark Complete
         </button>
       )}

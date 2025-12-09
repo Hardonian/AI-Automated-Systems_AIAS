@@ -51,8 +51,10 @@ export default function ReliabilityDashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchDashboard();
-    const interval = setInterval(fetchDashboard, 60000); // Refresh every minute
+    void fetchDashboard();
+    const interval = setInterval(() => {
+      void fetchDashboard();
+    }, 60000); // Refresh every minute
     return () => clearInterval(interval);
   }, []);
 

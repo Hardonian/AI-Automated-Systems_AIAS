@@ -20,7 +20,7 @@ export function getContrastRatio(color1: string, color2: string): number {
  */
 function getLuminance(color: string): number {
   const rgb = hexToRgb(color);
-  if (!rgb) return 0;
+  if (!rgb) {return 0;}
   
   const r = (rgb.r / 255);
   const g = (rgb.g / 255);
@@ -137,7 +137,7 @@ export function trapFocus(element: HTMLElement): () => void {
   const lastElement = focusableElements[focusableElements.length - 1];
   
   const handleTab = (e: KeyboardEvent) => {
-    if (e.key !== 'Tab') return;
+    if (e.key !== 'Tab') {return;}
     
     if (e.shiftKey) {
       if (document.activeElement === firstElement) {

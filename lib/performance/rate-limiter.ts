@@ -9,8 +9,9 @@
  * - Performance monitoring
  */
 
-import Redis from 'ioredis';
 import { kv } from '@vercel/kv';
+import Redis from 'ioredis';
+
 import { logger } from '@/lib/logging/structured-logger';
 
 interface RateLimitConfig {

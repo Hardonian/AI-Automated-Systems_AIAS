@@ -3,8 +3,8 @@
  * Tracks user progression through activation stages
  */
 
-import { track } from "@/lib/telemetry/track";
 import { logger } from "@/lib/logging/structured-logger";
+import { track } from "@/lib/telemetry/track";
 
 export type FunnelStage =
   | "signup"

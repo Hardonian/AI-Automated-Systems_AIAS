@@ -3,11 +3,9 @@
  * Handles workflow CRUD operations
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
+import { NextResponse } from 'next/server';
 
 import { createGETHandler, createPOSTHandler, RouteContext } from '@/lib/api/route-handler';
-import { logger } from '@/lib/logging/structured-logger';
 import { createClient } from '@/lib/supabase/server';
 import { workflowDefinitionSchema } from '@/lib/workflows/dsl';
 

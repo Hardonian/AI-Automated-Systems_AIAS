@@ -50,8 +50,10 @@ export default function PerformanceDashboard() {
   const [timeRange, setTimeRange] = useState<'1h' | '24h' | '7d'>('1h');
 
   useEffect(() => {
-    fetchMetrics();
-    const interval = setInterval(fetchMetrics, 30000); // Refresh every 30 seconds
+    void fetchMetrics();
+    const interval = setInterval(() => {
+      void fetchMetrics();
+    }, 30000); // Refresh every 30 seconds
     return () => clearInterval(interval);
   }, [timeRange]);
 

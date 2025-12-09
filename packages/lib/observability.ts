@@ -1,6 +1,7 @@
 import { config } from '@ai-consultancy/config';
 import pino from 'pino';
 import { register, collectDefaultMetrics, Counter, Histogram, Gauge } from 'prom-client';
+import type { IncomingMessage, ServerResponse } from 'http';
 
 import { prisma } from './database.js';
 
@@ -57,10 +58,12 @@ export const metrics = {
 };
 
 // Initialize logger
-export const logger = pino({
+// Type assertion needed for ES module compatibility with NodeNext module resolution
+const pinoLogger = pino as any;
+export const logger = pinoLogger({
   level: config.app.env === 'production' ? 'info' : 'debug',
   formatters: {
-    level: (label) => {
+    level: (label: string) => {
       return { level: label };
     },
   },
@@ -79,18 +82,18 @@ export const logger = pino({
     censor: '[REDACTED]',
   },
   serializers: {
-    req: (req) => ({
+    req: (req: IncomingMessage) => ({
       method: req.method,
       url: req.url,
       headers: req.headers,
-      remoteAddress: req.remoteAddress,
-      remotePort: req.remotePort,
+      remoteAddress: req.socket?.remoteAddress,
+      remotePort: req.socket?.remotePort,
     }),
-    res: (res) => ({
+    res: (res: ServerResponse) => ({
       statusCode: res.statusCode,
       headers: res.headers,
     }),
-    err: pino.stdSerializers.err,
+    err: pinoLogger.stdSerializers?.err || ((err: Error) => ({ message: err.message, stack: err.stack })),
   },
 });
 

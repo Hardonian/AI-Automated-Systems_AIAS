@@ -174,9 +174,17 @@ class LeadNurturingService {
       }
       
       // Use database template
-      const personalized = this.personalizeEmail(dbTemplate, lead);
+      const leadData = lead as Record<string, unknown>;
+      const personalized = this.personalizeEmail(dbTemplate, {
+        name: (leadData.name as string) || (leadData.first_name as string) || '',
+        email: (leadData.email as string) || '',
+        company: (leadData.company as string) || '',
+      });
       
       // Send via email service
+      if (!lead.email) {
+        throw new Error('Lead email is required');
+      }
       const result = await emailService.send({
         to: lead.email,
         subject: personalized.subject,
@@ -205,16 +213,20 @@ class LeadNurturingService {
     }
 
     // Use template library template
+    const leadData = lead as Record<string, unknown>;
     const variables = {
-      firstName: lead.first_name || 'there',
-      lastName: lead.last_name || '',
-      email: lead.email || '',
-      company: lead.company || 'your company',
-      planName: lead.plan_name || 'Starter',
-      automationName: lead.automation_name || '',
+      firstName: (leadData.first_name as string) || 'there',
+      lastName: (leadData.last_name as string) || '',
+      email: (leadData.email as string) || '',
+      company: (leadData.company as string) || 'your company',
+      planName: (leadData.plan_name as string) || 'Starter',
+      automationName: (leadData.automation_name as string) || '',
     };
 
     // Send via email service
+    if (!lead.email) {
+      throw new Error('Lead email is required');
+    }
     const result = await emailService.sendTemplate(templateId, lead.email, variables, {
       tags: ['nurturing', templateId],
       metadata: {
@@ -246,10 +258,10 @@ class LeadNurturingService {
 
     // Replace placeholders
     const replacements: Record<string, string> = {
-      '{{firstName}}': lead.first_name || 'there',
-      '{{lastName}}': lead.last_name || '',
-      '{{company}}': lead.company || 'your company',
-      '{{email}}': lead.email || '',
+      '{{firstName}}': (lead as Record<string, unknown>).first_name as string || 'there',
+      '{{lastName}}': (lead as Record<string, unknown>).last_name as string || '',
+      '{{company}}': (lead as Record<string, unknown>).company as string || 'your company',
+      '{{email}}': (lead as Record<string, unknown>).email as string || '',
     };
 
     for (const [key, value] of Object.entries(replacements)) {

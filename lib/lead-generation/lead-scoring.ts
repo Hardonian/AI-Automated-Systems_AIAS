@@ -100,26 +100,28 @@ class LeadScoringService {
   private async calculateDemographicScore(lead: { email?: string; name?: string; company?: string; phone?: string; job_title?: string }): Promise<number> {
     let score = 0;
 
-    // Email quality
-    if (lead.email) {
+    // Email quality - use type assertion for database fields
+    const leadData = lead as Record<string, unknown>;
+    if (leadData.email) {
       score += 5;
-      const domain = lead.email.split('@')[1];
+      const domain = (leadData.email as string).split('@')[1];
       const corporateDomains = ['gmail.com', 'yahoo.com', 'hotmail.com'];
       if (domain && !corporateDomains.includes(domain.toLowerCase())) {
         score += 5; // Corporate email bonus
       }
     }
 
-    // Name completeness
-    if (lead.first_name) {score += 3;}
-    if (lead.last_name) {score += 3;}
+    // Name completeness - use type assertion for database fields
+    const leadData = lead as Record<string, unknown>;
+    if (leadData.first_name) {score += 3;}
+    if (leadData.last_name) {score += 3;}
 
     // Company information
-    if (lead.company) {
+    if (leadData.company) {
       score += 5;
       // Company size bonus (if available)
-      if (lead.metadata?.company_size) {
-        const size = lead.metadata.company_size as string;
+      if ((leadData.metadata as Record<string, unknown>)?.company_size) {
+        const size = ((leadData.metadata as Record<string, unknown>).company_size as string);
         if (size.includes('50+') || size.includes('100+')) {
           score += 4;
         }
@@ -127,7 +129,7 @@ class LeadScoringService {
     }
 
     // Phone number
-    if (lead.phone) {score += 5;}
+    if (leadData.phone) {score += 5;}
 
     return Math.min(score, 30);
   }
@@ -221,7 +223,7 @@ class LeadScoringService {
 
     // Source quality
     const highQualitySources = ['referral', 'partner', 'event'];
-    if (lead.source && highQualitySources.includes(lead.source.toLowerCase())) {
+    if (leadData.source && highQualitySources.includes((leadData.source as string).toLowerCase())) {
       score += 10;
     }
 

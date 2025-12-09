@@ -1,5 +1,6 @@
 import { config } from '@ai-consultancy/config';
 import { prisma } from './database';
+import { logger } from './observability';
 
 export interface PayPalConfig {
   clientId: string;
@@ -33,11 +34,13 @@ export class PayPalService {
   private baseUrl: string;
 
   constructor() {
+    // PayPal config is not in the main config type, so we access it safely
+    const paypalConfig = (config as typeof config & { paypal?: PayPalConfig }).paypal;
     this.config = {
-      clientId: (config as any).paypal?.clientId || '',
-      clientSecret: (config as any).paypal?.clientSecret || '',
-      environment: (config as any).paypal?.environment || 'sandbox',
-      webhookId: (config as any).paypal?.webhookId,
+      clientId: paypalConfig?.clientId || '',
+      clientSecret: paypalConfig?.clientSecret || '',
+      environment: paypalConfig?.environment || 'sandbox',
+      webhookId: paypalConfig?.webhookId,
     };
     
     this.baseUrl = this.config.environment === 'production' 
@@ -262,7 +265,7 @@ export class PayPalService {
     });
 
     if (!response.ok) {
-      console.error('PayPal webhook verification failed:', response.statusText);
+      logger.error({ status: response.statusText }, 'PayPal webhook verification failed');
       return false;
     }
 
@@ -270,7 +273,7 @@ export class PayPalService {
     return result.verification_status === 'SUCCESS';
   }
 
-  async handleWebhookEvent(event: any) {
+  async handleWebhookEvent(event: { event_type: string; resource: { id: string; custom_id?: string; supplementary_data?: { related_ids?: { order_id?: string } } } }): Promise<void> {
     switch (event.event_type) {
       case 'CHECKOUT.ORDER.APPROVED':
         await this.handleOrderApproved(event);
@@ -294,13 +297,13 @@ export class PayPalService {
         await this.handleSubscriptionSuspended(event);
         break;
       default:
-        console.log(`Unhandled PayPal event type: ${event.event_type}`);
+        logger.info({ eventType: event.event_type }, `Unhandled PayPal event type: ${event.event_type}`);
     }
   }
 
-  private async handleOrderApproved(event: any) {
+  private async handleOrderApproved(event: { resource: { id: string; custom_id?: string } }): Promise<void> {
     const orderId = event.resource.id;
-    console.log('PayPal order approved:', orderId);
+    logger.info({ orderId }, 'PayPal order approved');
     
     // Store the order approval event
     await prisma.webhookEvent.create({
@@ -313,11 +316,11 @@ export class PayPalService {
     });
   }
 
-  private async handlePaymentCompleted(event: any) {
+  private async handlePaymentCompleted(event: { resource: { id: string; supplementary_data?: { related_ids?: { order_id?: string } } } }): Promise<void> {
     const paymentId = event.resource.id;
     const orderId = event.resource.supplementary_data?.related_ids?.order_id;
     
-    console.log('PayPal payment completed:', paymentId, 'for order:', orderId);
+    logger.info({ paymentId, orderId }, 'PayPal payment completed');
     
     // Update subscription status in database
     if (orderId) {
@@ -332,9 +335,9 @@ export class PayPalService {
     }
   }
 
-  private async handlePaymentDenied(event: any) {
+  private async handlePaymentDenied(event: { resource: { id: string } }): Promise<void> {
     const paymentId = event.resource.id;
-    console.log('PayPal payment denied:', paymentId);
+    logger.warn({ paymentId }, 'PayPal payment denied');
     
     // Handle payment failure
     await prisma.webhookEvent.create({
@@ -347,9 +350,9 @@ export class PayPalService {
     });
   }
 
-  private async handleSubscriptionCreated(event: any) {
+  private async handleSubscriptionCreated(event: { resource: { id: string } }): Promise<void> {
     const subscriptionId = event.resource.id;
-    console.log('PayPal subscription created:', subscriptionId);
+    logger.info({ subscriptionId }, 'PayPal subscription created');
     
     // Store subscription creation event
     await prisma.webhookEvent.create({
@@ -362,9 +365,9 @@ export class PayPalService {
     });
   }
 
-  private async handleSubscriptionActivated(event: any) {
+  private async handleSubscriptionActivated(event: { resource: { id: string } }): Promise<void> {
     const subscriptionId = event.resource.id;
-    console.log('PayPal subscription activated:', subscriptionId);
+    logger.info({ subscriptionId }, 'PayPal subscription activated');
     
     // Update subscription status
     await prisma.subscription.updateMany({
@@ -377,9 +380,9 @@ export class PayPalService {
     });
   }
 
-  private async handleSubscriptionCancelled(event: any) {
+  private async handleSubscriptionCancelled(event: { resource: { id: string } }): Promise<void> {
     const subscriptionId = event.resource.id;
-    console.log('PayPal subscription cancelled:', subscriptionId);
+    logger.info({ subscriptionId }, 'PayPal subscription cancelled');
     
     // Update subscription status
     await prisma.subscription.updateMany({
@@ -392,9 +395,9 @@ export class PayPalService {
     });
   }
 
-  private async handleSubscriptionSuspended(event: any) {
+  private async handleSubscriptionSuspended(event: { resource: { id: string } }): Promise<void> {
     const subscriptionId = event.resource.id;
-    console.log('PayPal subscription suspended:', subscriptionId);
+    logger.warn({ subscriptionId }, 'PayPal subscription suspended');
     
     // Update subscription status
     await prisma.subscription.updateMany({

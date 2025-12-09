@@ -4,6 +4,7 @@ import { config } from '@ai-consultancy/config';
 import { prisma } from './database';
 // Note: aiClient import reserved for future AI queue processing
 import { AIGenerators } from './ai/generators';
+import { logger } from './observability';
 
 const connection = new IORedis(config.redis.url || 'redis://localhost:6379');
 
@@ -111,9 +112,9 @@ export class QueueProcessors {
         },
       });
 
-      console.log(`Processed ${processedData.length} records for source ${sourceId}`);
+      logger.info({ sourceId, recordCount: processedData.length }, `Processed ${processedData.length} records for source ${sourceId}`);
     } catch (error) {
-      console.error('Feed ingest error:', error);
+      logger.error({ err: error, sourceId }, 'Feed ingest error');
       
       // Update ingest event with error
       await prisma.ingestEvent.updateMany({
@@ -187,10 +188,10 @@ export class QueueProcessors {
         },
       });
 
-      console.log(`Generated ${type} for user ${userId}`);
+      logger.info({ type, userId }, `Generated ${type} for user ${userId}`);
       return result;
     } catch (error) {
-      console.error('AI generation error:', error);
+      logger.error({ err: error, type, userId }, 'AI generation error');
       throw error;
     }
   }
@@ -220,9 +221,9 @@ export class QueueProcessors {
         },
       });
 
-      console.log(`Generated PDF report ${reportId}`);
+      logger.info({ reportId }, `Generated PDF report ${reportId}`);
     } catch (error) {
-      console.error('PDF generation error:', error);
+      logger.error({ err: error, reportId }, 'PDF generation error');
       
       await prisma.report.update({
         where: { id: reportId },
@@ -239,9 +240,9 @@ export class QueueProcessors {
     try {
       // Sync subscription data with Stripe
       // This would fetch the latest subscription data and update the database
-      console.log(`Syncing billing for org ${orgId}, subscription ${subscriptionId}, event ${event}`);
+      logger.info({ orgId, subscriptionId, event }, `Syncing billing for org ${orgId}, subscription ${subscriptionId}, event ${event}`);
     } catch (error) {
-      console.error('Billing sync error:', error);
+      logger.error({ err: error, orgId, subscriptionId }, 'Billing sync error');
       throw error;
     }
   }
@@ -359,5 +360,5 @@ export function startWorkers() {
   // Billing sync worker
   new Worker('billing:sync', QueueProcessors.processBillingSync, { connection });
 
-  console.log('All queue workers started');
+  logger.info('All queue workers started');
 }

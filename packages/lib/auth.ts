@@ -106,7 +106,11 @@ export class AuthService {
   }
 
   static async createJWT(user: AuthUser): Promise<string> {
-    const secret = new TextEncoder().encode(config.security.jwtSecret);
+    const jwtSecret = config.security.jwtSecret;
+    if (!jwtSecret) {
+      throw new Error('JWT secret is not configured');
+    }
+    const secret = new TextEncoder().encode(jwtSecret);
     
     return new SignJWT({ 
       userId: user.id,
@@ -120,7 +124,11 @@ export class AuthService {
 
   static async verifyJWT(token: string): Promise<{ userId: string; email: string } | null> {
     try {
-      const secret = new TextEncoder().encode(config.security.jwtSecret);
+      const jwtSecret = config.security.jwtSecret;
+      if (!jwtSecret) {
+        throw new Error('JWT secret is not configured');
+      }
+      const secret = new TextEncoder().encode(jwtSecret);
       const { payload } = await jwtVerify(token, secret);
       
       return {

@@ -645,6 +645,16 @@ export class WorkflowExecutor {
     condition: Record<string, unknown> | string,
     value: unknown
   ): boolean {
+    // Type guard: if condition is a string, treat it as a simple equality check
+    if (typeof condition === 'string') {
+      return value === condition;
+    }
+    
+    // Ensure condition has required properties
+    if (typeof condition !== 'object' || condition === null || !('operator' in condition)) {
+      return false;
+    }
+    
     switch (condition.operator) {
       case 'equals':
         return value === condition.value;

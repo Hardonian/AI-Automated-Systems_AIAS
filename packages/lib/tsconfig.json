@@ -12,9 +12,11 @@
     "allowImportingTsExtensions": false,
     "noEmit": false,
     "resolvePackageJsonExports": true,
-    "resolvePackageJsonImports": true
+    "resolvePackageJsonImports": true,
+    "baseUrl": ".",
+    "paths": {}
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "ai/**/*.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"],
   "references": [
     {

@@ -201,15 +201,17 @@ export class QueryOptimizer {
         for (const item of data) {
           const itemObj = item as Record<string, unknown>;
           const {id} = itemObj;
-          results.set(id, item as T);
-          
-          if (options.cache !== false) {
-            const cacheKey = `query:${table}:${id}`;
-            await cacheService.set(cacheKey, item, {
-              ttl: options.cacheTTL || 600,
-              tenantId: options.tenantId,
-              tags: [`table:${table}`, `record:${id}`],
-            });
+          if (typeof id === 'string') {
+            results.set(id, item as T);
+            
+            if (options.cache !== false) {
+              const cacheKey = `query:${table}:${id}`;
+              await cacheService.set(cacheKey, item, {
+                ttl: options.cacheTTL || 600,
+                tenantId: options.tenantId,
+                tags: [`table:${table}`, `record:${id}`],
+              });
+            }
           }
         }
       }

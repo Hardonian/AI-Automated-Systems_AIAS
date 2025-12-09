@@ -1,5 +1,5 @@
 import { config } from '@ai-consultancy/config';
-import pino from 'pino';
+import { pino } from 'pino';
 import { register, collectDefaultMetrics, Counter, Histogram, Gauge } from 'prom-client';
 
 import { prisma } from './database.js';
@@ -60,7 +60,7 @@ export const metrics = {
 export const logger = pino({
   level: config.app.env === 'production' ? 'info' : 'debug',
   formatters: {
-    level: (label) => {
+    level: (label: string) => {
       return { level: label };
     },
   },
@@ -79,14 +79,14 @@ export const logger = pino({
     censor: '[REDACTED]',
   },
   serializers: {
-    req: (req) => ({
+    req: (req: any) => ({
       method: req.method,
       url: req.url,
       headers: req.headers,
       remoteAddress: req.remoteAddress,
       remotePort: req.remotePort,
     }),
-    res: (res) => ({
+    res: (res: any) => ({
       statusCode: res.statusCode,
       headers: res.headers,
     }),

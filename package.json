@@ -366,7 +366,8 @@
       "semver": ">=5.7.2",
       "axios": ">=0.30.2",
       "pdfjs-dist": ">=4.2.67",
-      "robots-txt-guard": ">=1.0.2"
+      "robots-txt-guard": ">=1.0.2",
+      "lodash.set": "npm:@types/lodash.set@latest"
     },
     "peerDependencyRules": {
       "ignoreMissing": [

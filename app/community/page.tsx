@@ -7,6 +7,7 @@ import ReportButton from "@/components/community/ReportButton";
 import FollowButton from "@/components/social/FollowButton";
 import ReactionBar from "@/components/social/ReactionBar";
 import ShareButton from "@/components/social/ShareButton";
+import { logger } from "@/lib/utils/logger";
 import { supabase } from "@/lib/supabase/client";
 
 interface Post {
@@ -24,11 +25,15 @@ export default function Community(){
   const [newPostTitle, setNewPostTitle] = useState("");
 
   useEffect(() => {
-    loadPosts();
+    loadPosts().catch((error) => {
+      logger.error("Failed to load posts", error instanceof Error ? error : new Error(String(error)));
+    });
     const channel = supabase
       .channel("posts")
       .on("postgres_changes", { event: "*", schema: "public", table: "posts" }, () => {
-        loadPosts();
+        loadPosts().catch((error) => {
+          logger.error("Failed to load posts", error instanceof Error ? error : new Error(String(error)));
+        });
       })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
@@ -51,18 +56,20 @@ export default function Community(){
       user_id: user.id,
       body: newPost,
       title: newPostTitle || undefined
-    });
+    } as Record<string, unknown>);
     
     // Create activity
     await supabase.from("activity_log").insert({
       user_id: user.id,
       activity_type: "post_created",
       metadata: { title: newPostTitle || "Untitled" }
-    });
+    } as Record<string, unknown>);
     
     setNewPost("");
     setNewPostTitle("");
-    loadPosts();
+    loadPosts().catch((error) => {
+      logger.error("Failed to load posts", error instanceof Error ? error : new Error(String(error)));
+    });
   }
 
   return (

@@ -29,7 +29,7 @@ export default function ExportDataPage() {
         <CardHeader>
           <CardTitle>Data Export Options</CardTitle>
           <CardDescription>
-            Choose what data you'd like to export
+            Choose what data you&apos;d like to export
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

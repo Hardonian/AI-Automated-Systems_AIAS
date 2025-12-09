@@ -38,7 +38,9 @@ export default function CreateWorkflowPage() {
 
   useEffect(() => {
     if (templateId) {
-      fetchTemplate(templateId);
+      fetchTemplate(templateId).catch((error) => {
+        logger.error("Failed to fetch template", error instanceof Error ? error : new Error(String(error)));
+      });
     } else {
       setLoading(false);
     }

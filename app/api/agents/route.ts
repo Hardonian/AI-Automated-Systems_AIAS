@@ -3,12 +3,10 @@
  * Handles agent CRUD operations
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
+import { NextResponse } from 'next/server';
 
 import { agentDefinitionSchema } from '@/lib/agents/schema';
 import { createGETHandler, RouteContext } from '@/lib/api/route-handler';
-import { logger } from '@/lib/logging/structured-logger';
 import { createClient } from '@/lib/supabase/server';
 
 const createAgentSchema = agentDefinitionSchema.omit({ id: true, createdAt: true, updatedAt: true });

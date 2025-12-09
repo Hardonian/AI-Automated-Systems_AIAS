@@ -19,7 +19,7 @@ export default function ReportButton({ postId, commentId }: { postId?: number; c
       comment_id: commentId || null,
       reason: reason,
       status: "pending"
-    });
+    } as Record<string, unknown>);
     
     setReported(true);
     setShowForm(false);

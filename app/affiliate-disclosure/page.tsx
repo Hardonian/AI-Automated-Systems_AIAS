@@ -51,7 +51,7 @@ export default function AffiliateDisclosurePage() {
               We only promote products and services that genuinely support systems thinking principles. Each recommendation 
               is evaluated through our 6-perspective framework: Does it improve processes? Enhance technology? Support people? 
               Enable better data? Strengthen systems? Enable effective automation? Our recommendations are based on systems 
-              thinking value, not commission rates. We're committed to helping you develop the critical skill that makes 
+              thinking value, not commission rates. We&apos;re committed to helping you develop the critical skill that makes 
               you stand out in the job market and succeed in business.
             </p>
           </div>

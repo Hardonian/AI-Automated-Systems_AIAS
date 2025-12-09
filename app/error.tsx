@@ -32,7 +32,7 @@ export default function Error({
       <div className="max-w-md text-center space-y-6">
         <h1 className="text-4xl font-bold">Something went wrong</h1>
         <p className="text-muted-foreground">
-          We're sorry, but something unexpected happened. Please try again.
+          We&apos;re sorry, but something unexpected happened. Please try again.
         </p>
         {error.digest && (
           <p className="text-sm text-muted-foreground">

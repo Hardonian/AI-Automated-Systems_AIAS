@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 
 import ChallengeCard from "@/components/gamification/ChallengeCard";
+import { logger } from "@/lib/utils/logger";
 import { supabase } from "@/lib/supabase/client";
 
 interface ChallengeRequirements {
@@ -26,7 +27,9 @@ export default function ChallengesPage() {
   const [filter, setFilter] = useState<"all" | "weekly" | "monthly" | "seasonal">("all");
 
   useEffect(() => {
-    loadChallenges();
+    loadChallenges().catch((error) => {
+      logger.error("Failed to load challenges", error instanceof Error ? error : new Error(String(error)));
+    });
   }, [filter]);
 
   async function loadChallenges() {

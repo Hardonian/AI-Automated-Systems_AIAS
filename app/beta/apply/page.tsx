@@ -62,7 +62,7 @@ export default function BetaApplyPage() {
             <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto mb-4" />
             <h1 className="text-2xl font-bold mb-2">Application Received!</h1>
             <p className="text-muted-foreground mb-6">
-              Thank you for your interest in the AIAS Beta Program. We'll review your application and get back to you within 1-2 weeks.
+              Thank you for your interest in the AIAS Beta Program. We&apos;ll review your application and get back to you within 1-2 weeks.
             </p>
             <Button asChild>
               <a href="/">Return to Home</a>
@@ -210,7 +210,7 @@ export default function BetaApplyPage() {
                   }
                 />
                 <Label className="text-sm leading-relaxed" htmlFor="feedback">
-                  I'm willing to participate in feedback sessions and surveys
+                  I&apos;m willing to participate in feedback sessions and surveys
                 </Label>
               </div>
             </div>

@@ -1,7 +1,7 @@
 import { logger } from '../observability';
 
-import { createAIProvider, createFallbackAIProvider } from './providers';
-import { ChatRequest, AuditRequest, EstimateRequest, ContentGenerationRequest, WorkflowGenerationRequest , AIProvider } from './types';
+import { createAIProvider, createFallbackAIProvider } from './providers.js';
+import { ChatRequest, AuditRequest, EstimateRequest, ContentGenerationRequest, WorkflowGenerationRequest , AIProvider } from './types.js';
 
 
 export class AIClient {

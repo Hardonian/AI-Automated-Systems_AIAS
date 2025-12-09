@@ -1,23 +1,23 @@
 // Database
-export * from './database';
+export * from './database.js';
 
 // AI
-export * from './ai';
+export * from './ai/index.js';
 
 // Auth
-export * from './auth';
+export * from './auth.js';
 
 // Payments
-export * from './payments';
+export * from './payments.js';
 
 // Queues
-export * from './queues';
+export * from './queues.js';
 
 // Data Feeds
-export * from './data-feeds';
+export * from './data-feeds.js';
 
 // Observability
-export * from './observability';
+export * from './observability.js';
 
 // Utils
 // export * from './utils'; // Module not found

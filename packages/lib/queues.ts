@@ -2,10 +2,10 @@ import { config } from '@ai-consultancy/config';
 import { Queue, Worker, Job } from 'bullmq';
 import IORedis from 'ioredis';
 
-import { AIGenerators } from './ai/generators';
-import { prisma } from './database';
+import { AIGenerators } from './ai/generators.js';
+import { prisma } from './database.js';
 // Note: aiClient import reserved for future AI queue processing
-import { logger } from './observability';
+import { logger } from './observability.js';
 
 const connection = new IORedis(config.redis.url || 'redis://localhost:6379');
 

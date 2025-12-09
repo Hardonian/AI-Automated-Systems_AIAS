@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-import { prisma } from './database';
-import { logger } from './observability';
-import { feedIngestQueue } from './queues';
+import { prisma } from './database.js';
+import { logger } from './observability.js';
+import { feedIngestQueue } from './queues.js';
 
 export const SourceConfigSchema = z.object({
   url: z.string().url().optional(),

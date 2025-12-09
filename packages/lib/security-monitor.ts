@@ -1,5 +1,5 @@
-import { prisma } from './database';
-import { logger } from './observability';
+import { prisma } from './database.js';
+import { logger } from './observability.js';
 
 export interface SecurityEvent {
   id: string;

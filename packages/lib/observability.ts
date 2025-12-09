@@ -2,7 +2,7 @@ import { config } from '@ai-consultancy/config';
 import pino from 'pino';
 import { register, collectDefaultMetrics, Counter, Histogram, Gauge } from 'prom-client';
 
-import { prisma } from './database';
+import { prisma } from './database.js';
 
 // Initialize Prometheus metrics
 collectDefaultMetrics({ register });

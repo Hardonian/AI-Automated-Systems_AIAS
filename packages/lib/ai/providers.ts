@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import OpenAI from 'openai';
 
-import { logger } from '../observability';
+import { logger } from '../observability.js';
 
 import { 
   AIProvider, 
@@ -17,7 +17,7 @@ import {
   EstimateResult,
   ContentResult,
   WorkflowResult
-} from './types';
+} from './types.js';
 
 class OpenAIProvider implements AIProvider {
   name = 'openai';

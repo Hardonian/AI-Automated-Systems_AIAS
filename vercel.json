@@ -16,9 +16,6 @@
   "functions": {
     "app/**": {
       "maxDuration": 30
-    },
-    "api/**": {
-      "maxDuration": 30
     }
   },
   "rewrites": [

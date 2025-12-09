@@ -4,10 +4,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { workflowExecutor } from '@/lib/workflows/executor';
-import { workflowExecutionContextSchema } from '@/lib/workflows/dsl';
-import { createClient } from '@/lib/supabase/server';
+
 import { observabilityService } from '@/lib/observability/telemetry';
+import { createClient } from '@/lib/supabase/server';
+import { workflowExecutionContextSchema } from '@/lib/workflows/dsl';
+import { workflowExecutor } from '@/lib/workflows/executor';
 
 export async function POST(
   request: NextRequest,

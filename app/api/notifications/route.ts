@@ -1,9 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
-import { handleApiError } from "@/lib/api/route-handler";
 import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+
+import { handleApiError } from "@/lib/api/route-handler";
 import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -67,7 +68,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Parse query parameters
-    const searchParams = new URL(request.url).searchParams;
+    const {searchParams} = new URL(request.url);
     const query = notificationQuerySchema.parse({
       type: searchParams.get("type") || undefined,
       read: searchParams.get("read") === "true" ? true : searchParams.get("read") === "false" ? false : undefined,

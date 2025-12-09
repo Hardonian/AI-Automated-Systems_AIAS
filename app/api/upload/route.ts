@@ -9,11 +9,12 @@
  * - Malware scanning
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
+
 import { env } from '@/lib/env';
-import { uploadFileSecure } from '@/lib/security/file-upload';
 import { logger } from '@/lib/logging/structured-logger';
+import { uploadFileSecure } from '@/lib/security/file-upload';
 /**
  * GET /api/upload - Get upload configuration
  */

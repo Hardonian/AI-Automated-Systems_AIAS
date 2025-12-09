@@ -1,6 +1,7 @@
-import { Bot, Zap, Shield, Clock, BarChart, Code, Brain, Workflow, Database, TrendingUp } from 'lucide-react';
-// import { Globe, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Bot, Zap, Shield, Clock, BarChart, Code, Brain, Workflow, Database, TrendingUp } from 'lucide-react';
+
+// import { Globe, Lock } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 const features = [
@@ -80,7 +81,7 @@ const features = [
 
 export const Features = () => {
   return (
-    <section id="features" className="py-24 relative overflow-hidden">
+    <section className="py-24 relative overflow-hidden" id="features">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
@@ -89,11 +90,11 @@ export const Features = () => {
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
           className="text-center max-w-4xl mx-auto mb-16 space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold px-4">
             Powerful Features for
@@ -111,12 +112,12 @@ export const Features = () => {
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ scale: 1.05, y: -8 }}
               className="group relative"
+              initial={{ opacity: 0, y: 30 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.05, y: -8 }}
+              whileInView={{ opacity: 1, y: 0 }}
             >
               <div className="h-full p-6 rounded-2xl bg-gradient-card backdrop-blur-sm border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10">
                 {/* Gradient Background on Hover */}
@@ -128,7 +129,7 @@ export const Features = () => {
                     <div className={`p-3 rounded-xl bg-gradient-to-br ${feature.gradient} group-hover:scale-110 transition-transform duration-300`}>
                       <feature.icon className={`w-6 h-6 ${feature.color}`} />
                     </div>
-                    <Badge variant="secondary" className="text-xs px-3 py-1">
+                    <Badge className="text-xs px-3 py-1" variant="secondary">
                       {feature.highlight}
                     </Badge>
                   </div>
@@ -153,11 +154,11 @@ export const Features = () => {
 
         {/* Bottom CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
           className="text-center mt-16"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-primary/10 border border-primary/20">
             <TrendingUp className="w-5 h-5 text-primary" />

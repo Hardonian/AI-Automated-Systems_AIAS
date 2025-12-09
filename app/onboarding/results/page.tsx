@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { ExecutionResults } from "@/components/workflows/ExecutionResults";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
-import { track } from "@/lib/telemetry/track";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ExecutionResults } from "@/components/workflows/ExecutionResults";
 import { logger } from "@/lib/logging/structured-logger";
+import { track } from "@/lib/telemetry/track";
 export default function ResultsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -23,7 +24,7 @@ export default function ResultsPage() {
   }, [workflowId]);
 
   async function executeWorkflow() {
-    if (!workflowId) return;
+    if (!workflowId) {return;}
 
     setLoading(true);
     setExecuted(true);
@@ -108,7 +109,7 @@ export default function ResultsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={handleComplete} size="lg" className="w-full">
+            <Button className="w-full" size="lg" onClick={handleComplete}>
               Complete Onboarding
             </Button>
           </CardContent>
@@ -124,7 +125,7 @@ export default function ResultsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={handleComplete} size="lg" variant="outline" className="w-full">
+            <Button className="w-full" size="lg" variant="outline" onClick={handleComplete}>
               Continue Anyway
             </Button>
           </CardContent>

@@ -98,7 +98,7 @@ async function verifyMigration() {
     }
   }
 
-  console.log("\n" + "=".repeat(50));
+  console.log(`\n${  "=".repeat(50)}`);
   if (allPassed) {
     console.log("✅ All migration objects verified successfully!");
     console.log("\n🎉 Your Living System is ready to use!");
@@ -107,7 +107,7 @@ async function verifyMigration() {
     console.log("   Please apply the migration first:");
     console.log("   tsx scripts/apply-living-system-migration.ts");
   }
-  console.log("=".repeat(50) + "\n");
+  console.log(`${"=".repeat(50)  }\n`);
 
   process.exit(allPassed ? 0 : 1);
 }

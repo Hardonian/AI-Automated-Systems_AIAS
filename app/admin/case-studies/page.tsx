@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import { CaseStudyDashboard } from "@/components/sales/case-study-dashboard";
 
 export const metadata: Metadata = {

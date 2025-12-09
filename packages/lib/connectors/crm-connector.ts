@@ -456,7 +456,7 @@ export class SalesforceConnector extends CRMConnector {
     });
 
     const contact = await this.getContact(response.id);
-    if (!contact) throw new Error('Failed to create contact');
+    if (!contact) {throw new Error('Failed to create contact');}
     return contact;
   }
 
@@ -475,7 +475,7 @@ export class SalesforceConnector extends CRMConnector {
     });
 
     const contact = await this.getContact(id);
-    if (!contact) throw new Error('Contact not found');
+    if (!contact) {throw new Error('Contact not found');}
     return contact;
   }
 
@@ -552,7 +552,7 @@ export class SalesforceConnector extends CRMConnector {
     });
 
     const opportunity = await this.getOpportunity(response.id);
-    if (!opportunity) throw new Error('Failed to create opportunity');
+    if (!opportunity) {throw new Error('Failed to create opportunity');}
     return opportunity;
   }
 
@@ -572,7 +572,7 @@ export class SalesforceConnector extends CRMConnector {
     });
 
     const opportunity = await this.getOpportunity(id);
-    if (!opportunity) throw new Error('Opportunity not found');
+    if (!opportunity) {throw new Error('Opportunity not found');}
     return opportunity;
   }
 

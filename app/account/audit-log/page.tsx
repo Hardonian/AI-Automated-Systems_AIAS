@@ -19,7 +19,7 @@ export default function AuditLog() {
   useEffect(() => {
     fetch("/api/audit/me")
       .then((r) => {
-        if (!r.ok) throw new Error("Failed to fetch audit log");
+        if (!r.ok) {throw new Error("Failed to fetch audit log");}
         return r.json();
       })
       .then((data) => {
@@ -110,7 +110,7 @@ export default function AuditLog() {
         </p>
         <p className="text-sm text-muted-foreground mt-2">
           For questions about your audit log, contact:{" "}
-          <a href="mailto:privacy@example.com" className="text-primary hover:underline">
+          <a className="text-primary hover:underline" href="mailto:privacy@example.com">
             privacy@example.com
           </a>
         </p>

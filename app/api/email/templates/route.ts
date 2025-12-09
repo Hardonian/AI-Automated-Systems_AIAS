@@ -4,9 +4,10 @@
  */
 
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
 import { createGETHandler } from '@/lib/api/route-handler';
 import { emailTemplates, getTemplateById, getTemplatesByStage, getTemplatesByCategory } from '@/lib/email-templates';
-import { z } from 'zod';
 
 const querySchema = z.object({
   stage: z.enum(['awareness', 'consideration', 'decision', 'onboarding', 'retention', 'reengagement']).optional(),

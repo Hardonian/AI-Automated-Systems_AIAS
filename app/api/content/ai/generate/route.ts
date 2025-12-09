@@ -1,8 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
+import OpenAI from "openai";
+
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logging/structured-logger";
-import OpenAI from "openai";
+
 /**
  * POST /api/content/ai/generate
  * Uses GenAI to generate or optimize content

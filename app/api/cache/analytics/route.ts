@@ -4,6 +4,7 @@
  */
 
 import { NextResponse } from 'next/server';
+
 import { createGETHandler } from '@/lib/api/route-handler';
 import { cacheService } from '@/lib/performance/cache';
 

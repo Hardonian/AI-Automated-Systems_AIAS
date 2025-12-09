@@ -1,10 +1,10 @@
 // scripts/etl/pull_shopify_orders.ts
-import pg from "pg";
 import fetch from "node-fetch";
+import pg from "pg";
 
-const SHOPIFY_API_KEY = process.env.SHOPIFY_API_KEY;
-const SHOPIFY_PASSWORD = process.env.SHOPIFY_PASSWORD;
-const SHOPIFY_STORE = process.env.SHOPIFY_STORE;
+const {SHOPIFY_API_KEY} = process.env;
+const {SHOPIFY_PASSWORD} = process.env;
+const {SHOPIFY_STORE} = process.env;
 const DATABASE_URL = process.env.DATABASE_URL || process.env.SUPABASE_DB_URL || process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!SHOPIFY_API_KEY || !SHOPIFY_PASSWORD || !SHOPIFY_STORE || !DATABASE_URL) {
@@ -115,7 +115,7 @@ async function pullShopifyOrders() {
 }
 
 function extractPageInfo(linkHeader: string | null): string | null {
-  if (!linkHeader) return null;
+  if (!linkHeader) {return null;}
   const match = linkHeader.match(/page_info=([^&>]+)/);
   return match ? match[1] : null;
 }

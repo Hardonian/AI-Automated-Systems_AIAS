@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import { ContentCalendarView } from "@/components/admin/content-calendar";
 
 export const metadata: Metadata = {

@@ -3,17 +3,6 @@
  * Complete setup process for new tenants with company info, plan selection, and configuration
  */
 
-import React, { useState, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Building2, 
   Users, 
@@ -23,19 +12,23 @@ import {
   ArrowRight, 
   ArrowLeft,
   Globe,
-  Shield,
   Zap,
   BarChart3,
-  Bot,
-  Workflow,
-  Store,
-  Bell,
-  Palette,
-  Upload,
-  Eye,
-  EyeOff
+  Palette
 } from 'lucide-react';
-import { SubscriptionPlan, TenantSettings } from '@/types/platform';
+import React, { useState, useCallback } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Progress } from '@/components/ui/progress';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { SubscriptionPlan } from '@/types/platform';
 
 interface TenantOnboardingProps {
   onComplete: (tenantData: TenantOnboardingData) => void;
@@ -366,7 +359,7 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
             <span>Step {currentStep} of {totalSteps}</span>
             <span>{Math.round(progress)}% Complete</span>
           </div>
-          <Progress value={progress} className="h-2" />
+          <Progress className="h-2" value={progress} />
         </div>
 
         {/* Step Content */}
@@ -386,9 +379,9 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                     <Label htmlFor="companyName">Company Name *</Label>
                     <Input
                       id="companyName"
+                      placeholder="Acme Corporation"
                       value={formData.companyInfo.name}
                       onChange={(e) => updateFormData('companyInfo', { name: e.target.value })}
-                      placeholder="Acme Corporation"
                     />
                   </div>
 
@@ -396,11 +389,11 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                     <Label htmlFor="subdomain">Subdomain *</Label>
                     <div className="flex">
                       <Input
+                        className="rounded-r-none"
                         id="subdomain"
+                        placeholder="acme"
                         value={formData.companyInfo.subdomain}
                         onChange={(e) => updateFormData('companyInfo', { subdomain: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') })}
-                        placeholder="acme"
-                        className="rounded-r-none"
                       />
                       <div className="flex items-center px-3 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md text-gray-600">
                         .aias.com
@@ -447,10 +440,10 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                     <Label htmlFor="description">Company Description</Label>
                     <Textarea
                       id="description"
-                      value={formData.companyInfo.description}
-                      onChange={(e) => updateFormData('companyInfo', { description: e.target.value })}
                       placeholder="Brief description of your company and what you do..."
                       rows={3}
+                      value={formData.companyInfo.description}
+                      onChange={(e) => updateFormData('companyInfo', { description: e.target.value })}
                     />
                   </div>
 
@@ -458,9 +451,9 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                     <Label htmlFor="website">Website</Label>
                     <Input
                       id="website"
+                      placeholder="https://www.yourcompany.com"
                       value={formData.companyInfo.website}
                       onChange={(e) => updateFormData('companyInfo', { website: e.target.value })}
-                      placeholder="https://www.yourcompany.com"
                     />
                   </div>
 
@@ -468,9 +461,10 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                     <Label htmlFor="logo">Company Logo</Label>
                     <div className="flex items-center gap-4">
                       <Input
+                        accept="image/*"
+                        className="flex-1"
                         id="logo"
                         type="file"
-                        accept="image/*"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           if (file) {
@@ -481,10 +475,9 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                             reader.readAsDataURL(file);
                           }
                         }}
-                        className="flex-1"
                       />
                       {formData.companyInfo.logo && (
-                        <img src={formData.companyInfo.logo} alt="Logo preview" className="h-12 w-12 object-contain rounded" />
+                        <img alt="Logo preview" className="h-12 w-12 object-contain rounded" src={formData.companyInfo.logo} />
                       )}
                     </div>
                   </div>
@@ -573,26 +566,26 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                         <div className="space-y-2">
                           <Label>First Name</Label>
                           <Input
+                            placeholder="John"
                             value={member.firstName}
                             onChange={(e) => updateTeamMember(index, 'firstName', e.target.value)}
-                            placeholder="John"
                           />
                         </div>
                         <div className="space-y-2">
                           <Label>Last Name</Label>
                           <Input
+                            placeholder="Doe"
                             value={member.lastName}
                             onChange={(e) => updateTeamMember(index, 'lastName', e.target.value)}
-                            placeholder="Doe"
                           />
                         </div>
                         <div className="space-y-2">
                           <Label>Email</Label>
                           <Input
+                            placeholder="john@company.com"
                             type="email"
                             value={member.email}
                             onChange={(e) => updateTeamMember(index, 'email', e.target.value)}
-                            placeholder="john@company.com"
                           />
                         </div>
                         <div className="space-y-2">
@@ -614,8 +607,8 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                       </div>
                       <div className="flex justify-end mt-4">
                         <Button
-                          variant="outline"
                           size="sm"
+                          variant="outline"
                           onClick={() => removeTeamMember(index)}
                         >
                           Remove
@@ -625,9 +618,9 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                   ))}
 
                   <Button
+                    className="w-full"
                     variant="outline"
                     onClick={addTeamMember}
-                    className="w-full"
                   >
                     <Users className="h-4 w-4 mr-2" />
                     Add Team Member
@@ -703,8 +696,8 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="flex items-center space-x-2">
                       <Checkbox
-                        id="email-notifications"
                         checked={formData.preferences.notifications.email}
+                        id="email-notifications"
                         onCheckedChange={(checked) => 
                           updateFormData('preferences', {
                             notifications: {
@@ -718,8 +711,8 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                     </div>
                     <div className="flex items-center space-x-2">
                       <Checkbox
-                        id="push-notifications"
                         checked={formData.preferences.notifications.push}
+                        id="push-notifications"
                         onCheckedChange={(checked) => 
                           updateFormData('preferences', {
                             notifications: {
@@ -733,8 +726,8 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                     </div>
                     <div className="flex items-center space-x-2">
                       <Checkbox
-                        id="sms-notifications"
                         checked={formData.preferences.notifications.sms}
+                        id="sms-notifications"
                         onCheckedChange={(checked) => 
                           updateFormData('preferences', {
                             notifications: {
@@ -748,8 +741,8 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                     </div>
                     <div className="flex items-center space-x-2">
                       <Checkbox
-                        id="webhook-notifications"
                         checked={formData.preferences.notifications.webhook}
+                        id="webhook-notifications"
                         onCheckedChange={(checked) => 
                           updateFormData('preferences', {
                             notifications: {
@@ -780,17 +773,17 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                     <Label htmlFor="primaryColor">Primary Color</Label>
                     <div className="flex items-center gap-2">
                       <Input
+                        className="w-16 h-10 p-1"
                         id="primaryColor"
                         type="color"
                         value={formData.branding.primaryColor}
                         onChange={(e) => updateFormData('branding', { primaryColor: e.target.value })}
-                        className="w-16 h-10 p-1"
                       />
                       <Input
+                        className="flex-1"
+                        placeholder="#3B82F6"
                         value={formData.branding.primaryColor}
                         onChange={(e) => updateFormData('branding', { primaryColor: e.target.value })}
-                        placeholder="#3B82F6"
-                        className="flex-1"
                       />
                     </div>
                   </div>
@@ -799,17 +792,17 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                     <Label htmlFor="secondaryColor">Secondary Color</Label>
                     <div className="flex items-center gap-2">
                       <Input
+                        className="w-16 h-10 p-1"
                         id="secondaryColor"
                         type="color"
                         value={formData.branding.secondaryColor}
                         onChange={(e) => updateFormData('branding', { secondaryColor: e.target.value })}
-                        className="w-16 h-10 p-1"
                       />
                       <Input
+                        className="flex-1"
+                        placeholder="#1E40AF"
                         value={formData.branding.secondaryColor}
                         onChange={(e) => updateFormData('branding', { secondaryColor: e.target.value })}
-                        placeholder="#1E40AF"
-                        className="flex-1"
                       />
                     </div>
                   </div>
@@ -818,9 +811,9 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                     <Label htmlFor="customDomain">Custom Domain (Optional)</Label>
                     <Input
                       id="customDomain"
+                      placeholder="app.yourcompany.com"
                       value={formData.branding.customDomain}
                       onChange={(e) => updateFormData('branding', { customDomain: e.target.value })}
-                      placeholder="app.yourcompany.com"
                     />
                     <p className="text-xs text-gray-500">You can configure DNS later</p>
                   </div>
@@ -845,11 +838,11 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                       <div 
                         className="h-2 rounded"
                         style={{ backgroundColor: formData.branding.primaryColor }}
-                      ></div>
+                       />
                       <div 
                         className="h-2 rounded"
                         style={{ backgroundColor: formData.branding.secondaryColor }}
-                      ></div>
+                       />
                     </div>
                   </div>
                 </div>
@@ -879,8 +872,8 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                       <CardContent className="p-4">
                         <div className="flex items-center gap-3">
                           <Checkbox
-                            checked={formData.integrations.selectedIntegrations.includes(integration.id)}
                             readOnly
+                            checked={formData.integrations.selectedIntegrations.includes(integration.id)}
                           />
                           <div className="flex-1">
                             <h3 className="font-semibold">{integration.name}</h3>
@@ -897,9 +890,9 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                     <Label htmlFor="webhookUrl">Webhook URL</Label>
                     <Input
                       id="webhookUrl"
+                      placeholder="https://yourcompany.com/webhook"
                       value={formData.integrations.webhookUrl}
                       onChange={(e) => updateFormData('integrations', { webhookUrl: e.target.value })}
-                      placeholder="https://yourcompany.com/webhook"
                     />
                   </div>
                 )}
@@ -1022,9 +1015,9 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
             {/* Navigation */}
             <div className="flex items-center justify-between pt-6 border-t">
               <Button
+                disabled={currentStep === 1}
                 variant="outline"
                 onClick={prevStep}
-                disabled={currentStep === 1}
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Previous
@@ -1036,17 +1029,17 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                 </Button>
                 {currentStep < totalSteps ? (
                   <Button
-                    onClick={nextStep}
                     disabled={!isStepValid(currentStep)}
+                    onClick={nextStep}
                   >
                     Next
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
                 ) : (
                   <Button
-                    onClick={handleComplete}
-                    disabled={!isStepValid(currentStep)}
                     className="bg-green-600 hover:bg-green-700"
+                    disabled={!isStepValid(currentStep)}
+                    onClick={handleComplete}
                   >
                     <CheckCircle className="h-4 w-4 mr-2" />
                     Create Workspace

@@ -2,9 +2,9 @@
  * Doctor Command - Comprehensive health checks
  */
 
+import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import { execSync } from 'child_process';
 
 interface CheckResult {
   name: string;
@@ -64,7 +64,7 @@ export async function doctor(options: { verbose?: boolean }): Promise<number> {
   // Print results
   console.log('\n📊 Health Check Results:\n');
   results.forEach((result) => {
-    const status: 'pass' | 'fail' | 'warn' = result.status;
+    const {status} = result;
     const icon = status === 'pass' ? '✅' : status === 'warn' ? '⚠️' : '❌';
     console.log(`${icon} ${result.name}: ${result.message}`);
     if (options.verbose && result.details) {

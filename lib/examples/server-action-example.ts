@@ -68,8 +68,8 @@ export async function createUser(
     }
 
     // Supabase query with null safety
-    const { data, error } = await supabase
-      .from('users')
+    const { data, error } = await (supabase
+      .from('users') as any)
       .insert({ email, name })
       .select()
       .single();

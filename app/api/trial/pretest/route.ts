@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+
+import { logger } from "@/lib/logging/structured-logger";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { savePretestAnswers } from "@/lib/trial/user-plan";
-import { logger } from "@/lib/logging/structured-logger";
 /**
  * POST /api/trial/pretest
  * Save pre-test questionnaire answers

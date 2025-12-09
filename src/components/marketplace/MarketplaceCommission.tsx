@@ -1,9 +1,3 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-// import { Progress } from '@/components/ui/progress';
 import { 
   ShoppingCart, 
   DollarSign, 
@@ -21,6 +15,13 @@ import {
   Target,
   Zap
 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// import { Progress } from '@/components/ui/progress';
 
 export interface MarketplaceItem {
   id: string;
@@ -366,7 +367,7 @@ export const MarketplaceCommission: React.FC = () => {
         </Card>
       </div>
 
-      <Tabs defaultValue="items" className="w-full">
+      <Tabs className="w-full" defaultValue="items">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="items">Marketplace Items</TabsTrigger>
           <TabsTrigger value="commissions">Commission Tiers</TabsTrigger>
@@ -374,7 +375,7 @@ export const MarketplaceCommission: React.FC = () => {
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="items" className="space-y-4">
+        <TabsContent className="space-y-4" value="items">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -386,7 +387,7 @@ export const MarketplaceCommission: React.FC = () => {
               <div className="space-y-4">
                 {marketplaceItems.map((item) => {
                   const tier = getCreatorTier(item.sales);
-                  const commissionRate = tier.commissionRate;
+                  const {commissionRate} = tier;
                   
                   return (
                     <div key={item.id} className="border rounded-lg p-4 hover:bg-gray-50">
@@ -399,7 +400,7 @@ export const MarketplaceCommission: React.FC = () => {
                               <Badge className={getStatusColor(item.status)}>
                                 {item.status}
                               </Badge>
-                              <Badge variant="outline" className={tier.color}>
+                              <Badge className={tier.color} variant="outline">
                                 {tier.name}
                               </Badge>
                             </div>
@@ -433,7 +434,7 @@ export const MarketplaceCommission: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="commissions" className="space-y-4">
+        <TabsContent className="space-y-4" value="commissions">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -484,7 +485,7 @@ export const MarketplaceCommission: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="payouts" className="space-y-4">
+        <TabsContent className="space-y-4" value="payouts">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -528,7 +529,7 @@ export const MarketplaceCommission: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="analytics" className="space-y-4">
+        <TabsContent className="space-y-4" value="analytics">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
               <CardHeader>
@@ -546,7 +547,7 @@ export const MarketplaceCommission: React.FC = () => {
                         <div 
                           className="bg-blue-600 h-2 rounded-full" 
                           style={{ width: `${(totalCommissions / totalRevenue) * 100}%` }}
-                        ></div>
+                         />
                       </div>
                       <span className="text-sm font-medium w-16 text-right">
                         {formatCurrency(totalCommissions)}
@@ -560,7 +561,7 @@ export const MarketplaceCommission: React.FC = () => {
                         <div 
                           className="bg-purple-600 h-2 rounded-full" 
                           style={{ width: `${(platformRevenue / totalRevenue) * 100}%` }}
-                        ></div>
+                         />
                       </div>
                       <span className="text-sm font-medium w-16 text-right">
                         {formatCurrency(platformRevenue)}

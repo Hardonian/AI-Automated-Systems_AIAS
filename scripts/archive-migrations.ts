@@ -72,7 +72,7 @@ function archiveMigrations() {
     }
   }
 
-  console.log('\n' + '='.repeat(60));
+  console.log(`\n${  '='.repeat(60)}`);
   console.log(`✅ Successfully archived ${archivedCount} migrations`);
   if (errorCount > 0) {
     console.log(`❌ Failed to archive ${errorCount} migrations`);

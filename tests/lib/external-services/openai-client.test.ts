@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
 import { callOpenAI } from '@/lib/external-services/openai-client';
 
 // Mock fetch

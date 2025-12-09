@@ -3,8 +3,8 @@
  * Validates referential integrity and data consistency
  */
 
-import { createClient } from '@supabase/supabase-js';
 import { Octokit } from '@octokit/rest';
+import { createClient } from '@supabase/supabase-js';
 
 interface IntegrityCheck {
   table: string;
@@ -85,7 +85,7 @@ class DatabaseIntegrityWatcher {
         .select('id, deployment_id')
         .not('deployment_id', 'in', '(SELECT DISTINCT deployment_id FROM deployments)');
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       if (orphanedMetrics && orphanedMetrics.length > 0) {
         checks.push({
@@ -124,7 +124,7 @@ class DatabaseIntegrityWatcher {
         .group('namespace, content')
         .having('count(*) > 1');
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       if (duplicates && duplicates.length > 0) {
         checks.push({
@@ -169,7 +169,7 @@ class DatabaseIntegrityWatcher {
             .select('id')
             .is(field, null);
 
-          if (error) throw error;
+          if (error) {throw error;}
 
           if (nullRecords && nullRecords.length > 0) {
             checks.push({
@@ -209,7 +209,7 @@ class DatabaseIntegrityWatcher {
         .select('id, metadata')
         .not('metadata', 'is', null);
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       if (invalidJson) {
         const invalidCount = invalidJson.filter((record: { metadata: string }) => {
@@ -269,7 +269,7 @@ class DatabaseIntegrityWatcher {
         .select('id, timestamp, created_at')
         .where('timestamp > created_at');
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       if (inconsistentTimestamps && inconsistentTimestamps.length > 0) {
         checks.push({
@@ -332,7 +332,7 @@ class DatabaseIntegrityWatcher {
         .from('integrity_reports')
         .insert([report]);
 
-      if (error) throw error;
+      if (error) {throw error;}
       
       console.log('Integrity report stored successfully');
     } catch (error: unknown) {
@@ -346,7 +346,7 @@ class DatabaseIntegrityWatcher {
   async createCriticalIssue(report: IntegrityReport): Promise<void> {
     const criticalChecks = report.checks.filter(c => c.severity === 'critical');
     
-    if (criticalChecks.length === 0) return;
+    if (criticalChecks.length === 0) {return;}
 
     try {
       const issue = {

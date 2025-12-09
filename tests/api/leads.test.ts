@@ -2,9 +2,10 @@
  * Leads API Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { POST } from "@/app/api/leads/capture/route";
 import { NextRequest } from "next/server";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+
+import { POST } from "@/app/api/leads/capture/route";
 
 vi.mock("@/lib/lead-generation/lead-capture", () => ({
   leadCaptureService: {

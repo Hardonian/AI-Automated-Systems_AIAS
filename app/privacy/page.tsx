@@ -3,6 +3,7 @@
 
 // import { readFile } from "fs/promises"; // Will be used for reading privacy policy file
 import { useEffect, useState } from "react";
+
 import { sanitize } from "@/lib/utils/sanitize-html";
 
 export default function Privacy() {
@@ -37,8 +38,8 @@ export default function Privacy() {
   return (
     <div className="container py-8">
       <article
-        className="prose dark:prose-invert max-w-none"
         dangerouslySetInnerHTML={{ __html: content }}
+        className="prose dark:prose-invert max-w-none"
       />
       <div className="mt-8 p-4 bg-muted rounded-lg">
         <p className="text-sm text-muted-foreground">
@@ -46,7 +47,7 @@ export default function Privacy() {
         </p>
         <p className="text-sm text-muted-foreground mt-2">
           For privacy inquiries, contact:{" "}
-          <a href="mailto:privacy@example.com" className="text-primary hover:underline">
+          <a className="text-primary hover:underline" href="mailto:privacy@example.com">
             privacy@example.com
           </a>
         </p>

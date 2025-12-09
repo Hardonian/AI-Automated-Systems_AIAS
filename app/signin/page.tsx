@@ -1,8 +1,9 @@
+import { Sparkles } from "lucide-react";
 import { Metadata } from "next";
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
-import { Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Sign In — AI Automated Systems",
@@ -33,19 +34,19 @@ export default function SignInPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6 pt-6">
-            <Button size="lg" className="w-full h-12 text-base font-semibold" asChild>
+            <Button asChild className="w-full h-12 text-base font-semibold" size="lg">
               <Link href="/api/auth/login">Sign In</Link>
             </Button>
             <p className="text-center text-sm md:text-base text-muted-foreground">
               Don't have an account?{" "}
-              <Link href="/signup" className="text-primary hover:underline font-medium">
+              <Link className="text-primary hover:underline font-medium" href="/signup">
                 Start your free trial
               </Link>
             </p>
             <div className="pt-6 border-t">
               <Link 
-                href="/help" 
-                className="text-sm md:text-base text-muted-foreground hover:text-foreground block text-center"
+                className="text-sm md:text-base text-muted-foreground hover:text-foreground block text-center" 
+                href="/help"
               >
                 Need help? Visit our Help Center
               </Link>

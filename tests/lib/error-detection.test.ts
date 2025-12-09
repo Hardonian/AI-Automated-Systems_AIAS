@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
 import { errorDetector, recordError } from '@/lib/utils/error-detection';
 
 describe('lib/utils/error-detection', () => {

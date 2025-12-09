@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { UsageProgressBanner } from '@/components/monetization/usage-progress-banner';
+
 import { TrialCountdownBanner } from '@/components/monetization/trial-countdown-banner';
+import { UsageProgressBanner } from '@/components/monetization/usage-progress-banner';
 import { WhatsNextChecklist } from '@/components/onboarding/whats-next-checklist';
 export function DashboardClient() {
   const [usage, setUsage] = useState<{ used: number; limit: number; plan: string } | null>(null);
@@ -40,9 +41,9 @@ export function DashboardClient() {
       {/* Upgrade Nudges */}
       {usage && (
         <UsageProgressBanner
-          used={usage.used}
           limit={usage.limit}
           plan={usage.plan}
+          used={usage.used}
         />
       )}
       {trialInfo && trialInfo.daysRemaining <= 3 && (

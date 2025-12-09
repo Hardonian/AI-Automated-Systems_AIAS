@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
 import { CheckCircle, PlayCircle, PauseCircle, RotateCcw, ArrowRight, ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 
 export interface TutorialStep {
   id: string;
@@ -187,8 +188,8 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
                 {step.content.quiz?.options.map((option, index) => (
                   <Button
                     key={index}
-                    variant="outline"
                     className="w-full justify-start text-left"
+                    variant="outline"
                     onClick={() => {
                       const isCorrect = handleQuizAnswer(index);
                       if (isCorrect) {
@@ -262,27 +263,27 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
             <span>Progress</span>
             <span>{currentStep + 1} of {tutorial.steps.length}</span>
           </div>
-          <Progress value={progress} className="h-2" />
+          <Progress className="h-2" value={progress} />
         </div>
 
         <div className="flex items-center gap-2">
           <Button
-            onClick={() => setIsPlaying(!isPlaying)}
-            variant="outline"
             size="sm"
+            variant="outline"
+            onClick={() => setIsPlaying(!isPlaying)}
           >
             {isPlaying ? <PauseCircle className="w-4 h-4" /> : <PlayCircle className="w-4 h-4" />}
             {isPlaying ? 'Pause' : 'Play'}
           </Button>
           <Button
+            size="sm"
+            variant="outline"
             onClick={() => {
               setCurrentStep(0);
               setCompletedSteps(new Set());
               setUserAnswers({});
               setScore(0);
             }}
-            variant="outline"
-            size="sm"
           >
             <RotateCcw className="w-4 h-4" />
             Restart
@@ -306,9 +307,9 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
 
         <div className="flex justify-between">
           <Button
-            onClick={handlePrevious}
             disabled={currentStep === 0}
             variant="outline"
+            onClick={handlePrevious}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Previous

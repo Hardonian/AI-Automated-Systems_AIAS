@@ -1,10 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { env } from "@/lib/env";
-import { track } from "@/lib/telemetry/track";
+
 import { handleApiError } from "@/lib/api/route-handler";
+import { env } from "@/lib/env";
 import { logger } from "@/lib/logging/structured-logger";
+import { track } from "@/lib/telemetry/track";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -58,7 +59,7 @@ export async function GET(request: NextRequest) {
                      new URL(request.url).searchParams.get("tenant_id");
 
     // Extract pagination params
-    const searchParams = new URL(request.url).searchParams;
+    const {searchParams} = new URL(request.url);
     const limit = Math.min(parseInt(searchParams.get("limit") || "20", 10), 100);
     const offset = parseInt(searchParams.get("offset") || "0", 10);
 

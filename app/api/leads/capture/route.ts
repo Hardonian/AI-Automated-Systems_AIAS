@@ -3,9 +3,10 @@
  */
 
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
 import { createPOSTHandler } from '@/lib/api/route-handler';
 import { leadCaptureService } from '@/lib/lead-generation/lead-capture';
-import { z } from 'zod';
 
 const leadCaptureSchema = z.object({
   email: z.string().email(),

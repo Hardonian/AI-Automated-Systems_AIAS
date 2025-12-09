@@ -1,11 +1,12 @@
 import { Metadata } from "next";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { TextReveal } from "@/components/ui/TextReveal";
-import { SpotlightCard } from "@/components/ui/SpotlightCard";
+
 import { BentoGrid, BentoGridItem } from "@/components/ui/BentoGrid";
+import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ParallaxBackground } from "@/components/ui/ParallaxBackground";
+import { SpotlightCard } from "@/components/ui/SpotlightCard";
+import { TextReveal } from "@/components/ui/TextReveal";
 
 export const metadata: Metadata = {
   title: "Features — Systems Thinking + AI | AIAS Platform",
@@ -202,7 +203,7 @@ export default function FeaturesPage() {
             </TextReveal>
             <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-2xl mx-auto">{category.description}</p>
           </div>
-          <BentoGrid columns={2} className="gap-6">
+          <BentoGrid className="gap-6" columns={2}>
             {category.features.map((feature) => (
               <BentoGridItem key={feature.name} colSpan={1} rowSpan={1}>
                 <SpotlightCard>
@@ -225,10 +226,10 @@ export default function FeaturesPage() {
           Start your 30-day free trial. No credit card required. Connect your tools and automate your first workflow in minutes.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" className="h-12 text-base font-semibold" asChild>
+          <Button asChild className="h-12 text-base font-semibold" size="lg">
             <Link href="/signup">Start 30-Day Free Trial</Link>
           </Button>
-          <Button size="lg" variant="outline" className="h-12 text-base font-semibold" asChild>
+          <Button asChild className="h-12 text-base font-semibold" size="lg" variant="outline">
             <Link href="/pricing">See Pricing</Link>
           </Button>
         </div>

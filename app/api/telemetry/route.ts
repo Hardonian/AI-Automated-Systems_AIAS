@@ -1,11 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+
 import { env } from "@/lib/env";
 import { SystemError, ValidationError, formatError } from "@/lib/errors";
+import { logger } from "@/lib/logging/structured-logger";
 import { recordError } from "@/lib/utils/error-detection";
 import { retry } from "@/lib/utils/retry";
-import { z } from "zod";
-import { logger } from "@/lib/logging/structured-logger";
 export const runtime = "edge";
 
 interface TelemetryResponse {
@@ -62,7 +63,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<TelemetryResp
       );
     }
 
-    const data = validationResult.data;
+    const {data} = validationResult;
 
     // Extract performance data
     const {
@@ -95,7 +96,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<TelemetryResp
 
     // Anonymize IP (don't store full IP)
     const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
-    const anonymizedIp = clientIp.split(".").slice(0, 2).join(".") + ".x.x";
+    const anonymizedIp = `${clientIp.split(".").slice(0, 2).join(".")  }.x.x`;
 
     // Prepare metric payload
     const metric = {

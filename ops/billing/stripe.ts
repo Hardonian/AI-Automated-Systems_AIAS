@@ -4,8 +4,9 @@
  */
 
 import Stripe from 'stripe';
-import { env } from '@/lib/env';
+
 import { generateIdempotencyKey, checkIdempotencyKey, recordIdempotencyKey, recordLedgerEntry } from '@/lib/billing/idempotency';
+import { env } from '@/lib/env';
 
 // CTO Mode: Use centralized env module - never destructure process.env
 const stripe = env.stripe.secretKey
@@ -29,7 +30,7 @@ export async function handleStripeWebhook(
 
   try {
     // CTO Mode: Use centralized env module
-    const webhookSecret = env.stripe.webhookSecret;
+    const {webhookSecret} = env.stripe;
     if (!webhookSecret) {
       throw new Error('STRIPE_WEBHOOK_SECRET not set');
     }
@@ -102,7 +103,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
         idempotencyKey: generateIdempotencyKey('subscription_ledger', subscription.id, { amount: amountCents }),
         accountId: orgId,
         accountType: 'tenant',
-        amountCents: amountCents,
+        amountCents,
         currency: subscription.items.data[0].price.currency.toUpperCase(),
         transactionType: 'subscription',
         sourceType: 'stripe',

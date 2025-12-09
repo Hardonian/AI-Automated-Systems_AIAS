@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+
 import {
   sanitizeFilename,
   validateFileSize,
@@ -25,7 +26,7 @@ describe('sanitizeFilename', () => {
   });
 
   it('should limit filename length', () => {
-    const longName = 'a'.repeat(300) + '.jpg';
+    const longName = `${'a'.repeat(300)  }.jpg`;
     expect(sanitizeFilename(longName).length).toBeLessThanOrEqual(255);
   });
 

@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
+
 import { createGETHandler, RouteContext } from "@/lib/api/route-handler";
 import { requireAdmin } from "@/lib/auth/admin-auth";
 import { seedRoundDB } from "@/lib/database/seed-round-db";
+import { logger } from "@/lib/logging/structured-logger";
 
 /**
  * Customer Health Score API

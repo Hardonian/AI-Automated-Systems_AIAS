@@ -1,13 +1,3 @@
-import React, { useState } from 'react';
-// import { useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
-import { Input } from '@/components/ui/input';
-// import { Textarea } from '@/components/ui/textarea';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   Shield, 
   FileText, 
@@ -26,6 +16,16 @@ import {
   Filter,
   Calendar
 } from 'lucide-react';
+import React, { useState } from 'react';
+
+// import { useEffect } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// import { Textarea } from '@/components/ui/textarea';
 
 export interface ConsentSettings {
   necessary: boolean;
@@ -262,7 +262,7 @@ export const GDPRComplianceUI: React.FC = () => {
         ))}
       </div>
 
-      <Tabs defaultValue="consent" className="w-full">
+      <Tabs className="w-full" defaultValue="consent">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="consent">Consent Management</TabsTrigger>
           <TabsTrigger value="subjects">Data Subjects</TabsTrigger>
@@ -270,7 +270,7 @@ export const GDPRComplianceUI: React.FC = () => {
           <TabsTrigger value="reports">Compliance Reports</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="consent" className="space-y-4">
+        <TabsContent className="space-y-4" value="consent">
           <Card>
             <CardHeader>
               <CardTitle>Cookie & Consent Settings</CardTitle>
@@ -282,7 +282,7 @@ export const GDPRComplianceUI: React.FC = () => {
                     <h4 className="font-semibold">Necessary Cookies</h4>
                     <p className="text-sm text-gray-600">Required for basic website functionality</p>
                   </div>
-                  <Switch checked={consentSettings.necessary} disabled />
+                  <Switch disabled checked={consentSettings.necessary} />
                 </div>
 
                 <div className="flex items-center justify-between">
@@ -361,7 +361,7 @@ export const GDPRComplianceUI: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="subjects" className="space-y-4">
+        <TabsContent className="space-y-4" value="subjects">
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -370,10 +370,10 @@ export const GDPRComplianceUI: React.FC = () => {
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
+                      className="pl-10 w-64"
                       placeholder="Search subjects..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 w-64"
                     />
                   </div>
                   <Button variant="outline">
@@ -396,7 +396,7 @@ export const GDPRComplianceUI: React.FC = () => {
                           <h4 className="font-semibold">{subject.name}</h4>
                           <p className="text-sm text-gray-600">{subject.email}</p>
                           <div className="flex items-center gap-2 mt-1">
-                            <Badge variant="outline" className="text-xs">
+                            <Badge className="text-xs" variant="outline">
                               {subject.processingBasis.replace('_', ' ')}
                             </Badge>
                             <Badge className={getStatusColor(subject.status)}>
@@ -406,11 +406,11 @@ export const GDPRComplianceUI: React.FC = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm">
+                        <Button size="sm" variant="outline">
                           <Eye className="w-4 h-4 mr-2" />
                           View Data
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button size="sm" variant="outline">
                           <Edit className="w-4 h-4 mr-2" />
                           Edit
                         </Button>
@@ -427,7 +427,7 @@ export const GDPRComplianceUI: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="requests" className="space-y-4">
+        <TabsContent className="space-y-4" value="requests">
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -436,10 +436,10 @@ export const GDPRComplianceUI: React.FC = () => {
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
+                      className="pl-10 w-64"
                       placeholder="Search requests..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 w-64"
                     />
                   </div>
                 </div>
@@ -476,8 +476,8 @@ export const GDPRComplianceUI: React.FC = () => {
                       </div>
                       <div className="flex gap-2">
                         <Button 
-                          variant="outline" 
-                          size="sm"
+                          size="sm" 
+                          variant="outline"
                           onClick={() => setSelectedRequest(request)}
                         >
                           View Details
@@ -507,7 +507,7 @@ export const GDPRComplianceUI: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="reports" className="space-y-4">
+        <TabsContent className="space-y-4" value="reports">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {complianceReports.map((report) => (
               <Card key={report.id}>
@@ -557,7 +557,7 @@ export const GDPRComplianceUI: React.FC = () => {
                   </div>
 
                   <div className="pt-4 border-t">
-                    <Button variant="outline" className="w-full">
+                    <Button className="w-full" variant="outline">
                       <Download className="w-4 h-4 mr-2" />
                       Download Report
                     </Button>

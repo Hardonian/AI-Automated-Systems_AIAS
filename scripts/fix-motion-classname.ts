@@ -4,13 +4,14 @@
  */
 
 import { readFileSync, writeFileSync } from 'fs';
+
 import { glob } from 'glob';
 
 const files = glob.sync('apps/web/components/**/*.tsx');
 
 for (const file of files) {
   let content = readFileSync(file, 'utf-8');
-  let _modified = false;
+  const _modified = false;
 
   // Pattern: motion.div, motion.span, etc. with className
   const _motionPattern = /(motion\.(?:div|span|section|article|header|footer|nav|main|p|h[1-6]|button|a|ul|ol|li|form|input|textarea|select|label|img|svg|path|g|circle|rect|line|polyline|polygon|ellipse)\s*\([^)]*className:\s*[^,}]+)/g;

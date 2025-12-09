@@ -3,9 +3,10 @@
  * Comprehensive analytics for lead generation and growth
  */
 
-import { NextResponse } from 'next/server';
-import { createGETHandler } from '@/lib/api/route-handler';
 import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
+
+import { createGETHandler } from '@/lib/api/route-handler';
 import { env } from '@/lib/env';
 import { conversionTrackingService } from '@/lib/lead-generation/conversion-tracking';
 import { costOptimizationService } from '@/lib/lead-generation/cost-optimization';
@@ -13,7 +14,7 @@ import { roiTrackingService } from '@/lib/lead-generation/roi-tracking';
 
 export const GET = createGETHandler(
   async (context) => {
-    const searchParams = context.request.nextUrl.searchParams;
+    const {searchParams} = context.request.nextUrl;
     const startDate = new Date(searchParams.get('startDate') || Date.now() - 30 * 24 * 60 * 60 * 1000);
     const endDate = new Date(searchParams.get('endDate') || Date.now());
     const tenantId = context.tenantId || undefined;

@@ -3,50 +3,37 @@
  * Forums, expert profiles, social features, and gamification
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   MessageSquare, 
-  Users, 
   Star, 
-  Heart, 
   Share2, 
   Bookmark, 
-  Search, 
-  Filter,
+  Search,
   Plus,
-  TrendingUp,
   Award,
   Trophy,
   Target,
   Zap,
-  Globe,
-  Calendar,
-  Clock,
   ThumbsUp,
-  ThumbsDown,
   Reply,
-  Flag,
   MoreVertical,
-  Edit,
-  Trash2,
   Pin,
   Eye,
   MessageCircle,
   UserPlus,
   CheckCircle,
-  Crown,
   Flame,
   Sparkles
 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CommunityPost, ExpertProfile } from '@/types/platform';
 
 interface CommunityFeaturesProps {
@@ -473,7 +460,7 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs className="w-full" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="forums">Forums</TabsTrigger>
           <TabsTrigger value="experts">Experts</TabsTrigger>
@@ -483,7 +470,7 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
         </TabsList>
 
         {/* Forums Tab */}
-        <TabsContent value="forums" className="space-y-6">
+        <TabsContent className="space-y-6" value="forums">
           {/* Categories */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {categories.map(category => (
@@ -512,10 +499,10 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
+                className="pl-10"
                 placeholder="Search posts, tags, or users..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
               />
             </div>
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
@@ -571,10 +558,10 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
                           </Badge>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Button variant="ghost" size="sm">
+                          <Button size="sm" variant="ghost">
                             <Bookmark className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="sm">
+                          <Button size="sm" variant="ghost">
                             <MoreVertical className="h-4 w-4" />
                           </Button>
                         </div>
@@ -596,15 +583,15 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <div className="flex items-center gap-1">
-                            <Button variant="ghost" size="sm">
+                            <Button size="sm" variant="ghost">
                               <ThumbsUp className="h-4 w-4" />
                               <span className="ml-1">{post.likes}</span>
                             </Button>
-                            <Button variant="ghost" size="sm">
+                            <Button size="sm" variant="ghost">
                               <Reply className="h-4 w-4" />
                               <span className="ml-1">{post.comments}</span>
                             </Button>
-                            <Button variant="ghost" size="sm">
+                            <Button size="sm" variant="ghost">
                               <Share2 className="h-4 w-4" />
                             </Button>
                           </div>
@@ -616,7 +603,7 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
 
                         <div className="flex items-center gap-2">
                           {post.tags.map((tag: string) => (
-                            <Badge key={tag} variant="secondary" className="text-xs">
+                            <Badge key={tag} className="text-xs" variant="secondary">
                               #{tag}
                             </Badge>
                           ))}
@@ -631,7 +618,7 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
         </TabsContent>
 
         {/* Experts Tab */}
-        <TabsContent value="experts" className="space-y-6">
+        <TabsContent className="space-y-6" value="experts">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {experts.map(expert => (
               <Card key={expert.id} className="hover:shadow-lg transition-shadow">
@@ -680,12 +667,12 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
                     <h4 className="text-sm font-medium">Expertise</h4>
                     <div className="flex flex-wrap gap-1">
                       {expert.expertise.slice(0, 3).map((skill: string) => (
-                        <Badge key={skill} variant="outline" className="text-xs">
+                        <Badge key={skill} className="text-xs" variant="outline">
                           {skill}
                         </Badge>
                       ))}
                       {expert.expertise.length > 3 && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge className="text-xs" variant="outline">
                           +{expert.expertise.length - 3} more
                         </Badge>
                       )}
@@ -697,7 +684,7 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
                       <UserPlus className="h-4 w-4 mr-2" />
                       Follow
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button size="sm" variant="outline">
                       <MessageCircle className="h-4 w-4" />
                     </Button>
                   </div>
@@ -708,7 +695,7 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
         </TabsContent>
 
         {/* Leaderboard Tab */}
-        <TabsContent value="leaderboard" className="space-y-6">
+        <TabsContent className="space-y-6" value="leaderboard">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -747,7 +734,7 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
         </TabsContent>
 
         {/* Achievements Tab */}
-        <TabsContent value="achievements" className="space-y-6">
+        <TabsContent className="space-y-6" value="achievements">
           {gamificationStats && (
             <>
               {/* Stats Overview */}
@@ -826,7 +813,7 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
                           {achievement.completed ? (
                             <CheckCircle className="h-8 w-8 text-green-600" />
                           ) : (
-                            <div className="h-8 w-8 rounded-full border-2 border-gray-300"></div>
+                            <div className="h-8 w-8 rounded-full border-2 border-gray-300" />
                           )}
                         </div>
                         <div className="flex-1">
@@ -841,7 +828,7 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
                               <div 
                                 className="bg-blue-600 h-2 rounded-full transition-all"
                                 style={{ width: `${(achievement.progress / achievement.maxProgress) * 100}%` }}
-                              ></div>
+                               />
                             </div>
                           </div>
                         </div>
@@ -860,7 +847,7 @@ export const CommunityFeatures: React.FC<CommunityFeaturesProps> = ({
         </TabsContent>
 
         {/* Knowledge Base Tab */}
-        <TabsContent value="knowledge" className="space-y-6">
+        <TabsContent className="space-y-6" value="knowledge">
           <div className="text-center py-12">
             <Bookmark className="h-16 w-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">Knowledge Base</h3>

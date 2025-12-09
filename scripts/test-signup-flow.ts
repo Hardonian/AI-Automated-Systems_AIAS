@@ -13,6 +13,7 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
+
 import { signUpUser } from "../lib/actions/auth-actions";
 
 async function testSignUpFlow() {
@@ -52,7 +53,7 @@ async function testSignUpFlow() {
       process.exit(1);
     }
 
-    const userId = signUpResult.data.userId;
+    const {userId} = signUpResult.data;
     console.log(`✅ User created: ${userId}\n`);
 
     // Step 2: Verify profile creation

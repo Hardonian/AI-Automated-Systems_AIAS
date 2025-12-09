@@ -1,6 +1,7 @@
 "use client";
-import Leaderboard from "@/components/gamification/Leaderboard";
 import { useState } from "react";
+
+import Leaderboard from "@/components/gamification/Leaderboard";
 
 export default function LeaderboardPage() {
   const [period, setPeriod] = useState<"weekly" | "monthly" | "all_time">("weekly");
@@ -13,10 +14,10 @@ export default function LeaderboardPage() {
           {(["weekly", "monthly", "all_time"] as const).map((p) => (
             <button
               key={p}
-              onClick={() => setPeriod(p)}
               className={`px-4 py-2 rounded-xl text-sm capitalize ${
                 period === p ? "bg-primary text-primary-fg" : "bg-muted"
               }`}
+              onClick={() => setPeriod(p)}
             >
               {p.replace("_", " ")}
             </button>

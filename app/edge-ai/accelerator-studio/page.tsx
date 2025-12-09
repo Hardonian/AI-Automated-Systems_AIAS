@@ -1,8 +1,9 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Check, ArrowRight } from "lucide-react";
+import { Metadata } from "next";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Edge AI Accelerator Studio — Deep Dive | AIAS",
@@ -168,13 +169,13 @@ export default function AcceleratorStudioPage() {
           Start optimizing your models for edge deployment. No credit card required.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/edge-ai/models">
               Upload Your First Model
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/edge-ai/device-analyzer">Analyze Your Device</Link>
           </Button>
         </div>

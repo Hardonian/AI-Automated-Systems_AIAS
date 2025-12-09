@@ -12,10 +12,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { logger } from "@/lib/logging/structured-logger";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { logger } from "@/lib/logging/structured-logger";
+
 
 interface PerformanceMetrics {
   api: {
@@ -102,9 +104,9 @@ export default function PerformanceDashboard() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Performance Dashboard</h1>
         <select
+          className="px-4 py-2 border rounded"
           value={timeRange}
           onChange={(e) => setTimeRange(e.target.value as '1h' | '24h' | '7d')}
-          className="px-4 py-2 border rounded"
         >
           <option value="1h">Last Hour</option>
           <option value="24h">Last 24 Hours</option>
@@ -112,7 +114,7 @@ export default function PerformanceDashboard() {
         </select>
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-4">
+      <Tabs className="space-y-4" defaultValue="overview">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="api">API Performance</TabsTrigger>
@@ -121,7 +123,7 @@ export default function PerformanceDashboard() {
           <TabsTrigger value="web-vitals">Web Vitals</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-4">
+        <TabsContent className="space-y-4" value="overview">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>
               <CardHeader>
@@ -182,14 +184,14 @@ export default function PerformanceDashboard() {
           </div>
         </TabsContent>
 
-        <TabsContent value="api" className="space-y-4">
+        <TabsContent className="space-y-4" value="api">
           <Card>
             <CardHeader>
               <CardTitle>API Response Times</CardTitle>
               <CardDescription>Latency percentiles</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer height={300} width="100%">
                 <BarChart data={apiData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
@@ -230,7 +232,7 @@ export default function PerformanceDashboard() {
           </div>
         </TabsContent>
 
-        <TabsContent value="database" className="space-y-4">
+        <TabsContent className="space-y-4" value="database">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardHeader>
@@ -259,14 +261,14 @@ export default function PerformanceDashboard() {
           </div>
         </TabsContent>
 
-        <TabsContent value="cache" className="space-y-4">
+        <TabsContent className="space-y-4" value="cache">
           <Card>
             <CardHeader>
               <CardTitle>Cache Performance</CardTitle>
               <CardDescription>Hit vs Miss Rate</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer height={300} width="100%">
                 <BarChart data={cacheData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
@@ -299,7 +301,7 @@ export default function PerformanceDashboard() {
           </div>
         </TabsContent>
 
-        <TabsContent value="web-vitals" className="space-y-4">
+        <TabsContent className="space-y-4" value="web-vitals">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardHeader>

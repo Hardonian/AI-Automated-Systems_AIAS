@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
+
 import { createGETHandler, RouteContext } from "@/lib/api/route-handler";
 import { requireAdmin } from "@/lib/auth/admin-auth";
+import { logger } from "@/lib/logging/structured-logger";
 import { getAllNotifications } from "@/lib/notifications/seed-round-notifications";
 
 /**

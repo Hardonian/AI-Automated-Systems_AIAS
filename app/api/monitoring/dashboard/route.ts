@@ -4,10 +4,10 @@
  */
 
 import { NextResponse } from 'next/server';
+
 import { createGETHandler } from '@/lib/api/route-handler';
-import { circuitBreakerRegistry } from '@/lib/resilience/circuit-breaker';
 import { cacheService } from '@/lib/performance/cache';
-import { rateLimiter as _rateLimiter } from '@/lib/performance/rate-limiter';
+import { circuitBreakerRegistry } from '@/lib/resilience/circuit-breaker';
 
 export const GET = createGETHandler(
   async () => {

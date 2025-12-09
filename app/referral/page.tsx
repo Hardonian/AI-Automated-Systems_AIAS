@@ -1,10 +1,11 @@
+import { Check, Gift, Users, Share2 } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Check, Gift, Users, Share2 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Referral Program — AIAS Platform | Get 1 Month Free",
@@ -44,21 +45,21 @@ export default function ReferralPage() {
                 <Label htmlFor="referral-link">Your Referral Link</Label>
                 <div className="flex gap-2 mt-2">
                   <Input
-                    id="referral-link"
-                    value="https://aias-platform.com/signup?ref=YOUR_CODE"
                     readOnly
                     className="font-mono text-sm"
+                    id="referral-link"
+                    value="https://aias-platform.com/signup?ref=YOUR_CODE"
                   />
-                  <Button variant="outline" size="sm">
+                  <Button size="sm" variant="outline">
                     Copy
                   </Button>
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button className="flex-1" size="sm" variant="outline">
                   Share on Twitter
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button className="flex-1" size="sm" variant="outline">
                   Share on LinkedIn
                 </Button>
               </div>
@@ -210,10 +211,10 @@ export default function ReferralPage() {
           Sign in to get your referral link and start earning free months.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/signup">Sign Up to Get Started</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/signin">Sign In</Link>
           </Button>
         </div>

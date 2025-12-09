@@ -3,9 +3,10 @@
  */
 
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
 import { createPOSTHandler } from '@/lib/api/route-handler';
 import { abTestingService } from '@/lib/lead-generation/ab-testing';
-import { z } from 'zod';
 
 const assignVariationSchema = z.object({
   testId: z.string().uuid(),

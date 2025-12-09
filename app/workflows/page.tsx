@@ -1,8 +1,9 @@
+import { Sparkles, Plus, Play, Settings } from "lucide-react";
 import { Metadata } from "next";
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
-import { Sparkles, Plus, Play, Settings } from "lucide-react";
 import { WorkflowsEmptyState } from "@/components/ui/empty-state-enhanced";
 
 export const metadata: Metadata = {
@@ -26,7 +27,7 @@ export default function WorkflowsPage() {
               Manage and monitor your automation workflows
             </p>
           </div>
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/onboarding/create-workflow">
               <Plus className="h-5 w-5 mr-2" />
               Create Workflow
@@ -54,7 +55,7 @@ export default function WorkflowsPage() {
                 <p className="text-sm text-muted-foreground mb-4">
                   Choose from pre-built templates for common workflows
                 </p>
-                <Button variant="outline" size="sm" asChild>
+                <Button asChild size="sm" variant="outline">
                   <Link href="/templates">Browse Templates</Link>
                 </Button>
               </div>
@@ -66,7 +67,7 @@ export default function WorkflowsPage() {
                 <p className="text-sm text-muted-foreground mb-4">
                   Create a workflow from scratch tailored to your needs
                 </p>
-                <Button variant="outline" size="sm" asChild>
+                <Button asChild size="sm" variant="outline">
                   <Link href="/onboarding/create-workflow">Create Custom</Link>
                 </Button>
               </div>
@@ -78,7 +79,7 @@ export default function WorkflowsPage() {
                 <p className="text-sm text-muted-foreground mb-4">
                   Explore our documentation and guides
                 </p>
-                <Button variant="outline" size="sm" asChild>
+                <Button asChild size="sm" variant="outline">
                   <Link href="/help">View Help</Link>
                 </Button>
               </div>
@@ -99,7 +100,7 @@ export default function WorkflowsPage() {
                 <Button asChild>
                   <Link href="/demo">Schedule Demo</Link>
                 </Button>
-                <Button variant="outline" asChild>
+                <Button asChild variant="outline">
                   <Link href="/help">Visit Help Center</Link>
                 </Button>
               </div>

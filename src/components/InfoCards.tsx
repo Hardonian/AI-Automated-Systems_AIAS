@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import { TrendingUp, Clock, DollarSign, Users, Star, CheckCircle, Zap, Shield } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 
 export const InfoCards = () => {
   const proofPoints = [
@@ -91,11 +92,11 @@ export const InfoCards = () => {
       <div className="container mx-auto px-4 relative z-10">
         {/* Proof Points */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
           className="mb-20"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <div className="text-center mb-12">
             <h2 className="text-4xl sm:text-5xl font-bold mb-4">
@@ -113,12 +114,12 @@ export const InfoCards = () => {
             {proofPoints.map((point, index) => (
               <motion.div
                 key={point.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -8 }}
                 className="group"
+                initial={{ opacity: 0, y: 30 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05, y: -8 }}
+                whileInView={{ opacity: 1, y: 0 }}
               >
                 <Card className="h-full bg-gradient-card backdrop-blur-sm border border-border group-hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10">
                   <CardContent className="p-6 text-center">
@@ -139,11 +140,11 @@ export const InfoCards = () => {
 
         {/* Testimonials */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
           className="mb-20"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <div className="text-center mb-12">
             <h2 className="text-4xl sm:text-5xl font-bold mb-4">
@@ -161,12 +162,12 @@ export const InfoCards = () => {
             {testimonials.map((testimonial, index) => (
               <motion.div
                 key={testimonial.author}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ scale: 1.02, y: -5 }}
                 className="group"
+                initial={{ opacity: 0, y: 30 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.02, y: -5 }}
+                whileInView={{ opacity: 1, y: 0 }}
               >
                 <Card className="h-full bg-gradient-card backdrop-blur-sm border border-border group-hover:border-primary/50 transition-all duration-300 hover:shadow-xl">
                   <CardContent className="p-6">
@@ -197,9 +198,9 @@ export const InfoCards = () => {
         {/* Feature Highlights */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <div className="text-center mb-12">
             <h2 className="text-4xl sm:text-5xl font-bold mb-4">
@@ -217,19 +218,19 @@ export const InfoCards = () => {
             {features.map((feature, index) => (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -5 }}
                 className="group"
+                initial={{ opacity: 0, y: 30 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05, y: -5 }}
+                whileInView={{ opacity: 1, y: 0 }}
               >
                 <Card className="h-full bg-gradient-card backdrop-blur-sm border border-border group-hover:border-primary/50 transition-all duration-300 hover:shadow-xl">
                   <CardContent className="p-6 text-center">
                     <div className="p-4 rounded-full bg-primary/10 w-fit mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
                       <feature.icon className="w-8 h-8 text-primary" />
                     </div>
-                    <Badge variant="secondary" className="mb-4 text-sm px-3 py-1">
+                    <Badge className="mb-4 text-sm px-3 py-1" variant="secondary">
                       {feature.highlight}
                     </Badge>
                     <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>

@@ -3,6 +3,7 @@
  */
 
 import { readFileSync, writeFileSync } from 'fs';
+
 import { globSync } from 'glob';
 
 const files = globSync('apps/web/components/**/*.tsx');
@@ -33,7 +34,7 @@ for (const file of allFiles) {
       const restAfter = (after || '').trim().replace(/^,\s*/, '');
       const allProps = [restBefore, restAfter].filter(Boolean).join(',').trim();
       
-      return `${component}({${allProps ? allProps + ',' : ''}...({className: ${classNameValue}} as any)})`;
+      return `${component}({${allProps ? `${allProps  },` : ''}...({className: ${classNameValue}} as any)})`;
     });
   }
   
@@ -46,7 +47,7 @@ for (const file of allFiles) {
       const restAfter = after.trim().replace(/^,\s*/, '');
       const allProps = [restBefore, restAfter].filter(Boolean).join(',').trim();
       
-      return `${component}({${allProps ? allProps + ',' : ''}...({className: ${classNameValue}} as any)})`;
+      return `${component}({${allProps ? `${allProps  },` : ''}...({className: ${classNameValue}} as any)})`;
     }
   );
   

@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import { emailService } from '@/lib/email/email-service';
 
 // Mock fetch

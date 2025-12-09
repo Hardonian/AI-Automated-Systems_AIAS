@@ -230,14 +230,14 @@ class SmokeTestRunner {
     const failed = this.results.filter(r => !r.passed).length;
     const totalDuration = this.results.reduce((sum, r) => sum + r.duration, 0);
 
-    console.log('\n' + '='.repeat(60));
+    console.log(`\n${  '='.repeat(60)}`);
     console.log('SMOKE TEST RESULTS');
     console.log('='.repeat(60));
     console.log(`Total Tests: ${this.results.length}`);
     console.log(`Passed: ${passed}`);
     console.log(`Failed: ${failed}`);
     console.log(`Total Duration: ${totalDuration}ms`);
-    console.log('='.repeat(60) + '\n');
+    console.log(`${'='.repeat(60)  }\n`);
 
     for (const result of this.results) {
       const status = result.passed ? '✅ PASS' : '❌ FAIL';
@@ -247,7 +247,7 @@ class SmokeTestRunner {
       }
     }
 
-    console.log('\n' + '='.repeat(60));
+    console.log(`\n${  '='.repeat(60)}`);
 
     if (failed > 0) {
       logger.error('Smoke tests failed', {

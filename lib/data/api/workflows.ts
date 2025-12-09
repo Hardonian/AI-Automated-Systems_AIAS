@@ -107,8 +107,8 @@ export async function createWorkflow(
 ): Promise<Workflow> {
   const supabase = createClient();
   
-  const { data, error } = await supabase
-    .from("workflows")
+  const { data, error } = await (supabase
+    .from("workflows") as any)
     .insert(workflow)
     .select()
     .single();
@@ -121,7 +121,7 @@ export async function createWorkflow(
   if (workflow.user_id) {
     try {
       const { trackWorkflowCreate } = await import("@/lib/analytics/funnel-tracking");
-      trackWorkflowCreate(workflow.user_id, data.id, {
+      trackWorkflowCreate(workflow.user_id, (data as { id: string }).id, {
         templateId: workflow.template_id,
         timestamp: new Date().toISOString(),
       });
@@ -143,8 +143,8 @@ export async function updateWorkflow(
 ): Promise<Workflow> {
   const supabase = createClient();
   
-  const { data, error } = await supabase
-    .from("workflows")
+  const { data, error } = await (supabase
+    .from("workflows") as any)
     .update(updates)
     .eq("id", workflowId)
     .select()

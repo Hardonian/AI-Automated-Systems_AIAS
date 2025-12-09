@@ -1,8 +1,9 @@
+import { Code, Book, Key, Zap } from "lucide-react";
 import { Metadata } from "next";
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
-import { Code, Book, Key, Zap } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "API Documentation — AIAS Platform | Developer Resources",
@@ -36,7 +37,7 @@ export default function APIPage() {
             <CardDescription className="mb-4">
               Learn how to authenticate API requests using API keys and OAuth
             </CardDescription>
-            <Button variant="outline" asChild>
+            <Button asChild variant="outline">
               <Link href="/api/openapi">View API Spec</Link>
             </Button>
           </CardContent>
@@ -53,7 +54,7 @@ export default function APIPage() {
             <CardDescription className="mb-4">
               Create, execute, and manage workflows programmatically
             </CardDescription>
-            <Button variant="outline" asChild>
+            <Button asChild variant="outline">
               <Link href="/api/v1/workflows">View Endpoints</Link>
             </Button>
           </CardContent>
@@ -70,7 +71,7 @@ export default function APIPage() {
             <CardDescription className="mb-4">
               Complete API specification in OpenAPI format
             </CardDescription>
-            <Button variant="outline" asChild>
+            <Button asChild variant="outline">
               <Link href="/api/openapi">View Specification</Link>
             </Button>
           </CardContent>
@@ -87,7 +88,7 @@ export default function APIPage() {
             <CardDescription className="mb-4">
               Interactive API documentation and testing interface
             </CardDescription>
-            <Button variant="outline" asChild>
+            <Button asChild variant="outline">
               <Link href="/api/swagger">Open Swagger</Link>
             </Button>
           </CardContent>
@@ -112,7 +113,7 @@ export default function APIPage() {
             <Button asChild>
               <Link href="/settings">Get API Key</Link>
             </Button>
-            <Button variant="outline" asChild>
+            <Button asChild variant="outline">
               <Link href="/help">View Documentation</Link>
             </Button>
           </div>
@@ -120,7 +121,7 @@ export default function APIPage() {
       </Card>
 
       <div className="mt-8 text-center">
-        <Link href="/integrations" className="text-primary hover:underline">
+        <Link className="text-primary hover:underline" href="/integrations">
           View Available Integrations →
         </Link>
       </div>

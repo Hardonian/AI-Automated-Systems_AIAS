@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import { CustomerHealthDashboardEnhanced } from "@/components/metrics/customer-health-dashboard-enhanced";
 
 export const metadata: Metadata = {

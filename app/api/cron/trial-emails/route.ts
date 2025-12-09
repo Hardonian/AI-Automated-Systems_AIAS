@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { processAllTrialEmails } from "@/lib/email-cadence/sender";
 import { logger } from "@/lib/logging/structured-logger";
 /**

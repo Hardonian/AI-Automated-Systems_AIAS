@@ -7,11 +7,12 @@
 import { execSync } from 'child_process';
 import { readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
+
 import { Pool } from 'pg';
 
 const SUPABASE_PROJECT_REF = process.env.SUPABASE_PROJECT_REF || process.env.VITE_SUPABASE_PROJECT_ID;
-const SUPABASE_ACCESS_TOKEN = process.env.SUPABASE_ACCESS_TOKEN;
-const SUPABASE_DB_URL = process.env.SUPABASE_DB_URL;
+const {SUPABASE_ACCESS_TOKEN} = process.env;
+const {SUPABASE_DB_URL} = process.env;
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');
 
 interface MigrationFile {

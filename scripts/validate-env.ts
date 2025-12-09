@@ -147,7 +147,7 @@ function printValidationResults(results: ValidationResult[]): { valid: boolean; 
     }
   }
 
-  console.log('\n' + '='.repeat(60));
+  console.log(`\n${  '='.repeat(60)}`);
 
   if (allValid) {
     console.log('\n✅ All required environment variables are set!\n');

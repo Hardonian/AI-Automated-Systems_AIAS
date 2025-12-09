@@ -1,8 +1,9 @@
+import { Gift, Download, Mail } from 'lucide-react';
 import { useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { Gift, Download, Mail } from 'lucide-react';
 
 export const LeadGenForm = () => {
   const [email, setEmail] = useState('');
@@ -69,28 +70,28 @@ export const LeadGenForm = () => {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
+            <form className="space-y-4 max-w-md mx-auto" onSubmit={handleSubmit}>
               <Input
-                type="text"
+                required
+                className="bg-background/50 border-primary/20"
                 placeholder="Your Name"
+                type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                required
-                className="bg-background/50 border-primary/20"
               />
               <Input
-                type="email"
-                placeholder="Your Email Address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 required
                 className="bg-background/50 border-primary/20"
+                placeholder="Your Email Address"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <Button
-                type="submit"
-                size="lg"
                 className="w-full bg-gradient-primary shadow-glow text-lg"
                 disabled={isLoading}
+                size="lg"
+                type="submit"
               >
                 {isLoading ? 'Sending...' : 'Download Free Guide'}
                 <Download className="ml-2 w-5 h-5" />

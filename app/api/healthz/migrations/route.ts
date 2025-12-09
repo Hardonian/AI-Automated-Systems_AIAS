@@ -8,6 +8,7 @@
  */
 
 import { NextResponse } from 'next/server';
+
 import { getMigrationFiles, getAppliedMigrations, validateSchemaAfterMigrations } from '@/lib/database/migrations';
 import { isError, isString } from '@/lib/utils/type-guards';
 

@@ -3,9 +3,10 @@
  * Compares latest OpenAPI vs deployed endpoints
  */
 
-import { Octokit } from '@octokit/rest';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+
+import { Octokit } from '@octokit/rest';
 
 interface APIContract {
   path: string;
@@ -283,7 +284,7 @@ class APIContractWatcher {
   async createCriticalIssue(report: ContractReport): Promise<void> {
     const criticalViolations = report.violations.filter(v => v.severity === 'critical');
     
-    if (criticalViolations.length === 0) return;
+    if (criticalViolations.length === 0) {return;}
 
     try {
       const issue = {

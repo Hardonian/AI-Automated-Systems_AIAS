@@ -1,9 +1,10 @@
 import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { TextReveal } from "@/components/ui/TextReveal";
-import { SpotlightCard } from "@/components/ui/SpotlightCard";
+
 import { BentoGrid, BentoGridItem } from "@/components/ui/BentoGrid";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ParallaxBackground } from "@/components/ui/ParallaxBackground";
+import { SpotlightCard } from "@/components/ui/SpotlightCard";
+import { TextReveal } from "@/components/ui/TextReveal";
 
 export const metadata: Metadata = {
   title: "About — AIAS Platform | Made in Canada",
@@ -116,7 +117,7 @@ export default function AboutPage() {
           >
             Our Values
           </TextReveal>
-          <BentoGrid columns={2} className="gap-4">
+          <BentoGrid className="gap-4" columns={2}>
             <BentoGridItem colSpan={1} rowSpan={1}>
               <SpotlightCard>
                 <Card className="border-0 bg-transparent shadow-none h-full">
@@ -213,8 +214,8 @@ export default function AboutPage() {
                 <div className="space-y-2 text-sm">
                   <p><strong>Location:</strong> Toronto, Canada</p>
                   <p><strong>Background:</strong> Full-stack developer, e-commerce operator (Hardonia.store), founder of Hardonian Industries. Active open-source contributor with 40+ public repositories.</p>
-                  <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/scottrmhardie" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">scottrmhardie</a></p>
-                  <p><strong>GitHub:</strong> <a href="https://github.com/shardie-github" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">shardie-github</a></p>
+                  <p><strong>LinkedIn:</strong> <a className="text-primary hover:underline" href="https://www.linkedin.com/in/scottrmhardie" rel="noopener noreferrer" target="_blank">scottrmhardie</a></p>
+                  <p><strong>GitHub:</strong> <a className="text-primary hover:underline" href="https://github.com/shardie-github" rel="noopener noreferrer" target="_blank">shardie-github</a></p>
                   <p><strong>Why AIAS:</strong> Experienced firsthand the pain of manual workflows running e-commerce operations. Built AIAS Platform to solve this problem for Canadian SMBs who can't afford expensive enterprise tools.</p>
                 </div>
               </CardContent>
@@ -232,13 +233,13 @@ export default function AboutPage() {
             <CardContent className="space-y-2">
               <p>
                 <strong>Email:</strong>{" "}
-                <a href="mailto:support@aiautomatedsystems.ca" className="text-primary hover:underline">
+                <a className="text-primary hover:underline" href="mailto:support@aiautomatedsystems.ca">
                   support@aiautomatedsystems.ca
                 </a>
               </p>
               <p>
                 <strong>Sales:</strong>{" "}
-                <a href="mailto:inquiries@aiautomatedsystems.ca" className="text-primary hover:underline">
+                <a className="text-primary hover:underline" href="mailto:inquiries@aiautomatedsystems.ca">
                   inquiries@aiautomatedsystems.ca
                 </a>
               </p>

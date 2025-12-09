@@ -89,8 +89,8 @@ export async function checkFeatureAccess(
       .single();
 
     let plan: PlanTier = "free";
-    if (subscription?.subscription_plans?.tier) {
-      plan = subscription.subscription_plans.tier as PlanTier;
+    if (subscription?.subscription_plans && Array.isArray(subscription.subscription_plans) && subscription.subscription_plans[0]?.tier) {
+      plan = subscription.subscription_plans[0].tier as PlanTier;
     } else {
       const { data: profile } = await supabase
         .from("profiles")
@@ -172,8 +172,8 @@ export async function canCreateWorkflow(userId: string): Promise<FeatureAccess> 
       .single();
 
     let plan: PlanTier = "free";
-    if (subscription?.subscription_plans?.tier) {
-      plan = subscription.subscription_plans.tier as PlanTier;
+    if (subscription?.subscription_plans && Array.isArray(subscription.subscription_plans) && subscription.subscription_plans[0]?.tier) {
+      plan = subscription.subscription_plans[0].tier as PlanTier;
     }
 
     const maxWorkflows = FEATURES.workflows[plan]?.max || 3;

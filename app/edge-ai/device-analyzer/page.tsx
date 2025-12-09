@@ -1,8 +1,9 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Cpu, Smartphone, Server, Settings } from "lucide-react";
+import { Metadata } from "next";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Device Analyzer — Hardware Profiling | AIAS",
@@ -74,7 +75,7 @@ export default function DeviceAnalyzerPage() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <Button size="sm" variant="outline" className="w-full" asChild>
+                  <Button asChild className="w-full" size="sm" variant="outline">
                     <Link href={`/edge-ai/device-analyzer/${device.type}`}>Use Template</Link>
                   </Button>
                 </CardContent>

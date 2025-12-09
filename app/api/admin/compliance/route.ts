@@ -1,7 +1,8 @@
-import { createClient } from '@supabase/supabase-js';
-import { NextResponse } from 'next/server';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+
+import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs'; // Requires Node.js runtime for fs operations
@@ -34,7 +35,7 @@ export async function GET() {
       .single();
 
     if (latestAudit?.audit) {
-      const audit = latestAudit.audit;
+      const {audit} = latestAudit;
       return NextResponse.json({
         timestamp: new Date().toISOString(),
         secrets: audit.secrets?.status || 'ok',

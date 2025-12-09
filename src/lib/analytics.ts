@@ -340,11 +340,11 @@ export class AnalyticsService {
   }
 
   private getSessionId(): string {
-    if (typeof window === 'undefined') return '';
+    if (typeof window === 'undefined') {return '';}
     
     let sessionId = sessionStorage.getItem('analytics_session_id');
     if (!sessionId) {
-      sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+      sessionId = `session_${  Math.random().toString(36).substr(2, 9)}`;
       sessionStorage.setItem('analytics_session_id', sessionId);
     }
     return sessionId;
@@ -386,8 +386,8 @@ export const trackPurchase = (transactionId: string, value: number, currency: st
   if (typeof window !== 'undefined' && (window as any).gtag) {
     (window as any).gtag('event', 'purchase', {
       transaction_id: transactionId,
-      value: value,
-      currency: currency
+      value,
+      currency
     });
   }
 };

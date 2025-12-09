@@ -1,8 +1,9 @@
-import { Metadata } from "next";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Check, ArrowRight, Clock, Zap } from "lucide-react";
+import { Metadata } from "next";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "10 Automation Workflows That Save 10+ Hours Per Week | AIAS Platform",
@@ -242,7 +243,7 @@ export default function AutomationWorkflowsPage() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-            <Button variant="outline" size="lg" asChild>
+            <Button asChild size="lg" variant="outline">
               <Link href="/templates">Browse Templates</Link>
             </Button>
           </div>
@@ -253,11 +254,11 @@ export default function AutomationWorkflowsPage() {
       <div className="mt-12 pt-8 border-t">
         <h3 className="text-xl font-bold mb-4">Related Articles</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Link href="/systems-thinking" className="block p-4 border rounded-lg hover:border-primary transition-colors">
+          <Link className="block p-4 border rounded-lg hover:border-primary transition-colors" href="/systems-thinking">
             <h4 className="font-semibold mb-2">Systems Thinking: The Critical Skill for the AI Age</h4>
             <p className="text-sm text-muted-foreground">Learn how systems thinking makes your automations better</p>
           </Link>
-          <Link href="/automation-guide" className="block p-4 border rounded-lg hover:border-primary transition-colors">
+          <Link className="block p-4 border rounded-lg hover:border-primary transition-colors" href="/automation-guide">
             <h4 className="font-semibold mb-2">Business Automation: Complete Guide</h4>
             <p className="text-sm text-muted-foreground">Everything you need to know about business automation</p>
           </Link>

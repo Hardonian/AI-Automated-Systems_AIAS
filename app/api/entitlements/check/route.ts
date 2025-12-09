@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { checkFeatureAccess } from "@/lib/entitlements/check";
-import { handleApiError } from "@/lib/api/route-handler";
 import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
+
+import { handleApiError } from "@/lib/api/route-handler";
+import { checkFeatureAccess } from "@/lib/entitlements/check";
 import { env } from "@/lib/env";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);

@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node
+import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
-import { execSync } from "child_process";
 
 const args = process.argv.slice(2);
 const getArg = (k: string, d?: string) => {
@@ -31,7 +31,7 @@ function toPascal(s: string) {
 }
 
 function convertHtmlToComponent(filePath: string) {
-  if (!DEST) throw new Error('DEST is not set');
+  if (!DEST) {throw new Error('DEST is not set');}
   const raw = fs.readFileSync(filePath, "utf8");
   const name = toPascal(path.basename(filePath, path.extname(filePath)));
   // naive sanitation; Cursor to refine with codemods if needed
@@ -53,10 +53,10 @@ export default function ${name}(){
 }
 
 function processDir(dir: string) {
-  if (!DEST) throw new Error('DEST is not set');
+  if (!DEST) {throw new Error('DEST is not set');}
   const report: string[] = [];
   for (const f of fs.readdirSync(dir)) {
-    if (typeof f !== 'string') continue;
+    if (typeof f !== 'string') {continue;}
     const p = path.join(dir, f);
     const stat = fs.statSync(p);
     if (stat.isDirectory()) {

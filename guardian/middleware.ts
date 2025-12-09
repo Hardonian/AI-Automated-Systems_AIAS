@@ -3,8 +3,9 @@
  * Hooks into app telemetry events and API calls
  */
 
-import { guardianService, type GuardianEvent, type DataScope, type DataClass } from './core';
 import { monitoringService, type ErrorInfo } from '../src/lib/monitoring';
+
+import { guardianService, type GuardianEvent, type DataScope, type DataClass } from './core';
 
 // Extend monitoring service to emit guardian events
 const originalTrackEvent = monitoringService.trackEvent.bind(monitoringService);
@@ -58,11 +59,11 @@ monitoringService.trackError = function(error: Error, errorInfo?: ErrorInfo) {
  * Determine data scope from event properties
  */
 function determineScope(properties?: Record<string, unknown>): DataScope {
-  if (!properties) return 'app';
+  if (!properties) {return 'app';}
   
-  if (properties.user_id || properties.userId) return 'user';
-  if (properties.api_endpoint || properties.endpoint) return 'api';
-  if (properties.external === true) return 'external';
+  if (properties.user_id || properties.userId) {return 'user';}
+  if (properties.api_endpoint || properties.endpoint) {return 'api';}
+  if (properties.external === true) {return 'external';}
   
   return 'app';
 }
@@ -73,16 +74,16 @@ function determineScope(properties?: Record<string, unknown>): DataScope {
 function determineDataClass(name: string, properties?: Record<string, unknown>): DataClass {
   const nameLower = name.toLowerCase();
   
-  if (nameLower.includes('location') || nameLower.includes('geo')) return 'location';
-  if (nameLower.includes('audio') || nameLower.includes('mic') || nameLower.includes('voice')) return 'audio';
-  if (nameLower.includes('biometric') || nameLower.includes('fingerprint') || nameLower.includes('face')) return 'biometrics';
-  if (nameLower.includes('password') || nameLower.includes('token') || nameLower.includes('credential')) return 'credentials';
-  if (nameLower.includes('content') || nameLower.includes('message') || nameLower.includes('text')) return 'content';
+  if (nameLower.includes('location') || nameLower.includes('geo')) {return 'location';}
+  if (nameLower.includes('audio') || nameLower.includes('mic') || nameLower.includes('voice')) {return 'audio';}
+  if (nameLower.includes('biometric') || nameLower.includes('fingerprint') || nameLower.includes('face')) {return 'biometrics';}
+  if (nameLower.includes('password') || nameLower.includes('token') || nameLower.includes('credential')) {return 'credentials';}
+  if (nameLower.includes('content') || nameLower.includes('message') || nameLower.includes('text')) {return 'content';}
   
   if (properties) {
-    if (properties.hasAudio || properties.audio) return 'audio';
-    if (properties.hasLocation || properties.location) return 'location';
-    if (properties.hasBiometrics || properties.biometric) return 'biometrics';
+    if (properties.hasAudio || properties.audio) {return 'audio';}
+    if (properties.hasLocation || properties.location) {return 'location';}
+    if (properties.hasBiometrics || properties.biometric) {return 'biometrics';}
   }
   
   return 'telemetry';

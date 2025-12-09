@@ -1,8 +1,10 @@
 import { Metadata } from "next";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 
 export const metadata: Metadata = {
   title: "Integrations — AIAS Platform | 100+ Global Business Tools & Platforms",
@@ -116,10 +118,10 @@ export default function IntegrationsPage() {
             <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 rounded-full text-sm font-medium border border-green-300 dark:border-green-700">
               Wave Accounting <Badge className="ml-1 bg-green-500 text-xs">Available</Badge>
             </span>
-            <span className="px-3 py-1 bg-background rounded-full text-sm font-medium">Stripe CAD <Badge variant="secondary" className="ml-1 text-xs">Soon</Badge></span>
-            <span className="px-3 py-1 bg-background rounded-full text-sm font-medium">RBC <Badge variant="secondary" className="ml-1 text-xs">Soon</Badge></span>
-            <span className="px-3 py-1 bg-background rounded-full text-sm font-medium">TD Bank <Badge variant="secondary" className="ml-1 text-xs">Soon</Badge></span>
-            <span className="px-3 py-1 bg-background rounded-full text-sm font-medium">Interac <Badge variant="secondary" className="ml-1 text-xs">Soon</Badge></span>
+            <span className="px-3 py-1 bg-background rounded-full text-sm font-medium">Stripe CAD <Badge className="ml-1 text-xs" variant="secondary">Soon</Badge></span>
+            <span className="px-3 py-1 bg-background rounded-full text-sm font-medium">RBC <Badge className="ml-1 text-xs" variant="secondary">Soon</Badge></span>
+            <span className="px-3 py-1 bg-background rounded-full text-sm font-medium">TD Bank <Badge className="ml-1 text-xs" variant="secondary">Soon</Badge></span>
+            <span className="px-3 py-1 bg-background rounded-full text-sm font-medium">Interac <Badge className="ml-1 text-xs" variant="secondary">Soon</Badge></span>
           </div>
         </div>
       </div>
@@ -156,10 +158,10 @@ export default function IntegrationsPage() {
           We're constantly adding new integrations. Request one or build your own with our API.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button variant="outline" className="h-11 text-base" asChild>
+          <Button asChild className="h-11 text-base" variant="outline">
             <Link href="/help">Request Integration</Link>
           </Button>
-          <Button variant="outline" className="h-11 text-base" asChild>
+          <Button asChild className="h-11 text-base" variant="outline">
             <Link href="/api">View API Docs</Link>
           </Button>
         </div>
@@ -170,7 +172,7 @@ export default function IntegrationsPage() {
         <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
           Start automating your workflows today. Connect your first integration in minutes.
         </p>
-        <Button size="lg" className="h-12 text-base font-semibold" asChild>
+        <Button asChild className="h-12 text-base font-semibold" size="lg">
           <Link href="/pricing">Start Free Trial</Link>
         </Button>
       </div>

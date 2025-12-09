@@ -5,10 +5,12 @@
  * Logs all changes for audit trail
  */
 
-import { createClient } from "@supabase/supabase-js";
-import { env } from "../lib/env";
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+
+import { createClient } from "@supabase/supabase-js";
+
+import { env } from "../lib/env";
 
 interface Optimization {
   type: string;
@@ -37,7 +39,7 @@ async function analyzeAndOptimize() {
 
   // Analyze each source
   for (const metric of latestMetrics || []) {
-    const source = metric.source;
+    const {source} = metric;
     const data = metric.metric || {};
 
     // Supabase optimizations

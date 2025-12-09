@@ -19,6 +19,7 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
+
 import { env } from "../lib/env";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
@@ -75,7 +76,7 @@ async function seedDemo() {
         console.error(`  ✗ Failed to create user ${userData.email}:`, error.message);
       } else {
         console.log(`  ✓ Created user: ${userData.email}`);
-        if (user) demoData.users.push(user);
+        if (user) {demoData.users.push(user);}
       }
     }
 
@@ -109,7 +110,7 @@ async function seedDemo() {
         console.error(`  ✗ Failed to create tenant ${tenantData.name}:`, error.message);
       } else {
         console.log(`  ✓ Created tenant: ${tenantData.name}`);
-        if (tenant) demoData.tenants.push(tenant);
+        if (tenant) {demoData.tenants.push(tenant);}
       }
     }
 
@@ -146,7 +147,7 @@ async function seedDemo() {
         console.error(`  ✗ Failed to create agent ${agentData.name}:`, error.message);
       } else {
         console.log(`  ✓ Created agent: ${agentData.name}`);
-        if (agent) demoData.agents.push(agent);
+        if (agent) {demoData.agents.push(agent);}
       }
     }
 
@@ -194,7 +195,7 @@ async function seedDemo() {
         console.error(`  ✗ Failed to create workflow ${workflowData.name}:`, error.message);
       } else {
         console.log(`  ✓ Created workflow: ${workflowData.name}`);
-        if (workflow) demoData.workflows.push(workflow);
+        if (workflow) {demoData.workflows.push(workflow);}
       }
     }
 

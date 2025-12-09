@@ -1,11 +1,12 @@
-import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { NextResponse } from "next/server";
+
 import { createGETHandler } from "@/lib/api/route-handler";
-import { logger } from "@/lib/logging/structured-logger";
 import { env } from "@/lib/env";
 import { SystemError } from "@/lib/errors";
-import { cacheService } from "@/lib/performance/cache";
+import { logger } from "@/lib/logging/structured-logger";
 import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
+import { cacheService } from "@/lib/performance/cache";
 export const runtime = "nodejs"; // Use Node.js runtime for ioredis compatibility
 export const dynamic = "force-dynamic";
 export const revalidate = 60; // Cache for 60 seconds
@@ -158,7 +159,7 @@ export const GET = createGETHandler(
     // Single pass: group and track latest per source
     // RPC function already returns latest per source, so we can simplify
     for (const metric of latestMetrics) {
-      const source = metric.source;
+      const {source} = metric;
       
       // Track latest (RPC function already returns latest per source)
       if (!sourceLatest.has(source)) {

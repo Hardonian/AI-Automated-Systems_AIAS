@@ -66,7 +66,7 @@ function checkPackageManager() {
     }
 
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
-    const packageManager = packageJson.packageManager;
+    const {packageManager} = packageJson;
 
     if (!packageManager) {
       addResult('Package Manager', 'warn', 'No packageManager field in package.json', 'Add "packageManager": "pnpm@8.15.0" to package.json');
@@ -276,7 +276,7 @@ function runDiagnostics() {
   let hasWarnings = false;
 
   for (const result of results) {
-    const status: 'pass' | 'fail' | 'warn' = result.status;
+    const {status} = result;
     const emoji = statusEmoji[status];
     console.log(`${emoji} ${result.check}: ${result.message}`);
     
@@ -291,7 +291,7 @@ function runDiagnostics() {
     }
   }
 
-  console.log('\n' + '='.repeat(60));
+  console.log(`\n${  '='.repeat(60)}`);
   
   if (hasFailures) {
     console.log('\n❌ FAILURES DETECTED - Deployment will likely fail');

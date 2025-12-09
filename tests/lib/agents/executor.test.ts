@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
+
 import { AgentExecutor } from '@/lib/agents/executor';
-import { agentDefinitionSchema, agentExecutionContextSchema } from '@/lib/agents/schema';
 
 describe('AgentExecutor', () => {
   let executor: AgentExecutor;

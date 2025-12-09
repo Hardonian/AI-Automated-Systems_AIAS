@@ -1,10 +1,10 @@
 // scripts/etl/pull_ads_tiktok.ts
-import pg from "pg";
 import fetch from "node-fetch";
+import pg from "pg";
 
 const TIKTOK_API_VERSION = "v1.3";
 const TIKTOK_TOKEN = process.env.TIKTOK_ACCESS_TOKEN || process.env.TIKTOK_TOKEN;
-const TIKTOK_ADVERTISER_ID = process.env.TIKTOK_ADVERTISER_ID;
+const {TIKTOK_ADVERTISER_ID} = process.env;
 const DATABASE_URL = process.env.DATABASE_URL || process.env.SUPABASE_DB_URL || process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!TIKTOK_TOKEN || !TIKTOK_ADVERTISER_ID || !DATABASE_URL) {

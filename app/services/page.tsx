@@ -1,10 +1,11 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 import { Code, Workflow, Zap, Shield, BarChart, Users, Building2 } from "lucide-react";
+import { Metadata } from "next";
+import Link from "next/link";
+
 import { ServiceSchema } from "@/components/seo/structured-data";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Consultancy Services — Custom AI Platform Development | AIAS",
@@ -138,7 +139,7 @@ export default function ServicesPage() {
                 <li>• Quick setup (30 minutes)</li>
                 <li>• Standard workflows</li>
               </ul>
-              <Button size="sm" variant="outline" className="w-full" asChild>
+              <Button asChild className="w-full" size="sm" variant="outline">
                 <Link href="/pricing">View SaaS Plans</Link>
               </Button>
             </div>
@@ -151,17 +152,17 @@ export default function ServicesPage() {
                 <li>• Full-stack development (8-16 weeks)</li>
                 <li>• Ongoing support and optimization</li>
               </ul>
-              <Button size="sm" variant="outline" className="w-full" asChild>
+              <Button asChild className="w-full" size="sm" variant="outline">
                 <Link href="/demo">Schedule Consultation</Link>
               </Button>
             </div>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/demo">Schedule Strategy Call</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/case-studies">See Our Builds</Link>
           </Button>
         </div>
@@ -178,7 +179,7 @@ export default function ServicesPage() {
                     <Icon className="h-6 w-6 text-primary" />
                   </div>
                   {"badge" in service && service.badge && (
-                    <Badge variant="secondary" className="ml-auto">
+                    <Badge className="ml-auto" variant="secondary">
                       {service.badge}
                     </Badge>
                   )}
@@ -204,7 +205,7 @@ export default function ServicesPage() {
                       <strong>Typical Timeline:</strong> {service.timeline}
                     </p>
                     {"link" in service && service.link && (
-                      <Button size="sm" variant="outline" className="w-full" asChild>
+                      <Button asChild className="w-full" size="sm" variant="outline">
                         <Link href={service.link}>Learn More</Link>
                       </Button>
                     )}
@@ -223,10 +224,10 @@ export default function ServicesPage() {
           share relevant case studies, and outline a custom solution.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/demo">Schedule Strategy Call</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/case-studies">View Case Studies</Link>
           </Button>
         </div>

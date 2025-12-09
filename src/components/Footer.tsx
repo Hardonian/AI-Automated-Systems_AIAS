@@ -31,13 +31,13 @@ export const Footer = () => {
             <div className="space-y-2 mb-6">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Mail className="w-4 h-4" />
-                <a href="mailto:hello@aias.com" className="hover:text-primary transition-colors">
+                <a className="hover:text-primary transition-colors" href="mailto:hello@aias.com">
                   hello@aias.com
                 </a>
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Phone className="w-4 h-4" />
-                <a href="tel:+1-555-AIAS-123" className="hover:text-primary transition-colors">
+                <a className="hover:text-primary transition-colors" href="tel:+1-555-AIAS-123">
                   +1 (555) AIAS-123
                 </a>
               </div>
@@ -50,28 +50,28 @@ export const Footer = () => {
             {/* Social Links */}
             <div className="flex gap-3">
               <a
-                href="https://github.com/aias-founder"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-secondary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                href="https://github.com/aias-founder"
+                rel="noopener noreferrer"
+                target="_blank"
                 title="GitHub"
               >
                 <Github className="w-4 h-4" />
               </a>
               <a
-                href="https://linkedin.com/in/aias-founder"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-secondary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                href="https://linkedin.com/in/aias-founder"
+                rel="noopener noreferrer"
+                target="_blank"
                 title="LinkedIn"
               >
                 <Linkedin className="w-4 h-4" />
               </a>
               <a
-                href="https://twitter.com/aias_ai"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-secondary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                href="https://twitter.com/aias_ai"
+                rel="noopener noreferrer"
+                target="_blank"
                 title="Twitter"
               >
                 <Twitter className="w-4 h-4" />
@@ -105,9 +105,9 @@ export const Footer = () => {
               © 2025 AIAS. All rights reserved.
             </p>
             <div className="flex gap-4 text-sm text-muted-foreground">
-              <a href="/privacy" className="hover:text-primary transition-colors">Privacy</a>
-              <a href="/terms" className="hover:text-primary transition-colors">Terms</a>
-              <a href="/cookies" className="hover:text-primary transition-colors">Cookies</a>
+              <a className="hover:text-primary transition-colors" href="/privacy">Privacy</a>
+              <a className="hover:text-primary transition-colors" href="/terms">Terms</a>
+              <a className="hover:text-primary transition-colors" href="/cookies">Cookies</a>
             </div>
           </div>
           <p className="text-sm text-muted-foreground">

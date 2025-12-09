@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
+
+import { handleApiError } from "@/lib/api/route-handler";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logging/structured-logger";
-import { handleApiError } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -65,8 +66,8 @@ export async function GET(request: NextRequest) {
       }
 
       // Normalize plan
-      if (plan === "professional") plan = "pro";
-      if (plan === "starter" || plan === "standard") plan = "starter";
+      if (plan === "professional") {plan = "pro";}
+      if (plan === "starter" || plan === "standard") {plan = "starter";}
 
       const limits: Record<string, number> = {
         free: 100,

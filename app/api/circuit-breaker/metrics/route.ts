@@ -4,8 +4,9 @@
  */
 
 import { NextResponse } from 'next/server';
-import { circuitBreakerRegistry } from '@/lib/resilience/circuit-breaker';
+
 import { createGETHandler } from '@/lib/api/route-handler';
+import { circuitBreakerRegistry } from '@/lib/resilience/circuit-breaker';
 
 export const GET = createGETHandler(
   async () => {

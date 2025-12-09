@@ -1,9 +1,10 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { CheckCircle2, Search, Code, Rocket, Shield, Users, ArrowRight } from "lucide-react";
+import { Metadata } from "next";
+import Link from "next/link";
+
 import { ServiceSchema } from "@/components/seo/structured-data";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Our Process — How We Build Custom AI Platforms | AIAS Consultancy",
@@ -126,10 +127,10 @@ export default function ProcessPage() {
             delivers real business value. Transparent, collaborative, results-driven.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
+            <Button asChild size="lg">
               <Link href="/demo">Schedule Strategy Call</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
+            <Button asChild size="lg" variant="outline">
               <Link href="/case-studies">See Results</Link>
             </Button>
           </div>
@@ -266,13 +267,13 @@ export default function ProcessPage() {
             share relevant case studies, and outline a clear process tailored to your project.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
+            <Button asChild size="lg">
               <Link href="/demo">
                 Schedule Strategy Call
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
+            <Button asChild size="lg" variant="outline">
               <Link href="/case-studies">View Case Studies</Link>
             </Button>
           </div>

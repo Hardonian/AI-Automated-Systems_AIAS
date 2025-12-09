@@ -3,10 +3,9 @@
  * Identifies unused files, functions, and components
  */
 
-import { readdir, readFile } from "fs/promises";
+import { readdir, readFile , writeFile } from "fs/promises";
 // import { stat } from "fs/promises";
 import { join } from "path";
-import { writeFile } from "fs/promises";
 
 interface DeadCodeReport {
   unusedFiles: string[];

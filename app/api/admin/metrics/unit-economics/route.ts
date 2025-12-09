@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { createGETHandler } from '@/lib/api/route-handler';
 
 /**
@@ -98,9 +99,9 @@ export async function GET(request: NextRequest) {
       paybackPeriod: Math.round(paybackPeriod * 10) / 10,
       grossMargin: Math.round(grossMargin * 100),
       monthlyChurn: Math.round(monthlyChurn * 100 * 10) / 10,
-      nrr: nrr,
-      arr: arr,
-      customers: customers,
+      nrr,
+      arr,
+      customers,
     },
     channels,
     historical,

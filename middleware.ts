@@ -6,11 +6,11 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { addSecurityHeaders } from "@/lib/middleware/security";
-import { detectSuspiciousActivity } from "@/lib/middleware/security";
-import { rateLimit, getClientIP } from "@/lib/utils/rate-limit";
-import { logger } from "@/lib/utils/logger";
+
 import { adminGuard, financialAdminGuard } from "@/lib/middleware/admin-guard";
+import { addSecurityHeaders , detectSuspiciousActivity } from "@/lib/middleware/security";
+import { logger } from "@/lib/utils/logger";
+import { rateLimit, getClientIP } from "@/lib/utils/rate-limit";
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
@@ -18,11 +18,11 @@ export async function middleware(request: NextRequest) {
 
   // Check admin access first (before rate limiting)
   const adminCheck = await adminGuard(request);
-  if (adminCheck) return adminCheck;
+  if (adminCheck) {return adminCheck;}
 
   // Check financial admin access
   const financialCheck = await financialAdminGuard(request);
-  if (financialCheck) return financialCheck;
+  if (financialCheck) {return financialCheck;}
 
   // Skip middleware for static files and API routes (handled separately)
   if (

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface RevenueData {
@@ -123,7 +124,7 @@ export default function RevenuePage() {
           <CardDescription>Monthly recurring revenue over time</CardDescription>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer height={300} width="100%">
             <BarChart data={revenueData.revenueByMonth}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
@@ -143,17 +144,17 @@ export default function RevenuePage() {
             <CardDescription>Subscriptions by plan tier</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer height={300} width="100%">
               <PieChart>
                 <Pie
-                  data={revenueData.planDistribution}
                   cx="50%"
                   cy="50%"
-                  labelLine={false}
-                  label={({ plan, count }) => `${plan}: ${count}`}
-                  outerRadius={80}
-                  fill="#8884d8"
+                  data={revenueData.planDistribution}
                   dataKey="count"
+                  fill="#8884d8"
+                  label={({ plan, count }) => `${plan}: ${count}`}
+                  labelLine={false}
+                  outerRadius={80}
                 >
                   {revenueData.planDistribution.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

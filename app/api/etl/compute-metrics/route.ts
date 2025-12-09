@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
+
 import { env } from "@/lib/env";
 import { SystemError, ValidationError, formatError } from "@/lib/errors";
 import { logger } from "@/lib/logging/structured-logger";
@@ -118,7 +119,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       }
 
       spendData?.forEach((row: SpendRow) => {
-        const date = row.date;
+        const {date} = row;
         if (!metricsByDate.has(date)) {
           metricsByDate.set(date, {
             date,

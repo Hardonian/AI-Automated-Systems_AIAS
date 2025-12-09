@@ -1,8 +1,9 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Check } from "lucide-react";
+import { Metadata } from "next";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Premium Content — Systems Thinking + AI | AIAS Platform",
@@ -53,7 +54,7 @@ export default function PremiumPage() {
                 <span>Monthly systems thinking insights newsletter</span>
               </li>
             </ul>
-            <Button size="lg" className="w-full" asChild>
+            <Button asChild className="w-full" size="lg">
               <Link href="/pricing">Subscribe to Premium</Link>
             </Button>
           </CardContent>
@@ -92,7 +93,7 @@ export default function PremiumPage() {
                 <span>Advanced GenAI Content Engine with systems thinking analysis</span>
               </li>
             </ul>
-            <Button size="lg" className="w-full" asChild>
+            <Button asChild className="w-full" size="lg">
               <Link href="/pricing">Subscribe to Pro</Link>
             </Button>
           </CardContent>
@@ -152,10 +153,10 @@ export default function PremiumPage() {
             and drives business success.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
+            <Button asChild size="lg">
               <Link href="/pricing">View Pricing</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
+            <Button asChild size="lg" variant="outline">
               <Link href="/blog">View Free Content</Link>
             </Button>
           </div>

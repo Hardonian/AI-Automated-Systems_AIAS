@@ -1,27 +1,28 @@
 "use client";
-import { useEffect, useState } from "react";
-import { GamificationProvider, useGamify } from "@/components/gamification/GamificationProvider";
-import ProgressRing from "@/components/gamification/ProgressRing";
-import StreakFlame from "@/components/gamification/StreakFlame";
-import QuestCard from "@/components/gamification/QuestCard";
-import AvatarStack from "@/components/social/AvatarStack";
-import ShareButton from "@/components/social/ShareButton";
-import ReferralWidget from "@/components/gamification/ReferralWidget";
-import OnboardingQuests from "@/components/gamification/OnboardingQuests";
-import ProgressAnalytics from "@/components/gamification/ProgressAnalytics";
-import PushNotificationButton from "@/components/gamification/PushNotificationButton";
-import NotificationsCenter from "@/components/gamification/NotificationsCenter";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-const LiveVisitors = dynamic(()=>import("@/components/integrations/LiveVisitors").then(m=>m.default), { ssr:false });
+import { GamificationProvider, useGamify } from "@/components/gamification/GamificationProvider";
+import NotificationsCenter from "@/components/gamification/NotificationsCenter";
+import OnboardingQuests from "@/components/gamification/OnboardingQuests";
+import ProgressAnalytics from "@/components/gamification/ProgressAnalytics";
+import ProgressRing from "@/components/gamification/ProgressRing";
+import PushNotificationButton from "@/components/gamification/PushNotificationButton";
+import QuestCard from "@/components/gamification/QuestCard";
+import ReferralWidget from "@/components/gamification/ReferralWidget";
+import StreakFlame from "@/components/gamification/StreakFlame";
+import AvatarStack from "@/components/social/AvatarStack";
+import ShareButton from "@/components/social/ShareButton";
+
+const LiveVisitors = dynamic(() => import("@/components/integrations/LiveVisitors").then(m => m.default), { ssr:false });
 
 function HubInner(){
   const { level, xp, dailyGoal, streak } = useGamify();
   const currentXp = xp % 100;
   const pct = Math.min(1, currentXp / dailyGoal);
   const [peers, setPeers] = useState<string[]>([]);
-  useEffect(()=>{ setPeers([
+  useEffect(() => { setPeers([
     "https://i.pravatar.cc/64?img=1","https://i.pravatar.cc/64?img=2","https://i.pravatar.cc/64?img=3",
     "https://i.pravatar.cc/64?img=4","https://i.pravatar.cc/64?img=5","https://i.pravatar.cc/64?img=6"
   ]); }, []);
@@ -69,10 +70,10 @@ function HubInner(){
       <ProgressAnalytics />
 
       <div className="flex flex-wrap gap-2">
-        <Link href="/journal" className="h-10 px-4 rounded-xl bg-secondary grid place-items-center">Open Journal</Link>
-        <Link href="/community" className="h-10 px-4 rounded-xl bg-secondary grid place-items-center">Community</Link>
-        <Link href="/challenges" className="h-10 px-4 rounded-xl bg-secondary grid place-items-center">Challenges</Link>
-        <Link href="/leaderboard" className="h-10 px-4 rounded-xl bg-secondary grid place-items-center">Leaderboard</Link>
+        <Link className="h-10 px-4 rounded-xl bg-secondary grid place-items-center" href="/journal">Open Journal</Link>
+        <Link className="h-10 px-4 rounded-xl bg-secondary grid place-items-center" href="/community">Community</Link>
+        <Link className="h-10 px-4 rounded-xl bg-secondary grid place-items-center" href="/challenges">Challenges</Link>
+        <Link className="h-10 px-4 rounded-xl bg-secondary grid place-items-center" href="/leaderboard">Leaderboard</Link>
         <ShareButton />
         <PushNotificationButton />
       </div>

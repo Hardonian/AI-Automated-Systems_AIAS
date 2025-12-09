@@ -11,7 +11,7 @@ import { readdirSync, existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 const SUPABASE_PROJECT_REF = process.env.SUPABASE_PROJECT_REF || process.env.VITE_SUPABASE_PROJECT_ID?.replace(/"/g, '');
-const SUPABASE_ACCESS_TOKEN = process.env.SUPABASE_ACCESS_TOKEN;
+const {SUPABASE_ACCESS_TOKEN} = process.env;
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');
 const WORKFLOWS_DIR = join(process.cwd(), '.github', 'workflows');
 
@@ -221,7 +221,7 @@ async function main() {
     runManualScripts();
   }
 
-  console.log('\n' + '=' .repeat(60));
+  console.log(`\n${  '=' .repeat(60)}`);
   console.log('✅ Process Complete!\n');
   
   if (missingWorkflows && missingWorkflows.length > 0) {

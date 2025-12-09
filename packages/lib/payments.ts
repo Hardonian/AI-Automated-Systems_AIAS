@@ -1,5 +1,6 @@
-import Stripe from 'stripe';
 import { config } from '@ai-consultancy/config';
+import Stripe from 'stripe';
+
 import { prisma } from './database';
 import { logger } from './observability';
 

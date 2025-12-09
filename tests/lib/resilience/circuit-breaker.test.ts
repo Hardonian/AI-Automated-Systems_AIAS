@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
+
 import { CircuitBreaker, circuitBreakerRegistry, withCircuitBreaker } from '@/lib/resilience/circuit-breaker';
 
 describe('CircuitBreaker', () => {

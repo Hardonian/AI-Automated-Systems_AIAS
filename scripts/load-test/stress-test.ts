@@ -6,9 +6,9 @@
  *   pnpm tsx scripts/load-test/stress-test.ts --users 1000 --duration 300
  */
 
-import { performance } from 'perf_hooks';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
+import { performance } from 'perf_hooks';
 
 interface LoadTestConfig {
   baseUrl: string;
@@ -279,7 +279,7 @@ class LoadTester {
   }
 
   private percentile(sortedArray: number[], percentile: number): number {
-    if (sortedArray.length === 0) return 0;
+    if (sortedArray.length === 0) {return 0;}
     const index = Math.ceil((percentile / 100) * sortedArray.length) - 1;
     return sortedArray[Math.max(0, index)];
   }
@@ -308,10 +308,10 @@ async function main() {
     const key = args[i]?.replace('--', '');
     const value = args[i + 1];
     
-    if (key === 'users') config.targetUsers = parseInt(value || '1000');
-    if (key === 'duration') config.duration = parseInt(value || '300');
-    if (key === 'ramp-up') config.rampUpTime = parseInt(value || '60');
-    if (key === 'base-url') config.baseUrl = value || 'http://localhost:3000';
+    if (key === 'users') {config.targetUsers = parseInt(value || '1000');}
+    if (key === 'duration') {config.duration = parseInt(value || '300');}
+    if (key === 'ramp-up') {config.rampUpTime = parseInt(value || '60');}
+    if (key === 'base-url') {config.baseUrl = value || 'http://localhost:3000';}
   }
 
   const tester = new LoadTester(config);

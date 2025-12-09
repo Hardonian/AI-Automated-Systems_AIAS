@@ -12,9 +12,9 @@
  * - Deployed Vercel serverless & edge functions environment
  */
 
+import { execSync } from "child_process";
 import { readFileSync, existsSync, writeFileSync } from "fs";
 import { join } from "path";
-import { execSync } from "child_process";
 
 // Dynamic import for Supabase (may not be available)
 let createClient: any;
@@ -158,9 +158,9 @@ function checkEnvLocal(): Record<string, string> {
               // Map Vite-style to Next.js style
               let mappedKey = key;
               if (vitePrefix === "VITE_") {
-                if (key === "SUPABASE_URL") mappedKey = "NEXT_PUBLIC_SUPABASE_URL";
-                else if (key === "SUPABASE_ANON_KEY" || key === "SUPABASE_PUBLISHABLE_KEY") mappedKey = "NEXT_PUBLIC_SUPABASE_ANON_KEY";
-                else if (key === "SUPABASE_PROJECT_ID") mappedKey = "SUPABASE_PROJECT_REF";
+                if (key === "SUPABASE_URL") {mappedKey = "NEXT_PUBLIC_SUPABASE_URL";}
+                else if (key === "SUPABASE_ANON_KEY" || key === "SUPABASE_PUBLISHABLE_KEY") {mappedKey = "NEXT_PUBLIC_SUPABASE_ANON_KEY";}
+                else if (key === "SUPABASE_PROJECT_ID") {mappedKey = "SUPABASE_PROJECT_REF";}
               }
               
               if (mappedKey && value && (EXPECTED_ENV_VARS.includes(mappedKey) || (key && EXPECTED_ENV_VARS.includes(key)))) {
@@ -222,9 +222,9 @@ async function checkVercelEnv(): Promise<{ prod: Record<string, string>; preview
               const key = match[1];
               const value = match[2].replace(/^["']|["']$/g, "");
               if (EXPECTED_ENV_VARS.includes(key)) {
-                if (env === "production") result.prod[key] = value;
-                else if (env === "preview") result.preview[key] = value;
-                else if (env === "development") result.dev[key] = value;
+                if (env === "production") {result.prod[key] = value;}
+                else if (env === "preview") {result.preview[key] = value;}
+                else if (env === "development") {result.dev[key] = value;}
               }
             }
           }
@@ -677,12 +677,12 @@ function generateAutoFixSteps(matrix: EnvVarSource[]): string[] {
 
   for (const source of matrix) {
     const missing: string[] = [];
-    if (!source.cursor) missing.push("Cursor");
-    if (!source.envLocal) missing.push(".env.local");
-    if (!source.github) missing.push("GitHub");
-    if (!source.vercelProd) missing.push("Vercel Production");
-    if (!source.vercelPreview) missing.push("Vercel Preview");
-    if (!source.vercelDev) missing.push("Vercel Development");
+    if (!source.cursor) {missing.push("Cursor");}
+    if (!source.envLocal) {missing.push(".env.local");}
+    if (!source.github) {missing.push("GitHub");}
+    if (!source.vercelProd) {missing.push("Vercel Production");}
+    if (!source.vercelPreview) {missing.push("Vercel Preview");}
+    if (!source.vercelDev) {missing.push("Vercel Development");}
 
     if (missing.length > 0) {
       steps.push(`Missing ${source.name} in: ${missing.join(", ")}`);
@@ -874,12 +874,12 @@ async function main() {
   console.log(`📄 JSON report written to: ${jsonReportPath}`);
 
   // Print summary to console
-  console.log("\n" + "=".repeat(80));
+  console.log(`\n${  "=".repeat(80)}`);
   console.log("\n📊 TEST SUMMARY");
   console.log("=".repeat(80));
   console.log(`Status: ${report.summary.status}`);
   console.log(`Total: ${report.summary.total} | Passed: ${report.summary.passed} | Failed: ${report.summary.failed}`);
-  console.log("\n" + "=".repeat(80));
+  console.log(`\n${  "=".repeat(80)}`);
 
   // Exit with appropriate code
   process.exit(report.summary.status === "PASS" ? 0 : 1);

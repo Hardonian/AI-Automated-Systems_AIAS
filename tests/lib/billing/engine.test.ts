@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
+
 import { BillingService } from '@/lib/billing/engine';
 import { SubscriptionTier } from '@/lib/pricing/tiers';
 

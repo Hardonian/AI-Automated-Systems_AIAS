@@ -1,8 +1,9 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Check } from "lucide-react";
+import { Metadata } from "next";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Shopify Automation Canada | AIAS Platform | Save 10+ Hours/Week",
@@ -123,7 +124,7 @@ export default function ShopifyAutomationCanadaPage() {
         </Card>
 
         <div className="text-center space-y-4">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/signup">Get Started Free</Link>
           </Button>
           <p className="text-sm text-muted-foreground">

@@ -1,8 +1,9 @@
+import { Calendar, Clock, Video, Phone, MessageSquare } from 'lucide-react';
 import { useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Calendar, Clock, Video, Phone, MessageSquare } from 'lucide-react';
 
 const meetingTypes = [
   { icon: Video, label: 'Video Call', value: 'video' },
@@ -40,40 +41,40 @@ export const BookingInterface = () => {
               {/* Contact Info */}
               <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label htmlFor="fullName" className="block text-sm font-medium mb-2">Full Name *</label>
-                  <Input id="fullName" placeholder="John Doe" required />
+                  <label className="block text-sm font-medium mb-2" htmlFor="fullName">Full Name *</label>
+                  <Input required id="fullName" placeholder="John Doe" />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">Email *</label>
-                  <Input id="email" type="email" placeholder="john@company.com" required />
+                  <label className="block text-sm font-medium mb-2" htmlFor="email">Email *</label>
+                  <Input required id="email" placeholder="john@company.com" type="email" />
                 </div>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label htmlFor="company" className="block text-sm font-medium mb-2">Company</label>
+                  <label className="block text-sm font-medium mb-2" htmlFor="company">Company</label>
                   <Input id="company" placeholder="Your Company" />
                 </div>
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium mb-2">Phone</label>
-                  <Input id="phone" type="tel" placeholder="+1 (555) 000-0000" />
+                  <label className="block text-sm font-medium mb-2" htmlFor="phone">Phone</label>
+                  <Input id="phone" placeholder="+1 (555) 000-0000" type="tel" />
                 </div>
               </div>
 
               {/* Meeting Type */}
               <div>
-                <label htmlFor="meetingType" className="block text-sm font-medium mb-3">Preferred Meeting Type *</label>
+                <label className="block text-sm font-medium mb-3" htmlFor="meetingType">Preferred Meeting Type *</label>
                 <div className="grid grid-cols-3 gap-2 sm:gap-4">
                   {meetingTypes.map((type) => (
                     <button
                       key={type.value}
-                      type="button"
-                      onClick={() => setSelectedType(type.value)}
                       className={`p-3 sm:p-4 rounded-lg border transition-all min-h-[80px] sm:min-h-[100px] ${
                         selectedType === type.value
                           ? 'border-primary bg-primary/10'
                           : 'border-border hover:border-primary/50'
                       }`}
+                      type="button"
+                      onClick={() => setSelectedType(type.value)}
                     >
                       <type.icon className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 sm:mb-2 text-primary" />
                       <div className="text-xs sm:text-sm font-medium">{type.label}</div>
@@ -85,30 +86,30 @@ export const BookingInterface = () => {
               {/* Date & Time Selection */}
               <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label htmlFor="date" className="block text-sm font-medium mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-medium mb-2 flex items-center gap-2" htmlFor="date">
                     <Calendar className="w-4 h-4" />
                     Select Date *
                   </label>
                   <Input
+                    required
                     id="date"
+                    min={new Date().toISOString().split('T')[0]}
                     type="date"
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
-                    min={new Date().toISOString().split('T')[0]}
-                    required
                   />
                 </div>
                 <div>
-                  <label htmlFor="time" className="block text-sm font-medium mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-medium mb-2 flex items-center gap-2" htmlFor="time">
                     <Clock className="w-4 h-4" />
                     Select Time *
                   </label>
                   <select
+                    required
+                    className="w-full px-3 py-2 rounded-md bg-background border border-input"
                     id="time"
                     value={selectedTime}
                     onChange={(e) => setSelectedTime(e.target.value)}
-                    className="w-full px-3 py-2 rounded-md bg-background border border-input"
-                    required
                   >
                     <option value="">Choose a time</option>
                     {timeSlots.map((slot) => (
@@ -120,7 +121,7 @@ export const BookingInterface = () => {
 
               {/* Additional Info */}
               <div>
-                <label htmlFor="needs" className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-medium mb-2" htmlFor="needs">
                   Tell us about your automation needs
                 </label>
                 <Textarea
@@ -131,7 +132,7 @@ export const BookingInterface = () => {
               </div>
 
               {/* Submit Button */}
-              <Button type="submit" size="lg" className="w-full bg-gradient-primary shadow-glow">
+              <Button className="w-full bg-gradient-primary shadow-glow" size="lg" type="submit">
                 Schedule Consultation
               </Button>
 

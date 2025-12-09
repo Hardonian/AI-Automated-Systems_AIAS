@@ -273,16 +273,16 @@ function generateOpenAPISpec(routes: RouteInfo[]): string {
 }
 
 function getTag(path: string): string {
-  if (path.includes("/health")) return "Health";
-  if (path.includes("/auth")) return "Auth";
-  if (path.includes("/settings")) return "Settings";
-  if (path.includes("/workflows")) return "Workflows";
-  if (path.includes("/agents")) return "Agents";
-  if (path.includes("/telemetry")) return "Telemetry";
-  if (path.includes("/leads")) return "Leads";
-  if (path.includes("/billing") || path.includes("/stripe")) return "Billing";
-  if (path.includes("/admin")) return "Admin";
-  if (path.includes("/integrations")) return "Integrations";
+  if (path.includes("/health")) {return "Health";}
+  if (path.includes("/auth")) {return "Auth";}
+  if (path.includes("/settings")) {return "Settings";}
+  if (path.includes("/workflows")) {return "Workflows";}
+  if (path.includes("/agents")) {return "Agents";}
+  if (path.includes("/telemetry")) {return "Telemetry";}
+  if (path.includes("/leads")) {return "Leads";}
+  if (path.includes("/billing") || path.includes("/stripe")) {return "Billing";}
+  if (path.includes("/admin")) {return "Admin";}
+  if (path.includes("/integrations")) {return "Integrations";}
   return "General";
 }
 

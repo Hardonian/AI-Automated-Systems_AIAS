@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
+
 import { PredictiveIntelligenceService } from '@/lib/predictive/intelligence';
 
 describe('PredictiveIntelligenceService', () => {

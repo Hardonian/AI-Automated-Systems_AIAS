@@ -3,9 +3,9 @@
  */
 
 import { describe, it, expect } from 'vitest';
+
 // import { beforeEach } from 'vitest';
 import { AdapterFactory, BaseAdapter } from '@/lib/integrations/adapter-framework';
-import { adapterConfigSchema } from '@/lib/integrations/adapter-framework';
 
 describe('AdapterFactory', () => {
   let factory: AdapterFactory;

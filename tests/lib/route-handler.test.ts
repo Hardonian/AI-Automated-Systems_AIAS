@@ -3,11 +3,12 @@
  * Tests request body caching, error handling, and validation
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createGETHandler, createPOSTHandler } from '@/lib/api/route-handler';
 import { NextRequest, NextResponse } from 'next/server';
-// import { ValidationError } from '@/lib/errors';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { z } from 'zod';
+
+import { createGETHandler, createPOSTHandler } from '@/lib/api/route-handler';
+// import { ValidationError } from '@/lib/errors';
 
 describe('Route Handler Utility', () => {
   beforeEach(() => {

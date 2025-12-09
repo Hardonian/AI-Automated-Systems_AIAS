@@ -1,4 +1,5 @@
 import { Check } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 
 const plans = [
@@ -54,7 +55,7 @@ const plans = [
 
 export const Pricing = () => {
   return (
-    <section id="pricing" className="py-24 relative">
+    <section className="py-24 relative" id="pricing">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3 sm:space-y-4">

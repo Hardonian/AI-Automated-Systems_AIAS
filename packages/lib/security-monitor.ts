@@ -184,7 +184,7 @@ export class SecurityMonitor {
 
   private async checkThreatRules(event: SecurityEvent): Promise<void> {
     for (const rule of this.threatRules.values()) {
-      if (!rule.enabled) continue;
+      if (!rule.enabled) {continue;}
 
       if (await this.matchesRule(event, rule)) {
         await this.executeRuleActions(event, rule);
@@ -210,7 +210,7 @@ export class SecurityMonitor {
   }
 
   private async checkLoginFailurePattern(event: SecurityEvent, params: string[]): Promise<boolean> {
-    if (event.type !== SecurityEventType.LOGIN_FAILURE) return false;
+    if (event.type !== SecurityEventType.LOGIN_FAILURE) {return false;}
 
     const maxFailures = parseInt(params[0] || "0");
     const timeWindow = parseInt(params[1] || "0") * 1000; // Convert to milliseconds
@@ -231,7 +231,7 @@ export class SecurityMonitor {
       },
     });
 
-    const recentFailures = recentEvents.filter((e) => {
+    const recentFailures = recentEvents.filter((e: { payload: unknown }) => {
       const payload = e.payload as Record<string, unknown>;
       return payload?.ipAddress === event.ipAddress;
     }).length;
@@ -240,9 +240,9 @@ export class SecurityMonitor {
   }
 
   private async checkGeographicAnomaly(event: SecurityEvent): Promise<boolean> {
-    if (!event.metadata.country || !event.metadata.previousCountries) return false;
+    if (!event.metadata.country || !event.metadata.previousCountries) {return false;}
 
-    const currentCountry = event.metadata.country;
+    const currentCountry = event.metadata.country as string;
     const previousCountries = event.metadata.previousCountries as string[];
 
     // Check if user has logged in from this country before
@@ -408,14 +408,14 @@ export class SecurityMonitor {
       skip: offset,
     });
 
-    return events.map((event) => {
+    return events.map((event: { id: string; event: unknown; payload: unknown; orgId: string; createdAt: Date }) => {
       const payload = event.payload as Record<string, unknown>;
       return {
       id: event.id,
       type: event.event as SecurityEventType,
-      severity: event.payload.severity || SecuritySeverity.LOW,
-      source: event.payload.source || 'unknown',
-      description: event.payload.description || '',
+      severity: payload.severity || SecuritySeverity.LOW,
+      source: payload.source || 'unknown',
+      description: payload.description || '',
       metadata: (payload.metadata as Record<string, unknown>) || {},
       userId: payload.userId as string | undefined,
       orgId: event.orgId,
@@ -461,17 +461,17 @@ export class SecurityMonitor {
       },
     });
 
-    const criticalEvents = allEvents.filter((e) => {
+    const criticalEvents = allEvents.filter((e: { payload: unknown }) => {
       const payload = e.payload as Record<string, unknown>;
       return payload?.severity === SecuritySeverity.CRITICAL;
     }).length;
 
-    const highEvents = allEvents.filter((e) => {
+    const highEvents = allEvents.filter((e: { payload: unknown }) => {
       const payload = e.payload as Record<string, unknown>;
       return payload?.severity === SecuritySeverity.HIGH;
     }).length;
 
-    const resolvedEvents = allEvents.filter((e) => {
+    const resolvedEvents = allEvents.filter((e: { payload: unknown }) => {
       const payload = e.payload as Record<string, unknown>;
       return payload?.resolved === true;
     }).length;
@@ -501,7 +501,7 @@ export class SecurityMonitor {
 
   async updateThreatRule(id: string, updates: Partial<ThreatDetectionRule>): Promise<ThreatDetectionRule | null> {
     const rule = this.threatRules.get(id);
-    if (!rule) return null;
+    if (!rule) {return null;}
 
     const updatedRule = {
       ...rule,
@@ -536,7 +536,7 @@ export class SecurityMonitor {
     });
 
     // Filter by IP address in memory (Prisma doesn't support JSON path queries)
-    const blockEvent = blockEvents.find((e) => {
+    const blockEvent = blockEvents.find((e: { payload: unknown }) => {
       const payload = e.payload as Record<string, unknown>;
       return payload?.source === ipAddress;
     });
@@ -546,7 +546,7 @@ export class SecurityMonitor {
 
   async isRateLimited(key: string): Promise<boolean> {
     const rateLimit = this.rateLimiters.get(key);
-    if (!rateLimit) return false;
+    if (!rateLimit) {return false;}
 
     return Date.now() < rateLimit.resetTime;
   }

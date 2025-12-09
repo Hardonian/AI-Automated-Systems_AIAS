@@ -1,7 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
-import type { Database } from "@/src/integrations/supabase/types";
+
 import { logger } from "@/lib/logging/structured-logger";
+import type { Database } from "@/src/integrations/supabase/types";
 /**
  * Health Status Endpoint: "All-Cylinder Firing Check"
  * 

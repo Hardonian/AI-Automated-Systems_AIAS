@@ -1,13 +1,14 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 import { Rocket } from "lucide-react";
+import { Metadata } from "next";
+import Link from "next/link";
+
+import { GatedCaseStudy } from "@/components/case-studies/gated-case-study";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import type { PlanTier } from "@/config/plans";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { getUserPlanData } from "@/lib/trial/user-plan";
-import { GatedCaseStudy } from "@/components/case-studies/gated-case-study";
-import type { PlanTier } from "@/config/plans";
 
 export const metadata: Metadata = {
   title: "Case Studies — AIAS Consultancy | Custom Builds & Platform Success Stories",
@@ -179,9 +180,9 @@ export default async function CaseStudiesPage() {
             return (
             <GatedCaseStudy
               key={build.title}
+              showFull={true} // Consultancy builds always show full
               study={buildAsStudy}
               userPlan={userPlan}
-              showFull={true} // Consultancy builds always show full
             />
           )})}
           {/* Original consultancy builds code kept for reference but replaced above */}
@@ -266,9 +267,9 @@ export default async function CaseStudiesPage() {
           {caseStudies.map((study) => (
             <GatedCaseStudy
               key={study.title}
+              showFull={userPlan === "starter" || userPlan === "pro"}
               study={study}
               userPlan={userPlan}
-              showFull={userPlan === "starter" || userPlan === "pro"}
             />
           ))}
         </div>
@@ -281,13 +282,13 @@ export default async function CaseStudiesPage() {
           Let's discuss your project and see how we can help.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/demo">Book Consultation</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/tasks">View Upcoming Builds</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/pricing">Start Free Trial</Link>
           </Button>
         </div>

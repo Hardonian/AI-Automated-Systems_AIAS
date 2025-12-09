@@ -3,9 +3,10 @@
  */
 
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
 import { createPOSTHandler } from '@/lib/api/route-handler';
 import { crmIntegrationService } from '@/lib/lead-generation/crm-integration';
-import { z } from 'zod';
 
 const crmSyncSchema = z.object({
   leadId: z.string().uuid(),

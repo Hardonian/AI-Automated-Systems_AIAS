@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import { InvestorDashboard } from "@/components/sales/investor-dashboard";
 
 export const metadata: Metadata = {

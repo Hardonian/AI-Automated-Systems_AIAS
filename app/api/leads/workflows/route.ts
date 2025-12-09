@@ -2,12 +2,14 @@
  * Autopilot Workflows API Endpoint
  */
 
-import { NextResponse } from 'next/server';
-import { createPOSTHandler, createGETHandler } from '@/lib/api/route-handler';
-import { autopilotWorkflowService } from '@/lib/lead-generation/autopilot-workflows';
 import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
 import { z } from 'zod';
+
+import { createPOSTHandler, createGETHandler } from '@/lib/api/route-handler';
 import { env } from '@/lib/env';
+import { autopilotWorkflowService } from '@/lib/lead-generation/autopilot-workflows';
+
 
 export const dynamic = 'force-dynamic';
 

@@ -1,9 +1,3 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -18,7 +12,15 @@ import {
   // PieChart,
   // LineChart
 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart as RechartsPieChart, Cell } from 'recharts';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 
 interface BusinessMetrics {
   revenue: {
@@ -196,7 +198,7 @@ const BusinessDashboard: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
       </div>
     );
   }
@@ -213,29 +215,29 @@ const BusinessDashboard: React.FC = () => {
         </div>
         <div className="flex items-center space-x-2">
           <Button
-            variant={timeRange === '7d' ? 'default' : 'outline'}
             size="sm"
+            variant={timeRange === '7d' ? 'default' : 'outline'}
             onClick={() => setTimeRange('7d')}
           >
             7D
           </Button>
           <Button
-            variant={timeRange === '30d' ? 'default' : 'outline'}
             size="sm"
+            variant={timeRange === '30d' ? 'default' : 'outline'}
             onClick={() => setTimeRange('30d')}
           >
             30D
           </Button>
           <Button
-            variant={timeRange === '90d' ? 'default' : 'outline'}
             size="sm"
+            variant={timeRange === '90d' ? 'default' : 'outline'}
             onClick={() => setTimeRange('90d')}
           >
             90D
           </Button>
           <Button
-            variant={timeRange === '1y' ? 'default' : 'outline'}
             size="sm"
+            variant={timeRange === '1y' ? 'default' : 'outline'}
             onClick={() => setTimeRange('1y')}
           >
             1Y
@@ -303,7 +305,7 @@ const BusinessDashboard: React.FC = () => {
       </div>
 
       {/* Charts and Detailed Metrics */}
-      <Tabs defaultValue="revenue" className="space-y-4">
+      <Tabs className="space-y-4" defaultValue="revenue">
         <TabsList>
           <TabsTrigger value="revenue">Revenue</TabsTrigger>
           <TabsTrigger value="usage">Usage</TabsTrigger>
@@ -311,7 +313,7 @@ const BusinessDashboard: React.FC = () => {
           <TabsTrigger value="alerts">Alerts</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="revenue" className="space-y-4">
+        <TabsContent className="space-y-4" value="revenue">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -319,13 +321,13 @@ const BusinessDashboard: React.FC = () => {
                 <CardDescription>Monthly recurring revenue over time</CardDescription>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer height={300} width="100%">
                   <RechartsLineChart data={revenueData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
                     <YAxis />
                     <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-                    <Line type="monotone" dataKey="revenue" stroke="#8884d8" strokeWidth={2} />
+                    <Line dataKey="revenue" stroke="#8884d8" strokeWidth={2} type="monotone" />
                   </RechartsLineChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -337,13 +339,13 @@ const BusinessDashboard: React.FC = () => {
                 <CardDescription>Active customers over time</CardDescription>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer height={300} width="100%">
                   <RechartsLineChart data={revenueData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
                     <YAxis />
                     <Tooltip />
-                    <Line type="monotone" dataKey="customers" stroke="#82ca9d" strokeWidth={2} />
+                    <Line dataKey="customers" stroke="#82ca9d" strokeWidth={2} type="monotone" />
                   </RechartsLineChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -351,7 +353,7 @@ const BusinessDashboard: React.FC = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="usage" className="space-y-4">
+        <TabsContent className="space-y-4" value="usage">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -359,7 +361,7 @@ const BusinessDashboard: React.FC = () => {
                 <CardDescription>Workflows and executions per day</CardDescription>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer height={300} width="100%">
                   <BarChart data={usageData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="day" />
@@ -399,7 +401,7 @@ const BusinessDashboard: React.FC = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="conversion" className="space-y-4">
+        <TabsContent className="space-y-4" value="conversion">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -407,17 +409,17 @@ const BusinessDashboard: React.FC = () => {
                 <CardDescription>Visitor to customer conversion</CardDescription>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer height={300} width="100%">
                   <RechartsPieChart>
                     <Pie
-                      data={conversionData}
                       cx="50%"
                       cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={80}
-                      fill="#8884d8"
+                      data={conversionData}
                       dataKey="value"
+                      fill="#8884d8"
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      labelLine={false}
+                      outerRadius={80}
                     >
                       {conversionData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
@@ -440,28 +442,28 @@ const BusinessDashboard: React.FC = () => {
                     <span className="text-sm font-medium">Visitor to Trial</span>
                     <span className="text-lg font-bold">{formatPercentage(metrics?.conversion.visitorToTrial || 0)}</span>
                   </div>
-                  <Progress value={metrics?.conversion.visitorToTrial || 0} className="h-2" />
+                  <Progress className="h-2" value={metrics?.conversion.visitorToTrial || 0} />
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">Trial to Paid</span>
                     <span className="text-lg font-bold">{formatPercentage(metrics?.conversion.trialToPaid || 0)}</span>
                   </div>
-                  <Progress value={metrics?.conversion.trialToPaid || 0} className="h-2" />
+                  <Progress className="h-2" value={metrics?.conversion.trialToPaid || 0} />
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">Visitor to Paid</span>
                     <span className="text-lg font-bold">{formatPercentage(metrics?.conversion.visitorToPaid || 0)}</span>
                   </div>
-                  <Progress value={metrics?.conversion.visitorToPaid || 0} className="h-2" />
+                  <Progress className="h-2" value={metrics?.conversion.visitorToPaid || 0} />
                 </div>
               </CardContent>
             </Card>
           </div>
         </TabsContent>
 
-        <TabsContent value="alerts" className="space-y-4">
+        <TabsContent className="space-y-4" value="alerts">
           <Card>
             <CardHeader>
               <CardTitle>System Alerts</CardTitle>

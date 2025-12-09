@@ -4,15 +4,16 @@
 
 "use client";
 
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function BetaApplyPage() {
   const [formData, setFormData] = useState({
@@ -89,12 +90,12 @@ export default function BetaApplyPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="name">Full Name *</Label>
               <Input
-                id="name"
                 required
+                id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
@@ -103,9 +104,9 @@ export default function BetaApplyPage() {
             <div className="space-y-2">
               <Label htmlFor="email">Email Address *</Label>
               <Input
+                required
                 id="email"
                 type="email"
-                required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
@@ -114,8 +115,8 @@ export default function BetaApplyPage() {
             <div className="space-y-2">
               <Label htmlFor="company">Company/Organization *</Label>
               <Input
-                id="company"
                 required
+                id="company"
                 value={formData.company}
                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
               />
@@ -124,9 +125,9 @@ export default function BetaApplyPage() {
             <div className="space-y-2">
               <Label htmlFor="role">Your Role *</Label>
               <Input
+                required
                 id="role"
                 placeholder="e.g., Operations Manager, Founder, CTO"
-                required
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value })}
               />
@@ -135,9 +136,9 @@ export default function BetaApplyPage() {
             <div className="space-y-2">
               <Label htmlFor="companySize">Company Size *</Label>
               <Select
+                required
                 value={formData.companySize}
                 onValueChange={(value) => setFormData({ ...formData, companySize: value })}
-                required
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select company size" />
@@ -155,9 +156,9 @@ export default function BetaApplyPage() {
             <div className="space-y-2">
               <Label htmlFor="useCase">Primary Use Case *</Label>
               <Textarea
+                required
                 id="useCase"
                 placeholder="Describe your primary automation use case..."
-                required
                 rows={4}
                 value={formData.useCase}
                 onChange={(e) => setFormData({ ...formData, useCase: e.target.value })}
@@ -189,32 +190,32 @@ export default function BetaApplyPage() {
             <div className="space-y-4">
               <div className="flex items-start space-x-2">
                 <Checkbox
-                  id="commitment"
                   checked={formData.commitment}
+                  id="commitment"
                   onCheckedChange={(checked) =>
                     setFormData({ ...formData, commitment: checked === true })
                   }
                 />
-                <Label htmlFor="commitment" className="text-sm leading-relaxed">
+                <Label className="text-sm leading-relaxed" htmlFor="commitment">
                   I commit to using the platform regularly and providing feedback during the beta period *
                 </Label>
               </div>
 
               <div className="flex items-start space-x-2">
                 <Checkbox
-                  id="feedback"
                   checked={formData.feedback}
+                  id="feedback"
                   onCheckedChange={(checked) =>
                     setFormData({ ...formData, feedback: checked === true })
                   }
                 />
-                <Label htmlFor="feedback" className="text-sm leading-relaxed">
+                <Label className="text-sm leading-relaxed" htmlFor="feedback">
                   I'm willing to participate in feedback sessions and surveys
                 </Label>
               </div>
             </div>
 
-            <Button type="submit" className="w-full" disabled={submitting || !formData.commitment}>
+            <Button className="w-full" disabled={submitting || !formData.commitment} type="submit">
               {submitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -231,7 +232,7 @@ export default function BetaApplyPage() {
       <div className="mt-8 text-center text-sm text-muted-foreground">
         <p>
           Questions? Contact us at{" "}
-          <a href="mailto:beta@aiautomatedsystems.ca" className="underline">
+          <a className="underline" href="mailto:beta@aiautomatedsystems.ca">
             beta@aiautomatedsystems.ca
           </a>
         </p>

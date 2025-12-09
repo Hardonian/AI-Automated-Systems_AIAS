@@ -4,9 +4,10 @@
  */
 
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
 import { createPOSTHandler } from '@/lib/api/route-handler';
 import { emailService } from '@/lib/email/email-service';
-import { z } from 'zod';
 
 const sendEmailSchema = z.object({
   templateId: z.string(),

@@ -5,6 +5,7 @@
 
 import { readFileSync, existsSync, readdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
+
 import { type GuardianEvent } from './core';
 // import { guardianService } from './core';
 // import type { TrustLedgerEntry } from './core';
@@ -132,7 +133,7 @@ export class GuardianInspector {
   private loadEvents(): GuardianEvent[] {
     const events: GuardianEvent[] = [];
     
-    if (!existsSync(this.logsPath)) return events;
+    if (!existsSync(this.logsPath)) {return events;}
 
     const files = readdirSync(this.logsPath).filter(f => f.endsWith('.jsonl'));
     
@@ -199,7 +200,7 @@ export class GuardianInspector {
    * Calculate guardian confidence score
    */
   private calculateConfidenceScore(events: GuardianEvent[]): number {
-    if (events.length === 0) return 1.0;
+    if (events.length === 0) {return 1.0;}
 
     let safeOperations = 0;
     

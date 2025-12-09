@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2 } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -31,7 +32,7 @@ export const AIChat = () => {
   }, [messages]);
 
   const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading) {return;}
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -71,7 +72,7 @@ export const AIChat = () => {
       </div>
 
       {/* Messages */}
-      <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+      <ScrollArea ref={scrollRef} className="flex-1 p-4">
         <div className="space-y-4">
           {messages.map((message) => (
             <div
@@ -131,17 +132,17 @@ export const AIChat = () => {
       <div className="p-4 border-t border-border">
         <div className="flex gap-2">
           <Input
+            className="flex-1 bg-secondary/50"
+            disabled={isLoading}
+            placeholder="Type your message..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Type your message..."
-            className="flex-1 bg-secondary/50"
-            disabled={isLoading}
           />
           <Button
-            onClick={handleSend}
-            disabled={isLoading || !input.trim()}
             className="bg-gradient-primary shadow-glow"
+            disabled={isLoading || !input.trim()}
+            onClick={handleSend}
           >
             <Send className="w-4 h-4" />
           </Button>

@@ -9,7 +9,7 @@ import unusedImports from "eslint-plugin-unused-imports";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", ".next", "node_modules", "reports"] },
+  { ignores: ["dist", ".next", "node_modules", "reports", "ai/aurora_prime.ts"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
@@ -89,14 +89,6 @@ export default tseslint.config(
       "jsx-a11y/tabindex-no-positive": "warn",
       
       // Code quality rules
-      "prefer-const": "warn",
-      "no-var": "error",
-      "no-console": ["warn", { allow: ["warn", "error"] }],
-      "no-debugger": "warn",
-      "no-alert": "warn",
-      "no-duplicate-imports": "error",
-      "no-unused-expressions": "warn",
-      "no-useless-return": "warn",
       "prefer-template": "warn",
       "prefer-arrow-callback": "warn",
       "arrow-spacing": "warn",
@@ -162,6 +154,11 @@ export default tseslint.config(
       
       // Performance and best practices
       "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
+      "no-debugger": "warn",
+      "no-alert": "warn",
+      "no-duplicate-imports": "error",
+      "no-unused-expressions": "warn",
+      "no-useless-return": "warn",
       "no-await-in-loop": "warn",
       "prefer-const": "error",
       "no-var": "error",

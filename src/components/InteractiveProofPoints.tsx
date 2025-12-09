@@ -1,6 +1,7 @@
 import { motion, useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
 import { TrendingUp, Users, DollarSign, Clock, Zap, Shield, CheckCircle } from 'lucide-react';
+import { useRef, useState } from 'react';
+
 import { Card, CardContent } from '@/components/ui/card';
 // import { Badge } from '@/components/ui/badge';
 
@@ -79,11 +80,11 @@ export const InteractiveProofPoints = () => {
       
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
           className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
             Numbers That
@@ -100,12 +101,13 @@ export const InteractiveProofPoints = () => {
           {proofPoints.map((point, index) => (
             <motion.div
               key={point.label}
-              initial={{ opacity: 0, y: 50, scale: 0.8 }}
               animate={isInView ? { 
                 opacity: 1, 
                 y: 0, 
                 scale: 1 
               } : {}}
+              className="group cursor-pointer"
+              initial={{ opacity: 0, y: 50, scale: 0.8 }}
               transition={{ 
                 duration: 0.6, 
                 delay: point.delay,
@@ -117,33 +119,32 @@ export const InteractiveProofPoints = () => {
                 y: -10,
                 transition: { duration: 0.2 }
               }}
-              onHoverStart={() => setHoveredCard(index)}
               onHoverEnd={() => setHoveredCard(null)}
-              className="group cursor-pointer"
+              onHoverStart={() => setHoveredCard(index)}
             >
               <Card className={`h-full bg-gradient-card backdrop-blur-sm border ${point.borderColor} hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 ${hoveredCard === index ? 'ring-2 ring-primary/20' : ''}`}>
                 <CardContent className="p-6 text-center relative overflow-hidden">
                   {/* Animated Background */}
                   <motion.div
+                    animate={hoveredCard === index ? { scale: 1 } : { scale: 0 }}
                     className={`absolute inset-0 ${point.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
                     initial={{ scale: 0 }}
-                    animate={hoveredCard === index ? { scale: 1 } : { scale: 0 }}
                     transition={{ duration: 0.3 }}
                   />
                   
                   {/* Icon */}
                   <motion.div
                     className={`relative z-10 p-4 rounded-full ${point.bgColor} w-fit mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}
-                    whileHover={{ rotate: 360 }}
                     transition={{ duration: 0.6 }}
+                    whileHover={{ rotate: 360 }}
                   >
                     <point.icon className={`w-8 h-8 ${point.color}`} />
                   </motion.div>
 
                   {/* Value */}
                   <motion.div
-                    className={`relative z-10 text-4xl font-bold ${point.color} mb-2`}
                     animate={hoveredCard === index ? { scale: 1.1 } : { scale: 1 }}
+                    className={`relative z-10 text-4xl font-bold ${point.color} mb-2`}
                     transition={{ duration: 0.2 }}
                   >
                     {point.value}
@@ -161,17 +162,17 @@ export const InteractiveProofPoints = () => {
 
                   {/* Animated Border */}
                   <motion.div
+                    animate={hoveredCard === index ? { scale: 1 } : { scale: 0.8 }}
                     className="absolute inset-0 rounded-lg border-2 border-primary/20 opacity-0 group-hover:opacity-100"
                     initial={{ scale: 0.8 }}
-                    animate={hoveredCard === index ? { scale: 1 } : { scale: 0.8 }}
                     transition={{ duration: 0.3 }}
                   />
 
                   {/* Pulse Effect */}
                   {hoveredCard === index && (
                     <motion.div
-                      className="absolute inset-0 rounded-lg border-2 border-primary/40"
                       animate={{ scale: [1, 1.05, 1] }}
+                      className="absolute inset-0 rounded-lg border-2 border-primary/40"
                       transition={{ duration: 1, repeat: Infinity }}
                     />
                   )}
@@ -183,11 +184,11 @@ export const InteractiveProofPoints = () => {
 
         {/* Bottom CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
           className="text-center mt-16"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <div className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-primary/10 border border-primary/20 hover:bg-gradient-primary/20 transition-all duration-300 group cursor-pointer">
             <CheckCircle className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
@@ -196,8 +197,8 @@ export const InteractiveProofPoints = () => {
             </span>
             <motion.div
               animate={{ x: [0, 5, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
               className="text-primary"
+              transition={{ duration: 1.5, repeat: Infinity }}
             >
               →
             </motion.div>

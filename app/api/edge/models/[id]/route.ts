@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
+
+import { handleApiError } from "@/lib/api/route-handler";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logging/structured-logger";
-import { handleApiError } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -97,20 +98,20 @@ export async function PATCH(
     const updateData: Record<string, unknown> = {};
 
     // Allow updating specific fields
-    if (body.name !== undefined) updateData.name = body.name;
-    if (body.description !== undefined) updateData.description = body.description;
-    if (body.status !== undefined) updateData.status = body.status;
+    if (body.name !== undefined) {updateData.name = body.name;}
+    if (body.description !== undefined) {updateData.description = body.description;}
+    if (body.status !== undefined) {updateData.status = body.status;}
     if (body.upload_progress !== undefined)
-      updateData.upload_progress = body.upload_progress;
+      {updateData.upload_progress = body.upload_progress;}
     if (body.original_file_path !== undefined)
-      updateData.original_file_path = body.original_file_path;
+      {updateData.original_file_path = body.original_file_path;}
     if (body.original_size_bytes !== undefined)
-      updateData.original_size_bytes = body.original_size_bytes;
-    if (body.input_shape !== undefined) updateData.input_shape = body.input_shape;
+      {updateData.original_size_bytes = body.original_size_bytes;}
+    if (body.input_shape !== undefined) {updateData.input_shape = body.input_shape;}
     if (body.output_shape !== undefined)
-      updateData.output_shape = body.output_shape;
+      {updateData.output_shape = body.output_shape;}
     if (body.model_metadata !== undefined)
-      updateData.model_metadata = body.model_metadata;
+      {updateData.model_metadata = body.model_metadata;}
 
     const { data: model, error } = await supabase
       .from("edge_ai_models")

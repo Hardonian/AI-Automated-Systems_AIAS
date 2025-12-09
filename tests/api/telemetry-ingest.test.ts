@@ -3,9 +3,10 @@
  * Tests error handling, validation, and telemetry tracking
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { POST } from '@/app/api/telemetry/ingest/route';
 import { NextRequest } from 'next/server';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+import { POST } from '@/app/api/telemetry/ingest/route';
 
 // Mock dependencies
 vi.mock('@/lib/env', () => ({

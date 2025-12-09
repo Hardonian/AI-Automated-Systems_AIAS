@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { TemplateCard } from "@/components/templates/TemplateCard";
 import { Search, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+
+import { TemplateCard } from "@/components/templates/TemplateCard";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { logger } from "@/lib/logging/structured-logger";
 interface WorkflowTemplate {
   id: string;
@@ -34,7 +35,7 @@ export default function SelectTemplatePage() {
   async function fetchTemplates() {
     try {
       const response = await fetch("/api/workflows/templates");
-      if (!response.ok) throw new Error("Failed to fetch templates");
+      if (!response.ok) {throw new Error("Failed to fetch templates");}
       const data = await response.json();
       setTemplates(data.templates);
     } catch (err) {
@@ -87,26 +88,26 @@ export default function SelectTemplatePage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
+            className="pl-10"
             placeholder="Search templates..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
           />
         </div>
         <div className="flex gap-2 overflow-x-auto">
           <Button
+            size="sm"
             variant={categoryFilter === "all" ? "default" : "outline"}
             onClick={() => setCategoryFilter("all")}
-            size="sm"
           >
             All
           </Button>
           {categories.map((category) => (
             <Button
               key={category}
+              size="sm"
               variant={categoryFilter === category ? "default" : "outline"}
               onClick={() => setCategoryFilter(category)}
-              size="sm"
             >
               {category.charAt(0).toUpperCase() + category.slice(1)}
             </Button>
@@ -125,8 +126,8 @@ export default function SelectTemplatePage() {
           {filteredTemplates.map((template) => (
             <TemplateCard
               key={template.id}
-              template={template}
               selected={selectedTemplate?.id === template.id}
+              template={template}
               onSelect={setSelectedTemplate}
             />
           ))}
@@ -137,7 +138,7 @@ export default function SelectTemplatePage() {
         <Button variant="outline" onClick={() => router.back()}>
           Back
         </Button>
-        <Button onClick={handleNext} disabled={!selectedTemplate}>
+        <Button disabled={!selectedTemplate} onClick={handleNext}>
           Next: Configure Workflow
         </Button>
       </div>

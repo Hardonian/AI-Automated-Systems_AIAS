@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar, LineChart, Line } from 'recharts';
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 interface FunnelData {
   period: string;
   stages: {
@@ -109,10 +110,10 @@ export default function FunnelPage() {
           <CardDescription>User progression through activation stages</CardDescription>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={400}>
+          <ResponsiveContainer height={400} width="100%">
             <BarChart data={funnelChartData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="stage" angle={-45} textAnchor="end" height={100} />
+              <XAxis angle={-45} dataKey="stage" height={100} textAnchor="end" />
               <YAxis />
               <Tooltip />
               <Bar dataKey="count" fill="#4F46E5" />
@@ -128,13 +129,13 @@ export default function FunnelPage() {
           <CardDescription>Conversion rate between each stage</CardDescription>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer height={300} width="100%">
             <LineChart data={funnelChartData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="stage" angle={-45} textAnchor="end" height={100} />
+              <XAxis angle={-45} dataKey="stage" height={100} textAnchor="end" />
               <YAxis domain={[0, 100]} />
               <Tooltip formatter={(value: number) => `${value.toFixed(1)}%`} />
-              <Line type="monotone" dataKey="conversion" stroke="#22c55e" strokeWidth={2} />
+              <Line dataKey="conversion" stroke="#22c55e" strokeWidth={2} type="monotone" />
             </LineChart>
           </ResponsiveContainer>
         </CardContent>

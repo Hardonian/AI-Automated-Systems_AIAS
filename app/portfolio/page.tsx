@@ -1,9 +1,11 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 import { BarChart, ShoppingCart, ArrowRight } from "lucide-react";
+import { Metadata } from "next";
+import Link from "next/link";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 
 export const metadata: Metadata = {
   title: "Portfolio — Custom AI Platforms We've Built | AIAS Consultancy",
@@ -111,10 +113,10 @@ export default function PortfolioPage() {
           See real projects, real technologies, and real results.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/demo">Start Your Project</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/process">See Our Process</Link>
           </Button>
         </div>
@@ -224,7 +226,7 @@ export default function PortfolioPage() {
                       <CardContent>
                         <div className="flex flex-wrap gap-2">
                           {project.technologies.map((tech, idx) => (
-                            <Badge key={idx} variant="secondary" className="text-xs">
+                            <Badge key={idx} className="text-xs" variant="secondary">
                               {tech}
                             </Badge>
                           ))}
@@ -272,13 +274,13 @@ export default function PortfolioPage() {
           share relevant case studies, and outline a custom solution.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/demo">
               Schedule Strategy Call
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/case-studies">View All Case Studies</Link>
           </Button>
         </div>

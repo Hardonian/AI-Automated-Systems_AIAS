@@ -3,10 +3,11 @@
  * Adaptive recommendations based on user behavior
  */
 
-import { type GuardianEvent } from './core';
 // import { guardianService } from './core';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+
+import { type GuardianEvent } from './core';
 
 export interface TrustFabricModel {
   user_id?: string;
@@ -140,10 +141,10 @@ export class TrustFabricAI {
    * Extract context from event
    */
   private extractContext(event: GuardianEvent): string | null {
-    if (event.metadata.camera_active) return 'camera_active';
-    if (event.metadata.microphone_active) return 'microphone_active';
-    if (event.metadata.location_tracking) return 'location_tracking';
-    if (event.data_class === 'biometrics') return 'biometric_auth';
+    if (event.metadata.camera_active) {return 'camera_active';}
+    if (event.metadata.microphone_active) {return 'microphone_active';}
+    if (event.metadata.location_tracking) {return 'location_tracking';}
+    if (event.data_class === 'biometrics') {return 'biometric_auth';}
     return null;
   }
 

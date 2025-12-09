@@ -5,6 +5,7 @@
  */
 
 import { readFileSync, writeFileSync } from "fs";
+
 import { glob } from "glob";
 // import { join } from "path";
 
@@ -37,9 +38,9 @@ for (const file of files) {
       if (lastImport) {
         const importIndex = content.indexOf(lastImport) + lastImport.length;
         content = 
-          content.slice(0, importIndex) +
-          "\nimport { logger } from \"@/lib/logging/structured-logger\";" +
-          content.slice(importIndex);
+          `${content.slice(0, importIndex) 
+          }\nimport { logger } from "@/lib/logging/structured-logger";${ 
+          content.slice(importIndex)}`;
       }
     }
 

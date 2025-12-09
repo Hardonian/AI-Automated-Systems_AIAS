@@ -1,9 +1,3 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   Shield, 
   AlertTriangle, 
@@ -17,10 +11,16 @@ import {
   Clock,
   TrendingUp,
   TrendingDown,
-  RefreshCw,
   Settings,
   Download
 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export interface SecurityEvent {
   id: string;
@@ -208,9 +208,9 @@ export const RealTimeSecurityDashboard: React.FC = () => {
     const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / (1000 * 60));
     
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`;
+    if (diffMins < 1) {return 'Just now';}
+    if (diffMins < 60) {return `${diffMins}m ago`;}
+    if (diffMins < 1440) {return `${Math.floor(diffMins / 60)}h ago`;}
     return date.toLocaleDateString();
   };
 
@@ -226,18 +226,18 @@ export const RealTimeSecurityDashboard: React.FC = () => {
         </div>
         <div className="flex items-center gap-2">
           <Button
-            onClick={() => setIsLive(!isLive)}
-            variant={isLive ? "destructive" : "default"}
             size="sm"
+            variant={isLive ? "destructive" : "default"}
+            onClick={() => setIsLive(!isLive)}
           >
             <Activity className="w-4 h-4 mr-2" />
             {isLive ? 'Live' : 'Paused'}
           </Button>
-          <Button variant="outline" size="sm">
+          <Button size="sm" variant="outline">
             <Settings className="w-4 h-4 mr-2" />
             Settings
           </Button>
-          <Button variant="outline" size="sm">
+          <Button size="sm" variant="outline">
             <Download className="w-4 h-4 mr-2" />
             Export
           </Button>
@@ -320,7 +320,7 @@ export const RealTimeSecurityDashboard: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <Tabs defaultValue="events" className="w-full">
+      <Tabs className="w-full" defaultValue="events">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="events">Security Events</TabsTrigger>
           <TabsTrigger value="alerts">Active Alerts</TabsTrigger>
@@ -328,7 +328,7 @@ export const RealTimeSecurityDashboard: React.FC = () => {
           <TabsTrigger value="compliance">Compliance</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="events" className="space-y-4">
+        <TabsContent className="space-y-4" value="events">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -372,11 +372,11 @@ export const RealTimeSecurityDashboard: React.FC = () => {
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
+                        <Button size="sm" variant="outline">
                           View Details
                         </Button>
                         {event.status === 'active' && (
-                          <Button variant="destructive" size="sm">
+                          <Button size="sm" variant="destructive">
                             Block
                           </Button>
                         )}
@@ -389,7 +389,7 @@ export const RealTimeSecurityDashboard: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="alerts" className="space-y-4">
+        <TabsContent className="space-y-4" value="alerts">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -416,7 +416,7 @@ export const RealTimeSecurityDashboard: React.FC = () => {
                             <p className="text-sm font-medium mb-1">Recommended Actions:</p>
                             <div className="flex flex-wrap gap-1">
                               {alert.actions.map((action, index) => (
-                                <Badge key={index} variant="outline" className="text-xs">
+                                <Badge key={index} className="text-xs" variant="outline">
                                   {action}
                                 </Badge>
                               ))}
@@ -449,7 +449,7 @@ export const RealTimeSecurityDashboard: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="threats" className="space-y-4">
+        <TabsContent className="space-y-4" value="threats">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
               <CardHeader>
@@ -505,7 +505,7 @@ export const RealTimeSecurityDashboard: React.FC = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="compliance" className="space-y-4">
+        <TabsContent className="space-y-4" value="compliance">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardContent className="p-6 text-center">

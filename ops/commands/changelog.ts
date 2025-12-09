@@ -2,9 +2,9 @@
  * Changelog Command - Generate changelog
  */
 
+import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import { execSync } from 'child_process';
 
 export async function changelog(options: { version?: string }) {
   console.log('📝 Generating changelog...\n');
@@ -90,7 +90,7 @@ export async function changelog(options: { version?: string }) {
   const updatedChangelog =
     existingChangelog.startsWith('# Changelog')
       ? existingChangelog.replace(/^# Changelog[\s\S]*?\n\n/, header + newEntry)
-      : header + newEntry + (existingChangelog ? '\n' + existingChangelog : '');
+      : header + newEntry + (existingChangelog ? `\n${  existingChangelog}` : '');
 
   fs.writeFileSync(changelogPath, updatedChangelog);
   console.log(`✅ Changelog updated: ${changelogPath}`);

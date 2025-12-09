@@ -66,10 +66,10 @@ export const ResourceLinks = () => {
           {resources.map((resource, index) => (
             <a
               key={`resource-${index}`}
-              href={resource.link}
-              target="_blank"
-              rel="noopener noreferrer"
               className="group p-6 rounded-xl bg-gradient-card backdrop-blur-sm border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-glow"
+              href={resource.link}
+              rel="noopener noreferrer"
+              target="_blank"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="p-3 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">

@@ -296,7 +296,7 @@ export class SecurityManager {
     const attemptKey = `${userId}_${ipAddress}`;
     const attempts = this.failedAttempts.get(attemptKey);
     
-    if (!attempts) return false;
+    if (!attempts) {return false;}
     
     const lockoutExpiry = attempts.lastAttempt + this.config.authentication.lockoutDuration;
     return Date.now() < lockoutExpiry && attempts.count >= this.config.authentication.maxLoginAttempts;
@@ -459,7 +459,7 @@ export class SecurityManager {
     const criticalEvents = events.filter(e => e.severity === 'critical').length;
     const totalEvents = events.length;
     
-    if (totalEvents === 0) return 100;
+    if (totalEvents === 0) {return 100;}
     
     const criticalRatio = criticalEvents / totalEvents;
     return Math.max(0, 100 - (criticalRatio * 50));

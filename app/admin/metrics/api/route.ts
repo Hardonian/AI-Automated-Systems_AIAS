@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
-import { createGETHandler, RouteContext } from "@/lib/api/route-handler";
 import { createClient } from "@supabase/supabase-js";
+import { NextResponse } from "next/server";
+
+import { createGETHandler, RouteContext } from "@/lib/api/route-handler";
 import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
 
 // Lazy initialization to avoid build-time errors when env vars are not set
 function getSupabaseClient() {
@@ -11,7 +12,7 @@ function getSupabaseClient() {
     return null;
   }
 
-  const url = env.supabase.url;
+  const {url} = env.supabase;
   const key = env.supabase.serviceRoleKey;
   
   // Validate URLs are not placeholders (build-time safety)

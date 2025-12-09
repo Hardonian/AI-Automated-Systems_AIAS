@@ -62,7 +62,7 @@ export class I18n {
       }
     }
 
-    const rows: string[] = ['key,' + locales.join(',')];
+    const rows: string[] = [`key,${  locales.join(',')}`];
     for (const key of allKeys) {
       const values = locales.map((locale) => {
         const localeMap = this.translations.get(locale);

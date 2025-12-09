@@ -13,9 +13,9 @@ const BACKUP_DIR = join(process.cwd(), "backups");
 function getFileSize(filePath: string): string {
   const stats = statSync(filePath);
   const bytes = stats.size;
-  if (bytes < 1024) return bytes + " B";
-  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
-  return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+  if (bytes < 1024) {return `${bytes  } B`;}
+  if (bytes < 1024 * 1024) {return `${(bytes / 1024).toFixed(2)  } KB`;}
+  return `${(bytes / (1024 * 1024)).toFixed(2)  } MB`;
 }
 
 function createBackup() {

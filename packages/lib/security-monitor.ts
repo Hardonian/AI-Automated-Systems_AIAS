@@ -1,4 +1,5 @@
 import { prisma } from './database';
+import { logger } from './observability';
 
 export interface SecurityEvent {
   id: string;
@@ -6,7 +7,7 @@ export interface SecurityEvent {
   severity: SecuritySeverity;
   source: string;
   description: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   userId?: string;
   orgId?: string;
   ipAddress?: string;
@@ -230,8 +231,8 @@ export class SecurityMonitor {
       },
     });
 
-    const recentFailures = recentEvents.filter((e: any) => {
-      const payload = e.payload as any;
+    const recentFailures = recentEvents.filter((e) => {
+      const payload = e.payload as Record<string, unknown>;
       return payload?.ipAddress === event.ipAddress;
     }).length;
 
@@ -286,7 +287,7 @@ export class SecurityMonitor {
     for (const action of rule.actions) {
       switch (action) {
         case SecurityAction.LOG:
-          console.log(`Security event logged: ${event.type} - ${event.description}`);
+          logger.info({ eventType: event.type, description: event.description }, 'Security event logged');
           break;
 
         case SecurityAction.ALERT:
@@ -372,28 +373,28 @@ export class SecurityMonitor {
 
   private async notifyAdmin(event: SecurityEvent, rule: ThreatDetectionRule): Promise<void> {
     // Send notification to admin users
-    console.log(`Admin notification: ${rule.name} - ${event.description}`);
+    logger.info({ ruleName: rule.name, description: event.description }, 'Admin notification sent');
     
     // In a real implementation, this would send emails, Slack messages, etc.
   }
 
   private async suspendUser(userId: string): Promise<void> {
     // Suspend user account
-    console.log(`User ${userId} suspended due to security threat`);
+    logger.warn({ userId }, 'User suspended due to security threat');
     
     // In a real implementation, this would update the user's status in the database
   }
 
   private async require2FA(userId: string): Promise<void> {
     // Require 2FA for next login
-    console.log(`2FA required for user ${userId}`);
+    logger.info({ userId }, '2FA required for user');
     
     // In a real implementation, this would set a flag in the user's record
   }
 
   private async sendRealTimeAlert(alertId: string, _event: SecurityEvent, _rule: ThreatDetectionRule): Promise<void> {
     // Send real-time alert via WebSocket or similar
-    console.log(`Real-time alert sent: ${alertId}`);
+    logger.info({ alertId }, 'Real-time alert sent');
   }
 
   async getSecurityEvents(orgId: string, limit = 50, offset = 0): Promise<SecurityEvent[]> {
@@ -407,25 +408,36 @@ export class SecurityMonitor {
       skip: offset,
     });
 
-    return events.map((event: any) => ({
+    return events.map((event) => {
+      const payload = event.payload as Record<string, unknown>;
+      return {
       id: event.id,
       type: event.event as SecurityEventType,
       severity: event.payload.severity || SecuritySeverity.LOW,
       source: event.payload.source || 'unknown',
       description: event.payload.description || '',
-      metadata: event.payload.metadata || {},
-      userId: event.payload.userId,
+      metadata: (payload.metadata as Record<string, unknown>) || {},
+      userId: payload.userId as string | undefined,
       orgId: event.orgId,
-      ipAddress: event.payload.ipAddress,
-      userAgent: event.payload.userAgent,
+      ipAddress: payload.ipAddress as string | undefined,
+      userAgent: payload.userAgent as string | undefined,
       timestamp: event.createdAt,
-      resolved: event.payload.resolved || false,
-      resolvedAt: event.payload.resolvedAt,
-      resolvedBy: event.payload.resolvedBy,
-    }));
+      resolved: (payload.resolved as boolean) || false,
+      resolvedAt: payload.resolvedAt ? new Date(payload.resolvedAt as string) : undefined,
+      resolvedBy: payload.resolvedBy as string | undefined,
+    };
+    });
   }
 
-  async getSecurityStats(orgId: string, days = 30): Promise<any> {
+  async getSecurityStats(orgId: string, days = 30): Promise<{
+    totalEvents: number;
+    criticalEvents: number;
+    highEvents: number;
+    resolvedEvents: number;
+    unresolvedEvents: number;
+    criticalRate: number;
+    resolutionRate: number;
+  }> {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 
@@ -449,18 +461,18 @@ export class SecurityMonitor {
       },
     });
 
-    const criticalEvents = allEvents.filter((e: any) => {
-      const payload = e.payload as any;
+    const criticalEvents = allEvents.filter((e) => {
+      const payload = e.payload as Record<string, unknown>;
       return payload?.severity === SecuritySeverity.CRITICAL;
     }).length;
 
-    const highEvents = allEvents.filter((e: any) => {
-      const payload = e.payload as any;
+    const highEvents = allEvents.filter((e) => {
+      const payload = e.payload as Record<string, unknown>;
       return payload?.severity === SecuritySeverity.HIGH;
     }).length;
 
-    const resolvedEvents = allEvents.filter((e: any) => {
-      const payload = e.payload as any;
+    const resolvedEvents = allEvents.filter((e) => {
+      const payload = e.payload as Record<string, unknown>;
       return payload?.resolved === true;
     }).length;
 
@@ -524,8 +536,8 @@ export class SecurityMonitor {
     });
 
     // Filter by IP address in memory (Prisma doesn't support JSON path queries)
-    const blockEvent = blockEvents.find((e: any) => {
-      const payload = e.payload as any;
+    const blockEvent = blockEvents.find((e) => {
+      const payload = e.payload as Record<string, unknown>;
       return payload?.source === ipAddress;
     });
 

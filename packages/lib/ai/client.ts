@@ -1,5 +1,6 @@
 import { createAIProvider, createFallbackAIProvider } from './providers';
 import { ChatRequest, AuditRequest, EstimateRequest, ContentGenerationRequest, WorkflowGenerationRequest } from './types';
+import { logger } from '../observability';
 
 import { AIProvider } from './types';
 
@@ -11,14 +12,14 @@ export class AIClient {
     try {
       this.primaryProvider = createAIProvider();
     } catch (error) {
-      console.warn('Failed to initialize primary AI provider:', error);
+      logger.warn({ err: error }, 'Failed to initialize primary AI provider');
       this.primaryProvider = null;
     }
 
     try {
       this.fallbackProvider = createFallbackAIProvider();
     } catch (error) {
-      console.warn('Failed to initialize fallback AI provider:', error);
+      logger.warn({ err: error }, 'Failed to initialize fallback AI provider');
       this.fallbackProvider = null;
     }
   }
@@ -31,7 +32,7 @@ export class AIClient {
       try {
         return await operation(this.primaryProvider);
       } catch (error) {
-        console.warn(`Primary provider failed for ${operationName}:`, error);
+        logger.warn({ err: error, operation: operationName }, `Primary provider failed for ${operationName}`);
       }
     }
 
@@ -39,7 +40,7 @@ export class AIClient {
       try {
         return await operation(this.fallbackProvider);
       } catch (error) {
-        console.warn(`Fallback provider failed for ${operationName}:`, error);
+        logger.warn({ err: error, operation: operationName }, `Fallback provider failed for ${operationName}`);
       }
     }
 
@@ -59,7 +60,7 @@ export class AIClient {
         yield* this.primaryProvider.streamChat(request);
         return;
       } catch (error) {
-        console.warn('Primary provider failed for streamChat:', error);
+        logger.warn({ err: error }, 'Primary provider failed for streamChat');
       }
     }
 
@@ -68,7 +69,7 @@ export class AIClient {
         yield* this.fallbackProvider.streamChat(request);
         return;
       } catch (error) {
-        console.warn('Fallback provider failed for streamChat:', error);
+        logger.warn({ err: error }, 'Fallback provider failed for streamChat');
       }
     }
 

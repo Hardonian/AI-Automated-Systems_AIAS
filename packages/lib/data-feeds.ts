@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { prisma } from './database';
 import { feedIngestQueue } from './queues';
+import { logger } from './observability';
 
 export const SourceConfigSchema = z.object({
   url: z.string().url().optional(),
@@ -304,7 +305,8 @@ export class DataFeedService {
 
       return { success: true, message: 'Source queued for processing' };
     } catch (error) {
-      console.error('Source run error:', error);
+      logger.error({ err: error, sourceId: source.id }, 'Source run error');
+      logger.error({ err: error, sourceId: source.id }, 'Source run error');
       throw new Error(`Failed to run source: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

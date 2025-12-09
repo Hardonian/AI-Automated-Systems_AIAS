@@ -65,14 +65,61 @@ export type EstimateRequest = z.infer<typeof EstimateRequestSchema>;
 export type ContentGenerationRequest = z.infer<typeof ContentGenerationRequestSchema>;
 export type WorkflowGenerationRequest = z.infer<typeof WorkflowGenerationRequestSchema>;
 
+export interface AuditResult {
+  type: string;
+  website: string;
+  analysis: string;
+  recommendations: string[];
+  metrics: Record<string, unknown>;
+  generatedAt: string;
+}
+
+export interface EstimateResult {
+  projectType: string;
+  scope: {
+    pages: number;
+    features: string[];
+    integrations: string[];
+    timeline: string;
+  };
+  requirements: {
+    design: boolean;
+    development: boolean;
+    testing: boolean;
+    deployment: boolean;
+    maintenance: boolean;
+  };
+  estimate: string;
+  timeline: string;
+  generatedAt: string;
+}
+
+export interface ContentResult {
+  type: string;
+  topic: string;
+  content: string;
+  tone: string;
+  length: string;
+  generatedAt: string;
+}
+
+export interface WorkflowResult {
+  businessType: string;
+  goals: string[];
+  workflow: string;
+  budget: string;
+  timeline: string;
+  generatedAt: string;
+}
+
 export interface AIProvider {
   name: string;
   chat(request: ChatRequest): Promise<AIResponse>;
   streamChat(request: ChatRequest): AsyncIterable<string>;
-  generateAudit(request: AuditRequest): Promise<any>;
-  generateEstimate(request: EstimateRequest): Promise<any>;
-  generateContent(request: ContentGenerationRequest): Promise<any>;
-  generateWorkflow(request: WorkflowGenerationRequest): Promise<any>;
+  generateAudit(request: AuditRequest): Promise<AuditResult>;
+  generateEstimate(request: EstimateRequest): Promise<EstimateResult>;
+  generateContent(request: ContentGenerationRequest): Promise<ContentResult>;
+  generateWorkflow(request: WorkflowGenerationRequest): Promise<WorkflowResult>;
 }
 
 export interface AIResponse {

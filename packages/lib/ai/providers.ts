@@ -1,8 +1,22 @@
 import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { AIProvider, ChatRequest, AuditRequest, EstimateRequest, ContentGenerationRequest, WorkflowGenerationRequest, AIResponse } from './types';
+import { 
+  AIProvider, 
+  ChatRequest, 
+  AuditRequest, 
+  EstimateRequest, 
+  ContentGenerationRequest, 
+  WorkflowGenerationRequest, 
+  AIResponse,
+  AuditResult,
+  EstimateResult,
+  ContentResult,
+  WorkflowResult,
+  ChatMessage
+} from './types';
 import { config } from '@ai-consultancy/config';
+import { logger } from '../observability';
 
 class OpenAIProvider implements AIProvider {
   name = 'openai';
@@ -18,9 +32,14 @@ class OpenAIProvider implements AIProvider {
   }
 
   async chat(request: ChatRequest): Promise<AIResponse> {
+    const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = request.messages.map(msg => ({
+      role: msg.role as 'system' | 'user' | 'assistant',
+      content: msg.content,
+    }));
+    
     const response = await this.client.chat.completions.create({
       model: request.model || 'gpt-4',
-      messages: request.messages as any,
+      messages,
       temperature: request.temperature || 0.7,
       max_tokens: request.maxTokens || 1000,
     });
@@ -38,9 +57,14 @@ class OpenAIProvider implements AIProvider {
   }
 
   async *streamChat(request: ChatRequest): AsyncIterable<string> {
+    const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = request.messages.map(msg => ({
+      role: msg.role as 'system' | 'user' | 'assistant',
+      content: msg.content,
+    }));
+    
     const stream = await this.client.chat.completions.create({
       model: request.model || 'gpt-4',
-      messages: request.messages as any,
+      messages,
       temperature: request.temperature || 0.7,
       max_tokens: request.maxTokens || 1000,
       stream: true,
@@ -54,7 +78,7 @@ class OpenAIProvider implements AIProvider {
     }
   }
 
-  async generateAudit(request: AuditRequest): Promise<any> {
+  async generateAudit(request: AuditRequest): Promise<AuditResult> {
     const prompt = `Generate a comprehensive ${request.type} audit for ${request.website}. Include detailed analysis, recommendations, and metrics.`;
     
     const response = await this.chat({
@@ -76,7 +100,7 @@ class OpenAIProvider implements AIProvider {
     };
   }
 
-  async generateEstimate(request: EstimateRequest): Promise<any> {
+  async generateEstimate(request: EstimateRequest): Promise<EstimateResult> {
     const prompt = `Generate a detailed project estimate for a ${request.projectType} project with ${request.scope.pages} pages, features: ${request.scope.features.join(', ')}, timeline: ${request.scope.timeline}.`;
     
     const response = await this.chat({
@@ -98,7 +122,7 @@ class OpenAIProvider implements AIProvider {
     };
   }
 
-  async generateContent(request: ContentGenerationRequest): Promise<any> {
+  async generateContent(request: ContentGenerationRequest): Promise<ContentResult> {
     const prompt = `Generate ${request.type} content about "${request.topic}" with a ${request.tone} tone, ${request.length} length. Target audience: ${request.targetAudience || 'general'}. Keywords: ${request.keywords?.join(', ') || 'none'}.`;
     
     const response = await this.chat({
@@ -120,7 +144,7 @@ class OpenAIProvider implements AIProvider {
     };
   }
 
-  async generateWorkflow(request: WorkflowGenerationRequest): Promise<any> {
+  async generateWorkflow(request: WorkflowGenerationRequest): Promise<WorkflowResult> {
     const prompt = `Generate an automated workflow for a ${request.businessType} business. Goals: ${request.goals.join(', ')}. Current processes: ${request.currentProcesses.join(', ')}. Pain points: ${request.painPoints.join(', ')}. Budget: ${request.budget}, Timeline: ${request.timeline}.`;
     
     const response = await this.chat({
@@ -157,7 +181,19 @@ class AnthropicProvider implements AIProvider {
   }
 
   async chat(request: ChatRequest): Promise<AIResponse> {
-    const response = await (this.client as any).messages.create({
+    // Anthropic SDK types may not be fully compatible, but the API is correct
+    const response = await (this.client.messages as unknown as {
+      create: (params: {
+        model: string;
+        max_tokens: number;
+        temperature: number;
+        messages: Array<{ role: string; content: string }>;
+      }) => Promise<{
+        content: Array<{ text: string }>;
+        usage: { input_tokens: number; output_tokens: number };
+        model: string;
+      }>;
+    }).create({
       model: request.model || 'claude-3-sonnet-20240229',
       max_tokens: request.maxTokens || 1000,
       temperature: request.temperature || 0.7,
@@ -180,7 +216,16 @@ class AnthropicProvider implements AIProvider {
   }
 
   async *streamChat(request: ChatRequest): AsyncIterable<string> {
-    const stream = await (this.client as any).messages.create({
+    // Anthropic SDK types may not be fully compatible, but the API is correct
+    const stream = await (this.client.messages as unknown as {
+      create: (params: {
+        model: string;
+        max_tokens: number;
+        temperature: number;
+        messages: Array<{ role: string; content: string }>;
+        stream: true;
+      }) => AsyncIterable<{ type: string; delta?: { type: string; text?: string } }>;
+    }).create({
       model: request.model || 'claude-3-sonnet-20240229',
       max_tokens: request.maxTokens || 1000,
       temperature: request.temperature || 0.7,
@@ -198,7 +243,7 @@ class AnthropicProvider implements AIProvider {
     }
   }
 
-  async generateAudit(request: AuditRequest): Promise<any> {
+  async generateAudit(request: AuditRequest): Promise<AuditResult> {
     const prompt = `Generate a comprehensive ${request.type} audit for ${request.website}. Include detailed analysis, recommendations, and metrics.`;
     
     const response = await this.chat({
@@ -220,7 +265,7 @@ class AnthropicProvider implements AIProvider {
     };
   }
 
-  async generateEstimate(request: EstimateRequest): Promise<any> {
+  async generateEstimate(request: EstimateRequest): Promise<EstimateResult> {
     const prompt = `Generate a detailed project estimate for a ${request.projectType} project with ${request.scope.pages} pages, features: ${request.scope.features.join(', ')}, timeline: ${request.scope.timeline}.`;
     
     const response = await this.chat({
@@ -242,7 +287,7 @@ class AnthropicProvider implements AIProvider {
     };
   }
 
-  async generateContent(request: ContentGenerationRequest): Promise<any> {
+  async generateContent(request: ContentGenerationRequest): Promise<ContentResult> {
     const prompt = `Generate ${request.type} content about "${request.topic}" with a ${request.tone} tone, ${request.length} length. Target audience: ${request.targetAudience || 'general'}. Keywords: ${request.keywords?.join(', ') || 'none'}.`;
     
     const response = await this.chat({
@@ -264,7 +309,7 @@ class AnthropicProvider implements AIProvider {
     };
   }
 
-  async generateWorkflow(request: WorkflowGenerationRequest): Promise<any> {
+  async generateWorkflow(request: WorkflowGenerationRequest): Promise<WorkflowResult> {
     const prompt = `Generate an automated workflow for a ${request.businessType} business. Goals: ${request.goals.join(', ')}. Current processes: ${request.currentProcesses.join(', ')}. Pain points: ${request.painPoints.join(', ')}. Budget: ${request.budget}, Timeline: ${request.timeline}.`;
     
     const response = await this.chat({
@@ -338,7 +383,7 @@ class GoogleProvider implements AIProvider {
     }
   }
 
-  async generateAudit(request: AuditRequest): Promise<any> {
+  async generateAudit(request: AuditRequest): Promise<AuditResult> {
     const prompt = `Generate a comprehensive ${request.type} audit for ${request.website}. Include detailed analysis, recommendations, and metrics.`;
     
     const response = await this.chat({
@@ -360,7 +405,7 @@ class GoogleProvider implements AIProvider {
     };
   }
 
-  async generateEstimate(request: EstimateRequest): Promise<any> {
+  async generateEstimate(request: EstimateRequest): Promise<EstimateResult> {
     const prompt = `Generate a detailed project estimate for a ${request.projectType} project with ${request.scope.pages} pages, features: ${request.scope.features.join(', ')}, timeline: ${request.scope.timeline}.`;
     
     const response = await this.chat({
@@ -382,7 +427,7 @@ class GoogleProvider implements AIProvider {
     };
   }
 
-  async generateContent(request: ContentGenerationRequest): Promise<any> {
+  async generateContent(request: ContentGenerationRequest): Promise<ContentResult> {
     const prompt = `Generate ${request.type} content about "${request.topic}" with a ${request.tone} tone, ${request.length} length. Target audience: ${request.targetAudience || 'general'}. Keywords: ${request.keywords?.join(', ') || 'none'}.`;
     
     const response = await this.chat({
@@ -404,7 +449,7 @@ class GoogleProvider implements AIProvider {
     };
   }
 
-  async generateWorkflow(request: WorkflowGenerationRequest): Promise<any> {
+  async generateWorkflow(request: WorkflowGenerationRequest): Promise<WorkflowResult> {
     const prompt = `Generate an automated workflow for a ${request.businessType} business. Goals: ${request.goals.join(', ')}. Current processes: ${request.currentProcesses.join(', ')}. Pain points: ${request.painPoints.join(', ')}. Budget: ${request.budget}, Timeline: ${request.timeline}.`;
     
     const response = await this.chat({
@@ -449,7 +494,7 @@ export function createFallbackAIProvider(): AIProvider {
     try {
       return createAIProvider(provider);
     } catch (error) {
-      console.warn(`Failed to initialize ${provider} provider:`, error);
+      logger.warn({ err: error, provider }, `Failed to initialize ${provider} provider`);
       continue;
     }
   }

@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { config } from '@ai-consultancy/config';
 import { prisma } from './database';
+import { logger } from './observability';
 
 const stripe = new Stripe(config.stripe.secretKey || '', {
   apiVersion: '2023-10-16',
@@ -121,7 +122,7 @@ export class PaymentService {
         await this.handleInvoicePaymentFailed(event.data.object as Stripe.Invoice);
         break;
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        logger.info({ eventType: event.type }, `Unhandled event type: ${event.type}`);
     }
   }
 
@@ -130,7 +131,7 @@ export class PaymentService {
     const subscriptionId = session.subscription as string;
 
     if (!customerId || !subscriptionId) {
-      console.error('Missing customer or subscription ID in checkout session');
+      logger.error('Missing customer or subscription ID in checkout session');
       return;
     }
 
@@ -178,7 +179,7 @@ export class PaymentService {
     });
 
     if (!org) {
-      console.error('Organization not found for customer:', customerId);
+      logger.error({ customerId }, 'Organization not found for customer');
       return;
     }
 
@@ -226,12 +227,12 @@ export class PaymentService {
 
   private static async handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
     // Handle successful payment
-    console.log('Invoice payment succeeded:', invoice.id);
+    logger.info({ invoiceId: invoice.id }, 'Invoice payment succeeded');
   }
 
   private static async handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
     // Handle failed payment
-    console.log('Invoice payment failed:', invoice.id);
+    logger.warn({ invoiceId: invoice.id }, 'Invoice payment failed');
   }
 
   private static mapStripeStatus(status: Stripe.Subscription.Status): 'ACTIVE' | 'CANCELED' | 'INCOMPLETE' | 'INCOMPLETE_EXPIRED' | 'PAST_DUE' | 'TRIALING' | 'UNPAID' {

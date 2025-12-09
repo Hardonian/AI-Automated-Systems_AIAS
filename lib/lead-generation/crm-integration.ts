@@ -278,7 +278,7 @@ class CRMIntegrationService {
    */
   private convertToCRMFormat(lead: LeadRecord): CRMLead {
     return {
-      email: lead.email,
+      email: lead.email || '',
       firstName: lead.first_name,
       lastName: lead.last_name,
       company: lead.company,

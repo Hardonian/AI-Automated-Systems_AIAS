@@ -272,8 +272,8 @@ export function getDefaultVariables(userData: Record<string, unknown> = {}): Tem
   };
 
   // Merge user data
-  if (userData) {
-    defaults.user = { ...defaults.user, ...userData };
+  if (userData && typeof userData === 'object' && userData !== null) {
+    defaults.user = Object.assign({}, defaults.user, userData);
   }
 
   return defaults;
@@ -293,14 +293,14 @@ export function renderTemplate(
     ...getDefaultVariables(),
     ...variables,
     // Flatten user data if provided at top level
-    user: {
-      ...getDefaultVariables().user,
-      ...(variables.user || {}),
-      // Support both camelCase and snake_case
-      ...(variables.firstName ? { first_name: variables.firstName } : {}),
-      ...(variables.lastName ? { last_name: variables.lastName } : {}),
-      ...(variables.planName ? { plan_name: variables.planName } : {}),
-    },
+    user: Object.assign(
+      {},
+      getDefaultVariables().user,
+      variables.user || {},
+      variables.firstName ? { first_name: variables.firstName } : {},
+      variables.lastName ? { last_name: variables.lastName } : {},
+      variables.planName ? { plan_name: variables.planName } : {}
+    ),
   };
 
   let result = template;

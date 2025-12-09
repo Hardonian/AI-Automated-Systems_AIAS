@@ -147,7 +147,11 @@ export function sanitizeRequestBody(body: unknown): unknown {
     return body;
   }
 
-  const sanitized: Record<string, unknown> | unknown[] = Array.isArray(body) ? [] : {};
+  if (Array.isArray(body)) {
+    return body.map((item) => sanitizeRequestBody(item));
+  }
+
+  const sanitized: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(body)) {
     // Skip dangerous keys

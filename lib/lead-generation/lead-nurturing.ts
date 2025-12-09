@@ -159,10 +159,24 @@ class LeadNurturingService {
    * Send nurturing email
    */
   private async sendNurturingEmail(
-    lead: { id: string; email?: string; name?: string },
+    lead: { 
+      id: string; 
+      email?: string; 
+      name?: string;
+      first_name?: string;
+      last_name?: string;
+      company?: string;
+      plan_name?: string;
+      automation_name?: string;
+    },
     templateId: string,
     tenantId?: string
   ): Promise<void> {
+    // Validate email exists
+    if (!lead.email) {
+      throw new Error(`Cannot send nurturing email: lead ${lead.id} has no email address`);
+    }
+
     // Try to get template from our template library first
     const template = getTemplateById(templateId);
     

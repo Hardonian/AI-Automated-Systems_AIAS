@@ -200,7 +200,7 @@ export class QueryOptimizer {
       if (data) {
         for (const item of data) {
           const itemObj = item as Record<string, unknown>;
-          const id = itemObj.id;
+          const {id} = itemObj;
           results.set(id, item as T);
           
           if (options.cache !== false) {

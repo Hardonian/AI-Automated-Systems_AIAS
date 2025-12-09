@@ -27,6 +27,17 @@ export interface CRMLead {
   status?: string;
 }
 
+interface LeadRecord {
+  email?: string;
+  first_name?: string;
+  last_name?: string;
+  company?: string;
+  phone?: string;
+  source?: string;
+  score?: number;
+  status?: string;
+}
+
 class CRMIntegrationService {
   private supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -265,19 +276,9 @@ class CRMIntegrationService {
   /**
    * Convert lead to CRM format
    */
-  interface LeadRecord {
-    email?: string;
-    first_name?: string;
-    last_name?: string;
-    company?: string;
-    phone?: string;
-    source?: string;
-    score?: number;
-    status?: string;
-  }
   private convertToCRMFormat(lead: LeadRecord): CRMLead {
     return {
-      email: lead.email,
+      email: lead.email || '',
       firstName: lead.first_name,
       lastName: lead.last_name,
       company: lead.company,

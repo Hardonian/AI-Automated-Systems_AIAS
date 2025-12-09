@@ -104,7 +104,7 @@ export default function ResultsPage() {
         </p>
       </div>
 
-      <ExecutionResults execution={execution} loading={loading} />
+      <ExecutionResults execution={execution ?? undefined} loading={loading} />
 
       {execution && execution.status === "completed" && (
         <Card className="border-green-500">

@@ -18,6 +18,9 @@ export default tseslint.config(
       globals: globals.browser,
       parserOptions: {
         project: ["./tsconfig.json", "./apps/web/tsconfig.json"],
+        projectService: {
+          allowDefaultProject: ["*.js", "*.mjs", "*.cjs"],
+        },
       },
     },
     settings: {
@@ -145,6 +148,7 @@ export default tseslint.config(
       "react/jsx-key": "error",
       "react/jsx-no-useless-fragment": "warn",
       "react/self-closing-comp": "warn",
+      "react/no-unescaped-entities": "warn", // Allow unescaped entities (common in content)
       "react/jsx-sort-props": ["warn", {
         "callbacksLast": true,
         "shorthandFirst": true,

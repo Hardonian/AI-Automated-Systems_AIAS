@@ -135,9 +135,10 @@ export async function POST(request: NextRequest) {
       fileName,
     });
   } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error("Upload error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
-      { error: error.message || "Failed to upload file" },
+      { error: errorMessage || "Failed to upload file" },
       { status: 500 }
     );
   }

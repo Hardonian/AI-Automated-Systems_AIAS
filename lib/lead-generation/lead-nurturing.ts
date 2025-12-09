@@ -25,6 +25,19 @@ export interface NurturingStep {
   conditions?: Record<string, unknown>;
 }
 
+interface NurturingStepRecord {
+  id: string;
+  lead_id: string;
+  sequence_id: string;
+  step_order: number;
+  tenant_id?: string;
+}
+
+interface EmailTemplate {
+  subject: string;
+  body: string;
+}
+
 class LeadNurturingService {
   private supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -88,14 +101,7 @@ class LeadNurturingService {
   /**
    * Execute nurturing step
    */
-  interface NurturingStep {
-    id: string;
-    lead_id: string;
-    sequence_id: string;
-    step_order: number;
-    tenant_id?: string;
-  }
-  private async executeStep(step: NurturingStep): Promise<void> {
+  private async executeStep(step: NurturingStepRecord): Promise<void> {
     // Get lead
     const { data: lead } = await this.supabase
       .from('leads')
@@ -234,10 +240,6 @@ class LeadNurturingService {
   /**
    * Personalize email (for database templates)
    */
-  interface EmailTemplate {
-    subject: string;
-    body: string;
-  }
   private personalizeEmail(template: EmailTemplate, lead: { name?: string; email?: string; company?: string }): { subject: string; body: string } {
     let subject = template.subject || '';
     let body = template.body || '';

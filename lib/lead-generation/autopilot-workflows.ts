@@ -152,7 +152,13 @@ class AutopilotWorkflowService {
       id: string;
       email?: string;
       name?: string;
+      first_name?: string;
+      last_name?: string;
       company?: string;
+      plan_name?: string;
+      automation_name?: string;
+      score?: number;
+      qualified?: boolean;
     }
     let lead: Lead | null = null;
     if (leadId) {

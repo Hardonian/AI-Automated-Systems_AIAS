@@ -89,7 +89,7 @@ export async function checkFeatureAccess(
       .eq("status", "active")
       .single();
 
-    let plan: PlanTier = "free";
+    let plan: string | PlanTier = "free";
     if (subscription?.subscription_plans && Array.isArray(subscription.subscription_plans) && subscription.subscription_plans[0]?.tier) {
       plan = subscription.subscription_plans[0].tier as PlanTier;
     } else {
@@ -100,7 +100,7 @@ export async function checkFeatureAccess(
         .single();
 
       if (profile?.subscription_tier) {
-        plan = profile.subscription_tier.toLowerCase() as PlanTier;
+        plan = profile.subscription_tier.toLowerCase();
       } else if (profile?.trial_started_at) {
         plan = "trial";
       }
@@ -109,9 +109,12 @@ export async function checkFeatureAccess(
     // Normalize plan
     if (plan === "professional") {plan = "pro";}
     if (plan === "standard") {plan = "starter";}
+    
+    // Ensure plan is a valid PlanTier
+    const normalizedPlan = plan as PlanTier;
 
     const featureConfig = FEATURES[feature];
-    const planAccess = featureConfig[plan];
+    const planAccess = featureConfig[normalizedPlan];
 
     // Check boolean features
     if (typeof planAccess === "boolean") {
@@ -172,12 +175,17 @@ export async function canCreateWorkflow(userId: string): Promise<FeatureAccess> 
       .eq("status", "active")
       .single();
 
-    let plan: PlanTier = "free";
+    let plan: string | PlanTier = "free";
     if (subscription?.subscription_plans && Array.isArray(subscription.subscription_plans) && subscription.subscription_plans[0]?.tier) {
       plan = subscription.subscription_plans[0].tier as PlanTier;
     }
+    
+    // Normalize plan
+    if (plan === "professional") {plan = "pro";}
+    if (plan === "standard") {plan = "starter";}
+    const normalizedPlan = plan as PlanTier;
 
-    const maxWorkflows = FEATURES.workflows[plan]?.max || 3;
+    const maxWorkflows = FEATURES.workflows[normalizedPlan]?.max || 3;
 
     if (maxWorkflows === -1) {
       return { allowed: true }; // Unlimited
@@ -187,7 +195,7 @@ export async function canCreateWorkflow(userId: string): Promise<FeatureAccess> 
       return {
         allowed: false,
         reason: `You've reached your workflow limit (${maxWorkflows}). Upgrade to create more.`,
-        upgradePlan: plan === "free" || plan === "trial" ? "starter" : "pro",
+        upgradePlan: normalizedPlan === "free" || normalizedPlan === "trial" ? "starter" : "pro",
       };
     }
 

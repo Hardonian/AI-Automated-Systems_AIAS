@@ -117,9 +117,10 @@ Provide suggestions in a structured format with specific recommendations.`;
       suggestions,
     });
   } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error("SEO analysis error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
-      { error: error.message || "Failed to analyze SEO" },
+      { error: errorMessage || "Failed to analyze SEO" },
       { status: 500 }
     );
   }

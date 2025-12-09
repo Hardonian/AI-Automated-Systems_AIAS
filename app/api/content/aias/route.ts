@@ -93,9 +93,10 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({ success: true });
   } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error("Error saving AIAS content:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
-      { error: error.message || "Failed to save content" },
+      { error: errorMessage || "Failed to save content" },
       { status: 500 }
     );
   }

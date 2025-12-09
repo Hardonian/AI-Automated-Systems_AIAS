@@ -25,6 +25,19 @@ export interface LeadScore {
   recommendations: string[];
 }
 
+interface Lead {
+  id: string;
+  email?: string;
+  name?: string;
+  company?: string;
+  phone?: string;
+  job_title?: string;
+  source?: string;
+  score?: number;
+  status?: string;
+  qualified?: boolean;
+}
+
 class LeadScoringService {
   private supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -284,18 +297,6 @@ class LeadScoringService {
   /**
    * Get lead data
    */
-  interface Lead {
-    id: string;
-    email?: string;
-    name?: string;
-    company?: string;
-    phone?: string;
-    job_title?: string;
-    source?: string;
-    score?: number;
-    status?: string;
-    qualified?: boolean;
-  }
   private async getLead(leadId: string, tenantId?: string): Promise<Lead | null> {
     let query = this.supabase.from('leads').select('*').eq('id', leadId);
 
@@ -305,7 +306,9 @@ class LeadScoringService {
 
     const { data, error } = await query.single();
 
-    if (error) {throw error;}
+    if (error) {
+      throw error;
+    }
     return data;
   }
 

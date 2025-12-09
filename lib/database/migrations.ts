@@ -128,15 +128,15 @@ async function applyMigration(
       errorMessage.includes('already exists') ||
       errorMessage.includes('duplicate key') ||
       errorMessage.includes('relation already exists') ||
-      migrationError.message?.includes('already applied') ||
-      migrationError.message?.includes('duplicate')
+      errorMessage.includes('already applied') ||
+      errorMessage.includes('duplicate')
     ) {
-      console.log(`⏭️  Skipped (already applied): ${migration.name}`);
+      // Migration already applied
       return { success: true };
     }
     
-    console.error(`❌ Failed to apply ${migration.name}:`, migrationError.message);
-    return { success: false, error: migrationError.message || String(migrationError) };
+    console.error(`❌ Failed to apply ${migration.name}:`, errorMessage);
+    return { success: false, error: errorMessage };
   }
 }
 

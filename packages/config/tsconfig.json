@@ -8,7 +8,8 @@
     "declarationMap": true,
     "incremental": true,
     "module": "NodeNext",
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "NodeNext",
+    "noEmit": false
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]

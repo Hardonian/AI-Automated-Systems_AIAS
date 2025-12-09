@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { agentExecutor } from '@/lib/agents/executor';
 import { agentExecutionContextSchema } from '@/lib/agents/schema';
+import { logger } from '@/lib/logging/structured-logger';
 import { observabilityService } from '@/lib/observability/telemetry';
 import { createClient } from '@/lib/supabase/server';
 
@@ -82,15 +83,24 @@ export async function POST(
         metrics: 'metrics' in result ? result.metrics || null : null,
         started_at: 'startedAt' in result ? result.startedAt : null,
         completed_at: 'completedAt' in result ? result.completedAt : null,
-      });
+      } as Record<string, unknown>);
 
     if (dbError) {
-      console.error('Error saving execution to database:', dbError);
+      logger.error('Error saving execution to database', new Error(dbError.message), {
+        component: 'AgentExecuteAPI',
+        action: 'POST',
+        agentId: params.id,
+        userId: user.id,
+      });
     }
 
     return NextResponse.json({ result });
   } catch (error) {
-    console.error('Error executing agent:', error);
+    logger.error('Error executing agent', error instanceof Error ? error : new Error(String(error)), {
+      component: 'AgentExecuteAPI',
+      action: 'POST',
+      agentId: params.id,
+    });
     return NextResponse.json(
       { error: 'Failed to execute agent' },
       { status: 500 }

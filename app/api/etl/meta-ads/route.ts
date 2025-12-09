@@ -112,9 +112,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           platform: "meta",
           date: ad.date_start,
           spend_cents: Math.round(parseFloat(ad.spend) * 100),
-          clicks: parseInt(ad.clicks) || 0,
-          impressions: parseInt(ad.impressions) || 0,
-          conversions: parseInt(conversions) || 0,
+          clicks: parseInt(ad.clicks, 10) || 0,
+          impressions: parseInt(ad.impressions, 10) || 0,
+          conversions: parseInt(conversions, 10) || 0,
         }, {
           onConflict: "platform,date",
         });

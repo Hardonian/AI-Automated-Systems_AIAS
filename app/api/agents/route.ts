@@ -3,16 +3,19 @@
  * Handles agent CRUD operations
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
+import { NextResponse } from 'next/server';
 
 import { agentDefinitionSchema } from '@/lib/agents/schema';
+import { createGETHandler, RouteContext } from '@/lib/api/route-handler';
 import { createClient } from '@/lib/supabase/server';
 
 const createAgentSchema = agentDefinitionSchema.omit({ id: true, createdAt: true, updatedAt: true });
 
-export async function GET(request: NextRequest) {
-  try {
+export const GET = createGETHandler(
+  async (context: RouteContext) => {
+    const { request } = context;
+    
+    // Get authenticated user (Supabase uses cookies, not Bearer tokens)
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -40,17 +43,20 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ agents: agents || [] });
-  } catch (error) {
-    console.error('Error fetching agents:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch agents' },
-      { status: 500 }
-    );
+  },
+  {
+    requireAuth: false, // We handle auth manually for Supabase
+    cache: { enabled: true, ttl: 60 }, // Cache for 1 minute
   }
-}
+);
 
-export async function POST(request: NextRequest) {
-  try {
+import { createPOSTHandler } from '@/lib/api/route-handler';
+
+export const POST = createPOSTHandler(
+  async (context: RouteContext) => {
+    const { request } = context;
+    
+    // Get authenticated user (Supabase uses cookies, not Bearer tokens)
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -76,18 +82,10 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ agent }, { status: 201 });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Validation error', details: error.errors },
-        { status: 400 }
-      );
-    }
-
-    console.error('Error creating agent:', error);
-    return NextResponse.json(
-      { error: 'Failed to create agent' },
-      { status: 500 }
-    );
+  },
+  {
+    requireAuth: false, // We handle auth manually for Supabase
+    validateBody: createAgentSchema,
+    maxBodySize: 100 * 1024, // 100KB max
   }
-}
+);

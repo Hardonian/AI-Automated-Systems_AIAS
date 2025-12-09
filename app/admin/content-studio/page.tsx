@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import type { AIASContent, SettlerContent } from "@/lib/content/schemas";
+import { logger } from "@/lib/utils/logger";
 
 export default function ContentStudioPage() {
   const { toast } = useToast();
@@ -42,7 +43,9 @@ export default function ContentStudioPage() {
     }
     if (auth === "true") {
       setAuthenticated(true);
-      loadContent();
+      loadContent().catch((error) => {
+        logger.error("Failed to load content", error instanceof Error ? error : new Error(String(error)));
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -59,7 +62,9 @@ export default function ContentStudioPage() {
     // Set new timeout for auto-save (5 seconds after last change)
     autoSaveTimeoutRef.current = setTimeout(() => {
       if (hasChanges && !saving) {
-        handleSave(true); // Silent save for auto-save
+        handleSave(true).catch((error) => {
+          logger.error("Auto-save failed", error instanceof Error ? error : new Error(String(error)));
+        }); // Silent save for auto-save
       }
     }, 5000);
 
@@ -264,7 +269,9 @@ export default function ContentStudioPage() {
   };
 
   const handleReset = () => {
-    loadContent();
+    loadContent().catch((error) => {
+      logger.error("Failed to load content", error instanceof Error ? error : new Error(String(error)));
+    });
     setHasChanges(false);
     toast({
       title: "Reset",
@@ -290,7 +297,9 @@ export default function ContentStudioPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    handleLogin();
+                    handleLogin().catch((error) => {
+                      logger.error("Login failed", error instanceof Error ? error : new Error(String(error)));
+                    });
                   }
                 }}
               />
@@ -310,7 +319,7 @@ export default function ContentStudioPage() {
               )}
             </Button>
             <p className="text-sm text-muted-foreground text-center">
-              If you're an admin, sign in to your account first, or enter your Content Studio token.
+              If you&apos;re an admin, sign in to your account first, or enter your Content Studio token.
             </p>
             <Button
               className="w-full"

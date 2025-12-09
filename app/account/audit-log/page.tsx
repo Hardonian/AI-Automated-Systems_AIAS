@@ -58,7 +58,7 @@ export default function AuditLog() {
       <div>
         <h1 className="text-2xl font-bold">My Audit Log</h1>
         <p className="text-muted-foreground mt-2">
-          View your personal activity log. This shows actions you've taken in the system.
+          View your personal activity log. This shows actions you&apos;ve taken in the system.
         </p>
       </div>
 

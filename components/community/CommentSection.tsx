@@ -42,7 +42,7 @@ export default function CommentSection({ postId }: { postId: number }) {
     hapticTap();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user || !newComment.trim()) return;
-    await supabase.from("comments").insert({ post_id: postId, user_id: user.id, body: newComment, parent_id: parentId });
+    await supabase.from("comments").insert({ post_id: postId, user_id: user.id, body: newComment, parent_id: parentId } as Record<string, unknown>);
     setNewComment("");
     setReplyingTo(null);
   }

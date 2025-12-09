@@ -17,6 +17,9 @@ function getCacheService() {
 import { z } from 'zod';
 import { SystemError, ValidationError, AuthenticationError, AuthorizationError, formatError } from '@/lib/errors';
 import { isDefined, isError, isObject } from '@/lib/utils/type-guards';
+import { logger } from '@/lib/logging/structured-logger';
+import { withTimeout } from '@/lib/performance/timeout-handler';
+import { checkResourceLimit } from '@/lib/guardrails/resource-limits';
 
 export interface RouteHandlerOptions {
   requireAuth?: boolean;
@@ -35,6 +38,8 @@ export interface RouteHandlerOptions {
   };
   cacheable?: boolean; // Legacy alias for cache.enabled
   cacheTTL?: number; // Legacy alias for cache.ttl
+  timeout?: number; // Request timeout in milliseconds (default: 30000)
+  enableResourceLimits?: boolean; // Enable resource limit checking
 }
 
 export interface RouteContext {
@@ -62,6 +67,7 @@ export function createRouteHandler(
   
   return async (request: NextRequest): Promise<NextResponse> => {
     const startTime = Date.now();
+    const timeout = normalizedOptions.timeout || 30000; // Default 30 seconds
     
     // Cache request body to avoid consuming it multiple times
     let cachedBody: string | null = null;
@@ -82,7 +88,34 @@ export function createRouteHandler(
       return cachedBodyJson;
     };
     
-    try {
+    // Wrap handler execution with timeout
+    const executeHandler = async (): Promise<NextResponse> => {
+      try {
+        // Check resource limits if enabled
+      if (normalizedOptions.enableResourceLimits) {
+        const bodySize = request.headers.get('content-length') 
+          ? parseInt(request.headers.get('content-length') || '0', 10) 
+          : 0;
+        const resourceCheck = checkResourceLimit('requestBody', bodySize);
+        if (!resourceCheck.allowed) {
+          const error = new ValidationError(
+            'Resource limit exceeded',
+            undefined,
+            { resetAt: new Date(resourceCheck.resetAt).toISOString() }
+          );
+          const formatted = formatError(error);
+          return NextResponse.json(
+            { error: formatted.message },
+            { 
+              status: formatted.statusCode,
+              headers: {
+                'Retry-After': String(Math.ceil((resourceCheck.resetAt - Date.now()) / 1000)),
+              },
+            }
+          );
+        }
+      }
+      
       // Check request size
       if (normalizedOptions.maxBodySize) {
         const body = await getBodyText();
@@ -248,46 +281,79 @@ export function createRouteHandler(
       }
       
       return response;
-    } catch (error: unknown) {
-      const errorDuration = Date.now() - startTime;
-      console.error('Route handler error:', maskSensitiveData(String(error)));
-      
-      // Track error performance
-      try {
-        const { telemetry } = await import('@/lib/monitoring/enhanced-telemetry');
-        telemetry.trackPerformance({
-          name: 'route_handler_error',
-          value: errorDuration,
-          unit: 'ms',
-          tags: {
-            path: request.nextUrl.pathname,
-            method: request.method,
-          },
+      } catch (error: unknown) {
+        const errorDuration = Date.now() - startTime;
+        logger.error('Route handler error', isError(error) ? error : new Error(String(error)), {
+          path: request.nextUrl.pathname,
+          method: request.method,
+          duration: errorDuration,
+          maskedError: maskSensitiveData(String(error)),
         });
-      } catch {
-        // Telemetry import failed, continue without tracking
-      }
-      
-      const systemError = new SystemError(
-        'Internal server error',
-        isError(error) ? error : new Error(String(error))
-      );
-      const formatted = formatError(systemError);
-      
-      return NextResponse.json(
-        {
-          error: formatted.message,
-          message: process.env.NODE_ENV === 'development' 
-            ? (isError(error) ? error.message : String(error))
-            : 'An error occurred processing your request',
-        },
-        { 
-          status: formatted.statusCode,
-          headers: {
-            'X-Response-Time': `${errorDuration}ms`,
-          },
+        
+        // Track error performance
+        try {
+          const { telemetry } = await import('@/lib/monitoring/enhanced-telemetry');
+          telemetry.trackPerformance({
+            name: 'route_handler_error',
+            value: errorDuration,
+            unit: 'ms',
+            tags: {
+              path: request.nextUrl.pathname,
+              method: request.method,
+            },
+          });
+        } catch {
+          // Telemetry import failed, continue without tracking
         }
+        
+        const systemError = new SystemError(
+          'Internal server error',
+          isError(error) ? error : new Error(String(error))
+        );
+        const formatted = formatError(systemError);
+        
+        return NextResponse.json(
+          {
+            error: formatted.message,
+            message: process.env.NODE_ENV === 'development' 
+              ? (isError(error) ? error.message : String(error))
+              : 'An error occurred processing your request',
+          },
+          { 
+            status: formatted.statusCode,
+            headers: {
+              'X-Response-Time': `${errorDuration}ms`,
+            },
+          }
+        );
+    };
+    
+    // Execute with timeout
+    try {
+      return await withTimeout(
+        executeHandler(),
+        timeout,
+        `Request exceeded timeout of ${timeout}ms`
       );
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === 'TimeoutError') {
+        logger.error('Request timeout', error, {
+          path: request.nextUrl.pathname,
+          method: request.method,
+          timeout,
+        });
+        return NextResponse.json(
+          { error: 'Request timeout' },
+          { 
+            status: 504,
+            headers: {
+              'X-Response-Time': `${Date.now() - startTime}ms`,
+            },
+          }
+        );
+      }
+      // Re-throw other errors to be handled by outer catch
+      throw error;
     }
   };
 }

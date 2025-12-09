@@ -95,8 +95,18 @@ const nextConfig = {
   // Performance optimizations
   compiler: {
     removeConsole: process.env.NODE_ENV === "production" ? {
-      exclude: ["error", "warn"],
+      exclude: ["error", "warn", "info"], // Keep error, warn, and info for production logging
     } : false,
+    // Enable SWC minification (default in Next.js 15)
+    // Additional optimizations
+  },
+  // Optimize production builds
+  productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundles
+  generateEtags: true, // Enable ETags for better caching
+  // Reduce memory usage
+  onDemandEntries: {
+    maxInactiveAge: 25 * 1000,
+    pagesBufferLength: 2,
   },
   // Bundle optimization
   webpack: (config, { isServer }) => {

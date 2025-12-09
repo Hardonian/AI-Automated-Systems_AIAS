@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
+import { logger } from '@/lib/logging/structured-logger';
 import { observabilityService } from '@/lib/observability/telemetry';
 import { createClient } from '@/lib/supabase/server';
 import { workflowExecutionContextSchema } from '@/lib/workflows/dsl';
@@ -80,15 +81,24 @@ export async function POST(
         state: result.state || null,
         started_at: result.startedAt,
         completed_at: result.completedAt || null,
-      });
+      } as Record<string, unknown>);
 
     if (dbError) {
-      console.error('Error saving execution to database:', dbError);
+      logger.error('Error saving execution to database', new Error(dbError.message), {
+        component: 'WorkflowExecuteAPI',
+        action: 'POST',
+        workflowId: params.id,
+        userId: user.id,
+      });
     }
 
     return NextResponse.json({ result });
   } catch (error) {
-    console.error('Error executing workflow:', error);
+    logger.error('Error executing workflow', error instanceof Error ? error : new Error(String(error)), {
+      component: 'WorkflowExecuteAPI',
+      action: 'POST',
+      workflowId: params.id,
+    });
     return NextResponse.json(
       { error: 'Failed to execute workflow' },
       { status: 500 }

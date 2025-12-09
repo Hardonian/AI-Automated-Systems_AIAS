@@ -39,8 +39,8 @@ export default function AboutPage() {
               Systems thinking is THE critical skill needed more than ever in the AI age.
             </p>
             <p className="text-muted-foreground text-base leading-relaxed">
-              It's what makes you stand out in the job market, succeed in business, and achieve optimal outcomes. 
-              AI amplifies systems thinking — it doesn't replace it.
+              It&apos;s what makes you stand out in the job market, succeed in business, and achieve optimal outcomes. 
+              AI amplifies systems thinking — it doesn&apos;t replace it.
             </p>
           </div>
           <p className="text-muted-foreground mb-5 text-base leading-relaxed">
@@ -52,12 +52,12 @@ export default function AboutPage() {
           <p className="text-muted-foreground mb-5 text-base leading-relaxed">
             Our mission is to develop systems thinking capabilities while making AI automation accessible to businesses everywhere. 
             We believe that <strong>automation alone fails</strong> — but systems thinking combined with AI automation creates 
-            unstoppable results. That's why every solution we build analyzes problems from multiple perspectives, finds root causes, 
+            unstoppable results. That&apos;s why every solution we build analyzes problems from multiple perspectives, finds root causes, 
             and designs holistic solutions.
           </p>
           <p className="text-muted-foreground mb-6 text-base leading-relaxed">
-            With deep roots in education and stakeholder management, we've seen first-hand how <strong>systems thinking</strong> 
-            transforms outcomes across industries. Whether you're managing educational programs, healthcare operations, or business 
+            With deep roots in education and stakeholder management, we&apos;ve seen first-hand how <strong>systems thinking</strong> 
+            transforms outcomes across industries. Whether you&apos;re managing educational programs, healthcare operations, or business 
             processes, systems thinking reveals optimal solutions that automation alone cannot achieve.
           </p>
         </section>
@@ -82,7 +82,7 @@ export default function AboutPage() {
             that <strong>systems thinking is the foundation of success</strong> in the AI age.
           </p>
           <p className="text-muted-foreground mb-5 text-base leading-relaxed">
-            That's why AIAS Platform combines:
+            That&apos;s why AIAS Platform combines:
           </p>
           <ul className="space-y-3 text-muted-foreground mb-6">
             <li className="flex items-start gap-3 text-base leading-relaxed">
@@ -193,7 +193,7 @@ export default function AboutPage() {
             <p className="text-muted-foreground">
               So we built AIAS Platform—an affordable ($49/month), no-code automation platform built specifically for 
               Canadian SMBs. With native Canadian integrations (Shopify, Wave Accounting, RBC, TD), PIPEDA compliance 
-              built-in, and a visual workflow builder that anyone can use, we're making enterprise-grade automation 
+              built-in, and a visual workflow builder that anyone can use, we&apos;re making enterprise-grade automation 
               accessible to businesses that need it most.
             </p>
           </div>
@@ -216,7 +216,7 @@ export default function AboutPage() {
                   <p><strong>Background:</strong> Full-stack developer, e-commerce operator (Hardonia.store), founder of Hardonian Industries. Active open-source contributor with 40+ public repositories.</p>
                   <p><strong>LinkedIn:</strong> <a className="text-primary hover:underline" href="https://www.linkedin.com/in/scottrmhardie" rel="noopener noreferrer" target="_blank">scottrmhardie</a></p>
                   <p><strong>GitHub:</strong> <a className="text-primary hover:underline" href="https://github.com/shardie-github" rel="noopener noreferrer" target="_blank">shardie-github</a></p>
-                  <p><strong>Why AIAS:</strong> Experienced firsthand the pain of manual workflows running e-commerce operations. Built AIAS Platform to solve this problem for Canadian SMBs who can't afford expensive enterprise tools.</p>
+                  <p><strong>Why AIAS:</strong> Experienced firsthand the pain of manual workflows running e-commerce operations. Built AIAS Platform to solve this problem for Canadian SMBs who can&apos;t afford expensive enterprise tools.</p>
                 </div>
               </CardContent>
             </Card>

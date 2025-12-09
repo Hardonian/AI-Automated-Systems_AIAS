@@ -91,7 +91,7 @@ export const logger = pinoLogger({
     }),
     res: (res: ServerResponse) => ({
       statusCode: res.statusCode,
-      headers: res.headers,
+      headers: res.getHeaders ? res.getHeaders() : {},
     }),
     err: pinoLogger.stdSerializers?.err || ((err: Error) => ({ message: err.message, stack: err.stack })),
   },

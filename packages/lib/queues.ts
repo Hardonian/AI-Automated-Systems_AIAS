@@ -7,7 +7,9 @@ import { prisma } from './database.js';
 // Note: aiClient import reserved for future AI queue processing
 import { logger } from './observability.js';
 
-const connection = new Redis(config.redis.url || 'redis://localhost:6379');
+// Type assertion for ES module compatibility
+const RedisConstructor = Redis as unknown as new (url?: string) => Redis;
+const connection = new RedisConstructor(config.redis.url || 'redis://localhost:6379');
 
 // Queue definitions
 export const feedIngestQueue = new Queue('feeds:ingest', { connection });

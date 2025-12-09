@@ -515,9 +515,9 @@ export class WorkflowExecutor {
       const conditionResult = result as boolean;
       const config = step.config as Record<string, unknown>;
       const nextSteps = conditionResult 
-        ? (config.then as unknown[] | undefined)
-        : (config.else as unknown[] | undefined);
-      return nextSteps?.[0] || null;
+        ? (config.then as string[] | undefined)
+        : (config.else as string[] | undefined);
+      return (nextSteps?.[0] as string | undefined) || null;
     }
 
     const edges = graph.edges.get(step.id);

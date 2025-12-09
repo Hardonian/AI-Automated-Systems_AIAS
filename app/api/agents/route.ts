@@ -26,8 +26,8 @@ export const GET = createGETHandler(
     const { searchParams } = new URL(request.url);
     const tenantId = searchParams.get('tenantId');
 
-    let query = (supabase
-      .from('agents') as any)
+    let query = supabase
+      .from('agents')
       .select('*')
       .eq('enabled', true)
       .eq('deprecated', false);
@@ -65,8 +65,8 @@ export const POST = createPOSTHandler(
     const body = await request.json();
     const validated = createAgentSchema.parse(body);
 
-    const { data: agent, error } = await (supabase
-      .from('agents') as any)
+    const { data: agent, error } = await supabase
+      .from('agents')
       .insert({
         ...validated,
         created_by: user.id,

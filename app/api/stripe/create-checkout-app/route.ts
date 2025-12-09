@@ -16,7 +16,7 @@ import { retry } from "@/lib/utils/retry";
 
 // Load environment variables dynamically - no hardcoded values
 const stripe = new Stripe(env.stripe.secretKey!, {
-  apiVersion: "2023-10-16" as any, // Using latest compatible version
+  apiVersion: "2023-10-16", // Using latest compatible version
 });
 
 const supabase = createClient(

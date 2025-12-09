@@ -50,7 +50,7 @@ async function fetchTechNews() {
     const articles = await response.json();
     return {
       source: "dev.to",
-      articles: articles.slice(0, 5).map((article: any) => ({
+      articles: articles.slice(0, 5).map((article: { title: string; url: string; published_at: string; user?: { name?: string } }) => ({
         title: article.title,
         url: article.url,
         publishedAt: article.published_at,

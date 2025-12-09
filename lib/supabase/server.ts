@@ -62,7 +62,7 @@ export async function createServerSupabaseClient() {
       {
         cookies: {
           getAll() { return cookieStore.getAll() },
-          setAll(cookiesToSet: Array<{ name: string; value: string; options?: any }>) {
+          setAll(cookiesToSet: Array<{ name: string; value: string; options?: { path?: string; maxAge?: number; domain?: string; sameSite?: 'lax' | 'strict' | 'none'; secure?: boolean } }>) {
             // Note: This often throws in Server Components, handle gracefully
             try {
               cookiesToSet.forEach(({ name, value, options }) => 
@@ -84,7 +84,7 @@ export async function createServerSupabaseClient() {
     {
       cookies: {
         getAll() { return cookieStore.getAll() },
-        setAll(cookiesToSet: Array<{ name: string; value: string; options?: any }>) {
+        setAll(cookiesToSet: Array<{ name: string; value: string; options?: { path?: string; maxAge?: number; domain?: string; sameSite?: 'lax' | 'strict' | 'none'; secure?: boolean } }>) {
           // Note: This often throws in Server Components, handle gracefully
           try {
             cookiesToSet.forEach(({ name, value, options }) => 

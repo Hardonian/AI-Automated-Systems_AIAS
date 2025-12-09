@@ -148,7 +148,13 @@ class AutopilotWorkflowService {
     }
 
     // Get lead if leadId provided
-    let lead: any = null;
+    interface Lead {
+      id: string;
+      email?: string;
+      name?: string;
+      company?: string;
+    }
+    let lead: Lead | null = null;
     if (leadId) {
       const { data } = await this.supabase
         .from('leads')
@@ -248,7 +254,7 @@ class AutopilotWorkflowService {
 
     await crmIntegrationService.syncLeadToCRM(
       leadId,
-      { provider: provider as any, apiKey, apiUrl },
+      { provider: provider as 'salesforce' | 'hubspot' | 'pipedrive' | 'custom', apiKey, apiUrl },
       tenantId
     );
   }

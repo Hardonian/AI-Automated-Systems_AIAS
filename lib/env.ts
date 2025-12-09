@@ -240,8 +240,8 @@ export function validateEnv(): { valid: boolean; errors: string[] } {
     if (!env.database.url) {
       errors.push('DATABASE_URL is required');
     }
-  } catch (error: any) {
-    errors.push(error.message);
+  } catch (error: unknown) {
+    errors.push(error instanceof Error ? error.message : String(error));
   }
   
   return {

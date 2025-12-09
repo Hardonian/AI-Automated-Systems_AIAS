@@ -225,7 +225,7 @@ export class WorkflowExecutor {
       case 'webhook':
         return this.executeWebhook(step, state);
       default:
-        throw new Error(`Unknown step type: ${(step as any).type}`);
+        throw new Error(`Unknown step type: ${'type' in step ? String(step.type) : 'unknown'}`);
     }
   }
 
@@ -513,9 +513,10 @@ export class WorkflowExecutor {
   ): string | null {
     if (step.type === 'condition') {
       const conditionResult = result as boolean;
+      const config = step.config as Record<string, unknown>;
       const nextSteps = conditionResult 
-        ? (step.config as any).then 
-        : (step.config as any).else;
+        ? (config.then as unknown[] | undefined)
+        : (config.else as unknown[] | undefined);
       return nextSteps?.[0] || null;
     }
 
@@ -640,7 +641,7 @@ export class WorkflowExecutor {
    * Evaluate condition
    */
   private evaluateCondition(
-    condition: any,
+    condition: Record<string, unknown> | string,
     value: unknown
   ): boolean {
     switch (condition.operator) {

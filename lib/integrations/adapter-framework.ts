@@ -354,8 +354,9 @@ export abstract class BaseAdapter implements IntegrationAdapter {
 
     try {
       const data = await response.json();
-      const message = (data as any)[errorShape.messageField] || data[errorShape.errorField] || response.statusText;
-      const code = (data as any)[errorShape.codeField] || String(response.status);
+      const dataObj = data as Record<string, unknown>;
+      const message = String(dataObj[errorShape.messageField] || dataObj[errorShape.errorField] || response.statusText);
+      const code = String(dataObj[errorShape.codeField] || response.status);
       
       return new Error(`API Error [${code}]: ${message}`);
     } catch {

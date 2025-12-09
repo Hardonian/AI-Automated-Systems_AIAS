@@ -84,7 +84,7 @@ class LeadScoringService {
   /**
    * Calculate demographic score
    */
-  private async calculateDemographicScore(lead: any): Promise<number> {
+  private async calculateDemographicScore(lead: { email?: string; name?: string; company?: string; phone?: string; job_title?: string }): Promise<number> {
     let score = 0;
 
     // Email quality
@@ -203,7 +203,7 @@ class LeadScoringService {
   /**
    * Calculate fit score
    */
-  private async calculateFitScore(lead: any, _tenantId?: string): Promise<number> {
+  private async calculateFitScore(lead: { email?: string; source?: string; company?: string }, _tenantId?: string): Promise<number> {
     let score = 0;
 
     // Source quality
@@ -284,7 +284,19 @@ class LeadScoringService {
   /**
    * Get lead data
    */
-  private async getLead(leadId: string, tenantId?: string): Promise<any> {
+  interface Lead {
+    id: string;
+    email?: string;
+    name?: string;
+    company?: string;
+    phone?: string;
+    job_title?: string;
+    source?: string;
+    score?: number;
+    status?: string;
+    qualified?: boolean;
+  }
+  private async getLead(leadId: string, tenantId?: string): Promise<Lead | null> {
     let query = this.supabase.from('leads').select('*').eq('id', leadId);
 
     if (tenantId) {

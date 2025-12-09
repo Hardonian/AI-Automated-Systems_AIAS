@@ -121,12 +121,13 @@ async function applyMigration(
     
     console.log(`✅ Applied: ${migration.name}`);
     return { success: true };
-  } catch (migrationError: any) {
+  } catch (migrationError: unknown) {
     // Check if error is because migration was already applied (idempotent)
+    const errorMessage = migrationError instanceof Error ? migrationError.message : String(migrationError);
     if (
-      migrationError.message?.includes('already exists') ||
-      migrationError.message?.includes('duplicate key') ||
-      migrationError.message?.includes('relation already exists') ||
+      errorMessage.includes('already exists') ||
+      errorMessage.includes('duplicate key') ||
+      errorMessage.includes('relation already exists') ||
       migrationError.message?.includes('already applied') ||
       migrationError.message?.includes('duplicate')
     ) {
@@ -186,8 +187,9 @@ async function runMigrationsViaSupabaseCLI(): Promise<MigrationResult> {
 
     console.log('✅ Migrations applied via Supabase CLI');
     return { success: true, applied: 0, skipped: 0, failed: 0, errors: [] };
-  } catch (error: any) {
-    console.log('⚠️  Supabase CLI method failed, falling back to direct SQL:', error.message);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.log('⚠️  Supabase CLI method failed, falling back to direct SQL:', errorMessage);
     throw error;
   }
 }
@@ -210,8 +212,9 @@ async function runMigrationsDirectly(dbUrl: string): Promise<MigrationResult> {
   try {
     appliedMigrations = await getAppliedMigrations(dbUrl);
     console.log(`✅ Found ${appliedMigrations.length} already applied migrations`);
-  } catch (error: any) {
-    console.warn(`⚠️  Could not check applied migrations: ${error.message}`);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.warn(`⚠️  Could not check applied migrations: ${errorMessage}`);
     console.log('   Will attempt to apply all migrations');
   }
 
@@ -357,8 +360,9 @@ export async function validateSchemaAfterMigrations(): Promise<boolean> {
 
     console.log('✅ Schema validation passed');
     return true;
-  } catch (error: any) {
-    console.error('❌ Schema validation failed:', error.message);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('❌ Schema validation failed:', errorMessage);
     return false;
   }
 }

@@ -69,7 +69,13 @@ export async function GET() {
     ]);
 
     // Handle KPI 1: New Users This Week
-    const kpi1 = kpi1Result.data as any;
+    interface KPIResult {
+      new_users_count?: number;
+      avg_post_views?: number;
+      actions_count?: number;
+      threshold_met?: boolean;
+    }
+    const kpi1 = (kpi1Result.data as KPIResult | null);
     const newUsersWeek = {
       value: kpi1?.new_users_count || 0,
       threshold: 50,
@@ -77,7 +83,7 @@ export async function GET() {
     };
 
     // Handle KPI 2: Average Post Views
-    const kpi2 = kpi2Result.data as any;
+    const kpi2 = (kpi2Result.data as KPIResult | null);
     const avgPostViews = {
       value: Number(kpi2?.avg_post_views || 0),
       threshold: 100,
@@ -85,7 +91,7 @@ export async function GET() {
     };
 
     // Handle KPI 3: Actions Last Hour
-    const kpi3 = kpi3Result.data as any;
+    const kpi3 = (kpi3Result.data as KPIResult | null);
     const actionsLastHour = {
       value: kpi3?.actions_count || 0,
       threshold: 20,

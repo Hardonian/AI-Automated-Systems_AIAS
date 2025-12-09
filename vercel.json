@@ -14,7 +14,7 @@
     }
   },
   "functions": {
-    "app/**": {
+    "app/api/**": {
       "maxDuration": 30
     }
   },

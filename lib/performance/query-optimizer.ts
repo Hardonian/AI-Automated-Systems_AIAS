@@ -199,7 +199,8 @@ export class QueryOptimizer {
       // Cache and add to results
       if (data) {
         for (const item of data) {
-          const {id} = (item as any);
+          const itemObj = item as Record<string, unknown>;
+          const id = itemObj.id;
           results.set(id, item as T);
           
           if (options.cache !== false) {

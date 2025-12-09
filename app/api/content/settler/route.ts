@@ -12,7 +12,7 @@ export async function GET() {
   try {
     const content = await loadSettlerContent();
     return NextResponse.json(content);
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error("Error loading Settler content:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Failed to load content" },
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
     await saveSettlerContent(content);
     
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error("Error saving Settler content:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: error.message || "Failed to save content" },

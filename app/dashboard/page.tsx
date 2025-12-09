@@ -45,9 +45,15 @@ async function getKPIData() {
       supabase.from("posts").select("id", { count: "exact", head: true }),
     ]);
 
-    const kpi1Data = kpi1.data as any;
-    const kpi2Data = kpi2.data as any;
-    const kpi3Data = kpi3.data as any;
+    interface KPIResult {
+      new_users_count?: number;
+      avg_post_views?: number;
+      actions_count?: number;
+      threshold_met?: boolean;
+    }
+    const kpi1Data = kpi1.data as KPIResult | null;
+    const kpi2Data = kpi2.data as KPIResult | null;
+    const kpi3Data = kpi3.data as KPIResult | null;
     return {
       newUsersThisWeek: kpi1Data?.new_users_count || 0,
       avgPostViews: Number(kpi2Data?.avg_post_views || 0),
@@ -131,9 +137,9 @@ export default async function DashboardPage() {
   const techNews = await enrichWithExternalData("tech_news");
 
   const allCylindersFiring =
-    (kpiData as any).kpi1Met &&
-    (kpiData as any).kpi2Met &&
-    (kpiData as any).kpi3Met;
+    kpiData.kpi1Met &&
+    kpiData.kpi2Met &&
+    kpiData.kpi3Met;
 
   // TODO: Get user plan from session/database
   const userPlan: "free" | "trial" | "starter" | "pro" = "trial"; // Placeholder
@@ -202,7 +208,7 @@ export default async function DashboardPage() {
             <div className="text-3xl font-bold mb-3">{kpiData.newUsersThisWeek}</div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Threshold: 50+ users
-              {(kpiData as any).kpi1Met ? (
+              {kpiData.kpi1Met ? (
                 <Badge className="ml-2" variant="default">
                   ✓ Met
                 </Badge>
@@ -229,7 +235,7 @@ export default async function DashboardPage() {
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Threshold: 100+ views
-              {(kpiData as any).kpi2Met ? (
+              {kpiData.kpi2Met ? (
                 <Badge className="ml-2" variant="default">
                   ✓ Met
                 </Badge>
@@ -254,7 +260,7 @@ export default async function DashboardPage() {
             <div className="text-3xl font-bold mb-3">{kpiData.actionsLastHour}</div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Threshold: 20+ actions
-              {(kpiData as any).kpi3Met ? (
+              {kpiData.kpi3Met ? (
                 <Badge className="ml-2" variant="default">
                   ✓ Met
                 </Badge>
@@ -307,7 +313,7 @@ export default async function DashboardPage() {
           <CardContent className="pt-6">
             {topPosts.length > 0 ? (
               <div className="space-y-3">
-                {topPosts.map((post: any) => (
+                {topPosts.map((post: { id: string; title?: string; view_count?: number }) => (
                   <div key={post.id} className="flex justify-between items-center">
                     <span className="text-sm truncate flex-1">
                       {post.title || `Post #${post.id}`}
@@ -339,7 +345,7 @@ export default async function DashboardPage() {
         <CardContent className="pt-6">
           {recentActivity.length > 0 ? (
             <div className="space-y-2">
-              {recentActivity.map((activity: any, idx: number) => (
+              {recentActivity.map((activity: { activity_type?: string; created_at: string }, idx: number) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between p-2 rounded-lg bg-muted/50"
@@ -373,7 +379,7 @@ export default async function DashboardPage() {
           <CardContent className="pt-6">
             {techNews.articles && techNews.articles.length > 0 ? (
               <div className="space-y-2">
-                {techNews.articles.slice(0, 3).map((article: any, idx: number) => (
+                {techNews.articles.slice(0, 3).map((article: { title?: string; url?: string; description?: string }, idx: number) => (
                   <div key={idx} className="text-sm">
                     <a
                       className="text-primary hover:underline"

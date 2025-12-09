@@ -124,7 +124,7 @@ export async function savePretestAnswers(
   try {
     // Save to pretest_answers table (create if doesn't exist)
     const { error: upsertError } = await (supabase
-      .from("pretest_answers") as any)
+      .from("pretest_answers"))
       .upsert({
         user_id: userId,
         answers,
@@ -135,7 +135,7 @@ export async function savePretestAnswers(
     if (upsertError) {
       // If table doesn't exist, try updating profile
       const { error: profileError } = await (supabase
-        .from("profiles") as any)
+        .from("profiles"))
         .update({
           pretest_completed: true,
           pretest_answers: answers,
@@ -164,7 +164,7 @@ export async function markEmailConnected(userId: string): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
   await (supabase
-    .from("profiles") as any)
+    .from("profiles"))
     .update({
       email_connected: true,
       updated_at: new Date().toISOString(),
@@ -179,7 +179,7 @@ export async function markWorkflowCreated(userId: string): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
   await (supabase
-    .from("profiles") as any)
+    .from("profiles"))
     .update({
       workflows_created: true,
       updated_at: new Date().toISOString(),
@@ -194,7 +194,7 @@ export async function startTrial(userId: string): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
   await (supabase
-    .from("profiles") as any)
+    .from("profiles"))
     .update({
       subscription_tier: "trial",
       trial_started_at: new Date().toISOString(),

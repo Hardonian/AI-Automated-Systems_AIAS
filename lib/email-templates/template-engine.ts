@@ -4,7 +4,7 @@
  */
 
 export interface TemplateVariables {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -41,7 +41,7 @@ export function replaceTemplateVariables(
 /**
  * Get nested value from object using dot notation
  */
-function getNestedValue(obj: any, path: string): any {
+function getNestedValue(obj: unknown, path: string): unknown {
   return path.split('.').reduce((current, key) => {
     if (current && typeof current === 'object' && key in current) {
       return current[key];
@@ -240,7 +240,7 @@ export function formatDate(date: string | Date, format: 'short' | 'long' | 'rela
 /**
  * Get default values for fields based on dynamic_fields.json
  */
-export function getDefaultVariables(userData: any = {}): TemplateVariables {
+export function getDefaultVariables(userData: Record<string, unknown> = {}): TemplateVariables {
   const defaults: TemplateVariables = {
     user: {
       first_name: userData.firstName || userData.first_name || 'there',

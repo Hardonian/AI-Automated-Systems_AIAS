@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
       success: true,
       content: generatedContent,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error("AI generation error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: error.message || "Failed to generate content" },

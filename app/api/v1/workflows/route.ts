@@ -170,7 +170,7 @@ export async function POST(request: NextRequest) {
       // Track funnel stage
       const { trackWorkflowCreate } = await import("@/lib/analytics/funnel-tracking");
       trackWorkflowCreate(user.id, workflow.id, {
-        templateId: (validatedData as any).template_id,
+        templateId: 'template_id' in validatedData ? String(validatedData.template_id) : undefined,
         timestamp: new Date().toISOString(),
       });
 

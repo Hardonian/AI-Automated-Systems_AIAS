@@ -170,10 +170,10 @@ export default function ContentStudioPage() {
         title: "Authenticated",
         description: "You can now edit content",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Authentication failed",
-        description: error.message || "Invalid token. If you're an admin, try signing in first.",
+        description: error instanceof Error ? error.message : "Invalid token. If you're an admin, try signing in first.",
         variant: "destructive",
       });
     } finally {
@@ -255,11 +255,11 @@ export default function ContentStudioPage() {
           description: "Your changes have been saved.",
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (!silent) {
         toast({
           title: "Error saving",
-          description: error.message || "Failed to save content",
+          description: error instanceof Error ? error.message : "Failed to save content",
           variant: "destructive",
         });
       }

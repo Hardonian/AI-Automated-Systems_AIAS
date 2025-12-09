@@ -88,7 +88,14 @@ class LeadNurturingService {
   /**
    * Execute nurturing step
    */
-  private async executeStep(step: any): Promise<void> {
+  interface NurturingStep {
+    id: string;
+    lead_id: string;
+    sequence_id: string;
+    step_order: number;
+    tenant_id?: string;
+  }
+  private async executeStep(step: NurturingStep): Promise<void> {
     // Get lead
     const { data: lead } = await this.supabase
       .from('leads')
@@ -146,7 +153,7 @@ class LeadNurturingService {
    * Send nurturing email
    */
   private async sendNurturingEmail(
-    lead: any,
+    lead: { id: string; email?: string; name?: string },
     templateId: string,
     tenantId?: string
   ): Promise<void> {
@@ -227,7 +234,11 @@ class LeadNurturingService {
   /**
    * Personalize email (for database templates)
    */
-  private personalizeEmail(template: any, lead: any): { subject: string; body: string } {
+  interface EmailTemplate {
+    subject: string;
+    body: string;
+  }
+  private personalizeEmail(template: EmailTemplate, lead: { name?: string; email?: string; company?: string }): { subject: string; body: string } {
     let subject = template.subject || '';
     let body = template.body || '';
 
@@ -277,7 +288,7 @@ class LeadNurturingService {
   /**
    * Check conditions
    */
-  private checkConditions(lead: any, conditions: Record<string, unknown>): boolean {
+  private checkConditions(lead: Record<string, unknown>, conditions: Record<string, unknown>): boolean {
     // Simple condition checking - can be enhanced
     for (const [key, value] of Object.entries(conditions)) {
       if (lead[key] !== value) {
@@ -303,7 +314,7 @@ class LeadNurturingService {
   /**
    * Get email template
    */
-  private async getEmailTemplate(templateId: string, tenantId?: string): Promise<any> {
+  private async getEmailTemplate(templateId: string, tenantId?: string): Promise<{ subject: string; body: string } | null> {
     let query = this.supabase.from('email_templates').select('*').eq('id', templateId);
 
     if (tenantId) {

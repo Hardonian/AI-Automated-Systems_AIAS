@@ -22,7 +22,7 @@ interface CacheResult<T> {
 
 class CacheService {
   private redis: Redis | null = null;
-  private inMemoryStore: Map<string, { value: any; expiresAt: number }> = new Map();
+  private inMemoryStore: Map<string, { value: unknown; expiresAt: number }> = new Map();
   private useRedis: boolean = false;
   private useVercelKV: boolean = false;
   private keyPrefix: string = 'cache:';
@@ -116,7 +116,7 @@ class CacheService {
   /**
    * Set in Redis
    */
-  private async setInRedis(key: string, value: any, ttlSeconds: number): Promise<void> {
+  private async setInRedis(key: string, value: unknown, ttlSeconds: number): Promise<void> {
     if (!this.redis) {
       throw new Error('Redis not initialized');
     }
@@ -177,7 +177,7 @@ class CacheService {
   /**
    * Set in Vercel KV
    */
-  private async setInVercelKV(key: string, value: any, ttlSeconds: number): Promise<void> {
+  private async setInVercelKV(key: string, value: unknown, ttlSeconds: number): Promise<void> {
     const kvUrl = process.env.KV_REST_API_URL;
     const kvToken = process.env.KV_REST_API_TOKEN;
 
@@ -230,7 +230,7 @@ class CacheService {
   /**
    * Set in in-memory cache
    */
-  private setInMemory(key: string, value: any, ttlSeconds: number): void {
+  private setInMemory(key: string, value: unknown, ttlSeconds: number): void {
     const expiresAt = Date.now() + (ttlSeconds * 1000);
     this.inMemoryStore.set(key, {
       value,
@@ -294,7 +294,7 @@ class CacheService {
   /**
    * Set value in cache
    */
-  async set(key: string, value: any, config: CacheConfig): Promise<void> {
+  async set(key: string, value: unknown, config: CacheConfig): Promise<void> {
     const cacheKey = this.getCacheKey(key, config.keyPrefix);
     const {ttlSeconds} = config;
 

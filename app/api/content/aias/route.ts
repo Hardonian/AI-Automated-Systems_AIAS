@@ -12,7 +12,7 @@ export async function GET() {
   try {
     const content = await loadAIASContent();
     return NextResponse.json(content);
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error("Error loading AIAS content:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: "Failed to load content" },
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
     await saveAIASContent(content);
     
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error("Error saving AIAS content:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(
       { error: error.message || "Failed to save content" },

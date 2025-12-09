@@ -100,7 +100,7 @@ export function addCacheHeaders(
  * In-memory cache store
  */
 class MemoryCache {
-  private store: Map<string, { data: any; expires: number }> = new Map();
+  private store: Map<string, { data: unknown; expires: number }> = new Map();
   private _cleanupInterval: NodeJS.Timeout;
 
   constructor() {
@@ -110,7 +110,7 @@ class MemoryCache {
     }, 5 * 60 * 1000);
   }
 
-  get(key: string): any | null {
+  get<T = unknown>(key: string): T | null {
     const entry = this.store.get(key);
     if (!entry) {return null;}
 
@@ -122,7 +122,7 @@ class MemoryCache {
     return entry.data;
   }
 
-  set(key: string, data: any, ttl: number): void {
+  set(key: string, data: unknown, ttl: number): void {
     this.store.set(key, {
       data,
       expires: Date.now() + ttl * 1000,

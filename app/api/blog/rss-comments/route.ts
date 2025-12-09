@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
     comment.status = moderation.approved ? "approved" : "pending";
 
     // Generate systems thinking insight
-    const insight = generateSystemsThinkingInsight(comment, { slug: `rss-${itemId}`, title: itemTitle } as any);
+    const insight = generateSystemsThinkingInsight(comment, { slug: `rss-${itemId}`, title: itemTitle });
     comment.systemsThinkingInsight = insight;
 
     // Save to database

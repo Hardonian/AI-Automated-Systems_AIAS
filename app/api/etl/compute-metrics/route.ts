@@ -191,7 +191,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       value: duration,
       unit: "ms",
       tags: { status: "success" },
-    } as any);
+    });
 
     logger.info("Metrics computation completed", { duration });
 
@@ -216,7 +216,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       value: duration,
       unit: "ms",
       tags: { status: "error" },
-    } as any);
+    });
 
     logger.error("Compute Metrics ETL failed", systemError, { duration });
 

@@ -142,12 +142,12 @@ export function addSecurityHeaders(response: NextResponse): NextResponse {
 /**
  * Sanitize request body to prevent injection attacks
  */
-export function sanitizeRequestBody(body: any): any {
+export function sanitizeRequestBody(body: unknown): unknown {
   if (typeof body !== "object" || body === null) {
     return body;
   }
 
-  const sanitized: any = Array.isArray(body) ? [] : {};
+  const sanitized: Record<string, unknown> | unknown[] = Array.isArray(body) ? [] : {};
 
   for (const [key, value] of Object.entries(body)) {
     // Skip dangerous keys

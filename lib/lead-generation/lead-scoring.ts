@@ -29,13 +29,22 @@ interface Lead {
   id: string;
   email?: string;
   name?: string;
+  first_name?: string;
+  last_name?: string;
   company?: string;
   phone?: string;
   job_title?: string;
   source?: string;
+  campaign?: string;
   score?: number;
   status?: string;
   qualified?: boolean;
+  metadata?: {
+    company_size?: string;
+    industry?: string;
+    budget?: string;
+    [key: string]: unknown;
+  };
 }
 
 class LeadScoringService {
@@ -97,7 +106,7 @@ class LeadScoringService {
   /**
    * Calculate demographic score
    */
-  private async calculateDemographicScore(lead: { email?: string; name?: string; company?: string; phone?: string; job_title?: string }): Promise<number> {
+  private async calculateDemographicScore(lead: { email?: string; name?: string; first_name?: string; last_name?: string; company?: string; phone?: string; job_title?: string; metadata?: { company_size?: string; [key: string]: unknown } }): Promise<number> {
     let score = 0;
 
     // Email quality
@@ -216,7 +225,7 @@ class LeadScoringService {
   /**
    * Calculate fit score
    */
-  private async calculateFitScore(lead: { email?: string; source?: string; company?: string }, _tenantId?: string): Promise<number> {
+  private async calculateFitScore(lead: { email?: string; source?: string; company?: string; campaign?: string; metadata?: { industry?: string; budget?: string; [key: string]: unknown } }, _tenantId?: string): Promise<number> {
     let score = 0;
 
     // Source quality
@@ -228,7 +237,7 @@ class LeadScoringService {
     // Campaign quality
     if (lead.campaign) {
       const highValueCampaigns = ['enterprise', 'partnership', 'webinar'];
-      if (highValueCampaigns.some(c => lead.campaign.toLowerCase().includes(c))) {
+      if (highValueCampaigns.some(c => lead.campaign!.toLowerCase().includes(c))) {
         score += 5;
       } else {
         score += 2;

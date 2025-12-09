@@ -1,12 +1,13 @@
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { getArticleBySlug, getLatestArticles, type BlogArticle } from "@/lib/blog/articles";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+
 import { CommentsSection } from "@/components/blog/comments-section";
 import { AffiliateDisclosure } from "@/components/monetization/affiliate-disclosure";
 import { AffiliateLink } from "@/components/monetization/affiliate-link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { getArticleBySlug, getLatestArticles, type BlogArticle } from "@/lib/blog/articles";
 import { sanitizeHTMLServer } from "@/lib/utils/sanitize-html";
 
 interface PageProps {
@@ -51,7 +52,7 @@ export default function BlogArticlePage({ params }: PageProps) {
       <article>
         {/* Back to Blog */}
         <div className="mb-6">
-          <Link href="/blog" className="text-sm text-muted-foreground hover:underline">
+          <Link className="text-sm text-muted-foreground hover:underline" href="/blog">
             ← Back to Blog
           </Link>
         </div>
@@ -156,7 +157,7 @@ export default function BlogArticlePage({ params }: PageProps) {
               <Card key={related.slug} className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle className="text-lg">
-                    <Link href={`/blog/${related.slug}`} className="hover:underline">
+                    <Link className="hover:underline" href={`/blog/${related.slug}`}>
                       {related.title}
                     </Link>
                   </CardTitle>
@@ -164,8 +165,8 @@ export default function BlogArticlePage({ params }: PageProps) {
                 </CardHeader>
                 <CardContent>
                   <Link
-                    href={`/blog/${related.slug}`}
                     className="text-sm text-primary hover:underline"
+                    href={`/blog/${related.slug}`}
                   >
                     Read more →
                   </Link>
@@ -184,10 +185,10 @@ export default function BlogArticlePage({ params }: PageProps) {
           Plus RSS feed of AI and tech news analyzed through systems thinking.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/blog">View All Articles</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/rss-news">AI & Tech News Feed</Link>
           </Button>
         </div>

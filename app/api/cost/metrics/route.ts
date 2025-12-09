@@ -5,13 +5,14 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+
 import { costMonitor } from "@/lib/cost-tracking/cost-monitor";
-import { CostAggregator } from "@/lib/cost-tracking/service-costs";
 import { CostOptimizer } from "@/lib/cost-tracking/cost-optimizer";
-import { addSecurityHeaders } from "@/lib/middleware/security";
-import { addCacheHeaders } from "@/lib/middleware/cache";
-import { logger } from "@/lib/logging/structured-logger";
+import { CostAggregator } from "@/lib/cost-tracking/service-costs";
 import type { ServiceCost } from "@/lib/cost-tracking/service-costs";
+import { logger } from "@/lib/logging/structured-logger";
+import { addCacheHeaders } from "@/lib/middleware/cache";
+import { addSecurityHeaders } from "@/lib/middleware/security";
 export const dynamic = "force-dynamic";
 
 /**

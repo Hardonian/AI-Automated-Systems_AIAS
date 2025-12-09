@@ -6,7 +6,9 @@
     "rootDir": ".",
     "declaration": true,
     "declarationMap": true,
-    "incremental": true
+    "incremental": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]

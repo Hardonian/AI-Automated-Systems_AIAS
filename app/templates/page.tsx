@@ -1,8 +1,9 @@
-import { Metadata } from "next";
+import { Sparkles, Zap, ShoppingCart, Mail, Calendar } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
-import { Sparkles, Zap, ShoppingCart, Mail, Calendar } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Workflow Templates — AIAS Platform | Pre-Built Automation Templates",
@@ -95,7 +96,7 @@ export default function TemplatesPage() {
               <Button asChild>
                 <Link href="/demo">Schedule Consultation</Link>
               </Button>
-              <Button variant="outline" asChild>
+              <Button asChild variant="outline">
                 <Link href="/services">View Services</Link>
               </Button>
             </div>
@@ -103,7 +104,7 @@ export default function TemplatesPage() {
         </Card>
 
         <div className="mt-12 text-center">
-          <Link href="/onboarding/select-template" className="text-primary hover:underline">
+          <Link className="text-primary hover:underline" href="/onboarding/select-template">
             View All Templates →
           </Link>
         </div>

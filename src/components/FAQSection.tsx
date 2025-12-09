@@ -57,12 +57,12 @@ export const FAQSection = () => {
             </p>
           </div>
 
-          <Accordion type="single" collapsible className="w-full space-y-4">
+          <Accordion collapsible className="w-full space-y-4" type="single">
             {faqs.map((faq, index) => (
               <AccordionItem
                 key={`faq-${index}`}
-                value={`item-${index}`}
                 className="border border-border rounded-lg px-6 bg-gradient-card backdrop-blur-sm hover:border-primary/50 transition-all"
+                value={`item-${index}`}
               >
                 <AccordionTrigger className="text-left hover:no-underline">
                   <span className="font-semibold">{faq.question}</span>

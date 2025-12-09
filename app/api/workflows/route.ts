@@ -5,8 +5,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { workflowDefinitionSchema } from '@/lib/workflows/dsl';
+
 import { createClient } from '@/lib/supabase/server';
+import { workflowDefinitionSchema } from '@/lib/workflows/dsl';
 
 const createWorkflowSchema = workflowDefinitionSchema.omit({ id: true, createdAt: true, updatedAt: true });
 

@@ -9,10 +9,10 @@ function getBaseUrl(): string {
   }
   // Try Vite environment variables using eval to avoid TypeScript parsing issues
   try {
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-eval
+    // eslint-disable-next-line no-eval
     const hasImportMeta = typeof eval !== 'undefined' && typeof eval('typeof import') !== 'undefined';
     if (hasImportMeta) {
-      // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-eval
+      // eslint-disable-next-line no-eval
       const importMeta = eval('import.meta');
       if (importMeta && importMeta.env) {
         return importMeta.env.VITE_APP_URL || 
@@ -265,7 +265,7 @@ export class SEOService {
 
   // Generate structured data
   generateStructuredData(config: SEOConfig): string {
-    if (!config.structuredData) return '';
+    if (!config.structuredData) {return '';}
     
     return JSON.stringify({
       ...config.structuredData,

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
 import { Zap, TrendingUp, Users, Database, MessageSquare, FileText } from 'lucide-react';
+import { useState } from 'react';
 
 const cases = [
   {
@@ -70,27 +70,27 @@ export const DynamicCaseExplorer = () => {
         return (
           <motion.div
             key={`case-${index}`}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.1 }}
-            onHoverStart={() => setActiveIndex(index)}
-            onHoverEnd={() => setActiveIndex(null)}
             className="relative"
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ delay: index * 0.1 }}
+            viewport={{ once: true }}
+            whileInView={{ opacity: 1, y: 0 }}
+            onHoverEnd={() => setActiveIndex(null)}
+            onHoverStart={() => setActiveIndex(index)}
           >
             <motion.div
               animate={{
                 scale: isActive ? 1.05 : 1,
                 y: isActive ? -8 : 0,
               }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
               className="h-full bg-card border border-border rounded-2xl p-6 shadow-card hover:shadow-glow transition-shadow cursor-pointer overflow-hidden"
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             >
               {/* Gradient overlay */}
               <motion.div
                 animate={{ opacity: isActive ? 0.1 : 0 }}
-                transition={{ duration: 0.3 }}
                 className={`absolute inset-0 bg-gradient-to-br ${caseStudy.gradient}`}
+                transition={{ duration: 0.3 }}
               />
 
               <div className="relative z-10 space-y-4">
@@ -110,13 +110,13 @@ export const DynamicCaseExplorer = () => {
                   </div>
 
                   <motion.div
-                    initial={{ height: 0, opacity: 0 }}
                     animate={{
                       height: isActive ? 'auto' : 0,
                       opacity: isActive ? 1 : 0,
                     }}
-                    transition={{ duration: 0.3 }}
                     className="overflow-hidden"
+                    initial={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
                   >
                     <p className="text-sm text-foreground/80 mb-4">
                       {caseStudy.description}
@@ -150,9 +150,9 @@ export const DynamicCaseExplorer = () => {
                 animate={{
                   opacity: isActive ? 1 : 0,
                 }}
-                transition={{ duration: 0.3 }}
                 className={`absolute inset-0 rounded-2xl border-2 bg-gradient-to-br ${caseStudy.gradient} opacity-50`}
                 style={{ padding: '2px' }}
+                transition={{ duration: 0.3 }}
               >
                 <div className="w-full h-full bg-card rounded-2xl" />
               </motion.div>

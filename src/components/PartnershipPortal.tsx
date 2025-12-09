@@ -1,12 +1,3 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Users, 
   DollarSign, 
@@ -21,6 +12,16 @@ import {
   Gift,
   Handshake
 } from 'lucide-react';
+import React, { useState } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
 import { PARTNERSHIP_TIERS, createReferralLink } from '@/lib/partnerships';
 
 const PartnershipPortal: React.FC = () => {
@@ -102,7 +103,7 @@ const PartnershipPortal: React.FC = () => {
                   <span className="font-semibold text-lg">{partnerData.tier.name}</span>
                 </div>
               </div>
-              <Badge variant="outline" className="text-green-600 border-green-600">
+              <Badge className="text-green-600 border-green-600" variant="outline">
                 {partnerData.status.toUpperCase()}
               </Badge>
             </div>
@@ -165,7 +166,7 @@ const PartnershipPortal: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs className="space-y-6" value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="referrals">Referrals</TabsTrigger>
@@ -174,7 +175,7 @@ const PartnershipPortal: React.FC = () => {
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="space-y-6">
+          <TabsContent className="space-y-6" value="overview">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Recent Activity */}
               <Card>
@@ -246,7 +247,7 @@ const PartnershipPortal: React.FC = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="referrals" className="space-y-6">
+          <TabsContent className="space-y-6" value="referrals">
             <Card>
               <CardHeader>
                 <CardTitle>Referral Management</CardTitle>
@@ -259,12 +260,12 @@ const PartnershipPortal: React.FC = () => {
                     <Label htmlFor="referral-link">Your Referral Link</Label>
                     <div className="flex space-x-2">
                       <Input
-                        id="referral-link"
-                        value={createReferralLink(referralCode)}
                         readOnly
                         className="flex-1"
+                        id="referral-link"
+                        value={createReferralLink(referralCode)}
                       />
-                      <Button onClick={copyReferralLink} variant="outline">
+                      <Button variant="outline" onClick={copyReferralLink}>
                         {copied ? <CheckCircle className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                       </Button>
                     </div>
@@ -295,7 +296,7 @@ const PartnershipPortal: React.FC = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="marketing" className="space-y-6">
+          <TabsContent className="space-y-6" value="marketing">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
@@ -309,7 +310,7 @@ const PartnershipPortal: React.FC = () => {
                         <p className="font-medium">Company Overview PDF</p>
                         <p className="text-sm text-gray-500">Professional company overview</p>
                       </div>
-                      <Button variant="outline" size="sm">
+                      <Button size="sm" variant="outline">
                         <ExternalLink className="h-4 w-4 mr-2" />
                         Download
                       </Button>
@@ -319,7 +320,7 @@ const PartnershipPortal: React.FC = () => {
                         <p className="font-medium">Product Brochure</p>
                         <p className="text-sm text-gray-500">Detailed product information</p>
                       </div>
-                      <Button variant="outline" size="sm">
+                      <Button size="sm" variant="outline">
                         <ExternalLink className="h-4 w-4 mr-2" />
                         Download
                       </Button>
@@ -329,7 +330,7 @@ const PartnershipPortal: React.FC = () => {
                         <p className="font-medium">Social Media Kit</p>
                         <p className="text-sm text-gray-500">Ready-to-use social media content</p>
                       </div>
-                      <Button variant="outline" size="sm">
+                      <Button size="sm" variant="outline">
                         <ExternalLink className="h-4 w-4 mr-2" />
                         Download
                       </Button>
@@ -372,7 +373,7 @@ const PartnershipPortal: React.FC = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="resources" className="space-y-6">
+          <TabsContent className="space-y-6" value="resources">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
@@ -386,21 +387,21 @@ const PartnershipPortal: React.FC = () => {
                         <p className="font-medium">Product Training</p>
                         <p className="text-sm text-gray-500">Comprehensive product knowledge</p>
                       </div>
-                      <Button variant="outline" size="sm">Start Course</Button>
+                      <Button size="sm" variant="outline">Start Course</Button>
                     </div>
                     <div className="flex items-center justify-between p-3 border rounded-lg">
                       <div>
                         <p className="font-medium">Sales Training</p>
                         <p className="text-sm text-gray-500">Effective selling techniques</p>
                       </div>
-                      <Button variant="outline" size="sm">Start Course</Button>
+                      <Button size="sm" variant="outline">Start Course</Button>
                     </div>
                     <div className="flex items-center justify-between p-3 border rounded-lg">
                       <div>
                         <p className="font-medium">Technical Documentation</p>
                         <p className="text-sm text-gray-500">API and integration guides</p>
                       </div>
-                      <Button variant="outline" size="sm">View Docs</Button>
+                      <Button size="sm" variant="outline">View Docs</Button>
                     </div>
                   </div>
                 </CardContent>
@@ -439,7 +440,7 @@ const PartnershipPortal: React.FC = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="settings" className="space-y-6">
+          <TabsContent className="space-y-6" value="settings">
             <Card>
               <CardHeader>
                 <CardTitle>Account Settings</CardTitle>
@@ -450,24 +451,24 @@ const PartnershipPortal: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="company-name">Company Name</Label>
-                      <Input id="company-name" defaultValue={partnerData.name} />
+                      <Input defaultValue={partnerData.name} id="company-name" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="contact-email">Contact Email</Label>
-                      <Input id="contact-email" type="email" defaultValue="contact@techsolutions.com" />
+                      <Input defaultValue="contact@techsolutions.com" id="contact-email" type="email" />
                     </div>
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="website">Website</Label>
-                    <Input id="website" defaultValue="https://techsolutions.com" />
+                    <Input defaultValue="https://techsolutions.com" id="website" />
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="description">Company Description</Label>
                     <Textarea 
-                      id="description" 
-                      defaultValue="Leading technology solutions provider specializing in AI and automation."
+                      defaultValue="Leading technology solutions provider specializing in AI and automation." 
+                      id="description"
                       rows={3}
                     />
                   </div>

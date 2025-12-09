@@ -28,8 +28,8 @@ export interface FlagsConfig {
 function getCurrentEnv(): "development" | "staging" | "production" {
   if (typeof process !== "undefined") {
     const env = process.env.NODE_ENV || process.env.NEXT_PUBLIC_APP_ENV || "production";
-    if (env === "development") return "development";
-    if (env === "staging" || env === "preview") return "staging";
+    if (env === "development") {return "development";}
+    if (env === "staging" || env === "preview") {return "staging";}
   }
   return "production";
 }

@@ -1,9 +1,10 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { rssFeeds, RSSFeedItem } from "@/lib/blog/rss-feed";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { generateQuickTake } from "@/lib/blog/rss-editorial";
+import { rssFeeds, RSSFeedItem } from "@/lib/blog/rss-feed";
 
 export const metadata: Metadata = {
   title: "AI & Tech News Feed | Systems Thinking Analysis | AIAS Platform",
@@ -121,7 +122,7 @@ export default function RSSNewsPage() {
                       )}
                     </div>
                     <CardTitle className="text-xl mb-2">
-                      <Link href={`/rss-news/${item.id}`} className="hover:underline">
+                      <Link className="hover:underline" href={`/rss-news/${item.id}`}>
                         {item.title}
                       </Link>
                     </CardTitle>
@@ -165,16 +166,16 @@ export default function RSSNewsPage() {
                         </time>
                         <span>•</span>
                         <a 
+                          className="text-primary hover:underline" 
                           href={item.link} 
-                          target="_blank" 
                           rel="noopener noreferrer"
-                          className="text-primary hover:underline"
+                          target="_blank"
                         >
                           Original Article →
                         </a>
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm" asChild>
+                        <Button asChild size="sm" variant="outline">
                           <Link href={`/rss-news/${item.id}`}>
                             Read Editorial + Discussion
                           </Link>
@@ -289,10 +290,10 @@ export default function RSSNewsPage() {
               Stay informed about the latest developments with systems thinking insights.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild>
+              <Button asChild size="lg">
                 <Link href="/blog">View Blog Articles</Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button asChild size="lg" variant="outline">
                 <Link href="/demo">Get Daily Updates</Link>
               </Button>
             </div>

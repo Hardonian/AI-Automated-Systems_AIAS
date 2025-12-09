@@ -1,15 +1,18 @@
+import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { createClient } from "@supabase/supabase-js";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { ValidationError, formatError } from "@/lib/errors";
-import { createPOSTHandler } from "@/lib/api/route-handler";
-// import { recordError } from "@/lib/utils/error-detection"; // Will be used for error tracking
-import { retry } from "@/lib/utils/retry";
-import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
 import { z } from "zod";
+
+import { createPOSTHandler } from "@/lib/api/route-handler";
 import { recordCheckoutRequest, getCheckoutHandler } from "@/lib/canary/checkout";
+import { env } from "@/lib/env";
+import { ValidationError, formatError } from "@/lib/errors";
+import { logger } from "@/lib/logging/structured-logger";
+// import { recordError } from "@/lib/utils/error-detection"; // Will be used for error tracking
+import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
+import { retry } from "@/lib/utils/retry";
+
+
 
 // Load environment variables dynamically - no hardcoded values
 const stripe = new Stripe(env.stripe.secretKey!, {

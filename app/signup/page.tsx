@@ -1,8 +1,9 @@
-import { Metadata } from "next";
+import { Check, Sparkles } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
-import { Check, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Sign Up — Start Your Free Trial | AI Automated Systems",
@@ -59,12 +60,12 @@ export default function SignUpPage() {
         </Card>
 
         <div className="space-y-6">
-          <Button size="lg" className="w-full h-12 text-base font-semibold" asChild>
+          <Button asChild className="w-full h-12 text-base font-semibold" size="lg">
             <Link href="/api/auth/signup">Create Account</Link>
           </Button>
           <p className="text-center text-sm md:text-base text-muted-foreground">
             Already have an account?{" "}
-            <Link href="/signin" className="text-primary hover:underline font-medium">
+            <Link className="text-primary hover:underline font-medium" href="/signin">
               Sign in
             </Link>
           </p>

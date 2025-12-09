@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { logger } from "@/lib/logging/structured-logger";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface ComplianceStatus {
   timestamp: string;
@@ -31,7 +32,7 @@ export default function ComplianceDashboardPage() {
   async function fetchCompliance() {
     try {
       const response = await fetch("/api/admin/compliance");
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      if (!response.ok) {throw new Error(`HTTP ${response.status}`);}
       const data = await response.json();
       setCompliance(data);
       setError(null);

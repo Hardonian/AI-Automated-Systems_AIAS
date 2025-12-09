@@ -215,7 +215,7 @@ function validateJsonFiles(): ValidationResult {
   const result: ValidationResult = { success: true, errors: [], warnings: [] };
 
   function checkDirectory(dirPath: string, depth: number = 0) {
-    if (depth > 5) return; // Prevent infinite recursion
+    if (depth > 5) {return;} // Prevent infinite recursion
 
     try {
       const entries = readdirSync(dirPath);

@@ -19,7 +19,7 @@ function parseEnvFile(content: string): Record<string, string> {
   for (const line of lines) {
     const trimmed = line.trim();
     // Skip comments and empty lines
-    if (!trimmed || trimmed.startsWith('#')) continue;
+    if (!trimmed || trimmed.startsWith('#')) {continue;}
     
     // Match KEY=VALUE or KEY="VALUE" or KEY='VALUE'
     const match = trimmed.match(/^([^=]+)=(.*)$/);
@@ -169,7 +169,7 @@ function discoverEnvFiles(): string[] {
 
 function loadEnvConfig(): EnvConfig {
   const envFiles = discoverEnvFiles();
-  let config: EnvConfig = {};
+  const config: EnvConfig = {};
   
   // Load in priority order
   for (const file of envFiles) {
@@ -705,7 +705,7 @@ function appendToLog(result: RunResult): void {
     existingContent = `# Migration Guardian Log\n\nThis log is maintained by the Migration Guardian agent.\n\n`;
   }
   
-  const newContent = existingContent + '\n' + entry + '\n';
+  const newContent = `${existingContent  }\n${  entry  }\n`;
   writeFileSync(LOG_FILE, newContent, 'utf-8');
 }
 

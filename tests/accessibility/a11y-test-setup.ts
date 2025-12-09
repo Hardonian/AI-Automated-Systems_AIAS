@@ -53,7 +53,7 @@ export const a11yChecklist = {
       let lastLevel = 0;
       for (const heading of Array.from(headings)) {
         const levelStr = heading.tagName[1];
-        if (!levelStr) continue;
+        if (!levelStr) {continue;}
         const level = parseInt(levelStr);
         if (level > lastLevel + 1) {
           return false; // Skipped a level
@@ -79,7 +79,7 @@ export const a11yChecklist = {
       const inputs = element.querySelectorAll('input, select, textarea');
       return Array.from(inputs).every((input) => {
         const id = input.getAttribute('id');
-        if (!id) return false;
+        if (!id) {return false;}
         const label = element.querySelector(`label[for="${id}"]`);
         return label !== null || input.hasAttribute('aria-label') || input.hasAttribute('aria-labelledby');
       });

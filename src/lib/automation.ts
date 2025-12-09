@@ -703,7 +703,7 @@ export class AutomationManager {
       sent: true,
       type: config.type,
       recipients: config.recipients,
-      messageId: 'msg_' + Date.now()
+      messageId: `msg_${  Date.now()}`
     };
   }
 
@@ -722,7 +722,7 @@ export class AutomationManager {
     return {
       success: true,
       affectedRows: 1,
-      recordId: 'rec_' + Date.now()
+      recordId: `rec_${  Date.now()}`
     };
   }
 
@@ -740,7 +740,7 @@ export class AutomationManager {
     // Simulate scheduling
     return {
       scheduled: true,
-      scheduleId: 'sched_' + Date.now(),
+      scheduleId: `sched_${  Date.now()}`,
       nextRun: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
     };
   }
@@ -751,20 +751,20 @@ export class AutomationManager {
       integrated: true,
       service: config.service,
       status: 'active',
-      connectionId: 'conn_' + Date.now()
+      connectionId: `conn_${  Date.now()}`
     };
   }
 
   private generateWorkflowId(): string {
-    return 'wf_' + Date.now() + '_' + Math.random().toString(36).substring(2);
+    return `wf_${  Date.now()  }_${  Math.random().toString(36).substring(2)}`;
   }
 
   private generateExecutionId(): string {
-    return 'exec_' + Date.now() + '_' + Math.random().toString(36).substring(2);
+    return `exec_${  Date.now()  }_${  Math.random().toString(36).substring(2)}`;
   }
 
   private generateStepId(): string {
-    return 'step_' + Date.now() + '_' + Math.random().toString(36).substring(2);
+    return `step_${  Date.now()  }_${  Math.random().toString(36).substring(2)}`;
   }
 
   private async logAutomationEvent(action: string, metadata: Record<string, unknown>): Promise<void> {

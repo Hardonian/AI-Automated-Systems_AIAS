@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { processTrialEmailsForUser, processAllTrialEmails } from "@/lib/email-cadence/sender";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { logger } from "@/lib/logging/structured-logger";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 /**
  * POST /api/trial/emails/send
  * Send trial emails (can be called for specific user or all users)
@@ -62,7 +63,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const searchParams = request.nextUrl.searchParams;
+    const {searchParams} = request.nextUrl;
     const targetUserId = searchParams.get("userId") || user.id;
 
     await processTrialEmailsForUser(targetUserId);

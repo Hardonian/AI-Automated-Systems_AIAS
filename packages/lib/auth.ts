@@ -1,8 +1,10 @@
-import { createClient } from '@supabase/supabase-js';
 import { config } from '@ai-consultancy/config';
-import { prisma } from './database';
-import { SignJWT, jwtVerify } from 'jose';
+import { createClient } from '@supabase/supabase-js';
 import bcrypt from 'bcryptjs';
+import { SignJWT, jwtVerify } from 'jose';
+
+import { prisma } from './database';
+
 
 const supabase = createClient(
   config.supabase.url,
@@ -42,7 +44,7 @@ export class AuthService {
       where: { email },
     });
 
-    if (!user) return null;
+    if (!user) {return null;}
 
     return {
       id: user.id,
@@ -58,7 +60,7 @@ export class AuthService {
       where: { id },
     });
 
-    if (!user) return null;
+    if (!user) {return null;}
 
     return {
       id: user.id,
@@ -74,7 +76,7 @@ export class AuthService {
       where: { supabaseId },
     });
 
-    if (!user) return null;
+    if (!user) {return null;}
 
     return {
       id: user.id,
@@ -106,7 +108,7 @@ export class AuthService {
   }
 
   static async createJWT(user: AuthUser): Promise<string> {
-    const jwtSecret = config.security.jwtSecret;
+    const {jwtSecret} = config.security;
     if (!jwtSecret) {
       throw new Error('JWT secret is not configured');
     }
@@ -124,7 +126,7 @@ export class AuthService {
 
   static async verifyJWT(token: string): Promise<{ userId: string; email: string } | null> {
     try {
-      const jwtSecret = config.security.jwtSecret;
+      const {jwtSecret} = config.security;
       if (!jwtSecret) {
         throw new Error('JWT secret is not configured');
       }

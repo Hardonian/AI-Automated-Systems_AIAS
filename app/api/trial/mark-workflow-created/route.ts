@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+
+import { logger } from "@/lib/logging/structured-logger";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { markWorkflowCreated } from "@/lib/trial/user-plan";
-import { logger } from "@/lib/logging/structured-logger";
 /**
  * POST /api/trial/mark-workflow-created
  * Mark user's first workflow as created

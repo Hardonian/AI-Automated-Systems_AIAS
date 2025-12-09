@@ -66,7 +66,7 @@ export async function sendAlert(payload: AlertPayload): Promise<boolean> {
                   type: "section",
                   text: {
                     type: "mrkdwn",
-                    text: "```\n" + JSON.stringify(payload.metrics, null, 2) + "\n```",
+                    text: `\`\`\`\n${  JSON.stringify(payload.metrics, null, 2)  }\n\`\`\``,
                   },
                 },
               ]

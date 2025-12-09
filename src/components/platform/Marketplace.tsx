@@ -3,12 +3,6 @@
  * Template, agent, and integration marketplace for the platform
  */
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Search, 
   Filter, 
@@ -25,12 +19,16 @@ import {
   Zap,
   Users,
   Clock,
-  CheckCircle,
-  TrendingUp,
-  Award,
   Crown
 } from 'lucide-react';
-import { MarketplaceItem, WorkflowTemplate, AIAgent, Integration } from '@/types/platform';
+import React, { useState, useEffect } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { MarketplaceItem } from '@/types/platform';
 
 interface MarketplaceProps {
   onItemSelect?: (item: MarketplaceItem) => void;
@@ -355,15 +353,15 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onItemSelect: _onItemS
   };
 
   const formatPrice = (price: number, currency: string) => {
-    if (price === 0) return 'Free';
-    if (price < 1) return `$${price.toFixed(2)} per use`;
+    if (price === 0) {return 'Free';}
+    if (price < 1) {return `$${price.toFixed(2)} per use`;}
     return `$${price} ${currency}`;
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
       </div>
     );
   }
@@ -394,22 +392,22 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onItemSelect: _onItemS
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
+              className="pl-10"
               placeholder="Search templates, agents, integrations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
             />
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">
+          <Button size="sm" variant="outline">
             <Filter className="h-4 w-4 mr-2" />
             Filters
           </Button>
           <select
+            className="px-3 py-2 border border-gray-300 rounded-md text-sm"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md text-sm"
           >
             {sortOptions.map(option => (
               <option key={option.id} value={option.id}>
@@ -426,14 +424,14 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onItemSelect: _onItemS
           {categories.map(category => (
             <TabsTrigger key={category.id} value={category.id}>
               {category.label}
-              <Badge variant="secondary" className="ml-2">
+              <Badge className="ml-2" variant="secondary">
                 {items.filter(item => selectedCategory === 'all' || item.type === selectedCategory).length}
               </Badge>
             </TabsTrigger>
           ))}
         </TabsList>
 
-        <TabsContent value={selectedCategory} className="space-y-6">
+        <TabsContent className="space-y-6" value={selectedCategory}>
           {/* Featured Items */}
           <div>
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -459,10 +457,10 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onItemSelect: _onItemS
                           </div>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                          <Button className="h-8 w-8 p-0" size="sm" variant="ghost">
                             <Heart className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                          <Button className="h-8 w-8 p-0" size="sm" variant="ghost">
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </div>
@@ -488,14 +486,14 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onItemSelect: _onItemS
                               {item.rating} ({item.reviews} reviews)
                             </span>
                           </div>
-                          <Badge variant="outline" className="text-xs">
+                          <Badge className="text-xs" variant="outline">
                             {item.type}
                           </Badge>
                         </div>
 
                         <div className="flex flex-wrap gap-1">
                           {item.tags.slice(0, 3).map((tag: string) => (
-                            <Badge key={tag} variant="secondary" className="text-xs">
+                            <Badge key={tag} className="text-xs" variant="secondary">
                               {tag}
                             </Badge>
                           ))}
@@ -557,10 +555,10 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onItemSelect: _onItemS
                           </div>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                          <Button className="h-8 w-8 p-0" size="sm" variant="ghost">
                             <Heart className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                          <Button className="h-8 w-8 p-0" size="sm" variant="ghost">
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </div>
@@ -586,14 +584,14 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onItemSelect: _onItemS
                               {item.rating} ({item.reviews})
                             </span>
                           </div>
-                          <Badge variant="outline" className="text-xs">
+                          <Badge className="text-xs" variant="outline">
                             {item.type}
                           </Badge>
                         </div>
 
                         <div className="flex flex-wrap gap-1">
                           {item.tags.slice(0, 3).map((tag: string) => (
-                            <Badge key={tag} variant="secondary" className="text-xs">
+                            <Badge key={tag} className="text-xs" variant="secondary">
                               {tag}
                             </Badge>
                           ))}

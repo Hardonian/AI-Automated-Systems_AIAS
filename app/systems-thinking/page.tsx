@@ -1,8 +1,9 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Check, ArrowRight, Brain, Target, Zap, Users, TrendingUp } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Systems Thinking: The Critical Skill for the AI Age | AIAS Platform",
@@ -193,7 +194,7 @@ export default function SystemsThinkingPage() {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild>
+              <Button asChild size="lg" variant="outline">
                 <Link href="/case-studies">See Case Studies</Link>
               </Button>
             </div>

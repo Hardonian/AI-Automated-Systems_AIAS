@@ -1,17 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 // import { Button } from "@/components/ui/button"; // Will be used for save actions
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 import { logger } from "@/lib/logging/structured-logger";
+import { createClient } from "@/lib/supabase/client";
 interface UserSettings {
   id: string;
   user_id: string;
@@ -139,7 +140,7 @@ export default function SettingsPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="notifications" className="space-y-6">
+      <Tabs className="space-y-6" defaultValue="notifications">
         <TabsList>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
@@ -148,7 +149,7 @@ export default function SettingsPage() {
         </TabsList>
 
         {/* Notifications Tab */}
-        <TabsContent value="notifications" className="space-y-6">
+        <TabsContent className="space-y-6" value="notifications">
           <Card>
             <CardHeader className="pb-4">
               <CardTitle className="text-xl mb-2">Notification Preferences</CardTitle>
@@ -159,52 +160,52 @@ export default function SettingsPage() {
             <CardContent className="space-y-6 pt-6">
               <div className="flex items-center justify-between py-2">
                 <div className="space-y-1">
-                  <Label htmlFor="email-notifications" className="text-base">Email Notifications</Label>
+                  <Label className="text-base" htmlFor="email-notifications">Email Notifications</Label>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     Receive notifications via email
                   </p>
                 </div>
                 <Switch
-                  id="email-notifications"
                   checked={settings.email_notifications_enabled ?? true}
+                  disabled={saving}
+                  id="email-notifications"
                   onCheckedChange={(checked) =>
                     updateSetting("email_notifications_enabled", checked)
                   }
-                  disabled={saving}
                 />
               </div>
 
               <div className="flex items-center justify-between py-2">
                 <div className="space-y-1">
-                  <Label htmlFor="push-notifications" className="text-base">Push Notifications</Label>
+                  <Label className="text-base" htmlFor="push-notifications">Push Notifications</Label>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     Receive push notifications in your browser
                   </p>
                 </div>
                 <Switch
-                  id="push-notifications"
                   checked={settings.push_notifications_enabled ?? true}
+                  disabled={saving}
+                  id="push-notifications"
                   onCheckedChange={(checked) =>
                     updateSetting("push_notifications_enabled", checked)
                   }
-                  disabled={saving}
                 />
               </div>
 
               <div className="flex items-center justify-between py-2">
                 <div className="space-y-1">
-                  <Label htmlFor="sms-notifications" className="text-base">SMS Notifications</Label>
+                  <Label className="text-base" htmlFor="sms-notifications">SMS Notifications</Label>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     Receive notifications via SMS (requires phone number)
                   </p>
                 </div>
                 <Switch
-                  id="sms-notifications"
                   checked={settings.sms_notifications_enabled ?? false}
+                  disabled={saving}
+                  id="sms-notifications"
                   onCheckedChange={(checked) =>
                     updateSetting("sms_notifications_enabled", checked)
                   }
-                  disabled={saving}
                 />
               </div>
 
@@ -213,19 +214,19 @@ export default function SettingsPage() {
                 <div className="space-y-4">
                   {Object.entries(settings.notification_types || {}).map(([type, enabled]) => (
                     <div key={type} className="flex items-center justify-between py-2">
-                      <Label htmlFor={`notification-${type}`} className="capitalize text-base">
+                      <Label className="capitalize text-base" htmlFor={`notification-${type}`}>
                         {type.replace(/_/g, " ")}
                       </Label>
                       <Switch
-                        id={`notification-${type}`}
                         checked={enabled}
+                        disabled={saving}
+                        id={`notification-${type}`}
                         onCheckedChange={(checked) => {
                           updateSetting("notification_types", {
                             ...settings.notification_types,
                             [type]: checked,
                           });
                         }}
-                        disabled={saving}
                       />
                     </div>
                   ))}
@@ -236,7 +237,7 @@ export default function SettingsPage() {
         </TabsContent>
 
         {/* Appearance Tab */}
-        <TabsContent value="appearance" className="space-y-6">
+        <TabsContent className="space-y-6" value="appearance">
           <Card>
             <CardHeader className="pb-4">
               <CardTitle className="text-xl mb-2">Appearance</CardTitle>
@@ -246,13 +247,13 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent className="space-y-6 pt-6">
               <div className="space-y-2">
-                <Label htmlFor="theme" className="text-base">Theme</Label>
+                <Label className="text-base" htmlFor="theme">Theme</Label>
                 <Select
+                  disabled={saving}
                   value={settings.theme || "system"}
                   onValueChange={(value) =>
                     updateSetting("theme", value as "light" | "dark" | "system")
                   }
-                  disabled={saving}
                 >
                   <SelectTrigger id="theme">
                     <SelectValue />
@@ -266,11 +267,11 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="language" className="text-base">Language</Label>
+                <Label className="text-base" htmlFor="language">Language</Label>
                 <Select
+                  disabled={saving}
                   value={settings.language || "en"}
                   onValueChange={(value) => updateSetting("language", value)}
-                  disabled={saving}
                 >
                   <SelectTrigger id="language">
                     <SelectValue />
@@ -284,11 +285,11 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="timezone" className="text-base">Timezone</Label>
+                <Label className="text-base" htmlFor="timezone">Timezone</Label>
                 <Select
+                  disabled={saving}
                   value={settings.timezone || "UTC"}
                   onValueChange={(value) => updateSetting("timezone", value)}
-                  disabled={saving}
                 >
                   <SelectTrigger id="timezone">
                     <SelectValue />
@@ -303,13 +304,13 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="time-format" className="text-base">Time Format</Label>
+                <Label className="text-base" htmlFor="time-format">Time Format</Label>
                 <Select
+                  disabled={saving}
                   value={settings.time_format || "24h"}
                   onValueChange={(value) =>
                     updateSetting("time_format", value as "12h" | "24h")
                   }
-                  disabled={saving}
                 >
                   <SelectTrigger id="time-format">
                     <SelectValue />
@@ -325,7 +326,7 @@ export default function SettingsPage() {
         </TabsContent>
 
         {/* Privacy Tab */}
-        <TabsContent value="privacy" className="space-y-6">
+        <TabsContent className="space-y-6" value="privacy">
           <Card>
             <CardHeader className="pb-4">
               <CardTitle className="text-xl mb-2">Privacy Settings</CardTitle>
@@ -335,13 +336,13 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent className="space-y-6 pt-6">
               <div className="space-y-2">
-                <Label htmlFor="profile-visibility" className="text-base">Profile Visibility</Label>
+                <Label className="text-base" htmlFor="profile-visibility">Profile Visibility</Label>
                 <Select
+                  disabled={saving}
                   value={settings.profile_visibility || "private"}
                   onValueChange={(value) =>
                     updateSetting("profile_visibility", value as "public" | "private" | "friends")
                   }
-                  disabled={saving}
                 >
                   <SelectTrigger id="profile-visibility">
                     <SelectValue />
@@ -356,35 +357,35 @@ export default function SettingsPage() {
 
               <div className="flex items-center justify-between py-2">
                 <div className="space-y-1">
-                  <Label htmlFor="analytics-opt-in" className="text-base">Analytics</Label>
+                  <Label className="text-base" htmlFor="analytics-opt-in">Analytics</Label>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     Help us improve by sharing anonymous usage data
                   </p>
                 </div>
                 <Switch
-                  id="analytics-opt-in"
                   checked={settings.analytics_opt_in ?? true}
+                  disabled={saving}
+                  id="analytics-opt-in"
                   onCheckedChange={(checked) =>
                     updateSetting("analytics_opt_in", checked)
                   }
-                  disabled={saving}
                 />
               </div>
 
               <div className="flex items-center justify-between py-2">
                 <div className="space-y-1">
-                  <Label htmlFor="data-sharing" className="text-base">Data Sharing</Label>
+                  <Label className="text-base" htmlFor="data-sharing">Data Sharing</Label>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     Allow sharing of anonymized data with partners
                   </p>
                 </div>
                 <Switch
-                  id="data-sharing"
                   checked={settings.data_sharing_enabled ?? false}
+                  disabled={saving}
+                  id="data-sharing"
                   onCheckedChange={(checked) =>
                     updateSetting("data_sharing_enabled", checked)
                   }
-                  disabled={saving}
                 />
               </div>
             </CardContent>
@@ -392,7 +393,7 @@ export default function SettingsPage() {
         </TabsContent>
 
         {/* Features Tab */}
-        <TabsContent value="features" className="space-y-6">
+        <TabsContent className="space-y-6" value="features">
           <Card>
             <CardHeader className="pb-4">
               <CardTitle className="text-xl mb-2">Feature Preferences</CardTitle>
@@ -403,35 +404,35 @@ export default function SettingsPage() {
             <CardContent className="space-y-6 pt-6">
               <div className="flex items-center justify-between py-2">
                 <div className="space-y-1">
-                  <Label htmlFor="beta-features" className="text-base">Beta Features</Label>
+                  <Label className="text-base" htmlFor="beta-features">Beta Features</Label>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     Enable access to beta features
                   </p>
                 </div>
                 <Switch
-                  id="beta-features"
                   checked={settings.beta_features_enabled ?? false}
+                  disabled={saving}
+                  id="beta-features"
                   onCheckedChange={(checked) =>
                     updateSetting("beta_features_enabled", checked)
                   }
-                  disabled={saving}
                 />
               </div>
 
               <div className="flex items-center justify-between py-2">
                 <div className="space-y-1">
-                  <Label htmlFor="experimental-features" className="text-base">Experimental Features</Label>
+                  <Label className="text-base" htmlFor="experimental-features">Experimental Features</Label>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     Enable experimental features (may be unstable)
                   </p>
                 </div>
                 <Switch
-                  id="experimental-features"
                   checked={settings.experimental_features_enabled ?? false}
+                  disabled={saving}
+                  id="experimental-features"
                   onCheckedChange={(checked) =>
                     updateSetting("experimental_features_enabled", checked)
                   }
-                  disabled={saving}
                 />
               </div>
             </CardContent>

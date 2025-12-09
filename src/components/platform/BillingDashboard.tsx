@@ -3,19 +3,11 @@
  * Comprehensive billing management with usage tracking, payment processing, and subscription management
  */
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
 import { 
   CreditCard, 
   DollarSign, 
   TrendingUp, 
-  AlertTriangle, 
-  CheckCircle, 
-  Clock,
+  AlertTriangle,
   Download,
   Settings,
   Shield,
@@ -28,6 +20,13 @@ import {
   ArrowUpRight,
   ArrowDownRight
 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface BillingDashboardProps {
   tenantId: string;
@@ -206,7 +205,7 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
   };
 
   const getUsagePercentage = (used: number, limit: number) => {
-    if (limit === -1) return 0; // Unlimited
+    if (limit === -1) {return 0;} // Unlimited
     return Math.min((used / limit) * 100, 100);
   };
 
@@ -223,14 +222,14 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
   const formatCurrency = (amount: number, currency: string = 'USD') => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency
+      currency
     }).format(amount);
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
       </div>
     );
   }
@@ -353,7 +352,7 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
       </div>
 
       {/* Main Content */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs className="w-full" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="usage">Usage</TabsTrigger>
@@ -363,7 +362,7 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
           <TabsTrigger value="revenue">Revenue</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-6">
+        <TabsContent className="space-y-6" value="overview">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Usage Overview */}
             <Card>
@@ -382,8 +381,8 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
                     </span>
                   </div>
                   <Progress 
-                    value={getUsagePercentage(billingData.usage.workflows.used, billingData.usage.workflows.limit)} 
-                    className="h-2"
+                    className="h-2" 
+                    value={getUsagePercentage(billingData.usage.workflows.used, billingData.usage.workflows.limit)}
                   />
                 </div>
 
@@ -395,8 +394,8 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
                     </span>
                   </div>
                   <Progress 
-                    value={getUsagePercentage(billingData.usage.executions.used, billingData.usage.executions.limit)} 
-                    className="h-2"
+                    className="h-2" 
+                    value={getUsagePercentage(billingData.usage.executions.used, billingData.usage.executions.limit)}
                   />
                 </div>
 
@@ -408,10 +407,10 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
                     </span>
                   </div>
                   <Progress 
+                    className="h-2" 
                     value={typeof billingData.usage.storage === 'object' && 'used' in billingData.usage.storage && 'limit' in billingData.usage.storage
                       ? getUsagePercentage(billingData.usage.storage.used, billingData.usage.storage.limit)
-                      : 0} 
-                    className="h-2"
+                      : 0}
                   />
                 </div>
 
@@ -423,8 +422,8 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
                     </span>
                   </div>
                   <Progress 
-                    value={getUsagePercentage(billingData.usage.apiCalls.used, billingData.usage.apiCalls.limit)} 
-                    className="h-2"
+                    className="h-2" 
+                    value={getUsagePercentage(billingData.usage.apiCalls.used, billingData.usage.apiCalls.limit)}
                   />
                 </div>
               </CardContent>
@@ -480,7 +479,7 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
           </div>
         </TabsContent>
 
-        <TabsContent value="usage" className="space-y-6">
+        <TabsContent className="space-y-6" value="usage">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Detailed Usage */}
             <Card>
@@ -489,9 +488,9 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
               </CardHeader>
               <CardContent className="space-y-6">
                 {Object.entries(billingData.usage).map(([key, value]) => {
-                  if (key === 'period') return null;
+                  if (key === 'period') {return null;}
                   
-                  if (typeof value === 'string') return null;
+                  if (typeof value === 'string') {return null;}
                   const limit = typeof value === 'object' && 'limit' in value ? value.limit : 0;
                   const used = typeof value === 'object' && 'used' in value ? value.used : 0;
                   const percentage = getUsagePercentage(used, limit);
@@ -506,7 +505,7 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
                           {used.toLocaleString()} / {limit === -1 ? '∞' : limit.toLocaleString()}
                         </span>
                       </div>
-                      <Progress value={percentage} className="h-2" />
+                      <Progress className="h-2" value={percentage} />
                       {percentage > 80 && (
                         <p className="text-xs text-yellow-600 mt-1">
                           <AlertTriangle className="h-3 w-3 inline mr-1" />
@@ -539,7 +538,7 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
           </div>
         </TabsContent>
 
-        <TabsContent value="billing" className="space-y-6">
+        <TabsContent className="space-y-6" value="billing">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Next Invoice */}
             <Card>
@@ -601,7 +600,7 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
                 </div>
                 
                 <div className="pt-4 border-t mt-4">
-                  <Button variant="outline" className="w-full">
+                  <Button className="w-full" variant="outline">
                     <Settings className="h-4 w-4 mr-2" />
                     Update Address
                   </Button>
@@ -611,7 +610,7 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
           </div>
         </TabsContent>
 
-        <TabsContent value="invoices" className="space-y-6">
+        <TabsContent className="space-y-6" value="invoices">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -654,7 +653,7 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="payment" className="space-y-6">
+        <TabsContent className="space-y-6" value="payment">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Payment Method */}
             <Card>
@@ -681,7 +680,7 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
                   </div>
                   
                   <div className="pt-4 border-t">
-                    <Button variant="outline" className="w-full">
+                    <Button className="w-full" variant="outline">
                       <Settings className="h-4 w-4 mr-2" />
                       Update Payment Method
                     </Button>
@@ -711,8 +710,8 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
                       <div className="text-right">
                         <div className="text-sm font-medium">{formatCurrency(invoice.amount)}</div>
                         <Badge 
-                          variant="outline" 
-                          className={getStatusColor(invoice.status)}
+                          className={getStatusColor(invoice.status)} 
+                          variant="outline"
                         >
                           {invoice.status}
                         </Badge>
@@ -725,7 +724,7 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
           </div>
         </TabsContent>
 
-        <TabsContent value="revenue" className="space-y-6">
+        <TabsContent className="space-y-6" value="revenue">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Revenue Overview */}
             <Card>
@@ -777,7 +776,7 @@ const BillingDashboard: React.FC<BillingDashboardProps> = ({ tenantId }) => {
                         <div 
                           className="bg-blue-600 h-2 rounded-full" 
                           style={{ width: `${item.percentage}%` }}
-                        ></div>
+                         />
                       </div>
                       <div className="text-xs text-gray-500 mt-1">{item.percentage}%</div>
                     </div>

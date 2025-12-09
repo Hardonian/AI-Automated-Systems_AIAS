@@ -4,9 +4,11 @@
  * Validates database schema consistency, migration health, and RLS policies
  */
 
-import { createClient } from "@supabase/supabase-js";
 import { readFileSync, readdirSync, existsSync } from "fs";
 import { join } from "path";
+
+import { createClient } from "@supabase/supabase-js";
+
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logging/structured-logger";
 

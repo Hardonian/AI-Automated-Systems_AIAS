@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
 import { validateEnvWithZod, validateApiEnv, getValidatedEnvVar } from '@/lib/env-validation';
 
 describe('lib/env-validation', () => {

@@ -1,13 +1,15 @@
 import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/src/integrations/supabase/types";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Users, Eye, Activity, MessageSquare, Zap } from "lucide-react";
-import { enrichWithExternalData, generateSampleMetrics, getIndustryBenchmarks } from "@/lib/data-enrichment";
-import { HealthMonitor } from "@/components/monitoring/health-monitor";
-import { RealtimeDashboard } from "@/components/dashboard/realtime-dashboard";
-import { DashboardUpgradeSection } from "@/components/dashboard/dashboard-upgrade-section";
+
 import { DashboardClient } from "./dashboard-client";
+
+import { DashboardUpgradeSection } from "@/components/dashboard/dashboard-upgrade-section";
+import { RealtimeDashboard } from "@/components/dashboard/realtime-dashboard";
+import { HealthMonitor } from "@/components/monitoring/health-monitor";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { enrichWithExternalData, generateSampleMetrics, getIndustryBenchmarks } from "@/lib/data-enrichment";
+import type { Database } from "@/src/integrations/supabase/types";
 /**
  * Public Dashboard: "Loud & High" Social Proof Metrics
  * 
@@ -140,19 +142,19 @@ export default async function DashboardPage() {
   return (
     <div className="container mx-auto py-8 px-4">
       {/* Upgrade prompts and welcome dashboard */}
-      <DashboardUpgradeSection userPlan={userPlan} isFirstVisit={isFirstVisit} />
+      <DashboardUpgradeSection isFirstVisit={isFirstVisit} userPlan={userPlan} />
       
       {/* Quick Links */}
       <div className="mb-6 flex gap-4">
         <a
-          href="/dashboard/analytics"
           className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+          href="/dashboard/analytics"
         >
           View Analytics
         </a>
         <a
-          href="/workflows"
           className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors"
+          href="/workflows"
         >
           Manage Workflows
         </a>
@@ -310,7 +312,7 @@ export default async function DashboardPage() {
                     <span className="text-sm truncate flex-1">
                       {post.title || `Post #${post.id}`}
                     </span>
-                    <Badge variant="secondary" className="ml-2">
+                    <Badge className="ml-2" variant="secondary">
                       {post.view_count} views
                     </Badge>
                   </div>
@@ -374,10 +376,10 @@ export default async function DashboardPage() {
                 {techNews.articles.slice(0, 3).map((article: any, idx: number) => (
                   <div key={idx} className="text-sm">
                     <a
-                      href={article.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
                       className="text-primary hover:underline"
+                      href={article.url}
+                      rel="noopener noreferrer"
+                      target="_blank"
                     >
                       {article.title}
                     </a>

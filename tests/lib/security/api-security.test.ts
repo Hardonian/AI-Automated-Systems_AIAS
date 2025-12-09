@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { z } from 'zod';
+
 import {
   sanitizeInput,
   sanitizeHTML,
@@ -6,7 +8,6 @@ import {
   detectXSS,
   validateRequestBody,
 } from '@/lib/security/api-security';
-import { z } from 'zod';
 
 describe('API Security Utilities', () => {
   describe('sanitizeInput', () => {

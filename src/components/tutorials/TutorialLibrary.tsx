@@ -1,12 +1,15 @@
+import { Search, Clock, Star, Play, Users, Shield, Zap, ShoppingCart } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+
+import { InteractiveTutorial, Tutorial } from './InteractiveTutorial';
+
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, Clock, Star, Play, Users, Shield, Zap, ShoppingCart } from 'lucide-react';
-import { InteractiveTutorial, Tutorial } from './InteractiveTutorial';
+
 
 const tutorialLibrary: Tutorial[] = [
   {
@@ -234,9 +237,9 @@ export const TutorialLibrary: React.FC = () => {
     return (
       <div className="space-y-4">
         <Button
-          onClick={() => setSelectedTutorial(null)}
-          variant="outline"
           className="mb-4"
+          variant="outline"
+          onClick={() => setSelectedTutorial(null)}
         >
           ← Back to Library
         </Button>
@@ -266,10 +269,10 @@ export const TutorialLibrary: React.FC = () => {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
+              className="pl-10"
               placeholder="Search tutorials..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
             />
           </div>
         </div>
@@ -301,13 +304,13 @@ export const TutorialLibrary: React.FC = () => {
         </Select>
       </div>
 
-      <Tabs defaultValue="all" className="w-full">
+      <Tabs className="w-full" defaultValue="all">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="all">All Tutorials</TabsTrigger>
           <TabsTrigger value="featured">Featured</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="all" className="space-y-4">
+        <TabsContent className="space-y-4" value="all">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {filteredTutorials.map((tutorial) => (
               <Card key={tutorial.id} className="hover:shadow-lg transition-shadow cursor-pointer">
@@ -338,15 +341,15 @@ export const TutorialLibrary: React.FC = () => {
                   
                   <div className="flex flex-wrap gap-1">
                     {tutorial.tags.slice(0, 3).map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs">
+                      <Badge key={tag} className="text-xs" variant="outline">
                         {tag}
                       </Badge>
                     ))}
                   </div>
                   
                   <Button
-                    onClick={() => setSelectedTutorial(tutorial)}
                     className="w-full"
+                    onClick={() => setSelectedTutorial(tutorial)}
                   >
                     Start Tutorial
                   </Button>
@@ -356,7 +359,7 @@ export const TutorialLibrary: React.FC = () => {
           </div>
         </TabsContent>
         
-        <TabsContent value="featured" className="space-y-4">
+        <TabsContent className="space-y-4" value="featured">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {filteredTutorials
               .filter(tutorial => tutorial.tags.includes('featured'))
@@ -386,8 +389,8 @@ export const TutorialLibrary: React.FC = () => {
                     </div>
                     
                     <Button
-                      onClick={() => setSelectedTutorial(tutorial)}
                       className="w-full"
+                      onClick={() => setSelectedTutorial(tutorial)}
                     >
                       Start Tutorial
                     </Button>

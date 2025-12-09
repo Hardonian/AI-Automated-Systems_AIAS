@@ -1,6 +1,10 @@
-import OpenAI from 'openai';
+import { config } from '@ai-consultancy/config';
 import Anthropic from '@anthropic-ai/sdk';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from 'openai';
+
+import { logger } from '../observability';
+
 import { 
   AIProvider, 
   ChatRequest, 
@@ -12,11 +16,8 @@ import {
   AuditResult,
   EstimateResult,
   ContentResult,
-  WorkflowResult,
-  ChatMessage
+  WorkflowResult
 } from './types';
-import { config } from '@ai-consultancy/config';
-import { logger } from '../observability';
 
 class OpenAIProvider implements AIProvider {
   name = 'openai';
@@ -182,18 +183,22 @@ class AnthropicProvider implements AIProvider {
 
   async chat(request: ChatRequest): Promise<AIResponse> {
     // Anthropic SDK types may not be fully compatible, but the API is correct
-    const response = await (this.client.messages as unknown as {
-      create: (params: {
-        model: string;
-        max_tokens: number;
-        temperature: number;
-        messages: Array<{ role: string; content: string }>;
-      }) => Promise<{
-        content: Array<{ text: string }>;
-        usage: { input_tokens: number; output_tokens: number };
-        model: string;
-      }>;
-    }).create({
+    const clientWithMessages = this.client as unknown as {
+      messages: {
+        create: (params: {
+          model: string;
+          max_tokens: number;
+          temperature: number;
+          messages: Array<{ role: string; content: string }>;
+        }) => Promise<{
+          content: Array<{ text: string }>;
+          usage: { input_tokens: number; output_tokens: number };
+          model: string;
+        }>;
+      };
+    };
+    
+    const response = await clientWithMessages.messages.create({
       model: request.model || 'claude-3-sonnet-20240229',
       max_tokens: request.maxTokens || 1000,
       temperature: request.temperature || 0.7,
@@ -217,15 +222,19 @@ class AnthropicProvider implements AIProvider {
 
   async *streamChat(request: ChatRequest): AsyncIterable<string> {
     // Anthropic SDK types may not be fully compatible, but the API is correct
-    const stream = await (this.client.messages as unknown as {
-      create: (params: {
-        model: string;
-        max_tokens: number;
-        temperature: number;
-        messages: Array<{ role: string; content: string }>;
-        stream: true;
-      }) => AsyncIterable<{ type: string; delta?: { type: string; text?: string } }>;
-    }).create({
+    const clientWithMessages = this.client as unknown as {
+      messages: {
+        create: (params: {
+          model: string;
+          max_tokens: number;
+          temperature: number;
+          messages: Array<{ role: string; content: string }>;
+          stream: true;
+        }) => AsyncIterable<{ type: string; delta?: { type: string; text?: string } }>;
+      };
+    };
+    
+    const stream = await clientWithMessages.messages.create({
       model: request.model || 'claude-3-sonnet-20240229',
       max_tokens: request.maxTokens || 1000,
       temperature: request.temperature || 0.7,
@@ -237,7 +246,7 @@ class AnthropicProvider implements AIProvider {
     });
 
     for await (const chunk of stream) {
-      if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
+      if (chunk.type === 'content_block_delta' && chunk.delta?.type === 'text_delta' && chunk.delta.text) {
         yield chunk.delta.text;
       }
     }

@@ -4,30 +4,31 @@
  * Production framework operations command-line interface
  */
 
-import { program } from 'commander';
+import { createRequire } from 'module';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import { createRequire } from 'module';
+
+import { program } from 'commander';
 
 const _require = createRequire(import.meta.url);
 const __filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(__filename);
 
 // Import command modules
-import { doctor } from './commands/doctor.js';
-import { init } from './commands/init.js';
+import { benchmark } from './commands/benchmark.js';
+import { changelog } from './commands/changelog.js';
 import { check } from './commands/check.js';
+import { docs } from './commands/docs.js';
+import { doctor } from './commands/doctor.js';
+import * as guardian from './commands/guardian.js';
+import { init } from './commands/init.js';
+import { lintfix } from './commands/lintfix.js';
 import { release } from './commands/release.js';
-import { snapshot } from './commands/snapshot.js';
 import { restore } from './commands/restore.js';
 import { rotateSecrets } from './commands/rotate-secrets.js';
 import { sbGuard } from './commands/sb-guard.js';
+import { snapshot } from './commands/snapshot.js';
 import { testE2E } from './commands/test-e2e.js';
-import { benchmark } from './commands/benchmark.js';
-import { lintfix } from './commands/lintfix.js';
-import { docs } from './commands/docs.js';
-import { changelog } from './commands/changelog.js';
-import * as guardian from './commands/guardian.js';
 
 program
   .name('ops')

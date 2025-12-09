@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
+
 import { rssFeeds, analyzeRSSItemWithSystemsThinking, type RSSFeedItem } from "@/lib/blog/rss-feed";
+import { logger } from "@/lib/logging/structured-logger";
 
 // RSS Feed Endpoint
 // Fetches and analyzes AI/Tech news with systems thinking perspective

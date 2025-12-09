@@ -241,5 +241,5 @@ export function coalesceNonEmpty<T extends string>(
   value: T | null | undefined | '',
   defaultValue: T
 ): T {
-  return isNonEmptyString(value) ? value : defaultValue;
+  return (isNonEmptyString(value) ? value : defaultValue) as T;
 }

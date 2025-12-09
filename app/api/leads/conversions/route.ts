@@ -3,9 +3,10 @@
  */
 
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
 import { createPOSTHandler } from '@/lib/api/route-handler';
 import { conversionTrackingService } from '@/lib/lead-generation/conversion-tracking';
-import { z } from 'zod';
 
 const conversionSchema = z.object({
   leadId: z.string().uuid(),

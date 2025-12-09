@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { SemanticLayer } from '@/lib/data/semantic-layer';
-import { semanticEntitySchema, kpiDefinitionSchema } from '@/lib/data/semantic-layer';
+
+import { SemanticLayer  } from '@/lib/data/semantic-layer';
 
 describe('SemanticLayer', () => {
   let semanticLayer: SemanticLayer;

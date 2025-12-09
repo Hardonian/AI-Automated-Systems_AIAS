@@ -15,7 +15,6 @@
 
 import { execSync } from 'child_process';
 import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
 
 const BACKUPS_DIR = 'backups';
 const TEST_DB_NAME = 'restore_drill_test';

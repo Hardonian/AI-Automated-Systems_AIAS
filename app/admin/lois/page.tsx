@@ -1,4 +1,5 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
+
 import { LOIDashboardEnhanced } from "@/components/sales/loi-dashboard-enhanced";
 
 export const metadata: Metadata = {

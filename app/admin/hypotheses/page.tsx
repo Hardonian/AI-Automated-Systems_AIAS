@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { logger } from "@/lib/logging/structured-logger";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface Hypothesis {
   id: string;
@@ -142,7 +143,7 @@ export default function HypothesesDashboard() {
                   <Badge className={getStatusColor(hypothesis.status)}>
                     {hypothesis.status.replace("_", " ").toUpperCase()}
                   </Badge>
-                  <Badge variant="outline" className={getConfidenceColor(hypothesis.confidence)}>
+                  <Badge className={getConfidenceColor(hypothesis.confidence)} variant="outline">
                     {hypothesis.confidence.toUpperCase()} CONFIDENCE
                   </Badge>
                 </div>

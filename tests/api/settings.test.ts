@@ -2,9 +2,10 @@
  * Settings API Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { GET, PUT } from "@/app/api/settings/route";
 import { NextRequest } from "next/server";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+
+import { GET, PUT } from "@/app/api/settings/route";
 
 const mockSupabaseClient = {
   auth: {

@@ -2,9 +2,9 @@
  * Benchmark Command - Run performance benchmarks
  */
 
+import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import { execSync } from 'child_process';
 
 export async function benchmark(options: { output?: string }) {
   console.log('⚡ Running performance benchmarks...\n');
@@ -27,7 +27,7 @@ export async function benchmark(options: { output?: string }) {
       fs.mkdirSync(reportDir, { recursive: true });
     }
 
-    let report = `<!DOCTYPE html>
+    const report = `<!DOCTYPE html>
 <html>
 <head>
   <title>Performance Benchmark Report</title>

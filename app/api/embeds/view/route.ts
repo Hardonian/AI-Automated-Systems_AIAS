@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+
 import { logger } from "@/lib/logging/structured-logger";
 // import { createServerClient } from "@/lib/supabase/server"; // Will be used for tracking
 

@@ -1,16 +1,20 @@
 // [STAKE+TRUST:BEGIN:help_page]
 "use client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Mail, MessageCircle, BookOpen, Settings, Zap, AlertCircle } from "lucide-react";
+import Link from "next/link";
+
+import { FAQSchema } from "@/components/seo/structured-data";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { FAQSchema } from "@/components/seo/structured-data";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Mail, MessageCircle, BookOpen, Settings, Zap, AlertCircle } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+
+
 
 const faqs = [
   {
@@ -184,7 +188,7 @@ export default function Help() {
             <p className="text-sm text-muted-foreground mb-4">
               Comprehensive guides and tutorials
             </p>
-            <Button variant="outline" size="sm" asChild>
+            <Button asChild size="sm" variant="outline">
               <Link href="/docs">View Docs</Link>
             </Button>
           </CardContent>
@@ -197,7 +201,7 @@ export default function Help() {
             <p className="text-sm text-muted-foreground mb-4">
               Get help from our team
             </p>
-            <Button variant="outline" size="sm" asChild>
+            <Button asChild size="sm" variant="outline">
               <a href="mailto:support@aiautomatedsystems.ca">Email Us</a>
             </Button>
           </CardContent>
@@ -210,7 +214,7 @@ export default function Help() {
             <p className="text-sm text-muted-foreground mb-4">
               See the platform in action
             </p>
-            <Button variant="outline" size="sm" asChild>
+            <Button asChild size="sm" variant="outline">
               <Link href="/demo">Schedule Demo</Link>
             </Button>
           </CardContent>
@@ -230,7 +234,7 @@ export default function Help() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <Accordion type="single" collapsible className="w-full">
+                <Accordion collapsible className="w-full" type="single">
                   {category.questions.map((faq, index) => (
                     <AccordionItem key={index} value={`item-${category.category}-${index}`}>
                       <AccordionTrigger className="text-left">
@@ -263,7 +267,7 @@ export default function Help() {
                   Email Support
                 </a>
               </Button>
-              <Button variant="outline" size="lg" asChild>
+              <Button asChild size="lg" variant="outline">
                 <Link href="/demo">
                   <MessageCircle className="w-4 h-4 mr-2" />
                   Schedule a Demo

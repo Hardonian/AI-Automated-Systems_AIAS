@@ -1,4 +1,5 @@
 import { config } from '@ai-consultancy/config';
+
 import { prisma } from './database';
 import { logger } from './observability';
 

@@ -1,12 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
-import ReactionBar from "@/components/social/ReactionBar";
-import CommentSection from "@/components/community/CommentSection";
-import FollowButton from "@/components/social/FollowButton";
-import ReportButton from "@/components/community/ReportButton";
+
 import ActivityFeed from "@/components/community/ActivityFeed";
+import CommentSection from "@/components/community/CommentSection";
+import ReportButton from "@/components/community/ReportButton";
+import FollowButton from "@/components/social/FollowButton";
+import ReactionBar from "@/components/social/ReactionBar";
 import ShareButton from "@/components/social/ShareButton";
+import { supabase } from "@/lib/supabase/client";
 
 interface Post {
   id: number;
@@ -39,12 +40,12 @@ export default function Community(){
       .select("*, profiles(display_name, avatar_url, id)")
       .order("created_at", { ascending: false })
       .limit(20);
-    if (data) setPosts(data);
+    if (data) {setPosts(data);}
   }
 
   async function createPost() {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user || !newPost.trim()) return;
+    if (!user || !newPost.trim()) {return;}
     
     await supabase.from("posts").insert({
       user_id: user.id,
@@ -71,22 +72,22 @@ export default function Community(){
         
         <div className="rounded-2xl border p-4 bg-card space-y-3">
           <input
+            className="w-full rounded-xl border border-border p-2 text-sm"
+            placeholder="Post title (optional)"
             value={newPostTitle}
             onChange={e => setNewPostTitle(e.target.value)}
-            placeholder="Post title (optional)"
-            className="w-full rounded-xl border border-border p-2 text-sm"
           />
           <textarea
-            value={newPost}
-            onChange={e => setNewPost(e.target.value)}
+            className="w-full rounded-xl border border-border p-3 text-sm"
             placeholder="Share your progress, ask questions, give kudos..."
             rows={4}
-            className="w-full rounded-xl border border-border p-3 text-sm"
+            value={newPost}
+            onChange={e => setNewPost(e.target.value)}
           />
           <div className="flex justify-end">
             <button
-              onClick={createPost}
               className="h-10 px-4 rounded-xl bg-primary text-primary-fg text-sm font-medium"
+              onClick={createPost}
             >
               Post
             </button>
@@ -119,7 +120,7 @@ export default function Community(){
               
               <div className="flex items-center justify-between">
                 <ReactionBar />
-                <ShareButton title={post.title || "Community Post"} text={post.body} url={`/community#post-${post.id}`} />
+                <ShareButton text={post.body} title={post.title || "Community Post"} url={`/community#post-${post.id}`} />
               </div>
               
               <div className="mt-4 pt-4 border-t">

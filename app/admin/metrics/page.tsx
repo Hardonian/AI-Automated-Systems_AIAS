@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { logger } from "@/lib/logging/structured-logger";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface MetricsData {
   performance: {
@@ -141,39 +142,39 @@ export default function MetricsDashboard() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <MetricCard
-              label="LCP (Largest Contentful Paint)"
-              value={metrics.performance.webVitals.LCP}
-              unit="ms"
               good={metrics.performance.webVitals.LCP ? metrics.performance.webVitals.LCP <= 2500 : undefined}
+              label="LCP (Largest Contentful Paint)"
               threshold={2500}
+              unit="ms"
+              value={metrics.performance.webVitals.LCP}
             />
             <MetricCard
-              label="CLS (Cumulative Layout Shift)"
-              value={metrics.performance.webVitals.CLS}
-              unit=""
               good={metrics.performance.webVitals.CLS ? metrics.performance.webVitals.CLS <= 0.1 : undefined}
+              label="CLS (Cumulative Layout Shift)"
               threshold={0.1}
+              unit=""
+              value={metrics.performance.webVitals.CLS}
             />
             <MetricCard
-              label="INP (Interaction to Next Paint)"
-              value={metrics.performance.webVitals.INP}
-              unit="ms"
               good={metrics.performance.webVitals.INP ? metrics.performance.webVitals.INP <= 200 : undefined}
+              label="INP (Interaction to Next Paint)"
               threshold={200}
+              unit="ms"
+              value={metrics.performance.webVitals.INP}
             />
             <MetricCard
-              label="TTFB (Time to First Byte)"
-              value={metrics.performance.webVitals.TTFB}
-              unit="ms"
               good={metrics.performance.webVitals.TTFB ? metrics.performance.webVitals.TTFB <= 800 : undefined}
+              label="TTFB (Time to First Byte)"
               threshold={800}
+              unit="ms"
+              value={metrics.performance.webVitals.TTFB}
             />
             <MetricCard
-              label="FCP (First Contentful Paint)"
-              value={metrics.performance.webVitals.FCP}
-              unit="ms"
               good={metrics.performance.webVitals.FCP ? metrics.performance.webVitals.FCP <= 1800 : undefined}
+              label="FCP (First Contentful Paint)"
               threshold={1800}
+              unit="ms"
+              value={metrics.performance.webVitals.FCP}
             />
           </div>
         </CardContent>
@@ -188,20 +189,20 @@ export default function MetricsDashboard() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <MetricCard
-              label="Average Latency"
-              value={metrics.performance.supabase.avgLatencyMs}
-              unit="ms"
               good={metrics.performance.supabase.avgLatencyMs ? metrics.performance.supabase.avgLatencyMs <= 200 : undefined}
+              label="Average Latency"
+              unit="ms"
+              value={metrics.performance.supabase.avgLatencyMs}
             />
             <MetricCard
               label="Query Time"
-              value={metrics.performance.supabase.queryTime}
               unit="ms"
+              value={metrics.performance.supabase.queryTime}
             />
             <MetricCard
               label="Row Count"
-              value={metrics.performance.supabase.rowCount}
               unit="rows"
+              value={metrics.performance.supabase.rowCount}
             />
           </div>
         </CardContent>
@@ -217,21 +218,21 @@ export default function MetricsDashboard() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <MetricCard
-                label="Bundle Size"
-                value={metrics.performance.expo.bundleMB}
-                unit="MB"
                 good={metrics.performance.expo.bundleMB ? metrics.performance.expo.bundleMB <= 30 : undefined}
+                label="Bundle Size"
                 threshold={30}
+                unit="MB"
+                value={metrics.performance.expo.bundleMB}
               />
               <MetricCard
                 label="Build Duration"
-                value={metrics.performance.expo.duration}
                 unit="min"
+                value={metrics.performance.expo.duration}
               />
               <MetricCard
+                good={metrics.performance.expo.buildSuccess}
                 label="Build Success"
                 value={metrics.performance.expo.buildSuccess ? "Yes" : "No"}
-                good={metrics.performance.expo.buildSuccess}
               />
             </div>
           </CardContent>
@@ -249,20 +250,20 @@ export default function MetricsDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <MetricCard
                 label="Average Build Time"
-                value={metrics.performance.ci.avgBuildMin}
                 unit="min"
+                value={metrics.performance.ci.avgBuildMin}
               />
               <MetricCard
-                label="Success Rate"
-                value={metrics.performance.ci.successRate}
-                unit="%"
                 good={metrics.performance.ci.successRate ? metrics.performance.ci.successRate >= 95 : undefined}
+                label="Success Rate"
+                unit="%"
+                value={metrics.performance.ci.successRate}
               />
               <MetricCard
-                label="Queue Length"
-                value={metrics.performance.ci.queueLength}
-                unit="pending"
                 good={metrics.performance.ci.queueLength ? metrics.performance.ci.queueLength <= 3 : undefined}
+                label="Queue Length"
+                unit="pending"
+                value={metrics.performance.ci.queueLength}
               />
             </div>
           </CardContent>

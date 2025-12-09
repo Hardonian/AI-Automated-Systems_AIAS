@@ -1,14 +1,16 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { readFile, writeFile, mkdir } from "fs/promises";
+import { writeFile, mkdir } from "fs/promises";
 // import { rm } from "fs/promises";
 import { join } from "path";
+
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
+
+import { defaultAIASContent, defaultSettlerContent } from "@/lib/content/defaults";
 import {
   loadAIASContent,
   saveAIASContent,
   loadSettlerContent,
   saveSettlerContent,
 } from "@/lib/content/loader";
-import { defaultAIASContent, defaultSettlerContent } from "@/lib/content/defaults";
 
 // Mock the content directory for testing
 const TEST_CONTENT_DIR = join(process.cwd(), "content-test");

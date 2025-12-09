@@ -1,8 +1,9 @@
-import { Metadata } from "next";
+import { Download, Shield, FileJson } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
-import { Download, Shield, FileJson } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Export Your Data — AIAS Platform | Data Portability",
@@ -73,7 +74,7 @@ export default function ExportDataPage() {
             <li>Request deletion of your data</li>
           </ul>
           <div className="mt-6">
-            <Link href="/privacy" className="text-sm text-primary hover:underline">
+            <Link className="text-sm text-primary hover:underline" href="/privacy">
               Learn more about our Privacy Policy →
             </Link>
           </div>
@@ -81,7 +82,7 @@ export default function ExportDataPage() {
       </Card>
 
       <div className="mt-8 text-center">
-        <Link href="/account/audit-log" className="text-primary hover:underline">
+        <Link className="text-primary hover:underline" href="/account/audit-log">
           View Audit Log →
         </Link>
       </div>

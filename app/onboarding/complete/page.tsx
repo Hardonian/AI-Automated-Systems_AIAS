@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
-// import { useRouter } from "next/navigation"; // Will be used for navigation
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Check, Sparkles, Zap, Target } from "lucide-react";
 import Link from "next/link";
-import { track } from "@/lib/telemetry/track";
+import { useEffect , useState } from "react";
+
+// import { useRouter } from "next/navigation"; // Will be used for navigation
 import { ShareInvite } from "@/components/plg/share-invite";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { track } from "@/lib/telemetry/track";
+
 
 export default function CompletePage() {
   // const router = useRouter(); // Will be used for navigation
@@ -104,13 +105,13 @@ export default function CompletePage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <Link href="/help" className="block text-sm text-primary hover:underline">
+              <Link className="block text-sm text-primary hover:underline" href="/help">
                 Help Center
               </Link>
-              <Link href="/case-studies" className="block text-sm text-primary hover:underline">
+              <Link className="block text-sm text-primary hover:underline" href="/case-studies">
                 Case Studies
               </Link>
-              <Link href="/blog" className="block text-sm text-primary hover:underline">
+              <Link className="block text-sm text-primary hover:underline" href="/blog">
                 Blog & Tutorials
               </Link>
             </div>
@@ -119,17 +120,17 @@ export default function CompletePage() {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-2xl mx-auto">
-        <Button size="lg" asChild>
+        <Button asChild size="lg">
           <Link href="/dashboard">Go to Dashboard</Link>
         </Button>
-        <Button size="lg" variant="outline" asChild>
+        <Button asChild size="lg" variant="outline">
           <Link href="/templates">Browse More Templates</Link>
         </Button>
       </div>
 
       {/* Viral Invite Flow */}
       <div className="max-w-2xl mx-auto mt-8">
-        <ShareInvite userId={userId} referralCode={referralCode} />
+        <ShareInvite referralCode={referralCode} userId={userId} />
       </div>
     </div>
   );

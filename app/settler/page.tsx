@@ -1,12 +1,13 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Building2, Zap, Shield, Globe, CheckCircle2, ArrowRight, Code, Database, Lock, TrendingUp } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { ContentDrivenHero } from "@/components/content/ContentDrivenHero";
+import { DashboardPreviewWrapper } from "@/components/dashboard/dashboard-preview-wrapper";
 import { ServiceSchema } from "@/components/seo/structured-data";
 import { Badge } from "@/components/ui/badge";
-import { DashboardPreviewWrapper } from "@/components/dashboard/dashboard-preview-wrapper";
-import { ContentDrivenHero } from "@/components/content/ContentDrivenHero";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { loadSettlerContent } from "@/lib/content/loader";
 
 export const metadata: Metadata = {
@@ -54,7 +55,7 @@ export default async function SettlerPage() {
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-sm font-semibold mb-4">
                   <Building2 className="h-4 w-4" />
                   <span>Enterprise Payment Platform</span>
-                  <Badge variant="outline" className="ml-2 border-blue-300 dark:border-blue-700">
+                  <Badge className="ml-2 border-blue-300 dark:border-blue-700" variant="outline">
                     AIAS Partner Product
                   </Badge>
                 </div>
@@ -69,13 +70,13 @@ export default async function SettlerPage() {
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-                  <Button size="lg" className="text-lg px-8" asChild>
+                  <Button asChild className="text-lg px-8" size="lg">
                     <Link href="/demo">
                       Schedule Demo
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
-                  <Button size="lg" variant="outline" className="text-lg px-8" asChild>
+                  <Button asChild className="text-lg px-8" size="lg" variant="outline">
                     <Link href="#features">Explore Features</Link>
                   </Button>
                 </div>
@@ -111,16 +112,16 @@ export default async function SettlerPage() {
               </p>
             </div>
             <DashboardPreviewWrapper
-              title="Settler Analytics Dashboard"
               description="Transaction monitoring, settlement tracking, and performance metrics"
-              variant="settler"
               scrollTargetId="demo-cta"
+              title="Settler Analytics Dashboard"
+              variant="settler"
             />
           </div>
         </section>
 
         {/* Features Section */}
-        <section id="features" className="py-20 bg-background">
+        <section className="py-20 bg-background" id="features">
           <div className="container">
             <div className="text-center mb-16 max-w-3xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -228,7 +229,7 @@ export default async function SettlerPage() {
                       <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         {content.partnership.ctas.map((cta, i) => (
                           cta.visible && (
-                            <Button key={i} size="lg" variant={cta.variant as any} asChild>
+                            <Button key={i} asChild size="lg" variant={cta.variant as any}>
                               <Link href={cta.href}>
                                 {cta.label}
                                 {i === 0 && <ArrowRight className="ml-2 h-5 w-5" />}
@@ -247,7 +248,7 @@ export default async function SettlerPage() {
 
         {/* CTA Section */}
         {content?.cta && (
-          <section id="demo-cta" className="py-20 bg-gradient-to-br from-blue-600 to-purple-600 text-white">
+          <section className="py-20 bg-gradient-to-br from-blue-600 to-purple-600 text-white" id="demo-cta">
             <div className="container">
               <div className="max-w-3xl mx-auto text-center space-y-8">
                 <h2 className="text-4xl md:text-5xl font-bold">
@@ -262,7 +263,7 @@ export default async function SettlerPage() {
                   <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                     {content.cta.ctas.map((cta, i) => (
                       cta.visible && (
-                        <Button key={i} size="lg" variant={cta.variant as any} className="text-lg px-8" asChild>
+                        <Button key={i} asChild className="text-lg px-8" size="lg" variant={cta.variant as any}>
                           <Link href={cta.href}>
                             {cta.label}
                             {i === 0 && <ArrowRight className="ml-2 h-5 w-5" />}

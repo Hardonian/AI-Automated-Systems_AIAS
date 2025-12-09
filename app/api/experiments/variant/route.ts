@@ -4,12 +4,13 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
+
 import { getExperimentVariant } from "@/lib/experiments/feature-flags";
+import { logger } from "@/lib/logging/structured-logger";
 
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
+    const {searchParams} = request.nextUrl;
     const experimentId = searchParams.get("experimentId");
     const userId = searchParams.get("userId") || undefined;
     

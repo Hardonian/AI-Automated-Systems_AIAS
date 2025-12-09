@@ -3,10 +3,9 @@
  * Scans API routes and generates documentation
  */
 
-import { readdir, readFile } from "fs/promises";
+import { readdir, readFile , writeFile } from "fs/promises";
 // import { stat } from "fs/promises";
 import { join } from "path";
-import { writeFile } from "fs/promises";
 
 interface Endpoint {
   method: string;

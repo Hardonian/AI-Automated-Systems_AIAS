@@ -27,7 +27,7 @@ ${scopes.map(scope => `- **${scope}**: ${report.summary.by_scope[scope] ?? 0} ev
 The following types of data were accessed:
 ${dataClasses.map(cls => `- **${cls}**: ${report.summary.by_data_class[cls] ?? 0} times`).join('\n')}
 
-All events were classified as ${Object.keys(report.summary.by_risk_level).filter(l => (report.summary.by_risk_level[l] ?? 0) > 0).join(' or ')} risk, and Guardian ${report.violations_prevented > 0 ? 'prevented ' + report.violations_prevented + ' violations' : 'allowed all necessary operations'}.
+All events were classified as ${Object.keys(report.summary.by_risk_level).filter(l => (report.summary.by_risk_level[l] ?? 0) > 0).join(' or ')} risk, and Guardian ${report.violations_prevented > 0 ? `prevented ${  report.violations_prevented  } violations` : 'allowed all necessary operations'}.
 
 No data left your device without your explicit consent.`;
 
@@ -192,7 +192,7 @@ ${this.getUserFriendlyExplanation(event)}`;
       return `Your device activity was summarized locally to help improve the app experience. No content, credentials, or conversations were stored or shared.`;
     }
     if (event.type === 'api_call') {
-      return `The app made a request to ${event.scope === 'external' ? 'an external service' : 'the server'}. ${event.action_taken === 'allow' ? 'This was necessary for the feature to work.' : 'Guardian ' + event.action_taken + ' this to protect your privacy.'}`;
+      return `The app made a request to ${event.scope === 'external' ? 'an external service' : 'the server'}. ${event.action_taken === 'allow' ? 'This was necessary for the feature to work.' : `Guardian ${  event.action_taken  } this to protect your privacy.`}`;
     }
     if (event.type === 'content_processing') {
       return `Your content was processed ${event.action_taken === 'mask' ? 'with sensitive portions masked' : 'locally'} to provide the requested feature. No data left your device.`;

@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+
 import { agentDefinitionSchema } from '@/lib/agents/schema';
 import { createClient } from '@/lib/supabase/server';
 
@@ -22,8 +23,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const tenantId = searchParams.get('tenantId');
 
-    let query = supabase
-      .from('agents')
+    let query = (supabase
+      .from('agents') as any)
       .select('*')
       .eq('enabled', true)
       .eq('deprecated', false);
@@ -60,8 +61,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validated = createAgentSchema.parse(body);
 
-    const { data: agent, error } = await supabase
-      .from('agents')
+    const { data: agent, error } = await (supabase
+      .from('agents') as any)
       .insert({
         ...validated,
         created_by: user.id,

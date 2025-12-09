@@ -4,10 +4,11 @@
  * Validates API endpoints match OpenAPI specification and expected behavior
  */
 
-import { describe, it, expect } from "vitest";
 import { readFileSync } from "fs";
 import { join } from "path";
+
 import yaml from "js-yaml";
+import { describe, it, expect } from "vitest";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3000/api";
 

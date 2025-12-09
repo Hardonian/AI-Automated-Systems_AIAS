@@ -340,7 +340,7 @@ function checkGitignore(): void {
  * Print summary
  */
 function printSummary(): void {
-  console.log("\n" + "=".repeat(60));
+  console.log(`\n${  "=".repeat(60)}`);
   console.log("Security Self-Check Summary");
   console.log("=".repeat(60));
   
@@ -367,7 +367,7 @@ function printSummary(): void {
       .forEach((r) => console.log(`  - ${r.name}: ${r.message}`));
   }
   
-  console.log("\n" + "=".repeat(60));
+  console.log(`\n${  "=".repeat(60)}`);
 }
 
 /**
@@ -378,7 +378,7 @@ function main(): void {
   console.log("=".repeat(60));
   console.log(`Working directory: ${process.cwd()}`);
   console.log(`Node version: ${process.version}`);
-  console.log("=".repeat(60) + "\n");
+  console.log(`${"=".repeat(60)  }\n`);
   
   // Run checks
   checkEnv();

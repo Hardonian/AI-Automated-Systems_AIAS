@@ -1,6 +1,8 @@
-import { createClient } from "@supabase/supabase-js";
 import * as fs from "fs";
 import * as path from "path";
+
+import { createClient } from "@supabase/supabase-js";
+
 import { env, validateEnv } from "../lib/env";
 
 // Validate environment variables dynamically

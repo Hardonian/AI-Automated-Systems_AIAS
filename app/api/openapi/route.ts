@@ -4,6 +4,7 @@
  */
 
 import { NextResponse } from 'next/server';
+
 import { createGETHandler } from '@/lib/api/route-handler';
 
 // import _openApiSpecRaw from "@/../docs/openapi-complete.yaml?raw"; // File not found, using inline spec

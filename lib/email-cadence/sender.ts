@@ -89,18 +89,19 @@ export async function processTrialEmailsForUser(userId: string): Promise<void> {
 
     // Get user email from profile
     const supabase = await createServerSupabaseClient();
-    const { data: profile } = await supabase
-      .from("profiles")
+    const { data: profile } = await (supabase
+      .from("profiles") as any)
       .select("email, full_name")
       .eq("id", userId)
       .single();
 
-    if (!profile?.email) {
+    const profileData = profile as { email?: string; full_name?: string } | null;
+    if (!profileData?.email) {
       logger.warn("User email not found", { userId });
       return;
     }
 
-    const userName = profile.full_name || "there";
+    const userName = profileData.full_name || "there";
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://aiautomatedsystems.ca";
 
     // Determine which email to send
@@ -137,13 +138,13 @@ export async function processTrialEmailsForUser(userId: string): Promise<void> {
       if (template) {
         const result = await sendTrialEmail(
           userId,
-          profile.email,
+          profileData.email!,
           userName,
           daysSinceStart
         );
 
         if (result.success) {
-          await supabase.from("trial_emails_sent").insert({
+          await (supabase.from("trial_emails_sent") as any).insert({
             user_id: userId,
             day: daysSinceStart,
             sent_at: new Date().toISOString(),
@@ -230,7 +231,7 @@ export async function processTrialEmailsForUser(userId: string): Promise<void> {
       `;
 
       const result = await emailService.send({
-        to: profile.email,
+        to: profileData.email!,
         subject: emailTemplate.subject,
         html,
         text: emailTemplate.content.body.join("\n\n"),
@@ -243,13 +244,13 @@ export async function processTrialEmailsForUser(userId: string): Promise<void> {
       });
 
       if (result.success) {
-        await supabase.from("trial_emails_sent").insert({
+        await (supabase.from("trial_emails_sent") as any).insert({
           user_id: userId,
           day: emailDay,
           sent_at: new Date().toISOString(),
           template_id: `trial-day-${emailDay}`,
         });
-        logger.info("Trial email sent", { userId, day: emailDay, email: profile.email });
+        logger.info("Trial email sent", { userId, day: emailDay, email: profileData.email });
       }
     }
   } catch (error) {
@@ -268,8 +269,8 @@ export async function processAllTrialEmails(): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
   // Get all users on trial
-  const { data: trialUsers } = await supabase
-    .from("profiles")
+  const { data: trialUsers } = await (supabase
+    .from("profiles") as any)
     .select("id")
     .eq("subscription_tier", "trial")
     .not("trial_started_at", "is", null);
@@ -279,7 +280,7 @@ export async function processAllTrialEmails(): Promise<void> {
   }
 
   // Process each user
-  for (const user of trialUsers) {
+  for (const user of trialUsers as { id: string }[]) {
     await processTrialEmailsForUser(user.id);
     // Small delay to avoid rate limits
     await new Promise((resolve) => setTimeout(resolve, 100));

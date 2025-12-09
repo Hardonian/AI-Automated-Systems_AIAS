@@ -1,8 +1,9 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Check, ArrowRight, Zap, Target, TrendingUp, Clock, BookOpen } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Business Automation: Complete Guide | AIAS Platform",
@@ -176,7 +177,7 @@ export default function AutomationGuidePage() {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild>
+              <Button asChild size="lg" variant="outline">
                 <Link href="/templates">Browse Templates</Link>
               </Button>
             </div>

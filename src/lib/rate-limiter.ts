@@ -82,7 +82,7 @@ export class RateLimiter {
     const now = Date.now();
     const windowStart = now - this.config.windowMs;
     
-    let _data = await this.getRedisValue(key);
+    const _data = await this.getRedisValue(key);
     
     if (!data || data.resetTime < now) {
       // Create new window
@@ -194,7 +194,7 @@ export class RateLimiter {
    */
   async getStatus(key: string): Promise<RateLimitInfo | null> {
     const data = await this.getRedisValue(key);
-    if (!data) return null;
+    if (!data) {return null;}
     
     return this.createRateLimitInfo(data);
   }
@@ -214,7 +214,7 @@ export class RateLimiter {
    * Clean up expired entries (for in-memory cache)
    */
   cleanup(): void {
-    if (this.redis) return; // Redis handles TTL automatically
+    if (this.redis) {return;} // Redis handles TTL automatically
 
     const now = Date.now();
     for (const [key, data] of this.cache.entries()) {

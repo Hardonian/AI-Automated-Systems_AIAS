@@ -5,12 +5,13 @@
  */
 
 import { exec } from 'child_process';
-import { promisify } from 'util';
 import * as fs from 'fs';
 import * as path from 'path';
+import { promisify } from 'util';
+
+import { notify } from './agents/notify.js';
 import { info, error, writeLogsToMarkdown } from './lib/logger.js';
 // import { getLogs } from './lib/logger.js';
-import { notify } from './agents/notify.js';
 
 const execAsync = promisify(exec);
 
@@ -216,7 +217,7 @@ async function generateSummary(): Promise<void> {
 
 ${results
   .map((r) => {
-    const status: 'pass' | 'fail' | 'skip' = r.status;
+    const {status} = r;
     const icon = status === 'pass' ? '✅' : status === 'fail' ? '❌' : '⏭️';
     return `### ${icon} ${r.phase}
 

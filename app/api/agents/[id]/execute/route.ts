@@ -4,10 +4,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+
 import { agentExecutor } from '@/lib/agents/executor';
 import { agentExecutionContextSchema } from '@/lib/agents/schema';
-import { createClient } from '@/lib/supabase/server';
 import { observabilityService } from '@/lib/observability/telemetry';
+import { createClient } from '@/lib/supabase/server';
 
 export async function POST(
   request: NextRequest,

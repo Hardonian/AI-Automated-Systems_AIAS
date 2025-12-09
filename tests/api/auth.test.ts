@@ -2,10 +2,11 @@
  * Authentication API Tests
  */
 
+import { NextRequest } from "next/server";
 import { describe, it, expect, beforeEach, vi } from "vitest";
+
 import { POST as loginPOST } from "@/app/api/auth/login/route";
 import { POST as signupPOST } from "@/app/api/auth/signup/route";
-import { NextRequest } from "next/server";
 
 // Mock Supabase client
 const mockSupabaseClient = {

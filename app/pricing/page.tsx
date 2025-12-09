@@ -1,11 +1,12 @@
-import { Metadata } from "next";
+import { Check } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { FeatureComparison } from "@/components/pricing/feature-comparison";
+import { PricingAnalytics } from "@/components/pricing/PricingAnalytics";
+import { ROICalculator } from "@/components/pricing/roi-calculator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
-import { Check } from "lucide-react";
-import { PricingAnalytics } from "@/components/pricing/PricingAnalytics";
-import { FeatureComparison } from "@/components/pricing/feature-comparison";
-import { ROICalculator } from "@/components/pricing/roi-calculator";
 
 export const metadata: Metadata = {
   title: "Pricing — AIAS Platform | Starting at $49/month | Multi-Currency Support",
@@ -100,7 +101,7 @@ export default function PricingPage() {
         <div className="mt-6 mb-8 p-4 md:p-5 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg max-w-3xl mx-auto">
           <p className="text-sm md:text-base text-amber-900 dark:text-amber-100 leading-relaxed">
             <strong>Note:</strong> Starter and Pro plans are in Beta. Some features are in active development. 
-            See our <Link href="/help" className="underline">help center</Link> for current availability.
+            See our <Link className="underline" href="/help">help center</Link> for current availability.
           </p>
         </div>
         <div className="mt-4 inline-flex flex-wrap items-center justify-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-full bg-primary/10 text-primary text-sm md:text-base font-semibold border border-primary/20">
@@ -112,15 +113,15 @@ export default function PricingPage() {
         </div>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm md:text-base text-muted-foreground">
           <span className="flex items-center gap-2">
-            <Check className="h-4 w-4 text-green-500" aria-hidden="true" />
+            <Check aria-hidden="true" className="h-4 w-4 text-green-500" />
             No credit card required
           </span>
           <span className="flex items-center gap-2">
-            <Check className="h-4 w-4 text-green-500" aria-hidden="true" />
+            <Check aria-hidden="true" className="h-4 w-4 text-green-500" />
             30-day free trial
           </span>
           <span className="flex items-center gap-2">
-            <Check className="h-4 w-4 text-green-500" aria-hidden="true" />
+            <Check aria-hidden="true" className="h-4 w-4 text-green-500" />
             Cancel anytime
           </span>
         </div>
@@ -182,12 +183,12 @@ export default function PricingPage() {
                 ))}
               </ul>
               <Button
-                className="w-full h-12 md:h-14 text-base md:text-lg font-bold shadow-lg hover:shadow-xl transition-all hover:scale-105"
-                variant={plan.popular ? "default" : "outline"}
-                size="lg"
                 asChild
+                className="w-full h-12 md:h-14 text-base md:text-lg font-bold shadow-lg hover:shadow-xl transition-all hover:scale-105"
+                size="lg"
+                variant={plan.popular ? "default" : "outline"}
               >
-                <Link href="/signup" aria-label={`${plan.cta} - ${plan.name} plan`}>
+                <Link aria-label={`${plan.cta} - ${plan.name} plan`} href="/signup">
                   {plan.cta}
                 </Link>
               </Button>
@@ -260,7 +261,7 @@ export default function PricingPage() {
           <CardContent>
             <p className="text-muted-foreground leading-relaxed">
               Shopify and Wave Accounting are available now. More integrations (RBC, TD, Interac, etc.) 
-              coming soon. See our <Link href="/integrations" className="text-primary hover:underline">integrations page</Link> for the full list.
+              coming soon. See our <Link className="text-primary hover:underline" href="/integrations">integrations page</Link> for the full list.
             </p>
           </CardContent>
         </Card>
@@ -296,7 +297,7 @@ export default function PricingPage() {
             <p className="text-muted-foreground leading-relaxed">
               Yes! We offer optional setup calls ($99 one-time) to help you get started quickly. Our team will help 
               you connect integrations, set up workflows, and answer questions. 
-              <Link href="/demo" className="text-primary hover:underline ml-1">Book a setup call</Link>.
+              <Link className="text-primary hover:underline ml-1" href="/demo">Book a setup call</Link>.
             </p>
           </CardContent>
         </Card>
@@ -322,7 +323,7 @@ export default function PricingPage() {
         <p className="text-muted-foreground mb-4">
           Need a custom plan for your team?
         </p>
-        <Button variant="outline" asChild>
+        <Button asChild variant="outline">
           <Link href="/demo">Contact Sales</Link>
         </Button>
       </div>

@@ -1,13 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { TrendingUp, TrendingDown } from 'lucide-react';
+import { useEffect, useState } from "react";
 import { ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line } from 'recharts';
-import { UsageProgressBanner } from '@/components/monetization/usage-progress-banner';
+
 import { TrialCountdownBanner } from '@/components/monetization/trial-countdown-banner';
+import { UsageProgressBanner } from '@/components/monetization/usage-progress-banner';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+
+
 interface UsageData {
   plan: string;
   month: string;
@@ -114,9 +117,9 @@ export default function AnalyticsPage() {
       {/* Upgrade Nudges */}
       {usage && (
         <UsageProgressBanner
-          used={usage.used}
           limit={usage.limit}
           plan={usage.plan}
+          used={usage.used}
         />
       )}
       {trialInfo && trialInfo.daysRemaining <= 3 && (
@@ -146,7 +149,7 @@ export default function AnalyticsPage() {
                     {usage.remaining.toLocaleString()} remaining
                   </span>
                 </div>
-                <Progress value={usagePercentage} className="h-2" />
+                <Progress className="h-2" value={usagePercentage} />
               </div>
               {usagePercentage > 80 && (
                 <div className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
@@ -154,7 +157,7 @@ export default function AnalyticsPage() {
                     <strong>Warning:</strong> You've used {usagePercentage.toFixed(0)}% of your monthly limit. 
                     {usagePercentage >= 100 ? " Upgrade your plan to continue automating." : " Consider upgrading if you need more."}
                   </p>
-                  <Button size="sm" variant="outline" className="mt-2" asChild>
+                  <Button asChild className="mt-2" size="sm" variant="outline">
                     <a href="/pricing">Upgrade Plan</a>
                   </Button>
                 </div>
@@ -240,14 +243,14 @@ export default function AnalyticsPage() {
             <CardDescription>Workflow executions over time</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer height={300} width="100%">
               <LineChart data={executionHistory}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey="completed" stroke="#22c55e" name="Completed" />
-                <Line type="monotone" dataKey="failed" stroke="#ef4444" name="Failed" />
+                <Line dataKey="completed" name="Completed" stroke="#22c55e" type="monotone" />
+                <Line dataKey="failed" name="Failed" stroke="#ef4444" type="monotone" />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -261,10 +264,10 @@ export default function AnalyticsPage() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-4">
-            <Button variant="outline" asChild>
+            <Button asChild variant="outline">
               <a href="/workflows">View All Workflows</a>
             </Button>
-            <Button variant="outline" asChild>
+            <Button asChild variant="outline">
               <a href="/workflows?create=true">Create New Workflow</a>
             </Button>
             {usage && usagePercentage > 80 && (
@@ -272,7 +275,7 @@ export default function AnalyticsPage() {
                 <a href="/pricing">Upgrade Plan</a>
               </Button>
             )}
-            <Button variant="outline" asChild>
+            <Button asChild variant="outline">
               <a href="/help">View Documentation</a>
             </Button>
           </div>

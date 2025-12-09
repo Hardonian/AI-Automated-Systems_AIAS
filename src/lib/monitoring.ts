@@ -22,7 +22,7 @@ class MonitoringService {
   private isInitialized = false;
 
   init() {
-    if (this.isInitialized) return;
+    if (this.isInitialized) {return;}
     
     // Initialize monitoring service
     console.log("Monitoring service initialized");

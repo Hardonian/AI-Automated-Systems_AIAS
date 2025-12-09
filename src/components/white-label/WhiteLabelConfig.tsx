@@ -1,12 +1,3 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   Palette, 
   Settings, 
@@ -16,16 +7,21 @@ import {
   Eye,
   Save,
   RefreshCw,
-  CheckCircle,
-  AlertTriangle,
   Image,
   Type,
-  Layout,
   Zap,
   Shield,
-  Users,
   BarChart3
 } from 'lucide-react';
+import React, { useState } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
 
 export interface WhiteLabelConfig {
   id: string;
@@ -235,14 +231,14 @@ export const WhiteLabelConfig: React.FC = () => {
           </div>
           <div className="flex items-center gap-2">
             <Button
-              onClick={() => setSelectedConfig(null)}
               variant="outline"
+              onClick={() => setSelectedConfig(null)}
             >
               ← Back to Configurations
             </Button>
             <Button
-              onClick={() => handleDeploy(selectedConfig.id)}
               disabled={isDeploying || selectedConfig.status === 'active'}
+              onClick={() => handleDeploy(selectedConfig.id)}
             >
               {isDeploying ? (
                 <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
@@ -251,7 +247,7 @@ export const WhiteLabelConfig: React.FC = () => {
               )}
               {isDeploying ? 'Deploying...' : 'Deploy Changes'}
             </Button>
-            <Button onClick={handleSave} disabled={isSaving}>
+            <Button disabled={isSaving} onClick={handleSave}>
               {isSaving ? (
                 <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
               ) : (
@@ -262,7 +258,7 @@ export const WhiteLabelConfig: React.FC = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="branding" className="w-full">
+        <Tabs className="w-full" defaultValue="branding">
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="branding">Branding</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
@@ -271,7 +267,7 @@ export const WhiteLabelConfig: React.FC = () => {
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="branding" className="space-y-4">
+          <TabsContent className="space-y-4" value="branding">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -287,7 +283,7 @@ export const WhiteLabelConfig: React.FC = () => {
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                         <Image className="w-8 h-8 mx-auto mb-2 text-gray-400" />
                         <p className="text-sm text-gray-600 mb-2">Upload your logo</p>
-                        <Button variant="outline" size="sm">
+                        <Button size="sm" variant="outline">
                           <Upload className="w-4 h-4 mr-2" />
                           Choose File
                         </Button>
@@ -299,7 +295,7 @@ export const WhiteLabelConfig: React.FC = () => {
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                         <Image className="w-8 h-8 mx-auto mb-2 text-gray-400" />
                         <p className="text-sm text-gray-600 mb-2">Upload favicon (32x32px)</p>
-                        <Button variant="outline" size="sm">
+                        <Button size="sm" variant="outline">
                           <Upload className="w-4 h-4 mr-2" />
                           Choose File
                         </Button>
@@ -312,13 +308,13 @@ export const WhiteLabelConfig: React.FC = () => {
                       <label className="text-sm font-medium mb-2 block">Primary Color</label>
                       <div className="flex items-center gap-2">
                         <Input
+                          className="w-16 h-10"
                           type="color"
                           value={selectedConfig.branding.primaryColor}
-                          className="w-16 h-10"
                         />
                         <Input
-                          value={selectedConfig.branding.primaryColor}
                           className="flex-1"
+                          value={selectedConfig.branding.primaryColor}
                         />
                       </div>
                     </div>
@@ -327,13 +323,13 @@ export const WhiteLabelConfig: React.FC = () => {
                       <label className="text-sm font-medium mb-2 block">Secondary Color</label>
                       <div className="flex items-center gap-2">
                         <Input
+                          className="w-16 h-10"
                           type="color"
                           value={selectedConfig.branding.secondaryColor}
-                          className="w-16 h-10"
                         />
                         <Input
-                          value={selectedConfig.branding.secondaryColor}
                           className="flex-1"
+                          value={selectedConfig.branding.secondaryColor}
                         />
                       </div>
                     </div>
@@ -342,13 +338,13 @@ export const WhiteLabelConfig: React.FC = () => {
                       <label className="text-sm font-medium mb-2 block">Accent Color</label>
                       <div className="flex items-center gap-2">
                         <Input
+                          className="w-16 h-10"
                           type="color"
                           value={selectedConfig.branding.accentColor}
-                          className="w-16 h-10"
                         />
                         <Input
-                          value={selectedConfig.branding.accentColor}
                           className="flex-1"
+                          value={selectedConfig.branding.accentColor}
                         />
                       </div>
                     </div>
@@ -369,16 +365,16 @@ export const WhiteLabelConfig: React.FC = () => {
                 <div>
                   <label className="text-sm font-medium mb-2 block">Custom CSS</label>
                   <Textarea
-                    value={selectedConfig.branding.customCss}
-                    placeholder="Enter custom CSS..."
                     className="min-h-[200px] font-mono text-sm"
+                    placeholder="Enter custom CSS..."
+                    value={selectedConfig.branding.customCss}
                   />
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="content" className="space-y-4">
+          <TabsContent className="space-y-4" value="content">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -401,9 +397,9 @@ export const WhiteLabelConfig: React.FC = () => {
                 <div>
                   <label className="text-sm font-medium mb-2 block">Description</label>
                   <Textarea
-                    value={selectedConfig.content.description}
-                    placeholder="Enter platform description..."
                     className="min-h-[100px]"
+                    placeholder="Enter platform description..."
+                    value={selectedConfig.content.description}
                   />
                 </div>
 
@@ -432,7 +428,7 @@ export const WhiteLabelConfig: React.FC = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="features" className="space-y-4">
+          <TabsContent className="space-y-4" value="features">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -460,7 +456,7 @@ export const WhiteLabelConfig: React.FC = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="deployment" className="space-y-4">
+          <TabsContent className="space-y-4" value="deployment">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -493,8 +489,8 @@ export const WhiteLabelConfig: React.FC = () => {
                   <div>
                     <label className="text-sm font-medium mb-2 block">Last Deployed</label>
                     <Input 
-                      value={formatDate(selectedConfig.deployment.lastDeployed)} 
                       disabled 
+                      value={formatDate(selectedConfig.deployment.lastDeployed)} 
                     />
                   </div>
                 </div>
@@ -520,7 +516,7 @@ export const WhiteLabelConfig: React.FC = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="analytics" className="space-y-4">
+          <TabsContent className="space-y-4" value="analytics">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -537,9 +533,9 @@ export const WhiteLabelConfig: React.FC = () => {
                 <div>
                   <label className="text-sm font-medium mb-2 block">Custom Tracking Code</label>
                   <Textarea
-                    value={selectedConfig.analytics.customTracking || ''}
-                    placeholder="Enter custom tracking JavaScript..."
                     className="min-h-[100px] font-mono text-sm"
+                    placeholder="Enter custom tracking JavaScript..."
+                    value={selectedConfig.analytics.customTracking || ''}
                   />
                 </div>
 
@@ -627,18 +623,18 @@ export const WhiteLabelConfig: React.FC = () => {
                 
                 <div className="flex gap-2">
                   <Button
-                    onClick={() => setSelectedConfig(config)}
                     className="flex-1"
                     size="sm"
+                    onClick={() => setSelectedConfig(config)}
                   >
                     <Eye className="w-4 h-4 mr-2" />
                     Configure
                   </Button>
                   <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleDeploy(config.id)}
                     disabled={isDeploying || config.status === 'active'}
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleDeploy(config.id)}
                   >
                     <Zap className="w-4 h-4" />
                   </Button>

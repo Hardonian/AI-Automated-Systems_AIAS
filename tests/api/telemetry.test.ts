@@ -2,9 +2,10 @@
  * Telemetry API Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { POST } from "@/app/api/telemetry/ingest/route";
 import { NextRequest } from "next/server";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+
+import { POST } from "@/app/api/telemetry/ingest/route";
 
 // Mock fetch
 global.fetch = vi.fn();

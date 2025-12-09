@@ -193,7 +193,7 @@ export class PartnershipService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     await this.analytics.trackEvent('partner_created', {
       partner_id: data.id,
@@ -212,7 +212,7 @@ export class PartnershipService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     await this.analytics.trackEvent('partner_updated', {
       partner_id: partnerId,
@@ -234,7 +234,7 @@ export class PartnershipService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     await this.analytics.trackEvent('lead_created', {
       lead_id: data.id,
@@ -258,7 +258,7 @@ export class PartnershipService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     await this.analytics.trackEvent('lead_status_updated', {
       lead_id: leadId,
@@ -283,7 +283,7 @@ export class PartnershipService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     await this.analytics.trackRevenue('referral_created', commission, 'USD', {
       partner_id: partnerId,
@@ -301,7 +301,7 @@ export class PartnershipService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     await this.analytics.trackEvent('referral_qualified', {
       referral_id: referralId,
@@ -323,7 +323,7 @@ export class PartnershipService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     await this.analytics.trackRevenue('referral_paid', data.commission, 'USD', {
       referral_id: referralId,
@@ -400,7 +400,7 @@ export class PartnershipService {
       .update({ white_label_config: config })
       .eq('id', partnerId);
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     await this.analytics.trackEvent('white_label_configured', {
       partner_id: partnerId,
@@ -445,7 +445,7 @@ export class PartnershipService {
   }
 
   private generateTrackingCode(): string {
-    return 'aias_' + Math.random().toString(36).substr(2, 9);
+    return `aias_${  Math.random().toString(36).substr(2, 9)}`;
   }
 
   private async getCompanySize(_companyName: string): Promise<number> {
@@ -510,10 +510,10 @@ export const createReferralLink = (partnerId: string, campaign?: string): string
   } else {
     // Try Vite environment variables using eval to avoid TypeScript parsing issues
     try {
-      // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-eval
+      // eslint-disable-next-line no-eval
       const hasImportMeta = typeof eval !== 'undefined' && typeof eval('typeof import') !== 'undefined';
       if (hasImportMeta) {
-        // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-eval
+        // eslint-disable-next-line no-eval
         const importMeta = eval('import.meta');
         if (importMeta && importMeta.env) {
           baseUrl = importMeta.env.VITE_APP_URL || 

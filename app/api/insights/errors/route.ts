@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { env } from "@/lib/env";
+import { NextRequest, NextResponse } from "next/server";
+
 import { analyzeErrors } from "@/lib/ai-insights/error-analyzer";
 import { handleApiError } from "@/lib/api/route-handler";
+import { env } from "@/lib/env";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get query params
-    const searchParams = request.nextUrl.searchParams;
+    const {searchParams} = request.nextUrl;
     const days = parseInt(searchParams.get("days") || "7", 10);
 
     // Analyze errors

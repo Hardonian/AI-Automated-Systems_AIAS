@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
+
 import ChallengeCard from "@/components/gamification/ChallengeCard";
+import { supabase } from "@/lib/supabase/client";
 
 interface ChallengeRequirements {
   min_level?: number;
@@ -36,7 +37,7 @@ export default function ChallengesPage() {
     }
     
     const { data } = await query;
-    if (data) setChallenges(data);
+    if (data) {setChallenges(data);}
   }
 
   const active = challenges.filter(c => new Date(c.end_date) > new Date());
@@ -51,10 +52,10 @@ export default function ChallengesPage() {
           {(["all", "weekly", "monthly", "seasonal"] as const).map((f) => (
             <button
               key={f}
-              onClick={() => setFilter(f)}
               className={`px-3 py-1 rounded-lg text-sm capitalize ${
                 filter === f ? "bg-primary text-primary-fg" : "bg-muted"
               }`}
+              onClick={() => setFilter(f)}
             >
               {f}
             </button>

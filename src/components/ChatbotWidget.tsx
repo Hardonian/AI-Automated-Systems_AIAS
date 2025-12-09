@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { MessageCircle, X, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+
 import { AIChat } from './AIChat';
+
+import { Button } from '@/components/ui/button';
 
 const agentSkills = [
   'Answer product questions',
@@ -41,11 +43,11 @@ export const ChatbotWidget = () => {
             )}
             
             <Button
+              className="h-16 w-16 rounded-full bg-gradient-primary shadow-glow hover:shadow-xl transition-all animate-float"
+              size="lg"
               onClick={() => setIsOpen(true)}
               onMouseEnter={() => setShowSkills(true)}
               onMouseLeave={() => setShowSkills(false)}
-              size="lg"
-              className="h-16 w-16 rounded-full bg-gradient-primary shadow-glow hover:shadow-xl transition-all animate-float"
             >
               <MessageCircle className="w-6 h-6" />
             </Button>
@@ -68,10 +70,10 @@ export const ChatbotWidget = () => {
               </div>
             </div>
             <Button
-              onClick={() => setIsOpen(false)}
-              variant="ghost"
-              size="sm"
               className="h-8 w-8 p-0 text-primary-foreground hover:bg-primary-foreground/10"
+              size="sm"
+              variant="ghost"
+              onClick={() => setIsOpen(false)}
             >
               <X className="w-5 h-5" />
             </Button>

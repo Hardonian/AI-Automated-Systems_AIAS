@@ -1,13 +1,15 @@
+import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { createClient } from "@supabase/supabase-js";
+import { z } from "zod";
+
 import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
 import { SystemError, ValidationError, formatError } from "@/lib/errors";
+import { logger } from "@/lib/logging/structured-logger";
+import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
 import { recordError } from "@/lib/utils/error-detection";
 import { retry } from "@/lib/utils/retry";
-import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
-import { z } from "zod";
+
 
 // Load environment variables dynamically - no hardcoded values
 const stripe = new Stripe(env.stripe.secretKey!, {
@@ -115,7 +117,7 @@ interface WebhookResponse {
 export async function PUT(req: NextRequest): Promise<NextResponse<WebhookResponse>> {
   const startTime = Date.now();
   const sig = req.headers.get("stripe-signature");
-  const webhookSecret = env.stripe.webhookSecret;
+  const {webhookSecret} = env.stripe;
 
   if (!sig || !webhookSecret) {
     const error = new SystemError("Missing Stripe webhook configuration");

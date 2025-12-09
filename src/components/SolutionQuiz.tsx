@@ -1,7 +1,9 @@
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 import { ArrowRight, ArrowLeft, CheckCircle, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+
+import { Button } from '@/components/ui/button';
+
 
 const questions = [
   {
@@ -90,11 +92,11 @@ export const SolutionQuiz = () => {
         {!showResults ? (
           <motion.div
             key={currentQuestion}
-            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
             className="space-y-8"
+            exit={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.3 }}
           >
             {/* Progress */}
             <div className="space-y-2">
@@ -104,10 +106,10 @@ export const SolutionQuiz = () => {
               </div>
               <div className="h-2 bg-muted rounded-full overflow-hidden">
                 <motion.div
-                  initial={{ width: 0 }}
                   animate={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
-                  transition={{ duration: 0.5 }}
                   className="h-full bg-gradient-primary"
+                  initial={{ width: 0 }}
+                  transition={{ duration: 0.5 }}
                 />
               </div>
             </div>
@@ -122,10 +124,10 @@ export const SolutionQuiz = () => {
                 {questions[currentQuestion].options.map((option, index) => (
                   <motion.button
                     key={`option-${index}`}
+                    className="p-3 sm:p-4 text-left bg-card border border-border rounded-xl hover:border-primary/50 transition-colors group min-h-[48px]"
                     whileHover={{ scale: 1.02, x: 4 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleAnswer(option.value)}
-                    className="p-3 sm:p-4 text-left bg-card border border-border rounded-xl hover:border-primary/50 transition-colors group min-h-[48px]"
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-base sm:text-lg group-hover:text-primary transition-colors">
@@ -141,9 +143,9 @@ export const SolutionQuiz = () => {
             {/* Navigation */}
             {currentQuestion > 0 && (
               <Button
+                className="gap-2"
                 variant="ghost"
                 onClick={() => setCurrentQuestion(currentQuestion - 1)}
-                className="gap-2"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back
@@ -152,17 +154,17 @@ export const SolutionQuiz = () => {
           </motion.div>
         ) : (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
             className="space-y-6"
+            initial={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.5 }}
           >
             {/* Success indicator */}
             <motion.div
-              initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
               className="flex justify-center"
+              initial={{ scale: 0 }}
+              transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
             >
               <div className="p-4 bg-primary/10 rounded-full">
                 <CheckCircle className="w-12 h-12 text-primary" />
@@ -190,10 +192,10 @@ export const SolutionQuiz = () => {
               {recommendation.features.map((feature, index) => (
                 <motion.div
                   key={`feature-${index}`}
-                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 + index * 0.1 }}
                   className="flex items-center gap-3 p-4 bg-card/50 rounded-lg border border-border"
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ delay: 0.3 + index * 0.1 }}
                 >
                   <div className="w-2 h-2 bg-primary rounded-full" />
                   <span>{feature}</span>
@@ -203,10 +205,10 @@ export const SolutionQuiz = () => {
 
             {/* ROI highlight */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
               className="p-6 bg-gradient-card rounded-xl border border-primary/20 text-center"
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ delay: 0.7 }}
             >
               <div className="text-sm text-muted-foreground mb-2">Expected Impact</div>
               <div className="text-2xl font-bold bg-gradient-accent bg-clip-text text-transparent">
@@ -216,7 +218,7 @@ export const SolutionQuiz = () => {
 
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button size="lg" className="bg-gradient-primary shadow-glow">
+              <Button className="bg-gradient-primary shadow-glow" size="lg">
                 Schedule Consultation
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>

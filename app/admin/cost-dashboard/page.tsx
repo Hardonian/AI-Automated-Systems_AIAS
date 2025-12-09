@@ -7,13 +7,6 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
-import { AdminLayout } from "@/components/admin/admin-layout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import {
   TrendingUp,
   TrendingDown,
@@ -25,9 +18,17 @@ import {
   Calendar,
   Settings,
 } from "lucide-react";
-import { CostMetrics } from "@/lib/cost-tracking/service-costs";
+import { useEffect, useState } from "react";
+
+import { AdminLayout } from "@/components/admin/admin-layout";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CostAlert } from "@/lib/cost-tracking/cost-monitor";
 import { OptimizationRecommendation } from "@/lib/cost-tracking/cost-optimizer";
+import { CostMetrics } from "@/lib/cost-tracking/service-costs";
 
 export default function CostDashboard() {
   const [metrics, setMetrics] = useState<CostMetrics | null>(null);
@@ -47,7 +48,7 @@ export default function CostDashboard() {
     try {
       setLoading(true);
       const response = await fetch("/api/cost/metrics");
-      if (!response.ok) throw new Error("Failed to fetch cost data");
+      if (!response.ok) {throw new Error("Failed to fetch cost data");}
 
       const data = await response.json();
       setMetrics(data.metrics);
@@ -117,7 +118,7 @@ export default function CostDashboard() {
             Monitor and optimize infrastructure costs across all services
           </p>
         </div>
-        <Button onClick={fetchCostData} variant="outline">
+        <Button variant="outline" onClick={fetchCostData}>
           <Calendar className="h-4 w-4 mr-2" />
           Refresh
         </Button>
@@ -213,7 +214,7 @@ export default function CostDashboard() {
       )}
 
       {/* Main Content Tabs */}
-      <Tabs defaultValue="overview" className="space-y-4">
+      <Tabs className="space-y-4" defaultValue="overview">
         <TabsList>
           <TabsTrigger value="overview">
             <BarChart3 className="h-4 w-4 mr-2" />
@@ -233,7 +234,7 @@ export default function CostDashboard() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-4">
+        <TabsContent className="space-y-4" value="overview">
           <Card>
             <CardHeader>
               <CardTitle>Cost Trends</CardTitle>
@@ -287,7 +288,7 @@ export default function CostDashboard() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="services" className="space-y-4">
+        <TabsContent className="space-y-4" value="services">
           {metrics.byService.map((service) => (
             <Card key={service.service}>
               <CardHeader>
@@ -330,7 +331,7 @@ export default function CostDashboard() {
           ))}
         </TabsContent>
 
-        <TabsContent value="recommendations" className="space-y-4">
+        <TabsContent className="space-y-4" value="recommendations">
           {recommendations.length === 0 ? (
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">

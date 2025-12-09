@@ -2,10 +2,10 @@
  * Rotate Secrets Command - Rotate secrets and update environments
  */
 
+import { randomBytes } from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 // import { execSync } from 'child_process';
-import { randomBytes } from 'crypto';
 
 export async function rotateSecrets(options: {
   key?: string;

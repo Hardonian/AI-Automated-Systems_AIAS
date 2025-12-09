@@ -6,6 +6,7 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
+
 import { env, validateEnv } from "../lib/env";
 
 // Load environment variables dynamically
@@ -33,7 +34,7 @@ async function smokeTest() {
     console.log("1. Testing database connection...");
     const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
     const { error } = await supabaseService.from("app_events").select("count").limit(1);
-    if (error) throw error;
+    if (error) {throw error;}
     console.log("   ✓ Database connection OK");
     passed++;
   } catch (e: any) {
@@ -56,7 +57,7 @@ async function smokeTest() {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     console.log(`   ✓ Inserted test row (id: ${data.id})`);
     passed++;
 

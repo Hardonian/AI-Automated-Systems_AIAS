@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { NextResponse } from "next/server";
+
 import { env } from "@/lib/env";
-import { SystemError, formatError } from "@/lib/errors";
 import { validateEnvOnStartup } from "@/lib/env-validation";
+import { SystemError, formatError } from "@/lib/errors";
 import { logger } from "@/lib/logging/structured-logger";
 import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
 
@@ -177,7 +178,7 @@ export async function GET(): Promise<NextResponse<HealthCheckResult>> {
   // Process results
   if (dbResult.status === 'fulfilled') {
     checks.db = dbResult.value;
-    if (!checks.db.ok) checks.ok = false;
+    if (!checks.db.ok) {checks.ok = false;}
   } else {
     checks.db = {
       ok: false,
@@ -189,7 +190,7 @@ export async function GET(): Promise<NextResponse<HealthCheckResult>> {
 
   if (restResult.status === 'fulfilled') {
     checks.rest = restResult.value;
-    if (!checks.rest.ok) checks.ok = false;
+    if (!checks.rest.ok) {checks.ok = false;}
   } else {
     checks.rest = {
       ok: false,
@@ -201,7 +202,7 @@ export async function GET(): Promise<NextResponse<HealthCheckResult>> {
 
   if (authResult.status === 'fulfilled') {
     checks.auth = authResult.value;
-    if (!checks.auth.ok) checks.ok = false;
+    if (!checks.auth.ok) {checks.ok = false;}
   } else {
     checks.auth = {
       ok: false,
@@ -213,7 +214,7 @@ export async function GET(): Promise<NextResponse<HealthCheckResult>> {
 
   if (rlsResult.status === 'fulfilled') {
     checks.rls = rlsResult.value;
-    if (!checks.rls.ok) checks.ok = false;
+    if (!checks.rls.ok) {checks.ok = false;}
   } else {
     checks.rls = {
       ok: false,

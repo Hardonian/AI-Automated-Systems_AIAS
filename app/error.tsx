@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useEffect } from "react";
+
+import { Button } from "@/components/ui/button";
 import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
 import { logger } from "@/lib/utils/logger";
 
@@ -39,7 +40,7 @@ export default function Error({
           </p>
         )}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button onClick={reset} variant="default">
+          <Button variant="default" onClick={reset}>
             Try again
           </Button>
           <Button asChild variant="outline">

@@ -1,10 +1,3 @@
-import React, { useState } from 'react';
-// import { useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
 import { 
   DollarSign, 
   TrendingUp, 
@@ -22,6 +15,14 @@ import {
   Calendar,
   PieChart
 } from 'lucide-react';
+import React, { useState } from 'react';
+
+// import { useEffect } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export interface BillingMetric {
   id: string;
@@ -147,7 +148,7 @@ const mockBillingPeriods: BillingPeriod[] = [
 
 export const UsageBasedBilling: React.FC = () => {
   const [currentPeriod] = useState<BillingPeriod>(() => {
-    if (mockBillingPeriods[0]) return mockBillingPeriods[0];
+    if (mockBillingPeriods[0]) {return mockBillingPeriods[0];}
     return {
       id: 'current',
       startDate: '2024-01-01',
@@ -187,8 +188,8 @@ export const UsageBasedBilling: React.FC = () => {
   };
 
   const getUsageColor = (percentage: number) => {
-    if (percentage >= 100) return 'text-red-600';
-    if (percentage >= 90) return 'text-yellow-600';
+    if (percentage >= 100) {return 'text-red-600';}
+    if (percentage >= 90) {return 'text-yellow-600';}
     return 'text-green-600';
   };
 
@@ -234,7 +235,7 @@ export const UsageBasedBilling: React.FC = () => {
           <p className="text-gray-600 mt-1">Track usage, monitor costs, and optimize spending</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={handleRefresh} disabled={isRefreshing}>
+          <Button disabled={isRefreshing} variant="outline" onClick={handleRefresh}>
             <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
@@ -323,14 +324,14 @@ export const UsageBasedBilling: React.FC = () => {
         </Card>
       </div>
 
-      <Tabs defaultValue="current" className="w-full">
+      <Tabs className="w-full" defaultValue="current">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="current">Current Usage</TabsTrigger>
           <TabsTrigger value="history">Billing History</TabsTrigger>
           <TabsTrigger value="projections">Projections</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="current" className="space-y-4">
+        <TabsContent className="space-y-4" value="current">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -374,7 +375,7 @@ export const UsageBasedBilling: React.FC = () => {
                             {metric.currentUsage.toLocaleString()}/{metric.monthlyLimit.toLocaleString()}
                           </span>
                         </div>
-                        <Progress value={usagePercentage} className="h-2" />
+                        <Progress className="h-2" value={usagePercentage} />
                         
                         {isOverLimit && (
                           <div className="flex justify-between text-sm text-red-600">
@@ -402,7 +403,7 @@ export const UsageBasedBilling: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="history" className="space-y-4">
+        <TabsContent className="space-y-4" value="history">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -427,8 +428,8 @@ export const UsageBasedBilling: React.FC = () => {
                       <div className="text-right">
                         <div className="text-xl font-bold">{formatCurrency(period.totalCost)}</div>
                         <Badge 
-                          variant={period.status === 'current' ? 'default' : 'outline'}
                           className="mt-1"
+                          variant={period.status === 'current' ? 'default' : 'outline'}
                         >
                           {period.status}
                         </Badge>
@@ -441,7 +442,7 @@ export const UsageBasedBilling: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="projections" className="space-y-4">
+        <TabsContent className="space-y-4" value="projections">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
               <CardHeader>
@@ -502,7 +503,7 @@ export const UsageBasedBilling: React.FC = () => {
                             <div 
                               className="bg-blue-600 h-2 rounded-full" 
                               style={{ width: `${percentage}%` }}
-                            ></div>
+                             />
                           </div>
                           <span className="text-sm font-medium w-16 text-right">
                             {formatCurrency(costs.totalCost)}

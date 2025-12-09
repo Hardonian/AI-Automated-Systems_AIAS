@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { logger } from "@/lib/logging/structured-logger";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface ReliabilityDashboard {
   timestamp: string;
@@ -58,7 +59,7 @@ export default function ReliabilityDashboardPage() {
   async function fetchDashboard() {
     try {
       const response = await fetch("/api/admin/reliability");
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      if (!response.ok) {throw new Error(`HTTP ${response.status}`);}
       const data = await response.json();
       setDashboard(data);
       setError(null);
@@ -129,20 +130,20 @@ export default function ReliabilityDashboardPage() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <MetricCard
-              label="Current Uptime"
-              value={dashboard.uptime.current.toFixed(2)}
-              unit="%"
               good={dashboard.uptime.current >= dashboard.uptime.target}
+              label="Current Uptime"
+              unit="%"
+              value={dashboard.uptime.current.toFixed(2)}
             />
             <MetricCard
               label="Target"
-              value={dashboard.uptime.target.toFixed(1)}
               unit="%"
+              value={dashboard.uptime.target.toFixed(1)}
             />
             <MetricCard
+              good={dashboard.uptime.status === 'healthy'}
               label="Status"
               value={dashboard.uptime.status}
-              good={dashboard.uptime.status === 'healthy'}
             />
             <MetricCard
               label="Trend"
@@ -161,21 +162,21 @@ export default function ReliabilityDashboardPage() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <MetricCard
-              label="P95 Latency"
-              value={dashboard.performance.latency_p95.toFixed(0)}
-              unit="ms"
               good={dashboard.performance.latency_p95 < 2000}
+              label="P95 Latency"
+              unit="ms"
+              value={dashboard.performance.latency_p95.toFixed(0)}
             />
             <MetricCard
-              label="Error Rate"
-              value={dashboard.performance.error_rate.toFixed(2)}
-              unit="%"
               good={dashboard.performance.error_rate < 1}
+              label="Error Rate"
+              unit="%"
+              value={dashboard.performance.error_rate.toFixed(2)}
             />
             <MetricCard
               label="Throughput"
-              value={dashboard.performance.throughput.toFixed(0)}
               unit="req/min"
+              value={dashboard.performance.throughput.toFixed(0)}
             />
           </div>
         </CardContent>
@@ -190,19 +191,19 @@ export default function ReliabilityDashboardPage() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <MetricCard
+              good={dashboard.dependencies.outdated === 0}
               label="Outdated Packages"
               value={dashboard.dependencies.outdated}
-              good={dashboard.dependencies.outdated === 0}
             />
             <MetricCard
+              good={dashboard.dependencies.vulnerabilities === 0}
               label="Vulnerabilities"
               value={dashboard.dependencies.vulnerabilities}
-              good={dashboard.dependencies.vulnerabilities === 0}
             />
             <MetricCard
+              good={dashboard.dependencies.critical_vulnerabilities === 0}
               label="Critical Vulnerabilities"
               value={dashboard.dependencies.critical_vulnerabilities}
-              good={dashboard.dependencies.critical_vulnerabilities === 0}
             />
           </div>
         </CardContent>
@@ -229,9 +230,9 @@ export default function ReliabilityDashboardPage() {
               value={`$${dashboard.cost.budget}`}
             />
             <MetricCard
+              good={dashboard.cost.status === 'within_budget'}
               label="Status"
               value={dashboard.cost.status === 'over_budget' ? '⚠️ Over Budget' : '✅ Within Budget'}
-              good={dashboard.cost.status === 'within_budget'}
             />
           </div>
         </CardContent>
@@ -246,25 +247,25 @@ export default function ReliabilityDashboardPage() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <MetricCard
+              good={dashboard.security.secrets_exposed === 0}
               label="Secrets Exposed"
               value={dashboard.security.secrets_exposed}
-              good={dashboard.security.secrets_exposed === 0}
             />
             <MetricCard
+              good={dashboard.security.rls_enabled}
               label="RLS Enabled"
               value={dashboard.security.rls_enabled ? '✅' : '❌'}
-              good={dashboard.security.rls_enabled}
             />
             <MetricCard
+              good={dashboard.security.tls_enforced}
               label="TLS Enforced"
               value={dashboard.security.tls_enforced ? '✅' : '❌'}
-              good={dashboard.security.tls_enforced}
             />
             <MetricCard
-              label="Compliance Score"
-              value={dashboard.security.compliance_score}
-              unit="/100"
               good={dashboard.security.compliance_score >= 80}
+              label="Compliance Score"
+              unit="/100"
+              value={dashboard.security.compliance_score}
             />
           </div>
         </CardContent>

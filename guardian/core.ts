@@ -6,6 +6,7 @@
 import { createHash } from 'crypto';
 import { existsSync, mkdirSync, appendFileSync, readFileSync } from 'fs';
 import { join } from 'path';
+
 import { PrivacyGuard } from '../ai/privacy_guard';
 
 export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
@@ -175,7 +176,7 @@ export class GuardianService {
    */
   private appendToLedger(entry: TrustLedgerEntry): void {
     const entryString = JSON.stringify(entry);
-    appendFileSync(this.ledgerPath, entryString + '\n', 'utf-8');
+    appendFileSync(this.ledgerPath, `${entryString  }\n`, 'utf-8');
   }
 
   /**
@@ -222,10 +223,10 @@ export class GuardianService {
 
     // Determine risk level
     let level: RiskLevel = 'low';
-    if (score >= policy.thresholds.critical) level = 'critical';
-    else if (score >= policy.thresholds.high) level = 'high';
-    else if (score >= policy.thresholds.medium) level = 'medium';
-    else level = 'low';
+    if (score >= policy.thresholds.critical) {level = 'critical';}
+    else if (score >= policy.thresholds.high) {level = 'high';}
+    else if (score >= policy.thresholds.medium) {level = 'medium';}
+    else {level = 'low';}
 
     return { score, level };
   }
@@ -320,7 +321,7 @@ export class GuardianService {
 
     // Also write full event to JSONL log
     const logPath = join(this.logsPath, `events_${new Date().toISOString().split('T')[0]}.jsonl`);
-    appendFileSync(logPath, JSON.stringify(fullEvent) + '\n', 'utf-8');
+    appendFileSync(logPath, `${JSON.stringify(fullEvent)  }\n`, 'utf-8');
 
     return fullEvent;
   }
@@ -418,7 +419,7 @@ export class GuardianService {
    * Get events from ledger
    */
   getLedgerEvents(limit: number = 100): TrustLedgerEntry[] {
-    if (!existsSync(this.ledgerPath)) return [];
+    if (!existsSync(this.ledgerPath)) {return [];}
     
     const lines = readFileSync(this.ledgerPath, 'utf-8').trim().split('\n');
     const entries = lines
@@ -444,7 +445,7 @@ export class GuardianService {
     
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i]?.trim();
-      if (!line) continue;
+      if (!line) {continue;}
       
       try {
         const entry = JSON.parse(line) as TrustLedgerEntry;

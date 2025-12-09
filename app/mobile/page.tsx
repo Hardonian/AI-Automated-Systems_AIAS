@@ -1,9 +1,10 @@
-import { Metadata } from "next";
-import { MobileOptimizedLayout } from "@/components/mobile/mobile-optimized-layout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Workflow, Zap, Shield, Smartphone } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+import { MobileOptimizedLayout } from "@/components/mobile/mobile-optimized-layout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Mobile App — AI Automated Systems",
@@ -85,10 +86,10 @@ export default function MobilePage() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/dashboard">Go to Dashboard</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/workflows">View Workflows</Link>
           </Button>
         </div>

@@ -1,7 +1,9 @@
-import { useState } from 'react';
 import { Menu, X, Bot } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import { Button } from '@/components/ui/button';
+
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,16 +39,16 @@ export const Navigation = () => {
               link.isRoute ? (
                 <Link
                   key={link.name}
-                  to={link.href}
                   className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                  to={link.href}
                 >
                   {link.name}
                 </Link>
               ) : (
                 <a
                   key={link.name}
-                  href={link.href}
                   className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                  href={link.href}
                 >
                   {link.name}
                 </a>
@@ -57,12 +59,12 @@ export const Navigation = () => {
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-4">
             <Link to="/auth">
-              <Button variant="ghost" size="sm">
+              <Button size="sm" variant="ghost">
                 Sign In
               </Button>
             </Link>
             <Link to="/auth">
-              <Button size="sm" className="bg-gradient-primary shadow-glow">
+              <Button className="bg-gradient-primary shadow-glow" size="sm">
                 Get Started
               </Button>
             </Link>
@@ -70,8 +72,8 @@ export const Navigation = () => {
 
           {/* Mobile Menu Button */}
           <button
-            onClick={() => setIsOpen(!isOpen)}
             className="md:hidden p-2 text-foreground"
+            onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -84,8 +86,8 @@ export const Navigation = () => {
               link.isRoute ? (
                 <Link
                   key={link.name}
-                  to={link.href}
                   className="block text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                  to={link.href}
                   onClick={() => setIsOpen(false)}
                 >
                   {link.name}
@@ -93,8 +95,8 @@ export const Navigation = () => {
               ) : (
                 <a
                   key={link.name}
-                  href={link.href}
                   className="block text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                  href={link.href}
                   onClick={() => setIsOpen(false)}
                 >
                   {link.name}
@@ -103,12 +105,12 @@ export const Navigation = () => {
             ))}
             <div className="flex flex-col gap-2 pt-4">
               <Link to="/auth" onClick={() => setIsOpen(false)}>
-                <Button variant="ghost" size="sm" className="w-full">
+                <Button className="w-full" size="sm" variant="ghost">
                   Sign In
                 </Button>
               </Link>
               <Link to="/auth" onClick={() => setIsOpen(false)}>
-                <Button size="sm" className="bg-gradient-primary shadow-glow w-full">
+                <Button className="bg-gradient-primary shadow-glow w-full" size="sm">
                   Get Started
                 </Button>
               </Link>

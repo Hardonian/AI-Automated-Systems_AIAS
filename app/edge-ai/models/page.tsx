@@ -1,8 +1,9 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Upload, FileText, Settings, Download } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Edge AI Models — Upload & Manage | AIAS",
@@ -70,10 +71,10 @@ export default function EdgeAIModelsPage() {
                   <span className="font-medium">2 days ago</span>
                 </div>
                 <div className="flex gap-2 mt-4">
-                  <Button size="sm" variant="outline" asChild>
+                  <Button asChild size="sm" variant="outline">
                     <Link href="/edge-ai/models/example/optimize">Optimize</Link>
                   </Button>
-                  <Button size="sm" variant="outline" asChild>
+                  <Button asChild size="sm" variant="outline">
                     <Link href="/edge-ai/models/example/benchmark">Benchmark</Link>
                   </Button>
                 </div>
@@ -90,19 +91,19 @@ export default function EdgeAIModelsPage() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2" asChild>
+            <Button asChild className="h-auto py-4 flex flex-col items-center gap-2" variant="outline">
               <Link href="/edge-ai/device-analyzer">
                 <Settings className="h-6 w-6" />
                 <span>Analyze Device</span>
               </Link>
             </Button>
-            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2" asChild>
+            <Button asChild className="h-auto py-4 flex flex-col items-center gap-2" variant="outline">
               <Link href="/edge-ai/benchmarks">
                 <FileText className="h-6 w-6" />
                 <span>View Benchmarks</span>
               </Link>
             </Button>
-            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2" asChild>
+            <Button asChild className="h-auto py-4 flex flex-col items-center gap-2" variant="outline">
               <Link href="/edge-ai/sdk-export">
                 <Download className="h-6 w-6" />
                 <span>Download SDKs</span>

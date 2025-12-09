@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
+
 import { cacheService } from '@/lib/performance/cache';
 
 describe('CacheService', () => {

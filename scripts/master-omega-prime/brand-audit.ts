@@ -121,7 +121,7 @@ function printReport(dryRun: boolean = true) {
   
   // Group by file
   const byFile = issues.reduce((acc, issue) => {
-    if (!acc[issue.file]) acc[issue.file] = [];
+    if (!acc[issue.file]) {acc[issue.file] = [];}
     acc[issue.file].push(issue);
     return acc;
   }, {} as Record<string, BrandIssue[]>);
@@ -136,7 +136,7 @@ function printReport(dryRun: boolean = true) {
     });
   });
   
-  console.log('\n' + '='.repeat(70));
+  console.log(`\n${  '='.repeat(70)}`);
   
   if (dryRun) {
     console.log('\n💡 This was a dry run. Use --fix to automatically replace instances.\n');

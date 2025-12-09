@@ -6,6 +6,7 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
+
 import { env } from "../lib/env";
 
 interface MetricSource {
@@ -47,7 +48,7 @@ async function collectVercelMetrics(): Promise<MetricSource | null> {
     }
 
     const data = await response.json().catch(() => null);
-    if (!data) return null;
+    if (!data) {return null;}
 
     return {
       source: "vercel",
@@ -96,7 +97,7 @@ async function collectSupabaseMetrics(): Promise<MetricSource | null> {
       source: "supabase",
       metric: {
         avgLatencyMs: queryTime,
-        queryTime: queryTime,
+        queryTime,
         rowCount: count || 0,
         edgeLatency: queryTime, // Approximate
       },
@@ -207,8 +208,8 @@ async function collectCIMetrics(): Promise<MetricSource | null> {
     return {
       source: "ci",
       metric: {
-        avgBuildMin: avgBuildMin,
-        successRate: successRate,
+        avgBuildMin,
+        successRate,
         queueLength: pendingRuns,
         totalRuns: runs.length,
       },
@@ -252,10 +253,10 @@ async function main() {
     collectCIMetrics(),
   ]);
 
-  if (vercel) metrics.push(vercel);
-  if (supabase) metrics.push(supabase);
-  if (expo) metrics.push(expo);
-  if (ci) metrics.push(ci);
+  if (vercel) {metrics.push(vercel);}
+  if (supabase) {metrics.push(supabase);}
+  if (expo) {metrics.push(expo);}
+  if (ci) {metrics.push(ci);}
 
   if (metrics.length === 0) {
     console.warn("⚠️  No metrics collected");

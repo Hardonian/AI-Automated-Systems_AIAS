@@ -169,8 +169,8 @@ function printResults(): void {
     console.log("🔴 CRITICAL ISSUES:\n");
     critical.forEach(issue => {
       console.log(`  ${issue.message}`);
-      if (issue.file) console.log(`    File: ${issue.file}`);
-      if (issue.line) console.log(`    Line: ${issue.line}`);
+      if (issue.file) {console.log(`    File: ${issue.file}`);}
+      if (issue.line) {console.log(`    Line: ${issue.line}`);}
       console.log(`    Recommendation: ${issue.recommendation}\n`);
     });
   }
@@ -179,7 +179,7 @@ function printResults(): void {
     console.log("🟠 HIGH PRIORITY ISSUES:\n");
     high.forEach(issue => {
       console.log(`  ${issue.message}`);
-      if (issue.file) console.log(`    File: ${issue.file}`);
+      if (issue.file) {console.log(`    File: ${issue.file}`);}
       console.log(`    Recommendation: ${issue.recommendation}\n`);
     });
   }

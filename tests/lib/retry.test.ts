@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import { retry } from '@/lib/utils/retry';
 
 describe('lib/utils/retry', () => {

@@ -1,11 +1,12 @@
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { RSSFeedItem } from "@/lib/blog/rss-feed";
-import { generateEditorialTake, generateQuickTake } from "@/lib/blog/rss-editorial";
+import { notFound } from "next/navigation";
+
 import { RSSItemComments } from "@/components/blog/rss-item-comments";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { generateEditorialTake, generateQuickTake } from "@/lib/blog/rss-editorial";
+import { RSSFeedItem } from "@/lib/blog/rss-feed";
 
 interface PageProps {
   params: {
@@ -61,7 +62,7 @@ export default function RSSItemPage({ params }: PageProps) {
     <div className="container py-16 max-w-4xl">
       {/* Back to News Feed */}
       <div className="mb-6">
-        <Link href="/rss-news" className="text-sm text-muted-foreground hover:underline">
+        <Link className="text-sm text-muted-foreground hover:underline" href="/rss-news">
           ← Back to AI & Tech News Feed
         </Link>
       </div>
@@ -107,10 +108,10 @@ export default function RSSItemPage({ params }: PageProps) {
               })}
             </time>
             <a 
+              className="text-primary hover:underline" 
               href={item.link} 
-              target="_blank" 
               rel="noopener noreferrer"
-              className="text-primary hover:underline"
+              target="_blank"
             >
               Read Original Article →
             </a>
@@ -208,10 +209,10 @@ export default function RSSItemPage({ params }: PageProps) {
           Join the discussion on each news item.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/rss-news">View All News</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/blog">View Blog Articles</Link>
           </Button>
         </div>

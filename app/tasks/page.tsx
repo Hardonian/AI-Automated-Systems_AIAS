@@ -1,9 +1,11 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calendar, CheckCircle2, Rocket, Target } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Calendar, CheckCircle2, Rocket, Target } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 
 export const metadata: Metadata = {
   title: "Next 30 Days — AIAS Consultancy | Upcoming Builds & Case Studies",
@@ -136,7 +138,7 @@ export default function TasksPage() {
                       {task.type}
                     </CardDescription>
                   </div>
-                  <Badge variant="outline" className="ml-2">
+                  <Badge className="ml-2" variant="outline">
                     {task.status}
                   </Badge>
                 </div>
@@ -172,7 +174,7 @@ export default function TasksPage() {
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {task.technologies.map((tech, idx) => (
-                      <Badge key={idx} variant="secondary" className="text-xs">
+                      <Badge key={idx} className="text-xs" variant="secondary">
                         {tech}
                       </Badge>
                     ))}
@@ -262,10 +264,10 @@ export default function TasksPage() {
           Let's discuss your project.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/demo">Book Consultation</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/case-studies">View All Case Studies</Link>
           </Button>
         </div>

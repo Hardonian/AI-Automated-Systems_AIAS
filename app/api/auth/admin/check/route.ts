@@ -5,9 +5,10 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+
 import { getAdminUser, hasAdminRole, AdminRole } from "@/lib/auth/admin-auth";
-import { addSecurityHeaders } from "@/lib/middleware/security";
 import { logger } from "@/lib/logging/structured-logger";
+import { addSecurityHeaders } from "@/lib/middleware/security";
 export const dynamic = "force-dynamic";
 
 /**

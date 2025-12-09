@@ -9,6 +9,7 @@
  */
 
 import { useState, useEffect } from 'react';
+
 import { getExperimentVariant, ExperimentKey, Variant, UserId } from '@/lib/flags/flags';
 import { trackExperimentViewed } from '@/lib/telemetry/events';
 
@@ -16,10 +17,10 @@ import { trackExperimentViewed } from '@/lib/telemetry/events';
  * Get current user ID from context/session
  */
 function getCurrentUserId(): UserId | undefined {
-  if (typeof window === 'undefined') return undefined;
+  if (typeof window === 'undefined') {return undefined;}
   
   const userId = sessionStorage.getItem('user_id');
-  if (userId) return userId;
+  if (userId) {return userId;}
   
   return sessionStorage.getItem('analytics_session_id') || undefined;
 }

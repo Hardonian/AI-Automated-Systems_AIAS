@@ -1,7 +1,3 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { 
   Zap, 
   Rocket, 
@@ -11,6 +7,11 @@ import {
   Settings,
   Check
 } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Edge AI Services — Consulting & Implementation | AIAS",
@@ -115,10 +116,10 @@ export default function EdgeAIServicesPage() {
           From strategy to production.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/demo">Schedule Consultation</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/edge-ai">Explore Platform</Link>
           </Button>
         </div>
@@ -160,7 +161,7 @@ export default function EdgeAIServicesPage() {
                         {service.price}
                       </p>
                     </div>
-                    <Button size="sm" asChild>
+                    <Button asChild size="sm">
                       <Link href="/demo">Learn More</Link>
                     </Button>
                   </div>
@@ -180,10 +181,10 @@ export default function EdgeAIServicesPage() {
           We'll help you choose the right service and create a custom plan.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/demo">Schedule Free Consultation</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/case-studies">View Case Studies</Link>
           </Button>
         </div>

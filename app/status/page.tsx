@@ -1,8 +1,9 @@
 // [STAKE+TRUST:BEGIN:status_page]
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
 import { logger } from "@/lib/logging/structured-logger";
 interface StatusItem {
   service: string;
@@ -120,14 +121,14 @@ export default function Status() {
           <li>This status page</li>
           <li>Email notifications (for subscribed users)</li>
           <li>
-            <Link href="/docs/trust/STATUS.md" className="text-primary hover:underline">
+            <Link className="text-primary hover:underline" href="/docs/trust/STATUS.md">
               Incident communication policy
             </Link>
           </li>
         </ul>
         <p className="text-sm text-muted-foreground mt-4">
           For incident reporting, contact:{" "}
-          <a href="mailto:support@example.com" className="text-primary hover:underline">
+          <a className="text-primary hover:underline" href="mailto:support@example.com">
             support@example.com
           </a>
         </p>

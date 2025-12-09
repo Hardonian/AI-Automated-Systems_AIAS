@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { logger } from "@/lib/logging/structured-logger";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Lightbulb, TrendingUp, Zap, AlertCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface ImprovementCandidate {
   id: string;
@@ -124,7 +125,7 @@ export default function OptimizationPage() {
                         </div>
                         <div className="text-sm">
                           <span className="font-medium">Risk:</span>{" "}
-                          <Badge variant={candidate.risk === "low" ? "default" : "destructive"} className="ml-1">
+                          <Badge className="ml-1" variant={candidate.risk === "low" ? "default" : "destructive"}>
                             {candidate.risk}
                           </Badge>
                         </div>

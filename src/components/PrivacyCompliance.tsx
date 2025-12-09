@@ -3,14 +3,6 @@
  * Comprehensive cookie management and privacy controls
  */
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { useToast } from '@/hooks/use-toast';
 import { 
   Shield, 
   Cookie, 
@@ -23,6 +15,15 @@ import {
   AlertTriangle,
   // Info
 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
 import { privacyManager, PrivacySettings } from '@/lib/privacy';
 
 interface CookieCategory {
@@ -128,7 +129,7 @@ export const PrivacyCompliance: React.FC = () => {
   }, []);
 
   const _handleConsentChange = (category: keyof PrivacySettings, enabled: boolean) => {
-    if (category === 'necessary') return; // Cannot disable necessary cookies
+    if (category === 'necessary') {return;} // Cannot disable necessary cookies
     
     setPrivacySettings((prev: PrivacySettings) => ({
       ...prev,
@@ -226,10 +227,10 @@ export const PrivacyCompliance: React.FC = () => {
                   analyze site traffic, and personalize content. Your privacy is important to us.
                 </p>
                 <div className="flex flex-wrap gap-3">
-                  <Button onClick={acceptAll} className="bg-blue-600 hover:bg-blue-700">
+                  <Button className="bg-blue-600 hover:bg-blue-700" onClick={acceptAll}>
                     Accept All
                   </Button>
-                  <Button onClick={rejectAll} variant="outline">
+                  <Button variant="outline" onClick={rejectAll}>
                     Reject All
                   </Button>
                   <Dialog>
@@ -244,10 +245,10 @@ export const PrivacyCompliance: React.FC = () => {
                         <DialogTitle>Privacy & Cookie Settings</DialogTitle>
                       </DialogHeader>
                       <PrivacySettingsPanel 
-                        settings={privacySettings}
-                        onSettingsChange={setPrivacySettings}
-                        onSave={saveConsent}
                         cookieCategories={cookieCategories}
+                        settings={privacySettings}
+                        onSave={saveConsent}
+                        onSettingsChange={setPrivacySettings}
                       />
                     </DialogContent>
                   </Dialog>
@@ -262,12 +263,12 @@ export const PrivacyCompliance: React.FC = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-3xl font-bold text-gray-900">Privacy & Compliance</h2>
-          <Badge variant="outline" className="text-sm">
+          <Badge className="text-sm" variant="outline">
             {consentStatus.enabled}/{consentStatus.total} Categories Enabled
           </Badge>
         </div>
 
-        <Tabs defaultValue="overview" className="w-full">
+        <Tabs className="w-full" defaultValue="overview">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="cookies">Cookie Settings</TabsTrigger>
@@ -275,7 +276,7 @@ export const PrivacyCompliance: React.FC = () => {
             <TabsTrigger value="policy">Privacy Policy</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="space-y-6">
+          <TabsContent className="space-y-6" value="overview">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card>
                 <CardHeader className="pb-3">
@@ -321,7 +322,7 @@ export const PrivacyCompliance: React.FC = () => {
                             <AlertTriangle className="h-4 w-4 text-gray-400" />
                           )}
                           {category.required && (
-                            <Badge variant="outline" className="text-xs">Required</Badge>
+                            <Badge className="text-xs" variant="outline">Required</Badge>
                           )}
                         </div>
                       </div>
@@ -340,27 +341,27 @@ export const PrivacyCompliance: React.FC = () => {
                 <CardContent>
                   <div className="space-y-3">
                     <Button 
-                      variant="outline" 
+                      className="w-full justify-start" 
                       size="sm" 
-                      className="w-full justify-start"
+                      variant="outline"
                       onClick={() => handleDataSubjectRequest('access')}
                     >
                       <FileText className="h-4 w-4 mr-2" />
                       Access My Data
                     </Button>
                     <Button 
-                      variant="outline" 
+                      className="w-full justify-start" 
                       size="sm" 
-                      className="w-full justify-start"
+                      variant="outline"
                       onClick={() => handleDataSubjectRequest('portability')}
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Download Data
                     </Button>
                     <Button 
-                      variant="outline" 
+                      className="w-full justify-start text-red-600 hover:text-red-700" 
                       size="sm" 
-                      className="w-full justify-start text-red-600 hover:text-red-700"
+                      variant="outline"
                       onClick={() => handleDataSubjectRequest('erasure')}
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
@@ -372,16 +373,16 @@ export const PrivacyCompliance: React.FC = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="cookies" className="space-y-6">
+          <TabsContent className="space-y-6" value="cookies">
             <PrivacySettingsPanel 
-              settings={privacySettings}
-              onSettingsChange={setPrivacySettings}
-              onSave={saveConsent}
               cookieCategories={cookieCategories}
+              settings={privacySettings}
+              onSave={saveConsent}
+              onSettingsChange={setPrivacySettings}
             />
           </TabsContent>
 
-          <TabsContent value="rights" className="space-y-6">
+          <TabsContent className="space-y-6" value="rights">
             <Card>
               <CardHeader>
                 <CardTitle>Your Data Protection Rights</CardTitle>
@@ -417,7 +418,7 @@ export const PrivacyCompliance: React.FC = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="policy" className="space-y-6">
+          <TabsContent className="space-y-6" value="policy">
             <Card>
               <CardHeader>
                 <CardTitle>Privacy Policy</CardTitle>
@@ -451,7 +452,7 @@ const PrivacySettingsPanel: React.FC<PrivacySettingsPanelProps> = ({
   cookieCategories
 }) => {
   const handleConsentChange = (category: keyof PrivacySettings, enabled: boolean) => {
-    if (category === 'necessary') return;
+    if (category === 'necessary') {return;}
     onSettingsChange({
       ...settings,
       [category]: enabled
@@ -469,7 +470,7 @@ const PrivacySettingsPanel: React.FC<PrivacySettingsPanelProps> = ({
                   <div className="flex items-center gap-2 mb-2">
                     <h4 className="font-semibold text-gray-900">{category.name}</h4>
                     {category.required && (
-                      <Badge variant="outline" className="text-xs">Required</Badge>
+                      <Badge className="text-xs" variant="outline">Required</Badge>
                     )}
                   </div>
                   <p className="text-sm text-gray-600 mb-3">{category.description}</p>
@@ -482,8 +483,8 @@ const PrivacySettingsPanel: React.FC<PrivacySettingsPanelProps> = ({
                 <div className="ml-4">
                   <Switch
                     checked={settings[category.id]}
-                    onCheckedChange={(enabled) => handleConsentChange(category.id, enabled)}
                     disabled={category.required}
+                    onCheckedChange={(enabled) => handleConsentChange(category.id, enabled)}
                   />
                 </div>
               </div>
@@ -496,7 +497,7 @@ const PrivacySettingsPanel: React.FC<PrivacySettingsPanelProps> = ({
         <Button variant="outline" onClick={() => window.history.back()}>
           Cancel
         </Button>
-        <Button onClick={onSave} className="bg-blue-600 hover:bg-blue-700">
+        <Button className="bg-blue-600 hover:bg-blue-700" onClick={onSave}>
           Save Preferences
         </Button>
       </div>

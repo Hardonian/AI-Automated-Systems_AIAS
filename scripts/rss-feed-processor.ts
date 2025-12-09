@@ -7,7 +7,7 @@
  * Curates for daily publication
  */
 
-import { rssFeeds, analyzeRSSItemWithSystemsThinking } from "@/lib/blog/rss-feed";
+import { rssFeeds } from "@/lib/blog/rss-feed";
 
 async function processRSSFeeds() {
   console.log("📡 RSS Feed Processor");

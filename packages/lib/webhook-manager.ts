@@ -1,7 +1,7 @@
 import { prisma } from './database';
+import { logger } from './observability';
 import { PaymentService } from './payments';
 import { paypalService } from './payments-paypal';
-import { logger } from './observability';
 
 export interface WebhookConfig {
   url: string;
@@ -51,32 +51,42 @@ export class WebhookManager {
 
   async processWebhook(webhookId: string, event: unknown): Promise<void> {
     try {
+      // Type guard for event
+      const typedEvent = event as {
+        source?: string;
+        type?: string;
+        event?: string;
+        orgId?: string;
+        headers?: Record<string, string>;
+        body?: unknown;
+      };
+      
       // Store the webhook event
       const webhookEvent = await prisma.webhookEvent.create({
         data: {
-          source: event.source || 'unknown',
-          event: event.type || event.event || 'unknown',
+          source: typedEvent.source || 'unknown',
+          event: typedEvent.type || typedEvent.event || 'unknown',
           payload: event,
-          orgId: event.orgId || 'unknown',
+          orgId: typedEvent.orgId || 'unknown',
         },
       });
 
       // Process based on source
-      switch (event.source || 'unknown') {
+      switch (typedEvent.source || 'unknown') {
         case 'stripe':
-          await this.processStripeWebhook(event);
+          await this.processStripeWebhook(typedEvent as { headers?: Record<string, string>; body?: unknown });
           break;
         case 'paypal':
-          await this.processPayPalWebhook(event);
+          await this.processPayPalWebhook(typedEvent as { headers?: Record<string, string>; body?: unknown });
           break;
         case 'github':
-          await this.processGitHubWebhook(event);
+          await this.processGitHubWebhook(typedEvent as { headers?: Record<string, string>; body?: unknown });
           break;
         case 'slack':
-          await this.processSlackWebhook(event);
+          await this.processSlackWebhook(typedEvent as { body?: unknown });
           break;
         default:
-          await this.processGenericWebhook(event);
+          await this.processGenericWebhook(typedEvent as { source?: string; type?: string; orgId?: string });
       }
 
       // Mark as processed
@@ -96,7 +106,7 @@ export class WebhookManager {
   private async processStripeWebhook(event: { headers?: Record<string, string>; body?: unknown }): Promise<void> {
     try {
       // Verify webhook signature
-      const signature = event.headers['stripe-signature'];
+      const signature = event.headers?.['stripe-signature'];
       const payload = JSON.stringify(event.body);
       
       if (signature) {
@@ -112,13 +122,24 @@ export class WebhookManager {
   private async processPayPalWebhook(event: { headers?: Record<string, string>; body?: unknown }): Promise<void> {
     try {
       // Verify webhook signature
-      const signature = event.headers['paypal-transmission-sig'];
+      const signature = event.headers?.['paypal-transmission-sig'];
       const payload = JSON.stringify(event.body);
       
       if (signature) {
         const isValid = await paypalService.verifyWebhookSignature(payload, signature);
-        if (isValid) {
-          await paypalService.handleWebhookEvent(event.body);
+        if (isValid && event.body) {
+          await paypalService.handleWebhookEvent(event.body as {
+            event_type: string;
+            resource: {
+              id: string;
+              custom_id?: string;
+              supplementary_data?: {
+                related_ids?: {
+                  order_id?: string;
+                };
+              };
+            };
+          });
         }
       }
     } catch (error) {
@@ -130,7 +151,7 @@ export class WebhookManager {
   private async processGitHubWebhook(event: { headers?: Record<string, string>; body?: unknown }): Promise<void> {
     try {
       // Process GitHub webhook events
-      const githubEvent = event.headers['x-github-event'];
+      const githubEvent = event.headers?.['x-github-event'];
       const payload = event.body;
 
       switch (githubEvent) {
@@ -155,13 +176,13 @@ export class WebhookManager {
   private async processSlackWebhook(event: { body?: unknown }): Promise<void> {
     try {
       // Process Slack webhook events
-      const slackEvent = event.body;
+      const slackEvent = event.body as { type?: string; event?: unknown; challenge?: string } | undefined;
       
-      if (slackEvent.type === 'event_callback') {
+      if (slackEvent?.type === 'event_callback' && slackEvent.event) {
         await this.handleSlackEvent(slackEvent.event);
-      } else if (slackEvent.type === 'url_verification') {
+      } else if (slackEvent?.type === 'url_verification') {
         // Handle Slack URL verification
-        return { challenge: slackEvent.challenge } as any;
+        return { challenge: slackEvent.challenge } as unknown as void;
       }
     } catch (error) {
       logger.error({ err: error }, 'Slack webhook processing failed');
@@ -242,7 +263,7 @@ export class WebhookManager {
     await prisma.webhookEvent.create({
       data: {
         source: 'slack',
-        event: event.type,
+        event: e.type || 'unknown',
         payload: event,
         orgId: 'slack-integration',
       },
@@ -254,7 +275,7 @@ export class WebhookManager {
       where: { id: webhookId },
     });
 
-    if (!webhookEvent) return;
+    if (!webhookEvent) {return;}
 
     const retryCount = webhookEvent.retryCount || 0;
     

@@ -124,14 +124,14 @@ class PerformanceBenchmark {
     const failed = this.results.filter(r => !r.success);
     const avgDuration = successful.reduce((sum, r) => sum + r.duration, 0) / successful.length;
 
-    console.log('\n' + '='.repeat(60));
+    console.log(`\n${  '='.repeat(60)}`);
     console.log('PERFORMANCE BENCHMARK RESULTS');
     console.log('='.repeat(60));
     console.log(`Total Benchmarks: ${this.results.length}`);
     console.log(`Successful: ${successful.length}`);
     console.log(`Failed: ${failed.length}`);
     console.log(`Average Duration: ${avgDuration.toFixed(2)}ms`);
-    console.log('='.repeat(60) + '\n');
+    console.log(`${'='.repeat(60)  }\n`);
 
     for (const result of this.results) {
       const status = result.success ? '✅ PASS' : '❌ FAIL';
@@ -141,7 +141,7 @@ class PerformanceBenchmark {
       }
     }
 
-    console.log('\n' + '='.repeat(60));
+    console.log(`\n${  '='.repeat(60)}`);
 
     // Performance thresholds
     const thresholds = {

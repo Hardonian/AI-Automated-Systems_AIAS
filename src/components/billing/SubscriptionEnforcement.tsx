@@ -1,9 +1,3 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   CreditCard, 
   Shield, 
@@ -21,6 +15,13 @@ import {
   TrendingUp,
   BarChart3
 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 
 export interface SubscriptionPlan {
   id: string;
@@ -149,7 +150,7 @@ const subscriptionPlans: SubscriptionPlan[] = [
 export const SubscriptionEnforcement: React.FC = () => {
   const [currentPlan, setCurrentPlan] = useState<SubscriptionPlan>(() => {
     const plan = subscriptionPlans[1] || subscriptionPlans[0];
-    if (!plan) throw new Error('No subscription plans available');
+    if (!plan) {throw new Error('No subscription plans available');}
     return plan;
   }); // Professional
   const [usageMetrics, setUsageMetrics] = useState<UsageMetrics>({
@@ -205,21 +206,21 @@ export const SubscriptionEnforcement: React.FC = () => {
   }, [currentPlan, usageMetrics]);
 
   const getUsagePercentage = (used: number, limit: number) => {
-    if (limit === -1) return 0; // unlimited
+    if (limit === -1) {return 0;} // unlimited
     return Math.min((used / limit) * 100, 100);
   };
 
   const _getUsageColor = (percentage: number) => {
-    if (percentage >= 90) return 'text-red-600';
-    if (percentage >= 75) return 'text-yellow-600';
+    if (percentage >= 90) {return 'text-red-600';}
+    if (percentage >= 75) {return 'text-yellow-600';}
     return 'text-green-600';
   };
 
   const getUsageStatus = (used: number, limit: number) => {
-    if (limit === -1) return { status: 'unlimited', color: 'text-green-600' };
+    if (limit === -1) {return { status: 'unlimited', color: 'text-green-600' };}
     const percentage = (used / limit) * 100;
-    if (percentage >= 100) return { status: 'limit_reached', color: 'text-red-600' };
-    if (percentage >= 90) return { status: 'near_limit', color: 'text-yellow-600' };
+    if (percentage >= 100) {return { status: 'limit_reached', color: 'text-red-600' };}
+    if (percentage >= 90) {return { status: 'near_limit', color: 'text-yellow-600' };}
     return { status: 'normal', color: 'text-green-600' };
   };
 
@@ -246,11 +247,11 @@ export const SubscriptionEnforcement: React.FC = () => {
   };
 
   const _formatBytes = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) {return '0 Bytes';}
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))  } ${  sizes[i]}`;
   };
 
   return (
@@ -318,8 +319,8 @@ export const SubscriptionEnforcement: React.FC = () => {
               </Badge>
             </div>
             <Progress 
-              value={getUsagePercentage(usageMetrics.workflows.used, usageMetrics.workflows.limit)} 
               className="h-2 mb-2" 
+              value={getUsagePercentage(usageMetrics.workflows.used, usageMetrics.workflows.limit)} 
             />
             <div className="text-sm text-gray-600">
               {usageMetrics.workflows.limit === -1 ? 'Unlimited' : `${usageMetrics.workflows.used} of ${usageMetrics.workflows.limit} used`}
@@ -339,8 +340,8 @@ export const SubscriptionEnforcement: React.FC = () => {
               </Badge>
             </div>
             <Progress 
-              value={getUsagePercentage(usageMetrics.executions.used, usageMetrics.executions.limit)} 
               className="h-2 mb-2" 
+              value={getUsagePercentage(usageMetrics.executions.used, usageMetrics.executions.limit)} 
             />
             <div className="text-sm text-gray-600">
               {usageMetrics.executions.used.toLocaleString()} of {usageMetrics.executions.limit.toLocaleString()} this month
@@ -360,8 +361,8 @@ export const SubscriptionEnforcement: React.FC = () => {
               </Badge>
             </div>
             <Progress 
-              value={getUsagePercentage(usageMetrics.storage.used, usageMetrics.storage.limit)} 
               className="h-2 mb-2" 
+              value={getUsagePercentage(usageMetrics.storage.used, usageMetrics.storage.limit)} 
             />
             <div className="text-sm text-gray-600">
               {usageMetrics.storage.used}GB of {usageMetrics.storage.limit}GB used
@@ -381,8 +382,8 @@ export const SubscriptionEnforcement: React.FC = () => {
               </Badge>
             </div>
             <Progress 
-              value={getUsagePercentage(usageMetrics.users.used, usageMetrics.users.limit)} 
               className="h-2 mb-2" 
+              value={getUsagePercentage(usageMetrics.users.used, usageMetrics.users.limit)} 
             />
             <div className="text-sm text-gray-600">
               {usageMetrics.users.limit === -1 ? 'Unlimited' : `${usageMetrics.users.used} of ${usageMetrics.users.limit} used`}
@@ -402,8 +403,8 @@ export const SubscriptionEnforcement: React.FC = () => {
               </Badge>
             </div>
             <Progress 
-              value={getUsagePercentage(usageMetrics.apiCalls.used, usageMetrics.apiCalls.limit)} 
               className="h-2 mb-2" 
+              value={getUsagePercentage(usageMetrics.apiCalls.used, usageMetrics.apiCalls.limit)} 
             />
             <div className="text-sm text-gray-600">
               {usageMetrics.apiCalls.used.toLocaleString()} of {usageMetrics.apiCalls.limit.toLocaleString()} this month
@@ -423,8 +424,8 @@ export const SubscriptionEnforcement: React.FC = () => {
               </Badge>
             </div>
             <Progress 
-              value={getUsagePercentage(usageMetrics.aiAgents.used, usageMetrics.aiAgents.limit)} 
               className="h-2 mb-2" 
+              value={getUsagePercentage(usageMetrics.aiAgents.used, usageMetrics.aiAgents.limit)} 
             />
             <div className="text-sm text-gray-600">
               {usageMetrics.aiAgents.limit === -1 ? 'Unlimited' : `${usageMetrics.aiAgents.used} of ${usageMetrics.aiAgents.limit} used`}
@@ -466,15 +467,15 @@ export const SubscriptionEnforcement: React.FC = () => {
                 <div className="flex items-center gap-2">
                   {!gate.allowed && (
                     <Button 
-                      size="sm" 
+                      disabled={isUpgrading} 
+                      size="sm"
                       onClick={() => handleUpgrade('enterprise')}
-                      disabled={isUpgrading}
                     >
                       {isUpgrading ? 'Upgrading...' : 'Upgrade'}
                     </Button>
                   )}
                   {gate.allowed && (
-                    <Badge variant="outline" className="text-green-600">
+                    <Badge className="text-green-600" variant="outline">
                       Available
                     </Badge>
                   )}
@@ -521,12 +522,12 @@ export const SubscriptionEnforcement: React.FC = () => {
 
                 <Button 
                   className="w-full"
-                  variant={plan.id === currentPlan.id ? "outline" : "default"}
                   disabled={plan.id === currentPlan.id || isUpgrading}
+                  variant={plan.id === currentPlan.id ? "outline" : "default"}
                   onClick={() => handleUpgrade(plan.id)}
                 >
                   {plan.id === currentPlan.id ? 'Current Plan' : 
-                   isUpgrading ? 'Upgrading...' : 'Upgrade to ' + plan.name}
+                   isUpgrading ? 'Upgrading...' : `Upgrade to ${  plan.name}`}
                 </Button>
               </div>
             ))}

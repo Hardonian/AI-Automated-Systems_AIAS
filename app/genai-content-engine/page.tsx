@@ -1,7 +1,8 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "GenAI Content Engine — Automated Website Creation | AIAS Platform",
@@ -268,10 +269,10 @@ export default function GenAIContentEnginePage() {
               let our engine analyze and generate, then deploy your optimized website.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild>
+              <Button asChild size="lg">
                 <Link href="/pricing">Start Free Trial</Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button asChild size="lg" variant="outline">
                 <Link href="/systems-thinking">Learn About Systems Thinking</Link>
               </Button>
             </div>

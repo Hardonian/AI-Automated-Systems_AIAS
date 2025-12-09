@@ -22,12 +22,12 @@ export const AnimatedBackground = () => {
           y: [0, -100, 0],
           scale: [1, 1.2, 1],
         }}
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl"
         transition={{
           duration: 20,
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl"
       />
       
       <motion.div
@@ -36,13 +36,13 @@ export const AnimatedBackground = () => {
           y: [0, 100, 0],
           scale: [1, 1.3, 1],
         }}
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl"
         transition={{
           duration: 25,
           repeat: Infinity,
           ease: "easeInOut",
           delay: 2
         }}
-        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl"
       />
 
       {/* Mouse-following orb */}
@@ -51,12 +51,12 @@ export const AnimatedBackground = () => {
           x: mousePosition.x - 50,
           y: mousePosition.y - 50,
         }}
+        className="absolute w-32 h-32 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full blur-2xl"
         transition={{
           type: "spring",
           stiffness: 50,
           damping: 15
         }}
-        className="absolute w-32 h-32 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full blur-2xl"
       />
 
       {/* Grid Pattern */}
@@ -74,21 +74,21 @@ export const AnimatedBackground = () => {
       {[...Array(20)].map((_, i) => (
         <motion.div
           key={`particle-${i}`}
-          className="absolute w-2 h-2 bg-primary/30 rounded-full"
           animate={{
             x: [0, Math.random() * 200 - 100],
             y: [0, Math.random() * 200 - 100],
             opacity: [0, 1, 0],
+          }}
+          className="absolute w-2 h-2 bg-primary/30 rounded-full"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
           }}
           transition={{
             duration: Math.random() * 10 + 10,
             repeat: Infinity,
             delay: Math.random() * 10,
             ease: "easeInOut"
-          }}
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
           }}
         />
       ))}

@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+
 import { PersonaEngine } from '@/lib/personas/engine';
 
 describe('PersonaEngine', () => {

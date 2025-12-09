@@ -1,4 +1,5 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
@@ -70,7 +71,7 @@ export default function AffiliateDisclosurePage() {
           <div className="bg-muted/50 p-4 rounded-lg">
             <p className="text-sm">
               <strong>Questions?</strong> If you have questions about our affiliate relationships, please contact us 
-              at <a href="mailto:inquiries@aiautomatedsystems.ca" className="text-primary hover:underline">inquiries@aiautomatedsystems.ca</a>.
+              at <a className="text-primary hover:underline" href="mailto:inquiries@aiautomatedsystems.ca">inquiries@aiautomatedsystems.ca</a>.
             </p>
           </div>
         </CardContent>

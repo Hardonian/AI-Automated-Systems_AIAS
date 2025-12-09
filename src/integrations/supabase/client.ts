@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+
 import type { Database } from './types';
 
 /**
@@ -20,14 +21,14 @@ function getEnvVar(key: string, viteKey?: string): string {
   // Try Vite environment variables first (for Vite-based builds)
   // Using eval to avoid TypeScript parsing issues with import.meta
   try {
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-eval
+    // eslint-disable-next-line no-eval
     const hasImportMeta = typeof eval !== 'undefined' && typeof eval('typeof import') !== 'undefined';
     if (hasImportMeta) {
-      // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-eval
+      // eslint-disable-next-line no-eval
       const importMeta = eval('import.meta');
       if (importMeta && importMeta.env) {
         const viteValue = importMeta.env[viteKey || key] || importMeta.env[`VITE_${key}`];
-        if (viteValue) return viteValue;
+        if (viteValue) {return viteValue;}
       }
     }
   } catch {
@@ -37,7 +38,7 @@ function getEnvVar(key: string, viteKey?: string): string {
   // Try Next.js environment variables
   if (typeof process !== 'undefined' && process.env) {
     const nextValue = process.env[key] || process.env[`NEXT_PUBLIC_${key}`];
-    if (nextValue) return nextValue;
+    if (nextValue) {return nextValue;}
   }
   
   // Throw error if not found (no fallback values for security)

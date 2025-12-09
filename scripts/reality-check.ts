@@ -6,6 +6,7 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
+
 import { env, validateEnv } from "../lib/env";
 // Prisma client is generated in apps/web, so we'll use direct DB connection for checks
 
@@ -187,7 +188,7 @@ async function main() {
   }
 
   // Summary
-  console.log("\n" + "=".repeat(50));
+  console.log(`\n${  "=".repeat(50)}`);
   const passed = results.filter((r) => r.ok).length;
   const total = results.length;
   const allPassed = results.every((r) => r.ok);

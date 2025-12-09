@@ -3,11 +3,12 @@
  * Comprehensive security and compliance indicators
  */
 
-import React, { useState, useEffect } from 'react';
 import { Shield, Lock, CheckCircle, Award, Globe, Eye, FileText, Zap } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useEffect } from 'react';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface TrustBadge {
@@ -242,13 +243,13 @@ export const TrustBadges: React.FC = () => {
         {categories.map(category => (
           <Button
             key={category.id}
-            variant={selectedCategory === category.id ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSelectedCategory(category.id)}
             className="flex items-center gap-2"
+            size="sm"
+            variant={selectedCategory === category.id ? "default" : "outline"}
+            onClick={() => setSelectedCategory(category.id)}
           >
             {category.label}
-            <Badge variant="secondary" className="ml-1">
+            <Badge className="ml-1" variant="secondary">
               {category.count}
             </Badge>
           </Button>
@@ -279,7 +280,7 @@ export const TrustBadges: React.FC = () => {
                           <Badge className={getStatusColor(badge.status)}>
                             {badge.status}
                           </Badge>
-                          <Badge variant="outline" className={getLevelColor(badge.level)}>
+                          <Badge className={getLevelColor(badge.level)} variant="outline">
                             {badge.level}
                           </Badge>
                         </div>
@@ -294,7 +295,7 @@ export const TrustBadges: React.FC = () => {
                     </CardContent>
                   </Card>
                 </TooltipTrigger>
-                <TooltipContent side="top" className="max-w-xs">
+                <TooltipContent className="max-w-xs" side="top">
                   <div className="space-y-2">
                     <div className="font-semibold">{badge.title}</div>
                     <div className="text-sm">{badge.description}</div>
@@ -352,13 +353,13 @@ export const TrustBadges: React.FC = () => {
 // Additional icons for missing ones
 const CreditCard = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+    <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
   </svg>
 );
 
 const Heart = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+    <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
   </svg>
 );
 

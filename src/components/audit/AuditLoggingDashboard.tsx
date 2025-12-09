@@ -1,12 +1,3 @@
-import React, { useState, useMemo } from 'react';
-// import { useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   FileText, 
   Search, 
@@ -28,6 +19,14 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+
+// import { useEffect } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export interface AuditLog {
   id: string;
@@ -203,7 +202,7 @@ export const AuditLoggingDashboard: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const filteredAndSortedLogs = useMemo(() => {
-    let filtered = auditLogs.filter(log => {
+    const filtered = auditLogs.filter(log => {
       const logDate = new Date(log.timestamp);
       const startDate = new Date(filters.dateRange.start);
       const endDate = new Date(filters.dateRange.end);
@@ -395,10 +394,10 @@ export const AuditLoggingDashboard: React.FC = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
+                  className="pl-10"
                   placeholder="Search logs..."
                   value={filters.searchQuery || ''}
                   onChange={(e) => setFilters(prev => ({ ...prev, searchQuery: e.target.value }))}
-                  className="pl-10"
                 />
               </div>
             </div>
@@ -459,8 +458,8 @@ export const AuditLoggingDashboard: React.FC = () => {
                 </Select>
               </div>
               <Button
-                variant="outline"
                 size="sm"
+                variant="outline"
                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
               >
                 {sortOrder === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -518,7 +517,7 @@ export const AuditLoggingDashboard: React.FC = () => {
                       </div>
                       <div className="flex flex-wrap gap-1 mt-2">
                         {log.tags.map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs">
+                          <Badge key={tag} className="text-xs" variant="outline">
                             {tag}
                           </Badge>
                         ))}
@@ -527,8 +526,8 @@ export const AuditLoggingDashboard: React.FC = () => {
                   </div>
                   <div className="flex gap-2">
                     <Button
-                      variant="outline"
                       size="sm"
+                      variant="outline"
                       onClick={() => toggleLogExpansion(log.id)}
                     >
                       <Eye className="w-4 h-4 mr-2" />

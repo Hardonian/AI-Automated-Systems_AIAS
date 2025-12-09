@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Award, Code, Users, Building2 } from 'lucide-react';
+
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 
 export const About = () => {
   const founders = [
@@ -49,7 +50,7 @@ export const About = () => {
   ];
 
   return (
-    <section id="about" className="py-24 relative overflow-hidden">
+    <section className="py-24 relative overflow-hidden" id="about">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
@@ -58,11 +59,11 @@ export const About = () => {
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
           className="text-center max-w-4xl mx-auto mb-16 space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold">
             Meet the
@@ -81,9 +82,9 @@ export const About = () => {
             <motion.div
               key={founder.name}
               initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
               transition={{ duration: 0.8, delay: index * 0.2 }}
+              viewport={{ once: true }}
+              whileInView={{ opacity: 1, y: 0 }}
             >
               <Card className="group h-full bg-gradient-card backdrop-blur-sm border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10">
                 <CardContent className="p-8">
@@ -94,7 +95,7 @@ export const About = () => {
                     {/* Name and Role */}
                     <div>
                       <h3 className="text-2xl font-bold mb-2">{founder.name}</h3>
-                      <Badge variant="secondary" className="text-sm px-4 py-1">
+                      <Badge className="text-sm px-4 py-1" variant="secondary">
                         {founder.role}
                       </Badge>
                     </div>
@@ -109,7 +110,7 @@ export const About = () => {
                       <h4 className="font-semibold mb-3 text-center">Key Expertise</h4>
                       <div className="flex flex-wrap gap-2 justify-center">
                         {founder.credentials.map((credential, idx) => (
-                          <Badge key={`${founder.name}-credential-${idx}`} variant="outline" className="text-xs">
+                          <Badge key={`${founder.name}-credential-${idx}`} className="text-xs" variant="outline">
                             {credential}
                           </Badge>
                         ))}
@@ -120,12 +121,12 @@ export const About = () => {
                     <div className="flex gap-3 pt-4">
                       {founder.social.github && (
                         <Button
-                          variant="outline"
-                          size="sm"
                           asChild
                           className="hover:bg-primary hover:text-primary-foreground transition-colors"
+                          size="sm"
+                          variant="outline"
                         >
-                          <a href={founder.social.github} target="_blank" rel="noopener noreferrer">
+                          <a href={founder.social.github} rel="noopener noreferrer" target="_blank">
                             <Github className="w-4 h-4 mr-2" />
                             GitHub
                           </a>
@@ -133,12 +134,12 @@ export const About = () => {
                       )}
                       {founder.social.linkedin && (
                         <Button
-                          variant="outline"
-                          size="sm"
                           asChild
                           className="hover:bg-primary hover:text-primary-foreground transition-colors"
+                          size="sm"
+                          variant="outline"
                         >
-                          <a href={founder.social.linkedin} target="_blank" rel="noopener noreferrer">
+                          <a href={founder.social.linkedin} rel="noopener noreferrer" target="_blank">
                             <Linkedin className="w-4 h-4 mr-2" />
                             LinkedIn
                           </a>
@@ -146,10 +147,10 @@ export const About = () => {
                       )}
                       {founder.social.email && (
                         <Button
-                          variant="outline"
-                          size="sm"
                           asChild
                           className="hover:bg-primary hover:text-primary-foreground transition-colors"
+                          size="sm"
+                          variant="outline"
                         >
                           <a href={`mailto:${founder.social.email}`}>
                             <Mail className="w-4 h-4 mr-2" />
@@ -167,11 +168,11 @@ export const About = () => {
 
         {/* Company Stats */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
           className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <h3 className="text-3xl font-bold mb-12">
             Our Impact in Numbers
@@ -180,12 +181,12 @@ export const About = () => {
             {companyStats.map((stat, index) => (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -5 }}
                 className="group"
+                initial={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05, y: -5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
               >
                 <Card className="h-full bg-gradient-card backdrop-blur-sm border border-border group-hover:border-primary/50 transition-all duration-300 hover:shadow-xl">
                   <CardContent className="p-6 text-center">
@@ -206,11 +207,11 @@ export const About = () => {
 
         {/* Mission Statement */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
           className="text-center max-w-4xl mx-auto"
+          initial={{ opacity: 0, y: 30 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <Card className="bg-gradient-card backdrop-blur-sm border border-border">
             <CardContent className="p-8 lg:p-12">
@@ -223,10 +224,10 @@ export const About = () => {
                 of AI to scale efficiently and focus on what matters most.
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
-                <Badge variant="secondary" className="px-4 py-2">Innovation First</Badge>
-                <Badge variant="secondary" className="px-4 py-2">Client Success</Badge>
-                <Badge variant="secondary" className="px-4 py-2">Open Source</Badge>
-                <Badge variant="secondary" className="px-4 py-2">Transparency</Badge>
+                <Badge className="px-4 py-2" variant="secondary">Innovation First</Badge>
+                <Badge className="px-4 py-2" variant="secondary">Client Success</Badge>
+                <Badge className="px-4 py-2" variant="secondary">Open Source</Badge>
+                <Badge className="px-4 py-2" variant="secondary">Transparency</Badge>
               </div>
             </CardContent>
           </Card>

@@ -1,11 +1,12 @@
 // [STAKE+TRUST:BEGIN:feedback_api]
+import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+
+import { createValidatedRoute } from "@/lib/api/validation-middleware";
+import { SystemError, ValidationError, formatError } from "@/lib/errors";
 import { logger } from "@/lib/logging/structured-logger";
 import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
-import { createClient } from "@supabase/supabase-js";
-import { createValidatedRoute } from "@/lib/api/validation-middleware";
-import { z } from "zod";
-import { SystemError, ValidationError, formatError } from "@/lib/errors";
 import { recordError } from "@/lib/utils/error-detection";
 import { retry } from "@/lib/utils/retry";
 

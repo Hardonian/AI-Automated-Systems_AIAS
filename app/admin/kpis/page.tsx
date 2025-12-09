@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { logger } from "@/lib/logging/structured-logger";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface KPIData {
   signups: number;
@@ -98,28 +99,28 @@ export default function KPIDashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <KPICard
+          format="number"
           label="Signups"
-          value={kpis.signups}
           trend={kpis.trends.signups}
-          format="number"
+          value={kpis.signups}
         />
         <KPICard
+          format="number"
           label="Activations"
-          value={kpis.activations}
           trend={kpis.trends.activations}
-          format="number"
+          value={kpis.activations}
         />
         <KPICard
-          label="MRR"
-          value={kpis.mrr}
-          trend={kpis.trends.mrr}
           format="currency"
+          label="MRR"
+          trend={kpis.trends.mrr}
+          value={kpis.mrr}
         />
         <KPICard
-          label="Retention (30-day)"
-          value={kpis.retention}
-          trend={kpis.trends.retention}
           format="percentage"
+          label="Retention (30-day)"
+          trend={kpis.trends.retention}
+          value={kpis.retention}
         />
       </div>
 
@@ -131,30 +132,30 @@ export default function KPIDashboard() {
         <CardContent>
           <div className="space-y-4">
             <TrendRow
-              label="Signups"
-              current={kpis.trends.signups.current}
-              previous={kpis.trends.signups.previous}
               change={kpis.trends.signups.change}
+              current={kpis.trends.signups.current}
+              label="Signups"
+              previous={kpis.trends.signups.previous}
             />
             <TrendRow
-              label="Activations"
-              current={kpis.trends.activations.current}
-              previous={kpis.trends.activations.previous}
               change={kpis.trends.activations.change}
+              current={kpis.trends.activations.current}
+              label="Activations"
+              previous={kpis.trends.activations.previous}
             />
             <TrendRow
-              label="MRR"
-              current={kpis.trends.mrr.current}
-              previous={kpis.trends.mrr.previous}
               change={kpis.trends.mrr.change}
+              current={kpis.trends.mrr.current}
               format="currency"
+              label="MRR"
+              previous={kpis.trends.mrr.previous}
             />
             <TrendRow
-              label="Retention"
-              current={kpis.trends.retention.current}
-              previous={kpis.trends.retention.previous}
               change={kpis.trends.retention.change}
+              current={kpis.trends.retention.current}
               format="percentage"
+              label="Retention"
+              previous={kpis.trends.retention.previous}
             />
           </div>
         </CardContent>

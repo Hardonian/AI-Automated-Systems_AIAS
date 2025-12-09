@@ -1,23 +1,24 @@
 import "./globals.css";
-import type { Metadata } from "next";
-import { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { EnhancedStickyCTA } from "@/components/layout/enhanced-sticky-cta";
-import { Toaster } from "@/components/ui/toaster";
-import { PWARegistration } from "@/components/pwa-registration";
-import { PerformanceHUD } from "@/components/dev/performance-hud";
-import { PerformanceBeacon } from "@/components/performance-beacon";
-import { WebVitalsTracker } from "@/components/performance/WebVitalsTracker";
+import type { Metadata } from "next";
+import { ReactNode } from "react";
+
 import AgentProvider from "@/components/agent/AgentProvider";
-import { OrganizationSchema, WebSiteSchema } from "@/components/seo/structured-data";
 import { EnhancedErrorBoundary } from "@/lib/error-handling/error-boundary-enhanced";
 import { TelemetryProvider } from "@/lib/monitoring/telemetry-provider";
 import { UTMTracker } from "@/components/analytics/utm-tracker";
+import { PerformanceHUD } from "@/components/dev/performance-hud";
+import { EnhancedStickyCTA } from "@/components/layout/enhanced-sticky-cta";
+import { Footer } from "@/components/layout/footer";
+import { Header } from "@/components/layout/header";
+import { WebVitalsTracker } from "@/components/performance/WebVitalsTracker";
+import { PerformanceBeacon } from "@/components/performance-beacon";
+import { PWARegistration } from "@/components/pwa-registration";
+import { OrganizationSchema, WebSiteSchema } from "@/components/seo/structured-data";
+import { ThemeProvider } from "@/components/theme-provider";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
+import { Toaster } from "@/components/ui/toaster";
 import { ReactQueryProvider } from "@/lib/data/react-query";
 import { env, getOptionalEnv } from "@/lib/env";
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
@@ -145,39 +146,38 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const isRTL = false;
 
   return (
-    <html lang={locale} dir={isRTL ? "rtl" : "ltr"} suppressHydrationWarning>
+    <html suppressHydrationWarning dir={isRTL ? "rtl" : "ltr"} lang={locale}>
       <head>
         {/* Performance: Resource hints */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-        <link rel="dns-prefetch" href="https://*.supabase.co" />
-        <link rel="dns-prefetch" href="https://*.supabase.in" />
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
+        <link crossOrigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />
+        <link href="https://fonts.googleapis.com" rel="dns-prefetch" />
+        <link href="https://fonts.gstatic.com" rel="dns-prefetch" />
+        <link href="https://*.supabase.co" rel="dns-prefetch" />
+        <link href="https://*.supabase.in" rel="dns-prefetch" />
         
         {/* Preload critical resources */}
-        <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link as="font" crossOrigin="anonymous" href="/fonts/inter-var.woff2" rel="preload" type="font/woff2" />
         
         {/* Prefetch likely next pages */}
-        <link rel="prefetch" href="/signup" />
-        <link rel="prefetch" href="/pricing" />
+        <link href="/signup" rel="prefetch" />
+        <link href="/pricing" rel="prefetch" />
         
         {/* PWA */}
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#3b82f6" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="AI Automated Systems" />
+        <link href="/manifest.json" rel="manifest" />
+        <meta content="#3b82f6" name="theme-color" />
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="default" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="AI Automated Systems" name="apple-mobile-web-app-title" />
         
         {/* SEO: Enhanced meta tags */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="application-name" content="AI Automated Systems" />
+        <meta content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" name="viewport" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta content="yes" name="mobile-web-app-capable" />
+        <meta content="AI Automated Systems" name="application-name" />
         
         {/* Service Worker - Use Next.js Script component for better security */}
         <script
-          id="service-worker-registration"
           dangerouslySetInnerHTML={{
             __html: `
               if('serviceWorker' in navigator) {
@@ -189,6 +189,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               }
             `,
           }}
+          id="service-worker-registration"
         />
         
         {/* Structured Data */}
@@ -203,18 +204,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <SmoothScroll>
                 {/* Accessibility: Skip to main content link */}
                 <a 
-                  href="#main" 
+                  aria-label="Skip to main content" 
                   className="skip-link"
-                  aria-label="Skip to main content"
+                  href="#main"
                 >
                   Skip to content
                 </a>
                 <Header />
                 <main 
-                  id="main" 
+                  aria-label="Main content" 
                   className="min-h-[calc(100vh-8rem)]"
+                  id="main"
                   role="main"
-                  aria-label="Main content"
                 >
                   {children}
                 </main>

@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
+
+import { handleApiError } from "@/lib/api/route-handler";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logging/structured-logger";
-import { handleApiError } from "@/lib/api/route-handler";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -116,7 +117,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       period: "last_30_days",
       stages: {
-        signup: signup,
+        signup,
         onboarding_start: onboarding,
         integration_connect: integration,
         workflow_create: workflow,

@@ -3,13 +3,20 @@
  * Revenue analytics, usage trends, and comprehensive reporting
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DatePickerWithRange } from '@/components/ui/date-picker';
+import { 
+  TrendingUp, 
+  TrendingDown, 
+  DollarSign, 
+  Users, 
+  Activity, 
+  Zap, 
+  BarChart3,
+  Download,
+  RefreshCw,
+  Target,
+  Globe
+} from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import { 
   BarChart, 
   Bar, 
@@ -20,42 +27,15 @@ import {
   ResponsiveContainer,
   LineChart,
   Line,
-  PieChart,
-  Pie,
-  Cell,
   Area,
-  AreaChart,
-  Scatter,
-  ScatterChart
+  AreaChart
 } from 'recharts';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
-  Users, 
-  Activity, 
-  Zap, 
-  BarChart3, 
-  PieChart as PieChartIcon,
-  Download,
-  RefreshCw,
-  Calendar,
-  Filter,
-  Eye,
-  Target,
-  Award,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Globe,
-  CreditCard,
-  Bot,
-  Workflow,
-  Database,
-  Cpu,
-  HardDrive
-} from 'lucide-react';
-import { RevenueStream, UsageMetrics, PlatformAnalytics } from '@/types/platform';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PlatformAnalytics } from '@/types/platform';
 
 interface AnalyticsDashboardProps {
   tenantId?: string;
@@ -221,7 +201,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   };
 
   const getRevenueGrowth = () => {
-    if (revenueData.length < 2) return 0;
+    if (revenueData.length < 2) {return 0;}
     const current = revenueData[revenueData.length - 1].revenue;
     const previous = revenueData[revenueData.length - 2].revenue;
     return ((current - previous) / previous) * 100;
@@ -232,7 +212,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   };
 
   const getUsageGrowth = () => {
-    if (usageData.length < 2) return 0;
+    if (usageData.length < 2) {return 0;}
     const current = usageData[usageData.length - 1].executions;
     const previous = usageData[usageData.length - 2].executions;
     return ((current - previous) / previous) * 100;
@@ -254,7 +234,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
       </div>
     );
   }
@@ -289,7 +269,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs className="w-full" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="revenue">Revenue</TabsTrigger>
@@ -300,7 +280,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </TabsList>
 
         {/* Overview Tab */}
-        <TabsContent value="overview" className="space-y-6">
+        <TabsContent className="space-y-6" value="overview">
           {/* Key Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card>
@@ -398,13 +378,13 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer height={300} width="100%">
                   <AreaChart data={revenueData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
                     <YAxis />
                     <Tooltip formatter={(value) => [formatCurrency(Number(value)), 'Revenue']} />
-                    <Area type="monotone" dataKey="revenue" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.3} />
+                    <Area dataKey="revenue" fill="#3B82F6" fillOpacity={0.3} stroke="#3B82F6" type="monotone" />
                   </AreaChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -418,14 +398,14 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer height={300} width="100%">
                   <LineChart data={usageData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
                     <YAxis />
                     <Tooltip />
-                    <Line type="monotone" dataKey="executions" stroke="#10B981" strokeWidth={2} />
-                    <Line type="monotone" dataKey="workflows" stroke="#F59E0B" strokeWidth={2} />
+                    <Line dataKey="executions" stroke="#10B981" strokeWidth={2} type="monotone" />
+                    <Line dataKey="workflows" stroke="#F59E0B" strokeWidth={2} type="monotone" />
                   </LineChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -466,7 +446,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </TabsContent>
 
         {/* Revenue Tab */}
-        <TabsContent value="revenue" className="space-y-6">
+        <TabsContent className="space-y-6" value="revenue">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -475,16 +455,16 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
+              <ResponsiveContainer height={400} width="100%">
                 <BarChart data={revenueData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" />
                   <YAxis />
                   <Tooltip formatter={(value) => [formatCurrency(Number(value)), 'Revenue']} />
-                  <Bar dataKey="subscriptions" stackId="a" fill="#3B82F6" name="Subscriptions" />
-                  <Bar dataKey="usage" stackId="a" fill="#10B981" name="Usage-based" />
-                  <Bar dataKey="oneTime" stackId="a" fill="#F59E0B" name="One-time" />
-                  <Bar dataKey="commissions" stackId="a" fill="#EF4444" name="Commissions" />
+                  <Bar dataKey="subscriptions" fill="#3B82F6" name="Subscriptions" stackId="a" />
+                  <Bar dataKey="usage" fill="#10B981" name="Usage-based" stackId="a" />
+                  <Bar dataKey="oneTime" fill="#F59E0B" name="One-time" stackId="a" />
+                  <Bar dataKey="commissions" fill="#EF4444" name="Commissions" stackId="a" />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
@@ -527,7 +507,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </TabsContent>
 
         {/* Usage Tab */}
-        <TabsContent value="usage" className="space-y-6">
+        <TabsContent className="space-y-6" value="usage">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -536,16 +516,16 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
+              <ResponsiveContainer height={400} width="100%">
                 <LineChart data={usageData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" />
                   <YAxis />
                   <Tooltip />
-                  <Line type="monotone" dataKey="executions" stroke="#3B82F6" strokeWidth={2} name="Executions" />
-                  <Line type="monotone" dataKey="workflows" stroke="#10B981" strokeWidth={2} name="Workflows" />
-                  <Line type="monotone" dataKey="apiCalls" stroke="#F59E0B" strokeWidth={2} name="API Calls" />
-                  <Line type="monotone" dataKey="aiProcessing" stroke="#8B5CF6" strokeWidth={2} name="AI Processing" />
+                  <Line dataKey="executions" name="Executions" stroke="#3B82F6" strokeWidth={2} type="monotone" />
+                  <Line dataKey="workflows" name="Workflows" stroke="#10B981" strokeWidth={2} type="monotone" />
+                  <Line dataKey="apiCalls" name="API Calls" stroke="#F59E0B" strokeWidth={2} type="monotone" />
+                  <Line dataKey="aiProcessing" name="AI Processing" stroke="#8B5CF6" strokeWidth={2} type="monotone" />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -588,7 +568,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </TabsContent>
 
         {/* Users Tab */}
-        <TabsContent value="users" className="space-y-6">
+        <TabsContent className="space-y-6" value="users">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -597,13 +577,13 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
+              <ResponsiveContainer height={400} width="100%">
                 <AreaChart data={usageData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" />
                   <YAxis />
                   <Tooltip />
-                  <Area type="monotone" dataKey="users" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.3} />
+                  <Area dataKey="users" fill="#3B82F6" fillOpacity={0.3} stroke="#3B82F6" type="monotone" />
                 </AreaChart>
               </ResponsiveContainer>
             </CardContent>
@@ -655,7 +635,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </TabsContent>
 
         {/* Conversion Tab */}
-        <TabsContent value="conversion" className="space-y-6">
+        <TabsContent className="space-y-6" value="conversion">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -664,7 +644,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
+              <ResponsiveContainer height={400} width="100%">
                 <BarChart data={conversionData} layout="horizontal">
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis type="number" />
@@ -695,7 +675,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </TabsContent>
 
         {/* Geographic Tab */}
-        <TabsContent value="geographic" className="space-y-6">
+        <TabsContent className="space-y-6" value="geographic">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

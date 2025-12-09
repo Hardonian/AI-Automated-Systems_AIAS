@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
 import { Activity, Zap, TrendingUp } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const activities = [
   { icon: Zap, text: 'Customer support workflow automated', value: '+32%' },
@@ -27,17 +27,17 @@ export const LiveActivityFeed = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.8 }}
       className="relative"
+      initial={{ opacity: 0, y: 20 }}
+      transition={{ delay: 0.8 }}
     >
       <div className="bg-gradient-card backdrop-blur-sm border border-primary/20 rounded-2xl p-6 shadow-card overflow-hidden">
         {/* Animated background pulse */}
         <motion.div
           animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
           className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl"
+          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
         />
 
         <div className="relative space-y-4">
@@ -46,16 +46,16 @@ export const LiveActivityFeed = () => {
             <div className="flex items-center gap-2">
               <motion.div
                 animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
                 className="w-2 h-2 bg-green-500 rounded-full"
+                transition={{ duration: 2, repeat: Infinity }}
               />
               <span className="text-sm text-muted-foreground">Live Activity</span>
             </div>
             <motion.div
               key={activeWorkflows}
-              initial={{ scale: 1.2, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               className="text-2xl font-bold bg-gradient-accent bg-clip-text text-transparent"
+              initial={{ scale: 1.2, opacity: 0 }}
             >
               {activeWorkflows}
             </motion.div>
@@ -68,11 +68,11 @@ export const LiveActivityFeed = () => {
           {/* Activity stream */}
           <motion.div
             key={currentActivity}
-            initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -20, opacity: 0 }}
-            transition={{ duration: 0.5 }}
             className="flex items-start gap-3 pt-4 border-t border-border"
+            exit={{ x: -20, opacity: 0 }}
+            initial={{ x: 20, opacity: 0 }}
+            transition={{ duration: 0.5 }}
           >
             <div className="p-2 bg-primary/10 rounded-lg">
               <activity.icon className="w-4 h-4 text-primary" />

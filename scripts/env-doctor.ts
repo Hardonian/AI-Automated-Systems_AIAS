@@ -177,7 +177,7 @@ function scanCodebase(): Map<string, EnvVarUsage> {
 
   for (const file of files) {
     const filePath = join(process.cwd(), file);
-    if (!existsSync(filePath)) continue;
+    if (!existsSync(filePath)) {continue;}
 
     const content = readFileSync(filePath, "utf-8");
     const _lines = content.split("\n");
@@ -187,7 +187,7 @@ function scanCodebase(): Map<string, EnvVarUsage> {
     let match;
     while ((match = processEnvPattern.exec(content)) !== null) {
       const key = match[1];
-      if (!key) continue;
+      if (!key) {continue;}
       const lineNum = match.index !== undefined ? content.substring(0, match.index).split("\n").length : 1;
 
       if (!usage.has(key)) {
@@ -213,7 +213,7 @@ function scanCodebase(): Map<string, EnvVarUsage> {
     const githubSecretsPattern = /\$\{\{\s*secrets\.([A-Z_][A-Z0-9_]*)\s*\}\}/g;
     while ((match = githubSecretsPattern.exec(content)) !== null) {
       const key = match[1];
-      if (!key) continue;
+      if (!key) {continue;}
       if (!usage.has(key)) {
         usage.set(key, {
           key,
@@ -238,7 +238,7 @@ function checkHardcodedSecrets(): { file: string; line: number; content: string 
 
   for (const file of files) {
     const filePath = join(process.cwd(), file);
-    if (!existsSync(filePath)) continue;
+    if (!existsSync(filePath)) {continue;}
 
     const content = readFileSync(filePath, "utf-8");
     const lines = content.split("\n");

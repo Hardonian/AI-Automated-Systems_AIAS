@@ -1,8 +1,9 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Download, Code, Package, FileCode } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "SDK Export — Download Bundles & SDKs | AIAS",
@@ -129,7 +130,7 @@ export default function SDKExportPage() {
                       </div>
                     </div>
                   )}
-                  <Button size="sm" variant="outline" className="w-full mt-4" asChild>
+                  <Button asChild className="w-full mt-4" size="sm" variant="outline">
                     <Link href={`/edge-ai/sdk-export/${exportType.type}`}>
                       <Download className="mr-2 h-4 w-4" />
                       Browse Downloads
@@ -153,7 +154,7 @@ export default function SDKExportPage() {
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
             <p>Complete an optimization job to see available downloads</p>
-            <Button variant="outline" className="mt-4" asChild>
+            <Button asChild className="mt-4" variant="outline">
               <Link href="/edge-ai/models">Upload a Model</Link>
             </Button>
           </div>

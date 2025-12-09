@@ -1,10 +1,10 @@
 // scripts/etl/pull_ads_meta.ts
-import pg from "pg";
 import fetch from "node-fetch";
+import pg from "pg";
 
 const META_API_VERSION = "v18.0";
 const META_TOKEN = process.env.META_ACCESS_TOKEN || process.env.META_TOKEN;
-const META_AD_ACCOUNT_ID = process.env.META_AD_ACCOUNT_ID;
+const {META_AD_ACCOUNT_ID} = process.env;
 const DATABASE_URL = process.env.DATABASE_URL || process.env.SUPABASE_DB_URL || process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!META_TOKEN || !META_AD_ACCOUNT_ID || !DATABASE_URL) {

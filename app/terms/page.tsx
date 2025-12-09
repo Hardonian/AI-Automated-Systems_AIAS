@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -60,7 +60,7 @@ export default function TermsPage() {
           <h2 className="text-2xl font-semibold mt-8 mb-4">5. Data and Privacy</h2>
           <p>
             Your use of AIAS Platform is also governed by our{" "}
-            <Link href="/privacy" className="text-primary hover:underline">
+            <Link className="text-primary hover:underline" href="/privacy">
               Privacy Policy
             </Link>
             . We are PIPEDA compliant and maintain Canadian data residency. You retain ownership of 
@@ -90,7 +90,7 @@ export default function TermsPage() {
           <h2 className="text-2xl font-semibold mt-8 mb-4">8. Contact Information</h2>
           <p>
             If you have any questions about these Terms of Service, please contact us at{" "}
-            <a href="mailto:legal@aiautomatedsystems.ca" className="text-primary hover:underline">
+            <a className="text-primary hover:underline" href="mailto:legal@aiautomatedsystems.ca">
               legal@aiautomatedsystems.ca
             </a>
             .
@@ -99,7 +99,7 @@ export default function TermsPage() {
       </div>
 
       <div className="mt-12 pt-8 border-t">
-        <Link href="/" className="text-primary hover:underline">
+        <Link className="text-primary hover:underline" href="/">
           ← Back to Home
         </Link>
       </div>

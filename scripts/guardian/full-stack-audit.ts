@@ -435,7 +435,7 @@ async function generateReport(results: AuditResult[]): Promise<string> {
   report += `## Domain Audits\n\n`;
 
   results.forEach((result) => {
-    const status: 'healthy' | 'warning' | 'critical' = result.status;
+    const {status} = result;
     const statusIcon = status === 'healthy' ? '✅' : 
                       status === 'warning' ? '⚠️' : '🔴';
     report += `### ${statusIcon} ${result.domain}\n\n`;

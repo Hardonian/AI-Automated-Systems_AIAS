@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Play, Pause, RotateCcw, Settings, Code, Eye, Download } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export interface DemoScenario {
   id: string;
@@ -416,7 +417,7 @@ export const DemoEnvironment: React.FC = () => {
             <ul className="space-y-1">
               {step.visual.content.steps?.map((s: string, index: number) => (
                 <li key={index} className="flex items-center gap-2 text-blue-800">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full" />
                   {s}
                 </li>
               ))}
@@ -469,25 +470,25 @@ export const DemoEnvironment: React.FC = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <Button
-            onClick={() => setSelectedDemo(null)}
             variant="outline"
+            onClick={() => setSelectedDemo(null)}
           >
             ← Back to Demos
           </Button>
           <div className="flex items-center gap-2">
             <Button
-              onClick={handlePlay}
               variant={isPlaying ? "destructive" : "default"}
+              onClick={handlePlay}
             >
               {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               {isPlaying ? 'Pause' : 'Play'} Demo
             </Button>
-            <Button onClick={handleReset} variant="outline">
+            <Button variant="outline" onClick={handleReset}>
               <RotateCcw className="w-4 h-4" />
             </Button>
             <Button
-              onClick={() => setShowCode(!showCode)}
               variant="outline"
+              onClick={() => setShowCode(!showCode)}
             >
               <Code className="w-4 h-4" />
             </Button>
@@ -516,13 +517,13 @@ export const DemoEnvironment: React.FC = () => {
                 <div 
                   className="bg-blue-600 h-2 rounded-full transition-all duration-100"
                   style={{ width: `${progress}%` }}
-                ></div>
+                 />
               </div>
             </div>
           </CardHeader>
 
           <CardContent>
-            <Tabs defaultValue="demo" className="w-full">
+            <Tabs className="w-full" defaultValue="demo">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="demo">
                   <Eye className="w-4 h-4 mr-2" />
@@ -534,7 +535,7 @@ export const DemoEnvironment: React.FC = () => {
                 </TabsTrigger>
               </TabsList>
               
-              <TabsContent value="demo" className="space-y-6">
+              <TabsContent className="space-y-6" value="demo">
                 <div className="text-center">
                   <h3 className="text-xl font-semibold mb-2">
                     Step {currentStep + 1}: {currentStepData.title}
@@ -552,18 +553,18 @@ export const DemoEnvironment: React.FC = () => {
                 </div>
               </TabsContent>
               
-              <TabsContent value="code" className="space-y-4">
+              <TabsContent className="space-y-4" value="code">
                 <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
                   <pre className="text-sm">
                     <code>{selectedDemo.codeExample}</code>
                   </pre>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
+                  <Button size="sm" variant="outline">
                     <Download className="w-4 h-4 mr-2" />
                     Download Code
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button size="sm" variant="outline">
                     <Settings className="w-4 h-4 mr-2" />
                     Customize
                   </Button>
@@ -601,7 +602,7 @@ export const DemoEnvironment: React.FC = () => {
               <div className="flex items-center gap-4 text-sm text-gray-500">
                 <span>{demo.estimatedTime} min</span>
                 <span>{demo.steps.length} steps</span>
-                <Badge variant="outline" className="text-xs">
+                <Badge className="text-xs" variant="outline">
                   {demo.category}
                 </Badge>
               </div>
@@ -619,8 +620,8 @@ export const DemoEnvironment: React.FC = () => {
               </div>
               
               <Button
-                onClick={() => setSelectedDemo(demo)}
                 className="w-full"
+                onClick={() => setSelectedDemo(demo)}
               >
                 <Play className="w-4 h-4 mr-2" />
                 Start Demo

@@ -55,7 +55,7 @@ export class ObservabilityService {
   }
 
   private initialize() {
-    if (this.isInitialized) return;
+    if (this.isInitialized) {return;}
     
     // Initialize performance monitoring
     this.initializePerformanceMonitoring();
@@ -114,7 +114,7 @@ export class ObservabilityService {
   }
 
   private initializeErrorTracking() {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {return;}
 
     // Global error handler
     window.addEventListener('error', (event) => {
@@ -324,22 +324,22 @@ export class ObservabilityService {
   }
 
   private getSessionId(): string {
-    if (typeof window === 'undefined') return '';
+    if (typeof window === 'undefined') {return '';}
     
     let sessionId = sessionStorage.getItem('observability_session_id');
     if (!sessionId) {
-      sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+      sessionId = `session_${  Math.random().toString(36).substr(2, 9)}`;
       sessionStorage.setItem('observability_session_id', sessionId);
     }
     return sessionId;
   }
 
   private getRequestId(): string {
-    if (typeof window === 'undefined') return '';
+    if (typeof window === 'undefined') {return '';}
     
     let requestId = sessionStorage.getItem('observability_request_id');
     if (!requestId) {
-      requestId = 'req_' + Math.random().toString(36).substr(2, 9);
+      requestId = `req_${  Math.random().toString(36).substr(2, 9)}`;
       sessionStorage.setItem('observability_request_id', requestId);
     }
     return requestId;

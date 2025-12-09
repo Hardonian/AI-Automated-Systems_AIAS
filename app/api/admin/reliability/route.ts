@@ -1,7 +1,8 @@
-import { createClient } from '@supabase/supabase-js';
-import { NextResponse } from 'next/server';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+
+import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs'; // Requires Node.js runtime for fs operations

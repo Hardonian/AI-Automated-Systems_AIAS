@@ -1,7 +1,8 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Book a Demo — AIAS Platform | See It In Action",
@@ -64,34 +65,34 @@ export default function DemoPage() {
               <div>
                 <label className="block text-sm font-medium mb-2">Email Address</label>
                 <input
-                  type="email"
-                  placeholder="your@email.com"
                   className="w-full px-4 py-2 border rounded-md"
+                  placeholder="your@email.com"
+                  type="email"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Company Name</label>
                 <input
-                  type="text"
-                  placeholder="Your Company"
                   className="w-full px-4 py-2 border rounded-md"
+                  placeholder="Your Company"
+                  type="text"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">What would you like to see?</label>
                 <textarea
+                  className="w-full px-4 py-2 border rounded-md"
                   placeholder="E.g., Shopify automation, invoice processing, lead qualification..."
                   rows={4}
-                  className="w-full px-4 py-2 border rounded-md"
                 />
               </div>
-              <Button className="w-full" size="lg" asChild>
-                <a href="https://calendly.com/aias-platform" target="_blank" rel="noopener noreferrer">
+              <Button asChild className="w-full" size="lg">
+                <a href="https://calendly.com/aias-platform" rel="noopener noreferrer" target="_blank">
                   Book Demo on Calendly
                 </a>
               </Button>
               <p className="text-sm text-muted-foreground text-center">
-                Or email us at <a href="mailto:inquiries@aiautomatedsystems.ca" className="text-primary hover:underline">inquiries@aiautomatedsystems.ca</a>
+                Or email us at <a className="text-primary hover:underline" href="mailto:inquiries@aiautomatedsystems.ca">inquiries@aiautomatedsystems.ca</a>
               </p>
             </div>
           </CardContent>
@@ -106,7 +107,7 @@ export default function DemoPage() {
               <p className="text-muted-foreground mb-4">
                 No credit card required. Start with our free plan and upgrade when you're ready.
               </p>
-              <Button variant="outline" className="w-full" asChild>
+              <Button asChild className="w-full" variant="outline">
                 <Link href="/pricing">Start Free Trial</Link>
               </Button>
             </CardContent>
@@ -120,7 +121,7 @@ export default function DemoPage() {
               <p className="text-muted-foreground mb-4">
                 Check out our help center or contact support.
               </p>
-              <Button variant="outline" className="w-full" asChild>
+              <Button asChild className="w-full" variant="outline">
                 <Link href="/help">Visit Help Center</Link>
               </Button>
             </CardContent>

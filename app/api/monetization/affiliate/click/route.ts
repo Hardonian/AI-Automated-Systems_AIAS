@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { databasePMFTracker } from "@/lib/analytics/database-integration";
 import { logger } from "@/lib/logging/structured-logger";
 export async function POST(request: NextRequest) {

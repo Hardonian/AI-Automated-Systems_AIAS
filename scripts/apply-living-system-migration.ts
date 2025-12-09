@@ -13,9 +13,10 @@
  *   - SUPABASE_SERVICE_ROLE_KEY
  */
 
-import { createClient } from "@supabase/supabase-js";
 import { readFileSync } from "fs";
 import { join } from "path";
+
+import { createClient } from "@supabase/supabase-js";
 
 async function applyMigration() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -64,7 +65,7 @@ async function applyMigration() {
 
     for (let i = 0; i < statements.length; i++) {
       const statement = statements[i];
-      if (statement.length < 10) continue; // Skip very short statements
+      if (statement.length < 10) {continue;} // Skip very short statements
 
       try {
         // Use RPC or direct query

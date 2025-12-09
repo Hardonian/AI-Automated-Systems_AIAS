@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUserPlanData } from "@/lib/trial/user-plan";
+
 import { handleApiError } from "@/lib/api/route-handler";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { getUserPlanData } from "@/lib/trial/user-plan";
 
 /**
  * GET /api/trial/user-data

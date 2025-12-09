@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { logger } from "@/lib/logging/structured-logger";
-import { WorkflowForm } from "@/components/workflows/WorkflowForm";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { WorkflowForm } from "@/components/workflows/WorkflowForm";
+import { logger } from "@/lib/logging/structured-logger";
+
 
 interface WorkflowTemplate {
   id: string;
@@ -45,7 +47,7 @@ export default function CreateWorkflowPage() {
   async function fetchTemplate(id: string) {
     try {
       const response = await fetch(`/api/workflows/templates`);
-      if (!response.ok) throw new Error("Failed to fetch template");
+      if (!response.ok) {throw new Error("Failed to fetch template");}
       const data = await response.json();
       const foundTemplate = data.templates.find((t: WorkflowTemplate) => t.id === id);
       setTemplate(foundTemplate || null);

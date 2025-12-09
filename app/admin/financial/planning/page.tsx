@@ -6,14 +6,15 @@
  * Documents are stored in internal/private/business-planning/ (encrypted with git-crypt).
  */
 
+import { Shield, Lock, FileText, DollarSign, Users, TrendingUp } from "lucide-react";
 import { redirect } from "next/navigation";
-import { checkAdminAccess, AdminRole, hasAdminRole } from "@/lib/auth/admin-auth";
+
 import { AdminLayout } from "@/components/admin/admin-layout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Shield, Lock, FileText, DollarSign, Users, TrendingUp } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAccessibleDocuments } from "@/lib/admin/business-planning-access";
+import { checkAdminAccess, AdminRole, hasAdminRole } from "@/lib/auth/admin-auth";
 
 export default async function BusinessPlanningPage() {
   // Check admin access

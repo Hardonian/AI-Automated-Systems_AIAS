@@ -14,14 +14,12 @@
  */
 
 import { execSync } from "child_process";
-import { readFileSync } from "fs";
-import { join } from "path";
 
 async function runSetup() {
   console.log("🚀 Living System Setup\n");
   console.log("=".repeat(60));
   console.log("This script will guide you through the complete setup.");
-  console.log("=".repeat(60) + "\n");
+  console.log(`${"=".repeat(60)  }\n`);
 
   // Step 1: Validate Environment
   console.log("📋 Step 1: Validating Environment Variables\n");
@@ -112,7 +110,7 @@ async function runSetup() {
   // Summary
   console.log("=".repeat(60));
   console.log("✅ Setup Complete!");
-  console.log("=".repeat(60) + "\n");
+  console.log(`${"=".repeat(60)  }\n`);
 
   console.log("📋 Next Steps:\n");
   console.log("1. ✅ Environment variables validated");

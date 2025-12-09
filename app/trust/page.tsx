@@ -1,8 +1,8 @@
 // [STAKE+TRUST:BEGIN:trust_page]
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function TrustCenter() {
   const [flags, setFlags] = useState<Record<string, boolean>>({});
@@ -27,20 +27,20 @@ export default function TrustCenter() {
           <h2 className="text-xl font-semibold">Privacy & Data</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/privacy" className="text-primary hover:underline">
+              <Link className="text-primary hover:underline" href="/privacy">
                 Privacy Policy
               </Link>
             </li>
             {flags.export_portability && (
               <li>
-                <Link href="/account/export" className="text-primary hover:underline">
+                <Link className="text-primary hover:underline" href="/account/export">
                   Export My Data
                 </Link>
               </li>
             )}
             {flags.audit_log && (
               <li>
-                <Link href="/account/audit-log" className="text-primary hover:underline">
+                <Link className="text-primary hover:underline" href="/account/audit-log">
                   My Audit Log
                 </Link>
               </li>
@@ -57,18 +57,18 @@ export default function TrustCenter() {
           <h2 className="text-xl font-semibold">Security & Compliance</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/docs/trust/SECURITY.md" className="text-primary hover:underline">
+              <Link className="text-primary hover:underline" href="/docs/trust/SECURITY.md">
                 Security Documentation
               </Link>
             </li>
             <li>
-              <Link href="/docs/trust/TRUST.md" className="text-primary hover:underline">
+              <Link className="text-primary hover:underline" href="/docs/trust/TRUST.md">
                 Trust Documentation
               </Link>
             </li>
             {flags.slo_sla_docs && (
               <li>
-                <Link href="/docs/trust/SLO_SLA.md" className="text-primary hover:underline">
+                <Link className="text-primary hover:underline" href="/docs/trust/SLO_SLA.md">
                   SLO/SLA Details
                 </Link>
               </li>
@@ -81,14 +81,14 @@ export default function TrustCenter() {
           <ul className="space-y-2 text-sm">
             {flags.status_page && (
               <li>
-                <Link href="/status" className="text-primary hover:underline">
+                <Link className="text-primary hover:underline" href="/status">
                   Status & Uptime
                 </Link>
               </li>
             )}
             {flags.incident_comms && (
               <li>
-                <Link href="/docs/trust/STATUS.md" className="text-primary hover:underline">
+                <Link className="text-primary hover:underline" href="/docs/trust/STATUS.md">
                   Incident Communication
                 </Link>
               </li>
@@ -101,7 +101,7 @@ export default function TrustCenter() {
           <ul className="space-y-2 text-sm">
             {flags.help_center && (
               <li>
-                <Link href="/help" className="text-primary hover:underline">
+                <Link className="text-primary hover:underline" href="/help">
                   Help Center
                 </Link>
               </li>
@@ -127,7 +127,7 @@ export default function TrustCenter() {
         </ul>
         <p className="text-sm text-muted-foreground mt-4">
           For data subject rights requests, contact:{" "}
-          <a href="mailto:privacy@example.com" className="text-primary hover:underline">
+          <a className="text-primary hover:underline" href="mailto:privacy@example.com">
             privacy@example.com
           </a>
         </p>

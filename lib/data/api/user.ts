@@ -44,8 +44,8 @@ export async function getCurrentUser(): Promise<UserProfile | null> {
 export async function getUserProfile(userId: string): Promise<UserProfile | null> {
   const supabase = createClient();
   
-  const { data, error } = await supabase
-    .from("profiles")
+  const { data, error } = await (supabase
+    .from("profiles") as any)
     .select("*")
     .eq("id", userId)
     .single();
@@ -73,8 +73,8 @@ export async function updateUserProfile(
 ): Promise<UserProfile> {
   const supabase = createClient();
   
-  const { data, error } = await supabase
-    .from("profiles")
+  const { data, error } = await (supabase
+    .from("profiles") as any)
     .update(updates)
     .eq("id", userId)
     .select()
@@ -84,13 +84,23 @@ export async function updateUserProfile(
     throw new Error(error?.message || "Failed to update profile");
   }
 
+  const profileData = data as {
+    id: string;
+    email: string;
+    name?: string | null;
+    full_name?: string | null;
+    avatar_url?: string | null;
+    created_at: string;
+    updated_at: string;
+  };
+
   return {
-    id: data.id,
-    email: data.email,
-    name: data.name || data.full_name,
-    avatar_url: data.avatar_url,
-    created_at: data.created_at,
-    updated_at: data.updated_at,
+    id: profileData.id,
+    email: profileData.email,
+    name: profileData.name || profileData.full_name || '',
+    avatar_url: profileData.avatar_url,
+    created_at: profileData.created_at,
+    updated_at: profileData.updated_at,
   };
 }
 

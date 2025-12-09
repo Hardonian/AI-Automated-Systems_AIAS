@@ -1,8 +1,9 @@
 import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
 import { Building2, TrendingUp, Users, Award, CheckCircle } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { useRef } from 'react';
+
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 
 export const ClientShowcase = () => {
   const ref = useRef(null);
@@ -67,11 +68,11 @@ export const ClientShowcase = () => {
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
           className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
             Trusted by Industry
@@ -87,21 +88,21 @@ export const ClientShowcase = () => {
         {/* Client Logos */}
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
           className="mb-20"
+          initial={{ opacity: 0, y: 30 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {clients.map((client, index) => (
               <motion.div
                 key={client.name}
-                initial={{ opacity: 0, scale: 0.8 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                className="group"
+                initial={{ opacity: 0, scale: 0.8 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ scale: 1.1, y: -5 }}
-                className="group"
               >
                 <Card className="h-full bg-gradient-card backdrop-blur-sm border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-xl">
                   <CardContent className="p-6 text-center">
@@ -110,7 +111,7 @@ export const ClientShowcase = () => {
                     </div>
                     <h3 className="font-semibold text-sm mb-1">{client.name}</h3>
                     <p className="text-xs text-muted-foreground mb-2">{client.industry}</p>
-                    <Badge variant="outline" className="text-xs">
+                    <Badge className="text-xs" variant="outline">
                       {client.size}
                     </Badge>
                   </CardContent>
@@ -123,9 +124,9 @@ export const ClientShowcase = () => {
         {/* Case Studies */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <div className="text-center mb-12">
             <h3 className="text-3xl font-bold mb-4">
@@ -140,12 +141,12 @@ export const ClientShowcase = () => {
             {caseStudies.map((study, index) => (
               <motion.div
                 key={study.client}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ scale: 1.02, y: -5 }}
                 className="group"
+                initial={{ opacity: 0, y: 30 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.02, y: -5 }}
+                whileInView={{ opacity: 1, y: 0 }}
               >
                 <Card className="h-full bg-gradient-card backdrop-blur-sm border border-border group-hover:border-primary/50 transition-all duration-300 hover:shadow-2xl">
                   <CardContent className="p-6">
@@ -194,11 +195,11 @@ export const ClientShowcase = () => {
 
         {/* Bottom Stats */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
           className="mt-20"
+          initial={{ opacity: 0, y: 30 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
@@ -209,12 +210,12 @@ export const ClientShowcase = () => {
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -5 }}
                 className="text-center"
+                initial={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05, y: -5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
               >
                 <Card className="bg-gradient-card backdrop-blur-sm border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-xl">
                   <CardContent className="p-6">

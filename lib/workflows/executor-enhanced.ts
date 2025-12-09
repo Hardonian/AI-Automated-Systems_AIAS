@@ -166,8 +166,8 @@ export async function executeWorkflow(
 
     // Fallback to checking profiles or default to free
     let plan = "free";
-    if (subscription?.subscription_plans?.tier) {
-      plan = subscription.subscription_plans.tier as string;
+    if (subscription?.subscription_plans && Array.isArray(subscription.subscription_plans) && subscription.subscription_plans[0]?.tier) {
+      plan = subscription.subscription_plans[0].tier as string;
     } else {
       const { data: profile } = await supabase
         .from("profiles")

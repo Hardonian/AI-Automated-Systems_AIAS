@@ -4,9 +4,9 @@
  * Validates and applies all Supabase migrations
  */
 
+import { execSync } from 'child_process';
 import { readdirSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { execSync } from 'child_process';
 
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');
 // Check multiple environment variable sources (GitHub secrets, local env, etc.)
@@ -192,7 +192,7 @@ async function main() {
   }
 
   if (!applied) {
-    console.log('\n' + '='.repeat(60));
+    console.log(`\n${  '='.repeat(60)}`);
     console.log('⚠️  Could not apply migrations automatically.');
     console.log('\nTo apply migrations manually, use one of these methods:\n');
     console.log('Method 1: Supabase CLI');
@@ -210,7 +210,7 @@ async function main() {
     newMigrations.forEach(m => console.log(`  - ${m}`));
     console.log('');
   } else {
-    console.log('\n' + '='.repeat(60));
+    console.log(`\n${  '='.repeat(60)}`);
     console.log('✅ Migration process completed!\n');
   }
 }

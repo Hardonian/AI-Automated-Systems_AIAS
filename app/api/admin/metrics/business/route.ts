@@ -3,11 +3,12 @@
  * Returns business metrics for YC readiness dashboard
  */
 
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { logger } from "@/lib/logging/structured-logger";
-import { env } from "@/lib/env";
+import { NextRequest, NextResponse } from "next/server";
+
 import { getAllActivationMetrics } from "@/lib/analytics/metrics";
+import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const searchParams = request.nextUrl.searchParams;
+    const {searchParams} = request.nextUrl;
     const days = parseInt(searchParams.get("days") || "30");
 
     // Get activation metrics
@@ -113,12 +114,12 @@ export async function GET(request: NextRequest) {
         workflowsPerUser: pmfSnapshot?.workflows_per_user || 0,
       },
       unitEconomics: {
-        arpu: arpu,
+        arpu,
         cac: 0, // TODO: Calculate from marketing spend
         ltvCac: 0, // TODO: Calculate LTV:CAC
         grossMargin: 0, // TODO: Calculate gross margin
       },
-      channels: channels,
+      channels,
       pmf: {
         nps: pmfSnapshot?.nps || 0,
         timeToActivation: pmfSnapshot?.time_to_activation_hours || activationMetrics.timeToActivation / (1000 * 60 * 60),

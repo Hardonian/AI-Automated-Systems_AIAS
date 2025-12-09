@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase/client";
+
 import SubscriptionPlans from "@/components/billing/SubscriptionPlans";
+import { supabase } from "@/lib/supabase/client";
 
 export default function BillingPage() {
   const [currentTier, setCurrentTier] = useState<any>(null);

@@ -3,8 +3,8 @@
  * Tracks token usage, latency, and accuracy per model
  */
 
-import { createClient } from '@supabase/supabase-js';
 import { Octokit } from '@octokit/rest';
+import { createClient } from '@supabase/supabase-js';
 
 interface AIPerformanceMetrics {
   model: string;
@@ -100,7 +100,7 @@ class AIPerformanceWatcher {
         .gte('timestamp', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
         .order('timestamp', { ascending: false });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return metrics || [];
     } catch (error) {
       console.warn('Could not collect performance metrics:', error);
@@ -114,7 +114,7 @@ class AIPerformanceWatcher {
   private async detectAnomalies(metrics: AIPerformanceMetrics[]): Promise<PerformanceAnomaly[]> {
     const anomalies: PerformanceAnomaly[] = [];
 
-    if (metrics.length === 0) return anomalies;
+    if (metrics.length === 0) {return anomalies;}
 
     // Group metrics by model
     const modelMetrics = this.groupMetricsByModel(metrics);
@@ -210,7 +210,7 @@ class AIPerformanceWatcher {
    */
   private groupMetricsByModel(metrics: AIPerformanceMetrics[]): Record<string, AIPerformanceMetrics[]> {
     return metrics.reduce((groups, metric) => {
-      const model = metric.model;
+      const {model} = metric;
       if (!groups[model]) {
         groups[model] = [];
       }
@@ -226,7 +226,7 @@ class AIPerformanceWatcher {
    * Calculate average of array
    */
   private calculateAverage(values: number[]): number {
-    if (values.length === 0) return 0;
+    if (values.length === 0) {return 0;}
     return values.reduce((sum, val) => sum + val, 0) / values.length;
   }
 
@@ -282,7 +282,7 @@ class AIPerformanceWatcher {
         .from('ai_performance_reports')
         .insert([report]);
 
-      if (error) throw error;
+      if (error) {throw error;}
       
       console.log('Performance report stored successfully');
     } catch (error) {
@@ -296,7 +296,7 @@ class AIPerformanceWatcher {
   async createCriticalIssue(report: PerformanceReport): Promise<void> {
     const criticalAnomalies = report.anomalies.filter(a => a.severity === 'critical');
     
-    if (criticalAnomalies.length === 0) return;
+    if (criticalAnomalies.length === 0) {return;}
 
     try {
       const issue = {

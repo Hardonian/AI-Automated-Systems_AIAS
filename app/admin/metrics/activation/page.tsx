@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { logger } from "@/lib/logging/structured-logger";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+
 import { ActivationChart } from "@/components/metrics/ActivationChart";
 import { FunnelChart } from "@/components/metrics/FunnelChart";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { logger } from "@/lib/logging/structured-logger";
 interface ActivationMetrics {
   metrics: {
     activation_rate: number;
@@ -133,7 +134,7 @@ export default function ActivationMetricsDashboard() {
             <div className="text-sm text-muted-foreground mt-2">
               Target: &gt;60%
             </div>
-            <Progress value={m.activation_rate} className="mt-2" />
+            <Progress className="mt-2" value={m.activation_rate} />
           </CardContent>
         </Card>
 
@@ -164,7 +165,7 @@ export default function ActivationMetricsDashboard() {
             <div className="text-sm text-muted-foreground mt-2">
               Target: &gt;40%
             </div>
-            <Progress value={m.day_7_retention} className="mt-2" />
+            <Progress className="mt-2" value={m.day_7_retention} />
           </CardContent>
         </Card>
 
@@ -198,7 +199,7 @@ export default function ActivationMetricsDashboard() {
                 <div className="font-semibold">Signups</div>
                 <div className="text-sm text-muted-foreground">{funnel.signups} users</div>
               </div>
-              <Progress value={100} className="h-3" />
+              <Progress className="h-3" value={100} />
             </div>
 
             {/* Integrations */}
@@ -209,7 +210,7 @@ export default function ActivationMetricsDashboard() {
                   {funnel.integrations} users ({signupToIntegration.toFixed(1)}%)
                 </div>
               </div>
-              <Progress value={signupToIntegration} className="h-3" />
+              <Progress className="h-3" value={signupToIntegration} />
             </div>
 
             {/* Workflows */}
@@ -220,7 +221,7 @@ export default function ActivationMetricsDashboard() {
                   {funnel.workflows} users ({integrationToWorkflow.toFixed(1)}%)
                 </div>
               </div>
-              <Progress value={integrationToWorkflow} className="h-3" />
+              <Progress className="h-3" value={integrationToWorkflow} />
             </div>
 
             {/* Activations */}
@@ -231,7 +232,7 @@ export default function ActivationMetricsDashboard() {
                   {funnel.activations} users ({workflowToActivation.toFixed(1)}%)
                 </div>
               </div>
-              <Progress value={workflowToActivation} className="h-3" />
+              <Progress className="h-3" value={workflowToActivation} />
             </div>
           </div>
         </CardContent>

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
+
 import { moderateComment, generateSystemsThinkingInsight, type Comment } from "@/lib/blog/comments";
 import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
 
 export const dynamic = 'force-dynamic';
 
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
         post_slug: articleSlug,
         author_name: author,
         author_email: email,
-        content: content,
+        content,
         parent_id: parentId || null,
         approved: moderation.approved,
         moderation_score: moderation.score,

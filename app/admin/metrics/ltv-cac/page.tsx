@@ -1,4 +1,5 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
+
 import { LTVCACDashboard } from "@/components/metrics/ltv-cac-dashboard";
 
 export const metadata: Metadata = {

@@ -1,9 +1,10 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { getLatestArticles, getFeaturedArticles } from "@/lib/blog/articles";
-import { Button } from "@/components/ui/button";
+
 import { AffiliateLink } from "@/components/monetization/affiliate-link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { getLatestArticles, getFeaturedArticles } from "@/lib/blog/articles";
 
 export const metadata: Metadata = {
   title: "Blog — Systems Thinking + AI | Daily Articles | AIAS Platform",
@@ -60,7 +61,7 @@ export default function BlogPage() {
                     )}
                   </div>
                   <CardTitle className="text-xl">
-                    <Link href={`/blog/${article.slug}`} className="hover:underline">
+                    <Link className="hover:underline" href={`/blog/${article.slug}`}>
                       {article.title}
                     </Link>
                   </CardTitle>
@@ -76,8 +77,8 @@ export default function BlogPage() {
                       })}
                     </time>
                     <Link
-                      href={`/blog/${article.slug}`}
                       className="text-sm text-primary hover:underline font-medium"
+                      href={`/blog/${article.slug}`}
                     >
                       Read more →
                     </Link>
@@ -94,7 +95,7 @@ export default function BlogPage() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">All Articles ({articles.length})</h2>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" asChild>
+            <Button asChild size="sm" variant="outline">
               <Link href="/rss-news">AI & Tech News Feed</Link>
             </Button>
           </div>
@@ -119,7 +120,7 @@ export default function BlogPage() {
                   )}
                 </div>
                 <CardTitle className="text-lg">
-                  <Link href={`/blog/${article.slug}`} className="hover:underline">
+                  <Link className="hover:underline" href={`/blog/${article.slug}`}>
                     {article.title}
                   </Link>
                 </CardTitle>
@@ -135,8 +136,8 @@ export default function BlogPage() {
                     })}
                   </time>
                   <Link
-                    href={`/blog/${article.slug}`}
                     className="text-xs text-primary hover:underline"
+                    href={`/blog/${article.slug}`}
                   >
                     Read →
                   </Link>
@@ -214,7 +215,7 @@ export default function BlogPage() {
             <Button asChild>
               <Link href="/genai-content-engine">Try GenAI Content Engine</Link>
             </Button>
-            <Button variant="outline" asChild>
+            <Button asChild variant="outline">
               <Link href="/systems-thinking">Learn About Systems Thinking</Link>
             </Button>
           </div>
@@ -253,9 +254,9 @@ export default function BlogPage() {
           <CardContent>
             <div className="space-y-2">
               <input
-                type="email"
-                placeholder="your@email.com"
                 className="w-full px-4 py-2 border rounded-md"
+                placeholder="your@email.com"
+                type="email"
               />
               <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
                 Subscribe to Daily Updates

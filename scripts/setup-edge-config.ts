@@ -14,6 +14,7 @@
 
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+
 import { get } from '@vercel/edge-config';
 
 const EDGE_CONFIG_URL = process.env.EDGE_CONFIG;

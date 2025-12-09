@@ -1,6 +1,7 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, X } from "lucide-react";
+import type { Metadata } from "next";
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Compare — AIAS Platform vs Zapier vs Make | Canadian Business Automation",
@@ -223,8 +224,8 @@ export default function ComparePage() {
         <div className="text-center">
           <p className="text-lg mb-4">Ready to automate your Canadian business?</p>
           <a
-            href="/signup"
             className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
+            href="/signup"
           >
             Start Free Trial
           </a>

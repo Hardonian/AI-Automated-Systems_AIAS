@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+
 import { logger } from "@/lib/logging/structured-logger";
 import { createServerClient } from "@/lib/supabase/server";
 
@@ -51,7 +52,7 @@ export async function GET() {
     const referralCount = referrals?.length || 0;
 
     const calculateRate = (current: number, previous: number) => {
-      if (previous === 0) return 0;
+      if (previous === 0) {return 0;}
       return (current / previous) * 100;
     };
 

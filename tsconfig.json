@@ -35,7 +35,13 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "components/**/*.tsx",
+    "components/**/*.ts",
+    "app/**/*.tsx",
+    "app/**/*.ts",
+    "lib/**/*.ts",
+    "lib/**/*.tsx"
   ],
   "exclude": [
     "node_modules",
@@ -44,6 +50,7 @@
     "dist",
     "ai/aurora_prime.ts",
     "scripts/generate-performance-report.ts",
-    "supabase/functions/**/*"
+    "supabase/functions/**/*",
+    "ai/**/*"
   ]
 }

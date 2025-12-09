@@ -31,21 +31,21 @@ export async function check(options: { type?: string }): Promise<number> {
     const result = await checkEnvVars();
     const isPass = result.status === 'pass';
     console.log(`${isPass ? '✅' : '❌'} ${result.name}: ${result.message}`);
-    if (!isPass) exitCode = 1;
+    if (!isPass) {exitCode = 1;}
   }
 
   if (type === 'all' || type === 'db') {
     const result = await checkDatabase();
     const isPass = result.status === 'pass';
     console.log(`${isPass ? '✅' : '❌'} ${result.name}: ${result.message}`);
-    if (!isPass) exitCode = 1;
+    if (!isPass) {exitCode = 1;}
   }
 
   if (type === 'all' || type === 'api') {
     const result = await checkRLSPolicies();
     const isPass = result.status === 'pass';
     console.log(`${isPass ? '✅' : '⚠️'} ${result.name}: ${result.message}`);
-    if (!isPass) exitCode = 1;
+    if (!isPass) {exitCode = 1;}
   }
 
   return exitCode;

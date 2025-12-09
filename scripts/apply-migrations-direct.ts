@@ -6,10 +6,11 @@
 
 import { readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
+
 import { Pool } from 'pg';
 // import { execSync } from 'child_process';
 
-const SUPABASE_DB_URL = process.env.SUPABASE_DB_URL;
+const {SUPABASE_DB_URL} = process.env;
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');
 
 interface MigrationFile {
@@ -179,7 +180,7 @@ async function main() {
     }
   }
 
-  console.log('\n' + '=' .repeat(60));
+  console.log(`\n${  '=' .repeat(60)}`);
   console.log(`✅ Successfully applied ${successCount} migrations`);
   if (failCount > 0) {
     console.log(`❌ Failed to apply ${failCount} migrations`);

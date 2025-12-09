@@ -3,19 +3,9 @@
  * Drag-and-drop interface for creating automation workflows
  */
 
-import React, { useState, useCallback, useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { 
   Play, 
   Save, 
-  Download, 
-  Upload, 
   Settings, 
   Eye,
   Trash2,
@@ -25,14 +15,16 @@ import {
   Bot,
   Database,
   Mail,
-  Calendar,
-  FileText,
-  Webhook,
   Filter,
-  ArrowRight,
-  Plus,
-  MoreHorizontal
+  ArrowRight
 } from 'lucide-react';
+import React, { useState, useCallback, useRef } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { WorkflowNode, WorkflowTemplate } from '@/types/platform';
 
 interface WorkflowBuilderProps {
@@ -315,10 +307,10 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
             <h1 className="text-xl font-semibold">Workflow Builder</h1>
             <div className="flex items-center gap-2">
               <Input
-                value={workflow.name}
-                onChange={(e) => setWorkflow(prev => ({ ...prev, name: e.target.value }))}
                 className="w-64"
                 placeholder="Workflow name"
+                value={workflow.name}
+                onChange={(e) => setWorkflow(prev => ({ ...prev, name: e.target.value }))}
               />
               <Badge variant={workflow.status === 'active' ? 'default' : 'secondary'}>
                 {workflow.status}
@@ -327,11 +319,11 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
           </div>
           
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
+            <Button size="sm" variant="outline">
               <Eye className="h-4 w-4 mr-2" />
               Preview
             </Button>
-            <Button variant="outline" size="sm">
+            <Button size="sm" variant="outline">
               <Save className="h-4 w-4 mr-2" />
               Save
             </Button>
@@ -351,12 +343,12 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
             {nodeTypes.map((nodeType) => (
               <div
                 key={nodeType.type}
-                className="p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
                 draggable
-                onDragStart={() => setDraggedNode(nodeType.type)}
-                onDragEnd={() => setDraggedNode(null)}
+                className="p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
                 role="button"
                 tabIndex={0}
+                onDragEnd={() => setDraggedNode(null)}
+                onDragStart={() => setDraggedNode(nodeType.type)}
               >
                 <div className="flex items-center gap-3">
                   <div className={`p-2 rounded ${nodeType.color} text-white`}>
@@ -378,6 +370,8 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                 <div
                   key={template.id}
                   className="p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                  role="button"
+                  tabIndex={0}
                   onClick={() => loadTemplate(template)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
@@ -385,13 +379,11 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                       loadTemplate(template);
                     }
                   }}
-                  role="button"
-                  tabIndex={0}
                 >
                   <div className="font-medium text-sm">{template.name}</div>
                   <div className="text-xs text-gray-500 mb-2">{template.description}</div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs">
+                    <Badge className="text-xs" variant="outline">
                       {template.difficulty}
                     </Badge>
                     <span className="text-xs text-gray-500">
@@ -410,12 +402,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
             ref={canvasRef}
             className="w-full h-full relative overflow-hidden bg-gray-100"
             onClick={handleCanvasClick}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                handleCanvasClick(e as any);
-              }
-            }}
+            onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
               e.preventDefault();
               if (draggedNode) {
@@ -428,7 +415,12 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                 }
               }
             }}
-            onDragOver={(e) => e.preventDefault()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleCanvasClick(e as any);
+              }
+            }}
           >
             {/* Grid Background */}
             <div 
@@ -450,28 +442,21 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
               return (
                 <div
                   key={node.id}
+                  draggable
                   className={`absolute p-4 bg-white border-2 rounded-lg cursor-pointer shadow-sm hover:shadow-md transition-all ${
                     selectedNode === node.id ? 'border-blue-500' : 'border-gray-200'
                   }`}
-                  onClick={() => {
-                    setSelectedNode(node.id);
-                    handleNodeClick(node.id);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setSelectedNode(node.id);
-                      handleNodeClick(node.id);
-                    }
-                  }}
                   role="button"
-                  tabIndex={0}
                   style={{
                     left: node.position.x,
                     top: node.position.y,
                     transform: `scale(${zoom})`
                   }}
-                  draggable
+                  tabIndex={0}
+                  onClick={() => {
+                    setSelectedNode(node.id);
+                    handleNodeClick(node.id);
+                  }}
                   onDrag={(e) => {
                     const rect = canvasRef.current?.getBoundingClientRect();
                     if (rect) {
@@ -479,6 +464,13 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                         x: e.clientX - rect.left,
                         y: e.clientY - rect.top
                       });
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setSelectedNode(node.id);
+                      handleNodeClick(node.id);
                     }
                   }}
                 >
@@ -494,13 +486,13 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                   
                   {selectedNode === node.id && (
                     <div className="absolute -top-8 right-0 flex gap-1">
-                      <Button size="sm" variant="outline" className="h-6 w-6 p-0">
+                      <Button className="h-6 w-6 p-0" size="sm" variant="outline">
                         <Settings className="h-3 w-3" />
                       </Button>
                       <Button 
+                        className="h-6 w-6 p-0" 
                         size="sm" 
-                        variant="outline" 
-                        className="h-6 w-6 p-0"
+                        variant="outline"
                         onClick={() => deleteNode(node.id)}
                       >
                         <Trash2 className="h-3 w-3" />
@@ -517,7 +509,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                 const fromNode = workflow.nodes.find(n => n.id === connection.from);
                 const toNode = workflow.nodes.find(n => n.id === connection.to);
                 
-                if (!fromNode || !toNode) return null;
+                if (!fromNode || !toNode) {return null;}
 
                 const fromX = fromNode.position.x + 100; // Approximate node center
                 const fromY = fromNode.position.y + 50;
@@ -527,13 +519,13 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                 return (
                   <line
                     key={`connection-${connection.from}-${connection.to}`}
-                    x1={fromX}
-                    y1={fromY}
-                    x2={toX}
-                    y2={toY}
+                    markerEnd="url(#arrowhead)"
                     stroke="#6b7280"
                     strokeWidth="2"
-                    markerEnd="url(#arrowhead)"
+                    x1={fromX}
+                    x2={toX}
+                    y1={fromY}
+                    y2={toY}
                   />
                 );
               })}
@@ -541,15 +533,15 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
               <defs>
                 <marker
                   id="arrowhead"
-                  markerWidth="10"
                   markerHeight="7"
+                  markerWidth="10"
+                  orient="auto"
                   refX="9"
                   refY="3.5"
-                  orient="auto"
                 >
                   <polygon
-                    points="0 0, 10 3.5, 0 7"
                     fill="#6b7280"
+                    points="0 0, 10 3.5, 0 7"
                   />
                 </marker>
               </defs>
@@ -563,7 +555,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
             <h3 className="font-semibold mb-4">Node Properties</h3>
             {(() => {
               const node = workflow.nodes.find(n => n.id === selectedNode);
-              if (!node) return null;
+              if (!node) {return null;}
 
               return (
                 <div className="space-y-4">
@@ -582,11 +574,11 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                     <Label htmlFor="node-description">Description</Label>
                     <Textarea
                       id="node-description"
+                      rows={3}
                       value={node.metadata.description}
                       onChange={(e) => updateNode(node.id, {
                         metadata: { ...node.metadata, description: e.target.value }
                       })}
-                      rows={3}
                     />
                   </div>
 
@@ -601,11 +593,11 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
 
                   <div className="pt-4 border-t">
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline" className="flex-1">
+                      <Button className="flex-1" size="sm" variant="outline">
                         <Copy className="h-4 w-4 mr-2" />
                         Duplicate
                       </Button>
-                      <Button size="sm" variant="outline" className="flex-1">
+                      <Button className="flex-1" size="sm" variant="outline">
                         <Share className="h-4 w-4 mr-2" />
                         Share
                       </Button>

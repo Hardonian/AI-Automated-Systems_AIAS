@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
 import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
+
 import { env } from "@/lib/env";
+import { logger } from "@/lib/logging/structured-logger";
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -50,9 +51,9 @@ export async function GET(request: NextRequest) {
     const grouped: Record<string, { completed: number; failed: number }> = {};
 
     executions?.forEach((execution: { started_at?: string; status?: string }) => {
-      if (!execution.started_at) return;
+      if (!execution.started_at) {return;}
       const dateStr = new Date(execution.started_at).toISOString().split("T")[0]; // YYYY-MM-DD
-      if (!dateStr) return;
+      if (!dateStr) {return;}
       if (!grouped[dateStr]) {
         grouped[dateStr] = { completed: 0, failed: 0 };
       }

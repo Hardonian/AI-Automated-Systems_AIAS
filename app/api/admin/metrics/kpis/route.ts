@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+
 import { logger } from "@/lib/logging/structured-logger";
 import { createServerClient } from "@/lib/supabase/server";
 
@@ -92,7 +93,7 @@ export async function GET() {
 
     // Calculate trends
     const calculateChange = (current: number, previous: number) => {
-      if (previous === 0) return current > 0 ? 100 : 0;
+      if (previous === 0) {return current > 0 ? 100 : 0;}
       return ((current - previous) / previous) * 100;
     };
 

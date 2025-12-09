@@ -4,9 +4,10 @@
  */
 
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
 import { createPOSTHandler } from '@/lib/api/route-handler';
 import { getTemplateById, replaceTemplateVariables } from '@/lib/email-templates';
-import { z } from 'zod';
 
 const previewSchema = z.object({
   templateId: z.string(),

@@ -3,10 +3,10 @@
  * Validates build for Edge Runtime, WASM, Workers, and Hydrogen/Oxygen compatibility
  */
 
+import { execSync } from 'child_process';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 // import { resolve } from 'path';
-import { execSync } from 'child_process';
 
 interface CompatibilityReport {
   edgeRuntime: {
@@ -445,10 +445,10 @@ class FutureCheck {
     const score = (compatibleCount / checks.length) * 100;
 
     let status: CompatibilityReport['overall']['status'];
-    if (score >= 90) status = 'excellent';
-    else if (score >= 70) status = 'good';
-    else if (score >= 40) status = 'needs-work';
-    else status = 'incompatible';
+    if (score >= 90) {status = 'excellent';}
+    else if (score >= 70) {status = 'good';}
+    else if (score >= 40) {status = 'needs-work';}
+    else {status = 'incompatible';}
 
     return { score, status };
   }

@@ -3,12 +3,13 @@
  */
 
 import { NextResponse } from 'next/server';
+
 import { createGETHandler } from '@/lib/api/route-handler';
 import { abTestingService } from '@/lib/lead-generation/ab-testing';
 
 export const GET = createGETHandler(
   async (context) => {
-    const searchParams = context.request.nextUrl.searchParams;
+    const {searchParams} = context.request.nextUrl;
     const testId = searchParams.get('testId');
     
     if (!testId) {

@@ -3,11 +3,12 @@
  * ops guardian:verify, ops guardian:audit, etc.
  */
 
+import { readFileSync, existsSync } from 'fs';
+import { join } from 'path';
+
 import { guardianService } from '../../guardian/core';
 import { guardianInspector } from '../../guardian/inspector';
 import { trustFabricAI } from '../../guardian/recommendations';
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
 
 export async function verify(_options: { verbose?: boolean }): Promise<number> {
   console.log('🔍 Verifying Guardian ledger integrity...\n');

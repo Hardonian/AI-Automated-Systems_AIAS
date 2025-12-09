@@ -1,8 +1,9 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Check, Shield, Lock, Globe, DollarSign, Users } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Why Canadian — AIAS Platform | Built in Canada, Trusted Worldwide",
@@ -177,10 +178,10 @@ export default function WhyCanadianPage() {
           Join 2,000+ businesses worldwide trusting AIAS Platform for their automation needs.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
+          <Button asChild size="lg">
             <Link href="/signup">Start Free Trial</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
+          <Button asChild size="lg" variant="outline">
             <Link href="/demo">Book Demo</Link>
           </Button>
         </div>

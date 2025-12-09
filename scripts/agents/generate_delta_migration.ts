@@ -5,10 +5,11 @@
  * Idempotent, safe to re-run
  */
 
-import { withDb } from "../lib/db";
-import { log, err } from "../lib/logger";
 import fs from "fs";
 import path from "path";
+
+import { withDb } from "../lib/db";
+import { log, err } from "../lib/logger";
 
 async function checkTableExists(c: any, tableName: string): Promise<boolean> {
   const result = await c.query(

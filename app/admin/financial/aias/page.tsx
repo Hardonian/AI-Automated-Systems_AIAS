@@ -6,12 +6,13 @@
  * Data is stored in internal/private/financial/aias/ (encrypted with git-crypt).
  */
 
-import { redirect } from "next/navigation";
-import { checkAdminAccess, AdminRole, hasAdminRole } from "@/lib/auth/admin-auth";
-import { AdminLayout } from "@/components/admin/admin-layout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Shield, Lock, FileText } from "lucide-react";
+import { redirect } from "next/navigation";
+
+import { AdminLayout } from "@/components/admin/admin-layout";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { checkAdminAccess, AdminRole, hasAdminRole } from "@/lib/auth/admin-auth";
 
 export default async function AIASFinancialPage() {
   // Check admin access

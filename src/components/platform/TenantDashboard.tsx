@@ -3,12 +3,6 @@
  * Central hub for tenant management and platform overview
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
 import { 
   Building2, 
   Users, 
@@ -21,13 +15,18 @@ import {
   CheckCircle,
   Clock,
   Globe,
-  Shield,
   Bot,
   Workflow,
-  Store,
   Activity
 } from 'lucide-react';
-import { Tenant, SubscriptionPlan, UsageMetrics, PlatformAnalytics } from '@/types/platform';
+import React, { useState, useEffect } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tenant, UsageMetrics, PlatformAnalytics } from '@/types/platform';
 
 interface TenantDashboardProps {
   tenantId: string;
@@ -154,7 +153,7 @@ export const TenantDashboard: React.FC<TenantDashboardProps> = ({ tenantId }) =>
   };
 
   const getUsagePercentage = (used: number, limit: number) => {
-    if (limit === -1) return 0; // unlimited
+    if (limit === -1) {return 0;} // unlimited
     return Math.min((used / limit) * 100, 100);
   };
 
@@ -171,7 +170,7 @@ export const TenantDashboard: React.FC<TenantDashboardProps> = ({ tenantId }) =>
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
       </div>
     );
   }
@@ -230,8 +229,8 @@ export const TenantDashboard: React.FC<TenantDashboardProps> = ({ tenantId }) =>
             {tenant.limits.workflows !== -1 && (
               <div className="mt-3">
                 <Progress 
-                  value={getUsagePercentage(usage?.workflows || 0, tenant.limits.workflows)} 
-                  className="h-2"
+                  className="h-2" 
+                  value={getUsagePercentage(usage?.workflows || 0, tenant.limits.workflows)}
                 />
               </div>
             )}
@@ -254,8 +253,8 @@ export const TenantDashboard: React.FC<TenantDashboardProps> = ({ tenantId }) =>
             </div>
             <div className="mt-3">
               <Progress 
-                value={getUsagePercentage(usage?.executions || 0, tenant.limits.executions)} 
-                className="h-2"
+                className="h-2" 
+                value={getUsagePercentage(usage?.executions || 0, tenant.limits.executions)}
               />
             </div>
           </CardContent>
@@ -294,8 +293,8 @@ export const TenantDashboard: React.FC<TenantDashboardProps> = ({ tenantId }) =>
             </div>
             <div className="mt-3">
               <Progress 
-                value={getUsagePercentage(usage?.storage || 0, tenant.limits.storage)} 
-                className="h-2"
+                className="h-2" 
+                value={getUsagePercentage(usage?.storage || 0, tenant.limits.storage)}
               />
             </div>
           </CardContent>
@@ -303,7 +302,7 @@ export const TenantDashboard: React.FC<TenantDashboardProps> = ({ tenantId }) =>
       </div>
 
       {/* Main Content */}
-      <Tabs defaultValue="overview" className="w-full">
+      <Tabs className="w-full" defaultValue="overview">
         <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="workflows">Workflows</TabsTrigger>
@@ -313,7 +312,7 @@ export const TenantDashboard: React.FC<TenantDashboardProps> = ({ tenantId }) =>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-6">
+        <TabsContent className="space-y-6" value="overview">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Recent Activity */}
             <Card>
@@ -441,7 +440,7 @@ export const TenantDashboard: React.FC<TenantDashboardProps> = ({ tenantId }) =>
           </Card>
         </TabsContent>
 
-        <TabsContent value="workflows" className="space-y-6">
+        <TabsContent className="space-y-6" value="workflows">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Workflows</h2>
             <Button>
@@ -454,7 +453,7 @@ export const TenantDashboard: React.FC<TenantDashboardProps> = ({ tenantId }) =>
           </div>
         </TabsContent>
 
-        <TabsContent value="agents" className="space-y-6">
+        <TabsContent className="space-y-6" value="agents">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">AI Agents</h2>
             <Button>
@@ -467,7 +466,7 @@ export const TenantDashboard: React.FC<TenantDashboardProps> = ({ tenantId }) =>
           </div>
         </TabsContent>
 
-        <TabsContent value="integrations" className="space-y-6">
+        <TabsContent className="space-y-6" value="integrations">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Integrations</h2>
             <Button>
@@ -480,7 +479,7 @@ export const TenantDashboard: React.FC<TenantDashboardProps> = ({ tenantId }) =>
           </div>
         </TabsContent>
 
-        <TabsContent value="billing" className="space-y-6">
+        <TabsContent className="space-y-6" value="billing">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Billing & Usage</h2>
             <Button variant="outline">
@@ -493,7 +492,7 @@ export const TenantDashboard: React.FC<TenantDashboardProps> = ({ tenantId }) =>
           </div>
         </TabsContent>
 
-        <TabsContent value="settings" className="space-y-6">
+        <TabsContent className="space-y-6" value="settings">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Settings</h2>
             <Button variant="outline">

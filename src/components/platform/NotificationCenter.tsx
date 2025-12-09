@@ -3,36 +3,32 @@
  * Live notification components with WebSocket integration
  */
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Switch } from '@/components/ui/switch';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { 
   Bell, 
-  BellRing, 
   Settings, 
   Check, 
-  X, 
   AlertTriangle, 
   Info, 
   CheckCircle, 
   AlertCircle,
   Filter,
   Search,
-  MoreVertical,
   Trash2,
-  Archive,
   MarkAsRead,
   Volume2,
-  VolumeX,
   Wifi,
   WifiOff
 } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Notification, CommunicationChannel } from '@/types/platform';
 
 interface NotificationCenterProps {
@@ -89,7 +85,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
 
   // WebSocket connection management
   const connectWebSocket = useCallback(() => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) return;
+    if (wsRef.current?.readyState === WebSocket.OPEN) {return;}
 
     try {
       // Get WebSocket URL from environment variables dynamically
@@ -174,7 +170,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
   }, []);
 
   const showDesktopNotification = useCallback((notification: Notification) => {
-    if (!settings.desktop || !('Notification' in window)) return;
+    if (!settings.desktop || !('Notification' in window)) {return;}
 
     if (Notification.permission === 'granted') {
       const notif = new Notification(notification.title, {
@@ -456,14 +452,14 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
             )}
           </div>
 
-          <Button variant="outline" size="sm" onClick={markAllAsRead}>
+          <Button size="sm" variant="outline" onClick={markAllAsRead}>
             <MarkAsRead className="h-4 w-4 mr-2" />
             Mark All Read
           </Button>
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs className="w-full" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="all">
             All {unreadCount > 0 && `(${unreadCount})`}
@@ -480,7 +476,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
         </TabsList>
 
         {/* Notifications List */}
-        <TabsContent value={activeTab} className="space-y-4">
+        <TabsContent className="space-y-4" value={activeTab}>
           {activeTab !== 'settings' && (
             <>
               {/* Search and Filters */}
@@ -488,13 +484,13 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
+                    className="pl-10"
                     placeholder="Search notifications..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
                   />
                 </div>
-                <Button variant="outline" size="sm">
+                <Button size="sm" variant="outline">
                   <Filter className="h-4 w-4 mr-2" />
                   Filter
                 </Button>
@@ -530,13 +526,13 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                                       {notification.title}
                                     </h3>
                                     <Badge 
-                                      variant="outline" 
-                                      className={getPriorityColor(notification.priority)}
+                                      className={getPriorityColor(notification.priority)} 
+                                      variant="outline"
                                     >
                                       {notification.priority}
                                     </Badge>
                                     {!notification.read && (
-                                      <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                                      <div className="w-2 h-2 bg-blue-600 rounded-full" />
                                     )}
                                   </div>
                                   <p className="text-gray-600 text-sm mb-2">
@@ -548,7 +544,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                                     </span>
                                     <div className="flex items-center gap-1">
                                       {notification.channels.map((channel: string) => (
-                                        <Badge key={channel} variant="secondary" className="text-xs">
+                                        <Badge key={channel} className="text-xs" variant="secondary">
                                           {channel}
                                         </Badge>
                                       ))}
@@ -683,8 +679,8 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                       {['general', 'alerts', 'workflows', 'billing', 'integrations', 'security'].map(category => (
                         <div key={category} className="flex items-center space-x-2">
                           <Checkbox
-                            id={category}
                             checked={settings.categories.includes(category)}
+                            id={category}
                             onCheckedChange={(checked: boolean) => {
                               const newCategories = checked
                                 ? [...settings.categories, category]
@@ -692,7 +688,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                               updateSettings({ categories: newCategories });
                             }}
                           />
-                          <Label htmlFor={category} className="capitalize">
+                          <Label className="capitalize" htmlFor={category}>
                             {category}
                           </Label>
                         </div>
@@ -730,14 +726,14 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                               );
                             }}
                           />
-                          <Button variant="outline" size="sm">
+                          <Button size="sm" variant="outline">
                             <Settings className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>
                     ))}
                     
-                    <Button variant="outline" className="w-full">
+                    <Button className="w-full" variant="outline">
                       <Bell className="h-4 w-4 mr-2" />
                       Add New Channel
                     </Button>

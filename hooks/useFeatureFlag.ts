@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect } from 'react';
+
 import { isFeatureEnabled, FlagKey, UserId } from '@/lib/flags/flags';
 
 /**
@@ -14,11 +15,11 @@ import { isFeatureEnabled, FlagKey, UserId } from '@/lib/flags/flags';
  * Override this based on your auth setup
  */
 function getCurrentUserId(): UserId | undefined {
-  if (typeof window === 'undefined') return undefined;
+  if (typeof window === 'undefined') {return undefined;}
   
   // Try to get from session storage
   const userId = sessionStorage.getItem('user_id');
-  if (userId) return userId;
+  if (userId) {return userId;}
   
   // Fallback to session ID
   return sessionStorage.getItem('analytics_session_id') || undefined;

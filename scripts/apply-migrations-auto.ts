@@ -103,7 +103,7 @@ async function applyMigrations() {
       }
     );
 
-    console.log('\n' + '='.repeat(60));
+    console.log(`\n${  '='.repeat(60)}`);
     console.log('✅ Migrations applied successfully!\n');
     return true;
   } catch (error: any) {

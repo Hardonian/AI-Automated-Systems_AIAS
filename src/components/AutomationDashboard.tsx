@@ -3,12 +3,6 @@
  * Comprehensive view of backend automation capabilities
  */
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-// import { Progress } from '@/components/ui/progress';
 import { 
   Bot, 
   Calendar, 
@@ -28,6 +22,13 @@ import {
   AlertTriangle,
   Activity
 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// import { Progress } from '@/components/ui/progress';
 import { AutomationWorkflow } from '@/lib/automation';
 // import { automationManager, LeadGenerationConfig, AppointmentBookingConfig, NoteTakingConfig, SketchingConfig } from '@/lib/automation';
 
@@ -280,7 +281,7 @@ export const AutomationDashboard: React.FC = () => {
       )}
 
       {/* Main Content */}
-      <Tabs defaultValue="workflows" className="w-full">
+      <Tabs className="w-full" defaultValue="workflows">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="workflows">Workflows</TabsTrigger>
           <TabsTrigger value="executions">Recent Executions</TabsTrigger>
@@ -288,19 +289,19 @@ export const AutomationDashboard: React.FC = () => {
           <TabsTrigger value="integrations">Integrations</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="workflows" className="space-y-6">
+        <TabsContent className="space-y-6" value="workflows">
           {/* Category Filter */}
           <div className="flex flex-wrap gap-2">
             {categories.map(category => (
               <Button
                 key={category.id}
-                variant={selectedCategory === category.id ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedCategory(category.id)}
                 className="flex items-center gap-2"
+                size="sm"
+                variant={selectedCategory === category.id ? "default" : "outline"}
+                onClick={() => setSelectedCategory(category.id)}
               >
                 {category.label}
-                <Badge variant="secondary" className="ml-1">
+                <Badge className="ml-1" variant="secondary">
                   {category.count}
                 </Badge>
               </Button>
@@ -338,7 +339,7 @@ export const AutomationDashboard: React.FC = () => {
                   <div className="space-y-3">
                     <div className="flex flex-wrap gap-1">
                       {workflow.tags.map((tag: string) => (
-                        <Badge key={tag} variant="outline" className="text-xs">
+                        <Badge key={tag} className="text-xs" variant="outline">
                           {tag}
                         </Badge>
                       ))}
@@ -361,7 +362,7 @@ export const AutomationDashboard: React.FC = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="executions" className="space-y-6">
+        <TabsContent className="space-y-6" value="executions">
           <Card>
             <CardHeader>
               <CardTitle>Recent Executions</CardTitle>
@@ -401,7 +402,7 @@ export const AutomationDashboard: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="ai-features" className="space-y-6">
+        <TabsContent className="space-y-6" value="ai-features">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -521,7 +522,7 @@ export const AutomationDashboard: React.FC = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="integrations" className="space-y-6">
+        <TabsContent className="space-y-6" value="integrations">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card>
               <CardHeader>

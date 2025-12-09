@@ -1,18 +1,19 @@
 "use client";
 
+import { Loader2, Save, RefreshCw, Eye } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { ContentStudioFAQ } from "@/components/content-studio/ContentStudioFAQ";
+import { ContentStudioFeatures } from "@/components/content-studio/ContentStudioFeatures";
+import { ContentStudioHero } from "@/components/content-studio/ContentStudioHero";
+import { ContentStudioTestimonials } from "@/components/content-studio/ContentStudioTestimonials";
+import { ContentTemplates } from "@/components/content-studio/ContentTemplates";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, RefreshCw, Eye } from "lucide-react";
-import { ContentStudioHero } from "@/components/content-studio/ContentStudioHero";
-import { ContentStudioFeatures } from "@/components/content-studio/ContentStudioFeatures";
-import { ContentStudioTestimonials } from "@/components/content-studio/ContentStudioTestimonials";
-import { ContentStudioFAQ } from "@/components/content-studio/ContentStudioFAQ";
-import { ContentTemplates } from "@/components/content-studio/ContentTemplates";
 import type { AIASContent, SettlerContent } from "@/lib/content/schemas";
 
 export default function ContentStudioPage() {
@@ -33,7 +34,7 @@ export default function ContentStudioPage() {
 
   // Check if already authenticated (stored in sessionStorage)
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined") {return;}
     const auth = sessionStorage.getItem("content_studio_auth");
     const storedToken = sessionStorage.getItem("content_studio_token");
     if (storedToken) {
@@ -48,7 +49,7 @@ export default function ContentStudioPage() {
 
   // Auto-save functionality
   useEffect(() => {
-    if (!autoSaveEnabled || !hasChanges || !authenticated || saving) return;
+    if (!autoSaveEnabled || !hasChanges || !authenticated || saving) {return;}
 
     // Clear existing timeout
     if (autoSaveTimeoutRef.current) {
@@ -85,7 +86,7 @@ export default function ContentStudioPage() {
             setToken(data.token);
             setAuthenticated(true);
             await loadContent();
-            return;
+            
           }
         }
       } catch (error) {
@@ -283,6 +284,7 @@ export default function ContentStudioPage() {
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
+                placeholder="Enter access token"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -291,13 +293,12 @@ export default function ContentStudioPage() {
                     handleLogin();
                   }
                 }}
-                placeholder="Enter access token"
               />
             </div>
             <Button
-              onClick={handleLogin}
-              disabled={loading || !password}
               className="w-full"
+              disabled={loading || !password}
+              onClick={handleLogin}
             >
               {loading ? (
                 <>
@@ -312,6 +313,7 @@ export default function ContentStudioPage() {
               If you're an admin, sign in to your account first, or enter your Content Studio token.
             </p>
             <Button
+              className="w-full"
               variant="outline"
               onClick={async () => {
                 // Try to get token from admin session
@@ -345,7 +347,6 @@ export default function ContentStudioPage() {
                   });
                 }
               }}
-              className="w-full"
             >
               Sign In as Admin
             </Button>
@@ -368,8 +369,8 @@ export default function ContentStudioPage() {
             </div>
             <div className="flex items-center gap-2">
               <Button
-                variant="outline"
                 size="sm"
+                variant="outline"
                 onClick={() => {
                   const url =
                     activeSite === "aias" ? "/" : "/settler";
@@ -380,26 +381,26 @@ export default function ContentStudioPage() {
                 Preview
               </Button>
               <Button
-                variant="outline"
                 size="sm"
-                onClick={() => setAutoSaveEnabled(!autoSaveEnabled)}
                 title={autoSaveEnabled ? "Disable auto-save" : "Enable auto-save"}
+                variant="outline"
+                onClick={() => setAutoSaveEnabled(!autoSaveEnabled)}
               >
                 {autoSaveEnabled ? "Auto-save: ON" : "Auto-save: OFF"}
               </Button>
               <Button
-                variant="outline"
-                size="sm"
-                onClick={handleReset}
                 disabled={!hasChanges || saving}
+                size="sm"
+                variant="outline"
+                onClick={handleReset}
               >
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Reset
               </Button>
               <Button
-                onClick={() => handleSave()}
                 disabled={(!hasChanges && !saving) || saving}
                 size="sm"
+                onClick={() => handleSave()}
               >
                 {saving ? (
                   <>
@@ -431,7 +432,7 @@ export default function ContentStudioPage() {
             </div>
           ) : (
             <>
-              <TabsContent value="aias" className="space-y-6">
+              <TabsContent className="space-y-6" value="aias">
                 {aiasContent && (
                   <>
                     <ContentTemplates
@@ -443,41 +444,41 @@ export default function ContentStudioPage() {
                     />
                     <ContentStudioHero
                       content={aiasContent.hero}
+                      token={token}
                       onChange={(hero) => {
                         setAiasContent({ ...aiasContent, hero });
                         setHasChanges(true);
                       }}
-                      token={token}
                     />
                     <ContentStudioFeatures
                       content={aiasContent.features}
+                      token={token}
                       onChange={(features) => {
                         setAiasContent({ ...aiasContent, features });
                         setHasChanges(true);
                       }}
-                      token={token}
                     />
                     <ContentStudioTestimonials
                       content={aiasContent.testimonials}
+                      token={token}
                       onChange={(testimonials) => {
                         setAiasContent({ ...aiasContent, testimonials });
                         setHasChanges(true);
                       }}
-                      token={token}
                     />
                     <ContentStudioFAQ
                       content={aiasContent.faq}
+                      token={token}
                       onChange={(faq) => {
                         setAiasContent({ ...aiasContent, faq });
                         setHasChanges(true);
                       }}
-                      token={token}
                     />
                   </>
                 )}
               </TabsContent>
 
-              <TabsContent value="settler" className="space-y-6">
+              <TabsContent className="space-y-6" value="settler">
                 {settlerContent && (
                   <>
                     <ContentTemplates
@@ -489,19 +490,19 @@ export default function ContentStudioPage() {
                     />
                     <ContentStudioHero
                       content={settlerContent.hero}
+                      token={token}
                       onChange={(hero) => {
                         setSettlerContent({ ...settlerContent, hero });
                         setHasChanges(true);
                       }}
-                      token={token}
                     />
                     <ContentStudioFeatures
                       content={settlerContent.features}
+                      token={token}
                       onChange={(features) => {
                         setSettlerContent({ ...settlerContent, features });
                         setHasChanges(true);
                       }}
-                      token={token}
                     />
                     {/* Add more Settler-specific editors as needed */}
                   </>

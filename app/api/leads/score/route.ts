@@ -3,9 +3,10 @@
  */
 
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
 import { createPOSTHandler } from '@/lib/api/route-handler';
 import { leadScoringService } from '@/lib/lead-generation/lead-scoring';
-import { z } from 'zod';
 
 const scoreLeadSchema = z.object({
   leadId: z.string().uuid(),

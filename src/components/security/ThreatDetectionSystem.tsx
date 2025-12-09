@@ -1,10 +1,3 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Progress } from '@/components/ui/progress';
 import { 
   Brain, 
   Shield, 
@@ -14,20 +7,22 @@ import {
   Activity,
   Zap,
   Eye,
-  Lock,
   Globe,
   Clock,
   Settings,
   Play,
   Pause,
-  RotateCcw,
   TrendingUp,
-  TrendingDown,
-  Target,
-  Users,
-  Database,
-  FileText
+  Target
 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export interface ThreatPattern {
   id: string;
@@ -289,9 +284,9 @@ export const ThreatDetectionSystem: React.FC = () => {
     const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / (1000 * 60));
     
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`;
+    if (diffMins < 1) {return 'Just now';}
+    if (diffMins < 60) {return `${diffMins}m ago`;}
+    if (diffMins < 1440) {return `${Math.floor(diffMins / 60)}h ago`;}
     return date.toLocaleDateString();
   };
 
@@ -308,9 +303,9 @@ export const ThreatDetectionSystem: React.FC = () => {
   };
 
   const getRiskLevel = (score: number) => {
-    if (score >= 80) return { level: 'Critical', color: 'text-red-600' };
-    if (score >= 60) return { level: 'High', color: 'text-orange-600' };
-    if (score >= 40) return { level: 'Medium', color: 'text-yellow-600' };
+    if (score >= 80) {return { level: 'Critical', color: 'text-red-600' };}
+    if (score >= 60) {return { level: 'High', color: 'text-orange-600' };}
+    if (score >= 40) {return { level: 'Medium', color: 'text-yellow-600' };}
     return { level: 'Low', color: 'text-green-600' };
   };
 
@@ -326,8 +321,8 @@ export const ThreatDetectionSystem: React.FC = () => {
         </div>
         <div className="flex items-center gap-2">
           <Button
-            onClick={() => setIsMonitoring(!isMonitoring)}
             variant={isMonitoring ? "destructive" : "default"}
+            onClick={() => setIsMonitoring(!isMonitoring)}
           >
             {isMonitoring ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
             {isMonitoring ? 'Stop Monitoring' : 'Start Monitoring'}
@@ -416,7 +411,7 @@ export const ThreatDetectionSystem: React.FC = () => {
         </Card>
       </div>
 
-      <Tabs defaultValue="events" className="w-full">
+      <Tabs className="w-full" defaultValue="events">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="events">Threat Events</TabsTrigger>
           <TabsTrigger value="patterns">Threat Patterns</TabsTrigger>
@@ -424,7 +419,7 @@ export const ThreatDetectionSystem: React.FC = () => {
           <TabsTrigger value="response">Auto Response</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="events" className="space-y-4">
+        <TabsContent className="space-y-4" value="events">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -468,7 +463,7 @@ export const ThreatDetectionSystem: React.FC = () => {
                             <div className="flex items-center gap-2">
                               <span className="text-sm font-medium">Risk Score:</span>
                               <div className="flex items-center gap-2">
-                                <Progress value={event.riskScore} className="w-20 h-2" />
+                                <Progress className="w-20 h-2" value={event.riskScore} />
                                 <span className={`text-sm font-bold ${getRiskLevel(event.riskScore).color}`}>
                                   {event.riskScore}
                                 </span>
@@ -479,8 +474,8 @@ export const ThreatDetectionSystem: React.FC = () => {
                       </div>
                       <div className="flex gap-2">
                         <Button
-                          variant="outline"
                           size="sm"
+                          variant="outline"
                           onClick={() => setSelectedThreat(event)}
                         >
                           <Eye className="w-4 h-4 mr-2" />
@@ -496,8 +491,8 @@ export const ThreatDetectionSystem: React.FC = () => {
                               Mitigate
                             </Button>
                             <Button
-                              variant="destructive"
                               size="sm"
+                              variant="destructive"
                               onClick={() => handleThreatResponse(event.id, 'false_positive')}
                             >
                               <XCircle className="w-4 h-4 mr-2" />
@@ -512,7 +507,7 @@ export const ThreatDetectionSystem: React.FC = () => {
                         <h5 className="text-sm font-medium mb-2">Actions Taken:</h5>
                         <div className="flex flex-wrap gap-1">
                           {event.actions.map((action, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
+                            <Badge key={index} className="text-xs" variant="outline">
                               {action}
                             </Badge>
                           ))}
@@ -526,7 +521,7 @@ export const ThreatDetectionSystem: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="patterns" className="space-y-4">
+        <TabsContent className="space-y-4" value="patterns">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -556,7 +551,7 @@ export const ThreatDetectionSystem: React.FC = () => {
                             <h5 className="text-sm font-medium mb-2">Indicators:</h5>
                             <div className="flex flex-wrap gap-1">
                               {pattern.indicators.map((indicator, index) => (
-                                <Badge key={index} variant="outline" className="text-xs">
+                                <Badge key={index} className="text-xs" variant="outline">
                                   {indicator.replace(/_/g, ' ')}
                                 </Badge>
                               ))}
@@ -566,7 +561,7 @@ export const ThreatDetectionSystem: React.FC = () => {
                             <h5 className="text-sm font-medium mb-2">Mitigation:</h5>
                             <div className="flex flex-wrap gap-1">
                               {pattern.mitigation.map((action, index) => (
-                                <Badge key={index} variant="outline" className="text-xs">
+                                <Badge key={index} className="text-xs" variant="outline">
                                   {action.replace(/_/g, ' ')}
                                 </Badge>
                               ))}
@@ -589,7 +584,7 @@ export const ThreatDetectionSystem: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="analysis" className="space-y-4">
+        <TabsContent className="space-y-4" value="analysis">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -670,7 +665,7 @@ export const ThreatDetectionSystem: React.FC = () => {
                       <h5 className="text-sm font-medium mb-2">Next Steps</h5>
                       <div className="flex flex-wrap gap-1">
                         {analysis.nextSteps.map((step, idx) => (
-                          <Badge key={idx} variant="outline" className="text-xs">
+                          <Badge key={idx} className="text-xs" variant="outline">
                             {step}
                           </Badge>
                         ))}
@@ -683,7 +678,7 @@ export const ThreatDetectionSystem: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="response" className="space-y-4">
+        <TabsContent className="space-y-4" value="response">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

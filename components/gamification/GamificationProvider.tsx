@@ -32,15 +32,16 @@ export function GamificationProvider({ children }: { children: React.ReactNode }
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
     
-    const { data: tier } = await supabase
-      .from("subscription_tiers")
+    const { data: tier } = await (supabase
+      .from("subscription_tiers") as any)
       .select("xp_multiplier")
       .eq("user_id", user.id)
       .gte("expires_at", new Date().toISOString())
       .single();
     
     if (tier) {
-      setXpMultiplier(Number(tier.xp_multiplier) || 1.0);
+      const tierData = tier as { xp_multiplier?: number | string | null };
+      setXpMultiplier(Number(tierData.xp_multiplier) || 1.0);
     }
   }
   
@@ -84,14 +85,15 @@ export const awardXp = async (delta = 5) => {
     // Update server-side XP
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-      const { data: profile } = await supabase
-        .from("profiles")
+      const { data: profile } = await (supabase
+        .from("profiles") as any)
         .select("total_xp")
         .eq("id", user.id)
         .single();
       
-      const newTotalXP = (profile?.total_xp || 0) + adjustedDelta;
-      await supabase.from("profiles").update({ total_xp: newTotalXP }).eq("id", user.id);
+      const profileData = profile as { total_xp?: number | null } | null;
+      const newTotalXP = (profileData?.total_xp || 0) + adjustedDelta;
+      await (supabase.from("profiles") as any).update({ total_xp: newTotalXP }).eq("id", user.id);
     }
     
     window.dispatchEvent(new Event("storage"));

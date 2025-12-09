@@ -1,8 +1,9 @@
-import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Gauge, TrendingUp, Clock, Zap } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Edge AI Benchmarks — Performance Metrics | AIAS",
@@ -59,7 +60,7 @@ export default function EdgeAIBenchmarksPage() {
                 <span className="font-semibold">245 MB</span>
               </div>
               <div className="pt-3 border-t">
-                <Button size="sm" variant="outline" className="w-full" asChild>
+                <Button asChild className="w-full" size="sm" variant="outline">
                   <Link href="/edge-ai/benchmarks/example">View Details</Link>
                 </Button>
               </div>
@@ -79,7 +80,7 @@ export default function EdgeAIBenchmarksPage() {
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
             <p>Run multiple benchmarks to see comparison charts</p>
-            <Button variant="outline" className="mt-4" asChild>
+            <Button asChild className="mt-4" variant="outline">
               <Link href="/edge-ai/benchmarks/new">Start Benchmarking</Link>
             </Button>
           </div>

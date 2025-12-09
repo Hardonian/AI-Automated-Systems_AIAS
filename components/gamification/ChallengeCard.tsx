@@ -30,17 +30,18 @@ export default function ChallengeCard({ challenge }: { challenge: Challenge }) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
     
-    const { data } = await supabase
-      .from("challenge_participants")
+    const { data } = await (supabase
+      .from("challenge_participants") as any)
       .select("*")
       .eq("challenge_id", challenge.id)
       .eq("user_id", user.id)
       .single();
     
     if (data) {
+      const participantData = data as { progress?: Record<string, unknown>; completed_at?: string | null };
       setParticipating(true);
-      setProgress(data.progress || {});
-      setCompleted(!!data.completed_at);
+      setProgress(participantData.progress || {});
+      setCompleted(!!participantData.completed_at);
     }
   }
 
@@ -49,7 +50,7 @@ export default function ChallengeCard({ challenge }: { challenge: Challenge }) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
     
-    await supabase.from("challenge_participants").insert({
+    await (supabase.from("challenge_participants") as any).insert({
       challenge_id: challenge.id,
       user_id: user.id,
         progress: _progress
@@ -62,8 +63,8 @@ export default function ChallengeCard({ challenge }: { challenge: Challenge }) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
     
-    await supabase
-      .from("challenge_participants")
+    await (supabase
+      .from("challenge_participants") as any)
       .update({ completed_at: new Date().toISOString() })
       .eq("challenge_id", challenge.id)
       .eq("user_id", user.id);

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { logger } from "@/lib/logging/structured-logger";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Info } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { logger } from "@/lib/logging/structured-logger";
 
 interface UsagePattern {
   feature: string;
@@ -98,14 +99,14 @@ export default function InsightsPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="usage" className="space-y-4">
+      <Tabs className="space-y-4" defaultValue="usage">
         <TabsList>
           <TabsTrigger value="usage">Usage Patterns</TabsTrigger>
           <TabsTrigger value="errors">Error Analysis</TabsTrigger>
           <TabsTrigger value="health">Health Signals</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="usage" className="space-y-4">
+        <TabsContent className="space-y-4" value="usage">
           <Card>
             <CardHeader>
               <CardTitle>Feature Usage Patterns</CardTitle>
@@ -128,13 +129,13 @@ export default function InsightsPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       {pattern.trend === "increasing" && (
-                        <Badge variant="default" className="gap-1">
+                        <Badge className="gap-1" variant="default">
                           <TrendingUp className="h-3 w-3" />
                           Increasing
                         </Badge>
                       )}
                       {pattern.trend === "decreasing" && (
-                        <Badge variant="destructive" className="gap-1">
+                        <Badge className="gap-1" variant="destructive">
                           <TrendingDown className="h-3 w-3" />
                           Decreasing
                         </Badge>
@@ -153,7 +154,7 @@ export default function InsightsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="errors" className="space-y-4">
+        <TabsContent className="space-y-4" value="errors">
           <Card>
             <CardHeader>
               <CardTitle>Error Analysis</CardTitle>
@@ -194,7 +195,7 @@ export default function InsightsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="health" className="space-y-4">
+        <TabsContent className="space-y-4" value="health">
           <Card>
             <CardHeader>
               <CardTitle>Predictive Health Signals</CardTitle>

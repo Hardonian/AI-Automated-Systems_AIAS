@@ -2,9 +2,10 @@
  * Release Command - Execute release process
  */
 
-import * as fs from 'fs';
-// import * as path from 'path';
 import { execSync } from 'child_process';
+import * as fs from 'fs';
+
+// import * as path from 'path';
 import { doctor } from './doctor.js';
 
 export async function release(options: {
@@ -51,7 +52,7 @@ export async function release(options: {
   }
 
   // 4. Determine version
-  let version = options.version;
+  let {version} = options;
   if (!version) {
     const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
     version = packageJson.version;

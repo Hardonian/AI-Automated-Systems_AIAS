@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import { errorTracker } from '@/lib/monitoring/error-tracker';
 
 describe('Error Tracker', () => {

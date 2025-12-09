@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
+
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logging/structured-logger";
 /**
@@ -131,7 +132,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       url: urlData.publicUrl,
-      fileName: fileName,
+      fileName,
     });
   } catch (error: any) {
     logger.error("Upload error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });

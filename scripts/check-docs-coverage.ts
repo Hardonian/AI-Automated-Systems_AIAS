@@ -3,10 +3,9 @@
  * Identifies undocumented areas
  */
 
-import { stat } from "fs/promises";
+import { stat , writeFile } from "fs/promises";
 // import { readdir, readFile } from "fs/promises";
 import { join } from "path";
-import { writeFile } from "fs/promises";
 
 interface CoverageIssue {
   type: "missing_docs" | "outdated_docs" | "incomplete_docs";

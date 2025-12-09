@@ -90,10 +90,10 @@ export class PrivacyManager {
    */
   hasValidConsent(userId: string, purpose: keyof PrivacySettings): boolean {
     const dataSubject = this.dataSubjects.get(userId);
-    if (!dataSubject) return false;
+    if (!dataSubject) {return false;}
 
     const consent = this.consentData.get(dataSubject.consentId);
-    if (!consent) return false;
+    if (!consent) {return false;}
 
     // Check if consent is still valid (not expired)
     const consentAge = Date.now() - new Date(consent.timestamp).getTime();
@@ -191,13 +191,13 @@ export class PrivacyManager {
   private getDataProcessingPurposes(settings: PrivacySettings): string[] {
     const purposes: string[] = [];
     
-    if (settings.analytics) purposes.push('analytics', 'performance_measurement');
-    if (settings.marketing) purposes.push('marketing', 'advertising', 'personalization');
-    if (settings.functional) purposes.push('functionality', 'user_experience');
-    if (settings.necessary) purposes.push('security', 'authentication', 'legal_compliance');
-    if (settings.preferences) purposes.push('preference_storage', 'customization');
-    if (settings.performance) purposes.push('performance_optimization', 'caching');
-    if (settings.social) purposes.push('social_sharing', 'social_features');
+    if (settings.analytics) {purposes.push('analytics', 'performance_measurement');}
+    if (settings.marketing) {purposes.push('marketing', 'advertising', 'personalization');}
+    if (settings.functional) {purposes.push('functionality', 'user_experience');}
+    if (settings.necessary) {purposes.push('security', 'authentication', 'legal_compliance');}
+    if (settings.preferences) {purposes.push('preference_storage', 'customization');}
+    if (settings.performance) {purposes.push('performance_optimization', 'caching');}
+    if (settings.social) {purposes.push('social_sharing', 'social_features');}
 
     return purposes;
   }
@@ -210,9 +210,9 @@ export class PrivacyManager {
     let retention = 365; // 1 year default
 
     // Adjust based on consent types
-    if (settings.marketing) retention = Math.max(retention, 1095); // 3 years for marketing
-    if (settings.analytics) retention = Math.max(retention, 730); // 2 years for analytics
-    if (settings.social) retention = Math.max(retention, 1825); // 5 years for social data
+    if (settings.marketing) {retention = Math.max(retention, 1095);} // 3 years for marketing
+    if (settings.analytics) {retention = Math.max(retention, 730);} // 2 years for analytics
+    if (settings.social) {retention = Math.max(retention, 1825);} // 5 years for social data
 
     return retention;
   }
@@ -253,10 +253,10 @@ export class PrivacyManager {
    */
   needsConsentRenewal(userId: string): boolean {
     const dataSubject = this.dataSubjects.get(userId);
-    if (!dataSubject) return true;
+    if (!dataSubject) {return true;}
 
     const consent = this.consentData.get(dataSubject.consentId);
-    if (!consent) return true;
+    if (!consent) {return true;}
 
     // Check if consent is older than 1 year
     const oneYearAgo = Date.now() - (365 * 24 * 60 * 60 * 1000);

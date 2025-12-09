@@ -52,24 +52,35 @@ export async function getUserPlanData(userId: string): Promise<UserPlanData> {
     };
   }
 
+  // Type assertion for profile data
+  const profileData = profile as {
+    id: string;
+    subscription_tier?: string | null;
+    trial_started_at?: string | null;
+    created_at?: string | null;
+    pretest_completed?: boolean | null;
+    email_connected?: boolean | null;
+    workflows_created?: boolean | null;
+  };
+
   // Determine plan tier
   let plan: PlanTier = "free";
-  if (profile.subscription_tier) {
-    const tier = profile.subscription_tier.toLowerCase();
+  if (profileData.subscription_tier) {
+    const tier = profileData.subscription_tier.toLowerCase();
     if (tier === "starter" || tier === "pro") {
       plan = tier as PlanTier;
-    } else if (tier === "trial" || profile.trial_started_at) {
+    } else if (tier === "trial" || profileData.trial_started_at) {
       plan = "trial";
     }
-  } else if (profile.trial_started_at) {
+  } else if (profileData.trial_started_at) {
     plan = "trial";
   }
 
   // Calculate trial dates
-  const trialStartDate = profile.trial_started_at
-    ? new Date(profile.trial_started_at)
-    : profile.created_at
-    ? new Date(profile.created_at)
+  const trialStartDate = profileData.trial_started_at
+    ? new Date(profileData.trial_started_at)
+    : profileData.created_at
+    ? new Date(profileData.created_at)
     : null;
 
   const trialEndDate = trialStartDate
@@ -83,11 +94,11 @@ export async function getUserPlanData(userId: string): Promise<UserPlanData> {
 
   // Check if first visit (created in last 24 hours and no activity)
   const isFirstVisit =
-    profile.created_at &&
-    Date.now() - new Date(profile.created_at).getTime() < 24 * 60 * 60 * 1000 &&
-    !profile.pretest_completed &&
-    !profile.email_connected &&
-    !profile.workflows_created;
+    profileData.created_at &&
+    Date.now() - new Date(profileData.created_at).getTime() < 24 * 60 * 60 * 1000 &&
+    !profileData.pretest_completed &&
+    !profileData.email_connected &&
+    !profileData.workflows_created;
 
   return {
     plan,
@@ -95,9 +106,9 @@ export async function getUserPlanData(userId: string): Promise<UserPlanData> {
     trialEndDate,
     trialDaysRemaining,
     isFirstVisit: !!isFirstVisit,
-    hasCompletedPretest: profile.pretest_completed || false,
-    hasConnectedEmail: profile.email_connected || false,
-    hasCreatedWorkflow: profile.workflows_created || false,
+    hasCompletedPretest: profileData.pretest_completed || false,
+    hasConnectedEmail: profileData.email_connected || false,
+    hasCreatedWorkflow: profileData.workflows_created || false,
   };
 }
 
@@ -112,8 +123,8 @@ export async function savePretestAnswers(
 
   try {
     // Save to pretest_answers table (create if doesn't exist)
-    const { error: upsertError } = await supabase
-      .from("pretest_answers")
+    const { error: upsertError } = await (supabase
+      .from("pretest_answers") as any)
       .upsert({
         user_id: userId,
         answers: answers,
@@ -123,8 +134,8 @@ export async function savePretestAnswers(
 
     if (upsertError) {
       // If table doesn't exist, try updating profile
-      const { error: profileError } = await supabase
-        .from("profiles")
+      const { error: profileError } = await (supabase
+        .from("profiles") as any)
         .update({
           pretest_completed: true,
           pretest_answers: answers,
@@ -152,8 +163,8 @@ export async function savePretestAnswers(
 export async function markEmailConnected(userId: string): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
-  await supabase
-    .from("profiles")
+  await (supabase
+    .from("profiles") as any)
     .update({
       email_connected: true,
       updated_at: new Date().toISOString(),
@@ -167,8 +178,8 @@ export async function markEmailConnected(userId: string): Promise<void> {
 export async function markWorkflowCreated(userId: string): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
-  await supabase
-    .from("profiles")
+  await (supabase
+    .from("profiles") as any)
     .update({
       workflows_created: true,
       updated_at: new Date().toISOString(),
@@ -182,8 +193,8 @@ export async function markWorkflowCreated(userId: string): Promise<void> {
 export async function startTrial(userId: string): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
-  await supabase
-    .from("profiles")
+  await (supabase
+    .from("profiles") as any)
     .update({
       subscription_tier: "trial",
       trial_started_at: new Date().toISOString(),

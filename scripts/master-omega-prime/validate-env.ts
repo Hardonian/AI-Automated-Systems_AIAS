@@ -226,8 +226,8 @@ function printReport() {
 
   // Group by feature
   const byFeature = results.reduce((acc, result) => {
-    const feature = result.requirement.feature;
-    if (!acc[feature]) acc[feature] = [];
+    const {feature} = result.requirement;
+    if (!acc[feature]) {acc[feature] = [];}
     acc[feature].push(result);
     return acc;
   }, {} as Record<string, ValidationResult[]>);
@@ -245,7 +245,7 @@ function printReport() {
     });
   });
 
-  console.log('\n' + '='.repeat(70));
+  console.log(`\n${  '='.repeat(70)}`);
   
   if (summary.critical > 0) {
     console.log('\n🚨 CRITICAL: Missing required environment variables!');

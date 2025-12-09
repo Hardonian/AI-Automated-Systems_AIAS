@@ -234,7 +234,7 @@ export class PaymentService {
     console.log('Invoice payment failed:', invoice.id);
   }
 
-  private static mapStripeStatus(status: Stripe.Subscription.Status): any {
+  private static mapStripeStatus(status: Stripe.Subscription.Status): 'ACTIVE' | 'CANCELED' | 'INCOMPLETE' | 'INCOMPLETE_EXPIRED' | 'PAST_DUE' | 'TRIALING' | 'UNPAID' {
     switch (status) {
       case 'active':
         return 'ACTIVE';
@@ -255,7 +255,7 @@ export class PaymentService {
     }
   }
 
-  private static getPlanFromPriceId(priceId: string): any {
+  private static getPlanFromPriceId(priceId: string): 'BASIC' | 'PRO' | 'ADDON' | 'FREE' {
     if (priceId === config.stripe.prices.basic) {
       return 'BASIC';
     } else if (priceId === config.stripe.prices.pro) {

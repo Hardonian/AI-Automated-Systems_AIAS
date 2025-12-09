@@ -1,9 +1,11 @@
 import { createAIProvider, createFallbackAIProvider } from './providers';
 import { ChatRequest, AuditRequest, EstimateRequest, ContentGenerationRequest, WorkflowGenerationRequest } from './types';
 
+import { AIProvider } from './types';
+
 export class AIClient {
-  private primaryProvider: any;
-  private fallbackProvider: any;
+  private primaryProvider: AIProvider | null;
+  private fallbackProvider: AIProvider | null;
 
   constructor() {
     try {
@@ -22,7 +24,7 @@ export class AIClient {
   }
 
   private async executeWithFallback<T>(
-    operation: (provider: any) => Promise<T>,
+    operation: (provider: AIProvider) => Promise<T>,
     operationName: string
   ): Promise<T> {
     if (this.primaryProvider) {

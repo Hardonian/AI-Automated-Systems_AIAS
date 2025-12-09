@@ -67,7 +67,7 @@ export type WorkflowGenerationRequest = z.infer<typeof WorkflowGenerationRequest
 
 export interface AIProvider {
   name: string;
-  chat(request: ChatRequest): Promise<ChatMessage>;
+  chat(request: ChatRequest): Promise<AIResponse>;
   streamChat(request: ChatRequest): AsyncIterable<string>;
   generateAudit(request: AuditRequest): Promise<any>;
   generateEstimate(request: EstimateRequest): Promise<any>;

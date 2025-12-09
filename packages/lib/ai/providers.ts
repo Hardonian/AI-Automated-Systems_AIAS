@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { AIProvider, ChatRequest, AuditRequest, EstimateRequest, ContentGenerationRequest, WorkflowGenerationRequest } from './types';
+import { AIProvider, ChatRequest, AuditRequest, EstimateRequest, ContentGenerationRequest, WorkflowGenerationRequest, AIResponse } from './types';
 import { config } from '@ai-consultancy/config';
 
 class OpenAIProvider implements AIProvider {
@@ -17,7 +17,7 @@ class OpenAIProvider implements AIProvider {
     });
   }
 
-  async chat(request: ChatRequest): Promise<any> {
+  async chat(request: ChatRequest): Promise<AIResponse> {
     const response = await this.client.chat.completions.create({
       model: request.model || 'gpt-4',
       messages: request.messages as any,
@@ -27,7 +27,11 @@ class OpenAIProvider implements AIProvider {
 
     return {
       content: response.choices[0]?.message?.content || '',
-      usage: response.usage,
+      usage: response.usage ? {
+        promptTokens: response.usage.prompt_tokens || 0,
+        completionTokens: response.usage.completion_tokens || 0,
+        totalTokens: response.usage.total_tokens || 0,
+      } : undefined,
       model: response.model,
       provider: this.name,
     };
@@ -152,7 +156,7 @@ class AnthropicProvider implements AIProvider {
     });
   }
 
-  async chat(request: ChatRequest): Promise<any> {
+  async chat(request: ChatRequest): Promise<AIResponse> {
     const response = await (this.client as any).messages.create({
       model: request.model || 'claude-3-sonnet-20240229',
       max_tokens: request.maxTokens || 1000,
@@ -294,7 +298,7 @@ class GoogleProvider implements AIProvider {
     this.client = new GoogleGenerativeAI(config.ai.providers.google);
   }
 
-  async chat(request: ChatRequest): Promise<any> {
+  async chat(request: ChatRequest): Promise<AIResponse> {
     const model = this.client.getGenerativeModel({ model: request.model || 'gemini-pro' });
     
     const prompt = request.messages

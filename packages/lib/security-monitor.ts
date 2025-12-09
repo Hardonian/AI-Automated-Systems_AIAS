@@ -216,19 +216,24 @@ export class SecurityMonitor {
     const now = Date.now();
 
     // Get recent login failures for this IP
-    const recentFailures = await prisma.webhookEvent.count({
+    // Note: Prisma doesn't support JSON path queries directly, so we fetch and filter
+    const recentEvents = await prisma.webhookEvent.findMany({
       where: {
         source: 'security-monitor',
         event: SecurityEventType.LOGIN_FAILURE,
-        payload: {
-          path: ['ipAddress'],
-          equals: event.ipAddress,
-        },
         createdAt: {
           gte: new Date(now - timeWindow),
         },
       },
+      select: {
+        payload: true,
+      },
     });
+
+    const recentFailures = recentEvents.filter((e: any) => {
+      const payload = e.payload as any;
+      return payload?.ipAddress === event.ipAddress;
+    }).length;
 
     return recentFailures >= maxFailures;
   }
@@ -432,41 +437,32 @@ export class SecurityMonitor {
       },
     });
 
-    const criticalEvents = await prisma.webhookEvent.count({
+    // Fetch events and filter by severity in memory (Prisma doesn't support JSON path queries)
+    const allEvents = await prisma.webhookEvent.findMany({
       where: {
         source: 'security-monitor',
         orgId,
         createdAt: { gte: startDate },
-        payload: {
-          path: ['severity'],
-          equals: SecuritySeverity.CRITICAL,
-        },
+      },
+      select: {
+        payload: true,
       },
     });
 
-    const highEvents = await prisma.webhookEvent.count({
-      where: {
-        source: 'security-monitor',
-        orgId,
-        createdAt: { gte: startDate },
-        payload: {
-          path: ['severity'],
-          equals: SecuritySeverity.HIGH,
-        },
-      },
-    });
+    const criticalEvents = allEvents.filter((e: any) => {
+      const payload = e.payload as any;
+      return payload?.severity === SecuritySeverity.CRITICAL;
+    }).length;
 
-    const resolvedEvents = await prisma.webhookEvent.count({
-      where: {
-        source: 'security-monitor',
-        orgId,
-        createdAt: { gte: startDate },
-        payload: {
-          path: ['resolved'],
-          equals: true,
-        },
-      },
-    });
+    const highEvents = allEvents.filter((e: any) => {
+      const payload = e.payload as any;
+      return payload?.severity === SecuritySeverity.HIGH;
+    }).length;
+
+    const resolvedEvents = allEvents.filter((e: any) => {
+      const payload = e.payload as any;
+      return payload?.resolved === true;
+    }).length;
 
     return {
       totalEvents,
@@ -514,18 +510,23 @@ export class SecurityMonitor {
   }
 
   async isSourceBlocked(ipAddress: string): Promise<boolean> {
-    const blockEvent = await prisma.webhookEvent.findFirst({
+    const blockEvents = await prisma.webhookEvent.findMany({
       where: {
         source: 'security-block',
         event: 'source.blocked',
-        payload: {
-          path: ['source'],
-          equals: ipAddress,
-        },
         createdAt: {
           gte: new Date(Date.now() - 24 * 60 * 60 * 1000), // Check last 24 hours
         },
       },
+      select: {
+        payload: true,
+      },
+    });
+
+    // Filter by IP address in memory (Prisma doesn't support JSON path queries)
+    const blockEvent = blockEvents.find((e: any) => {
+      const payload = e.payload as any;
+      return payload?.source === ipAddress;
     });
 
     return !!blockEvent;

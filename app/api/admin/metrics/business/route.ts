@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     }
 
     const {searchParams} = request.nextUrl;
-    const days = parseInt(searchParams.get("days") || "30");
+    const days = parseInt(searchParams.get("days") || "30", 10);
 
     // Get activation metrics
     const activationMetrics = await getAllActivationMetrics(days);

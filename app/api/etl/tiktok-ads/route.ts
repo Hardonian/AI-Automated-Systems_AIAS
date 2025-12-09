@@ -125,9 +125,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           platform: "tiktok",
           date: ad.stat_time_day,
           spend_cents: Math.round(parseFloat(ad.spend) * 100),
-          clicks: parseInt(ad.click) || 0,
-          impressions: parseInt(ad.impression) || 0,
-          conversions: parseInt(ad.conversion) || 0,
+          clicks: parseInt(ad.click, 10) || 0,
+          impressions: parseInt(ad.impression, 10) || 0,
+          conversions: parseInt(ad.conversion, 10) || 0,
         }, {
           onConflict: "platform,date",
         });

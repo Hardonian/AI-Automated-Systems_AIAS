@@ -17,6 +17,7 @@ function getCacheService() {
 import { z } from 'zod';
 import { SystemError, ValidationError, AuthenticationError, AuthorizationError, formatError } from '@/lib/errors';
 import { isDefined, isError, isObject } from '@/lib/utils/type-guards';
+import { logger } from '@/lib/logging/structured-logger';
 
 export interface RouteHandlerOptions {
   requireAuth?: boolean;
@@ -250,7 +251,12 @@ export function createRouteHandler(
       return response;
     } catch (error: unknown) {
       const errorDuration = Date.now() - startTime;
-      console.error('Route handler error:', maskSensitiveData(String(error)));
+      logger.error('Route handler error', isError(error) ? error : new Error(String(error)), {
+        path: request.nextUrl.pathname,
+        method: request.method,
+        duration: errorDuration,
+        maskedError: maskSensitiveData(String(error)),
+      });
       
       // Track error performance
       try {

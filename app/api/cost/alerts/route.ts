@@ -18,7 +18,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get("limit") || "50");
+    const limit = parseInt(searchParams.get("limit") || "50", 10);
     const activeOnly = searchParams.get("active") === "true";
 
     const alerts = activeOnly

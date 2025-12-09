@@ -57,7 +57,7 @@ export const GET = createGETHandler(
     const { request } = context;
 
     // Get date range from query params (default to last 30 days)
-    const days = parseInt(request.nextUrl.searchParams.get("days") || "30");
+    const days = parseInt(request.nextUrl.searchParams.get("days") || "30", 10);
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 

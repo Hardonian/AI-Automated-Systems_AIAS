@@ -9,7 +9,7 @@ import unusedImports from "eslint-plugin-unused-imports";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", ".next", "node_modules", "reports", "ai/aurora_prime.ts"] },
+  { ignores: ["dist", ".next", "node_modules", "reports", "ai/**/*"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],

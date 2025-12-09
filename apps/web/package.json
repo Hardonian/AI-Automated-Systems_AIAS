@@ -61,7 +61,7 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "react-pdf": "^7.6.0",
+    "react-pdf": "^10.2.0",
     "@react-pdf/renderer": "^3.1.14",
     "puppeteer": "^23.11.1",
     "csv-parse": "^5.5.2",

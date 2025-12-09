@@ -171,7 +171,7 @@ export async function withCache<T>(
   ttl: number = 300 // 5 minutes default
 ): Promise<T> {
   // Check cache
-  const cached = memoryCache.get(key);
+  const cached = memoryCache.get<T>(key);
   if (cached !== null) {
     return cached;
   }

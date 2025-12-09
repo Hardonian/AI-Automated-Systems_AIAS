@@ -1,5 +1,5 @@
 import { Check, ArrowRight, Brain, Target, Zap, Users, TrendingUp } from "lucide-react";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";

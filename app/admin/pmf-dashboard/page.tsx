@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 // Card components imported but used in PMFDashboard component
 import { PMFDashboard } from "@/components/admin/pmf-dashboard";

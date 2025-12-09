@@ -1,5 +1,5 @@
 import { Workflow, Zap, Shield, Smartphone } from "lucide-react";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { MobileOptimizedLayout } from "@/components/mobile/mobile-optimized-layout";

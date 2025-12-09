@@ -1,5 +1,5 @@
 import { Building2, Zap, Shield, Globe, CheckCircle2, ArrowRight, Code, Database, Lock, TrendingUp } from "lucide-react";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ContentDrivenHero } from "@/components/content/ContentDrivenHero";

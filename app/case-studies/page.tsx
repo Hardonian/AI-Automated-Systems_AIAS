@@ -1,5 +1,5 @@
 import { Rocket } from "lucide-react";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { GatedCaseStudy } from "@/components/case-studies/gated-case-study";

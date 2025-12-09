@@ -1,5 +1,5 @@
 import { Calendar, CheckCircle2, Rocket, Target } from "lucide-react";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";

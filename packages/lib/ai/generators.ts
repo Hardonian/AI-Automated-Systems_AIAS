@@ -98,17 +98,26 @@ export class AIGenerators {
       },
     };
 
-    const result = await aiClient.generateAudit(request);
+    const result: unknown = await aiClient.generateAudit(request);
     
     // Parse the AI response and structure it according to our schema
-    const resultAny = result as any;
-    const summary = {
-      overallScore: this.extractScore(resultAny.analysis),
-      categories: this.extractCategories(resultAny.analysis),
-      criticalIssues: this.extractCriticalIssues(resultAny.analysis),
-      quickWins: this.extractQuickWins(resultAny.analysis),
-      estimatedImpact: this.extractImpact(resultAny.analysis),
-      nextSteps: this.extractNextSteps(resultAny.analysis),
+    const resultRecord: Record<string, unknown> = typeof result === 'object' && result !== null ? result as Record<string, unknown> : {};
+    const analysis: unknown = resultRecord.analysis;
+    const analysisRecord: Record<string, unknown> = typeof analysis === 'object' && analysis !== null ? analysis as Record<string, unknown> : {};
+    const summary: {
+      overallScore: number;
+      categories: unknown[];
+      criticalIssues: unknown[];
+      quickWins: unknown[];
+      estimatedImpact: string;
+      nextSteps: unknown[];
+    } = {
+      overallScore: this.extractScore(analysisRecord),
+      categories: this.extractCategories(analysisRecord),
+      criticalIssues: this.extractCriticalIssues(analysisRecord),
+      quickWins: this.extractQuickWins(analysisRecord),
+      estimatedImpact: this.extractImpact(analysisRecord),
+      nextSteps: this.extractNextSteps(analysisRecord),
     };
 
     return AuditSummarySchema.parse(summary);
@@ -219,12 +228,13 @@ export class AIGenerators {
   }
 
   // Helper methods to parse AI responses
-  private static extractScore(_analysis: string): number {
-    const scoreMatch = _analysis.match(/(?:score|rating|grade)[:\s]*(\d+)/i);
-    return scoreMatch && scoreMatch[1] ? parseInt(scoreMatch[1]) : 75;
+  private static extractScore(_analysis: Record<string, unknown>): number {
+    const analysisString: string = typeof _analysis === 'string' ? _analysis : JSON.stringify(_analysis);
+    const scoreMatch: RegExpMatchArray | null = analysisString.match(/(?:score|rating|grade)[:\s]*(\d+)/i);
+    return scoreMatch !== null && scoreMatch[1] !== undefined ? parseInt(scoreMatch[1], 10) : 75;
   }
 
-  private static extractCategories(_analysis: string) {
+  private static extractCategories(_analysis: Record<string, unknown>): Array<{ name: string; score: number; issues: string[]; recommendations: string[] }> {
     // This would parse the analysis to extract categories
     // For now, return a default structure
     return [
@@ -243,19 +253,19 @@ export class AIGenerators {
     ];
   }
 
-  private static extractCriticalIssues(_analysis: string): string[] {
+  private static extractCriticalIssues(_analysis: Record<string, unknown>): string[] {
     return ['Critical issue 1', 'Critical issue 2'];
   }
 
-  private static extractQuickWins(_analysis: string): string[] {
+  private static extractQuickWins(_analysis: Record<string, unknown>): string[] {
     return ['Quick win 1', 'Quick win 2'];
   }
 
-  private static extractImpact(_analysis: string): string {
+  private static extractImpact(_analysis: Record<string, unknown>): string {
     return 'High impact improvements identified';
   }
 
-  private static extractNextSteps(_analysis: string): string[] {
+  private static extractNextSteps(_analysis: Record<string, unknown>): string[] {
     return ['Step 1', 'Step 2', 'Step 3'];
   }
 

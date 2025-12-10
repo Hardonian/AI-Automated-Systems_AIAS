@@ -50,21 +50,21 @@ export class WorkflowExecutor {
   async execute(
     context: WorkflowExecutionContext
   ): Promise<WorkflowExecutionResult> {
-    const workflow = this.workflows.get(context.workflowId);
+    const workflow: WorkflowDefinition | undefined = this.workflows.get(context.workflowId);
     if (!workflow) {
       throw new Error(`Workflow ${context.workflowId} not found`);
     }
 
-    const executionId = this.generateExecutionId();
-    const graph = this.buildExecutionGraph(workflow, context.input);
+    const executionId: string = this.generateExecutionId();
+    const graph: ExecutionGraph = this.buildExecutionGraph(workflow, context.input);
     this.executions.set(executionId, graph);
 
-    const startTime = Date.now();
+    const startTime: number = Date.now();
     let currentStepId: string | null = workflow.startStepId;
 
     try {
-      while (currentStepId) {
-        const node = graph.nodes.get(currentStepId);
+      while (currentStepId !== null) {
+        const node: ExecutionNode | undefined = graph.nodes.get(currentStepId);
         if (!node) {
           throw new Error(`Step ${currentStepId} not found`);
         }
@@ -74,7 +74,7 @@ export class WorkflowExecutor {
         node.startedAt = new Date();
 
         try {
-          const result = await this.executeStep(node.step, graph.state);
+          const result: unknown = await this.executeStep(node.step, graph.state);
           node.status = 'completed';
           node.result = result;
           node.completedAt = new Date();
@@ -84,20 +84,20 @@ export class WorkflowExecutor {
 
           // Determine next step
           currentStepId = this.getNextStepId(node.step, graph, result);
-        } catch (error) {
+        } catch (error: unknown) {
           node.status = 'failed';
           node.error = error instanceof Error ? error : new Error(String(error));
           node.completedAt = new Date();
 
           // Handle error based on step configuration
           if (node.step.onError === 'retry' && node.step.retry) {
-            const retried = await this.retryStep(node, graph.state, node.step.retry);
-            if (retried) {
-              node.status = 'completed';
-              node.result = retried;
-              currentStepId = this.getNextStepId(node.step, graph, retried);
-              continue;
-            }
+          const retried: unknown | null = await this.retryStep(node, graph.state, node.step.retry);
+          if (retried !== null && retried !== undefined) {
+            node.status = 'completed';
+            node.result = retried;
+            currentStepId = this.getNextStepId(node.step, graph, retried);
+            continue;
+          }
           }
 
           if (node.step.onError === 'skip') {
@@ -115,27 +115,39 @@ export class WorkflowExecutor {
         }
       }
 
-      const _duration = Date.now() - startTime;
-      const metrics = this.calculateMetrics(graph);
+      const _duration: number = Date.now() - startTime;
+      const metrics: {
+        stepsExecuted: number;
+        stepsSucceeded: number;
+        stepsFailed: number;
+        retries: number;
+        duration: number;
+      } = this.calculateMetrics(graph);
 
       return {
         executionId,
         workflowId: context.workflowId,
-        status: 'completed',
+        status: 'completed' as const,
         output: graph.state,
         metrics,
         state: graph.state,
         startedAt: new Date(startTime).toISOString(),
         completedAt: new Date().toISOString(),
       };
-    } catch (error) {
-      const _duration = Date.now() - startTime;
-      const metrics = this.calculateMetrics(graph);
+    } catch (error: unknown) {
+      const _duration: number = Date.now() - startTime;
+      const metrics: {
+        stepsExecuted: number;
+        stepsSucceeded: number;
+        stepsFailed: number;
+        retries: number;
+        duration: number;
+      } = this.calculateMetrics(graph);
 
       return {
         executionId,
         workflowId: context.workflowId,
-        status: 'failed',
+        status: 'failed' as const,
         error: {
           message: error instanceof Error ? error.message : String(error),
           code: 'EXECUTION_ERROR',
@@ -157,11 +169,11 @@ export class WorkflowExecutor {
     workflow: WorkflowDefinition,
     initialState: Record<string, unknown>
   ): ExecutionGraph {
-    const nodes = new Map<string, ExecutionNode>();
-    const edges = new Map<string, string[]>();
+    const nodes: Map<string, ExecutionNode> = new Map<string, ExecutionNode>();
+    const edges: Map<string, string[]> = new Map<string, string[]>();
 
     // Create nodes
-    workflow.steps.forEach(step => {
+    workflow.steps.forEach((step: WorkflowStep): void => {
       nodes.set(step.id, {
         stepId: step.id,
         step,
@@ -171,10 +183,10 @@ export class WorkflowExecutor {
     });
 
     // Build edges (simplified - would need proper graph building)
-    workflow.steps.forEach((step, index) => {
+    workflow.steps.forEach((step: WorkflowStep, index: number): void => {
       if (index < workflow.steps.length - 1) {
-        const nextStep = workflow.steps[index + 1];
-        if (nextStep) {
+        const nextStep: WorkflowStep | undefined = workflow.steps[index + 1];
+        if (nextStep !== undefined) {
           edges.set(step.id, [nextStep.id]);
         }
       } else {
@@ -244,7 +256,8 @@ export class WorkflowExecutor {
     const result: Record<string, unknown> = {};
 
     for (const [target, source] of Object.entries(mapping)) {
-      result[target] = this.resolvePath(source as string, state);
+      const sourceAsString: string = typeof source === 'string' ? source : String(source);
+      result[target] = this.resolvePath(sourceAsString, state);
     }
 
     return result;
@@ -274,8 +287,8 @@ export class WorkflowExecutor {
       throw new Error('Invalid step type');
     }
     
-    const sourceA = this.resolvePath(step.config.sourceA, state);
-    const sourceB = this.resolvePath(step.config.sourceB, state);
+    const sourceA: unknown = this.resolvePath(step.config.sourceA, state);
+    const sourceB: unknown = this.resolvePath(step.config.sourceB, state);
     
     // Simplified reconciliation
     return {
@@ -297,12 +310,12 @@ export class WorkflowExecutor {
       throw new Error('Invalid step type');
     }
     
-    const url = this.interpolateString(step.config.endpoint, state);
-    const body = step.config.body 
+    const url: string = this.interpolateString(step.config.endpoint, state);
+    const body: Record<string, unknown> | undefined = step.config.body 
       ? this.interpolateObject(step.config.body, state)
       : undefined;
 
-    const response = await fetch(url, {
+    const response: Response = await fetch(url, {
       method: step.config.method,
       headers: {
         'Content-Type': 'application/json',
@@ -315,7 +328,8 @@ export class WorkflowExecutor {
       throw new Error(`API call failed: ${response.statusText}`);
     }
 
-    return response.json();
+    const jsonResult: unknown = await response.json();
+    return jsonResult;
   }
 
   /**
@@ -360,7 +374,11 @@ export class WorkflowExecutor {
       throw new Error('Invalid step type');
     }
     
-    const result = await agentExecutor.executeSync({
+    const result: {
+      status: string;
+      error?: { message?: string };
+      output?: unknown;
+    } = await agentExecutor.executeSync({
       agentId: step.config.agentId,
       userId: 'system', // Would come from context
       input: { ...step.config.input, ...state } as Record<string, unknown>,
@@ -368,10 +386,12 @@ export class WorkflowExecutor {
     });
 
     if (result.status !== 'completed') {
-      throw new Error(result.error?.message || 'Agent execution failed');
+      const errorMessage: string = result.error?.message ?? 'Agent execution failed';
+      throw new Error(errorMessage);
     }
 
-    return result.output;
+    const output: unknown = result.output;
+    return output;
   }
 
   /**
@@ -386,10 +406,10 @@ export class WorkflowExecutor {
     }
     
     // Evaluate conditions
-    let result = true;
+    let result: boolean = true;
     for (const condition of step.config.conditions) {
-      const fieldValue = this.resolvePath(condition.field, state);
-      const conditionResult = this.evaluateCondition(condition, fieldValue);
+      const fieldValue: unknown = this.resolvePath(condition.field, state);
+      const conditionResult: boolean = this.evaluateCondition(condition, fieldValue);
       
       if (condition.logicalOperator === 'or') {
         result = result || conditionResult;
@@ -412,16 +432,18 @@ export class WorkflowExecutor {
       throw new Error('Invalid step type');
     }
     
-    const items = this.resolvePath(step.config.items, state) as unknown[];
-    if (!Array.isArray(items)) {
+    const resolvedItems: unknown = this.resolvePath(step.config.items, state);
+    if (!Array.isArray(resolvedItems)) {
       throw new Error(`Expected array at path ${step.config.items}`);
     }
+    const items: unknown[] = resolvedItems;
 
     const results: unknown[] = [];
-    const maxIterations = step.config.maxIterations || items.length;
+    const maxIterations: number = step.config.maxIterations ?? items.length;
+    const iterationLimit: number = Math.min(items.length, maxIterations);
 
-    for (let i = 0; i < Math.min(items.length, maxIterations); i++) {
-      const _itemState = { ...state, item: items[i], index: i };
+    for (let i: number = 0; i < iterationLimit; i++) {
+      const _itemState: Record<string, unknown> = { ...state, item: items[i], index: i };
       
       // Execute steps for each item
       for (const _stepId of step.config.stepIds) {
@@ -484,17 +506,17 @@ export class WorkflowExecutor {
   private async executeWebhook(
     step: WorkflowStep,
     state: Record<string, unknown>
-  ): Promise<unknown> {
+  ): Promise<{ status: number; sent: boolean }> {
     if (step.type !== 'webhook' || step.config.type !== 'webhook') {
       throw new Error('Invalid step type');
     }
     
-    const url = this.interpolateString(step.config.url, state);
-    const body = step.config.body
+    const url: string = this.interpolateString(step.config.url, state);
+    const body: Record<string, unknown> | undefined = step.config.body
       ? this.interpolateObject(step.config.body, state)
       : undefined;
 
-    const response = await fetch(url, {
+    const response: Response = await fetch(url, {
       method: step.config.method,
       headers: step.config.headers,
       body: body ? JSON.stringify(body) : undefined,
@@ -512,17 +534,20 @@ export class WorkflowExecutor {
     result: unknown
   ): string | null {
     if (step.type === 'condition') {
-      const conditionResult = result as boolean;
-      const config = step.config as Record<string, unknown>;
-      const nextSteps = conditionResult 
-        ? (config.then as string[] | undefined)
-        : (config.else as string[] | undefined);
-      const firstStep = nextSteps?.[0];
-      return (typeof firstStep === 'string' ? firstStep : null);
+      const conditionResult: boolean = typeof result === 'boolean' ? result : false;
+      if (step.config.type === 'condition') {
+        const nextSteps: string[] | undefined = conditionResult 
+          ? step.config.then
+          : step.config.else;
+        const firstStep: string | undefined = nextSteps?.[0];
+        return (typeof firstStep === 'string' ? firstStep : null);
+      }
+      return null;
     }
 
-    const edges = graph.edges.get(step.id);
-    return edges?.[0] || null;
+    const edges: string[] | undefined = graph.edges.get(step.id);
+    const firstEdge: string | undefined = edges?.[0];
+    return (typeof firstEdge === 'string' ? firstEdge : null);
   }
 
   /**
@@ -535,21 +560,23 @@ export class WorkflowExecutor {
   ): Promise<unknown | null> {
     if (!retryConfig) {return null;}
 
-    let delay = retryConfig.initialDelay;
+    let delay: number = retryConfig.initialDelay;
 
-    for (let attempt = 1; attempt <= retryConfig.maxAttempts; attempt++) {
+    for (let attempt: number = 1; attempt <= retryConfig.maxAttempts; attempt++) {
       await this.sleep(delay);
       node.retries++;
 
       try {
-        return await this.executeStep(node.step, state);
-      } catch (error) {
+        const retryResult: unknown = await this.executeStep(node.step, state);
+        return retryResult;
+      } catch (error: unknown) {
         if (attempt === retryConfig.maxAttempts) {
           return null;
         }
 
         if (retryConfig.backoff === 'exponential') {
-          delay = Math.min(delay * 2, retryConfig.maxDelay || 60000);
+          const maxDelayValue: number = retryConfig.maxDelay ?? 60000;
+          delay = Math.min(delay * 2, maxDelayValue);
         }
       }
     }
@@ -560,13 +587,19 @@ export class WorkflowExecutor {
   /**
    * Calculate execution metrics
    */
-  private calculateMetrics(graph: ExecutionGraph) {
-    let stepsExecuted = 0;
-    let stepsSucceeded = 0;
-    let stepsFailed = 0;
-    let retries = 0;
+  private calculateMetrics(graph: ExecutionGraph): {
+    stepsExecuted: number;
+    stepsSucceeded: number;
+    stepsFailed: number;
+    retries: number;
+    duration: number;
+  } {
+    let stepsExecuted: number = 0;
+    let stepsSucceeded: number = 0;
+    let stepsFailed: number = 0;
+    let retries: number = 0;
 
-    graph.nodes.forEach(node => {
+    graph.nodes.forEach((node: ExecutionNode): void => {
       if (node.status !== 'pending') {
         stepsExecuted++;
       }
@@ -592,12 +625,13 @@ export class WorkflowExecutor {
    * Resolve path in state object
    */
   private resolvePath(path: string, state: Record<string, unknown>): unknown {
-    const parts = path.split('.');
+    const parts: string[] = path.split('.');
     let current: unknown = state;
 
     for (const part of parts) {
-      if (current && typeof current === 'object' && part in current) {
-        current = (current as Record<string, unknown>)[part];
+      if (current !== null && current !== undefined && typeof current === 'object' && part in current) {
+        const currentAsRecord: Record<string, unknown> = current as Record<string, unknown>;
+        current = currentAsRecord[part];
       } else {
         return undefined;
       }
@@ -610,8 +644,8 @@ export class WorkflowExecutor {
    * Interpolate string with state variables
    */
   private interpolateString(template: string, state: Record<string, unknown>): string {
-    return template.replace(/\{\{(\w+)\}\}/g, (_, key) => {
-      const value = this.resolvePath(key, state);
+    return template.replace(/\{\{(\w+)\}\}/g, (_match: string, key: string): string => {
+      const value: unknown = this.resolvePath(key, state);
       return value !== undefined ? String(value) : '';
     });
   }
@@ -628,8 +662,9 @@ export class WorkflowExecutor {
     for (const [key, value] of Object.entries(obj)) {
       if (typeof value === 'string') {
         result[key] = this.interpolateString(value, state);
-      } else if (typeof value === 'object' && value !== null) {
-        result[key] = this.interpolateObject(value as Record<string, unknown>, state);
+      } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        const valueAsRecord: Record<string, unknown> = value as Record<string, unknown>;
+        result[key] = this.interpolateObject(valueAsRecord, state);
       } else {
         result[key] = value;
       }
@@ -650,26 +685,39 @@ export class WorkflowExecutor {
       return value === condition;
     }
     
-    // Ensure condition has required properties
+    // Ensure condition has required properties with explicit type guard
     if (typeof condition !== 'object' || condition === null || !('operator' in condition)) {
       return false;
     }
     
-    const conditionValue = condition.value;
+    // Type guard for condition object with operator property
+    const conditionWithOperator = condition as { operator: string; value: unknown };
+    const conditionValue: unknown = conditionWithOperator.value;
+    const operator: string = conditionWithOperator.operator;
     
-    switch (condition.operator) {
+    switch (operator) {
       case 'equals':
         return value === conditionValue;
       case 'notEquals':
         return value !== conditionValue;
-      case 'greaterThan':
-        return typeof value === 'number' && typeof conditionValue === 'number' && value > conditionValue;
-      case 'lessThan':
-        return typeof value === 'number' && typeof conditionValue === 'number' && value < conditionValue;
-      case 'contains':
-        return typeof value === 'string' && value.includes(String(conditionValue));
-      case 'notContains':
-        return typeof value === 'string' && !value.includes(String(conditionValue));
+      case 'greaterThan': {
+        const valueAsNumber: number | undefined = typeof value === 'number' ? value : undefined;
+        const conditionValueAsNumber: number | undefined = typeof conditionValue === 'number' ? conditionValue : undefined;
+        return valueAsNumber !== undefined && conditionValueAsNumber !== undefined && valueAsNumber > conditionValueAsNumber;
+      }
+      case 'lessThan': {
+        const valueAsNumber: number | undefined = typeof value === 'number' ? value : undefined;
+        const conditionValueAsNumber: number | undefined = typeof conditionValue === 'number' ? conditionValue : undefined;
+        return valueAsNumber !== undefined && conditionValueAsNumber !== undefined && valueAsNumber < conditionValueAsNumber;
+      }
+      case 'contains': {
+        const valueAsString: string | undefined = typeof value === 'string' ? value : undefined;
+        return valueAsString !== undefined && valueAsString.includes(String(conditionValue));
+      }
+      case 'notContains': {
+        const valueAsString: string | undefined = typeof value === 'string' ? value : undefined;
+        return valueAsString !== undefined && !valueAsString.includes(String(conditionValue));
+      }
       case 'exists':
         return value !== undefined && value !== null;
       case 'notExists':

@@ -7,6 +7,8 @@ import { createHash } from 'crypto';
 import { existsSync, mkdirSync, appendFileSync, readFileSync } from 'fs';
 import { join } from 'path';
 
+// Import PrivacyGuard from ai directory
+// Note: ai/privacy_guard.ts is excluded from Next.js build but needed for guardian
 import { PrivacyGuard } from '../ai/privacy_guard.js';
 
 export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';

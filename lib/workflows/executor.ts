@@ -655,19 +655,21 @@ export class WorkflowExecutor {
       return false;
     }
     
+    const conditionValue = condition.value;
+    
     switch (condition.operator) {
       case 'equals':
-        return value === condition.value;
+        return value === conditionValue;
       case 'notEquals':
-        return value !== condition.value;
+        return value !== conditionValue;
       case 'greaterThan':
-        return typeof value === 'number' && value > condition.value;
+        return typeof value === 'number' && typeof conditionValue === 'number' && value > conditionValue;
       case 'lessThan':
-        return typeof value === 'number' && value < condition.value;
+        return typeof value === 'number' && typeof conditionValue === 'number' && value < conditionValue;
       case 'contains':
-        return typeof value === 'string' && value.includes(String(condition.value));
+        return typeof value === 'string' && value.includes(String(conditionValue));
       case 'notContains':
-        return typeof value === 'string' && !value.includes(String(condition.value));
+        return typeof value === 'string' && !value.includes(String(conditionValue));
       case 'exists':
         return value !== undefined && value !== null;
       case 'notExists':

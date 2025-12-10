@@ -7,7 +7,7 @@ import { createHash } from 'crypto';
 import { existsSync, mkdirSync, appendFileSync, readFileSync } from 'fs';
 import { join } from 'path';
 
-import { PrivacyGuard } from '../ai/privacy_guard';
+import { PrivacyGuard } from '../ai/privacy_guard.js';
 
 export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
 export type DataScope = 'user' | 'app' | 'api' | 'external';

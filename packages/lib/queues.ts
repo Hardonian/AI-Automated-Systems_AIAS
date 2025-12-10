@@ -8,7 +8,7 @@ import { prisma } from './database.js';
 import { logger } from './observability.js';
 
 // Create Redis connection with proper typing for ES modules
-const connection: Redis = new Redis(config.redis.url || 'redis://localhost:6379');
+const connection = new Redis(config.redis.url || 'redis://localhost:6379');
 
 // Queue definitions
 export const feedIngestQueue = new Queue('feeds:ingest', { connection });

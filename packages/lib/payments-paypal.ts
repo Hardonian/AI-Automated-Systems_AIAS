@@ -65,7 +65,7 @@ export class PayPalService {
       throw new Error(`PayPal authentication failed: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as { access_token: string };
     return data.access_token;
   }
 
@@ -105,11 +105,11 @@ export class PayPalService {
     });
 
     if (!response.ok) {
-      const error = await response.json();
+      const error = await response.json() as { message?: string };
       throw new Error(`PayPal order creation failed: ${error.message || response.statusText}`);
     }
 
-    return response.json();
+    return response.json() as PayPalOrderResponse;
   }
 
   async captureOrder(orderId: string): Promise<any> {
@@ -125,11 +125,11 @@ export class PayPalService {
     });
 
     if (!response.ok) {
-      const error = await response.json();
+      const error = await response.json() as { message?: string };
       throw new Error(`PayPal order capture failed: ${error.message || response.statusText}`);
     }
 
-    return response.json();
+    return response.json() as unknown;
   }
 
   async getOrder(orderId: string): Promise<any> {
@@ -193,11 +193,11 @@ export class PayPalService {
     });
 
     if (!response.ok) {
-      const error = await response.json();
+      const error = await response.json() as { message?: string };
       throw new Error(`PayPal subscription creation failed: ${error.message || response.statusText}`);
     }
 
-    return response.json();
+    return response.json() as unknown;
   }
 
   async getSubscription(subscriptionId: string): Promise<any> {
@@ -233,11 +233,11 @@ export class PayPalService {
     });
 
     if (!response.ok) {
-      const error = await response.json();
+      const error = await response.json() as { message?: string };
       throw new Error(`PayPal subscription cancellation failed: ${error.message || response.statusText}`);
     }
 
-    return response.json();
+    return response.json() as unknown;
   }
 
   async verifyWebhookSignature(payload: string, signature: string, webhookId?: string): Promise<boolean> {
@@ -270,7 +270,7 @@ export class PayPalService {
       return false;
     }
 
-    const result = await response.json();
+    const result = await response.json() as { verification_status?: string };
     return result.verification_status === 'SUCCESS';
   }
 

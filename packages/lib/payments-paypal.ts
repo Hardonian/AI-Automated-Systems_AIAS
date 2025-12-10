@@ -109,7 +109,8 @@ export class PayPalService {
       throw new Error(`PayPal order creation failed: ${error.message || response.statusText}`);
     }
 
-    return response.json() as PayPalOrderResponse;
+    const result = await response.json() as PayPalOrderResponse;
+    return result;
   }
 
   async captureOrder(orderId: string): Promise<any> {

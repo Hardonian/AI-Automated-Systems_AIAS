@@ -18,8 +18,8 @@
     "target": "ES2022",
     "lib": ["ES2022"]
   },
-  "include": ["**/*.ts", "ai/**/*.ts"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts", "../../ai/**/*"],
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"],
   "references": [
     {
       "path": "../config"

@@ -122,7 +122,7 @@
     "postinstall": "patch-package --error-on-fail=false || true",
     "type-check": "tsc --noEmit",
     "vercel-build": "npm run build:packages && npm run build:diagnostic || true && cd apps/web && export DATABASE_URL=${UPSTASH_POSTGRES_URL:-${DATABASE_URL:-}} && export DIRECT_URL=${UPSTASH_POSTGRES_DIRECT_URL:-${DIRECT_URL:-${DATABASE_URL:-}}} && (if [ -n \"$DATABASE_URL\" ] && [[ \"$DATABASE_URL\" =~ ^postgres ]]; then NODE_OPTIONS='--max-old-space-size=4096' prisma generate && (prisma migrate deploy || echo 'Migration skipped'); else echo 'Skipping Prisma migrations (DATABASE_URL not set or invalid)'; NODE_OPTIONS='--max-old-space-size=4096' prisma generate || echo 'Prisma generate skipped'; fi) && cd ../.. && NODE_OPTIONS='--max-old-space-size=4096' next build",
-    "build:packages": "cd packages/config && npm run build && cd ../lib && npm run build",
+    "build:packages": "cd packages/config && npm run build && cd ../lib && npm run build || (echo 'Package build failed' && exit 1)",
     "build:analyze": "ANALYZE=true vite build",
     "preview": "next start",
     "start": "next start",

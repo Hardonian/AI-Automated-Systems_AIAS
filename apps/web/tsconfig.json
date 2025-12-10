@@ -42,7 +42,8 @@
     "../../components/**/*.ts",
     "../../components/**/*.tsx",
     "../../lib/**/*.ts",
-    "../../lib/**/*.tsx"
+    "../../lib/**/*.tsx",
+    "../../ai/privacy_guard.ts"
   ],
   "exclude": ["node_modules"]
 }

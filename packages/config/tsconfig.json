@@ -9,7 +9,8 @@
     "incremental": true,
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "noEmit": false
+    "noEmit": false,
+    "skipLibCheck": true
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]

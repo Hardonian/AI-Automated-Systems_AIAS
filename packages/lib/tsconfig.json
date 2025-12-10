@@ -12,7 +12,10 @@
     "allowImportingTsExtensions": false,
     "noEmit": false,
     "resolvePackageJsonExports": true,
-    "resolvePackageJsonImports": true
+    "resolvePackageJsonImports": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"],

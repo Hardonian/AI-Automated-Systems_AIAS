@@ -8,9 +8,6 @@
   "buildCommand": "pnpm run vercel-build",
   "installCommand": "pnpm install --frozen-lockfile || npm ci --legacy-peer-deps",
   "framework": "nextjs",
-  "engines": {
-    "node": "22.x"
-  },
   "build": {
     "env": {
       "NODE_OPTIONS": "--max-old-space-size=4096"

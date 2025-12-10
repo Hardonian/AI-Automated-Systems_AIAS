@@ -469,8 +469,8 @@ class PrivacyGuard {
 // Export for use in other modules
 export { PrivacyGuard, type PIIPattern, type RedactionResult, type ComplianceReport };
 
-// CLI execution
-if (require.main === module) {
+// CLI execution (ES module compatible - check if running directly)
+if (import.meta.url.endsWith('privacy_guard.ts') || import.meta.url.endsWith('privacy_guard.js')) {
   const guard = new PrivacyGuard();
   
   // Test with sample data

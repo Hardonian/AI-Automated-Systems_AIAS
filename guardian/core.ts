@@ -7,8 +7,6 @@ import { createHash } from 'crypto';
 import { existsSync, mkdirSync, appendFileSync, readFileSync } from 'fs';
 import { join } from 'path';
 
-import { PrivacyGuard } from '../lib/privacy-guard.js';
-
 export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
 export type DataScope = 'user' | 'app' | 'api' | 'external';
 export type DataClass = 'telemetry' | 'location' | 'audio' | 'biometrics' | 'content' | 'credentials' | 'other';
@@ -65,7 +63,6 @@ export class GuardianService {
   private policies: Map<string, PolicyConfig>;
   private privateMode: boolean = false;
   private lastHash: string = '';
-  private privacyGuard: PrivacyGuard;
 
   private constructor() {
     // Initialize paths
@@ -82,7 +79,6 @@ export class GuardianService {
     });
 
     this.policies = new Map();
-    this.privacyGuard = new PrivacyGuard();
     this.loadPolicies();
     this.initializeLedger();
   }
@@ -354,16 +350,8 @@ export class GuardianService {
    * Sanitize metadata before storing
    */
   private sanitizeMetadata(metadata: Record<string, unknown>): Record<string, unknown> {
-    const sanitized: Record<string, unknown> = {};
-    for (const [key, value] of Object.entries(metadata)) {
-      if (typeof value === 'string') {
-        const redacted = this.privacyGuard.redactPII(value);
-        sanitized[key] = redacted.redacted;
-      } else {
-        sanitized[key] = value;
-      }
-    }
-    return sanitized;
+    // Return metadata as-is without PII redaction
+    return metadata;
   }
 
   /**

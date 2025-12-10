@@ -361,8 +361,8 @@ export class SecurityAuditor {
     // Check PII handling
     checks.push({
       check: 'PII redaction',
-      status: 'pass', // PrivacyGuard handles this
-      details: 'PrivacyGuard module active'
+      status: 'skip', // PrivacyGuard module removed
+      details: 'PII redaction not implemented'
     });
 
     // Check audit logging

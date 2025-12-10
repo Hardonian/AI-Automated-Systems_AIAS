@@ -59,10 +59,6 @@ jobs:
         run: |
           npx tsx scripts/futurecheck.ts
 
-      - name: Run Privacy Guard Audit
-        run: |
-          npx tsx ai/privacy_guard.ts
-
       - name: Generate AI Audit Report
         run: |
           npx tsx scripts/generate-audit-report.ts
@@ -74,7 +70,6 @@ jobs:
           path: |
             ai-audit-report.json
             futurecheck-report.json
-            privacy-audit-report.json
 
       - name: Comment on PR (if applicable)
         if: github.event_name == 'pull_request'

@@ -41,7 +41,9 @@
     "app/**/*.tsx",
     "app/**/*.ts",
     "lib/**/*.ts",
-    "lib/**/*.tsx"
+    "lib/**/*.tsx",
+    "guardian/**/*.ts",
+    "ai/privacy_guard.ts"
   ],
   "exclude": [
     "node_modules",
@@ -51,7 +53,6 @@
     "ai/aurora_prime.ts",
     "scripts/**/*",
     "supabase/functions/**/*",
-    "ai/**/*",
     "watchers/**/*",
     "ops/**/*",
     "src/**/*",

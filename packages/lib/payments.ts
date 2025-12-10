@@ -1,8 +1,8 @@
 import { config } from '@ai-consultancy/config';
 import Stripe from 'stripe';
 
-import { prisma } from './database.js';
-import { logger } from './observability.js';
+import { prisma } from './database';
+import { logger } from './observability';
 
 const stripe = new Stripe(config.stripe.secretKey || '', {
   apiVersion: '2023-10-16',

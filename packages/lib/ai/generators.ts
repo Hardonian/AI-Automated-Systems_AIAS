@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { aiClient } from './client.js';
-import { AuditRequest, EstimateRequest, ContentGenerationRequest, WorkflowGenerationRequest } from './types.js';
+import { aiClient } from './client';
+import { AuditRequest, EstimateRequest, ContentGenerationRequest, WorkflowGenerationRequest } from './types';
 
 export const AuditSummarySchema = z.object({
   overallScore: z.number().min(0).max(100),

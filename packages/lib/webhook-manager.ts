@@ -1,7 +1,7 @@
-import { prisma } from './database.js';
-import { logger } from './observability.js';
-import { PaymentService } from './payments.js';
-import { paypalService } from './payments-paypal.js';
+import { prisma } from './database';
+import { logger } from './observability';
+import { PaymentService } from './payments';
+import { paypalService } from './payments-paypal';
 
 export interface WebhookConfig {
   url: string;

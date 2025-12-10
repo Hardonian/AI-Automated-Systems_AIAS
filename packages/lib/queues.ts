@@ -1,6 +1,6 @@
 import { config } from '@ai-consultancy/config';
 import { Queue, Worker, Job } from 'bullmq';
-import Redis from 'ioredis';
+import IORedis from 'ioredis';
 
 import { AIGenerators } from './ai/generators.js';
 import { prisma } from './database.js';
@@ -8,7 +8,7 @@ import { prisma } from './database.js';
 import { logger } from './observability.js';
 
 // Create Redis connection with proper typing for ES modules
-const connection = new Redis(config.redis.url || 'redis://localhost:6379');
+const connection = new IORedis(config.redis.url || 'redis://localhost:6379');
 
 // Queue definitions
 export const feedIngestQueue = new Queue('feeds:ingest', { connection });

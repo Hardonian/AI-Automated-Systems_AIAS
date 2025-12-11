@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from './database';
 import { logger } from './observability';
 import { feedIngestQueue } from './queues';
+import type { Prisma } from '@prisma/client';
 
 export const SourceConfigSchema = z.object({
   url: z.string().url().optional(),
@@ -326,8 +327,8 @@ export class DataFeedService {
 
     const stats = {
       totalSources: sources.length,
-      activeSources: sources.filter((s: any) => s.isActive).length,
-      lastRun: sources.reduce((latest: Date | null, source: any) => {
+      activeSources: sources.filter((s: Prisma.SourceGetPayload<{}>) => s.isActive).length,
+      lastRun: sources.reduce((latest: Date | null, source: Prisma.SourceGetPayload<{}>) => {
         if (!source.lastRun) {return latest;}
         if (!latest) {return source.lastRun;}
         return source.lastRun > latest ? source.lastRun : latest;

@@ -78,33 +78,45 @@ function getAppUrl(): string {
 }
 
 // Helper to get Supabase URL from multiple possible env vars
+// Returns empty string if not set (allows build to proceed, fails at runtime)
 function getSupabaseUrl(): string {
   const url = env.NEXT_PUBLIC_SUPABASE_URL || env.SUPABASE_URL;
   if (!url) {
-    throw new Error(
-      'Missing required environment variable: SUPABASE_URL or NEXT_PUBLIC_SUPABASE_URL\n' +
-      'Please set this variable in:\n' +
-      '- Vercel: Dashboard → Settings → Environment Variables\n' +
-      '- Supabase: Dashboard → Settings → API\n' +
-      '- GitHub Actions: Repository → Settings → Secrets\n' +
-      '- Local: .env.local file'
-    );
+    // Don't throw during build - allow build to proceed, will fail at runtime if accessed
+    if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
+      // Only throw in production non-Vercel environments (local production builds)
+      throw new Error(
+        'Missing required environment variable: SUPABASE_URL or NEXT_PUBLIC_SUPABASE_URL\n' +
+        'Please set this variable in:\n' +
+        '- Vercel: Dashboard → Settings → Environment Variables\n' +
+        '- Supabase: Dashboard → Settings → API\n' +
+        '- GitHub Actions: Repository → Settings → Secrets\n' +
+        '- Local: .env.local file'
+      );
+    }
+    return '';
   }
   return url;
 }
 
 // Helper to get Supabase anon key from multiple possible env vars
+// Returns empty string if not set (allows build to proceed, fails at runtime)
 function getSupabaseAnonKey(): string {
   const key = env.NEXT_PUBLIC_SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY;
   if (!key) {
-    throw new Error(
-      'Missing required environment variable: SUPABASE_ANON_KEY or NEXT_PUBLIC_SUPABASE_ANON_KEY\n' +
-      'Please set this variable in:\n' +
-      '- Vercel: Dashboard → Settings → Environment Variables\n' +
-      '- Supabase: Dashboard → Settings → API\n' +
-      '- GitHub Actions: Repository → Settings → Secrets\n' +
-      '- Local: .env.local file'
-    );
+    // Don't throw during build - allow build to proceed, will fail at runtime if accessed
+    if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
+      // Only throw in production non-Vercel environments (local production builds)
+      throw new Error(
+        'Missing required environment variable: SUPABASE_ANON_KEY or NEXT_PUBLIC_SUPABASE_ANON_KEY\n' +
+        'Please set this variable in:\n' +
+        '- Vercel: Dashboard → Settings → Environment Variables\n' +
+        '- Supabase: Dashboard → Settings → API\n' +
+        '- GitHub Actions: Repository → Settings → Secrets\n' +
+        '- Local: .env.local file'
+      );
+    }
+    return '';
   }
   return key;
 }

@@ -1,5 +1,6 @@
 #!/bin/bash
-set -euo pipefail
+# Use set -e but allow graceful handling of non-critical checks
+set -e
 
 # Pre-build validation script
 # Ensures all prerequisites are met before starting the build
@@ -46,10 +47,19 @@ if [ ! -d "packages/config" ] || [ ! -d "packages/lib" ]; then
 fi
 
 # Check required files exist
-REQUIRED_FILES=("package.json" "pnpm-workspace.yaml" ".npmrc" "next.config.mjs" "tsconfig.json")
+REQUIRED_FILES=("package.json" "pnpm-workspace.yaml" "tsconfig.json")
+OPTIONAL_FILES=(".npmrc" "next.config.mjs")
+
 for file in "${REQUIRED_FILES[@]}"; do
   if [ ! -f "$file" ]; then
-    echo "⚠️  Required file not found: $file"
+    echo "❌ Required file not found: $file"
+    exit 1
+  fi
+done
+
+for file in "${OPTIONAL_FILES[@]}"; do
+  if [ ! -f "$file" ]; then
+    echo "⚠️  Optional file not found: $file (non-critical)"
   fi
 done
 

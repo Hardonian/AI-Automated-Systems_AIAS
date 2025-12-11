@@ -1,27 +1,70 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
+  "globalEnv": [
+    "DATABASE_URL",
+    "DIRECT_URL",
+    "UPSTASH_POSTGRES_URL",
+    "UPSTASH_POSTGRES_DIRECT_URL",
+    "NODE_ENV"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
-      "cache": true
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**",
+        "**/.next/**",
+        "!**/.next/cache/**"
+      ],
+      "env": [
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "UPSTASH_POSTGRES_URL",
+        "UPSTASH_POSTGRES_DIRECT_URL",
+        "NEXT_PUBLIC_*"
+      ],
+      "cache": true,
+      "inputs": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js",
+        "**/*.jsx",
+        "package.json",
+        "tsconfig.json",
+        "next.config.js",
+        "prisma/schema.prisma"
+      ]
     },
     "typecheck": {
       "dependsOn": ["^typecheck"],
-      "outputs": []
+      "outputs": [],
+      "cache": true,
+      "inputs": [
+        "**/*.ts",
+        "**/*.tsx",
+        "tsconfig.json"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"],
-      "outputs": []
+      "outputs": [],
+      "cache": true
     },
     "test": {
       "dependsOn": ["^build"],
-      "outputs": []
+      "outputs": [],
+      "cache": true
     },
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "db:generate": {
+      "cache": true,
+      "outputs": ["**/node_modules/.prisma/**"],
+      "inputs": ["**/prisma/schema.prisma"]
     }
   }
 }

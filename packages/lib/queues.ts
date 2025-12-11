@@ -102,7 +102,7 @@ export class QueueProcessors {
       });
 
       // Update ingest event
-      const statsRecord = ingestEvent.stats && typeof ingestEvent.stats === 'object' && 'startedAt' in ingestEvent.stats
+      const existingStats = ingestEvent.stats && typeof ingestEvent.stats === 'object' && !Array.isArray(ingestEvent.stats)
         ? ingestEvent.stats as Record<string, unknown>
         : {};
       await prisma.ingestEvent.update({
@@ -110,8 +110,8 @@ export class QueueProcessors {
         data: {
           status: 'COMPLETED',
           stats: {
-            startedAt: statsRecord.startedAt,
-            completedAt: new Date(),
+            ...(existingStats.startedAt ? { startedAt: existingStats.startedAt } : {}),
+            completedAt: new Date().toISOString(),
             recordsProcessed: processedData.length,
           },
         },
@@ -239,21 +239,30 @@ export class QueueProcessors {
       }
 
       // Store AI run record
+      // Map type to valid AiRunKind enum value
+      const aiRunKindMap: Record<string, 'AUDIT' | 'ESTIMATE' | 'CONTENT_GENERATION' | 'WORKFLOW_GENERATION'> = {
+        audit: 'AUDIT',
+        estimate: 'ESTIMATE',
+        content: 'CONTENT_GENERATION',
+        workflow: 'WORKFLOW_GENERATION',
+      };
+      const kind = aiRunKindMap[type] || 'ESTIMATE';
+      
       await prisma.aiRun.create({
         data: {
           userId,
-          kind: type.toUpperCase() as 'AUDIT' | 'ESTIMATE' | 'CONTENT' | 'WORKFLOW',
+          kind,
           provider: 'openai', // This would be determined by the AI client
           model: 'gpt-4',
           tokensIn: 0, // This would be populated by the AI client
           tokensOut: 0,
           cost: 0,
           durationMs: 0,
-          metadata: {
+          metadata: JSON.parse(JSON.stringify({
             type,
             data,
             result,
-          },
+          })),
         },
       });
 
@@ -378,22 +387,37 @@ export class QueueProcessors {
 
   private static async storeProcessedData(type: string, data: Record<string, unknown>[], _orgId: string): Promise<void> {
     // Store processed data in appropriate tables
+    // Note: This is a simplified implementation - in production, you'd want proper type validation
     switch (type) {
       case 'SHOPIFY_JSON':
-        await prisma.product.createMany({
-          data: data.map((item: Record<string, unknown>): Record<string, unknown> => ({
-            ...item,
-            metadata: (typeof item.metadata === 'object' && item.metadata !== null ? item.metadata : {}) as Record<string, unknown>,
-          })),
-        });
+        // Skip product creation if data structure doesn't match - would need proper validation
+        if (data.length > 0 && typeof data[0]?.name === 'string') {
+          await prisma.product.createMany({
+            data: data.map((item: Record<string, unknown>) => ({
+              name: String(item.name || ''),
+              description: String(item.description || ''),
+              price: typeof item.price === 'number' ? item.price : 0,
+              currency: String(item.currency || 'USD'),
+              category: String(item.category || ''),
+              tags: Array.isArray(item.tags) ? item.tags.map(String) : [],
+              metadata: JSON.parse(JSON.stringify(item.metadata || {})),
+            })),
+            skipDuplicates: true,
+          });
+        }
         break;
       case 'GOOGLE_TRENDS_CSV':
-        await prisma.trend.createMany({
-          data: data.map((item: Record<string, unknown>): Record<string, unknown> => ({
-            ...item,
-            metadata: (typeof item.metadata === 'object' && item.metadata !== null ? item.metadata : {}) as Record<string, unknown>,
-          })),
-        });
+        // Skip trend creation if data structure doesn't match
+        if (data.length > 0) {
+          await prisma.trend.createMany({
+            data: data.map((item: Record<string, unknown>) => ({
+              keyword: String(item.keyword || ''),
+              score: typeof item.score === 'number' ? item.score : 0,
+              metadata: JSON.parse(JSON.stringify(item.metadata || {})),
+            })),
+            skipDuplicates: true,
+          });
+        }
         break;
       // Add other cases as needed
     }

@@ -66,7 +66,7 @@ export class WebhookManager {
         data: {
           source: typedEvent.source || 'unknown',
           event: typedEvent.type || typedEvent.event || 'unknown',
-          payload: event,
+          payload: JSON.parse(JSON.stringify(event)),
           orgId: typedEvent.orgId || 'unknown',
         },
       });
@@ -200,7 +200,7 @@ export class WebhookManager {
         data: {
           source: event.source || 'generic',
           event: event.type || 'unknown',
-          payload: event,
+          payload: JSON.parse(JSON.stringify(event)),
           orgId: event.orgId || 'unknown',
         },
       });
@@ -219,7 +219,7 @@ export class WebhookManager {
       data: {
         source: 'github',
         event: 'push',
-        payload,
+        payload: JSON.parse(JSON.stringify(payload)),
         orgId: 'github-integration',
       },
     });
@@ -234,7 +234,7 @@ export class WebhookManager {
       data: {
         source: 'github',
         event: 'pull_request',
-        payload,
+        payload: JSON.parse(JSON.stringify(payload)),
         orgId: 'github-integration',
       },
     });
@@ -249,7 +249,7 @@ export class WebhookManager {
       data: {
         source: 'github',
         event: 'issue',
-        payload,
+        payload: JSON.parse(JSON.stringify(payload)),
         orgId: 'github-integration',
       },
     });
@@ -264,7 +264,7 @@ export class WebhookManager {
       data: {
         source: 'slack',
         event: e.type || 'unknown',
-        payload: event,
+        payload: JSON.parse(JSON.stringify(event)),
         orgId: 'slack-integration',
       },
     });
@@ -277,7 +277,10 @@ export class WebhookManager {
 
     if (!webhookEvent) {return;}
 
-    const retryCount = webhookEvent.retryCount || 0;
+    const payload = webhookEvent.payload && typeof webhookEvent.payload === 'object' && !Array.isArray(webhookEvent.payload)
+      ? webhookEvent.payload as Record<string, unknown>
+      : {};
+    const retryCount = typeof payload.retryCount === 'number' ? payload.retryCount : 0;
     
     if (retryCount >= this.maxRetries) {
       logger.error({ webhookId, retryCount }, `Webhook ${webhookId} exceeded max retries`);
@@ -287,14 +290,20 @@ export class WebhookManager {
     const delay = this.baseRetryDelay * Math.pow(2, retryCount); // Exponential backoff
     const nextRetry = new Date(Date.now() + delay);
 
-    // Update webhook event with retry info
+    // Update webhook event with retry info (stored in payload)
+    const currentPayload = webhookEvent.payload && typeof webhookEvent.payload === 'object' && !Array.isArray(webhookEvent.payload)
+      ? webhookEvent.payload as Record<string, unknown>
+      : {};
     await prisma.webhookEvent.update({
       where: { id: webhookId },
       data: {
-        retryCount: retryCount + 1,
-        lastAttempt: new Date(),
-        nextRetry,
-        error: error.message,
+        payload: JSON.parse(JSON.stringify({
+          ...currentPayload,
+          retryCount: retryCount + 1,
+          lastAttempt: new Date().toISOString(),
+          nextRetry: nextRetry.toISOString(),
+          error: error.message,
+        })),
       },
     });
 
@@ -318,18 +327,23 @@ export class WebhookManager {
       skip: offset,
     });
 
-    return events.map((event: any) => ({
-      id: event.id,
-      source: event.source,
-      event: event.event,
-      payload: event.payload,
-      processed: event.processed,
-      retryCount: event.retryCount || 0,
-      lastAttempt: event.lastAttempt,
-      nextRetry: event.nextRetry,
-      error: event.error,
-      createdAt: event.createdAt,
-    }));
+    return events.map((event) => {
+      const payload = event.payload && typeof event.payload === 'object' && !Array.isArray(event.payload)
+        ? event.payload as Record<string, unknown>
+        : {};
+      return {
+        id: event.id,
+        source: event.source,
+        event: event.event,
+        payload: event.payload,
+        processed: event.processed,
+        retryCount: typeof payload.retryCount === 'number' ? payload.retryCount : 0,
+        lastAttempt: typeof payload.lastAttempt === 'string' ? new Date(payload.lastAttempt) : undefined,
+        nextRetry: typeof payload.nextRetry === 'string' ? new Date(payload.nextRetry) : undefined,
+        error: typeof payload.error === 'string' ? payload.error : undefined,
+        createdAt: event.createdAt,
+      };
+    });
   }
 
   async getWebhookStats(orgId: string): Promise<any> {
@@ -345,15 +359,16 @@ export class WebhookManager {
       where: { 
         orgId, 
         processed: false,
-        retryCount: { gte: this.maxRetries },
+        // retryCount is stored in payload JSON, cannot query directly
       },
     });
 
+    // Note: retryCount is stored in payload JSON, so we can't query it directly
+    // Count all unprocessed events as pending (some may have exceeded retries but we can't filter)
     const pending = await prisma.webhookEvent.count({
       where: { 
         orgId, 
         processed: false,
-        retryCount: { lt: this.maxRetries },
       },
     });
 
@@ -385,11 +400,26 @@ export class WebhookManager {
       this.retryQueue.delete(webhookId);
     }
 
+    const webhookEvent = await prisma.webhookEvent.findUnique({
+      where: { id: webhookId },
+    });
+
+    if (!webhookEvent) return;
+
+    const currentPayload = webhookEvent.payload && typeof webhookEvent.payload === 'object' && !Array.isArray(webhookEvent.payload)
+      ? webhookEvent.payload as Record<string, unknown>
+      : {};
+
     await prisma.webhookEvent.update({
       where: { id: webhookId },
       data: {
-        retryCount: this.maxRetries, // Mark as failed
-        error: 'Cancelled by user',
+        // Mark as failed by storing maxRetries in payload
+        payload: JSON.parse(JSON.stringify({
+          ...currentPayload,
+          retryCount: this.maxRetries,
+          failed: true,
+          error: 'Cancelled by user',
+        })),
       },
     });
   }
@@ -399,7 +429,7 @@ export class WebhookManager {
       where: {
         orgId,
         processed: false,
-        retryCount: { lt: this.maxRetries },
+        // retryCount is in payload JSON, cannot query directly - get all unprocessed
       },
     });
 

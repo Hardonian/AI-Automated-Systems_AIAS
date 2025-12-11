@@ -18,13 +18,16 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "target": "ES2022",
-    "lib": ["ES2022"]
+    "lib": ["ES2022"],
+    "types": [],
+    "typeRoots": []
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"],
   "references": [
     {
-      "path": "../config"
+      "path": "../config",
+      "prepend": true
     }
   ]
 }

@@ -56,7 +56,8 @@ temp/
 *.bak
 
 # Git
-.git/
+# Note: .git/ is needed for ignoreCommand in vercel.json
+# Vercel won't deploy .git/ even if not in .vercelignore
 .gitignore
 
 # Node modules (handled by Vercel)

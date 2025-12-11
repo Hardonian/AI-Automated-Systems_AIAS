@@ -102,12 +102,15 @@ export class QueueProcessors {
       });
 
       // Update ingest event
+      const statsRecord = ingestEvent.stats && typeof ingestEvent.stats === 'object' && 'startedAt' in ingestEvent.stats
+        ? ingestEvent.stats as Record<string, unknown>
+        : {};
       await prisma.ingestEvent.update({
         where: { id: ingestEvent.id },
         data: {
           status: 'COMPLETED',
           stats: {
-            startedAt: ingestEvent.stats?.startedAt,
+            startedAt: statsRecord.startedAt,
             completedAt: new Date(),
             recordsProcessed: processedData.length,
           },

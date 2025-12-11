@@ -136,10 +136,13 @@ export class PaymentService {
       return;
     }
 
-    // Find organization by customer ID or create new one
-    let org = await prisma.organization.findFirst({
+    // Find organization by customer ID through subscription or create new one
+    const existingSubscription = await prisma.subscription.findFirst({
       where: { stripeCustomerId: customerId },
+      include: { org: true },
     });
+
+    let org = existingSubscription?.org;
 
     if (!org) {
       // Create new organization for this customer
@@ -147,7 +150,6 @@ export class PaymentService {
         data: {
           name: 'New Organization',
           slug: `org-${Date.now()}`,
-          stripeCustomerId: customerId,
         },
       });
     }
@@ -175,9 +177,12 @@ export class PaymentService {
   private static async handleSubscriptionCreated(subscription: Stripe.Subscription) {
     const customerId = subscription.customer as string;
     
-    const org = await prisma.organization.findFirst({
+    const existingSubscription = await prisma.subscription.findFirst({
       where: { stripeCustomerId: customerId },
+      include: { org: true },
     });
+
+    const org = existingSubscription?.org;
 
     if (!org) {
       logger.error({ customerId }, 'Organization not found for customer');
@@ -257,13 +262,13 @@ export class PaymentService {
     }
   }
 
-  private static getPlanFromPriceId(priceId: string): 'BASIC' | 'PRO' | 'ADDON' | 'FREE' {
+  private static getPlanFromPriceId(priceId: string): 'BASIC' | 'PRO' | 'ENTERPRISE' | 'FREE' {
     if (priceId === config.stripe.prices.basic) {
       return 'BASIC';
     } else if (priceId === config.stripe.prices.pro) {
       return 'PRO';
     } else if (priceId === config.stripe.prices.addon) {
-      return 'ADDON';
+      return 'ENTERPRISE'; // Map addon to ENTERPRISE plan
     }
     return 'FREE';
   }

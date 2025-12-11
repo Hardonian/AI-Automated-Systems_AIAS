@@ -12,8 +12,6 @@
     "moduleResolution": "node",
     "allowImportingTsExtensions": false,
     "noEmit": false,
-    "resolvePackageJsonExports": true,
-    "resolvePackageJsonImports": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

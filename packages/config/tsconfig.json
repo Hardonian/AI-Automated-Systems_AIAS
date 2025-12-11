@@ -19,8 +19,8 @@
     "esModuleInterop": true,
     "target": "ES2022",
     "lib": ["ES2022"],
-    "types": [],
-    "typeRoots": []
+    "types": ["node"],
+    "typeRoots": ["../../node_modules/@types"],
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]

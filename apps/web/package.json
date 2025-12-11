@@ -96,7 +96,7 @@
     "robots-txt": "^1.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.10.2",
+    "@types/node": "^25.0.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/bcryptjs": "^2.4.6",

@@ -9,7 +9,7 @@
     "declarationMap": true,
     "incremental": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": false,
     "noEmit": false,
     "resolvePackageJsonExports": true,

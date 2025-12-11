@@ -154,17 +154,29 @@ export class QueueProcessors {
               : 'website';
           const scope: { pages: number; features: string[]; integrations: string[]; timeline: 'rush' | 'standard' | 'flexible' } = 
             typeof data.scope === 'object' && data.scope !== null ? data.scope as { pages: number; features: string[]; integrations: string[]; timeline: 'rush' | 'standard' | 'flexible' } : { pages: 0, features: [], integrations: [], timeline: 'standard' };
-          const requirements: { design: boolean; development: boolean; testing: boolean; deployment: boolean } = 
-            typeof data.requirements === 'object' && data.requirements !== null ? data.requirements as { design: boolean; development: boolean; testing: boolean; deployment: boolean } : { design: false, development: false, testing: false, deployment: false };
+          const requirementsData = typeof data.requirements === 'object' && data.requirements !== null ? data.requirements as Record<string, unknown> : {};
+          const requirements: { design: boolean; development: boolean; testing: boolean; deployment: boolean; maintenance: boolean } = { 
+            design: Boolean(requirementsData.design),
+            development: Boolean(requirementsData.development),
+            testing: Boolean(requirementsData.testing),
+            deployment: Boolean(requirementsData.deployment),
+            maintenance: Boolean(requirementsData.maintenance)
+          };
           result = await AIGenerators.generateProjectEstimate(projectType, scope, requirements);
           break;
         }
         case 'content': {
           const topic: string = typeof data.topic === 'string' ? data.topic : String(data.topic);
-          const contentType: string = typeof data.type === 'string' ? data.type : String(data.type);
-          const tone: string = typeof data.tone === 'string' ? data.tone : String(data.tone);
-          const targetAudience: string = typeof data.targetAudience === 'string' ? data.targetAudience : String(data.targetAudience);
-          const keywords: string[] = Array.isArray(data.keywords) ? data.keywords.map(k => String(k)) : [];
+          const contentType: 'blog-post' | 'social-media' | 'email' | 'ad-copy' | 'product-description' = 
+            typeof data.type === 'string' && ['blog-post', 'social-media', 'email', 'ad-copy', 'product-description'].includes(data.type)
+              ? data.type as 'blog-post' | 'social-media' | 'email' | 'ad-copy' | 'product-description'
+              : 'blog-post';
+          const tone: 'professional' | 'casual' | 'technical' | 'creative' | 'persuasive' = 
+            typeof data.tone === 'string' && ['professional', 'casual', 'technical', 'creative', 'persuasive'].includes(data.tone)
+              ? data.tone as 'professional' | 'casual' | 'technical' | 'creative' | 'persuasive'
+              : 'professional';
+          const targetAudience: string | undefined = typeof data.targetAudience === 'string' ? data.targetAudience : undefined;
+          const keywords: string[] | undefined = Array.isArray(data.keywords) ? data.keywords.map(k => String(k)) : undefined;
           result = await AIGenerators.generateContentPlan(topic, contentType, tone, targetAudience, keywords);
           break;
         }
@@ -173,8 +185,14 @@ export class QueueProcessors {
           const goals: string[] = Array.isArray(data.goals) ? data.goals.map(g => String(g)) : [];
           const currentProcesses: string[] = Array.isArray(data.currentProcesses) ? data.currentProcesses.map(p => String(p)) : [];
           const painPoints: string[] = Array.isArray(data.painPoints) ? data.painPoints.map(p => String(p)) : [];
-          const budget: string = typeof data.budget === 'string' ? data.budget : String(data.budget);
-          const timeline: string = typeof data.timeline === 'string' ? data.timeline : String(data.timeline);
+          const budget: 'low' | 'medium' | 'high' = 
+            typeof data.budget === 'string' && ['low', 'medium', 'high'].includes(data.budget)
+              ? data.budget as 'low' | 'medium' | 'high'
+              : 'medium';
+          const timeline: 'immediate' | '1-3months' | '3-6months' | '6-12months' = 
+            typeof data.timeline === 'string' && ['immediate', '1-3months', '3-6months', '6-12months'].includes(data.timeline)
+              ? data.timeline as 'immediate' | '1-3months' | '3-6months' | '6-12months'
+              : '3-6months';
           result = await AIGenerators.generateWorkflowBlueprint(businessType, goals, currentProcesses, painPoints, budget, timeline);
           break;
         }

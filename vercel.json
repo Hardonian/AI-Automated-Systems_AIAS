@@ -1,4 +1,5 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "crons": [
     {
       "path": "/api/cron/trial-emails",
@@ -6,7 +7,7 @@
     }
   ],
   "buildCommand": "pnpm run vercel-build",
-  "installCommand": "pnpm install --frozen-lockfile || npm ci --legacy-peer-deps",
+  "installCommand": "pnpm install --frozen-lockfile",
   "framework": "nextjs",
   "build": {
     "env": {
@@ -23,5 +24,7 @@
       "source": "/api/:path*",
       "destination": "/api/:path*"
     }
-  ]
+  ],
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD .",
+  "regions": ["iad1"]
 }

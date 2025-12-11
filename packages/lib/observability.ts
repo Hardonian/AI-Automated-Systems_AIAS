@@ -3,7 +3,7 @@ import pino from 'pino';
 import { register, collectDefaultMetrics, Counter, Histogram, Gauge } from 'prom-client';
 import type { IncomingMessage, ServerResponse } from 'http';
 
-import { prisma } from './database.js';
+import { prisma } from './database';
 
 // Initialize Prometheus metrics
 collectDefaultMetrics({ register });

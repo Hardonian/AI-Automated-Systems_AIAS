@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import bcrypt from 'bcryptjs';
 import { SignJWT, jwtVerify } from 'jose';
 
-import { prisma } from './database.js';
+import { prisma } from './database';
 
 
 const supabase = createClient(

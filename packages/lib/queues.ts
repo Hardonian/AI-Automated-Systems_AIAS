@@ -2,10 +2,10 @@ import { config } from '@ai-consultancy/config';
 import { Queue, Worker, Job } from 'bullmq';
 import { Redis } from 'ioredis';
 
-import { AIGenerators } from './ai/generators.js';
-import { prisma } from './database.js';
+import { AIGenerators } from './ai/generators';
+import { prisma } from './database';
 // Note: aiClient import reserved for future AI queue processing
-import { logger } from './observability.js';
+import { logger } from './observability';
 
 // Create Redis connection with proper typing for ES modules
 const connection = new Redis(config.redis.url || 'redis://localhost:6379');

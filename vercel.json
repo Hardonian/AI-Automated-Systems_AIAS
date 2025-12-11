@@ -25,6 +25,6 @@
       "destination": "/api/:path*"
     }
   ],
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD .",
+  "ignoreCommand": "git rev-parse --verify HEAD^ >/dev/null 2>&1 && git diff --quiet HEAD^ HEAD . || exit 1",
   "regions": ["iad1"]
 }

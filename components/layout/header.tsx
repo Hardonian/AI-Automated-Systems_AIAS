@@ -40,7 +40,7 @@ export function Header() {
             // { href: "/settler", label: "Settler" },
             // { href: "/edge-ai", label: "Edge AI" },
             // { href: "/portfolio", label: "Portfolio" },
-            // { href: "/tasks", label: "Our Builds" },
+            // { href: "/showcase", label: "Showcase" },
             { href: "/case-studies", label: "Case Studies" },
             { href: "/pricing", label: "Pricing" },
             { href: "/features", label: "Features" },

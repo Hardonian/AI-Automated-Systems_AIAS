@@ -127,7 +127,11 @@ export default function ServicesPage() {
           Need something custom? We build complete AI platforms, automation systems, 
           and intelligent agents tailored to your business. See our work: TokPulse, Hardonia Suite.
         </p>
-        <div className="p-6 md:p-8 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg mb-8">
+        <div 
+          aria-label="Service Comparison" 
+          className="p-6 md:p-8 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg mb-8"
+          role="region"
+        >
           <h2 className="text-lg md:text-xl font-semibold mb-4">SaaS vs. Consulting — Which Do You Need?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
             <div>

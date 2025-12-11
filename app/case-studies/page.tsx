@@ -287,7 +287,7 @@ export default async function CaseStudiesPage() {
             <Link href="/demo">Book Consultation</Link>
           </Button>
           <Button asChild size="lg" variant="outline">
-            <Link href="/tasks">View Upcoming Builds</Link>
+            <Link href="/showcase">View Upcoming Builds</Link>
           </Button>
           <Button asChild size="lg" variant="outline">
             <Link href="/pricing">Start Free Trial</Link>

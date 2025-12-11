@@ -40,7 +40,7 @@ export function Footer() {
                 { href: "/portfolio", label: "Portfolio" },
                 { href: "/process", label: "Our Process" },
                 { href: "/case-studies", label: "Case Studies" },
-                { href: "/tasks", label: "Our Builds" },
+                { href: "/showcase", label: "Showcase" },
                 { href: "/pricing", label: "Platform Pricing" },
                 { href: "/features", label: "Features" },
               ],
@@ -59,7 +59,7 @@ export function Footer() {
               title: "Company",
               links: [
                 { href: "/about", label: "About" },
-                { href: "/tasks", label: "Consultancy Builds" },
+                { href: "/showcase", label: "Consultancy Showcase" },
                 { href: "/why-canadian", label: "Why Canadian" },
                 { href: "/privacy", label: "Privacy Policy" },
                 { href: "/terms", label: "Terms of Service" },

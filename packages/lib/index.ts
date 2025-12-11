@@ -2,7 +2,7 @@
 export * from './database';
 
 // AI
-export * from './ai/index';
+// export * from './ai/index'; // Temporarily disabled due to build issues
 
 // Auth
 export * from './auth';

@@ -152,10 +152,18 @@ export class SecurityMonitor {
       data: {
         source: 'security-monitor',
         event: event.type,
-        payload: {
-          ...event,
+        payload: JSON.parse(JSON.stringify({
+          type: event.type,
+          severity: event.severity,
+          source: event.source,
+          description: event.description,
+          metadata: event.metadata || {},
+          userId: event.userId,
+          orgId: event.orgId,
+          ipAddress: event.ipAddress,
+          userAgent: event.userAgent,
           timestamp: new Date(),
-        },
+        })),
         orgId: event.orgId || 'security',
       },
     });
@@ -409,23 +417,30 @@ export class SecurityMonitor {
     });
 
     return events.map((event: { id: string; event: unknown; payload: unknown; orgId: string; createdAt: Date }) => {
-      const payload = event.payload as Record<string, unknown>;
+      const payload = event.payload && typeof event.payload === 'object' && !Array.isArray(event.payload)
+        ? event.payload as Record<string, unknown>
+        : {};
+      const severityValue = typeof payload.severity === 'string' && Object.values(SecuritySeverity).includes(payload.severity as SecuritySeverity)
+        ? payload.severity as SecuritySeverity
+        : SecuritySeverity.LOW;
       return {
-      id: event.id,
-      type: event.event as SecurityEventType,
-      severity: payload.severity || SecuritySeverity.LOW,
-      source: payload.source || 'unknown',
-      description: payload.description || '',
-      metadata: (payload.metadata as Record<string, unknown>) || {},
-      userId: payload.userId as string | undefined,
-      orgId: event.orgId,
-      ipAddress: payload.ipAddress as string | undefined,
-      userAgent: payload.userAgent as string | undefined,
-      timestamp: event.createdAt,
-      resolved: (payload.resolved as boolean) || false,
-      resolvedAt: payload.resolvedAt ? new Date(payload.resolvedAt as string) : undefined,
-      resolvedBy: payload.resolvedBy as string | undefined,
-    };
+        id: event.id,
+        type: (typeof event.event === 'string' ? event.event : 'SUSPICIOUS_ACTIVITY') as SecurityEventType,
+        severity: severityValue,
+        source: typeof payload.source === 'string' ? payload.source : 'unknown',
+        description: typeof payload.description === 'string' ? payload.description : '',
+        metadata: (payload.metadata && typeof payload.metadata === 'object' && !Array.isArray(payload.metadata)
+          ? payload.metadata as Record<string, unknown>
+          : {}) || {},
+        userId: typeof payload.userId === 'string' ? payload.userId : undefined,
+        orgId: event.orgId,
+        ipAddress: typeof payload.ipAddress === 'string' ? payload.ipAddress : undefined,
+        userAgent: typeof payload.userAgent === 'string' ? payload.userAgent : undefined,
+        timestamp: event.createdAt,
+        resolved: typeof payload.resolved === 'boolean' ? payload.resolved : false,
+        resolvedAt: payload.resolvedAt ? new Date(String(payload.resolvedAt)) : undefined,
+        resolvedBy: typeof payload.resolvedBy === 'string' ? payload.resolvedBy : undefined,
+      };
     });
   }
 

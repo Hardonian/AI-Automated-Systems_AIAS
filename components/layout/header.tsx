@@ -37,14 +37,14 @@ export function Header() {
         <nav aria-label="Primary" className="hidden md:flex items-center gap-1">
           {[
             { href: "/services", label: "Services" },
-            { href: "/settler", label: "Settler" },
-            { href: "/edge-ai", label: "Edge AI" },
-            { href: "/portfolio", label: "Portfolio" },
-            { href: "/tasks", label: "Our Builds" },
+            // { href: "/settler", label: "Settler" },
+            // { href: "/edge-ai", label: "Edge AI" },
+            // { href: "/portfolio", label: "Portfolio" },
+            // { href: "/tasks", label: "Our Builds" },
             { href: "/case-studies", label: "Case Studies" },
             { href: "/pricing", label: "Pricing" },
             { href: "/features", label: "Features" },
-            { href: "/why-canadian", label: "🇨🇦 Why Canadian" },
+            // { href: "/why-canadian", label: "🇨🇦 Why Canadian" },
             { href: "/blog", label: "Blog" },
           ].map((item, index) => (
             <motion.div

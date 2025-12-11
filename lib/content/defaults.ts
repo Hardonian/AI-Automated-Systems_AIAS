@@ -8,67 +8,67 @@ export const defaultAIASContent: AIASContent = {
     title: "Custom AI Platforms",
     subtitle: "That Transform Your Business",
     description:
-      "Save 10+ hours per week with AI automation. Connect your tools, automate workflows, and focus on what matters.",
-    badgeText: "Custom AI Platforms Built by AI Automated Systems",
+      "We build enterprise-grade automation systems and custom AI agents. From strategy to full-stack implementation, we help you scale without adding headcount.",
+    badgeText: "Consultancy & Automation Studio",
     primaryCta: {
-      label: "Start 30-Day Free Trial",
-      href: "/signup",
+      label: "Book Strategy Call",
+      href: "/demo",
       variant: "default",
       visible: true,
     },
     secondaryCta: {
-      label: "Book Free Demo",
-      href: "/demo",
+      label: "Explore Services",
+      href: "/services",
       variant: "outline",
       visible: true,
     },
     backgroundVariant: "gradient",
     socialProof: [
-      { icon: "👥", text: "2,000+ Active Users" },
+      { icon: "👥", text: "Enterprise Ready" },
       { icon: "⭐", text: "4.9/5 Rating" },
-      { icon: "🚀", text: "10+ Hours Saved/Week" },
-      { icon: "💰", text: "40% ROI Increase" },
+      { icon: "🚀", text: "Custom Architecture" },
+      { icon: "💰", text: "Proven ROI" },
     ],
     trustBadges: [
       { icon: "shield", text: "PIPEDA Compliant", color: "text-blue-500" },
       { icon: "globe", text: "🇨🇦 Canadian Built", color: "text-red-500" },
-      { icon: "check", text: "99.9% Uptime", color: "text-green-500" },
+      { icon: "check", text: "SOC 2 Ready", color: "text-green-500" },
       { icon: "zap", text: "Enterprise Security", color: "text-purple-500" },
     ],
   },
   features: {
-    sectionTitle: "Automate Your Workflows. Save Time. Grow Your Business.",
+    sectionTitle: "Custom Automation. Real Business Impact.",
     sectionSubtitle:
-      "Connect your tools, automate repetitive tasks, and get insights that help you make better decisions. No coding required. Start in minutes.",
+      "We don't just connect APIs — we architect complete intelligent systems. Whether you need a custom platform or a complex workflow automation, we build it.",
     items: [
       {
-        title: "No-Code AI Agents",
+        title: "Custom AI Agents",
         description:
-          "Build custom AI agents with drag-and-drop interface. No coding required. Deploy in 30 minutes.",
+          "We build autonomous agents tailored to your specific business logic. They handle complex decision-making tasks 24/7.",
         icon: "sparkles",
         gradient: "from-blue-500 to-cyan-500",
         highlight: true,
       },
       {
-        title: "Canadian Integrations",
+        title: "Enterprise Integrations",
         description:
-          "20+ Canadian-first integrations: Shopify, Wave Accounting, Stripe CAD, RBC, TD, Interac. Built for Canadian businesses.",
+          "Deep integration with your existing stack: ERPs, CRMs, Financial systems. We handle legacy systems and modern APIs alike.",
         icon: "zap",
         gradient: "from-red-500 to-pink-500",
         highlight: false,
       },
       {
-        title: "Save 10+ Hours/Week",
+        title: "Operational Efficiency",
         description:
-          "Automate repetitive tasks automatically. Reduce manual errors by 90%. Focus on high-value work.",
+          "Reduce manual overhead by 90%. We identify bottlenecks and deploy automated solutions that scale with your growth.",
         icon: "zap",
         gradient: "from-green-500 to-emerald-500",
         highlight: false,
       },
       {
-        title: "Affordable CAD Pricing",
+        title: "Platform & Consultancy",
         description:
-          "CAD $49/month (vs. $150+ competitors). Transparent GST/HST. Annual discounts available. Cancel anytime.",
+          "Use our self-serve platform for quick wins, or hire our consultancy for custom, full-stack enterprise builds.",
         icon: "dollar-sign",
         gradient: "from-yellow-500 to-orange-500",
         highlight: false,

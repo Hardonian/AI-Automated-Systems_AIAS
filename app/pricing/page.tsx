@@ -28,6 +28,7 @@ const plans = [
       "No credit card required",
     ],
     cta: "Start Free",
+    href: "/signup",
     popular: false,
     annualPrice: null,
     isBeta: false,
@@ -52,6 +53,7 @@ const plans = [
       "Cancel anytime",
     ],
     cta: "Start Free Trial",
+    href: "/signup",
     popular: true,
     annualPrice: "$490",
     annualSavings: "$98",
@@ -79,11 +81,34 @@ const plans = [
       "Advanced analytics (coming soon)",
     ],
     cta: "Start Free Trial",
+    href: "/signup",
     popular: false,
     annualPrice: "$1,490",
     annualSavings: "$298",
     annualDiscount: "20%",
     isBeta: true,
+  },
+  {
+    name: "Enterprise",
+    price: "Custom",
+    period: "project",
+    tagline: "For custom AI platforms & consultancy",
+    description: "Full-stack custom development, dedicated support, and enterprise-grade security. Built for your specific business needs.",
+    features: [
+      "Custom AI platform development",
+      "Unlimited workflows & automations",
+      "Dedicated account manager",
+      "SLA & 99.9% uptime guarantee",
+      "On-premise deployment options",
+      "Custom security & compliance",
+      "Priority 24/7 phone support",
+      "Quarterly strategy reviews",
+    ],
+    cta: "Book Consultation",
+    href: "/demo",
+    popular: false,
+    annualPrice: null,
+    isBeta: false,
   },
 ];
 
@@ -188,7 +213,7 @@ export default function PricingPage() {
                 size="lg"
                 variant={plan.popular ? "default" : "outline"}
               >
-                <Link aria-label={`${plan.cta} - ${plan.name} plan`} href="/signup">
+                <Link aria-label={`${plan.cta} - ${plan.name} plan`} href={plan.href}>
                   {plan.cta}
                 </Link>
               </Button>

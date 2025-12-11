@@ -1,4 +1,5 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "crons": [
     {
       "path": "/api/cron/trial-emails",
@@ -23,5 +24,7 @@
       "source": "/api/:path*",
       "destination": "/api/:path*"
     }
-  ]
+  ],
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD .",
+  "regions": ["iad1"]
 }

@@ -1,132 +1,178 @@
-# AI Automated Systems Platform
+# AIAS Platform
 
-**Enterprise-grade AI consultancy platform showcasing custom AI agents, workflow automation, and intelligent business solutions**
+Enterprise-grade AI automation platform for building custom AI agents, workflow automation, and intelligent business solutions.
 
-[![CI Pipeline](https://github.com/shardie-github/aias/actions/workflows/ci.yml/badge.svg)](https://github.com/shardie-github/aias/actions/workflows/ci.yml)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+## Overview
 
-## 🚀 Quick Start
+AIAS Platform is a multi-tenant SaaS application built with Next.js 15, TypeScript, and Supabase. It provides workflow automation, custom AI agents, analytics, and integrations for businesses seeking to automate operations and deploy AI solutions.
+
+### Core Capabilities
+
+- **Workflow Automation**: Visual workflow builder with pre-built templates and custom automation chains
+- **AI Agents**: Custom AI agents for specific business needs with natural language interaction
+- **Multi-Tenant Architecture**: Secure tenant isolation with row-level security (RLS)
+- **Analytics & Insights**: Real-time dashboards, usage analytics, and performance metrics
+- **Integrations**: Shopify, Wave Accounting, and custom API integrations
+
+## Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript 5.9 (strict mode)
+- **Database**: Supabase (PostgreSQL) with Prisma ORM
+- **Authentication**: Supabase Auth (JWT-based)
+- **Payments**: Stripe
+- **Email**: Resend
+- **Styling**: Tailwind CSS
+- **UI Components**: Radix UI
+- **Validation**: Zod
+- **Testing**: Vitest, Playwright
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 20.18.0+ or 22.0.0+
+- pnpm 8.15.0+
+- Git
+
+### Installation
 
 ```bash
+# Clone repository
+git clone https://github.com/shardie-github/aias.git
+cd aias
+
 # Install dependencies
 pnpm install
 
 # Set up environment variables
-cp .env.example .env.local
+cp .env.local.example .env.local
 # Edit .env.local with your values
 
-# Run development server
+# Start development server
 pnpm dev
-
-# Build for production
-pnpm build
-
-# Run tests
-pnpm test
 ```
 
-## ✨ Features
+The application will be available at `http://localhost:3000`.
 
-### 🤖 AI Automation
-- **Custom AI Platforms** - Not just integrations, full custom solutions
-- **Workflow Automation** - Visual builder with pre-built templates
-- **AI Agents** - Custom agents for specific business needs
-- **Edge AI** - Browser-based inference and device acceleration
+### Required Environment Variables
 
-### 💼 Business Features
-- **Three-Tier Pricing** - Free, Pro, Enterprise
-- **Content Gating** - Premium features for paid users
-- **Analytics Dashboard** - Real-time insights and metrics
-- **Team Collaboration** - Work together on workflows
+See [`.env.local.example`](.env.local.example) for complete configuration.
 
-### 🔒 Security & Compliance
-- **Canadian Data Residency** - PIPEDA compliant
-- **Row-Level Security** - Comprehensive RLS policies
-- **Input Sanitization** - XSS and SQL injection protection
-- **Rate Limiting** - Redis-backed rate limiting
-
-### 🎨 User Experience
-- **WCAG 2.1 AA** - Full accessibility compliance
-- **Mobile-First** - Responsive design
-- **Performance Optimized** - Fast load times
-- **SEO Optimized** - Comprehensive metadata
-
-## 📁 Project Structure
-
-```
-├── app/                    # Next.js app directory
-├── components/             # React components
-├── lib/                   # Utilities and libraries
-│   ├── api/               # API utilities and schemas
-│   ├── security/          # Security utilities
-│   ├── seo/               # SEO utilities
-│   ├── cro/               # Conversion optimization
-│   ├── pricing/           # Pricing system
-│   └── edge-ai/           # Edge AI foundations
-├── docs/                  # Documentation
-│   ├── internal/          # Internal documentation
-│   ├── external/          # External documentation
-│   ├── operations/        # Operational runbooks
-│   └── architecture/      # Architecture docs
-├── supabase/              # Supabase configuration
-│   ├── functions/         # Edge functions
-│   └── migrations/       # Database migrations
-└── tests/                 # Test suite
-```
-
-## 🛠️ Tech Stack
-
-- **Framework:** Next.js 15 (App Router)
-- **Language:** TypeScript (strict mode)
-- **Database:** Supabase (PostgreSQL)
-- **Authentication:** Supabase Auth
-- **Payments:** Stripe
-- **Email:** Resend
-- **Styling:** Tailwind CSS
-- **UI Components:** Radix UI
-- **Validation:** Zod
-- **Testing:** Vitest, Playwright
-
-## 📚 Documentation
-
-- [API Documentation](/docs/architecture/api-endpoints.md)
-- [Business Strategy](/docs/internal/business-strategy.md)
-- [Product Overview](/docs/external/product-overview.md)
-- [Operational Runbooks](/docs/operations/runbooks.md)
-- [Architecture Guide](/docs/architecture/ARCHITECTURE.md)
-
-## 🔐 Environment Variables
-
-See [`.env.example`](.env.example) for all required environment variables.
-
-Key variables:
+**Minimum required:**
 - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
 - `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key
-- `STRIPE_SECRET_KEY` - Stripe secret key
-- `RESEND_API_KEY` - Resend API key
+- `DATABASE_URL` - PostgreSQL connection string
 
-## 🧪 Testing
+**Optional (for full features):**
+- `STRIPE_SECRET_KEY` - Stripe secret key (billing)
+- `RESEND_API_KEY` - Resend API key (email)
+- `OPENAI_API_KEY` - OpenAI API key (AI features)
 
-```bash
-# Run all tests
-pnpm test
+## Project Structure
 
-# Run E2E tests
-pnpm test:e2e
-
-# Run with coverage
-pnpm test:coverage
+```
+├── app/                    # Next.js app directory (pages, API routes)
+├── components/             # React components
+├── lib/                    # Utilities and libraries
+│   ├── api/               # API utilities and schemas
+│   ├── security/          # Security utilities
+│   ├── billing/           # Billing system
+│   └── edge-ai/           # Edge AI foundations
+├── docs/                   # Documentation
+│   ├── architecture/      # Architecture documentation
+│   ├── api/               # API documentation
+│   └── operations/        # Operational runbooks
+├── supabase/              # Supabase configuration
+│   ├── functions/         # Edge functions
+│   └── migrations/        # Database migrations
+└── tests/                 # Test suite
 ```
 
-## 🚢 Deployment
+## Development
+
+### Common Commands
+
+```bash
+# Development
+pnpm dev              # Start development server
+pnpm build            # Build for production
+pnpm start            # Start production server
+
+# Code Quality
+pnpm lint             # Run ESLint
+pnpm lint:fix         # Fix linting issues
+pnpm typecheck        # TypeScript type checking
+pnpm format           # Format code with Prettier
+
+# Testing
+pnpm test             # Run unit tests
+pnpm test:coverage    # Run tests with coverage
+pnpm test:e2e         # Run E2E tests
+
+# Database
+pnpm db:push          # Push schema changes
+pnpm db:migrate       # Run migrations
+pnpm db:seed          # Seed database
+pnpm db:studio        # Open Prisma Studio
+```
+
+## Architecture
+
+The platform uses a multi-tier architecture:
+
+1. **Client Layer**: Next.js App Router with React Server Components
+2. **Edge Layer**: Vercel Edge middleware for security and rate limiting
+3. **API Layer**: Next.js API routes with unified route handlers
+4. **Backend**: Supabase (PostgreSQL, Auth, Storage, RLS)
+5. **External Services**: Stripe, Resend, OpenAI
+
+Multi-tenant isolation is enforced at multiple layers:
+- Middleware validates tenant access
+- Row-Level Security (RLS) policies filter data by tenant_id
+- Cache keys prefixed with tenant_id
+- Audit logs include tenant_id
+
+See [Architecture Documentation](docs/architecture/ARCHITECTURE.md) for details.
+
+## API Documentation
+
+The platform provides a RESTful API for programmatic access:
+
+- **Base URL**: `/api/v1`
+- **Authentication**: Bearer token or cookie-based
+- **Rate Limits**: Plan-based (Free: 100/hour, Pro: 5,000/hour)
+
+See [API Documentation](docs/api/overview.md) for endpoints, authentication, and examples.
+
+## Billing Model
+
+The platform uses a subscription-based billing model:
+
+- **Free**: Limited workflows, community support
+- **Pro**: Unlimited workflows, priority support, advanced analytics
+- **Enterprise**: Custom pricing, dedicated support, SLA
+
+Billing is handled via Stripe. See [Billing Documentation](docs/billing.md) for details.
+
+## Security
+
+- **Multi-Layer Security**: Edge middleware, application validation, database RLS
+- **Data Residency**: Canadian data centers (PIPEDA compliant)
+- **Input Validation**: Zod schemas for all inputs
+- **Output Sanitization**: XSS and SQL injection protection
+- **Rate Limiting**: Redis-backed rate limiting
+- **Audit Logging**: Comprehensive audit trails
+
+See [Security Documentation](docs/security.md) for details.
+
+## Deployment
 
 ### Vercel (Recommended)
 
-1. Connect your GitHub repository to Vercel
-2. Configure environment variables
+1. Connect GitHub repository to Vercel
+2. Configure environment variables in Vercel dashboard
 3. Deploy automatically on push to main
 
 ### Manual Deployment
@@ -139,25 +185,20 @@ pnpm build
 vercel deploy --prod
 ```
 
-## 📊 Performance
+See [Deployment Documentation](docs/operations/deployment.md) for details.
 
-- **Lighthouse Score:** 95+ (Performance, Accessibility, Best Practices, SEO)
-- **First Contentful Paint:** < 1.5s
-- **Largest Contentful Paint:** < 2.5s
-- **Time to Interactive:** < 3.5s
+## Documentation
 
-## 🔄 CI/CD
+- [Architecture Guide](docs/architecture/ARCHITECTURE.md)
+- [API Reference](docs/api/overview.md)
+- [Getting Started](docs/getting-started.md)
+- [Billing](docs/billing.md)
+- [Security](docs/security.md)
+- [Operations](docs/operations/)
 
-Automated CI/CD pipeline includes:
-- TypeScript type checking
-- ESLint linting
-- Unit and integration tests
-- E2E tests
-- Security audits
-- Accessibility checks
-- Performance monitoring
+## Contributing
 
-## 🤝 Contributing
+We welcome contributions. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 1. Fork the repository
 2. Create a feature branch
@@ -165,23 +206,15 @@ Automated CI/CD pipeline includes:
 4. Run tests and linting
 5. Submit a pull request
 
-## 📄 License
+## Support
 
-MIT License - see [LICENSE](LICENSE) file for details
+- **Documentation**: [docs/](docs/)
+- **Issues**: [GitHub Issues](https://github.com/shardie-github/aias/issues)
+- **Email**: support@aiautomatedsystems.ca
 
-## 🆘 Support
+## License
 
-- **Email:** support@aiautomatedsystems.ca
-- **Documentation:** [/docs](/docs)
-- **Issues:** [GitHub Issues](https://github.com/shardie-github/aias/issues)
-
-## 🎯 Roadmap
-
-- [ ] Mobile apps (iOS/Android)
-- [ ] Marketplace for workflows
-- [ ] Advanced AI capabilities
-- [ ] More integrations
-- [ ] White-label solutions
+MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 

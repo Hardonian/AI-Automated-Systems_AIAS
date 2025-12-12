@@ -2,7 +2,7 @@
 
 ## Overview
 
-AIAS Platform is a modern, enterprise-grade AI consultancy platform built with Next.js 14, TypeScript, and Supabase. The platform provides multi-tenant architecture, AI agent capabilities, workflow automation, and comprehensive security features.
+AIAS Platform is a modern, enterprise-grade AI automation platform built with Next.js 15, TypeScript 5.9, and Supabase. The platform provides multi-tenant architecture, AI agent capabilities, workflow automation, and comprehensive security features.
 
 ## System Architecture
 
@@ -52,9 +52,9 @@ AIAS Platform is a modern, enterprise-grade AI consultancy platform built with N
 ### Frontend Layer
 
 **Technology Stack:**
-- Next.js 14 (App Router)
-- React 18
-- TypeScript 5.3
+- Next.js 15 (App Router)
+- React 19
+- TypeScript 5.9
 - Tailwind CSS
 - Radix UI Components
 - Framer Motion

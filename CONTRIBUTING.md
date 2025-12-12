@@ -46,7 +46,7 @@ All pull requests must pass the following checks:
 
 ### Bug Reports
 
-Please report bugs to: **scottrmhardie@gmail.com**
+Please report bugs via [GitHub Issues](https://github.com/shardie-github/aias/issues) or email: **support@aiautomatedsystems.ca**
 
 Include:
 - Description of the bug
@@ -61,13 +61,13 @@ Include:
 For feature requests, please:
 1. Check if the feature already exists or is planned
 2. Open a GitHub issue with a clear description
-3. Or email: **scottrmhardie@gmail.com**
+3. Or email: **inquiries@aiautomatedsystems.ca**
 
 ## Security Issues
 
 **Do not** open public issues for security vulnerabilities.
 
-Instead, report security issues to: **scottrmhardie@gmail.com**
+Instead, report security issues to: **security@aiautomatedsystems.ca**
 
 We will:
 - Acknowledge receipt within 48 hours
@@ -77,9 +77,9 @@ We will:
 ## Contact
 
 - **Official Website:** https://aiautomatedsystems.ca
-- **Help Center Support:** support@aiautomatedsystems.ca (for existing clients)
-- **Consulting & Inquiries:** inquiries@aiautomatedsystems.ca (for consulting and services)
-- **Feedback & Bug Reports:** scottrmhardie@gmail.com
+- **Support:** support@aiautomatedsystems.ca
+- **Inquiries:** inquiries@aiautomatedsystems.ca
+- **Security:** security@aiautomatedsystems.ca
 
 ## Code of Conduct
 

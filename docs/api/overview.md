@@ -4,7 +4,7 @@ AIAS Platform provides a RESTful API for programmatic access to workflows, agent
 
 ## Base URL
 
-- **Production:** `https://aias-platform.com/api`
+- **Production:** `https://aiautomatedsystems.ca/api`
 - **Development:** `http://localhost:3000/api`
 
 ## Authentication
@@ -106,7 +106,7 @@ API versioning is done via URL path:
 
 ## SDKs
 
-Official SDKs are coming soon. For now, use direct HTTP requests.
+Official SDKs are planned for future releases. For now, use direct HTTP requests or build your own client using the API endpoints.
 
 ---
 

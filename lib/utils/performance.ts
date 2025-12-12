@@ -18,7 +18,7 @@ export function getLazyComponent<T extends React.ComponentType<any>>(
  * Prefetch resource
  */
 export function prefetchResource(href: string, as?: string): void {
-  if (typeof document === "undefined") return;
+  if (typeof document === "undefined") {return;}
 
   const link = document.createElement("link");
   link.rel = "prefetch";
@@ -37,7 +37,7 @@ export function preloadResource(
   as: string,
   options?: { crossorigin?: string; type?: string }
 ): void {
-  if (typeof document === "undefined") return;
+  if (typeof document === "undefined") {return;}
 
   const link = document.createElement("link");
   link.rel = "preload";
@@ -56,7 +56,7 @@ export function preloadResource(
  * Defer non-critical JavaScript
  */
 export function deferScript(src: string): void {
-  if (typeof document === "undefined") return;
+  if (typeof document === "undefined") {return;}
 
   const script = document.createElement("script");
   script.src = src;
@@ -103,7 +103,7 @@ export function isSlowConnection(): boolean {
   }
 
   const connection = (navigator as any).connection;
-  if (!connection) return false;
+  if (!connection) {return false;}
 
   // Check effective type (4G, 3G, 2G, slow-2g)
   const effectiveType = connection.effectiveType;
@@ -124,7 +124,7 @@ export function getOptimalImageQuality(): number {
  * Bundle size analyzer helper
  */
 export function analyzeBundleSize(moduleName: string): void {
-  if (process.env.NODE_ENV !== "development") return;
+  if (process.env.NODE_ENV !== "development") {return;}
 
   if (typeof window !== "undefined" && (window as any).__NEXT_DATA__) {
     const chunks = (window as any).__NEXT_DATA__.chunks || [];

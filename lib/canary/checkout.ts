@@ -9,7 +9,7 @@ import { canaryMonitor } from './monitor';
 /**
  * Check if checkout should use canary version
  */
-export async function useCanaryCheckout(userId: string): Promise<boolean> {
+export async function shouldUseCanaryCheckout(userId: string): Promise<boolean> {
   const config = await getCanaryFlag('checkout');
   
   if (!config.enabled || config.percentage === 0) {
@@ -27,7 +27,7 @@ export async function recordCheckoutRequest(
   success: boolean,
   latency: number
 ): Promise<void> {
-  const isCanary = await useCanaryCheckout(userId);
+  const isCanary = await shouldUseCanaryCheckout(userId);
   
   if (isCanary) {
     await canaryMonitor.recordRequest('checkout', success, latency);
@@ -38,6 +38,6 @@ export async function recordCheckoutRequest(
  * Get checkout handler (canary or stable)
  */
 export async function getCheckoutHandler(userId: string): Promise<'canary' | 'stable'> {
-  const useCanary = await useCanaryCheckout(userId);
+  const useCanary = await shouldUseCanaryCheckout(userId);
   return useCanary ? 'canary' : 'stable';
 }

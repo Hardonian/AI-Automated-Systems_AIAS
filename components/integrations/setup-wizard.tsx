@@ -118,7 +118,7 @@ export function IntegrationSetupWizard({ integration, onComplete, onCancel }: In
 
   const handleNext = () => {
     const step = steps[currentStep];
-    if (!step) return;
+    if (!step) {return;}
     const stepId = step.id;
     if (!completedSteps.includes(stepId)) {
       setCompletedSteps([...completedSteps, stepId]);
@@ -166,7 +166,7 @@ export function IntegrationSetupWizard({ integration, onComplete, onCancel }: In
   };
 
   const currentStepData = steps[currentStep];
-  if (!currentStepData) return null;
+  if (!currentStepData) {return null;}
   const totalTime = steps.reduce((sum, step) => sum + step.estimatedTime, 0);
 
   return (

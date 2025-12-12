@@ -70,7 +70,7 @@ export function OnboardingWizard() {
 
   const goToNext = () => {
     const step = steps[currentStep];
-    if (!step) return;
+    if (!step) {return;}
     const currentStepId = step.id;
     if (!completedSteps.includes(currentStepId)) {
       setCompletedSteps([...completedSteps, currentStepId]);
@@ -250,7 +250,7 @@ function ChooseIntegrationStep({ onNext }: { onNext: () => void }) {
     try {
       // Get OAuth URL
       const response = await fetch(`/api/integrations/${provider}/oauth`);
-      if (!response.ok) throw new Error("Failed to initiate OAuth");
+      if (!response.ok) {throw new Error("Failed to initiate OAuth");}
 
       const data = await response.json();
       

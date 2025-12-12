@@ -154,11 +154,11 @@ export class FinancialForecaster {
    * Calculate growth rate
    */
   static calculateGrowthRate(values: number[]): number {
-    if (values.length < 2) return 0;
+    if (values.length < 2) {return 0;}
 
     const first = values[0];
     const last = values[values.length - 1];
-    if (!first || !last || values.length < 2) return 0;
+    if (!first || !last || values.length < 2) {return 0;}
     const periods = values.length - 1;
 
     return ((last / first) ** (1 / periods) - 1) * 100;

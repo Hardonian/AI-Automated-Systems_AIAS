@@ -29,7 +29,7 @@ serve(async (req) => {
       .gte("days", 3)
       .lt("updated_at", twentyHoursAgo);
 
-    if (streaksError) throw streaksError;
+    if (streaksError) {throw streaksError;}
 
     if (!streaks || streaks.length === 0) {
       return new Response(
@@ -51,7 +51,7 @@ serve(async (req) => {
       .from("notifications")
       .insert(notifications);
 
-    if (notifError) throw notifError;
+    if (notifError) {throw notifError;}
 
     // In production, you'd also send emails here
     // For now, we'll just create notifications

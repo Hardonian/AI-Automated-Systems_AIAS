@@ -327,7 +327,9 @@ export class DataFeedService {
 
     const stats = {
       totalSources: sources.length,
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
       activeSources: sources.filter((s: Prisma.SourceGetPayload<{}>) => s.isActive).length,
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
       lastRun: sources.reduce((latest: Date | null, source: Prisma.SourceGetPayload<{}>) => {
         if (!source.lastRun) {return latest;}
         if (!latest) {return source.lastRun;}

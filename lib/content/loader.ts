@@ -5,10 +5,11 @@ import {
   defaultAIASContent,
   defaultSettlerContent,
 } from "./defaults";
-import type { AIASContent, SettlerContent } from "./schemas";
 import {
   aiasContentSchema,
   settlerContentSchema,
+  type AIASContent,
+  type SettlerContent,
 } from "./schemas";
 
 const CONTENT_DIR = join(process.cwd(), "content");

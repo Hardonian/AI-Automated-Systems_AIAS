@@ -160,7 +160,7 @@ export function validatePhone(phone: string): ValidationResult {
   }
 
   // Remove common formatting characters
-  const cleaned = phone.replace(/[\s\-\(\)]/g, '');
+  const cleaned = phone.replace(/[\s\-()]/g, '');
 
   // Check if it's all digits and reasonable length
   if (!/^\d+$/.test(cleaned)) {

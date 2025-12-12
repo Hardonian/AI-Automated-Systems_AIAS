@@ -74,7 +74,7 @@ serve(async (req) => {
         filter_namespace: namespace || null
       });
 
-      if (error) throw error;
+      if (error) {throw error;}
       results = data || [];
     } else {
       // Perform semantic search only
@@ -85,7 +85,7 @@ serve(async (req) => {
         filter_namespace: namespace || null
       });
 
-      if (error) throw error;
+      if (error) {throw error;}
       results = data || [];
     }
 

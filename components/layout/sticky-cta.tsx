@@ -22,7 +22,7 @@ export function StickyCTA() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isDismissed]);
 
-  if (!isVisible || isDismissed) return null;
+  if (!isVisible || isDismissed) {return null;}
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 animate-in slide-in-from-bottom duration-300">

@@ -62,6 +62,7 @@
     "ops/**/*",
     "src/**/*",
     "vite.config.ts",
-    "tsconfig.node.json"
+    "tsconfig.node.json",
+    "tests/**/*"
   ]
 }

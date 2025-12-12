@@ -18,7 +18,7 @@ export function lazyLoadComponent<T extends React.ComponentType<any>>(
  * Preload critical resources
  */
 export function preloadResource(href: string, as: string): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {return;}
   
   const link = document.createElement('link');
   link.rel = 'preload';
@@ -31,7 +31,7 @@ export function preloadResource(href: string, as: string): void {
  * Prefetch next page
  */
 export function prefetchPage(href: string): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {return;}
   
   const link = document.createElement('link');
   link.rel = 'prefetch';
@@ -89,7 +89,7 @@ export function optimizeImage(
 ): string {
   // Use Next.js Image Optimization API
   const params = new URLSearchParams();
-  if (width) params.set('w', width.toString());
+  if (width) {params.set('w', width.toString());}
   params.set('q', quality.toString());
   
   return `${src}?${params.toString()}`;
@@ -99,7 +99,7 @@ export function optimizeImage(
  * Check if user prefers reduced motion
  */
 export function prefersReducedMotion(): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined') {return false;}
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 

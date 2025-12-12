@@ -825,7 +825,7 @@ async function executeStep(step: any, context: any, supabase: any): Promise<any>
     case 'data_extraction':
       return { extractedData: { field1: 'value1' }, confidence: 0.88 }
     case 'notification':
-      return { sent: true, messageId: 'msg_' + Date.now() }
+      return { sent: true, messageId: `msg_${  Date.now()}` }
     case 'api_call':
       return { success: true, statusCode: 200, data: { result: 'API call successful' } }
     case 'database_update':
@@ -833,7 +833,7 @@ async function executeStep(step: any, context: any, supabase: any): Promise<any>
     case 'ai_generation':
       return { generated: true, content: 'AI-generated content' }
     case 'scheduling':
-      return { scheduled: true, scheduleId: 'sched_' + Date.now() }
+      return { scheduled: true, scheduleId: `sched_${  Date.now()}` }
     case 'integration':
       return { integrated: true, service: step.config?.service }
     default:

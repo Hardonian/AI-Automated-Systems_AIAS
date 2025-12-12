@@ -90,6 +90,7 @@ async function analyzeMetrics(): Promise<MetricAnalysis[]> {
             recommendations.push(
               "Reduce GitHub Actions concurrency or optimize workflow dependencies"
             );
+          }
         }
       }
     }

@@ -65,54 +65,50 @@ async function checkRateLimitVercelKV(
 
   const windowSeconds = Math.ceil(config.windowMs / 1000);
 
-  try {
-    // Get current count
-    const getResponse = await fetch(`${kvUrl}/get/${encodeURIComponent(key)}`, {
-      headers: {
-        Authorization: `Bearer ${kvToken}`,
-      },
-    });
+  // Get current count
+  const getResponse = await fetch(`${kvUrl}/get/${encodeURIComponent(key)}`, {
+    headers: {
+      Authorization: `Bearer ${kvToken}`,
+    },
+  });
 
-    let count = 1;
-    if (getResponse.ok) {
-      const data = await getResponse.json();
-      const entry = data.result ? JSON.parse(data.result) : null;
-      
-      if (entry && entry.resetTime > now) {
-        count = entry.count + 1;
-      }
+  let count = 1;
+  if (getResponse.ok) {
+    const data = await getResponse.json();
+    const entry = data.result ? JSON.parse(data.result) : null;
+    
+    if (entry && entry.resetTime > now) {
+      count = entry.count + 1;
     }
+  }
 
-    // Set count with TTL
-    const resetTime = now + config.windowMs;
-    await fetch(`${kvUrl}/set/${encodeURIComponent(key)}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${kvToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        value: JSON.stringify({ count, resetTime }),
-        expiration: windowSeconds,
-      }),
-    });
+  // Set count with TTL
+  const resetTime = now + config.windowMs;
+  await fetch(`${kvUrl}/set/${encodeURIComponent(key)}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${kvToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      value: JSON.stringify({ count, resetTime }),
+      expiration: windowSeconds,
+    }),
+  });
 
-    if (count > config.maxRequests) {
-      return {
-        allowed: false,
-        remaining: 0,
-        resetTime,
-      };
-    }
-
+  if (count > config.maxRequests) {
     return {
-      allowed: true,
-      remaining: config.maxRequests - count,
+      allowed: false,
+      remaining: 0,
       resetTime,
     };
-  } catch (error) {
-    throw error;
   }
+
+  return {
+    allowed: true,
+    remaining: config.maxRequests - count,
+    resetTime,
+  };
 }
 
 /**

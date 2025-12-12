@@ -65,7 +65,7 @@ function loadEmailComponents(): Record<string, string> {
  * Calculate days since trial start
  */
 function getTrialDays(user: UserData): number {
-  if (!user.trialStartDate) return 0;
+  if (!user.trialStartDate) {return 0;}
   const now = new Date();
   const start = new Date(user.trialStartDate);
   const diffTime = now.getTime() - start.getTime();
@@ -76,7 +76,7 @@ function getTrialDays(user: UserData): number {
  * Calculate days until trial end
  */
 function getTrialDaysRemaining(user: UserData): number {
-  if (!user.trialEndDate) return 0;
+  if (!user.trialEndDate) {return 0;}
   const now = new Date();
   const end = new Date(user.trialEndDate);
   const diffTime = end.getTime() - now.getTime();

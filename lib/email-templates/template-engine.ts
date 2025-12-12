@@ -100,7 +100,7 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
     if (!left || !right) {return false;}
     const leftValue = getNestedValue(variables, left) ?? left;
     const rightValue = getNestedValue(variables, right) ?? right;
-    return leftValue == rightValue;
+    return String(leftValue) === String(rightValue);
   }
 
   if (trimmed.includes('!=')) {
@@ -110,7 +110,7 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
     if (!left || !right) {return false;}
     const leftValue = getNestedValue(variables, left) ?? left;
     const rightValue = getNestedValue(variables, right) ?? right;
-    return leftValue != rightValue;
+    return String(leftValue) !== String(rightValue);
   }
 
   if (trimmed.includes('>=')) {
@@ -216,7 +216,7 @@ export function formatDate(date: string | Date, format: 'short' | 'long' | 'rela
         month: 'long',
         day: 'numeric',
       });
-    case 'relative':
+    case 'relative': {
       const now = new Date();
       const diffMs = now.getTime() - dateObj.getTime();
       const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -227,6 +227,7 @@ export function formatDate(date: string | Date, format: 'short' | 'long' | 'rela
       if (diffDays < 30) {return `${Math.floor(diffDays / 7)} weeks ago`;}
       if (diffDays < 365) {return `${Math.floor(diffDays / 30)} months ago`;}
       return `${Math.floor(diffDays / 365)} years ago`;
+    }
     case 'short':
     default:
       return dateObj.toLocaleDateString('en-US', {

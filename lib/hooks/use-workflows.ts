@@ -37,7 +37,7 @@ export function useWorkflow(workflowId: string | null) {
   return useQuery({
     queryKey: queryKeys.workflows.detail(workflowId ?? ""),
     queryFn: () => {
-      if (!workflowId) throw new Error("Workflow ID is required");
+      if (!workflowId) {throw new Error("Workflow ID is required");}
       return getWorkflow(workflowId);
     },
     enabled: !!workflowId,

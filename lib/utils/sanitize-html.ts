@@ -62,6 +62,7 @@ export function sanitizeHTML(html: string): string {
         if (value !== null) {
           // Sanitize href to prevent javascript: and data: URLs
           if (attr === 'href') {
+            // eslint-disable-next-line no-script-url
             if (value.startsWith('javascript:') || value.startsWith('data:')) {
               continue; // Skip dangerous URLs
             }

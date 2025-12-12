@@ -145,7 +145,7 @@ const memoryLimiter = new MemoryRateLimiter();
  * Get rate limiter instance
  */
 async function getRateLimiter(): Promise<MemoryRateLimiter | RedisRateLimiter> {
-  if (redisLimiter) return redisLimiter;
+  if (redisLimiter) {return redisLimiter;}
 
   try {
     const Redis = (await import('ioredis')).default;

@@ -200,7 +200,7 @@ export class SalesforceCRM {
 export function createCRMClient(provider: 'hubspot' | 'salesforce', config: Record<string, string>) {
   switch (provider) {
     case 'hubspot':
-      if (!config.apiKey) throw new Error('HubSpot API key is required');
+      if (!config.apiKey) {throw new Error('HubSpot API key is required');}
       return new HubSpotCRM(config.apiKey);
     case 'salesforce':
       if (!config.clientId || !config.clientSecret || !config.username || !config.password) {

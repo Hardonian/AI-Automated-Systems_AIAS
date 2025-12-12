@@ -82,7 +82,7 @@ serve(async (req) => {
       .select()
       .single();
 
-    if (createError) throw createError;
+    if (createError) {throw createError;}
 
     // Notify all users
     const { data: users } = await supabaseClient.from("profiles").select("id");

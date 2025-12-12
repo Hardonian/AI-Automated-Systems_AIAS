@@ -56,7 +56,7 @@ export function validateUUID(uuid: string): boolean {
  * Check request origin for CORS
  */
 export function isValidOrigin(origin: string | null, allowedOrigins: string[]): boolean {
-  if (!origin) return false;
+  if (!origin) {return false;}
   return allowedOrigins.some((allowed) => origin === allowed || origin.endsWith(allowed));
 }
 

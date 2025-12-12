@@ -79,7 +79,7 @@ export async function sendEmailViaSendGrid(
     const formData = new FormData();
     formData.append('from', options.from || 'inquiries@aiautomatedsystems.ca');
     formData.append('to', options.to);
-    if (options.replyTo) formData.append('reply_to', options.replyTo);
+    if (options.replyTo) {formData.append('reply_to', options.replyTo);}
     formData.append('subject', options.subject);
     formData.append('html', options.html);
     formData.append('text', options.text);
@@ -131,7 +131,7 @@ export async function sendEmailViaMailgun(
     const formData = new FormData();
     formData.append('from', options.from || `AI Automated Systems <inquiries@${domain}>`);
     formData.append('to', options.to);
-    if (options.replyTo) formData.append('h:Reply-To', options.replyTo);
+    if (options.replyTo) {formData.append('h:Reply-To', options.replyTo);}
     formData.append('subject', options.subject);
     formData.append('html', options.html);
     formData.append('text', options.text);

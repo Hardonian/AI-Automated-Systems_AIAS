@@ -37,7 +37,8 @@ export function MobileStickyCTA({
       {isVisible && (
         <motion.div
           animate={{ y: 0 }}
-          className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-lg border-t z-50 md:hidden pb-safe"
+           
+          {...({ className: "fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-lg border-t z-50 md:hidden pb-safe" } as any)}
           exit={{ y: 100 }}
           initial={{ y: 100 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}

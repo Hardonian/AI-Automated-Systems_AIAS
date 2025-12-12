@@ -56,7 +56,7 @@ serve(async (req) => {
     const emailsSent: Array<{ userId: string; type: string; success: boolean }> = [];
 
     for (const user of trialUsers || []) {
-      if (!user.trial_start_date) continue;
+      if (!user.trial_start_date) {continue;}
 
       const trialStart = new Date(user.trial_start_date);
       const trialEnd = user.trial_end_date ? new Date(user.trial_end_date) : null;

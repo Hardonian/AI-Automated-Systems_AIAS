@@ -5,7 +5,7 @@
  */
 
 try {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+   
   const Sentry = require("@sentry/nextjs");
   
   if (process.env.NEXT_PUBLIC_SENTRY_DSN) {

@@ -235,7 +235,7 @@ We'd love to hear your feedback!
           
           <p>Your <strong>{{planName}}</strong> subscription will renew on <strong>{{renewalDate}}</strong>.</p>
           
-          <p>Amount: <strong>` + '$' + '{{amount}}' + `</strong></p>
+          <p>Amount: <strong>$\{{amount}}</strong></p>
           
           <p>Your payment method on file will be charged automatically. No action needed unless you want to make changes.</p>
           
@@ -254,7 +254,7 @@ Hi {{userName}},
 
 Your {{planName}} subscription will renew on {{renewalDate}}.
 
-Amount: ` + '$' + '{{amount}}' + `
+Amount: \${{amount}}
 
 Your payment method on file will be charged automatically.
 

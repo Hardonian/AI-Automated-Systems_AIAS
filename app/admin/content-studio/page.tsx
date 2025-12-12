@@ -47,7 +47,7 @@ export default function ContentStudioPage() {
         logger.error("Failed to load content", error instanceof Error ? error : new Error(String(error)));
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   // Auto-save functionality
@@ -73,7 +73,7 @@ export default function ContentStudioPage() {
         clearTimeout(autoSaveTimeoutRef.current);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [aiasContent, settlerContent, hasChanges, autoSaveEnabled, authenticated, saving]);
 
   // Try to get token from admin session on mount
@@ -103,7 +103,7 @@ export default function ContentStudioPage() {
     if (authenticated === false) {
       void tryAdminAuth();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [authenticated]);
 
   const handleLogin = async () => {

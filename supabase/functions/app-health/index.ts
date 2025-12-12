@@ -38,7 +38,7 @@ serve(async (req) => {
       latency_ms: Date.now() - dbStart,
       error: error?.message || null,
     };
-    if (error) checks.ok = false;
+    if (error) {checks.ok = false;}
   } catch (e) {
     checks.db = { ok: false, latency_ms: null, error: String(e) };
     checks.ok = false;
@@ -51,7 +51,7 @@ serve(async (req) => {
       ok: !error,
       error: error?.message || null,
     };
-    if (error) checks.ok = false;
+    if (error) {checks.ok = false;}
   } catch (e) {
     checks.auth = { ok: false, error: String(e) };
     checks.ok = false;

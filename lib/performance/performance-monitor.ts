@@ -46,7 +46,7 @@ export class PerformanceMonitor {
    */
   getStats(name: string): { avg: number; min: number; max: number; count: number } | null {
     const values = this.metrics.get(name);
-    if (!values || values.length === 0) return null;
+    if (!values || values.length === 0) {return null;}
 
     return {
       avg: values.reduce((a, b) => a + b, 0) / values.length,

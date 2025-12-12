@@ -151,7 +151,7 @@ export function AgentExecutorComponent({ agentId, userId, tenantId }: AgentExecu
 
             {(() => {
               const output = result.output;
-              if (output === undefined || output === null) return null;
+              if (output === undefined || output === null) {return null;}
               const outputString = typeof output === 'string' ? output : JSON.stringify(output, null, 2);
               return (
                 <div>

@@ -33,7 +33,7 @@ export function trapFocus(container: HTMLElement): () => void {
   const lastElement = focusableElements[focusableElements.length - 1];
 
   const handleTab = (e: KeyboardEvent) => {
-    if (e.key !== 'Tab') return;
+    if (e.key !== 'Tab') {return;}
 
     if (e.shiftKey) {
       if (document.activeElement === firstElement) {

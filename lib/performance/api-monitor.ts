@@ -65,7 +65,7 @@ class APIMonitor {
     const filtered = this.metrics.filter(
       (m) => m.path === path && (!method || m.method === method)
     );
-    if (filtered.length === 0) return 0;
+    if (filtered.length === 0) {return 0;}
     return filtered.reduce((sum, m) => sum + m.duration, 0) / filtered.length;
   }
 
@@ -76,7 +76,7 @@ class APIMonitor {
     const filtered = this.metrics
       .filter((m) => m.path === path && (!method || m.method === method))
       .sort((a, b) => a.duration - b.duration);
-    if (filtered.length === 0) return 0;
+    if (filtered.length === 0) {return 0;}
     const index = Math.floor(filtered.length * 0.95);
     return filtered[index]?.duration || 0;
   }

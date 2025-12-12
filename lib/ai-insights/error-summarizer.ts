@@ -95,10 +95,10 @@ function determineEscalationCriteria(pattern: ErrorPattern): string {
  */
 function extractIntegrationName(message: string): string {
   const lowerMessage = message.toLowerCase();
-  if (lowerMessage.includes("shopify")) return "Shopify";
-  if (lowerMessage.includes("wave")) return "Wave Accounting";
-  if (lowerMessage.includes("slack")) return "Slack";
-  if (lowerMessage.includes("gmail")) return "Gmail";
+  if (lowerMessage.includes("shopify")) {return "Shopify";}
+  if (lowerMessage.includes("wave")) {return "Wave Accounting";}
+  if (lowerMessage.includes("slack")) {return "Slack";}
+  if (lowerMessage.includes("gmail")) {return "Gmail";}
   return "integration";
 }
 

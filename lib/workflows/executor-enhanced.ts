@@ -456,7 +456,7 @@ async function executeShopifyAction(
     const client = new ShopifyClient({ shop, accessToken });
 
     switch (action) {
-      case "get_orders":
+      case "get_orders": {
         const date = (config.date as string) || "today";
         let ordersResponse;
 
@@ -474,8 +474,9 @@ async function executeShopifyAction(
           orders: ordersResponse.orders || [],
           count: ordersResponse.orders?.length || 0,
         };
+      }
 
-      case "get_order":
+      case "get_order": {
         const orderId = config.orderId as number;
         if (!orderId) {
           throw new Error("Order ID is required for get_order action");
@@ -485,8 +486,9 @@ async function executeShopifyAction(
           success: true,
           order: orderResponse.order,
         };
+      }
 
-      case "update_order":
+      case "update_order": {
         const updateOrderId = config.orderId as number;
         const updates = config.updates as Partial<unknown>;
         if (!updateOrderId || !updates) {
@@ -497,8 +499,9 @@ async function executeShopifyAction(
           success: true,
           order: updatedOrder.order,
         };
+      }
 
-      case "send_notification":
+      case "send_notification": {
         const notificationOrderId = config.orderId as number;
         if (!notificationOrderId) {
           throw new Error("Order ID is required for send_notification action");
@@ -508,8 +511,9 @@ async function executeShopifyAction(
           success: notificationResult.success,
           message: "Order notification sent via Shopify",
         };
+      }
 
-      case "get_products":
+      case "get_products": {
         const limit = (config.limit as number) || 50;
         const productsResponse = await client.getProducts({ limit });
         return {
@@ -517,6 +521,7 @@ async function executeShopifyAction(
           products: productsResponse.products || [],
           count: productsResponse.products?.length || 0,
         };
+      }
 
       default:
         throw new Error(`Unsupported Shopify action: ${action}. Supported actions: get_orders, get_order, update_order, send_notification, get_products`);
@@ -549,7 +554,7 @@ async function executeWaveAction(
     const client = new WaveClient({ businessId, accessToken });
 
     switch (action) {
-      case "get_revenue":
+      case "get_revenue": {
         const date = (config.date as string) || "today";
         let revenueData;
 
@@ -571,8 +576,9 @@ async function executeWaveAction(
           revenue: revenueData.revenue,
           period: revenueData.period,
         };
+      }
 
-      case "get_invoices":
+      case "get_invoices": {
         const status = (config.status as string) || "ALL";
         const limit = (config.limit as number) || 50;
         const invoices = await client.getInvoices({ status, limit });
@@ -581,8 +587,9 @@ async function executeWaveAction(
           invoices,
           count: invoices.length,
         };
+      }
 
-      case "get_overdue_invoices":
+      case "get_overdue_invoices": {
         const daysOverdue = (config.daysOverdue as number) || 7;
         const overdueInvoices = await client.getOverdueInvoices(daysOverdue);
         return {
@@ -591,8 +598,9 @@ async function executeWaveAction(
           count: overdueInvoices.length,
           daysOverdue,
         };
+      }
 
-      case "create_invoice":
+      case "create_invoice": {
         const invoiceData = config.invoiceData as {
           customerEmail: string;
           customerName: string;
@@ -610,6 +618,7 @@ async function executeWaveAction(
           invoice: newInvoice,
           message: "Invoice created successfully",
         };
+      }
 
       default:
         throw new Error(`Unsupported Wave action: ${action}. Supported actions: get_revenue, get_invoices, get_overdue_invoices, create_invoice`);

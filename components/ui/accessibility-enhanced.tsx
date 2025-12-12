@@ -86,7 +86,7 @@ export function AccessibleModal({
     }
   }, [isOpen, onClose, title]);
 
-  if (!isOpen) return null;
+  if (!isOpen) {return null;}
 
   return (
     <div

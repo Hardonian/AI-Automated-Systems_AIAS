@@ -53,7 +53,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       const supabase = createClient();
       const { data: { session } } = await supabase.auth.getSession();
 
-      if (!session) return;
+      if (!session) {return;}
 
       const response = await fetch("/api/notifications?limit=20&archived=false", {
         headers: {
@@ -83,7 +83,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       const supabase = createClient();
       const { data: { session } } = await supabase.auth.getSession();
 
-      if (!session) return;
+      if (!session) {return;}
 
       const response = await fetch(`/api/notifications/${notificationId}`, {
         method: "PATCH",
@@ -116,7 +116,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       const supabase = createClient();
       const { data: { session } } = await supabase.auth.getSession();
 
-      if (!session) return;
+      if (!session) {return;}
 
       const response = await fetch("/api/notifications/mark-read", {
         method: "POST",
@@ -148,7 +148,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       const supabase = createClient();
       const { data: { session } } = await supabase.auth.getSession();
 
-      if (!session) return;
+      if (!session) {return;}
 
       const response = await fetch(`/api/notifications/${notificationId}`, {
         method: "PATCH",
@@ -179,7 +179,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       const supabase = createClient();
       const { data: { session } } = await supabase.auth.getSession();
 
-      if (!session) return;
+      if (!session) {return;}
 
       const response = await fetch(`/api/notifications/${notificationId}`, {
         method: "DELETE",

@@ -108,19 +108,19 @@ async function handleConsentRequest(req: Request, supabase: any, userId: string)
 
   // Calculate data processing purposes
   const dataProcessingPurposes = []
-  if (settings.analytics) dataProcessingPurposes.push('analytics', 'performance_measurement')
-  if (settings.marketing) dataProcessingPurposes.push('marketing', 'advertising', 'personalization')
-  if (settings.functional) dataProcessingPurposes.push('functionality', 'user_experience')
-  if (settings.necessary) dataProcessingPurposes.push('security', 'authentication', 'legal_compliance')
-  if (settings.preferences) dataProcessingPurposes.push('preference_storage', 'customization')
-  if (settings.performance) dataProcessingPurposes.push('performance_optimization', 'caching')
-  if (settings.social) dataProcessingPurposes.push('social_sharing', 'social_features')
+  if (settings.analytics) {dataProcessingPurposes.push('analytics', 'performance_measurement')}
+  if (settings.marketing) {dataProcessingPurposes.push('marketing', 'advertising', 'personalization')}
+  if (settings.functional) {dataProcessingPurposes.push('functionality', 'user_experience')}
+  if (settings.necessary) {dataProcessingPurposes.push('security', 'authentication', 'legal_compliance')}
+  if (settings.preferences) {dataProcessingPurposes.push('preference_storage', 'customization')}
+  if (settings.performance) {dataProcessingPurposes.push('performance_optimization', 'caching')}
+  if (settings.social) {dataProcessingPurposes.push('social_sharing', 'social_features')}
 
   // Calculate retention period
   let retentionPeriod = 365 // 1 year default
-  if (settings.marketing) retentionPeriod = Math.max(retentionPeriod, 1095) // 3 years
-  if (settings.analytics) retentionPeriod = Math.max(retentionPeriod, 730) // 2 years
-  if (settings.social) retentionPeriod = Math.max(retentionPeriod, 1825) // 5 years
+  if (settings.marketing) {retentionPeriod = Math.max(retentionPeriod, 1095)} // 3 years
+  if (settings.analytics) {retentionPeriod = Math.max(retentionPeriod, 730)} // 2 years
+  if (settings.social) {retentionPeriod = Math.max(retentionPeriod, 1825)} // 5 years
 
   // Insert consent record
   const { data: consentData, error: consentError } = await supabase

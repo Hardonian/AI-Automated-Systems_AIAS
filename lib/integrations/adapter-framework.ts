@@ -329,10 +329,11 @@ export abstract class BaseAdapter implements IntegrationAdapter {
           headers['Authorization'] = `Bearer ${this.authToken}`;
         }
         break;
-      case 'basic':
+      case 'basic': {
         const credentials = btoa(`${this.config.auth.username}:${this.config.auth.password}`);
         headers['Authorization'] = `Basic ${credentials}`;
         break;
+      }
       case 'hmac':
         // HMAC would be calculated per request
         break;

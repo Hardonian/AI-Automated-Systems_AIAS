@@ -364,7 +364,7 @@ async function interactWithAgent(supabaseClient: any, agentId: string, body: Age
       .update({
         output_text: outputText,
         processing_time: processingTime,
-        cost: cost,
+        cost,
         success: true,
         status: 'completed'
       })

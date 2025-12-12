@@ -230,11 +230,12 @@ export const AuditLoggingDashboard: React.FC = () => {
           aValue = new Date(a.timestamp).getTime();
           bValue = new Date(b.timestamp).getTime();
           break;
-        case 'severity':
+        case 'severity': {
           const severityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
           aValue = severityOrder[a.severity as keyof typeof severityOrder];
           bValue = severityOrder[b.severity as keyof typeof severityOrder];
           break;
+        }
         case 'action':
           aValue = a.action.toLowerCase();
           bValue = b.action.toLowerCase();

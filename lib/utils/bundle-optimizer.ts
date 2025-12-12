@@ -8,7 +8,7 @@
  * Analyze bundle size (for development)
  */
 export function analyzeBundle(moduleName: string): void {
-  if (process.env.NODE_ENV !== "development") return;
+  if (process.env.NODE_ENV !== "development") {return;}
 
   if (typeof window !== "undefined") {
     const performance = (window as any).performance;
@@ -57,7 +57,7 @@ export function shouldCodeSplit(moduleName: string): boolean {
  * Preload critical resources
  */
 export function preloadCriticalResources(): void {
-  if (typeof document === "undefined") return;
+  if (typeof document === "undefined") {return;}
 
   // Preload critical fonts
   const fontPreloads = [

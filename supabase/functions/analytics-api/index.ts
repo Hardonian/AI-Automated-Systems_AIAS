@@ -389,10 +389,10 @@ async function getAnalyticsDashboard(supabaseClient: any, tenantId: string, quer
       customerLifetimeValue: business.customerLifetimeValue,
       churnRate: business.churnRate
     },
-    revenue: revenue,
-    usage: usage,
-    performance: performance,
-    business: business,
+    revenue,
+    usage,
+    performance,
+    business,
     realTime: {
       activeUsers: realTimeMetrics?.reduce((sum, item) => sum + item.usage_count, 0) || 0,
       lastUpdated: new Date().toISOString()
@@ -608,7 +608,7 @@ function calculateRevenueGrowth(current: any[], previous: any[]): number {
   const currentTotal = calculateTotalRevenue(current)
   const previousTotal = calculateTotalRevenue(previous)
   
-  if (previousTotal === 0) return 0
+  if (previousTotal === 0) {return 0}
   return ((currentTotal - previousTotal) / previousTotal) * 100
 }
 
@@ -634,16 +634,17 @@ function groupRevenueByPeriod(revenueData: any[], groupBy: string): Array<{ peri
     
     switch (groupBy) {
       case 'hour':
-        period = date.toISOString().slice(0, 13) + ':00:00'
+        period = `${date.toISOString().slice(0, 13)  }:00:00`
         break
       case 'day':
         period = date.toISOString().slice(0, 10)
         break
-      case 'week':
+      case 'week': {
         const weekStart = new Date(date)
         weekStart.setDate(date.getDate() - date.getDay())
         period = weekStart.toISOString().slice(0, 10)
         break
+      }
       case 'month':
         period = date.toISOString().slice(0, 7)
         break
@@ -695,7 +696,7 @@ function calculateUsageGrowth(current: any[], previous: any[]): number {
   const currentTotal = calculateTotalUsage(current)
   const previousTotal = calculateTotalUsage(previous)
   
-  if (previousTotal === 0) return 0
+  if (previousTotal === 0) {return 0}
   return ((currentTotal - previousTotal) / previousTotal) * 100
 }
 
@@ -708,16 +709,17 @@ function groupUsageByPeriod(usageData: any[], groupBy: string): Array<{ period: 
     
     switch (groupBy) {
       case 'hour':
-        period = date.toISOString().slice(0, 13) + ':00:00'
+        period = `${date.toISOString().slice(0, 13)  }:00:00`
         break
       case 'day':
         period = date.toISOString().slice(0, 10)
         break
-      case 'week':
+      case 'week': {
         const weekStart = new Date(date)
         weekStart.setDate(date.getDate() - date.getDay())
         period = weekStart.toISOString().slice(0, 10)
         break
+      }
       case 'month':
         period = date.toISOString().slice(0, 7)
         break
@@ -757,28 +759,28 @@ function calculateUsageEfficiency(usageData: any[]): number {
 }
 
 function calculateAverageResponseTime(apiData: any[]): number {
-  if (apiData.length === 0) return 0
+  if (apiData.length === 0) {return 0}
   
   const totalTime = apiData.reduce((sum, item) => sum + (item.response_time || 0), 0)
   return totalTime / apiData.length
 }
 
 function calculateSuccessRate(apiData: any[]): number {
-  if (apiData.length === 0) return 0
+  if (apiData.length === 0) {return 0}
   
   const successCount = apiData.filter(item => item.status_code >= 200 && item.status_code < 300).length
   return (successCount / apiData.length) * 100
 }
 
 function calculateErrorRate(apiData: any[]): number {
-  if (apiData.length === 0) return 0
+  if (apiData.length === 0) {return 0}
   
   const errorCount = apiData.filter(item => item.status_code >= 400).length
   return (errorCount / apiData.length) * 100
 }
 
 function calculateUptime(apiData: any[]): number {
-  if (apiData.length === 0) return 100
+  if (apiData.length === 0) {return 100}
   
   const successCount = apiData.filter(item => item.status_code >= 200 && item.status_code < 300).length
   return (successCount / apiData.length) * 100
@@ -818,16 +820,17 @@ function getPerformanceTrends(apiData: any[], groupBy: string): Array<{ period: 
     
     switch (groupBy) {
       case 'hour':
-        period = date.toISOString().slice(0, 13) + ':00:00'
+        period = `${date.toISOString().slice(0, 13)  }:00:00`
         break
       case 'day':
         period = date.toISOString().slice(0, 10)
         break
-      case 'week':
+      case 'week': {
         const weekStart = new Date(date)
         weekStart.setDate(date.getDate() - date.getDay())
         period = weekStart.toISOString().slice(0, 10)
         break
+      }
       case 'month':
         period = date.toISOString().slice(0, 7)
         break

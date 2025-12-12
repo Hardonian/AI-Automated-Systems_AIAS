@@ -329,6 +329,7 @@ export class WebhookManager {
       skip: offset,
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     return events.map((event: Prisma.WebhookEventGetPayload<{}>) => {
       const payload = event.payload && typeof event.payload === 'object' && !Array.isArray(event.payload)
         ? event.payload as Record<string, unknown>

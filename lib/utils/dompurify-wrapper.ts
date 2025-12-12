@@ -12,7 +12,7 @@
  */
 
 let DOMPurify: any = null;
-let isServer = typeof window === 'undefined';
+const isServer = typeof window === 'undefined';
 let dompurifyInitialized = false;
 
 // Initialize client-side DOMPurify synchronously (only runs in browser)
@@ -20,7 +20,7 @@ let dompurifyInitialized = false;
 if (typeof window !== 'undefined' && !isServer) {
   try {
     // Client-side: use regular DOMPurify (synchronous require is OK here since we're in browser)
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+     
     DOMPurify = require('dompurify');
     dompurifyInitialized = true;
   } catch (e) {

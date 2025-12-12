@@ -4,8 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { searchHelpArticles } from "@/lib/customer-support/support-utils";
-import { HelpArticle } from "@/lib/customer-support/support-utils";
+import { searchHelpArticles , HelpArticle } from "@/lib/customer-support/support-utils";
 
 interface HelpWidgetProps {
   articles: HelpArticle[];

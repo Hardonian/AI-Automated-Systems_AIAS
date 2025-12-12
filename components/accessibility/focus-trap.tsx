@@ -17,7 +17,7 @@ export function FocusTrap({ children, active = true, onEscape }: FocusTrapProps)
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!active || !containerRef.current) return;
+    if (!active || !containerRef.current) {return;}
 
     const container = containerRef.current;
     const focusableElements = container.querySelectorAll<HTMLElement>(
@@ -27,7 +27,7 @@ export function FocusTrap({ children, active = true, onEscape }: FocusTrapProps)
     const lastElement = focusableElements[focusableElements.length - 1];
 
     const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
+      if (e.key !== "Tab") {return;}
 
       if (e.shiftKey) {
         // Shift + Tab

@@ -238,19 +238,19 @@ export class ExtensionPointRegistry {
 
   async createAgent(id: string): Promise<AgentDefinition | null> {
     const factory = this.agentFactories.get(id);
-    if (!factory) return null;
+    if (!factory) {return null;}
     return factory();
   }
 
   async createWorkflow(id: string): Promise<WorkflowTemplate | null> {
     const factory = this.workflowFactories.get(id);
-    if (!factory) return null;
+    if (!factory) {return null;}
     return factory();
   }
 
   async createTool(id: string): Promise<ToolInterface | null> {
     const factory = this.toolFactories.get(id);
-    if (!factory) return null;
+    if (!factory) {return null;}
     return factory();
   }
 }

@@ -101,7 +101,7 @@ serve(async (req) => {
         .select()
         .single();
 
-      if (convError) throw convError;
+      if (convError) {throw convError;}
       convId = newConv.id;
     }
 
@@ -114,7 +114,7 @@ serve(async (req) => {
         role: 'user',
       });
 
-    if (msgError) throw msgError;
+    if (msgError) {throw msgError;}
 
     // Log audit event
     await logAudit(supabaseAdmin, user.id, 'message_sent', 'chat_message', convId, { message_length: sanitizedMessage.length });
@@ -175,7 +175,7 @@ serve(async (req) => {
               },
               body: JSON.stringify({
                 model: Deno.env.get('OPENAI_MODEL') || 'gpt-4',
-                messages: messages,
+                messages,
                 temperature: 0.7,
                 max_tokens: 1000,
               }),
@@ -235,7 +235,7 @@ serve(async (req) => {
         role: 'assistant',
       });
 
-    if (aiMsgError) throw aiMsgError;
+    if (aiMsgError) {throw aiMsgError;}
 
     return new Response(
       JSON.stringify({ reply: aiResponse, conversationId: convId }),

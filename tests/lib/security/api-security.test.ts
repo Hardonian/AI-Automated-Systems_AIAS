@@ -60,6 +60,7 @@ describe('API Security Utilities', () => {
   describe('detectXSS', () => {
     it('should detect XSS attempts', () => {
       expect(detectXSS('<script>alert("xss")</script>')).toBe(true);
+      // eslint-disable-next-line no-script-url
       expect(detectXSS('javascript:alert(1)')).toBe(true);
       expect(detectXSS('<img src=x onerror=alert(1)>')).toBe(true);
     });

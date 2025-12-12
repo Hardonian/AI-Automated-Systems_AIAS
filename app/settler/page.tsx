@@ -1,4 +1,4 @@
-import { Building2, Zap, Shield, Globe, CheckCircle2, ArrowRight, Code, Database, Lock, TrendingUp } from "lucide-react";
+import { Building2, Zap, Shield, Globe, CheckCircle2, ArrowRight, Code, Database, Lock, TrendingUp, type LucideIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -16,7 +16,6 @@ export const metadata: Metadata = {
 };
 
 // Icon mapping for features
-import type { LucideIcon } from "lucide-react";
 const iconMap: Record<string, LucideIcon> = {
   zap: Zap,
   shield: Shield,

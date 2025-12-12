@@ -44,11 +44,11 @@ export function initializeOpenTelemetry(): NodeSDK | null {
     });
 
     const sdk = new NodeSDK({
-      resource: resource,
+      resource,
       traceExporter: new OTLPTraceExporter({
         url: `${OTEL_ENDPOINT}/v1/traces`,
       }),
-      metricReader: metricReader,
+      metricReader,
       instrumentations: [
         getNodeAutoInstrumentations({
           // Disable fs instrumentation in serverless environments
@@ -91,7 +91,7 @@ export function getOpenTelemetry() {
   }
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+     
     return require("@opentelemetry/api");
   } catch {
     return null;

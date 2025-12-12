@@ -20,12 +20,19 @@ export function RealtimeDashboard() {
   const [connectionError, setConnectionError] = useState<string | null>(null);
 
   useEffect(() => {
+    const client = supabase;
+    if (!client) {
+      setConnectionError("Supabase is not configured");
+      setIsConnected(false);
+      return;
+    }
+
     // Use the existing supabase client from the integration
-    let channel: ReturnType<typeof supabase.channel> | null = null;
+    let channel: any = null;
 
     try {
       // Subscribe to activity_log changes
-      channel = supabase
+      channel = client
         .channel("activity-feed")
         .on(
           "postgres_changes",
@@ -67,7 +74,7 @@ export function RealtimeDashboard() {
         });
 
       // Load initial activities
-      supabase
+      client
         .from("activity_log")
         .select("activity_type, created_at, metadata, user_id")
         .order("created_at", { ascending: false })
@@ -85,7 +92,7 @@ export function RealtimeDashboard() {
     // Cleanup on unmount
     return () => {
       if (channel) {
-        supabase.removeChannel(channel);
+        client.removeChannel(channel);
       }
     };
   }, []);

@@ -327,8 +327,8 @@ export class DataFeedService {
 
     const stats = {
       totalSources: sources.length,
-      activeSources: sources.filter((s: Prisma.SourceGetPayload<{}>) => s.isActive).length,
-      lastRun: sources.reduce((latest: Date | null, source: Prisma.SourceGetPayload<{}>) => {
+      activeSources: sources.filter((s: any) => s.isActive).length,
+      lastRun: sources.reduce((latest: Date | null, source: any) => {
         if (!source.lastRun) {return latest;}
         if (!latest) {return source.lastRun;}
         return source.lastRun > latest ? source.lastRun : latest;

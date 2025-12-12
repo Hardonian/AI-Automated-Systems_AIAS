@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+  return apiKey ? new Resend(apiKey) : null;
+}
 
 export async function POST(request: Request) {
   try {
@@ -14,7 +17,8 @@ export async function POST(request: Request) {
       );
     }
 
-    if (process.env.RESEND_API_KEY) {
+    const resend = getResendClient();
+    if (resend) {
       const data = await resend.emails.send({
         from: "AIAS Website <noreply@aiautomatedsystems.ca>",
         to: ["inquiries@aiautomatedsystems.ca"],

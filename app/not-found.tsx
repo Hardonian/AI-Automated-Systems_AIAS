@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Search, Home, FileQuestion, MessageCircle } from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,7 +18,7 @@ export default function NotFound() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
-          <Link href="/" className="group">
+          <Link className="group" href="/">
             <Card className="h-full hover:shadow-md transition-all border-primary/20 hover:border-primary/50">
               <CardContent className="p-4 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -32,7 +32,7 @@ export default function NotFound() {
             </Card>
           </Link>
 
-          <Link href="/services" className="group">
+          <Link className="group" href="/services">
             <Card className="h-full hover:shadow-md transition-all border-primary/20 hover:border-primary/50">
               <CardContent className="p-4 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -46,7 +46,7 @@ export default function NotFound() {
             </Card>
           </Link>
 
-          <Link href="/help" className="group">
+          <Link className="group" href="/help">
             <Card className="h-full hover:shadow-md transition-all border-primary/20 hover:border-primary/50">
               <CardContent className="p-4 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -60,7 +60,7 @@ export default function NotFound() {
             </Card>
           </Link>
 
-          <Link href="/contact" className="group">
+          <Link className="group" href="/contact">
             <Card className="h-full hover:shadow-md transition-all border-primary/20 hover:border-primary/50">
               <CardContent className="p-4 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -79,7 +79,7 @@ export default function NotFound() {
           <p className="text-muted-foreground mb-4">
             Looking for something specific?
           </p>
-          <Button asChild size="lg" className="w-full sm:w-auto">
+          <Button asChild className="w-full sm:w-auto" size="lg">
             <Link href="/demo">Book a Strategy Call</Link>
           </Button>
         </div>

@@ -390,7 +390,7 @@ export class WorkflowExecutor {
       throw new Error(errorMessage);
     }
 
-    const output: unknown = result.output;
+    const {output} = result;
     return output;
   }
 
@@ -693,7 +693,7 @@ export class WorkflowExecutor {
     // Type guard for condition object with operator property
     const conditionWithOperator = condition as { operator: string; value: unknown };
     const conditionValue: unknown = conditionWithOperator.value;
-    const operator: string = conditionWithOperator.operator;
+    const {operator} = conditionWithOperator;
     
     switch (operator) {
       case 'equals':

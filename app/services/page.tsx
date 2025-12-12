@@ -120,7 +120,7 @@ export default function ServicesPage() {
   return (
     <>
       <ServiceSchema />
-      <MobileStickyCTA primaryLabel="Book Consultation" primaryHref="/demo" secondaryLabel="See Pricing" secondaryHref="/pricing" />
+      <MobileStickyCTA primaryHref="/demo" primaryLabel="Book Consultation" secondaryHref="/pricing" secondaryLabel="See Pricing" />
       <div className="container py-16">
       <div className="text-center mb-16 max-w-3xl mx-auto px-4">
         <h1 className="text-4xl md:text-5xl font-bold mb-6">

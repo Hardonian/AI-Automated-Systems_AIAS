@@ -2,6 +2,7 @@ import { Check } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { MobileStickyCTA } from "@/components/layout/mobile-sticky-cta";
 import { FeatureComparison } from "@/components/pricing/feature-comparison";
 import { PricingAnalytics } from "@/components/pricing/PricingAnalytics";
 import { ROICalculator } from "@/components/pricing/roi-calculator";
@@ -112,12 +113,11 @@ const plans = [
   },
 ];
 
-import { MobileStickyCTA } from "@/components/layout/mobile-sticky-cta";
 
 export default function PricingPage() {
   return (
     <div className="container py-12 md:py-16 px-4">
-      <MobileStickyCTA primaryLabel="Start Free Trial" primaryHref="/signup" secondaryLabel="Book Demo" secondaryHref="/demo" />
+      <MobileStickyCTA primaryHref="/signup" primaryLabel="Start Free Trial" secondaryHref="/demo" secondaryLabel="Book Demo" />
       <PricingAnalytics />
       <div className="text-center mb-12 px-4">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">

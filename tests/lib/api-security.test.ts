@@ -215,6 +215,7 @@ describe('lib/security/api-security', () => {
   describe('detectXSS', () => {
     it('should detect XSS patterns', () => {
       expect(detectXSS('<script>alert("xss")</script>')).toBe(true);
+      // eslint-disable-next-line no-script-url
       expect(detectXSS('javascript:alert("xss")')).toBe(true);
       expect(detectXSS('normal text')).toBe(false);
     });

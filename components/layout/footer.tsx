@@ -15,7 +15,7 @@ export function Footer() {
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email) {return;}
     
     setIsLoading(true);
     // Simulate API call for now (can be hooked up to Resend later)
@@ -65,16 +65,16 @@ export function Footer() {
               <p className="text-xs text-muted-foreground mb-3">
                 Get the latest on AI automation trends and platform updates.
               </p>
-              <form onSubmit={handleSubscribe} className="flex gap-2">
+              <form className="flex gap-2" onSubmit={handleSubscribe}>
                 <Input 
-                  type="email" 
-                  placeholder="Enter your email" 
+                  required 
                   className="h-9 text-sm bg-background/50" 
+                  placeholder="Enter your email" 
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required
                 />
-                <Button size="sm" className="h-9 w-9 p-0 flex-shrink-0" type="submit" disabled={isLoading}>
+                <Button className="h-9 w-9 p-0 flex-shrink-0" disabled={isLoading} size="sm" type="submit">
                   <Send className="h-4 w-4" />
                   <span className="sr-only">Subscribe</span>
                 </Button>

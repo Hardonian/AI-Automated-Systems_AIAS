@@ -328,16 +328,16 @@ export class QueueProcessors {
   // Helper methods for data processing
   private static async processShopifyData(data: Record<string, unknown>): Promise<Record<string, unknown>[]> {
     // Process Shopify product data
-    const products: unknown = data.products;
+    const {products} = data;
     if (products !== undefined && Array.isArray(products)) {
       return products.map((product: unknown): Record<string, unknown> => {
         const productRecord: Record<string, unknown> = typeof product === 'object' && product !== null ? product as Record<string, unknown> : {};
-        const variants: unknown = productRecord.variants;
+        const {variants} = productRecord;
         const variantsArray: unknown[] = Array.isArray(variants) ? variants : [];
         const firstVariant: Record<string, unknown> = variantsArray[0] !== undefined && typeof variantsArray[0] === 'object' && variantsArray[0] !== null ? variantsArray[0] as Record<string, unknown> : {};
-        const price: unknown = firstVariant.price;
+        const {price} = firstVariant;
         const priceString: string = typeof price === 'string' ? price : String(price ?? '0');
-        const tags: unknown = productRecord.tags;
+        const {tags} = productRecord;
         const tagsString: string = typeof tags === 'string' ? tags : '';
         return {
           name: typeof productRecord.title === 'string' ? productRecord.title : String(productRecord.title ?? ''),

@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { Mail, MapPin } from "lucide-react";
+import type { Metadata } from "next";
 
 import { ContactForm } from "@/components/contact-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,7 +28,7 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-semibold mb-1">Email Us</h3>
                 <p className="text-sm text-muted-foreground mb-1">General Inquiries</p>
-                <a href="mailto:inquiries@aiautomatedsystems.ca" className="text-primary hover:underline">
+                <a className="text-primary hover:underline" href="mailto:inquiries@aiautomatedsystems.ca">
                   inquiries@aiautomatedsystems.ca
                 </a>
               </div>
@@ -53,7 +53,7 @@ export default function ContactPage() {
             <p className="text-sm text-muted-foreground mb-4">
               If you're ready to discuss a specific project, booking a call is the fastest way to get started.
             </p>
-            <a href="/demo" className="text-primary font-medium hover:underline">
+            <a className="text-primary font-medium hover:underline" href="/demo">
               Book a Strategy Call →
             </a>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { Building2, Rocket, Users, Globe } from "lucide-react";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const segments = [

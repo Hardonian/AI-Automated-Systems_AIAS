@@ -1,8 +1,9 @@
+import type { Prisma } from '@prisma/client';
+
 import { prisma } from './database';
 import { logger } from './observability';
 import { PaymentService } from './payments';
 import { paypalService } from './payments-paypal';
-import type { Prisma } from '@prisma/client';
 
 export interface WebhookConfig {
   url: string;
@@ -405,7 +406,7 @@ export class WebhookManager {
       where: { id: webhookId },
     });
 
-    if (!webhookEvent) return;
+    if (!webhookEvent) {return;}
 
     const currentPayload = webhookEvent.payload && typeof webhookEvent.payload === 'object' && !Array.isArray(webhookEvent.payload)
       ? webhookEvent.payload as Record<string, unknown>

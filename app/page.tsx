@@ -11,10 +11,10 @@ import { Features } from "@/components/home/features";
 import { SettlerShowcase } from "@/components/home/settler-showcase";
 import { StatsSection } from "@/components/home/stats-section";
 import { TrustBadges } from "@/components/home/trust-badges";
+import { WhoWeHelp } from "@/components/home/who-we-help";
 import { SoftwareApplicationSchema , FAQSchema, ProfessionalServiceSchema } from "@/components/seo/structured-data";
 import { loadAIASContent } from "@/lib/content/loader";
 
-import { WhoWeHelp } from "@/components/home/who-we-help";
 
 // Lazy load below-the-fold components for performance
 const Testimonials = dynamic(() => import("@/components/home/testimonials").then(mod => ({ default: mod.Testimonials })), {

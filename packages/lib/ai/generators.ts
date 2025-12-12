@@ -102,7 +102,7 @@ export class AIGenerators {
     
     // Parse the AI response and structure it according to our schema
     const resultRecord: Record<string, unknown> = typeof result === 'object' && result !== null ? result as Record<string, unknown> : {};
-    const analysis: unknown = resultRecord.analysis;
+    const {analysis} = resultRecord;
     const analysisRecord: Record<string, unknown> = typeof analysis === 'object' && analysis !== null ? analysis as Record<string, unknown> : {};
     const summary: {
       overallScore: number;

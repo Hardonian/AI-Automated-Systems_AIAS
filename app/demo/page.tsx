@@ -62,7 +62,7 @@ export default function DemoPage() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-col items-center justify-center py-6 space-y-6">
-              <Button asChild size="lg" className="w-full md:w-auto px-8 h-14 text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+              <Button asChild className="w-full md:w-auto px-8 h-14 text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all" size="lg">
                 <a href="https://calendly.com/aias-platform" rel="noopener noreferrer" target="_blank">
                   Open Calendar
                 </a>

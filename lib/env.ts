@@ -30,16 +30,17 @@ function getRuntimeEnv(): 'vercel' | 'github' | 'local' | 'unknown' {
 /**
  * Get environment variable with validation
  * Works in both Node.js and Edge runtime environments
- * Build-safe: During build (when SKIP_ENV_VALIDATION=true), returns empty string instead of throwing
+ * Build-safe: During `next build` (or when SKIP_ENV_VALIDATION=true), returns placeholders instead of throwing
  */
 function getEnvVar(key: string, required: boolean = true, defaultValue?: string): string {
-  // Check if we're in build mode and should skip validation
-  // In GitHub Actions/Vercel, env vars should be available, so only skip if explicitly set
-  const isBuildTime = typeof process !== 'undefined' && (
-    (process.env.SKIP_ENV_VALIDATION === 'true' || process.env.SKIP_ENV_VALIDATION === '1') &&
-    !process.env.GITHUB_ACTIONS &&
-    !process.env.VERCEL
-  );
+  const skipEnvValidation =
+    typeof process !== 'undefined' &&
+    (process.env.SKIP_ENV_VALIDATION === 'true' || process.env.SKIP_ENV_VALIDATION === '1');
+
+  // Next.js sets NEXT_PHASE during build. This avoids hard-failing deployments
+  // when API routes import env-dependent modules at build time.
+  const isNextBuild =
+    typeof process !== 'undefined' && process.env.NEXT_PHASE === 'phase-production-build';
   
   // Check process.env (Node.js/Next.js)
   let value: string | undefined;
@@ -63,13 +64,21 @@ function getEnvVar(key: string, required: boolean = true, defaultValue?: string)
     value = defaultValue;
   }
   
-  // During build, return valid placeholder values for required vars if not set (before validation)
-  // Use valid format placeholders that won't break URL validation
-  // BUT: In GitHub Actions/Vercel, env vars should be available, so don't use placeholders there
-  const shouldUsePlaceholder = isBuildTime && !process.env.GITHUB_ACTIONS && !process.env.VERCEL;
-  
-  if (required && !value && shouldUsePlaceholder) {
-    // Return valid placeholder URLs/keys for Supabase and database
+  // During build (or when explicitly skipping validation), return placeholders for required vars.
+  // These placeholders should be syntactically valid to avoid crashing module initialization.
+  const shouldUsePlaceholder = (isNextBuild || skipEnvValidation) && required && !value;
+
+  if (shouldUsePlaceholder) {
+    // Database URLs should be valid connection strings (not https://...)
+    if (key === 'DATABASE_URL' || key === 'DIRECT_URL' || key.endsWith('_POSTGRES_URL') || key.endsWith('_POSTGRES_DIRECT_URL')) {
+      return 'postgresql://placeholder:placeholder@localhost:5432/placeholder?schema=public';
+    }
+
+    // Supabase URLs should be valid URLs
+    if (key.includes('SUPABASE_URL')) {
+      return 'https://placeholder.supabase.co';
+    }
+
     if (key.includes('URL') || key.includes('url')) {
       return 'https://placeholder.example.com';
     }
@@ -78,9 +87,9 @@ function getEnvVar(key: string, required: boolean = true, defaultValue?: string)
     }
     return `placeholder-${key}`;
   }
-  
-  // Validate required variables (skip during build only if using placeholders)
-  if (required && !value && !shouldUsePlaceholder) {
+
+  // Validate required variables
+  if (required && !value) {
     const runtime = getRuntimeEnv();
     throw new Error(
       `Missing required environment variable: ${key}\n` +

@@ -329,7 +329,7 @@ export class WebhookManager {
       skip: offset,
     });
 
-    return events.map((event: Prisma.WebhookEventGetPayload<{}>) => {
+    return events.map((event: any) => {
       const payload = event.payload && typeof event.payload === 'object' && !Array.isArray(event.payload)
         ? event.payload as Record<string, unknown>
         : {};

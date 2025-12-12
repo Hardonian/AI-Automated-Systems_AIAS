@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 import type { Database } from './types';
 
@@ -15,9 +15,10 @@ import type { Database } from './types';
  * - Local: .env.local file
  */
 
-// Get environment variables dynamically
-// Support both Vite (import.meta.env) and Next.js (process.env) patterns
-function getEnvVar(key: string, viteKey?: string): string {
+// Get environment variables dynamically.
+// Support both Vite (import.meta.env) and Next.js (process.env) patterns.
+// IMPORTANT: This must be build-safe (Next.js will import modules during `next build`).
+function getOptionalEnvVar(key: string, viteKey?: string): string | undefined {
   // Try Vite environment variables first (for Vite-based builds)
   // Using eval to avoid TypeScript parsing issues with import.meta
   try {
@@ -41,27 +42,22 @@ function getEnvVar(key: string, viteKey?: string): string {
     if (nextValue) {return nextValue;}
   }
   
-  // Throw error if not found (no fallback values for security)
-  throw new Error(
-    `Missing required environment variable: ${key}\n` +
-    `Please set this variable in:\n` +
-    `- Vercel: Dashboard → Settings → Environment Variables\n` +
-    `- Supabase: Dashboard → Settings → API\n` +
-    `- GitHub Actions: Repository → Settings → Secrets\n` +
-    `- Local: .env.local file`
-  );
+  return undefined;
 }
 
-const SUPABASE_URL = getEnvVar('NEXT_PUBLIC_SUPABASE_URL', 'VITE_SUPABASE_URL');
-const SUPABASE_PUBLISHABLE_KEY = getEnvVar('NEXT_PUBLIC_SUPABASE_ANON_KEY', 'VITE_SUPABASE_ANON_KEY');
+const SUPABASE_URL = getOptionalEnvVar('NEXT_PUBLIC_SUPABASE_URL', 'VITE_SUPABASE_URL');
+const SUPABASE_PUBLISHABLE_KEY = getOptionalEnvVar('NEXT_PUBLIC_SUPABASE_ANON_KEY', 'VITE_SUPABASE_ANON_KEY');
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: {
-    storage: typeof window !== 'undefined' ? localStorage : undefined,
-    persistSession: true,
-    autoRefreshToken: true,
-  }
-});
+export const supabase: SupabaseClient<Database> | null =
+  SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY
+    ? createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+        auth: {
+          storage: typeof window !== 'undefined' ? localStorage : undefined,
+          persistSession: true,
+          autoRefreshToken: true,
+        },
+      })
+    : null;

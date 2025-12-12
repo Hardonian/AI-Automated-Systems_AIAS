@@ -11,7 +11,7 @@ import { Features } from "@/components/home/features";
 import { SettlerShowcase } from "@/components/home/settler-showcase";
 import { StatsSection } from "@/components/home/stats-section";
 import { TrustBadges } from "@/components/home/trust-badges";
-import { SoftwareApplicationSchema , FAQSchema } from "@/components/seo/structured-data";
+import { SoftwareApplicationSchema , FAQSchema, ProfessionalServiceSchema } from "@/components/seo/structured-data";
 import { loadAIASContent } from "@/lib/content/loader";
 
 import { WhoWeHelp } from "@/components/home/who-we-help";
@@ -51,6 +51,7 @@ export default async function HomePage() {
   return (
     <>
       <SoftwareApplicationSchema />
+      <ProfessionalServiceSchema />
       <FAQSchema faqs={homepageFAQs} />
       {content ? (
         <ContentDrivenHero content={content.hero} />

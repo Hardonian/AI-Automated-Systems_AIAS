@@ -1,9 +1,34 @@
 "use client";
 import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Mail, Send } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 
 export function Footer() {
+  const { toast } = useToast();
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    
+    setIsLoading(true);
+    // Simulate API call for now (can be hooked up to Resend later)
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    toast({
+      title: "Subscribed!",
+      description: "You've been added to our newsletter.",
+    });
+    setEmail("");
+    setIsLoading(false);
+  };
+
   return (
     <footer 
       aria-label="Site footer"
@@ -30,6 +55,30 @@ export function Footer() {
               <span className="px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">🚀 Custom Builds</span>
               <span className="px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">🤖 AI Agents</span>
               <span className="px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">🇨🇦 Built in Canada</span>
+            </div>
+
+            <div className="mt-8 pt-8 border-t border-border/50">
+              <h4 className="font-bold mb-2 text-sm flex items-center gap-2">
+                <Mail className="h-4 w-4 text-primary" />
+                Stay Updated
+              </h4>
+              <p className="text-xs text-muted-foreground mb-3">
+                Get the latest on AI automation trends and platform updates.
+              </p>
+              <form onSubmit={handleSubscribe} className="flex gap-2">
+                <Input 
+                  type="email" 
+                  placeholder="Enter your email" 
+                  className="h-9 text-sm bg-background/50" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <Button size="sm" className="h-9 w-9 p-0 flex-shrink-0" type="submit" disabled={isLoading}>
+                  <Send className="h-4 w-4" />
+                  <span className="sr-only">Subscribe</span>
+                </Button>
+              </form>
             </div>
           </motion.div>
           {[

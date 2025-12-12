@@ -1,4 +1,4 @@
-import { Code, Workflow, Zap, Shield, BarChart, Users, Building2 } from "lucide-react";
+import { Code, Workflow, Zap, Shield, BarChart, Users, Building2, Globe, HeartPulse, ShoppingBag } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -114,10 +114,13 @@ const services = [
   },
 ];
 
+import { MobileStickyCTA } from "@/components/layout/mobile-sticky-cta";
+
 export default function ServicesPage() {
   return (
     <>
       <ServiceSchema />
+      <MobileStickyCTA primaryLabel="Book Consultation" primaryHref="/demo" secondaryLabel="See Pricing" secondaryHref="/pricing" />
       <div className="container py-16">
       <div className="text-center mb-16 max-w-3xl mx-auto px-4">
         <h1 className="text-4xl md:text-5xl font-bold mb-6">
@@ -219,6 +222,53 @@ export default function ServicesPage() {
             </Card>
           );
         })}
+      </div>
+
+      <div className="mb-16 px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">Industries We Serve</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Our custom platforms are tailored to the unique regulatory and operational needs of these sectors.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="hover:shadow-lg transition-shadow border-t-4 border-t-blue-500">
+            <CardHeader>
+              <ShoppingBag className="h-8 w-8 text-blue-500 mb-2" />
+              <CardTitle className="text-lg">E-Commerce</CardTitle>
+              <CardDescription>
+                Inventory sync, multi-channel automation, and AI customer support.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+          <Card className="hover:shadow-lg transition-shadow border-t-4 border-t-green-500">
+            <CardHeader>
+              <BarChart className="h-8 w-8 text-green-500 mb-2" />
+              <CardTitle className="text-lg">Fintech</CardTitle>
+              <CardDescription>
+                Compliance reporting, transaction analysis, and fraud detection.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+          <Card className="hover:shadow-lg transition-shadow border-t-4 border-t-red-500">
+            <CardHeader>
+              <HeartPulse className="h-8 w-8 text-red-500 mb-2" />
+              <CardTitle className="text-lg">Healthcare</CardTitle>
+              <CardDescription>
+                HIPAA/PIPEDA compliant patient scheduling and document processing.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+          <Card className="hover:shadow-lg transition-shadow border-t-4 border-t-purple-500">
+            <CardHeader>
+              <Globe className="h-8 w-8 text-purple-500 mb-2" />
+              <CardTitle className="text-lg">Logistics</CardTitle>
+              <CardDescription>
+                Route optimization, fleet management, and automated dispatch.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </div>
       </div>
 
       <div className="bg-muted/50 rounded-lg p-8 md:p-10 text-center px-4">

@@ -112,9 +112,12 @@ const plans = [
   },
 ];
 
+import { MobileStickyCTA } from "@/components/layout/mobile-sticky-cta";
+
 export default function PricingPage() {
   return (
     <div className="container py-12 md:py-16 px-4">
+      <MobileStickyCTA primaryLabel="Start Free Trial" primaryHref="/signup" secondaryLabel="Book Demo" secondaryHref="/demo" />
       <PricingAnalytics />
       <div className="text-center mb-12 px-4">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">

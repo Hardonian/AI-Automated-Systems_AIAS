@@ -1,7 +1,8 @@
+import type { IncomingMessage, ServerResponse } from 'http';
+
 import { config } from '@ai-consultancy/config';
 import pino from 'pino';
 import { register, collectDefaultMetrics, Counter, Histogram, Gauge } from 'prom-client';
-import type { IncomingMessage, ServerResponse } from 'http';
 
 import { prisma } from './database';
 

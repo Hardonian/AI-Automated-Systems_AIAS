@@ -1,5 +1,48 @@
 import Script from "next/script";
 
+interface ProfessionalServiceSchemaProps {
+  name?: string;
+  url?: string;
+  description?: string;
+  priceRange?: string;
+}
+
+export function ProfessionalServiceSchema({
+  name = "AI Automated Systems Consultancy",
+  url = "https://aiautomatedsystems.ca",
+  description = "Enterprise AI strategy, custom platform development, and workflow automation consultancy.",
+  priceRange = "$$$",
+}: ProfessionalServiceSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name,
+    url,
+    description,
+    priceRange,
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "CA",
+      addressLocality: "Toronto",
+      addressRegion: "ON"
+    },
+    openingHours: "Mo,Tu,We,Th,Fr 09:00-17:00",
+    telephone: "+1-800-AIAS-HELP",
+    sameAs: [
+      "https://github.com/shardie-github/aias",
+      "https://linkedin.com/company/aias-platform"
+    ]
+  };
+
+  return (
+    <Script
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      id="professional-service-schema"
+      type="application/ld+json"
+    />
+  );
+}
+
 interface OrganizationSchemaProps {
   name?: string;
   url?: string;

@@ -1,9 +1,9 @@
+import type { Prisma } from '@prisma/client';
 import { z } from 'zod';
 
 import { prisma } from './database';
 import { logger } from './observability';
 import { feedIngestQueue } from './queues';
-import type { Prisma } from '@prisma/client';
 
 export const SourceConfigSchema = z.object({
   url: z.string().url().optional(),

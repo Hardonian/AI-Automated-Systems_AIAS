@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 
 export const metadata: Metadata = {
-  title: "Next 30 Days — AIAS Consultancy | Upcoming Builds & Case Studies",
+  title: "Showcase — AIAS Consultancy | Upcoming Builds & Case Studies",
   description: "See what AIAS Consultancy is building next. TokPulse TikTok analytics platform and Hardonia Suite ecosystems showcase our custom AI agent development and workflow automation expertise.",
 };
 
@@ -104,7 +104,7 @@ const consultancyBuilds = [
   },
 ];
 
-export default function TasksPage() {
+export default function ShowcasePage() {
   return (
     <div className="container py-16">
       <div className="text-center mb-12">

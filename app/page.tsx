@@ -11,8 +11,10 @@ import { Features } from "@/components/home/features";
 import { SettlerShowcase } from "@/components/home/settler-showcase";
 import { StatsSection } from "@/components/home/stats-section";
 import { TrustBadges } from "@/components/home/trust-badges";
-import { SoftwareApplicationSchema , FAQSchema } from "@/components/seo/structured-data";
+import { WhoWeHelp } from "@/components/home/who-we-help";
+import { SoftwareApplicationSchema , FAQSchema, ProfessionalServiceSchema } from "@/components/seo/structured-data";
 import { loadAIASContent } from "@/lib/content/loader";
+
 
 // Lazy load below-the-fold components for performance
 const Testimonials = dynamic(() => import("@/components/home/testimonials").then(mod => ({ default: mod.Testimonials })), {
@@ -49,6 +51,7 @@ export default async function HomePage() {
   return (
     <>
       <SoftwareApplicationSchema />
+      <ProfessionalServiceSchema />
       <FAQSchema faqs={homepageFAQs} />
       {content ? (
         <ContentDrivenHero content={content.hero} />
@@ -57,6 +60,7 @@ export default async function HomePage() {
       )}
       <StatsSection />
       <TrustBadges />
+      <WhoWeHelp />
       <CaseStudyPreview />
       <SettlerShowcase />
       <ROICalculator />

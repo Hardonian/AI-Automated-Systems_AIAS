@@ -132,7 +132,7 @@ export function Hero() {
               className="text-base px-8 h-14 text-lg font-semibold border-2 hover:bg-primary/5 hover:border-primary/50 transition-all hover:scale-105 min-h-[44px]" 
               asChild
             >
-              <Link href="/tasks" aria-label="View our builds and portfolio">
+              <Link href="/showcase" aria-label="View our showcase and portfolio">
                 See Our Builds
               </Link>
             </Button>

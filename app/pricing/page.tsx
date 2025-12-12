@@ -2,6 +2,7 @@ import { Check } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { MobileStickyCTA } from "@/components/layout/mobile-sticky-cta";
 import { FeatureComparison } from "@/components/pricing/feature-comparison";
 import { PricingAnalytics } from "@/components/pricing/PricingAnalytics";
 import { ROICalculator } from "@/components/pricing/roi-calculator";
@@ -28,6 +29,7 @@ const plans = [
       "No credit card required",
     ],
     cta: "Start Free",
+    href: "/signup",
     popular: false,
     annualPrice: null,
     isBeta: false,
@@ -52,6 +54,7 @@ const plans = [
       "Cancel anytime",
     ],
     cta: "Start Free Trial",
+    href: "/signup",
     popular: true,
     annualPrice: "$490",
     annualSavings: "$98",
@@ -79,17 +82,42 @@ const plans = [
       "Advanced analytics (coming soon)",
     ],
     cta: "Start Free Trial",
+    href: "/signup",
     popular: false,
     annualPrice: "$1,490",
     annualSavings: "$298",
     annualDiscount: "20%",
     isBeta: true,
   },
+  {
+    name: "Enterprise",
+    price: "Custom",
+    period: "project",
+    tagline: "For custom AI platforms & consultancy",
+    description: "Full-stack custom development, dedicated support, and enterprise-grade security. Built for your specific business needs.",
+    features: [
+      "Custom AI platform development",
+      "Unlimited workflows & automations",
+      "Dedicated account manager",
+      "SLA & 99.9% uptime guarantee",
+      "On-premise deployment options",
+      "Custom security & compliance",
+      "Priority 24/7 phone support",
+      "Quarterly strategy reviews",
+    ],
+    cta: "Book Consultation",
+    href: "/demo",
+    popular: false,
+    annualPrice: null,
+    isBeta: false,
+  },
 ];
+
 
 export default function PricingPage() {
   return (
     <div className="container py-12 md:py-16 px-4">
+      <MobileStickyCTA primaryHref="/signup" primaryLabel="Start Free Trial" secondaryHref="/demo" secondaryLabel="Book Demo" />
       <PricingAnalytics />
       <div className="text-center mb-12 px-4">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
@@ -188,7 +216,7 @@ export default function PricingPage() {
                 size="lg"
                 variant={plan.popular ? "default" : "outline"}
               >
-                <Link aria-label={`${plan.cta} - ${plan.name} plan`} href="/signup">
+                <Link aria-label={`${plan.cta} - ${plan.name} plan`} href={plan.href}>
                   {plan.cta}
                 </Link>
               </Button>

@@ -67,9 +67,9 @@ export function MobileNav() {
             Portfolio
           </Link>
           <Link 
-            aria-label="Navigate to Our Builds" 
+            aria-label="Navigate to Showcase" 
             className="text-lg font-medium hover:underline min-h-[44px] flex items-center" 
-            href="/tasks"
+            href="/showcase"
             onClick={() => setOpen(false)}
           >
             Our Builds

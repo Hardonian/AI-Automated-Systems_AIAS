@@ -118,7 +118,7 @@ export function CaseStudyPreview() {
                     <p className="text-xs text-muted-foreground">— {study.author}, {study.role}</p>
                   </div>
                   <Button asChild className="w-full" variant="outline">
-                    <Link href={study.type === "consultancy" ? "/tasks" : "/case-studies"}>
+                    <Link href={study.type === "consultancy" ? "/showcase" : "/case-studies"}>
                       {study.type === "consultancy" ? "View Build Details" : "Read Full Case Study"} <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
@@ -135,7 +135,7 @@ export function CaseStudyPreview() {
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link href="/tasks">
+                <Link href="/showcase">
                   See Upcoming Builds <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

@@ -199,7 +199,7 @@ export class QueryOptimizer {
       // Cache and add to results
       if (data) {
         for (const item of data) {
-          const itemObj = item as Record<string, unknown>;
+          const itemObj = item as unknown as Record<string, unknown>;
           const {id} = itemObj;
           const idString = typeof id === 'string' ? id : String(id);
           results.set(idString, item as T);

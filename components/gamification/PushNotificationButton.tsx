@@ -35,12 +35,12 @@ export async function subscribeToPush() {
     
     const { endpoint, keys } = subscription.toJSON();
     
-    await supabase.from("push_subscriptions").upsert({
+    await (supabase.from("push_subscriptions") as any).upsert({
       user_id: user.id,
       endpoint: endpoint!,
       p256dh: keys!.p256dh,
       auth: keys!.auth,
-    });
+    } as any);
     
     return true;
   } catch (error) {

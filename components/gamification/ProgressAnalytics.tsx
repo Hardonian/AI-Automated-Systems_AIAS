@@ -27,15 +27,15 @@ export default function ProgressAnalytics() {
     
     // In a real implementation, you'd aggregate from activity logs
     // For now, we'll simulate with profile XP changes
-    const { data: profile } = await supabase
+    const { data: profile } = await (supabase
       .from("profiles")
       .select("total_xp, created_at")
       .eq("id", user.id)
-      .single();
+      .single() as any);
     
-    if (profile) {
+    if (profile && (profile as any).total_xp) {
       // Simulate daily progress (replace with actual activity aggregation)
-      const dailyXP = Math.floor(profile.total_xp / days);
+      const dailyXP = Math.floor((profile as any).total_xp / days);
       const chartData: ProgressData[] = [];
       for (let i = 0; i < days; i++) {
         const date = new Date(startDate);

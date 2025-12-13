@@ -11,7 +11,7 @@ export default function JournalPage(){
     hapticTap();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {return;}
-    const { data: _data, error } = await supabase.from("journal_entries").insert({ user_id: user.id, body: text } as Record<string, unknown>).select("*").single();
+    const { data: _data, error } = await supabase.from("journal_entries").insert({ user_id: user.id, body: text } as any).select("*").single();
     setSaved(!error);
   }
   useEffect(() => { if(saved) { const t = setTimeout(() => setSaved(false), 2000); return () => clearTimeout(t); } }, [saved]);

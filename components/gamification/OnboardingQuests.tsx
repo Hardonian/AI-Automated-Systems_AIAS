@@ -52,12 +52,12 @@ export default function OnboardingQuests() {
     const quest = ONBOARDING_QUESTS.find(q => q.type === questType);
     if (!quest) {return;}
     
-    const { data: existing } = await supabase
+    const { data: existing } = await (supabase
       .from("onboarding_quests")
       .select("*")
       .eq("user_id", user.id)
       .eq("quest_type", questType)
-      .single();
+      .single()) as any;
     
     if (existing?.completed_at) {return;}
     
@@ -65,7 +65,7 @@ export default function OnboardingQuests() {
       user_id: user.id,
       quest_type: questType,
       completed_at: new Date().toISOString()
-    });
+    } as any);
     
     awardXp(quest.xp);
     setCelebrating(true);

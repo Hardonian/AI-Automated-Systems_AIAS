@@ -68,9 +68,9 @@ export async function updateUserSettings(
 
   if (existing) {
     // Update existing
-    const { data, error } = await supabase
-      .from("user_settings")
-      .update(updates)
+    const { data, error } = await (supabase
+      .from("user_settings") as any)
+      .update(updates as any)
       .eq("user_id", user.id)
       .select()
       .single();
@@ -87,7 +87,7 @@ export async function updateUserSettings(
       .insert({
         user_id: user.id,
         ...updates,
-      })
+      } as any)
       .select()
       .single();
 

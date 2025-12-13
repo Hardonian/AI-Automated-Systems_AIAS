@@ -3,9 +3,8 @@
  */
 
 import { NextRequest } from 'next/server';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
-// import { vi } from 'vitest';
 import { POST, GET } from '@/app/api/upload/route';
 
 // Mock Supabase

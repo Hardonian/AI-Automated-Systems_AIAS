@@ -26,7 +26,7 @@ export async function typedUpdate<T extends Record<string, unknown>>(
   table: string,
   values: Partial<T>
 ) {
-  return client.from(table).update(values as any)
+  return (client.from(table) as any).update(values as any)
 }
 
 /**

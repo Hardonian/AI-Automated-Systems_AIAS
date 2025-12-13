@@ -27,7 +27,7 @@ export async function checkErrorSpikes(): Promise<ErrorAlert[]> {
 
   try {
     // Get error count in last hour
-    const { data: errors, error } = await supabase
+    const { count: errorCount, error } = await supabase
       .from("app_events")
       .select("id", { count: "exact", head: true })
       .eq("event_type", "error")
@@ -38,16 +38,16 @@ export async function checkErrorSpikes(): Promise<ErrorAlert[]> {
       return alerts;
     }
 
-    const errorCount = errors || 0;
+    const count = errorCount || 0;
     const threshold = 100; // Alert if more than 100 errors in an hour
 
-    if (errorCount > threshold) {
+    if (count > threshold) {
       alerts.push({
         type: "error_spike",
-        severity: errorCount > 500 ? "critical" : errorCount > 200 ? "high" : "medium",
-        message: `Error spike detected: ${errorCount} errors in the last hour`,
+        severity: count > 500 ? "critical" : count > 200 ? "high" : "medium",
+        message: `Error spike detected: ${count} errors in the last hour`,
         details: {
-          errorCount,
+          errorCount: count,
           threshold,
           timeWindow: "1 hour",
         },

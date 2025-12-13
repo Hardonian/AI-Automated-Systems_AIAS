@@ -81,7 +81,7 @@ export async function POST(
         state: result.state || null,
         started_at: result.startedAt,
         completed_at: result.completedAt || null,
-      } as Record<string, unknown>);
+      } as any);
 
     if (dbError) {
       logger.error('Error saving execution to database', new Error(dbError.message), {

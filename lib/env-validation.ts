@@ -18,13 +18,22 @@ const envSchema = z.object({
   DATABASE_URL: z.string().optional(),
   DIRECT_URL: z.string().optional(),
   
+  // Supabase (for backward compatibility and testing)
+  SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_ANON_KEY: z.string().min(1).optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+  
+  // Stripe
+  STRIPE_SECRET_KEY: z.string().optional(),
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
+  
   // Build flags
   SKIP_ENV_VALIDATION: z.string().optional().default('false'),
   NODE_ENV: z.enum(['development', 'production', 'test']).optional().default('development'),
   
   // Prisma
   PRISMA_CLIENT_ENGINE_TYPE: z.enum(['library', 'wasm', 'binary']).optional().default('library'),
-});
+}).passthrough(); // Allow additional properties for testing
 
 // Skip validation during build if flag set
 const skipValidation = 
@@ -70,4 +79,62 @@ export function validateEnvOnStartup(): void {
     const errorMessage = `Environment validation failed:\n${JSON.stringify(errors, null, 2)}`;
     throw new Error(errorMessage);
   }
+}
+
+/**
+ * Validate environment variables with Zod schema
+ * Returns a result object with success status and data/errors
+ */
+export function validateEnvWithZod() {
+  const parsed = envSchema.safeParse(process.env);
+  
+  if (parsed.success) {
+    return {
+      success: true as const,
+      data: parsed.data,
+      errors: undefined,
+    };
+  }
+  
+  return {
+    success: false as const,
+    data: undefined,
+    errors: parsed.error,
+  };
+}
+
+/**
+ * Validate API environment variables
+ * Checks if required variables are present
+ */
+export function validateApiEnv(requiredVars: string[]): {
+  valid: boolean;
+  missing: string[];
+} {
+  const missing: string[] = [];
+  
+  for (const varName of requiredVars) {
+    if (!process.env[varName]) {
+      missing.push(varName);
+    }
+  }
+  
+  return {
+    valid: missing.length === 0,
+    missing,
+  };
+}
+
+/**
+ * Get a validated environment variable
+ * Returns undefined if validation fails or variable is missing
+ */
+export function getValidatedEnvVar(varName: string): string | undefined {
+  const result = validateEnvWithZod();
+  
+  if (result.success && result.data) {
+    return result.data[varName as keyof typeof result.data] as string | undefined;
+  }
+  
+  return process.env[varName];
 }

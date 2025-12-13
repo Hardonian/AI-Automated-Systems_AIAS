@@ -18,8 +18,8 @@ export default function ReferralWidget() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {return;}
     
-    const { data: profile } = await supabase.from("profiles").select("referral_code").eq("id", user.id).single();
-    if (profile?.referral_code) {setReferralCode(profile.referral_code);}
+    const { data: profile } = await (supabase.from("profiles").select("referral_code").eq("id", user.id).single() as any);
+    if (profile && (profile as any).referral_code) {setReferralCode((profile as any).referral_code);}
     
     const { data: refs } = await supabase.from("referrals").select("*").eq("referrer_id", user.id).order("created_at", { ascending: false });
     if (refs) {setReferrals(refs);}

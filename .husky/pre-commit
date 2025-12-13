@@ -1,5 +1,12 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Run lint-staged
+# Run type-check first to catch all type errors before committing
+echo "🔍 Running type-check..."
+pnpm type-check || {
+  echo "❌ Type-check failed. Please fix type errors before committing."
+  exit 1
+}
+
+# Run lint-staged for formatting and linting
 npx lint-staged

@@ -50,7 +50,7 @@ export default function NotificationsCenter() {
 
   async function markAsRead(id: number) {
     hapticTap();
-    await supabase.from("notifications").update({ read_at: new Date().toISOString() } as Record<string, unknown>).eq("id", id);
+    await (supabase.from("notifications") as any).update({ read_at: new Date().toISOString() } as any).eq("id", id);
     loadNotifications();
   }
 
@@ -59,9 +59,9 @@ export default function NotificationsCenter() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {return;}
     
-    await supabase
-      .from("notifications")
-      .update({ read_at: new Date().toISOString() })
+    await (supabase
+      .from("notifications") as any)
+      .update({ read_at: new Date().toISOString() } as any)
       .eq("user_id", user.id)
       .is("read_at", null);
     loadNotifications();

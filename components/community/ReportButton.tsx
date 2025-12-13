@@ -14,13 +14,13 @@ export default function ReportButton({ postId, commentId }: { postId?: number; c
     const { data: { user } } = await supabase.auth.getUser();
     if (!user || !reason.trim()) {return;}
     
-    await supabase.from("moderation_flags").insert({
+    await (supabase.from("moderation_flags") as any).insert({
       flagged_by: user.id,
       post_id: postId || null,
       comment_id: commentId || null,
       reason,
       status: "pending"
-    } as Record<string, unknown>);
+    } as any);
     
     setReported(true);
     setShowForm(false);

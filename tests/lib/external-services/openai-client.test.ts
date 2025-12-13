@@ -32,7 +32,7 @@ describe('callOpenAI', () => {
       'test-api-key'
     );
 
-    expect(result.choices[0].message.content).toBe('Test response');
+    expect(result.choices[0]?.message.content).toBe('Test response');
     expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 
@@ -53,7 +53,7 @@ describe('callOpenAI', () => {
       'test-api-key'
     );
 
-    expect(result.choices[0].message.content).toBe('Success after retry');
+    expect(result.choices[0]?.message.content).toBe('Success after retry');
     expect(global.fetch).toHaveBeenCalledTimes(2);
   });
 
@@ -83,6 +83,6 @@ describe('callOpenAI', () => {
       'test-api-key'
     );
 
-    expect(result.choices[0].message.content).toContain('temporarily unavailable');
+    expect(result.choices[0]?.message.content).toContain('temporarily unavailable');
   });
 });

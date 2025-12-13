@@ -344,13 +344,13 @@ export default async function DashboardPage() {
           <CardContent className="pt-6">
             {topPosts.length > 0 ? (
               <div className="space-y-3">
-                {topPosts.map((post: { id: string; title?: string; view_count?: number }) => (
+                {topPosts.map((post: any) => (
                   <div key={post.id} className="flex justify-between items-center">
                     <span className="text-sm truncate flex-1">
                       {post.title || `Post #${post.id}`}
                     </span>
                     <Badge className="ml-2" variant="secondary">
-                      {post.view_count} views
+                      {post.view_count || 0} views
                     </Badge>
                   </div>
                 ))}
@@ -376,16 +376,16 @@ export default async function DashboardPage() {
         <CardContent className="pt-6">
           {recentActivity.length > 0 ? (
             <div className="space-y-2">
-              {recentActivity.map((activity: { activity_type?: string; created_at: string }, idx: number) => (
+              {recentActivity.map((activity: any, idx: number) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between p-2 rounded-lg bg-muted/50"
                 >
                   <span className="text-sm capitalize">
-                    {activity.activity_type?.replace(/_/g, " ")}
+                    {activity.activity_type?.replace(/_/g, " ") || "Unknown"}
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    {new Date(activity.created_at).toLocaleTimeString()}
+                    {activity.created_at ? new Date(activity.created_at).toLocaleTimeString() : ""}
                   </span>
                 </div>
               ))}

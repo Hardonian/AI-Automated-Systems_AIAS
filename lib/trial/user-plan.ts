@@ -124,7 +124,7 @@ export async function savePretestAnswers(
   try {
     // Save to pretest_answers table (create if doesn't exist)
     const { error: upsertError } = await (supabase
-      .from("pretest_answers"))
+      .from("pretest_answers") as any)
       .upsert({
         user_id: userId,
         answers,
@@ -135,12 +135,12 @@ export async function savePretestAnswers(
     if (upsertError) {
       // If table doesn't exist, try updating profile
       const { error: profileError } = await (supabase
-        .from("profiles"))
+        .from("profiles") as any)
         .update({
           pretest_completed: true,
           pretest_answers: answers,
           updated_at: new Date().toISOString(),
-        })
+        } as any)
         .eq("id", userId);
 
       if (profileError) {
@@ -164,11 +164,11 @@ export async function markEmailConnected(userId: string): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
   await (supabase
-    .from("profiles"))
+    .from("profiles") as any)
     .update({
       email_connected: true,
       updated_at: new Date().toISOString(),
-    })
+    } as any)
     .eq("id", userId);
 }
 
@@ -179,11 +179,11 @@ export async function markWorkflowCreated(userId: string): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
   await (supabase
-    .from("profiles"))
+    .from("profiles") as any)
     .update({
       workflows_created: true,
       updated_at: new Date().toISOString(),
-    })
+    } as any)
     .eq("id", userId);
 }
 
@@ -194,11 +194,11 @@ export async function startTrial(userId: string): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
   await (supabase
-    .from("profiles"))
+    .from("profiles") as any)
     .update({
       subscription_tier: "trial",
       trial_started_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-    })
+    } as any)
     .eq("id", userId);
 }

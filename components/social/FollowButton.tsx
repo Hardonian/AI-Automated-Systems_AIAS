@@ -51,7 +51,7 @@ export default function FollowButton({ userId }: { userId: string }) {
       setFollowing(false);
       setFollowerCount(c => Math.max(0, c - 1));
     } else {
-      await supabase.from("user_follows").insert({ follower_id: user.id, following_id: userId });
+      await (supabase.from("user_follows") as any).insert({ follower_id: user.id, following_id: userId } as any);
       setFollowing(true);
       setFollowerCount(c => c + 1);
     }

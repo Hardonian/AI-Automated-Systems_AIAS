@@ -101,7 +101,26 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       "onAnimationStart" | "onAnimationEnd" | "onAnimationIteration" | "onDrag" | "onDragStart" | "onDragEnd"
     >;
     
-    const motionProps: Partial<SafeMotionButtonProps> = prefersReducedMotion() 
+    // Type for remaining props after destructuring custom Button props
+    // This ensures type safety when spreading props to motion.button
+    type RemainingButtonProps = Omit<
+      ButtonProps,
+      | "className"
+      | "variant"
+      | "size"
+      | "asChild"
+      | "loading"
+      | "icon"
+      | "iconPosition"
+      | "children"
+      | "disabled"
+      | "aria-label"
+    >;
+    
+    // Safe SSR: prefersReducedMotion returns false during SSR/build
+    // This ensures motion props are consistent between server and client
+    const shouldReduceMotion = typeof window !== 'undefined' && prefersReducedMotion();
+    const motionProps: Partial<SafeMotionButtonProps> = shouldReduceMotion
       ? {} 
       : {
           whileHover: { scale: isDisabled ? 1 : motionScale.hover },
@@ -109,17 +128,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           transition: motionTransitions.standard,
         };
     
-    // Extract only the props that are safe for MotionButton
-    // Exclude custom props (variant, size, etc. are handled separately)
-    const {
-      asChild: _asChild,
-      loading: _loading,
-      icon: _icon,
-      iconPosition: _iconPosition,
-      variant: _variant,
-      size: _size,
-      ...motionSafeProps
-    } = props;
+    // Props are already filtered - asChild, loading, icon, iconPosition, variant, size 
+    // are already destructured from function parameters, so props only contains HTML button attributes
+    // Type assertion is safe because RemainingButtonProps only contains HTML button attributes
+    const safeProps = props as RemainingButtonProps & SafeMotionButtonProps;
     
     return (
       <motion.button
@@ -130,7 +142,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ variant, size }), className)}
         disabled={isDisabled}
         {...motionProps}
-        {...(motionSafeProps as SafeMotionButtonProps)}
+        {...safeProps}
       >
         {buttonContent}
       </motion.button>

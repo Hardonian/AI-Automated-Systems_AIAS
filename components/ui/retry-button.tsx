@@ -14,14 +14,14 @@ interface RetryButtonProps {
   onRetry: () => Promise<void> | void;
   label?: string;
   variant?: "default" | "outline" | "ghost";
-  size?: "default" | "sm" | "lg" | "icon";
+  size?: "sm" | "md" | "lg" | "xl" | "icon" | "pill";
 }
 
 export function RetryButton({
   onRetry,
   label = "Try again",
   variant = "outline",
-  size = "default",
+  size = "md",
 }: RetryButtonProps) {
   const [isRetrying, setIsRetrying] = useState(false);
 

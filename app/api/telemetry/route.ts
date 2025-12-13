@@ -40,7 +40,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<TelemetryResp
     let body: unknown;
     try {
       body = await req.json();
-    } catch (error) {
+    } catch {
       const validationError = new ValidationError("Invalid JSON body");
       const formatted = formatError(validationError);
       return NextResponse.json(

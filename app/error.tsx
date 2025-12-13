@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect } from "react";
 
 import { ErrorState } from "@/components/ui/empty-state";

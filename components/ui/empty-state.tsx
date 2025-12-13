@@ -10,6 +10,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 interface EmptyStateProps {
   title?: string;
@@ -24,6 +25,8 @@ interface EmptyStateProps {
     href: string;
   };
   variant?: "default" | "error" | "loading";
+  children?: React.ReactNode;
+  className?: string;
 }
 
 export function EmptyState({
@@ -33,6 +36,8 @@ export function EmptyState({
   action,
   secondaryAction,
   variant = "default",
+  children,
+  className,
 }: EmptyStateProps) {
   const defaultIcon =
     variant === "error" ? (
@@ -44,7 +49,7 @@ export function EmptyState({
     );
 
   return (
-    <Card className="border-dashed">
+    <Card className={cn("border-dashed", className)}>
       <CardHeader className="text-center">
         <div className="flex justify-center mb-4">{icon || defaultIcon}</div>
         <CardTitle>{title}</CardTitle>
@@ -68,6 +73,7 @@ export function EmptyState({
           )}
         </CardContent>
       )}
+      {children && <CardContent>{children}</CardContent>}
     </Card>
   );
 }

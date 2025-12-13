@@ -91,8 +91,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           transition: motionTransitions.standard,
         };
     
+    const MotionButton = motion.button;
+    
+    // Filter out props that conflict with motion.button types
+    const { onDrag, onDragStart, onDragEnd, ...safeProps } = props;
+    
     return (
-      <Comp
+      <MotionButton
         ref={ref}
         aria-busy={loading}
         aria-disabled={isDisabled}
@@ -100,10 +105,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ variant, size }), className)}
         disabled={isDisabled}
         {...motionProps}
-        {...props}
+        {...(safeProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}
       >
         {buttonContent}
-      </Comp>
+      </MotionButton>
     );
   }
 );

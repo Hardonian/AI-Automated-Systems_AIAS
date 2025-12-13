@@ -1,7 +1,8 @@
-import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { z } from "zod";
+
+import { checkIdempotencyKey, recordIdempotencyKey } from "@/lib/billing/idempotency";
 
 import { env } from "@/lib/env";
 import { SystemError, ValidationError, formatError } from "@/lib/errors";
@@ -10,14 +11,13 @@ import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
 import { recordError } from "@/lib/utils/error-detection";
 import { retry } from "@/lib/utils/retry";
 import { safeStripe, safeSupabase } from "@/lib/utils/server-guards";
-import { checkIdempotencyKey, recordIdempotencyKey } from "@/lib/billing/idempotency";
 
 // CRITICAL: This route MUST use Node.js runtime (not Edge) for raw body access
 export const runtime = "nodejs";
 
 // Initialize Stripe and Supabase clients safely
 let stripe: Stripe;
-let supabase: ReturnType<typeof createClient>;
+let supabase: ReturnType<typeof safeSupabase>;
 
 try {
   stripe = safeStripe();
@@ -27,11 +27,6 @@ try {
   logger.error("Failed to initialize Stripe/Supabase in webhook", error instanceof Error ? error : new Error(String(error)));
 }
 
-const XP_MULTIPLIERS: Record<string, number> = {
-  starter: 1.25,
-  pro: 1.5,
-  enterprise: 2.0,
-};
 
 interface CheckoutResponse {
   sessionId?: string;
@@ -43,7 +38,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<CheckoutRespo
     let body: unknown;
     try {
       body = await req.json();
-    } catch (error) {
+    } catch {
       const validationError = new ValidationError("Invalid JSON body");
       const formatted = formatError(validationError);
       return NextResponse.json(
@@ -182,7 +177,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse<WebhookRespons
   }
 
   try {
-    let responseData: { received: boolean; processed?: boolean } = { received: true };
+    const responseData: { received: boolean; processed?: boolean } = { received: true };
 
     switch (event.type) {
       case "checkout.session.completed": {
@@ -287,10 +282,18 @@ export async function PUT(req: NextRequest): Promise<NextResponse<WebhookRespons
             .single();
 
           if (sub) {
+            const statusMap: Record<string, "ACTIVE" | "CANCELED" | "PAST_DUE" | "UNPAID" | "TRIALING"> = {
+              active: "ACTIVE",
+              canceled: "CANCELED",
+              past_due: "PAST_DUE",
+              unpaid: "UNPAID",
+              trialing: "TRIALING",
+            };
+            const normalizedStatus = subscription.status.toLowerCase().replace("-", "_");
             await supabase
               .from("subscriptions")
               .update({
-                status: subscription.status.toUpperCase().replace("-", "_") as any,
+                status: statusMap[normalizedStatus] || "ACTIVE",
                 currentPeriodStart: new Date(subscription.current_period_start * 1000),
                 currentPeriodEnd: new Date(subscription.current_period_end * 1000),
                 cancelAtPeriodEnd: subscription.cancel_at_period_end,

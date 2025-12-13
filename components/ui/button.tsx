@@ -94,7 +94,16 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const MotionButton = motion.button;
     
     // Filter out props that conflict with motion.button types
-    const { onDrag, onDragStart, onDragEnd, ...safeProps } = props;
+    // HTML animation handlers conflict with Framer Motion's animation handlers
+    const { 
+      onDrag, 
+      onDragStart, 
+      onDragEnd,
+      onAnimationStart,
+      onAnimationEnd,
+      onAnimationIteration,
+      ...safeProps 
+    } = props;
     
     return (
       <MotionButton

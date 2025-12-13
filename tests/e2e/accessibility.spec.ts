@@ -114,6 +114,6 @@ test.describe("Accessibility Tests", () => {
       rules: {
         "color-contrast": { enabled: true },
       },
-    });
+    } as any);
   });
 });

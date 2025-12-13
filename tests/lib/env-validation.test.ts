@@ -2,7 +2,7 @@
  * Tests for Environment Variable Validation
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 import { validateEnvWithZod, validateApiEnv, getValidatedEnvVar } from '@/lib/env-validation';
 
@@ -10,8 +10,17 @@ describe('lib/env-validation', () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
+    // Create a mutable copy of process.env for testing
     process.env = { ...originalEnv };
+    // Make NODE_ENV writable for testing
+    if (process.env.NODE_ENV) {
+      delete (process.env as any).NODE_ENV;
+    }
     vi.resetModules();
+  });
+  
+  afterEach(() => {
+    process.env = originalEnv;
   });
 
   describe('validateEnvWithZod', () => {
@@ -20,7 +29,12 @@ describe('lib/env-validation', () => {
       process.env.SUPABASE_ANON_KEY = 'test-anon-key';
       process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-key';
       process.env.DATABASE_URL = 'postgresql://localhost:5432/test';
-      process.env.NODE_ENV = 'test';
+      // Use Object.defineProperty to set NODE_ENV as it's read-only
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: 'test',
+        writable: true,
+        configurable: true,
+      });
 
       const result = validateEnvWithZod();
       
@@ -95,7 +109,12 @@ describe('lib/env-validation', () => {
       process.env.SUPABASE_ANON_KEY = 'test-anon-key';
       process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-key';
       process.env.DATABASE_URL = 'postgresql://localhost:5432/test';
-      process.env.NODE_ENV = 'test';
+      // Use Object.defineProperty to set NODE_ENV as it's read-only
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: 'test',
+        writable: true,
+        configurable: true,
+      });
 
       const result = getValidatedEnvVar('SUPABASE_URL');
       

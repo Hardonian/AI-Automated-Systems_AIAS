@@ -20,7 +20,7 @@ describe('lib/utils/error-detection', () => {
       
       const recentErrors = errorDetector.getRecentErrors(5);
       expect(recentErrors.length).toBeGreaterThan(0);
-      expect(recentErrors[0].error.message).toBe('Test error');
+      expect(recentErrors[0]?.error.message).toBe('Test error');
     });
 
     it('should track error context', () => {
@@ -29,7 +29,7 @@ describe('lib/utils/error-detection', () => {
       recordError(error, context);
       
       const recentErrors = errorDetector.getRecentErrors(5);
-      expect(recentErrors[0].context).toEqual(context);
+      expect(recentErrors[0]?.context).toEqual(context);
     });
   });
 

@@ -2,9 +2,8 @@
  * Tests for Workflow Executor
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 
-// import { beforeEach } from 'vitest';
 import { WorkflowExecutor } from '@/lib/workflows/executor';
 
 describe('WorkflowExecutor', () => {

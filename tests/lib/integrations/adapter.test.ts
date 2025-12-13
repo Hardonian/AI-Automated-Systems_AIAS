@@ -2,9 +2,8 @@
  * Tests for Integration Adapter Framework
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 
-// import { beforeEach } from 'vitest';
 import { AdapterFactory, BaseAdapter } from '@/lib/integrations/adapter-framework';
 
 describe('AdapterFactory', () => {

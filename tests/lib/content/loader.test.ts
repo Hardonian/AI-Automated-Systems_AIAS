@@ -1,5 +1,4 @@
-import { writeFile, mkdir } from "fs/promises";
-// import { rm } from "fs/promises";
+import { writeFile, mkdir, rm } from "fs/promises";
 import { join } from "path";
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";

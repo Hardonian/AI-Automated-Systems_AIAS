@@ -57,7 +57,7 @@ describe('PredictiveIntelligenceService', () => {
         stdDev: 10,
       });
 
-      if (anomalies.length > 0) {
+      if (anomalies.length > 0 && anomalies[0]) {
         const suggestions = await predictive.suggestRemediation(anomalies[0].id);
         expect(Array.isArray(suggestions)).toBe(true);
       }

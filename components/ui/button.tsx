@@ -2,7 +2,7 @@
 
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { motion } from "framer-motion";
+import { motion, type HTMLMotionProps } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import * as React from "react";
 
@@ -36,8 +36,19 @@ const buttonVariants = cva(
   }
 );
 
+// Type that excludes HTML animation handlers that conflict with Framer Motion
+type ButtonHTMLPropsWithoutAnimationHandlers = Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  | "onAnimationStart"
+  | "onAnimationEnd"
+  | "onAnimationIteration"
+  | "onDrag"
+  | "onDragStart"
+  | "onDragEnd"
+>;
+
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends ButtonHTMLPropsWithoutAnimationHandlers,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   loading?: boolean;
@@ -83,7 +94,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       );
     }
     
-    const motionProps = prefersReducedMotion() 
+    // Type-safe props for motion.button
+    // We exclude conflicting animation handlers that are already excluded from ButtonProps
+    type SafeMotionButtonProps = Omit<
+      HTMLMotionProps<"button">,
+      "onAnimationStart" | "onAnimationEnd" | "onAnimationIteration" | "onDrag" | "onDragStart" | "onDragEnd"
+    >;
+    
+    const motionProps: Partial<SafeMotionButtonProps> = prefersReducedMotion() 
       ? {} 
       : {
           whileHover: { scale: isDisabled ? 1 : motionScale.hover },
@@ -91,22 +109,20 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           transition: motionTransitions.standard,
         };
     
-    const MotionButton = motion.button;
-    
-    // Filter out props that conflict with motion.button types
-    // HTML animation handlers conflict with Framer Motion's animation handlers
-    const { 
-      onDrag, 
-      onDragStart, 
-      onDragEnd,
-      onAnimationStart,
-      onAnimationEnd,
-      onAnimationIteration,
-      ...safeProps 
+    // Extract only the props that are safe for MotionButton
+    // Exclude custom props (variant, size, etc. are handled separately)
+    const {
+      asChild: _asChild,
+      loading: _loading,
+      icon: _icon,
+      iconPosition: _iconPosition,
+      variant: _variant,
+      size: _size,
+      ...motionSafeProps
     } = props;
     
     return (
-      <MotionButton
+      <motion.button
         ref={ref}
         aria-busy={loading}
         aria-disabled={isDisabled}
@@ -114,10 +130,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ variant, size }), className)}
         disabled={isDisabled}
         {...motionProps}
-        {...(safeProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+        {...(motionSafeProps as SafeMotionButtonProps)}
       >
         {buttonContent}
-      </MotionButton>
+      </motion.button>
     );
   }
 );

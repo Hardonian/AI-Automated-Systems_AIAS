@@ -117,7 +117,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       | "aria-label"
     >;
     
-    const motionProps: Partial<SafeMotionButtonProps> = prefersReducedMotion() 
+    // Safe SSR: prefersReducedMotion returns false during SSR/build
+    // This ensures motion props are consistent between server and client
+    const shouldReduceMotion = typeof window !== 'undefined' && prefersReducedMotion();
+    const motionProps: Partial<SafeMotionButtonProps> = shouldReduceMotion
       ? {} 
       : {
           whileHover: { scale: isDisabled ? 1 : motionScale.hover },

@@ -43,25 +43,34 @@ export interface ButtonProps
   loading?: boolean;
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
+  "aria-label"?: string; // Explicitly support aria-label for accessibility
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, loading = false, icon, iconPosition = "left", children, disabled, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, loading = false, icon, iconPosition = "left", children, disabled, "aria-label": ariaLabel, ...props }, ref) => {
     const Comp = asChild ? Slot : motion.button;
     const isDisabled = disabled || loading;
+    
+    // If icon-only button without children, ensure aria-label is provided
+    const hasText = Boolean(children);
+    const isIconOnly = Boolean(icon && !hasText);
+    
+    if (isIconOnly && !ariaLabel && !props["aria-labelledby"]) {
+      console.warn("Button: Icon-only button should have aria-label or aria-labelledby for accessibility");
+    }
     
     const buttonContent = (
       <>
         {loading && (
-          <Loader2 className="mr-2 h-4 w-4 animate-spin absolute left-1/2 -translate-x-1/2" />
+          <Loader2 className="mr-2 h-4 w-4 animate-spin absolute left-1/2 -translate-x-1/2" aria-hidden="true" />
         )}
         <span className={cn("flex items-center gap-2", loading && "invisible")}>
-          {icon && iconPosition === "left" && <span className="inline-flex">{icon}</span>}
+          {icon && iconPosition === "left" && <span className="inline-flex" aria-hidden="true">{icon}</span>}
           {children}
-          {icon && iconPosition === "right" && <span className="inline-flex">{icon}</span>}
+          {icon && iconPosition === "right" && <span className="inline-flex" aria-hidden="true">{icon}</span>}
         </span>
         {variant === "cta" && (
-          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" aria-hidden="true" />
         )}
       </>
     );
@@ -87,10 +96,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         aria-busy={loading}
         aria-disabled={isDisabled}
+        aria-label={ariaLabel || (isIconOnly ? undefined : ariaLabel)}
         className={cn(buttonVariants({ variant, size }), className)}
         disabled={isDisabled}
         {...motionProps}
-        {...(props as any)}
+        {...props}
       >
         {buttonContent}
       </Comp>

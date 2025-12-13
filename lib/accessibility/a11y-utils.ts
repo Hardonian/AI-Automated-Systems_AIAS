@@ -1,105 +1,186 @@
 /**
  * Accessibility Utilities
- * Tools for better accessibility and WCAG compliance
+ * Helper functions for accessibility improvements
  */
 
 /**
- * Check if element is focusable
+ * Generate accessible ID from text
  */
-export function isFocusable(element: HTMLElement): boolean {
-  const focusableSelectors = [
-    'a[href]',
-    'button:not([disabled])',
-    'textarea:not([disabled])',
-    'input:not([disabled])',
-    'select:not([disabled])',
-    '[tabindex]:not([tabindex="-1"])',
-  ].join(', ');
-
-  return element.matches(focusableSelectors);
+export function generateA11yId(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 /**
- * Trap focus within container
+ * Get ARIA label for icon-only buttons
  */
-export function trapFocus(container: HTMLElement): () => void {
-  const focusableElements = Array.from(
-    container.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    )
-  ).filter(isFocusable);
+export function getIconButtonLabel(action: string, context?: string): string {
+  if (context) {
+    return `${action} ${context}`;
+  }
+  return action;
+}
 
-  const firstElement = focusableElements[0];
-  const lastElement = focusableElements[focusableElements.length - 1];
+/**
+ * Format number for screen readers
+ */
+export function formatForScreenReader(value: number | string): string {
+  if (typeof value === "number") {
+    return value.toLocaleString("en-US");
+  }
+  return value;
+}
 
-  const handleTab = (e: KeyboardEvent) => {
-    if (e.key !== 'Tab') return;
+/**
+ * Get live region announcement
+ */
+export function createLiveRegion(level: "polite" | "assertive" = "polite"): {
+  announce: (message: string) => void;
+  cleanup: () => void;
+} {
+  const region = document.createElement("div");
+  region.setAttribute("role", "status");
+  region.setAttribute("aria-live", level);
+  region.setAttribute("aria-atomic", "true");
+  region.className = "sr-only";
+  document.body.appendChild(region);
 
-    if (e.shiftKey) {
-      if (document.activeElement === firstElement) {
-        e.preventDefault();
-        lastElement?.focus();
-      }
-    } else {
-      if (document.activeElement === lastElement) {
-        e.preventDefault();
-        firstElement?.focus();
-      }
-    }
-  };
-
-  container.addEventListener('keydown', handleTab);
-  firstElement?.focus();
-
-  return () => {
-    container.removeEventListener('keydown', handleTab);
+  return {
+    announce: (message: string) => {
+      region.textContent = message;
+      // Clear after announcement
+      setTimeout(() => {
+        region.textContent = "";
+      }, 1000);
+    },
+    cleanup: () => {
+      document.body.removeChild(region);
+    },
   };
 }
 
 /**
- * Announce to screen readers
+ * Check if element is visible to screen readers
  */
-export function announceToScreenReader(message: string, priority: 'polite' | 'assertive' = 'polite'): void {
-  const announcement = document.createElement('div');
-  announcement.setAttribute('role', 'status');
-  announcement.setAttribute('aria-live', priority);
-  announcement.setAttribute('aria-atomic', 'true');
-  announcement.className = 'sr-only';
-  announcement.textContent = message;
-
-  document.body.appendChild(announcement);
-
-  setTimeout(() => {
-    document.body.removeChild(announcement);
-  }, 1000);
+export function isVisibleToScreenReader(element: HTMLElement): boolean {
+  const style = window.getComputedStyle(element);
+  return (
+    style.display !== "none" &&
+    style.visibility !== "hidden" &&
+    style.opacity !== "0" &&
+    element.getAttribute("aria-hidden") !== "true"
+  );
 }
 
 /**
- * Check color contrast ratio
+ * Get accessible color contrast ratio
+ * Returns ratio between 1 and 21
  */
-export function checkContrastRatio(foreground: string, background: string): number {
-  // Simplified contrast calculation - use a library for production
-  const getLuminance = (color: string): number => {
-    const rgb = color.match(/\d+/g)?.map(Number) || [0, 0, 0];
-    const [r = 0, g = 0, b = 0] = rgb.map((val) => {
-      val = val / 255;
-      return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
-    });
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  };
+export function getContrastRatio(
+  foreground: string,
+  background: string
+): number {
+  // Simplified contrast calculation
+  // In production, use a library like `color-contrast`
+  const fg = hexToRgb(foreground);
+  const bg = hexToRgb(background);
 
-  const l1 = getLuminance(foreground);
-  const l2 = getLuminance(background);
-  const lighter = Math.max(l1, l2);
-  const darker = Math.min(l1, l2);
+  if (!fg || !bg) return 1;
+
+  const luminance1 = getLuminance(fg);
+  const luminance2 = getLuminance(bg);
+
+  const lighter = Math.max(luminance1, luminance2);
+  const darker = Math.min(luminance1, luminance2);
 
   return (lighter + 0.05) / (darker + 0.05);
 }
 
+function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null;
+}
+
+function getLuminance(rgb: { r: number; g: number; b: number }): number {
+  const [r, g, b] = [rgb.r, rgb.g, rgb.b].map((val) => {
+    val = val / 255;
+    return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
 /**
- * Validate WCAG contrast requirements
+ * Keyboard navigation helpers
  */
-export function meetsWCAGContrast(text: string, background: string, level: 'AA' | 'AAA' = 'AA'): boolean {
-  const ratio = checkContrastRatio(text, background);
-  return level === 'AA' ? ratio >= 4.5 : ratio >= 7;
+export const KeyboardKeys = {
+  Enter: "Enter",
+  Space: " ",
+  Escape: "Escape",
+  Tab: "Tab",
+  ArrowUp: "ArrowUp",
+  ArrowDown: "ArrowDown",
+  ArrowLeft: "ArrowLeft",
+  ArrowRight: "ArrowRight",
+  Home: "Home",
+  End: "End",
+} as const;
+
+/**
+ * Handle keyboard navigation for custom components
+ */
+export function handleKeyboardNavigation(
+  event: React.KeyboardEvent,
+  options: {
+    onEnter?: () => void;
+    onEscape?: () => void;
+    onArrowUp?: () => void;
+    onArrowDown?: () => void;
+    onArrowLeft?: () => void;
+    onArrowRight?: () => void;
+    onHome?: () => void;
+    onEnd?: () => void;
+  }
+): void {
+  switch (event.key) {
+    case KeyboardKeys.Enter:
+    case KeyboardKeys.Space:
+      event.preventDefault();
+      options.onEnter?.();
+      break;
+    case KeyboardKeys.Escape:
+      options.onEscape?.();
+      break;
+    case KeyboardKeys.ArrowUp:
+      event.preventDefault();
+      options.onArrowUp?.();
+      break;
+    case KeyboardKeys.ArrowDown:
+      event.preventDefault();
+      options.onArrowDown?.();
+      break;
+    case KeyboardKeys.ArrowLeft:
+      event.preventDefault();
+      options.onArrowLeft?.();
+      break;
+    case KeyboardKeys.ArrowRight:
+      event.preventDefault();
+      options.onArrowRight?.();
+      break;
+    case KeyboardKeys.Home:
+      event.preventDefault();
+      options.onHome?.();
+      break;
+    case KeyboardKeys.End:
+      event.preventDefault();
+      options.onEnd?.();
+      break;
+  }
 }

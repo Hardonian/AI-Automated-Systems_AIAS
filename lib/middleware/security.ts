@@ -113,6 +113,7 @@ export function securityMiddleware(
 
 /**
  * Add security headers to response
+ * Includes CSP, HSTS, and other security headers
  */
 export function addSecurityHeaders(response: NextResponse): NextResponse {
   // Remove server information
@@ -127,6 +128,26 @@ export function addSecurityHeaders(response: NextResponse): NextResponse {
     "Permissions-Policy",
     "camera=(), microphone=(), geolocation=(), interest-cohort=()"
   );
+
+  // Content Security Policy
+  // Note: unsafe-inline and unsafe-eval are required for Next.js
+  // Consider hardening CSP in future iterations
+  const csp = [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://js.stripe.com",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' https://fonts.gstatic.com",
+    "img-src 'self' data: https:",
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com",
+    "frame-src 'self' https://js.stripe.com",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'self'",
+    "upgrade-insecure-requests",
+  ].join("; ");
+
+  response.headers.set("Content-Security-Policy", csp);
 
   // HSTS (only in production)
   if (process.env.NODE_ENV === "production") {

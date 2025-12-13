@@ -19,6 +19,8 @@ import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { Toaster } from "@/components/ui/toaster";
 import { ReactQueryProvider } from "@/lib/data/react-query";
 import { env, getOptionalEnv } from "@/lib/env";
+import { SkipLink } from "@/components/accessibility/skip-link";
+import { FocusVisibleStyles } from "@/components/accessibility/focus-visible";
 import { EnhancedErrorBoundary } from "@/lib/error-handling/error-boundary-enhanced";
 import { TelemetryProvider } from "@/lib/monitoring/telemetry-provider";
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
@@ -102,11 +104,11 @@ export const metadata: Metadata = {
     alternateLocale: ["en_CA"],
     images: [
       {
-        url: "/placeholder.svg",
+        url: `${siteUrl}/api/og?title=${encodeURIComponent("AI Automated Systems")}&description=${encodeURIComponent("Custom AI Platform Development")}`,
         width: 1200,
         height: 630,
         alt: "AI Automated Systems — Custom AI Platform Development",
-        type: "image/svg+xml",
+        type: "image/png",
       },
     ],
   },
@@ -116,7 +118,7 @@ export const metadata: Metadata = {
     description: "We build custom AI platforms — not integrations. See TokPulse and Hardonia Suite. From strategy to deployment.",
     creator: "@aias_platform",
     site: "@aias_platform",
-    images: ["/placeholder.svg"],
+    images: [`${siteUrl}/api/og?title=${encodeURIComponent("AI Automated Systems")}&description=${encodeURIComponent("Custom AI Platform Development")}`],
   },
   robots: {
     index: true,
@@ -197,19 +199,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <WebSiteSchema />
       </head>
       <body className="min-h-dvh antialiased">
+        <FocusVisibleStyles />
         <EnhancedErrorBoundary>
           <ReactQueryProvider>
             <TelemetryProvider>
               <ThemeProvider>
                 <SmoothScroll>
                 {/* Accessibility: Skip to main content link */}
-                <a 
-                  aria-label="Skip to main content" 
-                  className="skip-link"
-                  href="#main"
-                >
-                  Skip to content
-                </a>
+                <SkipLink />
                 <Header />
                 <main 
                   aria-label="Main content" 

@@ -332,7 +332,7 @@
     "knip": "^5.71.0",
     "license-checker": "^25.0.1",
     "lighthouse-ci": "^1.13.1",
-    "lint-staged": "^15.2.0",
+    "lint-staged": "^16.2.7",
     "pa11y-ci": "^4.0.1",
     "patch-package": "^8.0.1",
     "playwright": "^1.57.0",

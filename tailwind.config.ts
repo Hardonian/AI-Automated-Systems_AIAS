@@ -13,26 +13,43 @@ export default {
       colors: {
         bg: "hsl(var(--bg))",
         fg: "hsl(var(--fg))",
-        muted: "hsl(var(--muted))",
-        card: "hsl(var(--card))",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
           fg: "hsl(var(--primary-fg))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
           fg: "hsl(var(--secondary-fg))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          fg: "hsl(var(--accent-fg))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
           fg: "hsl(var(--destructive-fg))",
         },
-        border: "hsl(var(--border))",
-        ring: "hsl(var(--ring))",
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+          fg: "hsl(var(--accent-fg))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
         // Modern High-Tech Theme Colors
         neon: {
           cyan: "#06b6d4",

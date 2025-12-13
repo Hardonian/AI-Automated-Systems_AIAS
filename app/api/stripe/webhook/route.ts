@@ -9,17 +9,23 @@ import { logger } from "@/lib/logging/structured-logger";
 import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
 import { recordError } from "@/lib/utils/error-detection";
 import { retry } from "@/lib/utils/retry";
+import { safeStripe, safeSupabase } from "@/lib/utils/server-guards";
+import { checkIdempotencyKey, recordIdempotencyKey } from "@/lib/billing/idempotency";
 
+// CRITICAL: This route MUST use Node.js runtime (not Edge) for raw body access
+export const runtime = "nodejs";
 
-// Load environment variables dynamically - no hardcoded values
-const stripe = new Stripe(env.stripe.secretKey!, {
-  apiVersion: "2023-10-16", // Using latest compatible version
-});
+// Initialize Stripe and Supabase clients safely
+let stripe: Stripe;
+let supabase: ReturnType<typeof createClient>;
 
-const supabase = createClient(
-  env.supabase.url,
-  env.supabase.serviceRoleKey
-);
+try {
+  stripe = safeStripe();
+  supabase = safeSupabase(true); // Use service role for webhook
+} catch (error) {
+  // Will be caught by route handler
+  logger.error("Failed to initialize Stripe/Supabase in webhook", error instanceof Error ? error : new Error(String(error)));
+}
 
 const XP_MULTIPLIERS: Record<string, number> = {
   starter: 1.25,
@@ -112,7 +118,7 @@ interface WebhookResponse {
 }
 
 // Webhook handler - uses PUT method (Stripe sends webhooks as POST, but we use PUT to distinguish)
-// Note: Stripe webhooks require raw body for signature verification, so we can't use route handler utility
+// CRITICAL: Stripe webhooks require raw body for signature verification, so we MUST use Node.js runtime
 // However, we still use proper error handling and validation
 export async function PUT(req: NextRequest): Promise<NextResponse<WebhookResponse>> {
   const startTime = Date.now();
@@ -129,6 +135,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse<WebhookRespons
     );
   }
 
+  // Get raw body (required for signature verification)
   const body = await req.text();
   
   // Track webhook receipt
@@ -161,7 +168,22 @@ export async function PUT(req: NextRequest): Promise<NextResponse<WebhookRespons
     );
   }
 
+  // Idempotency: Use Stripe event ID as idempotency key
+  const idempotencyKey = `stripe_webhook_${event.id}`;
+  const idempotencyCheck = await checkIdempotencyKey(idempotencyKey);
+  
+  if (idempotencyCheck.exists && idempotencyCheck.response) {
+    // Already processed this webhook, return cached response
+    logger.info("Webhook already processed (idempotency)", {
+      eventId: event.id,
+      eventType: event.type,
+    });
+    return NextResponse.json({ received: true, cached: true });
+  }
+
   try {
+    let responseData: { received: boolean; processed?: boolean } = { received: true };
+
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
@@ -194,6 +216,12 @@ export async function PUT(req: NextRequest): Promise<NextResponse<WebhookRespons
         const { userId, tier } = metadataValidation.data;
 
         if (userId && tier) {
+          const XP_MULTIPLIERS: Record<string, number> = {
+            starter: 1.25,
+            pro: 1.5,
+            enterprise: 2.0,
+          };
+
           const expiresAt = new Date();
           expiresAt.setMonth(expiresAt.getMonth() + 1);
 
@@ -215,14 +243,81 @@ export async function PUT(req: NextRequest): Promise<NextResponse<WebhookRespons
               initialDelayMs: 1000,
             }
           );
+
+          // Also update Subscription table if it exists
+          try {
+            const { data: org } = await supabase
+              .from("organizations")
+              .select("id")
+              .eq("owner_id", userId)
+              .single();
+
+            if (org) {
+              await supabase.from("subscriptions").upsert({
+                org_id: org.id,
+                status: "ACTIVE",
+                plan: tier.toUpperCase() as "STARTER" | "PRO" | "ENTERPRISE",
+                stripeCustomerId: session.customer as string,
+                stripeSubscriptionId: session.subscription as string,
+                stripePriceId: session.metadata?.priceId,
+                currentPeriodStart: new Date(),
+                currentPeriodEnd: expiresAt,
+                cancelAtPeriodEnd: false,
+              });
+            }
+          } catch (subError) {
+            // Log but don't fail - subscription_tiers is the primary source
+            logger.warn("Failed to update Subscription table", subError instanceof Error ? subError : new Error(String(subError)));
+          }
+
+          responseData.processed = true;
         }
         break;
       }
 
-      case "customer.subscription.updated":
+      case "customer.subscription.updated": {
+        const subscription = event.data.object as Stripe.Subscription;
+        
+        // Update subscription status in database
+        try {
+          const { data: sub } = await supabase
+            .from("subscriptions")
+            .select("id, org_id")
+            .eq("stripeSubscriptionId", subscription.id)
+            .single();
+
+          if (sub) {
+            await supabase
+              .from("subscriptions")
+              .update({
+                status: subscription.status.toUpperCase().replace("-", "_") as any,
+                currentPeriodStart: new Date(subscription.current_period_start * 1000),
+                currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+                cancelAtPeriodEnd: subscription.cancel_at_period_end,
+              })
+              .eq("id", sub.id);
+          }
+        } catch (subError) {
+          logger.warn("Failed to update subscription status", subError instanceof Error ? subError : new Error(String(subError)));
+        }
+        break;
+      }
+
       case "customer.subscription.deleted": {
-        // const subscription = event.data.object as Stripe.Subscription; // Will be used for subscription handling
-        // Handle subscription updates/cancellations
+        const subscription = event.data.object as Stripe.Subscription;
+        
+        // Mark subscription as canceled
+        try {
+          await supabase
+            .from("subscriptions")
+            .update({
+              status: "CANCELED",
+              cancelAtPeriodEnd: false,
+            })
+            .eq("stripeSubscriptionId", subscription.id);
+        } catch (subError) {
+          logger.warn("Failed to cancel subscription", subError instanceof Error ? subError : new Error(String(subError)));
+        }
         break;
       }
 
@@ -232,6 +327,16 @@ export async function PUT(req: NextRequest): Promise<NextResponse<WebhookRespons
 
     const duration = Date.now() - startTime;
     
+    // Record idempotency key with response
+    await recordIdempotencyKey(
+      idempotencyKey,
+      "stripe_webhook",
+      event.id,
+      JSON.stringify(event),
+      responseData,
+      "completed"
+    );
+    
     // Track success
     telemetry.trackPerformance({
       name: "stripe_webhook_processed",
@@ -240,7 +345,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse<WebhookRespons
       tags: { status: "success", eventType: event.type },
     });
     
-    return NextResponse.json({ received: true });
+    return NextResponse.json(responseData);
   } catch (error: unknown) {
     const duration = Date.now() - startTime;
     const systemError = new SystemError(
@@ -248,6 +353,20 @@ export async function PUT(req: NextRequest): Promise<NextResponse<WebhookRespons
       error instanceof Error ? error : new Error(String(error))
     );
     recordError(systemError, { endpoint: '/api/stripe/webhook', action: 'webhook_handler' });
+    
+    // Record failed idempotency
+    try {
+      await recordIdempotencyKey(
+        idempotencyKey,
+        "stripe_webhook",
+        event.id,
+        JSON.stringify(event),
+        { error: systemError.message },
+        "failed"
+      );
+    } catch (idempError) {
+      logger.warn("Failed to record idempotency for failed webhook", idempError instanceof Error ? idempError : new Error(String(idempError)));
+    }
     
     // Track error
     telemetry.trackPerformance({

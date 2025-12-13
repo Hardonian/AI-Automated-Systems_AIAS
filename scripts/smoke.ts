@@ -88,7 +88,14 @@ async function smokeTest() {
   // Test 4: Health endpoint
   try {
     console.log("4. Testing /api/healthz endpoint...");
-    const response = await fetch(healthUrl);
+    const response = await fetch(healthUrl, {
+      signal: AbortSignal.timeout(5000), // 5 second timeout
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Health endpoint returned ${response.status}`);
+    }
+    
     const json = await response.json();
 
     if (json.ok && json.db?.ok && json.auth?.ok) {
@@ -99,8 +106,42 @@ async function smokeTest() {
       failed++;
     }
   } catch (e: any) {
-    console.error(`   ✗ Health endpoint unreachable: ${e.message}`);
+    if (e.name === "AbortError") {
+      console.error(`   ✗ Health endpoint timeout after 5s`);
+    } else {
+      console.error(`   ✗ Health endpoint unreachable: ${e.message}`);
+    }
     failed++;
+  }
+
+  // Test 5: Critical API routes (no 500s)
+  const criticalRoutes = [
+    "/api/health",
+    "/api/status",
+  ];
+
+  for (const route of criticalRoutes) {
+    try {
+      console.log(`5. Testing ${route}...`);
+      const url = healthUrl.replace("/api/healthz", route);
+      const response = await fetch(url, {
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (response.status >= 500) {
+        throw new Error(`Route returned ${response.status}`);
+      }
+
+      console.log(`   ✓ ${route} OK (${response.status})`);
+      passed++;
+    } catch (e: any) {
+      if (e.name === "AbortError") {
+        console.error(`   ✗ ${route} timeout`);
+      } else {
+        console.error(`   ✗ ${route} failed: ${e.message}`);
+      }
+      failed++;
+    }
   }
 
   // Summary

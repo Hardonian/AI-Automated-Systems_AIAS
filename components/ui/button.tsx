@@ -109,18 +109,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           transition: motionTransitions.standard,
         };
     
-    // Extract only the props that are safe for MotionButton
-    // Exclude custom props (variant, size, etc. are handled separately)
-    const {
-      asChild: _asChild,
-      loading: _loading,
-      icon: _icon,
-      iconPosition: _iconPosition,
-      variant: _variant,
-      size: _size,
-      ...motionSafeProps
-    } = props;
-    
+    // Props are already filtered - asChild, loading, icon, iconPosition, variant, size 
+    // are already destructured from function parameters, so props only contains HTML button attributes
     return (
       <motion.button
         ref={ref}
@@ -130,7 +120,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ variant, size }), className)}
         disabled={isDisabled}
         {...motionProps}
-        {...(motionSafeProps as SafeMotionButtonProps)}
+        {...(props as SafeMotionButtonProps)}
       >
         {buttonContent}
       </motion.button>

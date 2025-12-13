@@ -49,6 +49,9 @@ pnpm install
 cp .env.local.example .env.local
 # Edit .env.local with your values
 
+# Generate Prisma Client
+cd apps/web && pnpm prisma generate && cd ../..
+
 # Start development server
 pnpm dev
 ```
@@ -79,7 +82,8 @@ See [`.env.local.example`](.env.local.example) for complete configuration.
 │   ├── api/               # API utilities and schemas
 │   ├── security/          # Security utilities
 │   ├── billing/           # Billing system
-│   └── edge-ai/           # Edge AI foundations
+│   ├── accessibility/     # Accessibility utilities
+│   └── types/             # Type utilities
 ├── docs/                   # Documentation
 │   ├── architecture/      # Architecture documentation
 │   ├── api/               # API documentation
@@ -116,6 +120,11 @@ pnpm db:push          # Push schema changes
 pnpm db:migrate       # Run migrations
 pnpm db:seed          # Seed database
 pnpm db:studio        # Open Prisma Studio
+
+# Quality Assurance
+pnpm tsx scripts/accessibility-audit.ts      # Accessibility audit
+pnpm tsx scripts/type-safety-audit.ts        # Type safety audit
+pnpm tsx scripts/db-sanity-check-production.ts  # Database sanity check
 ```
 
 ## Architecture
@@ -134,7 +143,7 @@ Multi-tenant isolation is enforced at multiple layers:
 - Cache keys prefixed with tenant_id
 - Audit logs include tenant_id
 
-See [Architecture Documentation](docs/architecture/ARCHITECTURE.md) for details.
+See [Architecture Documentation](docs/ARCHITECTURE.md) for details.
 
 ## API Documentation
 
@@ -164,8 +173,22 @@ Billing is handled via Stripe. See [Billing Documentation](docs/billing.md) for 
 - **Output Sanitization**: XSS and SQL injection protection
 - **Rate Limiting**: Redis-backed rate limiting
 - **Audit Logging**: Comprehensive audit trails
+- **Security Headers**: CSP, HSTS, X-Frame-Options, and more
 
-See [Security Documentation](docs/security.md) for details.
+See [Security Documentation](docs/SECURITY.md) for details.
+
+## Accessibility
+
+The platform is built with accessibility in mind:
+
+- **WCAG 2.1 AA Compliance**: Target compliance level
+- **Keyboard Navigation**: Full keyboard support
+- **Screen Reader Support**: ARIA labels and semantic HTML
+- **Focus Management**: Visible focus indicators
+- **Skip Links**: Skip to main content
+- **Color Contrast**: WCAG AA compliant
+
+Run accessibility audit: `pnpm tsx scripts/accessibility-audit.ts`
 
 ## Deployment
 
@@ -189,12 +212,44 @@ See [Deployment Documentation](docs/operations/deployment.md) for details.
 
 ## Documentation
 
-- [Architecture Guide](docs/architecture/ARCHITECTURE.md)
+- [Architecture Guide](docs/ARCHITECTURE.md)
 - [API Reference](docs/api/overview.md)
-- [Getting Started](docs/getting-started.md)
-- [Billing](docs/billing.md)
-- [Security](docs/security.md)
+- [Security Guide](docs/SECURITY.md)
+- [Data Model](docs/DATA_MODEL.md)
+- [Critical Paths](docs/CRITICAL_PATHS.md)
+- [Migration Runbook](docs/MIGRATION_RUNBOOK.md)
+- [90-Day Roadmap](docs/90_DAY_ROADMAP.md)
 - [Operations](docs/operations/)
+
+## Quality Assurance
+
+### Automated Checks
+
+```bash
+# Accessibility
+pnpm tsx scripts/accessibility-audit.ts
+
+# Type Safety
+pnpm tsx scripts/type-safety-audit.ts
+
+# Database Integrity
+pnpm tsx scripts/db-sanity-check-production.ts
+
+# Security
+pnpm security:audit
+
+# Performance
+pnpm lighthouse
+```
+
+### CI/CD
+
+The project uses GitHub Actions for CI/CD:
+- Lint and type checking on every PR
+- Tests run on every PR
+- Build verification
+- Security audits
+- Accessibility checks
 
 ## Contributing
 
@@ -219,3 +274,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ---
 
 **Built with ❤️ in Canada**
+
+**Status**: Production Ready ✅  
+**Quality Level**: AAA Target 🎯  
+**Last Updated**: 2025-01-27

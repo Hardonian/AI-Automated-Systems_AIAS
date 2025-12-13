@@ -125,7 +125,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       : {
           whileHover: { scale: isDisabled ? 1 : motionScale.hover },
           whileTap: { scale: isDisabled ? 1 : motionScale.active },
-          transition: motionTransitions.standard,
+          transition: motionTransitions.standard as unknown as SafeMotionButtonProps['transition'],
         };
     
     // Props are already filtered - asChild, loading, icon, iconPosition, variant, size 
@@ -139,10 +139,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-busy={loading}
         aria-disabled={isDisabled}
         aria-label={ariaLabel || (isIconOnly ? undefined : ariaLabel)}
-        className={cn(buttonVariants({ variant, size }), className)}
         disabled={isDisabled}
         {...motionProps}
-        {...safeProps}
+        {...({ className: cn(buttonVariants({ variant, size }), className), ...safeProps } as any)}
       >
         {buttonContent}
       </motion.button>

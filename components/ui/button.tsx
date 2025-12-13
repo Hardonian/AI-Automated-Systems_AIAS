@@ -95,7 +95,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }
     
     // Type-safe props for motion.button
-    // We exclude conflicting animation handlers that are already excluded from ButtonProps
+    // HTMLMotionProps includes className from React.ButtonHTMLAttributes
     type SafeMotionButtonProps = Omit<
       HTMLMotionProps<"button">,
       "onAnimationStart" | "onAnimationEnd" | "onAnimationIteration" | "onDrag" | "onDragStart" | "onDragEnd"
@@ -120,7 +120,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // Safe SSR: prefersReducedMotion returns false during SSR/build
     // This ensures motion props are consistent between server and client
     const shouldReduceMotion = typeof window !== 'undefined' && prefersReducedMotion();
-    const motionProps: Partial<SafeMotionButtonProps> = shouldReduceMotion
+    const motionProps: Partial<Pick<SafeMotionButtonProps, "whileHover" | "whileTap" | "transition">> = shouldReduceMotion
       ? {} 
       : {
           whileHover: { scale: isDisabled ? 1 : motionScale.hover },
@@ -131,7 +131,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // Props are already filtered - asChild, loading, icon, iconPosition, variant, size 
     // are already destructured from function parameters, so props only contains HTML button attributes
     // Type assertion is safe because RemainingButtonProps only contains HTML button attributes
-    const safeProps = props as RemainingButtonProps & SafeMotionButtonProps;
+    const safeProps = props as RemainingButtonProps;
     
     return (
       <motion.button

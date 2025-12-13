@@ -1,6 +1,6 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Confetti from "@/components/gamification/Confetti";
 import { LoadingState, ErrorState } from "@/components/ui/empty-state";
@@ -15,17 +15,34 @@ export default function BillingSuccessPage() {
   const [celebrating, setCelebrating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [verified, setVerified] = useState(false);
+  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (sessionId) {
-      verifySubscription();
+      verifySubscription().catch((err) => {
+        setError(err instanceof Error ? err.message : "Failed to verify subscription");
+        setLoading(false);
+      });
     } else {
       setError("Missing session ID");
       setLoading(false);
     }
+    
+    return () => {
+      if (pollIntervalRef.current) {
+        clearInterval(pollIntervalRef.current);
+        pollIntervalRef.current = null;
+      }
+    };
   }, [sessionId]);
 
-  async function verifySubscription() {
+  async function verifySubscription(): Promise<void> {
+    // Clear any existing poll interval
+    if (pollIntervalRef.current) {
+      clearInterval(pollIntervalRef.current);
+      pollIntervalRef.current = null;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -42,7 +59,7 @@ export default function BillingSuccessPage() {
       // Poll for up to 10 seconds (webhook may be delayed)
       let attempts = 0;
       const maxAttempts = 10;
-      const pollInterval = 1000; // 1 second
+      const pollIntervalMs = 1000; // 1 second
 
       const checkSubscription = async (): Promise<boolean> => {
         const { data: tier } = await supabase
@@ -71,17 +88,23 @@ export default function BillingSuccessPage() {
       }
 
       // Poll for webhook processing
-      const poll = setInterval(async () => {
+      pollIntervalRef.current = setInterval(async () => {
         attempts++;
         if (await checkSubscription()) {
-          clearInterval(poll);
+          if (pollIntervalRef.current) {
+            clearInterval(pollIntervalRef.current);
+            pollIntervalRef.current = null;
+          }
           setLoading(false);
           setCelebrating(true);
           setTimeout(() => {
             router.push("/dashboard");
           }, 3000);
         } else if (attempts >= maxAttempts) {
-          clearInterval(poll);
+          if (pollIntervalRef.current) {
+            clearInterval(pollIntervalRef.current);
+            pollIntervalRef.current = null;
+          }
           // Webhook may be delayed, but show success anyway
           // User can check billing page if needed
           setLoading(false);
@@ -90,10 +113,7 @@ export default function BillingSuccessPage() {
             router.push("/dashboard");
           }, 3000);
         }
-      }, pollInterval);
-
-      // Cleanup on unmount
-      return () => clearInterval(poll);
+      }, pollIntervalMs);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to verify subscription");
       setLoading(false);

@@ -160,7 +160,7 @@ export function ContentStudioTestimonials({
                       type="number"
                       value={item.rating}
                       onChange={(e) =>
-                        updateItem(index, "rating", parseInt(e.target.value) || 5)
+                        updateItem(index, "rating", parseInt(e.target.value, 10) || 5)
                       }
                     />
                   </div>

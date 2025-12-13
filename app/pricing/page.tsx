@@ -192,7 +192,7 @@ export default function PricingPage() {
               {plan.annualPrice && (
                 <div className="mt-2">
                   <span className="text-sm text-muted-foreground line-through">
-                    ${(parseInt(plan.price.replace('$', '')) * 12).toLocaleString()}/year
+                    ${(parseInt(plan.price.replace('$', ''), 10) * 12).toLocaleString()}/year
                   </span>
                   <span className="text-sm font-medium text-primary ml-2">
                     {plan.annualPrice}/year (save {plan.annualSavings}) • Save {plan.annualDiscount}

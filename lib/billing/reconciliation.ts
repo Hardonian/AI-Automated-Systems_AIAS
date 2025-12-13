@@ -52,6 +52,10 @@ export async function reconcileUserSubscription(
     // Use the most recent subscription
     const latestSubscription = subscriptions.data[0];
 
+    if (!latestSubscription) {
+      return { success: false, error: "No active subscription found" };
+    }
+
     // Update database with latest status
     const { data: org } = await supabase
       .from("organizations")
@@ -63,9 +67,18 @@ export async function reconcileUserSubscription(
       return { success: false, error: "User has no organization" };
     }
 
+    const statusMap: Record<string, "ACTIVE" | "CANCELED" | "PAST_DUE" | "UNPAID" | "TRIALING"> = {
+      active: "ACTIVE",
+      canceled: "CANCELED",
+      past_due: "PAST_DUE",
+      unpaid: "UNPAID",
+      trialing: "TRIALING",
+    };
+    const normalizedStatus = latestSubscription.status.toLowerCase().replace("-", "_");
+
     const subscriptionData = {
       org_id: org.id,
-      status: latestSubscription.status.toUpperCase().replace("-", "_") as any,
+      status: statusMap[normalizedStatus] || "ACTIVE",
       stripeCustomerId: latestSubscription.customer as string,
       stripeSubscriptionId: latestSubscription.id,
       stripePriceId: latestSubscription.items.data[0]?.price.id,

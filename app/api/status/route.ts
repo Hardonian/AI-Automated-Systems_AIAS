@@ -60,7 +60,7 @@ export async function GET() {
           status.status = "degraded";
         }
       }
-    } catch (error) {
+    } catch {
       const authService = status.services.find(s => s.service === "Authentication");
       if (authService) {
         authService.status = "degraded";

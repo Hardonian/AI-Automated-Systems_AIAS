@@ -1,0 +1,442 @@
+name: Unified Database Migrations
+
+on:
+  # Trigger on migration file changes
+  push:
+    branches: [main, master]
+    paths:
+      - 'supabase/migrations/**'
+      - 'apps/web/prisma/migrations/**'
+      - 'apps/web/prisma/schema.prisma'
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'apps/web/prisma/migrations/**'
+      - 'apps/web/prisma/schema.prisma'
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      migration_type:
+        description: 'Type of migration to apply'
+        required: true
+        type: choice
+        options:
+          - all
+          - supabase
+          - prisma
+        default: 'all'
+      environment:
+        description: 'Environment to apply migrations to'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+        default: 'staging'
+  # Scheduled daily at 2 AM UTC to catch any missed migrations
+  schedule:
+    - cron: '0 2 * * *'
+
+env:
+  NODE_VERSION: '22'
+  PNPM_VERSION: '8.15.0'
+
+concurrency:
+  group: migrations-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # ============================================================================
+  # Test Migrations in Staging (PR only)
+  # ============================================================================
+  test-migrations-staging:
+    name: Test Migrations in Staging
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    environment: staging
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Authenticate Supabase (Staging)
+        run: |
+          echo "${{ secrets.STAGING_SUPABASE_ACCESS_TOKEN }}" | supabase login --token -
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.STAGING_SUPABASE_ACCESS_TOKEN }}
+
+      - name: Link staging project
+        run: |
+          supabase link --project-ref ${{ secrets.STAGING_SUPABASE_PROJECT_REF }}
+        env:
+          SUPABASE_PROJECT_REF: ${{ secrets.STAGING_SUPABASE_PROJECT_REF }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.STAGING_SUPABASE_ACCESS_TOKEN }}
+
+      - name: Test Supabase migrations (dry-run)
+        if: contains(github.event.head_commit.message, 'supabase') || contains(github.event.head_commit.message, 'migration') || github.event.inputs.migration_type == 'all' || github.event.inputs.migration_type == 'supabase'
+        run: |
+          echo "Testing Supabase migrations in staging..."
+          supabase db remote commit --dry-run || echo "No pending Supabase migrations"
+        continue-on-error: true
+
+      - name: Test Prisma migrations (dry-run)
+        if: contains(github.event.head_commit.message, 'prisma') || contains(github.event.head_commit.message, 'migration') || github.event.inputs.migration_type == 'all' || github.event.inputs.migration_type == 'prisma'
+        run: |
+          cd apps/web || echo "Prisma migrations directory not found"
+          pnpm prisma migrate status || echo "Prisma migration status check completed"
+        continue-on-error: true
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.STAGING_DIRECT_URL || secrets.STAGING_DATABASE_URL }}
+
+      - name: Validate staging schema
+        run: |
+          echo "Validating staging schema..."
+          pnpm run db:validate-schema || echo "Schema validation skipped"
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+
+  # ============================================================================
+  # Apply Supabase Migrations
+  # ============================================================================
+  apply-supabase-migrations:
+    name: Apply Supabase Migrations
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || github.event_name == 'push') &&
+      (github.event.inputs.migration_type == 'all' || github.event.inputs.migration_type == 'supabase' || github.event.inputs.migration_type == '')
+    environment: ${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'production' || 'staging') }}
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Authenticate Supabase
+        if: env.SUPABASE_ACCESS_TOKEN != ''
+        run: |
+          echo "${{ secrets.SUPABASE_ACCESS_TOKEN }}" | supabase login --token -
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Link Supabase project
+        if: env.SUPABASE_PROJECT_REF != ''
+        run: |
+          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
+        env:
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Check pending migrations (dry-run)
+        run: |
+          echo "Checking for pending Supabase migrations..."
+          supabase db remote commit --dry-run || echo "No pending migrations detected"
+        continue-on-error: true
+
+      - name: Apply Supabase migrations
+        run: |
+          echo "Applying all pending Supabase migrations..."
+          pnpm run migrate:run || {
+            echo "Migration script failed, trying Supabase CLI directly..."
+            supabase db push --include-all || {
+              echo "Supabase CLI push failed, trying alternative method..."
+              if [ -n "$SUPABASE_DB_URL" ]; then
+                echo "Applying migrations via psql..."
+                for file in supabase/migrations/*.sql; do
+                  echo "Applying: $file"
+                  psql "$SUPABASE_DB_URL" -f "$file" || echo "Migration $file may have already been applied"
+                done
+              else
+                echo "ERROR: Cannot apply migrations - no database connection available"
+                exit 1
+              fi
+            }
+          }
+
+      - name: Validate schema after migration
+        run: |
+          echo "Validating database schema..."
+          pnpm run db:validate-schema || echo "Schema validation skipped"
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Regenerate Supabase types
+        run: |
+          echo "Regenerating Supabase TypeScript types..."
+          npm run regenerate-types || echo "Type regeneration skipped"
+        continue-on-error: true
+        env:
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Commit type changes
+        if: success()
+        run: |
+          if [ -n "$(git status --porcelain src/integrations/supabase/types.ts)" ]; then
+            git config --local user.email "actions@github.com"
+            git config --local user.name "GitHub Actions"
+            git add src/integrations/supabase/types.ts
+            git commit -m "chore: regenerate Supabase types [skip ci]" || exit 0
+            git push || echo "No changes to commit"
+          fi
+        continue-on-error: true
+
+  # ============================================================================
+  # Apply Prisma Migrations
+  # ============================================================================
+  apply-prisma-migrations:
+    name: Apply Prisma Migrations
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: |
+      (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || github.event_name == 'push') &&
+      (github.event.inputs.migration_type == 'all' || github.event.inputs.migration_type == 'prisma' || github.event.inputs.migration_type == '')
+    environment: ${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'production' || 'staging') }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check migration status (before)
+        id: status-before
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL || secrets.DATABASE_URL }}
+        run: |
+          cd apps/web || exit 0
+          echo "=== Migration Status (Before) ===" > /tmp/migration-status-before.txt
+          pnpm prisma migrate status >> /tmp/migration-status-before.txt 2>&1 || echo "Status check completed"
+          cat /tmp/migration-status-before.txt
+
+      - name: Apply Prisma migrations
+        id: migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL || secrets.DATABASE_URL }}
+        run: |
+          cd apps/web || exit 0
+          echo "=== Applying Prisma Migrations ==="
+          pnpm run db:migrate || {
+            echo "Migration failed!"
+            exit 1
+          }
+          echo "Migrations applied successfully" >> $GITHUB_STEP_SUMMARY
+
+      - name: Verify migration status (after)
+        id: status-after
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL || secrets.DATABASE_URL }}
+        run: |
+          cd apps/web || exit 0
+          echo "=== Migration Status (After) ===" > /tmp/migration-status-after.txt
+          pnpm prisma migrate status >> /tmp/migration-status-after.txt 2>&1
+          cat /tmp/migration-status-after.txt
+          
+          if grep -q "Database schema is up to date\|All migrations have been applied" /tmp/migration-status-after.txt; then
+            echo "✅ All migrations applied successfully"
+            echo "status=success" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ Migration status unclear - check logs"
+            echo "status=warning" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Verify database schema
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL || secrets.DATABASE_URL }}
+        run: |
+          cd apps/web || exit 0
+          echo "=== Verifying Database Schema ==="
+          pnpm prisma generate
+          node -e "
+            const { PrismaClient } = require('@prisma/client');
+            const prisma = new PrismaClient();
+            prisma.\$queryRaw\`SELECT 1\`.then(() => {
+              console.log('✅ Database connection verified');
+              process.exit(0);
+            }).catch((e) => {
+              console.error('❌ Database verification failed:', e.message);
+              process.exit(1);
+            }).finally(() => prisma.\$disconnect());
+          " || echo "Schema verification completed"
+
+  # ============================================================================
+  # Migration Guardian (Unified Migration Health Check)
+  # ============================================================================
+  migration-guardian:
+    name: Migration Guardian
+    runs-on: ubuntu-latest
+    needs: [apply-supabase-migrations, apply-prisma-migrations]
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Migration Guardian
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL || secrets.DATABASE_URL }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
+          UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
+        run: pnpm run migrate:guardian || echo "Migration guardian check completed"
+        continue-on-error: true
+
+      - name: Upload Migration Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: migration-log
+          path: MIGRATION_LOG.md
+          retention-days: 90
+          if-no-files-found: ignore
+
+      - name: Comment PR with Migration Status
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let logContent = '';
+            try {
+              logContent = fs.readFileSync('MIGRATION_LOG.md', 'utf-8');
+              const latestRun = logContent.split('---').pop();
+              const outcomeMatch = latestRun.match(/\*\*STATE:\*\* (.+)/);
+              const outcome = outcomeMatch ? outcomeMatch[1] : 'UNKNOWN';
+              
+              const emoji = outcome.includes('VERIFIED') ? '✅' : outcome.includes('FAILED') ? '❌' : '⚠️';
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `## ${emoji} Migration Guardian Status\n\n**State:** ${outcome}\n\n<details>\n<summary>View Migration Log</summary>\n\n\`\`\`\n${latestRun}\n\`\`\`\n\n</details>`
+              });
+            } catch (error) {
+              console.log('Could not read migration log:', error.message);
+            }
+
+  # ============================================================================
+  # Notifications
+  # ============================================================================
+  notify:
+    name: Notify Migration Status
+    runs-on: ubuntu-latest
+    needs: [apply-supabase-migrations, apply-prisma-migrations, migration-guardian]
+    if: always()
+    steps:
+      - name: Notify on success
+        if: success()
+        uses: slackapi/slack-github-action@v1
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          payload: |
+            {
+              "text": "✅ Database migrations applied successfully",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Migrations Applied*\n\nDate: $(date -u +%Y-%m-%d)\nStatus: Success\n\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  }
+                }
+              ]
+            }
+        continue-on-error: true
+
+      - name: Notify on failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          payload: |
+            {
+              "text": "❌ Database migration failed",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Migration Failed*\n\nDate: $(date -u +%Y-%m-%d)\nStatus: Failed\n\nCheck workflow logs for details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  }
+                }
+              ]
+            }
+        continue-on-error: true

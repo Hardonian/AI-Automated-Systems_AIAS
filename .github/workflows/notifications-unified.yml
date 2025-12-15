@@ -1,0 +1,125 @@
+name: Unified Notifications
+
+on:
+  workflow_run:
+    workflows: ["Unified CI Pipeline", "Unified Deployment", "Unified Database Migrations"]
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      notification_type:
+        description: 'Type of notification'
+        required: true
+        type: choice
+        options:
+          - success
+          - failure
+          - warning
+          - info
+        default: 'info'
+      message:
+        description: 'Notification message'
+        required: true
+        type: string
+
+jobs:
+  notify-workflow-status:
+    name: Notify Workflow Status
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion != 'cancelled'
+    steps:
+      - name: Determine notification details
+        id: notify_details
+        run: |
+          WORKFLOW_NAME="${{ github.event.workflow_run.name }}"
+          WORKFLOW_CONCLUSION="${{ github.event.workflow_run.conclusion }}"
+          WORKFLOW_URL="${{ github.event.workflow_run.html_url }}"
+          COMMIT_SHA="${{ github.event.workflow_run.head_sha }}"
+          BRANCH="${{ github.event.workflow_run.head_branch }}"
+          
+          case "$WORKFLOW_CONCLUSION" in
+            "success")
+              EMOJI="✅"
+              STATUS_TEXT="succeeded"
+              COLOR="good"
+              ;;
+            "failure")
+              EMOJI="❌"
+              STATUS_TEXT="failed"
+              COLOR="danger"
+              ;;
+            "cancelled")
+              EMOJI="⚠️"
+              STATUS_TEXT="was cancelled"
+              COLOR="warning"
+              ;;
+            *)
+              EMOJI="ℹ️"
+              STATUS_TEXT="completed with status: $WORKFLOW_CONCLUSION"
+              COLOR="#36a64f"
+              ;;
+          esac
+          
+          echo "emoji=$EMOJI" >> $GITHUB_OUTPUT
+          echo "status_text=$STATUS_TEXT" >> $GITHUB_OUTPUT
+          echo "color=$COLOR" >> $GITHUB_OUTPUT
+          echo "workflow_name=$WORKFLOW_NAME" >> $GITHUB_OUTPUT
+          echo "workflow_url=$WORKFLOW_URL" >> $GITHUB_OUTPUT
+          echo "commit_sha=$COMMIT_SHA" >> $GITHUB_OUTPUT
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1
+        if: env.SLACK_WEBHOOK_URL != ''
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          payload: |
+            {
+              "text": "${{ steps.notify_details.outputs.emoji }} ${{ steps.notify_details.outputs.workflow_name }} ${{ steps.notify_details.outputs.status_text }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*${{ steps.notify_details.outputs.workflow_name }}*\n\n${{ steps.notify_details.outputs.emoji }} Status: *${{ steps.notify_details.outputs.status_text }}*\n\nBranch: `${{ steps.notify_details.outputs.branch }}`\nCommit: `${{ steps.notify_details.outputs.commit_sha }}`\n\n<${steps.notify_details.outputs.workflow_url}|View Workflow Run>"
+                  }
+                }
+              ],
+              "attachments": [
+                {
+                  "color": "${{ steps.notify_details.outputs.color }}",
+                  "footer": "GitHub Actions",
+                  "ts": ${{ github.event.workflow_run.updated_at && fromJSON(format('"{0}"', github.event.workflow_run.updated_at)) || 'null' }}
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        continue-on-error: true
+
+  notify-custom:
+    name: Send Custom Notification
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Send custom notification
+        uses: slackapi/slack-github-action@v1
+        if: env.SLACK_WEBHOOK_URL != ''
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          payload: |
+            {
+              "text": "${{ github.event.inputs.notification_type == 'success' && '✅' || github.event.inputs.notification_type == 'failure' && '❌' || github.event.inputs.notification_type == 'warning' && '⚠️' || 'ℹ️' }} ${{ github.event.inputs.message }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Custom Notification*\n\n${{ github.event.inputs.message }}\n\nTriggered by: ${{ github.actor }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        continue-on-error: true

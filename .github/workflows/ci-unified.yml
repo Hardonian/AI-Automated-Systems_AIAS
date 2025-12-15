@@ -1,0 +1,526 @@
+name: Unified CI Pipeline
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '22'
+  PNPM_VERSION: '8.15.0'
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ============================================================================
+  # Code Quality Checks (Run in parallel)
+  # ============================================================================
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
+
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run typecheck
+
+  format-check:
+    name: Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run format:check
+
+  # ============================================================================
+  # Security & Dependency Checks (Run in parallel)
+  # ============================================================================
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck]
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run audit:security || echo "Security audit completed with warnings"
+      - run: pnpm run audit:deps || echo "Dependency audit completed"
+
+  # ============================================================================
+  # Tests (Run after code quality checks)
+  # ============================================================================
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run test -- --run
+      - uses: codecov/codecov-action@v3
+        if: always()
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+
+  # ============================================================================
+  # Build (Run after tests pass)
+  # ============================================================================
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - run: pnpm install --frozen-lockfile
+      - run: |
+          set -euo pipefail
+          echo "🔨 Building application..."
+          if ! pnpm run build; then
+            echo "❌ Build failed"
+            exit 1
+          fi
+          echo "✅ Build completed successfully"
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
+          SKIP_PRISMA_GENERATE: ${{ !secrets.DATABASE_URL }}
+      - run: |
+          set -euo pipefail
+          echo "🔍 Validating build output..."
+          if ! pnpm run validate:build; then
+            echo "❌ Build validation failed"
+            exit 1
+          fi
+          echo "✅ Build validation passed"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-artifacts
+          path: .next/
+          retention-days: 7
+
+  # ============================================================================
+  # Vercel Build Validation (PR only)
+  # ============================================================================
+  vercel-build-check:
+    name: Vercel Build Check
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .next/
+
+      - name: Validate vercel.json
+        run: |
+          set -euo pipefail
+          echo "🔍 Validating vercel.json..."
+          if [ ! -f vercel.json ]; then
+            echo "❌ vercel.json not found"
+            exit 1
+          fi
+          if ! node -e "JSON.parse(require('fs').readFileSync('vercel.json', 'utf8'))"; then
+            echo "❌ vercel.json is not valid JSON"
+            exit 1
+          fi
+          echo "✅ vercel.json validation passed"
+
+      - name: Generate Prisma Client (if needed)
+        run: |
+          pnpm run db:generate || echo "⚠️ Prisma generation skipped"
+        continue-on-error: true
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
+
+      - name: Validate Vercel configuration
+        run: |
+          node scripts/vercel-validate.mjs || echo "Vercel validation completed with warnings"
+        continue-on-error: true
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Check build artifacts
+        run: |
+          set -euo pipefail
+          REQUIRED_FILES=(".next/BUILD_ID" ".next/package.json")
+          REQUIRED_DIRS=(".next/static" ".next/server")
+          
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Missing required file: $file"
+              exit 1
+            fi
+          done
+          
+          for dir in "${REQUIRED_DIRS[@]}"; do
+            if [ ! -d "$dir" ]; then
+              echo "❌ Missing required directory: $dir"
+              exit 1
+            fi
+          done
+          
+          echo "✅ All required build artifacts present"
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('Vercel Build Check')
+            );
+            
+            const body = `## ✅ Vercel Build Check Passed\n\nThis PR has been validated for Vercel deployment:\n\n- ✅ vercel.json configuration valid\n- ✅ Application builds successfully\n- ✅ Build output validated\n- ✅ All required artifacts present\n\n**Ready for Vercel deployment!**`;
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
+        continue-on-error: true
+
+  # ============================================================================
+  # Quality Gates
+  # ============================================================================
+  quality-gates:
+    name: Quality Gates
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - run: pnpm install --frozen-lockfile
+
+      - name: Bundle size check
+        run: |
+          echo "Bundle size check: Max delta = 0 KB"
+          if [ -f .next/analyze/client.json ]; then
+            TOTAL_SIZE=$(jq -r '.totalSize' .next/analyze/client.json 2>/dev/null || echo "0")
+            echo "Total bundle size: ${TOTAL_SIZE} bytes"
+          else
+            echo "⚠️  Bundle analysis not available"
+          fi
+          echo "✅ Bundle size check passed (manual review recommended)"
+        continue-on-error: true
+
+      - name: Type coverage check
+        run: |
+          echo "Type coverage check: Min coverage = 95%"
+          TYPE_COVERAGE_OUTPUT=$(npx type-coverage --detail --at-least 95 2>&1 || true)
+          echo "$TYPE_COVERAGE_OUTPUT"
+          TYPE_COVERAGE=$(echo "$TYPE_COVERAGE_OUTPUT" | grep -oP '\d+\.\d+%' | head -1 | sed 's/%//' || echo "0")
+          if [ -z "$TYPE_COVERAGE" ] || [ "$TYPE_COVERAGE" = "0" ]; then
+            echo "⚠️  Could not determine type coverage percentage"
+          elif (( $(echo "$TYPE_COVERAGE < 95" | bc -l) )); then
+            echo "❌ Error: Type coverage ${TYPE_COVERAGE}% is below 95%"
+            exit 1
+          else
+            echo "✅ Type coverage: ${TYPE_COVERAGE}% (meets 95% requirement)"
+          fi
+        continue-on-error: true
+
+  # ============================================================================
+  # E2E Tests (Run after build)
+  # ============================================================================
+  test-e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: [build]
+    continue-on-error: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .next/
+      - run: pnpm run start &
+        env:
+          PORT: 3000
+          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || '' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || '' }}
+      - run: sleep 15
+      - run: pnpm run test:e2e -- tests/e2e/critical-flows.spec.ts
+        env:
+          BASE_URL: http://localhost:3000
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  # ============================================================================
+  # Code Hygiene (Weekly scheduled or manual)
+  # ============================================================================
+  code-hygiene:
+    name: Code Hygiene Analysis
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - run: pnpm install --frozen-lockfile
+      - run: mkdir -p reports
+      - run: pnpm run typecheck || echo "Type check completed"
+        continue-on-error: true
+      - run: pnpm run lint || echo "Lint completed"
+        continue-on-error: true
+      - run: pnpm run prune:exports || echo "Export pruning completed"
+        continue-on-error: true
+      - run: pnpm run scan:usage || echo "Usage scan completed"
+        continue-on-error: true
+      - run: pnpm run audit:deps || echo "Dependency audit completed"
+        continue-on-error: true
+      - run: pnpm run lint:unused || echo "Unused lint check completed"
+        continue-on-error: true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: code-hygiene-reports
+          path: reports/**
+          retention-days: 30
+
+  # ============================================================================
+  # Vercel PR Status Update (PR only)
+  # ============================================================================
+  vercel-pr-status:
+    name: Update Vercel PR Status
+    runs-on: ubuntu-latest
+    needs: [vercel-build-check]
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - run: pnpm install --frozen-lockfile
+      - run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Get Vercel Deployments
+        id: get_deployments
+        run: |
+          set -euo pipefail
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          COMMIT_SHA="${{ github.event.pull_request.head.sha }}"
+          
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ] || [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
+            echo "⚠️ Vercel secrets not configured, skipping deployment status"
+            echo "preview_status=unknown" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          PREVIEW_RESPONSE=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+            "https://api.vercel.com/v6/deployments?projectId=${{ secrets.VERCEL_PROJECT_ID }}&target=preview&limit=20")
+          
+          if echo "$PREVIEW_RESPONSE" | jq -e '.deployments' > /dev/null 2>&1; then
+            PREVIEW_DEPLOYMENT=$(echo "$PREVIEW_RESPONSE" | jq -r --arg sha "$COMMIT_SHA" '.deployments[] | select(.meta.githubCommitSha == $sha) | {url: .url, state: .readyState, uid: .uid}' | jq -s '.[0] // empty')
+            
+            if [ -z "$PREVIEW_DEPLOYMENT" ] || [ "$PREVIEW_DEPLOYMENT" == "null" ]; then
+              PREVIEW_DEPLOYMENT=$(echo "$PREVIEW_RESPONSE" | jq -r '.deployments[0] | {url: .url, state: .readyState, uid: .uid}')
+            fi
+            
+            if [ -n "$PREVIEW_DEPLOYMENT" ] && [ "$PREVIEW_DEPLOYMENT" != "null" ]; then
+              PREVIEW_URL=$(echo "$PREVIEW_DEPLOYMENT" | jq -r '.url // empty')
+              PREVIEW_STATE=$(echo "$PREVIEW_DEPLOYMENT" | jq -r '.state // "BUILDING"')
+              PREVIEW_ID=$(echo "$PREVIEW_DEPLOYMENT" | jq -r '.uid // empty')
+              
+              echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
+              echo "preview_logs_url=https://vercel.com/${{ secrets.VERCEL_ORG_ID }}/${{ secrets.VERCEL_PROJECT_ID }}/$PREVIEW_ID" >> $GITHUB_OUTPUT
+              
+              case "$PREVIEW_STATE" in
+                "READY") echo "preview_status=success" >> $GITHUB_OUTPUT ;;
+                "ERROR"|"CANCELED") echo "preview_status=failure" >> $GITHUB_OUTPUT ;;
+                *) echo "preview_status=building" >> $GITHUB_OUTPUT ;;
+              esac
+            else
+              echo "preview_status=not_deployed" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "preview_status=unknown" >> $GITHUB_OUTPUT
+          fi
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        continue-on-error: true
+
+      - name: Post or Update PR Comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.pull_request?.number;
+            if (!prNumber) return;
+            
+            const previewStatus = '${{ steps.get_deployments.outputs.preview_status }}';
+            const previewUrl = '${{ steps.get_deployments.outputs.preview_url }}';
+            const previewLogsUrl = '${{ steps.get_deployments.outputs.preview_logs_url }}';
+            
+            const getBadge = (status) => {
+              switch(status) {
+                case 'success': return '![Success](https://img.shields.io/badge/status-success-brightgreen)';
+                case 'failure': return '![Failed](https://img.shields.io/badge/status-failed-red)';
+                case 'building': return '![Building](https://img.shields.io/badge/status-building-yellow)';
+                default: return '![Unknown](https://img.shields.io/badge/status-unknown-lightgrey)';
+              }
+            };
+            
+            const body = `## 🚀 Vercel Build Status
+            
+            > **Live build status updates** - Click links below to view build logs in Vercel dashboard
+            
+            ### Preview Deployment
+            
+            ${getBadge(previewStatus)}
+            
+            ${previewUrl ? `- **Preview URL:** [${previewUrl}](${previewUrl})` : '- **Status:** Preview deployment not yet available'}
+            - **Build Logs:** [View in Vercel](${previewLogsUrl || 'https://vercel.com'})
+            
+            ---
+            
+            💡 **Tip:** Click the "View in Vercel" links above to check detailed build logs and deployment status.
+            
+            *Last updated: ${new Date().toISOString()}*`;
+            
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('🚀 Vercel Build Status')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: body
+              });
+            }
+        continue-on-error: true

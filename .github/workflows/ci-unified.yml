@@ -103,7 +103,7 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
       - run: pnpm run test -- --run
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v5
         if: always()
         with:
           file: ./coverage/lcov.info

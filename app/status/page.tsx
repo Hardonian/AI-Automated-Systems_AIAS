@@ -136,7 +136,7 @@ export default function Status() {
 
       <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
         <p className="text-sm">
-          <strong>Note:</strong> This is a placeholder status page. Real-time monitoring and incident tracking will be integrated when the status_page feature flag is enabled.
+          <strong>Note:</strong> Status page shows current system health. For detailed incident tracking, contact support.
         </p>
       </div>
     </div>

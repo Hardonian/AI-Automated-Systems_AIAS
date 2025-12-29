@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { adminGuard, financialAdminGuard } from "@/lib/middleware/admin-guard";
 import { addSecurityHeaders , detectSuspiciousActivity } from "@/lib/middleware/security";
+import { requireSession } from "@/lib/middleware/session-handler";
 import { logger } from "@/lib/utils/logger";
 import { rateLimit, getClientIP } from "@/lib/utils/rate-limit";
 
@@ -23,6 +24,24 @@ export async function middleware(request: NextRequest) {
   // Check financial admin access
   const financialCheck = await financialAdminGuard(request);
   if (financialCheck) {return financialCheck;}
+
+  // Check session for protected routes (dashboard, workflows, billing, etc.)
+  const protectedPaths = ["/dashboard", "/workflows", "/billing", "/settings", "/admin"];
+  const isProtectedPath = protectedPaths.some((protectedPath) => path.startsWith(protectedPath));
+  
+  if (isProtectedPath) {
+    const sessionCheck = await requireSession(request);
+    if (sessionCheck.redirect) {
+      return sessionCheck.redirect;
+    }
+    if (sessionCheck.expired && !sessionCheck.valid) {
+      // Session expired, redirect to signin
+      const url = request.nextUrl.clone();
+      url.pathname = "/signin";
+      url.searchParams.set("redirect", path);
+      return NextResponse.redirect(url);
+    }
+  }
 
   // Skip middleware for static files and API routes (handled separately)
   if (

@@ -44,7 +44,7 @@ const plans = [
       "5 automation workflows",
       "10,000 automations per month",
       "10+ pre-built templates for common workflows",
-      "5+ Canadian integrations available (Shopify, Wave, more coming soon)",
+      "5+ Canadian integrations available (Shopify, Wave, and more)",
       "Personalized news feed based on your goals",
       "Email campaign analysis",
       "Optional setup call ($99 one-time)",
@@ -71,7 +71,7 @@ const plans = [
       "20 automation workflows",
       "50,000 automations per month",
       "25+ workflow templates",
-      "15+ integrations available (more coming soon)",
+      "15+ integrations available",
       "Personalized news feed & insights",
       "Full email campaign diagnostics",
       "Optional setup call ($99 one-time)",
@@ -289,7 +289,7 @@ export default function PricingPage() {
           <CardContent>
             <p className="text-muted-foreground leading-relaxed">
               Shopify and Wave Accounting are available now. More integrations (RBC, TD, Interac, etc.) 
-              coming soon. See our <Link className="text-primary hover:underline" href="/integrations">integrations page</Link> for the full list.
+              available. See our <Link className="text-primary hover:underline" href="/integrations">integrations page</Link> for the full list.
             </p>
           </CardContent>
         </Card>

@@ -12,7 +12,7 @@ interface EnhancedCTAProps {
   primaryAction: {
     label: string;
     href: string;
-    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "cta" | "trust" | "premium";
   };
   secondaryAction?: {
     label: string;

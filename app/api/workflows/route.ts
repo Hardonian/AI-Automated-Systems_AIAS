@@ -6,6 +6,7 @@
 import { NextResponse } from 'next/server';
 
 import { createGETHandler, createPOSTHandler, RouteContext } from '@/lib/api/route-handler';
+import { canCreateWorkflow } from '@/lib/entitlements/check';
 import { createClient } from '@/lib/supabase/server';
 import { workflowDefinitionSchema } from '@/lib/workflows/dsl';
 
@@ -62,6 +63,18 @@ export const POST = createPOSTHandler(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Check entitlement: Can user create more workflows?
+    const entitlementCheck = await canCreateWorkflow(user.id);
+    if (!entitlementCheck.allowed) {
+      return NextResponse.json(
+        { 
+          error: entitlementCheck.reason || 'Workflow limit reached',
+          upgradePlan: entitlementCheck.upgradePlan,
+        },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const validated = createWorkflowSchema.parse(body);
 
@@ -70,8 +83,8 @@ export const POST = createPOSTHandler(
       .insert({
         ...validated,
         created_by: user.id,
-        tenant_id: body.tenantId || null,
-      } as any)
+        tenant_id: (body as { tenantId?: string }).tenantId || null,
+      })
       .select()
       .single();
 

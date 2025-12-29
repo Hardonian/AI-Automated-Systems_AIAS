@@ -13,6 +13,8 @@ import { StatsSection } from "@/components/home/stats-section";
 import { TrustBadges } from "@/components/home/trust-badges";
 import { WhoWeHelp } from "@/components/home/who-we-help";
 import { SoftwareApplicationSchema , FAQSchema, ProfessionalServiceSchema } from "@/components/seo/structured-data";
+import { SocialProofBanner } from "@/components/gen-z/social-proof-banner";
+import { KeyboardNavEnhancement } from "@/components/accessibility/keyboard-nav";
 import { loadAIASContent } from "@/lib/content/loader";
 
 
@@ -50,6 +52,8 @@ export default async function HomePage() {
 
   return (
     <>
+      <KeyboardNavEnhancement />
+      <SocialProofBanner />
       <SoftwareApplicationSchema />
       <ProfessionalServiceSchema />
       <FAQSchema faqs={homepageFAQs} />

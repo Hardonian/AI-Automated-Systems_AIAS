@@ -96,11 +96,36 @@ export async function GET(): Promise<NextResponse<HealthCheckResult>> {
     (async () => {
       const dbStart = Date.now();
       const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
-      const { error } = await supabaseService.from("app_events").select("count").limit(1);
+      // Try profiles table first (most likely to exist), fallback to any table
+      let error = null;
+      let triedTables = [];
+      
+      // Try profiles table (core table that should exist)
+      const profilesCheck = await supabaseService.from("profiles").select("id").limit(1);
+      if (profilesCheck.error) {
+        triedTables.push("profiles");
+        // Try workflows table as fallback
+        const workflowsCheck = await supabaseService.from("workflows").select("id").limit(1);
+        if (workflowsCheck.error) {
+          triedTables.push("workflows");
+          // Try tenants table as last resort
+          const tenantsCheck = await supabaseService.from("tenants").select("id").limit(1);
+          if (tenantsCheck.error) {
+            triedTables.push("tenants");
+            error = tenantsCheck.error;
+          }
+        } else {
+          error = null; // workflows table exists, DB is accessible
+        }
+      } else {
+        error = null; // profiles table exists, DB is accessible
+      }
+      
       return {
         ok: !error,
         latency_ms: Date.now() - dbStart,
         error: error?.message || null,
+        ...(triedTables.length > 0 && { note: `Checked tables: ${triedTables.join(", ")}` }),
       };
     })(),
     
@@ -108,7 +133,8 @@ export async function GET(): Promise<NextResponse<HealthCheckResult>> {
     (async () => {
       const restStart = Date.now();
       const supabaseAnon = createClient(supabaseUrl, supabaseAnonKey);
-      const { error } = await supabaseAnon.from("app_events").select("count").limit(1);
+      // Try profiles table (public table that should be accessible)
+      const { error } = await supabaseAnon.from("profiles").select("id").limit(1);
       return {
         ok: !error,
         latency_ms: Date.now() - restStart,

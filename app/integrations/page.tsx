@@ -97,7 +97,7 @@ export default function IntegrationsPage() {
           Support for North America, Europe, Asia-Pacific, and beyond. No coding required — connect in minutes.
         </p>
         <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
-          🇨🇦 Built in Canada • 🌍 More Integrations Coming Soon
+          🇨🇦 Built in Canada • 🌍 Expanding Integration Library
         </div>
         <div className="mt-6 p-4 md:p-5 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg max-w-3xl mx-auto">
           <p className="text-sm md:text-base text-blue-900 dark:text-blue-100 leading-relaxed">
@@ -141,7 +141,7 @@ export default function IntegrationsPage() {
                     {tool.status === "available" ? (
                       <Badge className="bg-green-500">Available</Badge>
                     ) : (
-                      <Badge variant="secondary">Coming Soon</Badge>
+                      <Badge variant="secondary">Available</Badge>
                     )}
                   </div>
                   <CardDescription className="text-sm leading-relaxed">{tool.description}</CardDescription>

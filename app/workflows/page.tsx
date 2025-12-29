@@ -5,13 +5,43 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { WorkflowsEmptyState } from "@/components/ui/empty-state-enhanced";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Workflows — AIAS Platform | Manage Your Automations",
   description: "Manage and monitor your AI workflows and automations. Create, execute, and optimize your business processes.",
 };
 
-export default function WorkflowsPage() {
+async function getWorkflows() {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      return [];
+    }
+    
+    const { data: workflows, error } = await supabase
+      .from("workflows")
+      .select("*")
+      .eq("enabled", true)
+      .eq("deprecated", false)
+      .order("created_at", { ascending: false });
+    
+    if (error) {
+      console.error("Error fetching workflows:", error);
+      return [];
+    }
+    
+    return workflows || [];
+  } catch (error) {
+    console.error("Error in getWorkflows:", error);
+    return [];
+  }
+}
+
+export default async function WorkflowsPage() {
+  const workflows = await getWorkflows();
   return (
     <div className="container py-16">
       <div className="max-w-6xl mx-auto">
@@ -35,8 +65,33 @@ export default function WorkflowsPage() {
           </Button>
         </div>
 
-        {/* Empty state for no workflows */}
-        <WorkflowsEmptyState />
+        {/* Workflows list or empty state */}
+        {workflows.length === 0 ? (
+          <WorkflowsEmptyState />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {workflows.map((workflow: { id: string; name?: string; description?: string; category?: string }) => (
+              <Card key={workflow.id} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="text-lg">{workflow.name || "Unnamed Workflow"}</CardTitle>
+                  <CardDescription className="line-clamp-2">
+                    {workflow.description || "No description"}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      {workflow.category || "Uncategorized"}
+                    </span>
+                    <Button asChild size="sm" variant="outline">
+                      <Link href={`/workflows/${workflow.id}`}>View</Link>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
 
         <Card>
           <CardHeader>

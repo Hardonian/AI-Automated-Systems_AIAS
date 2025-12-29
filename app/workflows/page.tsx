@@ -70,7 +70,7 @@ export default async function WorkflowsPage() {
           <WorkflowsEmptyState />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {workflows.map((workflow: any) => (
+            {workflows.map((workflow: { id: string; name?: string; description?: string; category?: string }) => (
               <Card key={workflow.id} className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle className="text-lg">{workflow.name || "Unnamed Workflow"}</CardTitle>

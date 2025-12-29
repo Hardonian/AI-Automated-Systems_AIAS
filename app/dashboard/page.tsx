@@ -385,7 +385,7 @@ export default async function DashboardPage() {
           <CardContent className="pt-6">
             {topPosts.length > 0 ? (
               <div className="space-y-3">
-                {topPosts.map((post: any) => (
+                {topPosts.map((post: { id: string; title?: string; view_count?: number }) => (
                   <div key={post.id} className="flex justify-between items-center">
                     <span className="text-sm truncate flex-1">
                       {post.title || `Post #${post.id}`}
@@ -417,7 +417,7 @@ export default async function DashboardPage() {
         <CardContent className="pt-6">
           {recentActivity.length > 0 ? (
             <div className="space-y-2">
-              {recentActivity.map((activity: any, idx: number) => (
+              {recentActivity.map((activity: { activity_type?: string; created_at?: string; metadata?: unknown }, idx: number) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between p-2 rounded-lg bg-muted/50"

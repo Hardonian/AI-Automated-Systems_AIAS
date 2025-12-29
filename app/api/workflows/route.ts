@@ -83,8 +83,8 @@ export const POST = createPOSTHandler(
       .insert({
         ...validated,
         created_by: user.id,
-        tenant_id: body.tenantId || null,
-      } as any)
+        tenant_id: (body as { tenantId?: string }).tenantId || null,
+      })
       .select()
       .single();
 

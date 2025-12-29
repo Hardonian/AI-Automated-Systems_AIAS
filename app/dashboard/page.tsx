@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { TrendingUp, Users, Eye, Activity, MessageSquare, Zap } from "lucide-react";
 
 import { DashboardClient } from "./dashboard-client";
+import { createClient as createServerClient } from "@/lib/supabase/server";
 
 import { DashboardUpgradeSection } from "@/components/dashboard/dashboard-upgrade-section";
 import { RealtimeDashboard } from "@/components/dashboard/realtime-dashboard";
@@ -172,9 +173,49 @@ export default async function DashboardPage() {
     kpiData.kpi2Met &&
     kpiData.kpi3Met;
 
-  // TODO: Get user plan from session/database
-  const userPlan: "free" | "trial" | "starter" | "pro" = "trial"; // Placeholder
-  const isFirstVisit = false; // TODO: Check from database
+  // Get user plan from database
+  let userPlan: "free" | "trial" | "starter" | "pro" = "free";
+  let isFirstVisit = true;
+  
+  try {
+    const supabase = await createServerClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (user) {
+      // Get user profile to determine plan
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("subscription_tier, created_at")
+        .eq("id", user.id)
+        .single();
+      
+      if (profile) {
+        // Map subscription_tier to userPlan
+        const tier = profile.subscription_tier?.toLowerCase() || "free";
+        if (tier === "starter" || tier === "pro" || tier === "enterprise") {
+          userPlan = tier as "starter" | "pro";
+        } else if (tier === "trial") {
+          userPlan = "trial";
+        } else {
+          userPlan = "free";
+        }
+        
+        // Check if user has created any workflows (determine first visit)
+        const { data: workflowsData } = await supabase
+          .from("workflows")
+          .select("id")
+          .limit(1);
+        
+        isFirstVisit = !workflowsData || workflowsData.length === 0;
+      }
+    }
+  } catch (error) {
+    // Fallback to defaults on error
+    const { serverLogger } = await import("@/lib/utils/logger");
+    serverLogger.error("Error fetching user data for dashboard", error instanceof Error ? error : new Error(String(error)));
+    userPlan = "trial";
+    isFirstVisit = true;
+  }
 
   return (
     <div className="container mx-auto py-8 px-4">

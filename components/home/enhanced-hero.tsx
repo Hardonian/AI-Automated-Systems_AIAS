@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ParallaxBackground } from "@/components/ui/ParallaxBackground";
 import { TextReveal } from "@/components/ui/TextReveal";
+import { MotionDiv, MotionP } from "@/components/motion";
 
 const socialProof = [
   { icon: "👥", text: "2,000+ Active Users" },
@@ -43,14 +44,14 @@ export function EnhancedHero() {
       
       <div className="relative container text-center space-y-6 md:space-y-8 max-w-6xl mx-auto z-10 px-4 sm:px-6">
         {/* Social proof bar - mobile optimized */}
-        <motion.div
+        <MotionDiv
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : -20 }}
           initial={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.6 }}
           className="flex flex-wrap items-center justify-center gap-3 md:gap-6 text-xs md:text-sm font-medium mb-4"
         >
           {socialProof.map((item, i) => (
-            <motion.div
+            <MotionDiv
               key={i}
               animate={{ opacity: 1, scale: 1 }}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -59,12 +60,12 @@ export function EnhancedHero() {
             >
               <span className="text-base md:text-lg">{item.icon}</span>
               <span className="text-foreground font-semibold">{item.text}</span>
-            </motion.div>
+            </MotionDiv>
           ))}
-        </motion.div>
+        </MotionDiv>
 
         {/* Trust badge */}
-        <motion.div
+        <MotionDiv
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -72,7 +73,7 @@ export function EnhancedHero() {
         >
           <Sparkles aria-hidden="true" className="h-4 w-4 md:h-5 md:w-5 animate-pulse" />
           <span>Custom AI Platforms by AI Automated Systems</span>
-        </motion.div>
+        </MotionDiv>
         
         {/* Main headline - mobile responsive with TextReveal */}
         <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold tracking-tight leading-[1.1] px-2 mb-6">
@@ -95,17 +96,17 @@ export function EnhancedHero() {
         </div>
         
         {/* Subheadline */}
-        <motion.p
+        <MotionP
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-muted-foreground max-w-4xl mx-auto leading-relaxed font-medium px-4 mb-8"
         >
           Save 10+ hours per week with AI automation. Connect your tools, automate workflows, and focus on what matters.
-        </motion.p>
+        </MotionP>
         
         {/* Value propositions */}
-        <motion.div
+        <MotionDiv
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.5 }}
@@ -119,7 +120,7 @@ export function EnhancedHero() {
           ].map((item, i) => {
             const Icon = item.icon;
             return (
-              <motion.div
+              <MotionDiv
                 key={i}
                 animate={{ opacity: 1, scale: 1 }}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -128,13 +129,13 @@ export function EnhancedHero() {
               >
                 <Icon aria-hidden="true" className={`h-4 w-4 md:h-5 md:w-5 ${item.color}`} />
                 <span className="text-foreground font-semibold whitespace-nowrap">{item.text}</span>
-              </motion.div>
+              </MotionDiv>
             );
           })}
-        </motion.div>
+        </MotionDiv>
         
         {/* Primary CTAs - mobile optimized */}
-        <motion.div
+        <MotionDiv
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.6 }}
@@ -162,10 +163,10 @@ export function EnhancedHero() {
               Book Free Demo
             </Link>
           </Button>
-        </motion.div>
+        </MotionDiv>
 
         {/* Trust signals */}
-        <motion.div
+        <MotionDiv
           animate={{ opacity: isVisible ? 1 : 0 }}
           initial={{ opacity: 0 }}
           transition={{ duration: 0.6, delay: 0.7 }}
@@ -178,7 +179,7 @@ export function EnhancedHero() {
             {trustBadges.map((badge, i) => {
               const Icon = badge.icon;
               return (
-                <motion.div
+                <MotionDiv
                   key={i}
                   animate={{ opacity: 1, scale: 1 }}
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -187,14 +188,14 @@ export function EnhancedHero() {
                 >
                   <Icon aria-hidden="true" className={`h-4 w-4 md:h-5 md:w-5 ${badge.color}`} />
                   <span className="text-xs md:text-sm font-semibold text-foreground">{badge.text}</span>
-                </motion.div>
+                </MotionDiv>
               );
             })}
           </div>
-        </motion.div>
+        </MotionDiv>
 
         {/* Urgency CTA - mobile friendly */}
-        <motion.div
+        <MotionDiv
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.8 }}
@@ -208,7 +209,7 @@ export function EnhancedHero() {
               <Link href="/signup">Claim Offer</Link>
             </Button>
           </div>
-        </motion.div>
+        </MotionDiv>
       </div>
       </section>
     </ParallaxBackground>

@@ -29,6 +29,49 @@ export const motionEasing = {
   exit: 'cubic-bezier(0.4, 0, 1, 1)',
   // Sharp entrance
   sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
+  // Bounce for attention
+  bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+  // Elastic for playful interactions
+  elastic: 'cubic-bezier(0.68, -0.6, 0.32, 1.6)',
+} as const;
+
+// Spring configurations for Framer Motion
+export const motionSprings = {
+  // Gentle spring for subtle interactions
+  gentle: {
+    type: 'spring' as const,
+    stiffness: 200,
+    damping: 20,
+    mass: 1,
+  },
+  // Standard spring for most interactions
+  standard: {
+    type: 'spring' as const,
+    stiffness: 300,
+    damping: 25,
+    mass: 1,
+  },
+  // Bouncy spring for attention-grabbing elements
+  bouncy: {
+    type: 'spring' as const,
+    stiffness: 400,
+    damping: 15,
+    mass: 1,
+  },
+  // Snappy spring for quick feedback
+  snappy: {
+    type: 'spring' as const,
+    stiffness: 500,
+    damping: 30,
+    mass: 0.8,
+  },
+  // Smooth spring for page transitions
+  smooth: {
+    type: 'spring' as const,
+    stiffness: 200,
+    damping: 30,
+    mass: 1,
+  },
 } as const;
 
 // Framer Motion transition presets
@@ -154,6 +197,104 @@ export const motionVariants = {
       transition: motionTransitions.entrance,
     },
   },
+  // Attention pulse (for notifications, errors, highlights)
+  attention: {
+    hidden: { 
+      opacity: motionOpacity.hidden,
+      scale: 0.9,
+    },
+    visible: { 
+      opacity: motionOpacity.visible,
+      scale: 1,
+      transition: {
+        ...motionSprings.bouncy,
+        duration: motionDurations.moderate / 1000,
+      },
+    },
+    pulse: {
+      scale: [1, 1.05, 1],
+      transition: {
+        duration: motionDurations.slow / 1000,
+        repeat: Infinity,
+        repeatType: 'reverse' as const,
+        ease: motionEasing.standard,
+      },
+    },
+  },
+  // Success celebration (for completions, achievements)
+  success: {
+    hidden: { 
+      opacity: motionOpacity.hidden,
+      scale: 0.8,
+      y: 10,
+    },
+    visible: { 
+      opacity: motionOpacity.visible,
+      scale: 1,
+      y: 0,
+      transition: {
+        ...motionSprings.bouncy,
+        duration: motionDurations.moderate / 1000,
+      },
+    },
+    celebrate: {
+      scale: [1, 1.1, 1],
+      rotate: [0, 5, -5, 0],
+      transition: {
+        duration: motionDurations.slow / 1000,
+        ease: motionEasing.bounce,
+      },
+    },
+  },
+  // Error shake (for validation errors, failures)
+  error: {
+    hidden: { 
+      opacity: motionOpacity.hidden,
+      x: 0,
+    },
+    visible: { 
+      opacity: motionOpacity.visible,
+      x: 0,
+      transition: motionTransitions.entrance,
+    },
+    shake: {
+      x: [0, -10, 10, -10, 10, 0],
+      transition: {
+        duration: motionDurations.moderate / 1000,
+        ease: motionEasing.sharp,
+      },
+    },
+  },
+  // Slide transition for step changes
+  stepTransition: {
+    enter: {
+      opacity: motionOpacity.visible,
+      x: 0,
+      transition: motionTransitions.entrance,
+    },
+    exit: {
+      opacity: motionOpacity.hidden,
+      x: -20,
+      transition: motionTransitions.exit,
+    },
+  },
+  // Page transition
+  pageTransition: {
+    initial: {
+      opacity: motionOpacity.hidden,
+      y: 20,
+    },
+    animate: {
+      opacity: motionOpacity.visible,
+      y: 0,
+      transition: motionTransitions.page,
+    },
+    exit: {
+      opacity: motionOpacity.hidden,
+      y: -20,
+      transition: motionTransitions.exit,
+    },
+  },
 } as const;
 
 // Stagger children animation
@@ -165,6 +306,25 @@ export const staggerChildren = {
       staggerChildren: 0.1,
       delayChildren: 0.05,
     },
+  },
+} as const;
+
+// Stagger configurations
+export const staggerConfigs = {
+  // Fast stagger for quick lists
+  fast: {
+    staggerChildren: 0.05,
+    delayChildren: 0.02,
+  },
+  // Standard stagger
+  standard: {
+    staggerChildren: 0.1,
+    delayChildren: 0.05,
+  },
+  // Slow stagger for dramatic reveals
+  slow: {
+    staggerChildren: 0.15,
+    delayChildren: 0.1,
   },
 } as const;
 
@@ -231,3 +391,5 @@ export const transitionClasses = {
 // Export types
 export type MotionDuration = typeof motionDurations[keyof typeof motionDurations];
 export type MotionEasing = typeof motionEasing[keyof typeof motionEasing];
+export type MotionSpring = typeof motionSprings[keyof typeof motionSprings];
+export type MotionVariant = keyof typeof motionVariants;

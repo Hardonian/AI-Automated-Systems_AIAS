@@ -201,7 +201,12 @@ export const onboardingMachine = createMachine(
             if (!context.selectedIntegration) {
               throw new Error("No integration selected");
             }
-            return connectIntegration(context.selectedIntegration);
+            return Promise.race([
+              connectIntegration(context.selectedIntegration),
+              new Promise((_, reject) =>
+                setTimeout(() => reject(new Error("Connection timeout. Please try again.")), 10000)
+              ),
+            ]);
           },
           onDone: {
             target: "creatingWorkflow",
@@ -219,6 +224,14 @@ export const onboardingMachine = createMachine(
             actions: assign({
               error: ({ event }) => createMachineError(event.error),
               retryCount: ({ context }) => (context.retryCount || 0) + 1,
+            }),
+          },
+        },
+        after: {
+          10000: {
+            target: "error",
+            actions: assign({
+              error: () => createMachineError(new Error("Connection timeout. Please try again.")),
             }),
           },
         },
@@ -255,7 +268,12 @@ export const onboardingMachine = createMachine(
             if (!context.selectedIntegration) {
               throw new Error("No integration selected");
             }
-            return createWorkflow(context.selectedIntegration);
+            return Promise.race([
+              createWorkflow(context.selectedIntegration),
+              new Promise((_, reject) =>
+                setTimeout(() => reject(new Error("Workflow creation timeout. Please try again.")), 15000)
+              ),
+            ]);
           },
           onDone: {
             target: "testingWorkflow",
@@ -274,6 +292,14 @@ export const onboardingMachine = createMachine(
             actions: assign({
               error: ({ event }) => createMachineError(event.error),
               retryCount: ({ context }) => (context.retryCount || 0) + 1,
+            }),
+          },
+        },
+        after: {
+          15000: {
+            target: "error",
+            actions: assign({
+              error: () => createMachineError(new Error("Workflow creation timeout. Please try again.")),
             }),
           },
         },
@@ -306,7 +332,12 @@ export const onboardingMachine = createMachine(
         }),
         invoke: {
           id: "testWorkflow",
-          src: testWorkflow,
+          src: () => Promise.race([
+            testWorkflow(),
+            new Promise((_, reject) =>
+              setTimeout(() => reject(new Error("Workflow test timeout. Please try again.")), 8000)
+            ),
+          ]),
           onDone: {
             target: "complete",
             actions: assign({
@@ -324,6 +355,14 @@ export const onboardingMachine = createMachine(
             actions: assign({
               error: ({ event }) => createMachineError(event.error),
               retryCount: ({ context }) => (context.retryCount || 0) + 1,
+            }),
+          },
+        },
+        after: {
+          8000: {
+            target: "error",
+            actions: assign({
+              error: () => createMachineError(new Error("Workflow test timeout. Please try again.")),
             }),
           },
         },
@@ -357,19 +396,43 @@ export const onboardingMachine = createMachine(
         },
       },
       error: {
+        entry: ({ context }) => {
+          // Log error for debugging
+          if (process.env.NODE_ENV === "development") {
+            console.error("[Onboarding Error]", context.error);
+          }
+        },
         on: {
           RETRY: [
             {
-              guard: ({ context }) => context.currentStep === 1,
+              guard: ({ context }) => {
+                const retryCount = context.retryCount || 0;
+                return context.currentStep === 1 && retryCount < 3;
+              },
               target: "connectingIntegration",
+              actions: assign({
+                error: undefined,
+              }),
             },
             {
-              guard: ({ context }) => context.currentStep === 2,
+              guard: ({ context }) => {
+                const retryCount = context.retryCount || 0;
+                return context.currentStep === 2 && retryCount < 3;
+              },
               target: "creatingWorkflowAsync",
+              actions: assign({
+                error: undefined,
+              }),
             },
             {
-              guard: ({ context }) => context.currentStep === 3,
+              guard: ({ context }) => {
+                const retryCount = context.retryCount || 0;
+                return context.currentStep === 3 && retryCount < 3;
+              },
               target: "testingWorkflowAsync",
+              actions: assign({
+                error: undefined,
+              }),
             },
           ],
           PREVIOUS: [

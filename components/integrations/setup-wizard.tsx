@@ -3,9 +3,12 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { ArrowRight, ArrowLeft, ExternalLink, AlertCircle } from "lucide-react";
+import { ArrowRight, ArrowLeft, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { StepTransition, AnimatedButton, AnimatedCard, Reveal } from "@/components/motion";
+import { ProgressIndicator, ErrorMessage } from "@/components/feedback";
+import { trackFlowStarted, trackStepViewed, trackStepCompleted, trackFlowCompleted, trackError } from "@/lib/ux-events";
+import React from "react";
 
 interface SetupStep {
   id: string;
@@ -114,7 +117,19 @@ export function IntegrationSetupWizard({ integration, onComplete, onCancel }: In
   const [error, setError] = useState<string | null>(null);
 
   const steps = integration === "shopify" ? shopifySteps : waveSteps;
-  const progress = ((currentStep + 1) / steps.length) * 100;
+  
+  // Track flow start
+  React.useEffect(() => {
+    trackFlowStarted(`integration-setup-${integration}`);
+  }, [integration]);
+  
+  // Track step views
+  React.useEffect(() => {
+    const stepId = steps[currentStep]?.id;
+    if (stepId) {
+      trackStepViewed(`integration-setup-${integration}`, currentStep, stepId);
+    }
+  }, [currentStep, integration, steps]);
 
   const handleNext = () => {
     const step = steps[currentStep];
@@ -122,11 +137,13 @@ export function IntegrationSetupWizard({ integration, onComplete, onCancel }: In
     const stepId = step.id;
     if (!completedSteps.includes(stepId)) {
       setCompletedSteps([...completedSteps, stepId]);
+      trackStepCompleted(`integration-setup-${integration}`, currentStep, stepId);
     }
 
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
+      trackFlowCompleted(`integration-setup-${integration}`, 0, completedSteps.length + 1);
       onComplete();
     }
   };
@@ -160,8 +177,10 @@ export function IntegrationSetupWizard({ integration, onComplete, onCancel }: In
         throw new Error("No OAuth URL returned");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to connect integration");
+      const errorMessage = err instanceof Error ? err.message : "Failed to connect integration";
+      setError(errorMessage);
       setConnecting(false);
+      trackError(errorMessage, `integration-setup-${integration}`, undefined, true);
     }
   };
 
@@ -169,31 +188,44 @@ export function IntegrationSetupWizard({ integration, onComplete, onCancel }: In
   if (!currentStepData) return null;
   const totalTime = steps.reduce((sum, step) => sum + step.estimatedTime, 0);
 
+  const totalTime = steps.reduce((sum, step) => sum + step.estimatedTime, 0);
+
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Progress Header */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">
-            {integration === "shopify" ? "Shopify" : "Wave Accounting"} Setup
-          </h2>
-          <Badge variant="secondary">
-            Step {currentStep + 1} of {steps.length}
-          </Badge>
+      <Reveal variant="fadeInUp">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">
+              {integration === "shopify" ? "Shopify" : "Wave Accounting"} Setup
+            </h2>
+            <Badge variant="secondary">
+              Step {currentStep + 1} of {steps.length}
+            </Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Estimated time: {totalTime} minutes
+          </p>
         </div>
-        <Progress value={progress} className="h-2" />
-        <p className="text-sm text-muted-foreground">
-          Estimated time: {totalTime} minutes
-        </p>
-      </div>
+      </Reveal>
+
+      {/* Progress Indicator */}
+      <ProgressIndicator
+        current={currentStep}
+        total={steps.length}
+        completedSteps={completedSteps}
+        stepLabels={steps.map((s) => s.title)}
+      />
 
       {/* Current Step Card */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{currentStepData.title}</CardTitle>
-          <CardDescription>{currentStepData.description}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <StepTransition step={currentStep}>
+        <AnimatedCard variant="fadeInUp">
+          <Card>
+            <CardHeader>
+              <CardTitle>{currentStepData.title}</CardTitle>
+              <CardDescription>{currentStepData.description}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
           {/* Instructions */}
           <div className="space-y-3">
             <h3 className="font-semibold">Instructions:</h3>
@@ -210,14 +242,14 @@ export function IntegrationSetupWizard({ integration, onComplete, onCancel }: In
           {currentStepData.id === "authorize" && (
             <div className="pt-4 border-t">
               {error && (
-                <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg">
-                  <div className="flex items-center gap-2 text-red-900 dark:text-red-100">
-                    <AlertCircle className="h-4 w-4" />
-                    <span className="text-sm">{error}</span>
-                  </div>
-                </div>
+                <ErrorMessage
+                  message={error}
+                  showRetry={true}
+                  onRetry={handleConnect}
+                  retryLabel="Try Again"
+                />
               )}
-              <Button
+              <AnimatedButton
                 onClick={handleConnect}
                 disabled={connecting}
                 size="lg"
@@ -231,7 +263,7 @@ export function IntegrationSetupWizard({ integration, onComplete, onCancel }: In
                     <ExternalLink className="ml-2 h-4 w-4" />
                   </>
                 )}
-              </Button>
+              </AnimatedButton>
               <p className="text-xs text-muted-foreground mt-2 text-center">
                 You'll be redirected to {integration === "shopify" ? "Shopify" : "Wave"} to authorize
               </p>
@@ -240,36 +272,22 @@ export function IntegrationSetupWizard({ integration, onComplete, onCancel }: In
 
           {/* Navigation */}
           <div className="flex justify-between pt-4 border-t">
-            <Button variant="outline" onClick={currentStep === 0 ? onCancel : handleBack}>
+            <AnimatedButton variant="outline" onClick={currentStep === 0 ? onCancel : handleBack}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               {currentStep === 0 ? "Cancel" : "Back"}
-            </Button>
+            </AnimatedButton>
             {currentStepData.id !== "authorize" && (
-              <Button onClick={handleNext}>
+              <AnimatedButton onClick={handleNext}>
                 {currentStep === steps.length - 1 ? "Complete" : "Next"}
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              </AnimatedButton>
             )}
           </div>
         </CardContent>
-      </Card>
+          </Card>
+        </AnimatedCard>
+      </StepTransition>
 
-      {/* Step Indicators */}
-      <div className="flex justify-center gap-2">
-        {steps.map((step, idx) => (
-          <div
-            key={step.id}
-            className={`h-2 w-2 rounded-full ${
-              idx === currentStep
-                ? "bg-primary"
-                : completedSteps.includes(step.id)
-                ? "bg-green-500"
-                : "bg-muted"
-            }`}
-            title={step.title}
-          />
-        ))}
-      </div>
     </div>
   );
 }

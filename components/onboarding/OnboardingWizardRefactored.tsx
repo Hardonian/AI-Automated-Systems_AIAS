@@ -1,12 +1,22 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useMachine } from "@xstate/react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Check, ArrowRight, ArrowLeft, Sparkles, Zap, Target, Loader2, AlertCircle } from "lucide-react";
 import { track } from "@/lib/telemetry/track";
+import {
+  trackFlowStarted,
+  trackStepViewed,
+  trackStepCompleted,
+  trackFlowCompleted,
+  trackSuccess,
+  trackError,
+  trackRetry,
+} from "@/lib/ux-events";
+import { ProgressIndicator, SuccessToast, ErrorMessage } from "@/components/feedback";
 import Link from "next/link";
 import { onboardingMachine, type OnboardingStepId, type IntegrationProvider } from "@/lib/xstate/onboarding-machine";
 import { StepTransition, AnimatedButton, AnimatedCard, Reveal } from "@/components/motion";
@@ -38,6 +48,7 @@ export function OnboardingWizardRefactored() {
       },
       app: "web",
     });
+    trackFlowStarted("onboarding", { userId });
   }, []);
 
   // Track step changes
@@ -54,6 +65,7 @@ export function OnboardingWizardRefactored() {
       },
       app: "web",
     });
+    trackStepViewed("onboarding", currentStep, stepId, { userId });
   }, [currentStep]);
 
   // Track step completion
@@ -61,18 +73,20 @@ export function OnboardingWizardRefactored() {
     if (completedSteps.length > 0) {
       const userId = localStorage.getItem("user_id") || "anonymous";
       const lastCompleted = completedSteps[completedSteps.length - 1];
+      const stepIndex = getStepIds().indexOf(lastCompleted as OnboardingStepId);
       track(userId, {
         type: "onboarding_step_completed",
         path: "/onboarding",
         meta: {
           step_id: lastCompleted,
-          step_number: currentStep,
+          step_number: stepIndex + 1,
           timestamp: new Date().toISOString(),
         },
         app: "web",
       });
+      trackStepCompleted("onboarding", stepIndex, lastCompleted, undefined, { userId });
     }
-  }, [completedSteps, currentStep]);
+  }, [completedSteps]);
 
   // Track completion
   useEffect(() => {
@@ -86,8 +100,10 @@ export function OnboardingWizardRefactored() {
         },
         app: "web",
       });
+      trackFlowCompleted("onboarding", 0, completedSteps.length, { userId });
+      trackSuccess("onboarding_completed", "onboarding", { userId });
     }
-  }, [state]);
+  }, [state, completedSteps]);
 
   const progress = ((currentStep + 1) / totalSteps) * 100;
   const stepId = getStepId(currentStep);
@@ -113,60 +129,32 @@ export function OnboardingWizardRefactored() {
   };
 
   const handleRetry = () => {
+    trackRetry((state.context.retryCount || 0) + 1, "onboarding", currentStep);
     send({ type: "RETRY" });
   };
 
+  // Track errors
+  useEffect(() => {
+    if (hasError && error) {
+      trackError(
+        error instanceof Error ? error.message : String(error),
+        "onboarding",
+        undefined,
+        true,
+        { step: currentStep, retryCount: state.context.retryCount }
+      );
+    }
+  }, [hasError, error, currentStep, state.context.retryCount]);
+
   return (
     <div className="space-y-6" role="main" aria-label="Onboarding wizard">
-      {/* Progress Bar */}
-      <Reveal variant="fadeInUp">
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="font-medium">Step {currentStep + 1} of {totalSteps}</span>
-            <span className="text-muted-foreground">{Math.round(progress)}% Complete</span>
-          </div>
-          <Progress value={progress} className="h-2" aria-label={`Onboarding progress: ${Math.round(progress)}%`} />
-        </div>
-      </Reveal>
-
-      {/* Step Indicator */}
-      <Reveal variant="fadeInUp" delay={0.1}>
-        <div className="flex items-center justify-between" role="list" aria-label="Onboarding steps">
-          {getStepIds().map((id, index) => (
-            <div key={id} className="flex items-center flex-1" role="listitem">
-              <div className="flex flex-col items-center flex-1">
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${
-                    completedSteps.includes(id)
-                      ? "bg-primary border-primary text-primary-foreground"
-                      : index === currentStep
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-muted text-muted-foreground"
-                  }`}
-                  aria-label={`Step ${index + 1}: ${getStepTitle(id)}${completedSteps.includes(id) ? " completed" : index === currentStep ? " current" : ""}`}
-                >
-                  {completedSteps.includes(id) ? (
-                    <Check className="h-5 w-5" aria-hidden="true" />
-                  ) : (
-                    <span aria-hidden="true">{index + 1}</span>
-                  )}
-                </div>
-                <div className="mt-2 text-xs text-center max-w-[100px] text-muted-foreground">
-                  {getStepTitle(id)}
-                </div>
-              </div>
-              {index < getStepIds().length - 1 && (
-                <div
-                  className={`h-0.5 flex-1 mx-2 transition-colors ${
-                    completedSteps.includes(id) ? "bg-primary" : "bg-muted"
-                  }`}
-                  aria-hidden="true"
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      </Reveal>
+      {/* Progress Indicator */}
+      <ProgressIndicator
+        current={currentStep}
+        total={totalSteps}
+        completedSteps={completedSteps}
+        stepLabels={getStepIds().map((id) => getStepTitle(id))}
+      />
 
       {/* Current Step Content */}
       <StepTransition step={currentStep}>
@@ -193,33 +181,21 @@ export function OnboardingWizardRefactored() {
 
       {/* Error Message */}
       {hasError && error && (
-        <Reveal variant="fadeInUp">
-          <AnimatedCard variant="fadeInUp">
-            <Card className="border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/20">
-              <CardContent className="pt-6">
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-red-900 dark:text-red-100 mb-1">
-                      Error
-                    </h3>
-                    <p className="text-sm text-red-800 dark:text-red-200 mb-3">
-                      {error instanceof Error ? error.message : String(error)}
-                    </p>
-                    <AnimatedButton
-                      variant="outline"
-                      size="sm"
-                      onClick={handleRetry}
-                      className="border-red-300 text-red-700 hover:bg-red-100 dark:border-red-700 dark:text-red-300 dark:hover:bg-red-900/20"
-                    >
-                      Retry
-                    </AnimatedButton>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </AnimatedCard>
-        </Reveal>
+        <ErrorMessage
+          message={error instanceof Error ? error.message : String(error)}
+          title="Error"
+          showRetry={true}
+          onRetry={handleRetry}
+        />
+      )}
+
+      {/* Success Message */}
+      {state.matches("complete") && (
+        <SuccessToast
+          message="You've successfully completed onboarding! You're now ready to automate and save time."
+          title="Congratulations!"
+          celebrate={true}
+        />
       )}
 
       {/* Navigation */}

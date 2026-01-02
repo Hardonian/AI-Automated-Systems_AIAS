@@ -142,7 +142,7 @@ export async function canCreateSystem(tenantId: string): Promise<{ allowed: bool
     .eq("enabled", true);
 
   if (error) {
-    logger.error("Failed to count systems", { tenantId, error: error.message });
+    logger.error("Failed to count systems", new Error(error.message), { tenantId });
     // Fail closed - don't allow if we can't verify
     return { allowed: false, reason: "Unable to verify system limit" };
   }
@@ -176,7 +176,7 @@ export async function canCreateWebhook(tenantId: string): Promise<{ allowed: boo
     .eq("enabled", true);
 
   if (error) {
-    logger.error("Failed to count webhooks", { tenantId, error: error.message });
+    logger.error("Failed to count webhooks", new Error(error.message), { tenantId });
     return { allowed: false, reason: "Unable to verify webhook limit" };
   }
 
@@ -214,7 +214,7 @@ export async function canExecuteRun(tenantId: string): Promise<{ allowed: boolea
     .lte("started_at", monthEnd.toISOString());
 
   if (error) {
-    logger.error("Failed to count runs", { tenantId, error: error.message });
+    logger.error("Failed to count runs", new Error(error.message), { tenantId });
     return { allowed: false, reason: "Unable to verify run limit" };
   }
 

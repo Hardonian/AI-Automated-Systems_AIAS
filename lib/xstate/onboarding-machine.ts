@@ -69,20 +69,20 @@ const STEPS: OnboardingStepId[] = [
 /**
  * Validation guards
  */
-const canProceedFromWelcome: GuardFn<OnboardingContext, OnboardingEvent> = () => {
+const canProceedFromWelcome = () => {
   // Welcome step can always proceed
   return true;
 };
 
-const canProceedFromChooseIntegration: GuardFn<OnboardingContext, OnboardingEvent> = (context) => {
+const canProceedFromChooseIntegration = ({ context }: { context: OnboardingContext }) => {
   return !!context.selectedIntegration;
 };
 
-const canProceedFromCreateWorkflow: GuardFn<OnboardingContext, OnboardingEvent> = (context) => {
+const canProceedFromCreateWorkflow = ({ context }: { context: OnboardingContext }) => {
   return !!context.workflowCreated;
 };
 
-const canProceedFromTestWorkflow: GuardFn<OnboardingContext, OnboardingEvent> = (context) => {
+const canProceedFromTestWorkflow = ({ context }: { context: OnboardingContext }) => {
   return !!context.workflowTested;
 };
 

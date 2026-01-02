@@ -39,7 +39,7 @@ export function generateEnhancedMetadata(options: SEOOptions): Metadata {
     openGraph: {
       title: fullTitle,
       description,
-      type,
+      type: type === "product" ? "website" : type,
       url: `${siteUrl}${canonical}`,
       siteName: "AI Automated Systems",
       locale: "en_US",

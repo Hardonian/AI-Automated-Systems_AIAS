@@ -5,13 +5,13 @@
  */
 
 import { useMachine, useSelector } from "@xstate/react";
-import { StateMachine, ActorRefFrom } from "xstate";
+import { AnyActorRef, StateFrom } from "xstate";
 import { useMemo } from "react";
 
 /**
  * Hook for using a state machine with typed state
  */
-export function useTypedMachine<TMachine extends StateMachine<any, any, any>>(
+export function useTypedMachine<TMachine extends Parameters<typeof useMachine>[0]>(
   machine: TMachine
 ) {
   return useMachine(machine);
@@ -21,23 +21,23 @@ export function useTypedMachine<TMachine extends StateMachine<any, any, any>>(
  * Hook for selecting a specific value from machine state
  */
 export function useMachineSelector<
-  TMachine extends StateMachine<any, any, any>,
+  TActor extends AnyActorRef,
   TValue
 >(
-  actor: ActorRefFrom<TMachine>,
-  selector: (state: ReturnType<ActorRefFrom<TMachine>["getSnapshot"]>) => TValue
+  actor: TActor,
+  selector: (snapshot: TActor extends { getSnapshot(): infer TSnapshot } ? TSnapshot : any) => TValue
 ): TValue {
-  return useSelector(actor, selector);
+  return useSelector(actor, selector as any);
 }
 
 /**
  * Hook for checking if machine is in a specific state
  */
-export function useIsInState<TMachine extends StateMachine<any, any, any>>(
-  actor: ActorRefFrom<TMachine>,
+export function useIsInState<TActor extends AnyActorRef>(
+  actor: TActor,
   stateValue: string | string[]
 ): boolean {
-  return useSelector(actor, (state) => {
+  return useSelector(actor, (state: any) => {
     if (Array.isArray(stateValue)) {
       return stateValue.some((sv) => state.matches(sv));
     }
@@ -48,26 +48,26 @@ export function useIsInState<TMachine extends StateMachine<any, any, any>>(
 /**
  * Hook for getting current state value
  */
-export function useCurrentState<TMachine extends StateMachine<any, any, any>>(
-  actor: ActorRefFrom<TMachine>
+export function useCurrentState<TActor extends AnyActorRef>(
+  actor: TActor
 ): string {
-  return useSelector(actor, (state) => state.value as string);
+  return useSelector(actor, (state: any) => state.value as string);
 }
 
 /**
  * Hook for getting context value
  */
-export function useMachineContext<TMachine extends StateMachine<any, any, any>>(
-  actor: ActorRefFrom<TMachine>
+export function useMachineContext<TActor extends AnyActorRef>(
+  actor: TActor
 ) {
-  return useSelector(actor, (state) => state.context);
+  return useSelector(actor, (state: any) => state.context);
 }
 
 /**
  * Hook for checking if machine is in async pending state
  */
-export function useIsPending<TMachine extends StateMachine<any, any, any>>(
-  actor: ActorRefFrom<TMachine>
+export function useIsPending<TActor extends AnyActorRef>(
+  actor: TActor
 ): boolean {
   return useIsInState(actor, "pending");
 }
@@ -75,8 +75,8 @@ export function useIsPending<TMachine extends StateMachine<any, any, any>>(
 /**
  * Hook for checking if machine is in error state
  */
-export function useHasError<TMachine extends StateMachine<any, any, any>>(
-  actor: ActorRefFrom<TMachine>
+export function useHasError<TActor extends AnyActorRef>(
+  actor: TActor
 ): boolean {
   return useIsInState(actor, "error");
 }
@@ -84,10 +84,10 @@ export function useHasError<TMachine extends StateMachine<any, any, any>>(
 /**
  * Hook for getting error from machine context
  */
-export function useMachineError<TMachine extends StateMachine<any, any, any>>(
-  actor: ActorRefFrom<TMachine>
+export function useMachineError<TActor extends AnyActorRef>(
+  actor: TActor
 ): unknown {
-  return useSelector(actor, (state) => {
+  return useSelector(actor, (state: any) => {
     const context = state.context as { error?: unknown };
     return context.error;
   });

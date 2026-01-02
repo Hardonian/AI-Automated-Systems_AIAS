@@ -69,6 +69,13 @@ export class WorkflowExecutorWithArtifacts {
         startStepId: workflowData.start_step_id,
         trigger: workflowData.trigger,
         initialState: workflowData.initial_state || {},
+        category: (workflowData.category as "automation" | "reconciliation" | "consulting" | "custom") || "custom",
+        enabled: workflowData.enabled ?? true,
+        createdAt: workflowData.created_at || new Date().toISOString(),
+        updatedAt: workflowData.updated_at || new Date().toISOString(),
+        deprecated: workflowData.deprecated ?? false,
+        introspectable: workflowData.introspectable ?? true,
+        auditLog: workflowData.audit_log ?? true,
       };
 
       workflowExecutor.registerWorkflow(workflowDefinition);

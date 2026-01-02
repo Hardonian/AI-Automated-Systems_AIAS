@@ -73,18 +73,20 @@ export function OnboardingWizardRefactored() {
     if (completedSteps.length > 0) {
       const userId = localStorage.getItem("user_id") || "anonymous";
       const lastCompleted = completedSteps[completedSteps.length - 1];
-      const stepIndex = getStepIds().indexOf(lastCompleted as OnboardingStepId);
-      track(userId, {
-        type: "onboarding_step_completed",
-        path: "/onboarding",
-        meta: {
-          step_id: lastCompleted,
-          step_number: stepIndex + 1,
-          timestamp: new Date().toISOString(),
-        },
-        app: "web",
-      });
-      trackStepCompleted("onboarding", stepIndex, lastCompleted, undefined, { userId });
+      if (lastCompleted) {
+        const stepIndex = getStepIds().indexOf(lastCompleted as OnboardingStepId);
+        track(userId, {
+          type: "onboarding_step_completed",
+          path: "/onboarding",
+          meta: {
+            step_id: lastCompleted,
+            step_number: stepIndex + 1,
+            timestamp: new Date().toISOString(),
+          },
+          app: "web",
+        });
+        trackStepCompleted("onboarding", stepIndex, lastCompleted, undefined, { userId });
+      }
     }
   }, [completedSteps]);
 

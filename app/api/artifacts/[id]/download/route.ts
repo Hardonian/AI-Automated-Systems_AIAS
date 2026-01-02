@@ -61,7 +61,7 @@ export async function GET(
     }
 
     // Determine content and content type
-    let content: string | Uint8Array;
+    let content: string | Uint8Array | Buffer;
     let contentType: string;
     let filename: string;
 
@@ -74,7 +74,8 @@ export async function GET(
       contentType = "text/plain";
       filename = `artifact-${artifactId}.txt`;
     } else if (artifact.content_bytes) {
-      content = new Uint8Array(Buffer.from(artifact.content_bytes));
+      // Buffer extends Uint8Array and is compatible with BodyInit
+      content = Buffer.from(artifact.content_bytes);
       contentType = "application/octet-stream";
       filename = `artifact-${artifactId}.bin`;
     } else {
@@ -84,7 +85,7 @@ export async function GET(
       );
     }
 
-    return new NextResponse(content, {
+    return new NextResponse(content as BodyInit, {
       headers: {
         "Content-Type": contentType,
         "Content-Disposition": `attachment; filename="${filename}"`,

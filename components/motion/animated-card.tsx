@@ -51,10 +51,35 @@ export const AnimatedCard = forwardRef<HTMLDivElement, AnimatedCardProps>(
         };
 
     // Extract only the standard variant properties (hidden/visible) for TypeScript
-    const standardVariants: Variants = {
-      hidden: animationVariant.hidden as any,
-      visible: animationVariant.visible as any,
-    };
+    // Handle different variant structures: some have hidden/visible, others have enter/exit or initial/animate
+    const standardVariants: Variants = (() => {
+      // Check if variant has hidden/visible structure (most common)
+      if ('hidden' in animationVariant && 'visible' in animationVariant) {
+        return {
+          hidden: animationVariant.hidden,
+          visible: animationVariant.visible,
+        };
+      }
+      // Handle enter/exit structure (e.g., stepTransition)
+      if ('enter' in animationVariant && 'exit' in animationVariant) {
+        return {
+          hidden: animationVariant.exit,
+          visible: animationVariant.enter,
+        };
+      }
+      // Handle initial/animate structure (e.g., pageTransition)
+      if ('initial' in animationVariant && 'animate' in animationVariant) {
+        return {
+          hidden: animationVariant.initial,
+          visible: animationVariant.animate,
+        };
+      }
+      // Fallback to fadeInUp structure
+      return {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1 },
+      };
+    })();
 
     return (
       <motion.div

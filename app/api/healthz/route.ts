@@ -98,7 +98,7 @@ export async function GET(): Promise<NextResponse<HealthCheckResult>> {
       const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
       // Try profiles table first (most likely to exist), fallback to any table
       let error = null;
-      let triedTables = [];
+      const triedTables: string[] = [];
       
       // Try profiles table (core table that should exist)
       const profilesCheck = await supabaseService.from("profiles").select("id").limit(1);

@@ -15,7 +15,7 @@ type MotionComponentProps<T extends keyof React.JSX.IntrinsicElements> =
 
 export const MotionDiv = forwardRef<HTMLDivElement, MotionComponentProps<'div'>>(
   ({ className, ...props }, ref) => {
-    // @ts-ignore - framer-motion v12 type issue with className and props spreading
+    // @ts-expect-error - framer-motion v12 type issue with className and props spreading
     return <motion.div ref={ref} className={className} {...props} />;
   }
 );
@@ -23,7 +23,7 @@ MotionDiv.displayName = "MotionDiv";
 
 export const MotionSpan = forwardRef<HTMLSpanElement, MotionComponentProps<'span'>>(
   ({ className, ...props }, ref) => {
-    // @ts-ignore - framer-motion v12 type issue with className and props spreading
+    // @ts-expect-error - framer-motion v12 type issue with className and props spreading
     return <motion.span ref={ref} className={className} {...props} />;
   }
 );
@@ -31,7 +31,7 @@ MotionSpan.displayName = "MotionSpan";
 
 export const MotionP = forwardRef<HTMLParagraphElement, MotionComponentProps<'p'>>(
   ({ className, ...props }, ref) => {
-    // @ts-ignore - framer-motion v12 type issue with className and props spreading
+    // @ts-expect-error - framer-motion v12 type issue with className and props spreading
     return <motion.p ref={ref} className={className} {...props} />;
   }
 );
@@ -39,7 +39,7 @@ MotionP.displayName = "MotionP";
 
 export const MotionSection = forwardRef<HTMLElement, MotionComponentProps<'section'>>(
   ({ className, ...props }, ref) => {
-    // @ts-ignore - framer-motion v12 type issue with className and props spreading
+    // @ts-expect-error - framer-motion v12 type issue with className and props spreading
     return <motion.section ref={ref} className={className} {...props} />;
   }
 );

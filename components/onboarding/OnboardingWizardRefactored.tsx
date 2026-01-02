@@ -71,7 +71,7 @@ export function OnboardingWizardRefactored() {
   // Track step completion
   useEffect(() => {
     if (completedSteps.length > 0) {
-      const userId = localStorage.getItem("user_id") || "anonymous";
+      const userId: string = localStorage.getItem("user_id") || "anonymous";
       const lastCompleted = completedSteps[completedSteps.length - 1];
       if (lastCompleted) {
         const stepIndex = getStepIds().indexOf(lastCompleted as OnboardingStepId);

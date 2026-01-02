@@ -107,7 +107,7 @@ export default function DiagnosticsPage() {
         starter: { maxSystems: 20, maxWebhooks: 50, maxRunsPerMonth: 10000 },
         pro: { maxSystems: 100, maxWebhooks: 500, maxRunsPerMonth: 50000 },
         enterprise: { maxSystems: -1, maxWebhooks: -1, maxRunsPerMonth: -1 },
-      };
+      } as const;
       const limits = planLimits[plan as keyof typeof planLimits] || planLimits.free;
 
       // Count usage

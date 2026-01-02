@@ -9,7 +9,6 @@ import { AnimatedButton, AnimatedCard, Reveal, StepTransition, PageTransition } 
 import { useMachine } from "@xstate/react";
 import { demoFormMachine } from "@/lib/xstate/demo-machine";
 import { CheckCircle2, AlertCircle, Loader2, ArrowRight, ArrowLeft } from "lucide-react";
-import { motionVariants } from "@/lib/style/motion";
 
 /**
  * Playground Page

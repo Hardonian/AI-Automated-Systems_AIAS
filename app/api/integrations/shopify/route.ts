@@ -14,7 +14,7 @@ const shopifyConnectSchema = z.object({
   shop: z.string(),
 });
 
-export const runtime = "edge";
+export const runtime = "nodejs"; // Requires Supabase client and database operations
 
 /**
  * POST /api/integrations/shopify

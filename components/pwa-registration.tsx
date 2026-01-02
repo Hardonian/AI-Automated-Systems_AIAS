@@ -11,11 +11,13 @@ export function PWARegistration() {
         .then((registration) => {
           // Service worker registered (use logger in production)
           if (process.env.NODE_ENV === "development") {
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             const { logger } = require("@/lib/utils/logger");
             logger.debug("Service worker registered", { scope: registration.scope });
           }
         })
         .catch((error) => {
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
           const { logger } = require("@/lib/utils/logger");
           logger.error("Service worker registration failed", error as Error);
         });

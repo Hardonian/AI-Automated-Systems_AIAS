@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, ButtonProps } from "@/components/ui/button";
-import { motion, HTMLMotionProps } from "framer-motion";
+import { ButtonProps } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import { motionSprings, motionScale, prefersReducedMotion } from "@/lib/style/motion";
 import { forwardRef } from "react";
 

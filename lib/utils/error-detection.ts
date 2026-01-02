@@ -205,10 +205,12 @@ class ErrorDetector {
         // Example: fetch('https://api.datadoghq.com/api/v1/events', { ... })
         // Datadog alert prepared (use logger in production)
         if (process.env.NODE_ENV === "development") {
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
           const { logger } = require("@/lib/utils/logger");
           logger.debug("Datadog alert", { payload: alertPayload });
         }
       } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { logger } = require("@/lib/utils/logger");
         logger.warn("Failed to send to Datadog", e as Error);
       }

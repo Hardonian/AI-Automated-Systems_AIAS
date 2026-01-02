@@ -132,7 +132,7 @@ export function generateStructuredData(type: 'Organization' | 'WebSite' | 'Artic
   };
 
   switch (type) {
-    case 'Organization':
+    case 'Organization': {
       return {
         ...base,
         name: siteName,
@@ -151,7 +151,8 @@ export function generateStructuredData(type: 'Organization' | 'WebSite' | 'Artic
         },
         ...data,
       };
-    case 'WebSite':
+    }
+    case 'WebSite': {
       return {
         ...base,
         name: siteName,
@@ -166,7 +167,8 @@ export function generateStructuredData(type: 'Organization' | 'WebSite' | 'Artic
         },
         ...data,
       };
-    case 'Article':
+    }
+    case 'Article': {
       return {
         ...base,
         headline: data.headline,
@@ -188,7 +190,8 @@ export function generateStructuredData(type: 'Organization' | 'WebSite' | 'Artic
         },
         ...data,
       };
-    case 'Product':
+    }
+    case 'Product': {
       return {
         ...base,
         name: data.name,
@@ -207,6 +210,7 @@ export function generateStructuredData(type: 'Organization' | 'WebSite' | 'Artic
         },
         ...(data || {}),
       };
+    }
     default:
       return { ...base, ...data };
   }

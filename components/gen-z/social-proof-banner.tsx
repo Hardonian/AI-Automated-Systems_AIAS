@@ -41,7 +41,9 @@ export function SocialProofBanner() {
     return () => clearInterval(interval);
   }, []);
 
-  if (!isVisible || !data) return null;
+  if (!isVisible || !data) {
+    return null;
+  }
 
   return (
     <div

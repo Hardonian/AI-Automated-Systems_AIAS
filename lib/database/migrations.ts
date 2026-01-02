@@ -149,6 +149,8 @@ async function runMigrationsViaSupabaseCLI(): Promise<MigrationResult> {
     throw new Error('Supabase CLI migrations can only run in Node.js runtime');
   }
   // Use dynamic require to avoid webpack bundling
+  // eslint-disable-next-line @typescript-eslint/no-require-imports, no-eval
+  // @ts-expect-error - Dynamic require for Node.js only
   const childProcess = eval('require')('child_process');
   const { execSync } = childProcess;
   

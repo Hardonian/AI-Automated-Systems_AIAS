@@ -106,7 +106,7 @@ export const INTEGRATIONS: Record<string, IntegrationInfo> = {
  */
 export function isIntegrationAvailable(provider: string): boolean {
   const integration = INTEGRATIONS[provider.toLowerCase()];
-  return integration?.status === "available" || false;
+  return integration?.status === "available";
 }
 
 /**

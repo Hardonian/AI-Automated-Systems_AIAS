@@ -17,6 +17,7 @@ export function analyzeBundle(moduleName: string): void {
       const moduleResources = resources.filter((r) => r.name.includes(moduleName));
       
       // Use logger instead of console.log
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { logger } = require("@/lib/utils/logger");
       logger.debug(`Bundle Analysis: ${moduleName}`, {
         resources: moduleResources.map((resource) => ({

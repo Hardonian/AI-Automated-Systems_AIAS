@@ -10,6 +10,7 @@ let Sentry: any = null;
 
 try {
   // Try to import Sentry - it may not be installed
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   Sentry = require("@sentry/nextjs");
 } catch {
   // Sentry not installed, will use fallback logging

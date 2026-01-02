@@ -244,18 +244,22 @@ export abstract class BaseAdapter implements IntegrationAdapter {
       case 'apiKey':
         // API key is stored, no auth needed
         break;
-      case 'bearer':
+      case 'bearer': {
         this.authToken = this.config.auth.token;
         break;
-      case 'basic':
+      }
+      case 'basic': {
         // Basic auth is handled in headers
         break;
-      case 'oauth':
+      }
+      case 'oauth': {
         await this.authenticateOAuth();
         break;
-      case 'hmac':
+      }
+      case 'hmac': {
         // HMAC is calculated per request
         break;
+      }
     }
   }
 
@@ -319,20 +323,23 @@ export abstract class BaseAdapter implements IntegrationAdapter {
 
     // Add authentication
     switch (this.config.auth.type) {
-      case 'apiKey':
+      case 'apiKey': {
         if (this.config.auth.location === 'header') {
           headers[this.config.auth.headerName] = this.config.auth.key;
         }
         break;
-      case 'bearer':
+      }
+      case 'bearer': {
         if (this.authToken) {
           headers['Authorization'] = `Bearer ${this.authToken}`;
         }
         break;
-      case 'basic':
+      }
+      case 'basic': {
         const credentials = btoa(`${this.config.auth.username}:${this.config.auth.password}`);
         headers['Authorization'] = `Basic ${credentials}`;
         break;
+      }
       case 'hmac':
         // HMAC would be calculated per request
         break;
@@ -382,12 +389,15 @@ export abstract class BaseAdapter implements IntegrationAdapter {
    */
   private calculateBackoff(attempt: number, config: RetryConfig): number {
     switch (config.backoff) {
-      case 'exponential':
+      case 'exponential': {
         return Math.min(config.initialDelay * Math.pow(2, attempt - 1), config.maxDelay);
-      case 'linear':
+      }
+      case 'linear': {
         return config.initialDelay;
-      case 'fixed':
+      }
+      case 'fixed': {
         return config.initialDelay;
+      }
       default:
         return config.initialDelay;
     }

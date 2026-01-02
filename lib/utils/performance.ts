@@ -133,6 +133,7 @@ export function analyzeBundleSize(moduleName: string): void {
     );
     // Use logger instead of console.log
     if (typeof window !== "undefined") {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { logger } = require("@/lib/utils/logger");
       logger.debug(`Bundle analysis for ${moduleName}`, { chunks: moduleChunks });
     }

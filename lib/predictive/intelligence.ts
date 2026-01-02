@@ -273,7 +273,7 @@ export class PredictiveIntelligenceService {
     const suggestions: RemediationSuggestion[] = [];
 
     switch (anomaly.type) {
-      case 'performance_degradation':
+      case 'performance_degradation': {
         suggestions.push({
           id: this.generateId(),
           anomalyId,
@@ -290,8 +290,9 @@ export class PredictiveIntelligenceService {
           ],
         });
         break;
+      }
 
-      case 'error_spike':
+      case 'error_spike': {
         suggestions.push({
           id: this.generateId(),
           anomalyId,
@@ -308,8 +309,9 @@ export class PredictiveIntelligenceService {
           ],
         });
         break;
+      }
 
-      case 'cost_anomaly':
+      case 'cost_anomaly': {
         suggestions.push({
           id: this.generateId(),
           anomalyId,
@@ -326,6 +328,7 @@ export class PredictiveIntelligenceService {
           ],
         });
         break;
+      }
     }
 
     return suggestions;

@@ -22,7 +22,7 @@
     "lighthouse": "lighthouse-ci autorun"
   },
   "dependencies": {
-    "next": "^15.5.7",
+    "next": "^15.5.9",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "@prisma/client": "^5.22.0",
@@ -39,7 +39,7 @@
     "openai": "^4.20.1",
     "@anthropic-ai/sdk": "^0.9.1",
     "@google/generative-ai": "^0.2.1",
-    "ai": "^2.2.29",
+    "ai": "^5.0.52",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "tailwind-merge": "^2.2.0",

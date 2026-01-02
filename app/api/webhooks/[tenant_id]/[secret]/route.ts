@@ -16,7 +16,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import crypto from "crypto";
 
 import { env } from "@/lib/env";
 import { SystemError, ValidationError, formatError } from "@/lib/errors";
@@ -203,8 +202,6 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { tenant_id: string; secret: string } }
 ): Promise<NextResponse> {
-  const startTime = Date.now();
-
   try {
     const { tenant_id: tenantId, secret } = params;
 

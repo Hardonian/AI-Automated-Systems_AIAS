@@ -6,7 +6,7 @@
  */
 
 import createDOMPurify from 'isomorphic-dompurify';
-// @ts-ignore - jsdom types may not be available
+// @ts-expect-error - jsdom types may not be available
 import { JSDOM } from 'jsdom';
 
 /**

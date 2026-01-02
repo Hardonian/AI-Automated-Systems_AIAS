@@ -188,8 +188,6 @@ export function IntegrationSetupWizard({ integration, onComplete, onCancel }: In
   if (!currentStepData) return null;
   const totalTime = steps.reduce((sum, step) => sum + step.estimatedTime, 0);
 
-  const totalTime = steps.reduce((sum, step) => sum + step.estimatedTime, 0);
-
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Progress Header */}

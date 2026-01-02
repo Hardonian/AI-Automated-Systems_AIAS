@@ -71,7 +71,7 @@ jobs:
           echo "✅ Security audit passed"
 
       - name: Upload audit results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: security-audit-results

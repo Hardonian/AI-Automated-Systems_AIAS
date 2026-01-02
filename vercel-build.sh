@@ -88,8 +88,17 @@ info "🔨 Generating Prisma client..."
 cd apps/web || exit 1
 
 # Set up database URLs with fallbacks
-export DATABASE_URL=${UPSTASH_POSTGRES_URL:-${DATABASE_URL:-}}
-export DIRECT_URL=${UPSTASH_POSTGRES_DIRECT_URL:-${DIRECT_URL:-${DATABASE_URL:-}}}
+# Priority: DATABASE_POOLER_URL (from GitHub Secrets) > UPSTASH_POSTGRES_URL > DATABASE_URL
+export DATABASE_URL=${DATABASE_POOLER_URL:-${UPSTASH_POSTGRES_URL:-${DATABASE_URL:-}}}
+export DIRECT_URL=${DATABASE_POOLER_DIRECT_URL:-${UPSTASH_POSTGRES_DIRECT_URL:-${DIRECT_URL:-${DATABASE_POOLER_URL:-${DATABASE_URL:-}}}}}
+
+# Mask database URLs in logs to prevent exposure
+if [ -n "$DATABASE_URL" ]; then
+  echo "::add-mask::$DATABASE_URL"
+fi
+if [ -n "$DIRECT_URL" ]; then
+  echo "::add-mask::$DIRECT_URL"
+fi
 
 # Only run Prisma commands if DATABASE_URL is valid
 if [ -n "$DATABASE_URL" ] && [[ "$DATABASE_URL" =~ ^postgres ]]; then

@@ -62,6 +62,9 @@ BEGIN
   ) THEN
     ALTER TABLE public.tenants ADD COLUMN domain TEXT;
   END IF;
+EXCEPTION WHEN OTHERS THEN
+  -- Column might already exist, ignore
+  NULL;
 END $$;
 
 -- Indexes for foundational tables
@@ -157,12 +160,18 @@ BEGIN
   ) THEN
     ALTER TABLE public.agents ADD COLUMN created_by UUID REFERENCES auth.users(id);
   END IF;
+EXCEPTION WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$ 
+BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM information_schema.columns 
     WHERE table_schema = 'public' AND table_name = 'agents' AND column_name = 'tenant_id'
   ) THEN
     ALTER TABLE public.agents ADD COLUMN tenant_id UUID REFERENCES public.tenants(id) ON DELETE CASCADE;
   END IF;
+EXCEPTION WHEN OTHERS THEN NULL;
 END $$;
 
 -- Agent Executions Table
@@ -190,6 +199,7 @@ BEGIN
   ) THEN
     ALTER TABLE public.agent_executions ADD COLUMN tenant_id UUID REFERENCES public.tenants(id) ON DELETE CASCADE;
   END IF;
+EXCEPTION WHEN OTHERS THEN NULL;
 END $$;
 
 -- Workflows Table
@@ -225,12 +235,18 @@ BEGIN
   ) THEN
     ALTER TABLE public.workflows ADD COLUMN created_by UUID REFERENCES auth.users(id);
   END IF;
+EXCEPTION WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$ 
+BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM information_schema.columns 
     WHERE table_schema = 'public' AND table_name = 'workflows' AND column_name = 'tenant_id'
   ) THEN
     ALTER TABLE public.workflows ADD COLUMN tenant_id UUID REFERENCES public.tenants(id) ON DELETE CASCADE;
   END IF;
+EXCEPTION WHEN OTHERS THEN NULL;
 END $$;
 
 -- Workflow Executions Table
@@ -250,7 +266,7 @@ CREATE TABLE IF NOT EXISTS public.workflow_executions (
   metadata JSONB DEFAULT NULL
 );
 
--- Add missing columns if they don't exist
+-- Add missing columns if they don't exist (workflow_executions might already exist)
 DO $$ 
 BEGIN
   IF NOT EXISTS (
@@ -259,6 +275,22 @@ BEGIN
   ) THEN
     ALTER TABLE public.workflow_executions ADD COLUMN tenant_id UUID REFERENCES public.tenants(id) ON DELETE CASCADE;
   END IF;
+EXCEPTION WHEN OTHERS THEN NULL;
+END $$;
+
+-- Add tenant_id to telemetry_events if it exists but doesn't have tenant_id
+DO $$ 
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.tables 
+    WHERE table_schema = 'public' AND table_name = 'telemetry_events'
+  ) AND NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_schema = 'public' AND table_name = 'telemetry_events' AND column_name = 'tenant_id'
+  ) THEN
+    ALTER TABLE public.telemetry_events ADD COLUMN tenant_id UUID REFERENCES public.tenants(id) ON DELETE SET NULL;
+  END IF;
+EXCEPTION WHEN OTHERS THEN NULL;
 END $$;
 
 -- ============================================================================
@@ -433,12 +465,26 @@ CREATE INDEX IF NOT EXISTS idx_workflows_tenant_id ON public.workflows(tenant_id
 CREATE INDEX IF NOT EXISTS idx_workflows_enabled ON public.workflows(enabled);
 CREATE INDEX IF NOT EXISTS idx_workflows_category ON public.workflows(category);
 
--- Workflow executions indexes
-CREATE INDEX IF NOT EXISTS idx_workflow_executions_workflow_id ON public.workflow_executions(workflow_id);
-CREATE INDEX IF NOT EXISTS idx_workflow_executions_user_id ON public.workflow_executions(user_id);
-CREATE INDEX IF NOT EXISTS idx_workflow_executions_tenant_id ON public.workflow_executions(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_workflow_executions_status ON public.workflow_executions(status);
-CREATE INDEX IF NOT EXISTS idx_workflow_executions_started_at ON public.workflow_executions(started_at);
+-- Workflow executions indexes (only create if columns exist)
+DO $$ 
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'workflow_executions' AND column_name = 'workflow_id') THEN
+    CREATE INDEX IF NOT EXISTS idx_workflow_executions_workflow_id ON public.workflow_executions(workflow_id);
+  END IF;
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'workflow_executions' AND column_name = 'user_id') THEN
+    CREATE INDEX IF NOT EXISTS idx_workflow_executions_user_id ON public.workflow_executions(user_id);
+  END IF;
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'workflow_executions' AND column_name = 'tenant_id') THEN
+    CREATE INDEX IF NOT EXISTS idx_workflow_executions_tenant_id ON public.workflow_executions(tenant_id);
+  END IF;
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'workflow_executions' AND column_name = 'status') THEN
+    CREATE INDEX IF NOT EXISTS idx_workflow_executions_status ON public.workflow_executions(status);
+  END IF;
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'workflow_executions' AND column_name = 'started_at') THEN
+    CREATE INDEX IF NOT EXISTS idx_workflow_executions_started_at ON public.workflow_executions(started_at);
+  END IF;
+EXCEPTION WHEN OTHERS THEN NULL;
+END $$;
 
 -- Billing indexes
 CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id ON public.subscriptions(user_id);
@@ -455,11 +501,25 @@ CREATE INDEX IF NOT EXISTS idx_billing_events_user_id ON public.billing_events(u
 CREATE INDEX IF NOT EXISTS idx_billing_events_event_type ON public.billing_events(event_type);
 CREATE INDEX IF NOT EXISTS idx_billing_events_timestamp ON public.billing_events(timestamp);
 
--- Observability indexes
-CREATE INDEX IF NOT EXISTS idx_telemetry_events_type ON public.telemetry_events(type);
-CREATE INDEX IF NOT EXISTS idx_telemetry_events_user_id ON public.telemetry_events(user_id);
-CREATE INDEX IF NOT EXISTS idx_telemetry_events_tenant_id ON public.telemetry_events(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_telemetry_events_timestamp ON public.telemetry_events(timestamp);
+-- Observability indexes (telemetry_events might already exist)
+DO $$ 
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'telemetry_events') THEN
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'telemetry_events' AND column_name = 'type') THEN
+      CREATE INDEX IF NOT EXISTS idx_telemetry_events_type ON public.telemetry_events(type);
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'telemetry_events' AND column_name = 'user_id') THEN
+      CREATE INDEX IF NOT EXISTS idx_telemetry_events_user_id ON public.telemetry_events(user_id);
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'telemetry_events' AND column_name = 'tenant_id') THEN
+      CREATE INDEX IF NOT EXISTS idx_telemetry_events_tenant_id ON public.telemetry_events(tenant_id);
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'telemetry_events' AND column_name = 'timestamp') THEN
+      CREATE INDEX IF NOT EXISTS idx_telemetry_events_timestamp ON public.telemetry_events(timestamp);
+    END IF;
+  END IF;
+EXCEPTION WHEN OTHERS THEN NULL;
+END $$;
 
 CREATE INDEX IF NOT EXISTS idx_workflow_execution_logs_execution_id ON public.workflow_execution_logs(execution_id);
 CREATE INDEX IF NOT EXISTS idx_workflow_execution_logs_workflow_id ON public.workflow_execution_logs(workflow_id);
@@ -848,12 +908,25 @@ END $$;
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'supabase_realtime') THEN
-    -- Add tables to realtime publication
-    ALTER PUBLICATION supabase_realtime ADD TABLE IF NOT EXISTS public.agents;
-    ALTER PUBLICATION supabase_realtime ADD TABLE IF NOT EXISTS public.workflows;
-    ALTER PUBLICATION supabase_realtime ADD TABLE IF NOT EXISTS public.workflow_executions;
-    ALTER PUBLICATION supabase_realtime ADD TABLE IF NOT EXISTS public.agent_executions;
+    -- Add tables to realtime publication (IF NOT EXISTS not supported, so check first)
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'agents') 
+       AND NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'agents') THEN
+      ALTER PUBLICATION supabase_realtime ADD TABLE public.agents;
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'workflows')
+       AND NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'workflows') THEN
+      ALTER PUBLICATION supabase_realtime ADD TABLE public.workflows;
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'workflow_executions')
+       AND NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'workflow_executions') THEN
+      ALTER PUBLICATION supabase_realtime ADD TABLE public.workflow_executions;
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'agent_executions')
+       AND NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'agent_executions') THEN
+      ALTER PUBLICATION supabase_realtime ADD TABLE public.agent_executions;
+    END IF;
   END IF;
+EXCEPTION WHEN OTHERS THEN NULL;
 END $$;
 
 -- Set replica identity for UPDATE/DELETE payloads (if needed)

@@ -1,7 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { motionVariants, motionSprings, motionScale, prefersReducedMotion, MotionVariant } from "@/lib/style/motion";
 import { forwardRef, ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -50,19 +50,25 @@ export const AnimatedCard = forwardRef<HTMLDivElement, AnimatedCardProps>(
           transition: motionSprings.gentle,
         };
 
+    // Extract only the standard variant properties (hidden/visible) for TypeScript
+    const standardVariants: Variants = {
+      hidden: animationVariant.hidden as any,
+      visible: animationVariant.visible as any,
+    };
+
     return (
       <motion.div
         ref={ref}
         initial={reducedMotion ? false : "hidden"}
         animate="visible"
-        variants={animationVariant}
+        variants={standardVariants}
         whileHover={hoverProps}
         transition={{
           ...animationVariant.visible?.transition,
           delay: staggerDelay,
         }}
         className={cn("w-full", className)}
-        {...props}
+        {...(props as any)}
       >
         <Card hover={hover}>{children}</Card>
       </motion.div>

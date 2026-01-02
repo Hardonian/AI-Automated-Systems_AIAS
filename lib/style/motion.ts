@@ -212,7 +212,7 @@ export const motionVariants = {
       },
     },
     pulse: {
-      scale: [1, 1.05, 1],
+      scale: [1, 1.05, 1] as [number, number, number],
       transition: {
         duration: motionDurations.slow / 1000,
         repeat: Infinity,
@@ -238,8 +238,8 @@ export const motionVariants = {
       },
     },
     celebrate: {
-      scale: [1, 1.1, 1],
-      rotate: [0, 5, -5, 0],
+      scale: [1, 1.1, 1] as [number, number, number],
+      rotate: [0, 5, -5, 0] as [number, number, number, number],
       transition: {
         duration: motionDurations.slow / 1000,
         ease: motionEasing.bounce,
@@ -258,7 +258,7 @@ export const motionVariants = {
       transition: motionTransitions.entrance,
     },
     shake: {
-      x: [0, -10, 10, -10, 10, 0],
+      x: [0, -10, 10, -10, 10, 0] as [number, number, number, number, number, number],
       transition: {
         duration: motionDurations.moderate / 1000,
         ease: motionEasing.sharp,

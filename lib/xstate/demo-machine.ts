@@ -6,7 +6,7 @@
  * async operations, error handling, and retry logic.
  */
 
-import { createMachine, assign } from "xstate";
+import { createMachine, assign, fromPromise } from "xstate";
 import { 
   AsyncContext, 
   MachineError,
@@ -33,7 +33,8 @@ type DemoFormEvent =
   | { type: "INPUT_CHANGE"; field: "name" | "email"; value: string }
   | { type: "SUBMIT" }
   | { type: "RETRY" }
-  | { type: "RESET" };
+  | { type: "RESET" }
+  | { type: "CANCEL" };
 
 /**
  * Demo service: Simulates API call
@@ -75,7 +76,7 @@ function validateForm(context: DemoFormContext): { valid: boolean; errors: Recor
 /**
  * Validation guard
  */
-const isValidForm: GuardFn<DemoFormContext, DemoFormEvent> = (context) => {
+const isValidForm = ({ context }: { context: DemoFormContext }) => {
   const result = validateForm(context);
   return result.valid;
 };
@@ -168,8 +169,10 @@ export const demoFormMachine = createMachine(
         }),
         invoke: {
           id: "submitForm",
-          src: ({ context }) => 
-            retry(() => submitForm(context.formData), 3, 1000),
+          src: fromPromise(async ({ input }: { input: DemoFormContext["formData"] }) => {
+            return await retry(() => submitForm(input), 3, 1000);
+          }),
+          input: ({ context }: { context: DemoFormContext }) => context.formData,
           onDone: {
             target: "success",
             actions: assign({
@@ -180,7 +183,10 @@ export const demoFormMachine = createMachine(
           onError: {
             target: "error",
             actions: assign({
-              error: ({ event }) => createMachineError(event.error),
+              error: ({ event }) => {
+                const machineError = createMachineError(event.error);
+                return new Error(machineError.message);
+              },
               retryCount: ({ context }) => (context.retryCount || 0) + 1,
             }),
           },

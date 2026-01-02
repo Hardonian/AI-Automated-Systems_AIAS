@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence, HTMLMotionProps } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { motionVariants, prefersReducedMotion } from "@/lib/style/motion";
 import { ReactNode } from "react";
 
@@ -70,6 +70,7 @@ export function PageTransition({
         exit="exit"
         variants={variants}
         className={className}
+        {...({} as any)}
       >
         {children}
       </motion.div>

@@ -5,7 +5,7 @@
  * Ensures consistency, type safety, and maintainability.
  */
 
-import { EventObject, StateMachine, TypedState } from "xstate";
+import { EventObject, StateMachine, ActorRefFrom } from "xstate";
 
 /**
  * Standard async state values for async operations
@@ -86,8 +86,7 @@ export interface MachineConfig<TContext, TEvent extends EventObject> {
 /**
  * Type helper for machine state
  */
-export type MachineState<TMachine extends StateMachine<any, any, any>> =
-  TypedState<TMachine>;
+export type MachineState<TMachine = any> = ActorRefFrom<TMachine>;
 
 /**
  * Error handling pattern

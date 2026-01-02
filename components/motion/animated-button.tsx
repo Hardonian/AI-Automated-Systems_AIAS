@@ -42,7 +42,7 @@ export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>
         whileTap={reducedMotion || disableHover ? {} : { scale: activeScale }}
         transition={springConfig}
         className={className}
-        {...(props as HTMLMotionProps<"button">)}
+        {...(props as any)}
       >
         {props.children}
       </motion.button>

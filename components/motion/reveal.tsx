@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, HTMLMotionProps } from "framer-motion";
+import { motion, HTMLMotionProps, Variants } from "framer-motion";
 import { motionVariants, prefersReducedMotion, MotionVariant } from "@/lib/style/motion";
 import { forwardRef, ReactNode } from "react";
 
@@ -53,15 +53,21 @@ export const Reveal = forwardRef<HTMLDivElement, RevealProps>(
       delay: delay + staggerDelay,
     };
 
+    // Extract only the standard variant properties (hidden/visible) for TypeScript
+    const standardVariants: Variants = {
+      hidden: animationVariant.hidden as any,
+      visible: animationVariant.visible as any,
+    };
+
     return (
       <motion.div
         ref={ref}
         initial={reducedMotion ? false : "hidden"}
         animate="visible"
-        variants={animationVariant}
+        variants={standardVariants}
         transition={transition}
         className={className}
-        {...props}
+        {...(props as any)}
       >
         {children}
       </motion.div>

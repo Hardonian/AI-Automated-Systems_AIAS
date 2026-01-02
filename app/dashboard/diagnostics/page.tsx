@@ -102,12 +102,13 @@ export default function DiagnosticsPage() {
         .single();
 
       const plan = subscription?.tier || "free";
-      const limits = {
+      const planLimits = {
         free: { maxSystems: 3, maxWebhooks: 5, maxRunsPerMonth: 100 },
         starter: { maxSystems: 20, maxWebhooks: 50, maxRunsPerMonth: 10000 },
         pro: { maxSystems: 100, maxWebhooks: 500, maxRunsPerMonth: 50000 },
         enterprise: { maxSystems: -1, maxWebhooks: -1, maxRunsPerMonth: -1 },
-      }[plan] || limits.free;
+      } as const;
+      const limits = planLimits[plan as keyof typeof planLimits] || planLimits.free;
 
       // Count usage
       const { count: systemsCount } = await supabase

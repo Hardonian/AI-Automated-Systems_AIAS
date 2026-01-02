@@ -1,1 +1,9 @@
-export const hapticTap = () => { if (typeof window !== "undefined" && "vibrate" in navigator) { try { navigator.vibrate?.(20); } catch {} } };
+export const hapticTap = () => {
+  if (typeof window !== "undefined" && "vibrate" in navigator) {
+    try {
+      navigator.vibrate?.(20);
+    } catch {
+      // Haptic feedback is optional, ignore errors
+    }
+  }
+};

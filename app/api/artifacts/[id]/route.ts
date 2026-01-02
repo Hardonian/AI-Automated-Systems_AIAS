@@ -8,7 +8,6 @@ import { createClient } from "@supabase/supabase-js";
 
 import { handleApiError } from "@/lib/api/route-handler";
 import { env } from "@/lib/env";
-import { SystemError, formatError } from "@/lib/errors";
 import { createClient as createSupabaseClient } from "@/lib/supabase/server";
 
 const supabaseAdmin = createClient(env.supabase.url, env.supabase.serviceRoleKey);

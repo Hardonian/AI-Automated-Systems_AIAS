@@ -87,7 +87,7 @@ export function ParallaxBackground({
       />
 
       {/* Parallax content wrapper */}
-      {/* @ts-ignore - framer-motion v12 type issue with className prop */}
+      {/* @ts-expect-error - framer-motion v12 type issue with className prop */}
       <motion.div style={{ y: backgroundY }} className="relative z-10">
         {children}
       </motion.div>

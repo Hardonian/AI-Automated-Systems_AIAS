@@ -246,7 +246,19 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 
     // Construct webhook URLs (without secrets - user needs to check secret separately)
-    const endpointsWithUrls = (endpoints || []).map((endpoint) => ({
+    type WebhookEndpoint = {
+      id: string;
+      tenant_id: string;
+      system_id: string;
+      name: string | null;
+      description: string | null;
+      enabled: boolean;
+      created_at: string | null;
+      updated_at: string | null;
+    };
+    
+    const endpointsArray: WebhookEndpoint[] = (endpoints || []) as WebhookEndpoint[];
+    const endpointsWithUrls = endpointsArray.map((endpoint: WebhookEndpoint) => ({
       ...endpoint,
       webhook_url_pattern: `${request.nextUrl.origin}/api/webhooks/${tenantId}/[secret]`,
       // Note: Secret is not returned for security

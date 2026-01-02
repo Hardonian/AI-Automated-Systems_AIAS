@@ -136,8 +136,9 @@ jobs:
           fi
           echo "✅ Build completed successfully"
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
-          SKIP_PRISMA_GENERATE: ${{ !secrets.DATABASE_URL }}
+          # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
+          DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
+          SKIP_PRISMA_GENERATE: ${{ !secrets.DATABASE_POOLER_URL && !secrets.DATABASE_URL }}
       - run: |
           set -euo pipefail
           echo "🔍 Validating build output..."
@@ -196,7 +197,8 @@ jobs:
           pnpm run db:generate || echo "⚠️ Prisma generation skipped"
         continue-on-error: true
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
+          # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
+          DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
 
       - name: Validate Vercel configuration
         run: |
@@ -337,7 +339,8 @@ jobs:
       - run: pnpm run start &
         env:
           PORT: 3000
-          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
+          # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
+          DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || '' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || '' }}
       - run: sleep 15

@@ -16,8 +16,8 @@ import { safeStripe, safeSupabase } from "@/lib/utils/server-guards";
 export const runtime = "nodejs";
 
 // Initialize Stripe and Supabase clients safely
-let stripe: Stripe;
-let supabase: ReturnType<typeof safeSupabase>;
+let stripe: Stripe | undefined;
+let supabase: ReturnType<typeof safeSupabase> | undefined;
 
 try {
   stripe = safeStripe();
@@ -27,85 +27,6 @@ try {
   logger.error("Failed to initialize Stripe/Supabase in webhook", error instanceof Error ? error : new Error(String(error)));
 }
 
-
-interface CheckoutResponse {
-  sessionId?: string;
-  error?: string;
-}
-
-export async function POST(req: NextRequest): Promise<NextResponse<CheckoutResponse>> {
-  try {
-    let body: unknown;
-    try {
-      body = await req.json();
-    } catch {
-      const validationError = new ValidationError("Invalid JSON body");
-      const formatted = formatError(validationError);
-      return NextResponse.json(
-        { error: formatted.message },
-        { status: formatted.statusCode }
-      );
-    }
-
-    const { priceId, userId, tier } = body as { priceId?: string; userId?: string; tier?: string };
-
-    if (!priceId || !userId || !tier) {
-      const error = new ValidationError("Missing required fields: priceId, userId, tier");
-      const formatted = formatError(error);
-      return NextResponse.json(
-        { error: formatted.message },
-        { status: formatted.statusCode }
-      );
-    }
-
-    // Retry Stripe API call with exponential backoff
-    const session = await retry(
-      async () => {
-        return await stripe.checkout.sessions.create({
-          mode: "subscription",
-          payment_method_types: ["card"],
-          line_items: [{ price: priceId, quantity: 1 }],
-          success_url: `${req.nextUrl.origin}/billing/success?session_id={CHECKOUT_SESSION_ID}`,
-          cancel_url: `${req.nextUrl.origin}/billing`,
-          client_reference_id: userId,
-          metadata: {
-            userId,
-            tier,
-          },
-        });
-      },
-      {
-        maxAttempts: 3,
-        initialDelayMs: 1000,
-        onRetry: (attempt, err) => {
-          logger.warn(`Retrying Stripe checkout (attempt ${attempt})`, {
-            component: "StripeWebhookAPI",
-            action: "retry",
-            attempt,
-            error: err.message,
-          });
-        },
-      }
-    );
-
-    return NextResponse.json({ sessionId: session.id });
-  } catch (error: unknown) {
-    const systemError = new SystemError(
-      "Checkout error",
-      error instanceof Error ? error : new Error(String(error))
-    );
-    recordError(systemError, { endpoint: '/api/stripe/webhook', action: 'checkout' });
-    logger.error("Checkout error", systemError, {
-      component: "StripeWebhookAPI",
-      action: "checkout",
-    });
-    const formatted = formatError(systemError);
-    return NextResponse.json(
-      { error: formatted.message },
-      { status: formatted.statusCode }
-    );
-  }
-}
 
 interface WebhookResponse {
   received?: boolean;
@@ -119,6 +40,17 @@ export async function POST(req: NextRequest): Promise<NextResponse<WebhookRespon
   const startTime = Date.now();
   const sig = req.headers.get("stripe-signature");
   const {webhookSecret} = env.stripe;
+
+  // Guard: Ensure Stripe and Supabase are initialized
+  if (!stripe || !supabase) {
+    const error = new SystemError("Stripe or Supabase client not initialized");
+    recordError(error, { endpoint: '/api/stripe/webhook', action: 'webhook' });
+    const formatted = formatError(error);
+    return NextResponse.json(
+      { error: formatted.message },
+      { status: formatted.statusCode }
+    );
+  }
 
   if (!sig || !webhookSecret) {
     const error = new SystemError("Missing Stripe webhook configuration");

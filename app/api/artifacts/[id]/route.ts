@@ -127,7 +127,7 @@ export async function download(
     }
 
     // Determine content and content type
-    let content: string | Buffer;
+    let content: string | Uint8Array;
     let contentType: string;
     let filename: string;
 
@@ -140,7 +140,7 @@ export async function download(
       contentType = "text/plain";
       filename = `artifact-${artifactId}.txt`;
     } else if (artifact.content_bytes) {
-      content = Buffer.from(artifact.content_bytes);
+      content = new Uint8Array(Buffer.from(artifact.content_bytes));
       contentType = "application/octet-stream";
       filename = `artifact-${artifactId}.bin`;
     } else {

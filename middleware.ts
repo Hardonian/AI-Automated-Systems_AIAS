@@ -17,30 +17,39 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const ip = getClientIP(request);
 
-  // Check admin access first (before rate limiting)
-  const adminCheck = await adminGuard(request);
-  if (adminCheck) {return adminCheck;}
+  try {
+    // Check admin access first (before rate limiting)
+    const adminCheck = await adminGuard(request);
+    if (adminCheck) {return adminCheck;}
 
-  // Check financial admin access
-  const financialCheck = await financialAdminGuard(request);
-  if (financialCheck) {return financialCheck;}
+    // Check financial admin access
+    const financialCheck = await financialAdminGuard(request);
+    if (financialCheck) {return financialCheck;}
 
-  // Check session for protected routes (dashboard, workflows, billing, etc.)
-  const protectedPaths = ["/dashboard", "/workflows", "/billing", "/settings", "/admin"];
-  const isProtectedPath = protectedPaths.some((protectedPath) => path.startsWith(protectedPath));
-  
-  if (isProtectedPath) {
-    const sessionCheck = await requireSession(request);
-    if (sessionCheck.redirect) {
-      return sessionCheck.redirect;
+    // Check session for protected routes (dashboard, workflows, billing, etc.)
+    const protectedPaths = ["/dashboard", "/workflows", "/billing", "/settings", "/admin"];
+    const isProtectedPath = protectedPaths.some((protectedPath) => path.startsWith(protectedPath));
+    
+    if (isProtectedPath) {
+      const sessionCheck = await requireSession(request);
+      if (sessionCheck.redirect) {
+        return sessionCheck.redirect;
+      }
+      if (sessionCheck.expired && !sessionCheck.valid) {
+        // Session expired, redirect to signin
+        const url = request.nextUrl.clone();
+        url.pathname = "/signin";
+        url.searchParams.set("redirect", path);
+        return NextResponse.redirect(url);
+      }
     }
-    if (sessionCheck.expired && !sessionCheck.valid) {
-      // Session expired, redirect to signin
-      const url = request.nextUrl.clone();
-      url.pathname = "/signin";
-      url.searchParams.set("redirect", path);
-      return NextResponse.redirect(url);
-    }
+  } catch (error) {
+    // Middleware errors should not crash - log and continue
+    logger.error("Middleware error", error instanceof Error ? error : new Error(String(error)), {
+      path,
+      ip,
+    });
+    // Continue with request (fail open for middleware)
   }
 
   // Skip middleware for static files and API routes (handled separately)
@@ -53,19 +62,32 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Detect suspicious activity
-  const suspicious = detectSuspiciousActivity(request);
-  if (suspicious.suspicious) {
-    logger.warn("Suspicious activity detected", undefined, {
-      ip,
-      path,
-      reason: suspicious.reason,
-    });
-    // Optionally block or rate limit more aggressively
+  // Detect suspicious activity (wrap in try-catch)
+  try {
+    const suspicious = detectSuspiciousActivity(request);
+    if (suspicious.suspicious) {
+      logger.warn("Suspicious activity detected", undefined, {
+        ip,
+        path,
+        reason: suspicious.reason,
+      });
+      // Optionally block or rate limit more aggressively
+    }
+  } catch (error) {
+    // Don't fail on suspicious activity detection
+    logger.warn("Suspicious activity detection failed", error instanceof Error ? error : new Error(String(error)));
   }
 
   // Global rate limiting for pages (more lenient than API)
-  const limit = rateLimit(ip, 200, 60 * 1000); // 200 requests per minute
+  let limit;
+  try {
+    limit = rateLimit(ip, 200, 60 * 1000); // 200 requests per minute
+  } catch (error) {
+    // If rate limiting fails, allow request (fail open) but log
+    logger.warn("Rate limiting failed", error instanceof Error ? error : new Error(String(error)), { ip, path });
+    limit = { allowed: true, remaining: 200, resetTime: Date.now() + 60000 };
+  }
+
   if (!limit.allowed) {
     const response = NextResponse.json(
       { error: "Too many requests" },

@@ -112,10 +112,10 @@ interface WebhookResponse {
   error?: string;
 }
 
-// Webhook handler - uses PUT method (Stripe sends webhooks as POST, but we use PUT to distinguish)
+// Webhook handler - CRITICAL: Stripe sends webhooks as POST
 // CRITICAL: Stripe webhooks require raw body for signature verification, so we MUST use Node.js runtime
 // However, we still use proper error handling and validation
-export async function PUT(req: NextRequest): Promise<NextResponse<WebhookResponse>> {
+export async function POST(req: NextRequest): Promise<NextResponse<WebhookResponse>> {
   const startTime = Date.now();
   const sig = req.headers.get("stripe-signature");
   const {webhookSecret} = env.stripe;

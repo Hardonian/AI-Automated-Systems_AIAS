@@ -180,7 +180,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const validationError = new ValidationError("Invalid request data", error.errors);
+      const validationError = new ValidationError(
+        "Invalid request data",
+        error.errors.map((issue) => ({
+          path: issue.path.map((p) => String(p)),
+          message: issue.message,
+        }))
+      );
       const formatted = formatError(validationError);
       return NextResponse.json(
         { error: formatted.message, details: formatted.details },

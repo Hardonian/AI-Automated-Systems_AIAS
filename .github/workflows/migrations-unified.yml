@@ -101,21 +101,28 @@ jobs:
         if: contains(github.event.head_commit.message, 'prisma') || contains(github.event.head_commit.message, 'migration') || github.event.inputs.migration_type == 'all' || github.event.inputs.migration_type == 'prisma'
         run: |
           cd apps/web || echo "Prisma migrations directory not found"
+          # Mask secrets in output to prevent exposure
+          echo "::add-mask::$DATABASE_URL"
+          echo "::add-mask::$DIRECT_URL"
           pnpm prisma migrate status || echo "Prisma migration status check completed"
         continue-on-error: true
         env:
-          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.STAGING_DIRECT_URL || secrets.STAGING_DATABASE_URL }}
+          # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_POOLER_URL || secrets.STAGING_DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.STAGING_DATABASE_POOLER_DIRECT_URL || secrets.STAGING_DIRECT_URL || secrets.STAGING_DATABASE_POOLER_URL || secrets.STAGING_DATABASE_URL }}
 
       - name: Validate staging schema
         run: |
           echo "Validating staging schema..."
+          # Mask secrets in output to prevent exposure
+          echo "::add-mask::$DATABASE_URL"
           pnpm run db:validate-schema || echo "Schema validation skipped"
         continue-on-error: true
         env:
           SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
-          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_POOLER_URL || secrets.STAGING_DATABASE_URL }}
 
   # ============================================================================
   # Apply Supabase Migrations
@@ -259,10 +266,14 @@ jobs:
       - name: Check migration status (before)
         id: status-before
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL || secrets.DATABASE_URL }}
+          # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
+          DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DATABASE_POOLER_DIRECT_URL || secrets.DIRECT_URL || secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
         run: |
           cd apps/web || exit 0
+          # Mask secrets in output to prevent exposure
+          echo "::add-mask::$DATABASE_URL"
+          echo "::add-mask::$DIRECT_URL"
           echo "=== Migration Status (Before) ===" > /tmp/migration-status-before.txt
           pnpm prisma migrate status >> /tmp/migration-status-before.txt 2>&1 || echo "Status check completed"
           cat /tmp/migration-status-before.txt
@@ -270,10 +281,14 @@ jobs:
       - name: Apply Prisma migrations
         id: migrate
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL || secrets.DATABASE_URL }}
+          # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
+          DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DATABASE_POOLER_DIRECT_URL || secrets.DIRECT_URL || secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
         run: |
           cd apps/web || exit 0
+          # Mask secrets in output to prevent exposure
+          echo "::add-mask::$DATABASE_URL"
+          echo "::add-mask::$DIRECT_URL"
           echo "=== Applying Prisma Migrations ==="
           pnpm run db:migrate || {
             echo "Migration failed!"
@@ -284,10 +299,14 @@ jobs:
       - name: Verify migration status (after)
         id: status-after
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL || secrets.DATABASE_URL }}
+          # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
+          DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DATABASE_POOLER_DIRECT_URL || secrets.DIRECT_URL || secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
         run: |
           cd apps/web || exit 0
+          # Mask secrets in output to prevent exposure
+          echo "::add-mask::$DATABASE_URL"
+          echo "::add-mask::$DIRECT_URL"
           echo "=== Migration Status (After) ===" > /tmp/migration-status-after.txt
           pnpm prisma migrate status >> /tmp/migration-status-after.txt 2>&1
           cat /tmp/migration-status-after.txt
@@ -302,10 +321,14 @@ jobs:
 
       - name: Verify database schema
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL || secrets.DATABASE_URL }}
+          # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
+          DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DATABASE_POOLER_DIRECT_URL || secrets.DIRECT_URL || secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
         run: |
           cd apps/web || exit 0
+          # Mask secrets in output to prevent exposure
+          echo "::add-mask::$DATABASE_URL"
+          echo "::add-mask::$DIRECT_URL"
           echo "=== Verifying Database Schema ==="
           pnpm prisma generate
           node -e "
@@ -348,14 +371,19 @@ jobs:
 
       - name: Run Migration Guardian
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
+          DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL || secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DATABASE_POOLER_DIRECT_URL || secrets.DIRECT_URL || secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
           UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
           UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
           REDIS_URL: ${{ secrets.REDIS_URL }}
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
-        run: pnpm run migrate:guardian || echo "Migration guardian check completed"
+        run: |
+          # Mask secrets in output to prevent exposure
+          echo "::add-mask::$DATABASE_URL"
+          echo "::add-mask::$DIRECT_URL"
+          pnpm run migrate:guardian || echo "Migration guardian check completed"
         continue-on-error: true
 
       - name: Upload Migration Log

@@ -16,8 +16,8 @@ import { safeStripe, safeSupabase } from "@/lib/utils/server-guards";
 export const runtime = "nodejs";
 
 // Initialize Stripe and Supabase clients safely
-let stripe: Stripe;
-let supabase: ReturnType<typeof safeSupabase>;
+let stripe: Stripe | undefined;
+let supabase: ReturnType<typeof safeSupabase> | undefined;
 
 try {
   stripe = safeStripe();
@@ -40,6 +40,17 @@ export async function POST(req: NextRequest): Promise<NextResponse<WebhookRespon
   const startTime = Date.now();
   const sig = req.headers.get("stripe-signature");
   const {webhookSecret} = env.stripe;
+
+  // Guard: Ensure Stripe and Supabase are initialized
+  if (!stripe || !supabase) {
+    const error = new SystemError("Stripe or Supabase client not initialized");
+    recordError(error, { endpoint: '/api/stripe/webhook', action: 'webhook' });
+    const formatted = formatError(error);
+    return NextResponse.json(
+      { error: formatted.message },
+      { status: formatted.statusCode }
+    );
+  }
 
   if (!sig || !webhookSecret) {
     const error = new SystemError("Missing Stripe webhook configuration");

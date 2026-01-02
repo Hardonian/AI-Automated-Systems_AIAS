@@ -14,7 +14,7 @@ const waveConnectSchema = z.object({
   business_id: z.string().optional(),
 });
 
-export const runtime = "edge";
+export const runtime = "nodejs"; // Requires Supabase client and database operations
 
 /**
  * POST /api/integrations/wave

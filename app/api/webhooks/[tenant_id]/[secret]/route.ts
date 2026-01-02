@@ -22,7 +22,7 @@ import { env } from "@/lib/env";
 import { SystemError, ValidationError, formatError } from "@/lib/errors";
 import { assertCanExecuteRun } from "@/lib/entitlements/server-gates";
 import { logger } from "@/lib/logging/structured-logger";
-import { workflowExecutorWithArtifacts } from "@/lib/workflows/executor-with-artifacts";
+import { workflowExecutorWithLogs } from "@/lib/workflows/executor-with-logs";
 
 export const runtime = "nodejs"; // Required for crypto operations
 
@@ -140,7 +140,7 @@ async function executeWorkflowAsync(
     }
 
     // Execute workflow with artifacts and logs
-    const result = await workflowExecutorWithArtifacts.execute(
+    const result = await workflowExecutorWithLogs.execute(
       {
         workflowId: systemId,
         userId: "system", // System-triggered

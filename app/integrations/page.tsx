@@ -141,10 +141,19 @@ export default function IntegrationsPage() {
                     {tool.status === "available" ? (
                       <Badge className="bg-green-500">Available</Badge>
                     ) : (
-                      <Badge variant="secondary">Available</Badge>
+                      <Badge variant="secondary">Coming Soon</Badge>
                     )}
                   </div>
                   <CardDescription className="text-sm leading-relaxed">{tool.description}</CardDescription>
+                  {tool.status === "available" && (
+                    <div className="mt-4">
+                      <Button asChild size="sm" variant="outline">
+                        <Link href={`/settings?integration=${tool.name.toLowerCase().replace(/\s+/g, '-')}`}>
+                          Connect
+                        </Link>
+                      </Button>
+                    </div>
+                  )}
                 </CardHeader>
               </Card>
             ))}

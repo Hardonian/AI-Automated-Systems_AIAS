@@ -29,11 +29,11 @@ export default function Error({
   return (
     <div className="container flex min-h-[60vh] flex-col items-center justify-center py-16">
       <ErrorState
-        title="Something went wrong"
         description="We're sorry, but something unexpected happened. Please try again."
         error={error}
-        onRetry={reset}
         showDetails={process.env.NODE_ENV === "development"}
+        title="Something went wrong"
+        onRetry={reset}
       />
     </div>
   );

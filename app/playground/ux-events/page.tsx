@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { getRecentEvents, clearEvents, type UXEvent } from "@/lib/ux-events";
+
 import { Reveal, AnimatedCard } from "@/components/motion";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { getRecentEvents, clearEvents, type UXEvent } from "@/lib/ux-events";
 
 /**
  * UX Events Inspector (Dev Only)
@@ -75,7 +76,7 @@ export default function UXEventsPage() {
       </Reveal>
 
       {/* Stats */}
-      <Reveal variant="fadeInUp" delay={0.1}>
+      <Reveal delay={0.1} variant="fadeInUp">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <AnimatedCard variant="fadeInUp">
             <Card>
@@ -85,7 +86,7 @@ export default function UXEventsPage() {
               </CardContent>
             </Card>
           </AnimatedCard>
-          <AnimatedCard variant="fadeInUp" staggerDelay={0.1}>
+          <AnimatedCard staggerDelay={0.1} variant="fadeInUp">
             <Card>
               <CardContent className="pt-6">
                 <div className="text-2xl font-bold">
@@ -95,7 +96,7 @@ export default function UXEventsPage() {
               </CardContent>
             </Card>
           </AnimatedCard>
-          <AnimatedCard variant="fadeInUp" staggerDelay={0.2}>
+          <AnimatedCard staggerDelay={0.2} variant="fadeInUp">
             <Card>
               <CardContent className="pt-6">
                 <div className="text-2xl font-bold">
@@ -105,7 +106,7 @@ export default function UXEventsPage() {
               </CardContent>
             </Card>
           </AnimatedCard>
-          <AnimatedCard variant="fadeInUp" staggerDelay={0.3}>
+          <AnimatedCard staggerDelay={0.3} variant="fadeInUp">
             <Card>
               <CardContent className="pt-6">
                 <div className="text-2xl font-bold">
@@ -119,7 +120,7 @@ export default function UXEventsPage() {
       </Reveal>
 
       {/* Events List */}
-      <Reveal variant="fadeInUp" delay={0.2}>
+      <Reveal delay={0.2} variant="fadeInUp">
         <Card>
           <CardHeader>
             <CardTitle>Recent Events</CardTitle>

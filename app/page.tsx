@@ -1,9 +1,11 @@
 import dynamic from "next/dynamic";
 
+import { KeyboardNavEnhancement } from "@/components/accessibility/keyboard-nav";
 import { ContentDrivenFAQ } from "@/components/content/ContentDrivenFAQ";
 import { ContentDrivenFeatures } from "@/components/content/ContentDrivenFeatures";
 import { ContentDrivenHero } from "@/components/content/ContentDrivenHero";
 import { ContentDrivenTestimonials } from "@/components/content/ContentDrivenTestimonials";
+import { SocialProofBanner } from "@/components/gen-z/social-proof-banner";
 import { ConversionCTA } from "@/components/home/conversion-cta";
 import { CTAEnhanced } from "@/components/home/cta-enhanced";
 import { EnhancedHero } from "@/components/home/enhanced-hero";
@@ -13,8 +15,6 @@ import { StatsSection } from "@/components/home/stats-section";
 import { TrustBadges } from "@/components/home/trust-badges";
 import { WhoWeHelp } from "@/components/home/who-we-help";
 import { SoftwareApplicationSchema , FAQSchema, ProfessionalServiceSchema } from "@/components/seo/structured-data";
-import { SocialProofBanner } from "@/components/gen-z/social-proof-banner";
-import { KeyboardNavEnhancement } from "@/components/accessibility/keyboard-nav";
 import { loadAIASContent } from "@/lib/content/loader";
 
 

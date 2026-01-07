@@ -14,12 +14,12 @@
  * 6. Returns 202 Accepted immediately
  */
 
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
 
+import { assertCanExecuteRun } from "@/lib/entitlements/server-gates";
 import { env } from "@/lib/env";
 import { SystemError, ValidationError, formatError } from "@/lib/errors";
-import { assertCanExecuteRun } from "@/lib/entitlements/server-gates";
 import { logger } from "@/lib/logging/structured-logger";
 import { workflowExecutorWithLogs } from "@/lib/workflows/executor-with-logs";
 

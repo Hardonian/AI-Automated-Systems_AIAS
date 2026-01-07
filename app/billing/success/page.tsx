@@ -133,8 +133,8 @@ export default function BillingSuccessPage() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="max-w-md w-full">
           <ErrorState
-            title="Verification Failed"
             description={error}
+            title="Verification Failed"
             onRetry={verifySubscription}
           />
         </div>
@@ -156,9 +156,9 @@ export default function BillingSuccessPage() {
           <div className="text-sm text-muted-foreground mt-4">
             <p>If your subscription doesn't appear within a few minutes, please contact support.</p>
             <RetryButton
-              onRetry={verifySubscription}
               label="Check again"
               variant="outline"
+              onRetry={verifySubscription}
             />
           </div>
         )}

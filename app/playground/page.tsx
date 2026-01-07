@@ -1,14 +1,16 @@
 "use client";
 
+import { useMachine } from "@xstate/react";
+import { CheckCircle2, AlertCircle, Loader2, ArrowRight, ArrowLeft } from "lucide-react";
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { AnimatedButton, AnimatedCard, Reveal, StepTransition, PageTransition } from "@/components/motion";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AnimatedButton, AnimatedCard, Reveal, StepTransition, PageTransition } from "@/components/motion";
-import { useMachine } from "@xstate/react";
 import { demoFormMachine } from "@/lib/xstate/demo-machine";
-import { CheckCircle2, AlertCircle, Loader2, ArrowRight, ArrowLeft } from "lucide-react";
+
 
 /**
  * Playground Page
@@ -58,25 +60,25 @@ export default function PlaygroundPage() {
             <section>
               <h2 className="text-2xl font-semibold mb-4">Animated Cards</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <AnimatedCard variant="fadeInUp" staggerDelay={0}>
+                <AnimatedCard staggerDelay={0} variant="fadeInUp">
                   <CardHeader>
                     <CardTitle>Fade In Up</CardTitle>
                     <CardDescription>Standard entrance animation</CardDescription>
                   </CardHeader>
                 </AnimatedCard>
-                <AnimatedCard variant="scaleIn" staggerDelay={0.1}>
+                <AnimatedCard staggerDelay={0.1} variant="scaleIn">
                   <CardHeader>
                     <CardTitle>Scale In</CardTitle>
                     <CardDescription>Gentle scale entrance</CardDescription>
                   </CardHeader>
                 </AnimatedCard>
-                <AnimatedCard variant="slideInLeft" staggerDelay={0.2}>
+                <AnimatedCard staggerDelay={0.2} variant="slideInLeft">
                   <CardHeader>
                     <CardTitle>Slide In Left</CardTitle>
                     <CardDescription>Horizontal entrance</CardDescription>
                   </CardHeader>
                 </AnimatedCard>
-                <AnimatedCard variant="slideInRight" staggerDelay={0.3}>
+                <AnimatedCard staggerDelay={0.3} variant="slideInRight">
                   <CardHeader>
                     <CardTitle>Slide In Right</CardTitle>
                     <CardDescription>Horizontal entrance</CardDescription>
@@ -92,7 +94,7 @@ export default function PlaygroundPage() {
                 <AnimatedButton animationVariant="standard">Standard</AnimatedButton>
                 <AnimatedButton animationVariant="subtle">Subtle</AnimatedButton>
                 <AnimatedButton animationVariant="bouncy">Bouncy</AnimatedButton>
-                <AnimatedButton variant="outline" animationVariant="standard">
+                <AnimatedButton animationVariant="standard" variant="outline">
                   Outline
                 </AnimatedButton>
               </div>
@@ -102,21 +104,21 @@ export default function PlaygroundPage() {
             <section>
               <h2 className="text-2xl font-semibold mb-4">Reveal Components</h2>
               <div className="space-y-4">
-                <Reveal variant="fadeInUp" delay={0}>
+                <Reveal delay={0} variant="fadeInUp">
                   <Card>
                     <CardHeader>
                       <CardTitle>Delayed Reveal (0s)</CardTitle>
                     </CardHeader>
                   </Card>
                 </Reveal>
-                <Reveal variant="fadeInUp" delay={0.2}>
+                <Reveal delay={0.2} variant="fadeInUp">
                   <Card>
                     <CardHeader>
                       <CardTitle>Delayed Reveal (0.2s)</CardTitle>
                     </CardHeader>
                   </Card>
                 </Reveal>
-                <Reveal variant="fadeInUp" delay={0.4}>
+                <Reveal delay={0.4} variant="fadeInUp">
                   <Card>
                     <CardHeader>
                       <CardTitle>Delayed Reveal (0.4s)</CardTitle>
@@ -147,16 +149,16 @@ export default function PlaygroundPage() {
                   </StepTransition>
                   <div className="flex justify-between">
                     <Button
+                      disabled={step === 0}
                       variant="outline"
                       onClick={() => setStep((s) => Math.max(0, s - 1))}
-                      disabled={step === 0}
                     >
                       <ArrowLeft className="mr-2 h-4 w-4" />
                       Previous
                     </Button>
                     <Button
-                      onClick={() => setStep((s) => Math.min(2, s + 1))}
                       disabled={step === 2}
+                      onClick={() => setStep((s) => Math.min(2, s + 1))}
                     >
                       Next
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -172,8 +174,8 @@ export default function PlaygroundPage() {
               <Card>
                 <CardContent className="pt-6">
                   <Button
-                    onClick={() => setTransitionKey((k) => k + 1)}
                     className="mb-4"
+                    onClick={() => setTransitionKey((k) => k + 1)}
                   >
                     Trigger Transition
                   </Button>
@@ -252,7 +254,7 @@ function StateMachineDemo() {
       </AnimatedCard>
 
       {/* Form */}
-      <AnimatedCard variant="fadeInUp" staggerDelay={0.1}>
+      <AnimatedCard staggerDelay={0.1} variant="fadeInUp">
         <Card>
           <CardHeader>
             <CardTitle>Demo Form</CardTitle>
@@ -264,18 +266,18 @@ function StateMachineDemo() {
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
               <Input
+                aria-describedby={validationErrors.name ? "name-error" : undefined}
+                aria-invalid={!!validationErrors.name}
+                disabled={isPending}
                 id="name"
                 value={formData.name}
                 onChange={(e) =>
                   send({ type: "INPUT_CHANGE", field: "name", value: e.target.value })
                 }
-                disabled={isPending}
-                aria-invalid={!!validationErrors.name}
-                aria-describedby={validationErrors.name ? "name-error" : undefined}
               />
               {validationErrors.name && (
-                <Reveal variant="fadeInUp" immediate={false}>
-                  <p id="name-error" className="text-sm text-red-600 dark:text-red-400">
+                <Reveal immediate={false} variant="fadeInUp">
+                  <p className="text-sm text-red-600 dark:text-red-400" id="name-error">
                     {validationErrors.name}
                   </p>
                 </Reveal>
@@ -285,19 +287,19 @@ function StateMachineDemo() {
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
+                aria-describedby={validationErrors.email ? "email-error" : undefined}
+                aria-invalid={!!validationErrors.email}
+                disabled={isPending}
                 id="email"
                 type="email"
                 value={formData.email}
                 onChange={(e) =>
                   send({ type: "INPUT_CHANGE", field: "email", value: e.target.value })
                 }
-                disabled={isPending}
-                aria-invalid={!!validationErrors.email}
-                aria-describedby={validationErrors.email ? "email-error" : undefined}
               />
               {validationErrors.email && (
-                <Reveal variant="fadeInUp" immediate={false}>
-                  <p id="email-error" className="text-sm text-red-600 dark:text-red-400">
+                <Reveal immediate={false} variant="fadeInUp">
+                  <p className="text-sm text-red-600 dark:text-red-400" id="email-error">
                     {validationErrors.email}
                   </p>
                 </Reveal>
@@ -306,9 +308,9 @@ function StateMachineDemo() {
 
             <div className="flex gap-2">
               <AnimatedButton
-                onClick={() => send({ type: "SUBMIT" })}
-                disabled={isPending}
                 className="flex-1"
+                disabled={isPending}
+                onClick={() => send({ type: "SUBMIT" })}
               >
                 {isPending ? (
                   <>

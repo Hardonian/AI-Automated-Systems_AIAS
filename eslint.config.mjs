@@ -9,7 +9,7 @@ import unusedImports from "eslint-plugin-unused-imports";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", ".next", "node_modules", "reports", "ai/**/*", "vite.config.ts", "watchers/**/*", "scripts/**/*", "ops/**/*", "types/**/*"] },
+  { ignores: ["dist", ".next", "node_modules", "reports", "ai/**/*", "vite.config.ts", "vitest.config.ts", "watchers/**/*", "scripts/**/*", "ops/**/*", "types/**/*"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
@@ -40,7 +40,7 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { 
         allowConstantExport: true,
-        allowExportNames: ["useFormField", "useSidebar", "toast"]
+        allowExportNames: ["useFormField", "useSidebar", "toast", "metadata", "viewport", "generateMetadata", "generateStaticParams", "GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
       }],
       "@typescript-eslint/no-unused-vars": "off",
       "react/react-in-jsx-scope": "off",

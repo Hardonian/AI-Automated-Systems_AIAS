@@ -5,12 +5,13 @@
 
 "use client";
 
+import { RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { createClient } from "@/lib/supabase/client";
 
 interface DiagnosticsData {
   lastWebhook: {
@@ -219,7 +220,7 @@ export default function DiagnosticsPage() {
     <div className="container py-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">System Diagnostics</h1>
-        <Button onClick={fetchDiagnostics} variant="outline" size="sm">
+        <Button size="sm" variant="outline" onClick={fetchDiagnostics}>
           <RefreshCw className="mr-2 h-4 w-4" />
           Refresh
         </Button>

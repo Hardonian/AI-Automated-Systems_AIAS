@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { TrendingUp, Users, Eye, Activity, MessageSquare, Zap } from "lucide-react";
 
 import { DashboardClient } from "./dashboard-client";
-import { createClient as createServerClient } from "@/lib/supabase/server";
+
 
 import { DashboardUpgradeSection } from "@/components/dashboard/dashboard-upgrade-section";
 import { RealtimeDashboard } from "@/components/dashboard/realtime-dashboard";
@@ -10,6 +10,7 @@ import { HealthMonitor } from "@/components/monitoring/health-monitor";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { enrichWithExternalData, generateSampleMetrics, getIndustryBenchmarks } from "@/lib/data-enrichment";
+import { createClient as createServerClient } from "@/lib/supabase/server";
 import type { Database } from "@/src/integrations/supabase/types";
 /**
  * Public Dashboard: "Loud & High" Social Proof Metrics

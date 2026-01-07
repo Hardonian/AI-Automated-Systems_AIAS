@@ -4,6 +4,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 
+import { FocusVisibleStyles } from "@/components/accessibility/focus-visible";
+import { SkipLink } from "@/components/accessibility/skip-link";
 import AgentProvider from "@/components/agent/AgentProvider";
 import { UTMTracker } from "@/components/analytics/utm-tracker";
 import { PerformanceHUD } from "@/components/dev/performance-hud";
@@ -19,8 +21,6 @@ import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { Toaster } from "@/components/ui/toaster";
 import { ReactQueryProvider } from "@/lib/data/react-query";
 import { env, getOptionalEnv } from "@/lib/env";
-import { SkipLink } from "@/components/accessibility/skip-link";
-import { FocusVisibleStyles } from "@/components/accessibility/focus-visible";
 import { EnhancedErrorBoundary } from "@/lib/error-handling/error-boundary-enhanced";
 import { TelemetryProvider } from "@/lib/monitoring/telemetry-provider";
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";

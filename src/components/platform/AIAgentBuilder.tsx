@@ -617,7 +617,7 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
                               onChange={(e) => updatePricing({
                                 freeTier: {
                                   ...agent.pricing.freeTier,
-                                  requests: parseInt(e.target.value) || 0,
+                                  requests: parseInt(e.target.value, 10) || 0,
                                   period: agent.pricing.freeTier?.period || 'month'
                                 }
                               })}

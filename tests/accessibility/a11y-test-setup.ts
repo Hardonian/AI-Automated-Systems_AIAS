@@ -54,7 +54,7 @@ export const a11yChecklist = {
       for (const heading of Array.from(headings)) {
         const levelStr = heading.tagName[1];
         if (!levelStr) {continue;}
-        const level = parseInt(levelStr);
+        const level = parseInt(levelStr, 10);
         if (level > lastLevel + 1) {
           return false; // Skipped a level
         }

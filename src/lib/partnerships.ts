@@ -460,6 +460,7 @@ export class PartnershipService {
       case 'month':
         return new Date(now.getFullYear(), now.getMonth(), 1);
       case 'quarter':
+// eslint-disable-next-line no-case-declarations
         const quarter = Math.floor(now.getMonth() / 3);
         return new Date(now.getFullYear(), quarter * 3, 1);
       case 'year':

@@ -231,6 +231,7 @@ export const AuditLoggingDashboard: React.FC = () => {
           bValue = new Date(b.timestamp).getTime();
           break;
         case 'severity':
+// eslint-disable-next-line no-case-declarations
           const severityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
           aValue = severityOrder[a.severity as keyof typeof severityOrder];
           bValue = severityOrder[b.severity as keyof typeof severityOrder];

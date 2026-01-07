@@ -279,11 +279,11 @@ export const WhiteLabelConfig: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Logo</label>
+                      <label htmlFor="logo-upload" className="text-sm font-medium mb-2 block">Logo</label>
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                         <Image className="w-8 h-8 mx-auto mb-2 text-gray-400" />
                         <p className="text-sm text-gray-600 mb-2">Upload your logo</p>
-                        <Button size="sm" variant="outline">
+                        <Button id="logo-upload" size="sm" variant="outline">
                           <Upload className="w-4 h-4 mr-2" />
                           Choose File
                         </Button>

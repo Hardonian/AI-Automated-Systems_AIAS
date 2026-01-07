@@ -234,7 +234,8 @@ export class AnalyticsService {
       .gte('created_at', startDate.toISOString())
       .lte('created_at', endDate.toISOString());
 
-    const { data: users } = await this.supabase
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: activeUsers } = await this.supabase
       .from('user_sessions')
       .select('user_id')
       .gte('created_at', startDate.toISOString())
@@ -243,7 +244,8 @@ export class AnalyticsService {
     return {
       totalWorkflows: workflows?.length || 0,
       totalExecutions: executions?.length || 0,
-      activeUsers: new Set(users?.map((u: any) => u.user_id) || []).size,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      activeUsers: new Set(activeUsers?.map((u: any) => u.user_id) || []).size,
       apiCalls: apiCalls?.length || 0
     };
   }
@@ -330,6 +332,7 @@ export class AnalyticsService {
       case 'month':
         return new Date(now.getFullYear(), now.getMonth(), 1);
       case 'quarter':
+// eslint-disable-next-line no-case-declarations
         const quarter = Math.floor(now.getMonth() / 3);
         return new Date(now.getFullYear(), quarter * 3, 1);
       case 'year':

@@ -29,6 +29,14 @@ import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Notification, CommunicationChannel } from '@/types/platform';
 
 interface NotificationCenterProps {
@@ -147,6 +155,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
     }
   }, [userId, tenantId, wsConnection.reconnecting]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleWebSocketMessage = useCallback((data: any) => {
     switch (data.type) {
       case 'notification':

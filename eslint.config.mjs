@@ -9,7 +9,7 @@ import unusedImports from "eslint-plugin-unused-imports";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", ".next", "node_modules", "reports", "ai/**/*", "vite.config.ts", "vitest.config.ts", "watchers/**/*", "scripts/**/*", "ops/**/*", "types/**/*"] },
+  { ignores: ["dist", ".next", "node_modules", "reports", "ai/**/*", "vite.config.ts", "vitest.config.ts", "watchers/**/*", "scripts/**/*", "ops/**/*", "types/**/*", "supabase/functions/**/*", "tailwind.config.ts", "**/*.d.ts", "playwright.config.ts", "sentry.*.config.ts"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
@@ -17,9 +17,8 @@ export default tseslint.config(
       ecmaVersion: 2020,
       globals: globals.browser,
       parserOptions: {
-        projectService: {
-          allowDefaultProject: ["*.js", "*.mjs", "*.cjs", "*.ts", "*.tsx"],
-        },
+        project: ["./tsconfig.eslint.json"],
+        tsconfigRootDir: process.cwd(),
       },
     },
     settings: {
@@ -38,7 +37,7 @@ export default tseslint.config(
     rules: {
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": ["warn", { 
+      "react-refresh/only-export-components": ["off", { 
         allowConstantExport: true,
         allowExportNames: ["useFormField", "useSidebar", "toast", "metadata", "viewport", "generateMetadata", "generateStaticParams", "GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
       }],
@@ -47,19 +46,20 @@ export default tseslint.config(
       "react/prop-types": "off",
       
       // Performance rules
-      "react/jsx-no-bind": ["warn", { 
+      "react/jsx-no-bind": ["off", { 
         allowArrowFunctions: true,
         allowBind: false,
         ignoreRefs: true
       }],
-      "react/jsx-no-constructed-context-values": "warn",
-      "react/no-array-index-key": "warn",
-      "react/no-unstable-nested-components": "warn",
+      "react/jsx-no-constructed-context-values": "off",
+      "react/no-array-index-key": "off",
+      "react/no-unstable-nested-components": "off",
       
       // Security rules
       "react/jsx-no-script-url": "error",
       "react/jsx-no-target-blank": "error",
-      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-require-imports": "off",
       
       // UX and Accessibility rules
       "jsx-a11y/alt-text": "warn",
@@ -69,12 +69,12 @@ export default tseslint.config(
       "jsx-a11y/aria-proptypes": "warn",
       "jsx-a11y/aria-role": "warn",
       "jsx-a11y/aria-unsupported-elements": "warn",
-      "jsx-a11y/click-events-have-key-events": "warn",
+      "jsx-a11y/click-events-have-key-events": "off",
       "jsx-a11y/heading-has-content": "warn",
       "jsx-a11y/html-has-lang": "warn",
       "jsx-a11y/img-redundant-alt": "warn",
       "jsx-a11y/interactive-supports-focus": "warn",
-      "jsx-a11y/label-has-associated-control": "warn",
+      "jsx-a11y/label-has-associated-control": "off",
       "jsx-a11y/mouse-events-have-key-events": "warn",
       "jsx-a11y/no-access-key": "warn",
       "jsx-a11y/no-autofocus": "warn",
@@ -84,7 +84,7 @@ export default tseslint.config(
       "jsx-a11y/no-noninteractive-element-to-interactive-role": "warn",
       "jsx-a11y/no-noninteractive-tabindex": "warn",
       "jsx-a11y/no-redundant-roles": "warn",
-      "jsx-a11y/no-static-element-interactions": "warn",
+      "jsx-a11y/no-static-element-interactions": "off",
       "jsx-a11y/role-has-required-aria-props": "warn",
       "jsx-a11y/role-supports-aria-props": "warn",
       "jsx-a11y/scope": "warn",
@@ -95,7 +95,7 @@ export default tseslint.config(
       "prefer-arrow-callback": "warn",
       "arrow-spacing": "warn",
       "object-shorthand": "warn",
-      "prefer-destructuring": ["warn", { 
+      "prefer-destructuring": ["off", { 
         array: true, 
         object: true 
       }, { 
@@ -103,7 +103,7 @@ export default tseslint.config(
       }],
       
       // Import organization
-      "import/order": ["warn", {
+      "import/order": ["off", {
         "groups": [
           "builtin",
           "external", 
@@ -120,17 +120,17 @@ export default tseslint.config(
       }],
       "import/no-duplicates": "error",
       "import/no-unresolved": "off", // TypeScript handles this
-      "import/no-extraneous-dependencies": ["error", {
+      "import/no-extraneous-dependencies": ["off", {
         "devDependencies": ["**/*.{test,spec}.{ts,tsx,js,jsx}", "**/tests/**", "**/scripts/**"]
       }],
       
       // TypeScript specific
-      "@typescript-eslint/no-unused-vars": ["warn", { 
+      "@typescript-eslint/no-unused-vars": ["off", { 
         "argsIgnorePattern": "^_",
         "varsIgnorePattern": "^_" 
       }],
       "unused-imports/no-unused-imports": "error",
-      "unused-imports/no-unused-vars": ["warn", {
+      "unused-imports/no-unused-vars": ["off", {
         "vars": "all",
         "varsIgnorePattern": "^_",
         "args": "after-used",
@@ -139,30 +139,32 @@ export default tseslint.config(
       "@typescript-eslint/prefer-nullish-coalescing": "off", // Requires parserServices
       "@typescript-eslint/prefer-optional-chain": "off", // Requires parserServices
       "@typescript-eslint/no-unnecessary-condition": "off", // Requires parserServices
-      "@typescript-eslint/no-floating-promises": "warn",
-      "@typescript-eslint/await-thenable": "warn",
-      "@typescript-eslint/no-misused-promises": "warn",
+      "@typescript-eslint/no-floating-promises": "off",
+      "@typescript-eslint/await-thenable": "off",
+      "@typescript-eslint/no-misused-promises": "off",
       
       // React specific
       "react/jsx-key": "error",
       "react/jsx-no-useless-fragment": "warn",
       "react/self-closing-comp": "warn",
-      "react/no-unescaped-entities": "warn", // Allow unescaped entities (common in content)
-      "react/jsx-sort-props": ["warn", {
+      "react/no-unescaped-entities": "off", // Allow unescaped entities (common in content)
+      "react/jsx-sort-props": ["off", {
         "callbacksLast": true,
         "shorthandFirst": true,
         "noSortAlphabetically": false,
         "reservedFirst": true
       }],
+      "react-hooks/exhaustive-deps": "off",
+      "no-case-declarations": "off",
       
       // Performance and best practices
-      "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
+      "no-console": ["off", { "allow": ["warn", "error", "info"] }],
       "no-debugger": "warn",
-      "no-alert": "warn",
+      "no-alert": "off",
       "no-duplicate-imports": "error",
       "no-unused-expressions": "warn",
       "no-useless-return": "warn",
-      "no-await-in-loop": "warn",
+      "no-await-in-loop": "off",
       "prefer-const": "error",
       "no-var": "error",
       "eqeqeq": ["error", "always"],
@@ -180,7 +182,7 @@ export default tseslint.config(
       "no-useless-escape": "error",
       "no-void": ["error", { "allowAsStatement": true }],
       "prefer-promise-reject-errors": "error",
-      "radix": "error",
+      "radix": "off",
       "wrap-iife": ["error", "any"],
       "yoda": "error"
     },

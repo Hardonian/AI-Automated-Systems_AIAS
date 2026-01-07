@@ -196,6 +196,7 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
                         // Show explanation
                         setTimeout(() => {
                           if (step.content.quiz?.explanation) {
+// eslint-disable-next-line no-alert
                             alert(`Correct! ${step.content.quiz.explanation}`);
                           }
                         }, 500);

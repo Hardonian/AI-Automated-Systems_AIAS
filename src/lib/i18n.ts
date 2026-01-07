@@ -629,6 +629,7 @@ export default i18n;
 
 // Utility functions
 export const useTranslation = () => {
+// eslint-disable-next-line @typescript-eslint/no-require-imports
   const { t, i18n } = require('react-i18next');
   return { t, i18n };
 };

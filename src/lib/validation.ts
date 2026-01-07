@@ -19,7 +19,10 @@ const phoneSchema = z.string()
   .optional();
 
 const urlSchema = z.string().url('Invalid URL format');
-const _cuidSchema = z.string().cuid('Invalid ID format');
+const _cuidSchema = z.string().refine((val) => {
+  // Accept both UUID (v4) and CUID (v1/v2) during migration
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val) || /^c[a-z0-9]{24}$/.test(val);
+}, "Invalid ID format");
 
 // User validation schemas
 export const userSchemas = {

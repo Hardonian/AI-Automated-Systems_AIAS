@@ -4,7 +4,6 @@
 generator client {
   provider        = "prisma-client-js"
   engineType      = "library"
-  // Removed binaryTargets for Vercel Edge/Serverless WASM compatibility
   previewFeatures = ["driverAdapters"]
 }
 
@@ -15,15 +14,15 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email     String   @unique
   name      String?
   avatar    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Supabase auth
-  supabaseId String? @unique
+  supabaseId String? @unique @map("supabase_id")
 
   // Relations
   memberships Membership[]
@@ -35,15 +34,16 @@ model User {
   @@map("users")
 }
 
+// Mapped to 'tenants' table
 model Organization {
-  id          String   @id @default(cuid())
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String
   slug        String   @unique
   description String?
   logo        String?
   website     String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   // Relations
   memberships   Membership[]
@@ -53,66 +53,70 @@ model Organization {
   webhookEvents WebhookEvent[]
   featureFlags  FeatureFlag[]
 
-  @@map("organizations")
+  @@map("tenants")
 }
 
+// Mapped to 'tenant_members' table
 model Membership {
-  id     String @id @default(cuid())
-  role   Role   @default(VIEWER)
-  userId String
-  orgId  String
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  role   String @default("viewer") // Mapped to VARCHAR
+  userId String @map("user_id") @db.Uuid
+  orgId  String @map("tenant_id") @db.Uuid
 
   user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   org  Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
+  // Mapped to joined_at
+  createdAt DateTime @default(now()) @map("joined_at")
+
   @@unique([userId, orgId])
-  @@map("memberships")
+  @@map("tenant_members")
 }
 
 model Subscription {
-  id                   String             @id @default(cuid())
+  id                   String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   status               SubscriptionStatus
   plan                 Plan
-  stripeCustomerId     String?            @unique
-  stripeSubscriptionId String?            @unique
-  stripePriceId        String?
-  currentPeriodStart   DateTime?
-  currentPeriodEnd     DateTime?
-  cancelAtPeriodEnd    Boolean            @default(false)
-  createdAt            DateTime           @default(now())
-  updatedAt            DateTime           @updatedAt
+  stripeCustomerId     String?            @unique @map("stripe_customer_id")
+  stripeSubscriptionId String?            @unique @map("stripe_subscription_id")
+  stripePriceId        String?            @map("stripe_price_id")
+  currentPeriodStart   DateTime?          @map("current_period_start")
+  currentPeriodEnd     DateTime?          @map("current_period_end")
+  cancelAtPeriodEnd    Boolean            @default(false) @map("cancel_at_period_end")
+  createdAt            DateTime           @default(now()) @map("created_at")
+  updatedAt            DateTime           @updatedAt @map("updated_at")
 
-  orgId String
+  orgId String       @map("tenant_id") @db.Uuid
   org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
   @@map("subscriptions")
 }
 
 model ApiKey {
-  id        String    @id @default(cuid())
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
   key       String    @unique
-  lastUsed  DateTime?
-  createdAt DateTime  @default(now())
-  expiresAt DateTime?
+  lastUsed  DateTime? @map("last_used")
+  createdAt DateTime  @default(now()) @map("created_at")
+  expiresAt DateTime? @map("expires_at")
 
-  userId String
+  userId String @map("user_id") @db.Uuid
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("api_keys")
 }
 
 model Project {
-  id          String        @id @default(cuid())
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String
   description String?
   status      ProjectStatus @default(ACTIVE)
   metadata    Json?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
 
-  userId String
-  orgId  String
+  userId String       @map("user_id") @db.Uuid
+  orgId  String       @map("tenant_id") @db.Uuid
 
   user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   org  Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
@@ -121,16 +125,16 @@ model Project {
 }
 
 model Source {
-  id        String     @id @default(cuid())
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
   type      SourceType
   config    Json
-  lastRun   DateTime?
-  isActive  Boolean    @default(true)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  lastRun   DateTime?  @map("last_run")
+  isActive  Boolean    @default(true) @map("is_active")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
 
-  orgId String
+  orgId String       @map("tenant_id") @db.Uuid
   org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
   ingestEvents IngestEvent[]
@@ -139,21 +143,21 @@ model Source {
 }
 
 model IngestEvent {
-  id          String       @id @default(cuid())
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   status      IngestStatus
   stats       Json?
   error       String?
-  startedAt   DateTime     @default(now())
-  completedAt DateTime?
+  startedAt   DateTime     @default(now()) @map("started_at")
+  completedAt DateTime?    @map("completed_at")
 
-  sourceId String
+  sourceId String @map("source_id") @db.Uuid
   source   Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
 
   @@map("ingest_events")
 }
 
 model Product {
-  id          String   @id @default(cuid())
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String
   description String?
   price       Decimal?
@@ -161,117 +165,118 @@ model Product {
   category    String?
   tags        String[]
   metadata    Json?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("products")
 }
 
 model Trend {
-  id        String   @id @default(cuid())
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   keyword   String
   volume    Int?
   category  String?
   region    String?
   period    String?
   metadata  Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("trends")
 }
 
 model Creative {
-  id          String   @id @default(cuid())
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title       String
   description String?
   type        String?
   platform    String?
   metadata    Json?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("creatives")
 }
 
 model Metric {
-  id        String   @id @default(cuid())
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
   value     Decimal
   unit      String?
   category  String?
   metadata  Json?
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@map("metrics")
 }
 
 model AiRun {
-  id         String    @id @default(cuid())
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   kind       AiRunKind
   provider   String
   model      String
-  tokensIn   Int?
-  tokensOut  Int?
+  tokensIn   Int?      @map("tokens_in")
+  tokensOut  Int?      @map("tokens_out")
   cost       Decimal?
-  durationMs Int?
+  durationMs Int?      @map("duration_ms")
   metadata   Json?
-  createdAt  DateTime  @default(now())
+  createdAt  DateTime  @default(now()) @map("created_at")
 
-  userId String
+  userId String @map("user_id") @db.Uuid
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("ai_runs")
 }
 
 model Report {
-  id        String       @id @default(cuid())
+  id        String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title     String
   type      ReportType
   content   Json
   status    ReportStatus @default(PENDING)
-  fileUrl   String?
+  fileUrl   String?      @map("file_url")
   metadata  Json?
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
 
-  userId String
+  userId String @map("user_id") @db.Uuid
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("reports")
 }
 
 model WebhookEvent {
-  id        String   @id @default(cuid())
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   source    String
   event     String
   payload   Json
   processed Boolean  @default(false)
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
 
-  orgId String
+  orgId String       @map("tenant_id") @db.Uuid
   org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
   @@map("webhook_events")
 }
 
 model FeatureFlag {
-  id          String   @id @default(cuid())
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   key         String   @unique
   name        String
   description String?
   enabled     Boolean  @default(false)
   config      Json?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
-  orgId String
+  orgId String       @map("tenant_id") @db.Uuid
   org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
   @@map("feature_flags")
 }
 
-// Enums
+// Enums (Mapped to String/VARCHAR mostly, except where enum type exists)
+// Keeping Prisma Enums for type safety in App Layer
 enum Role {
   ADMIN
   EDITOR

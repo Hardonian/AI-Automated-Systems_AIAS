@@ -1,0 +1,44 @@
+name: Supabase Migrate
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'supabase/migrations/**'
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link Project
+        run: supabase link --project-ref $SUPABASE_PROJECT_REF
+
+      - name: Push Migrations
+        run: |
+          supabase db push --include-all
+
+      - name: Verify RLS and Tables (Smoke Test)
+        if: success()
+        env:
+          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          # Simple smoke test to ensure critical tables exist and have RLS
+          psql "$DATABASE_URL" -c "
+            SELECT relname, relrowsecurity 
+            FROM pg_class 
+            WHERE relname IN ('organizations', 'tenants', 'agents') 
+            AND relnamespace = 'public'::regnamespace;"

@@ -27,6 +27,10 @@ export interface RevealProps extends Omit<HTMLMotionProps<"div">, "children"> {
    * Whether to show immediately (skip animation)
    */
   immediate?: boolean;
+  /**
+   * Optional className (explicit to avoid framer-motion typing edge cases)
+   */
+  className?: string;
 }
 
 /**
@@ -49,15 +53,38 @@ export const Reveal = forwardRef<HTMLDivElement, RevealProps>(
     const animationVariant = motionVariants[variant] || motionVariants.fadeInUp;
     
     const transition = {
-      ...animationVariant.visible?.transition,
+      ...(("visible" in (animationVariant as any)
+        ? (animationVariant as any).visible?.transition
+        : "enter" in (animationVariant as any)
+          ? (animationVariant as any).enter?.transition
+          : "animate" in (animationVariant as any)
+            ? (animationVariant as any).animate?.transition
+            : undefined) ?? {}),
       delay: delay + staggerDelay,
     };
 
     // Extract only the standard variant properties (hidden/visible) for TypeScript
-    const standardVariants: Variants = {
-      hidden: animationVariant.hidden as any,
-      visible: animationVariant.visible as any,
-    };
+    const standardVariants: Variants = (() => {
+      if ("hidden" in (animationVariant as any) && "visible" in (animationVariant as any)) {
+        return {
+          hidden: (animationVariant as any).hidden,
+          visible: (animationVariant as any).visible,
+        };
+      }
+      if ("enter" in (animationVariant as any) && "exit" in (animationVariant as any)) {
+        return {
+          hidden: (animationVariant as any).exit,
+          visible: (animationVariant as any).enter,
+        };
+      }
+      if ("initial" in (animationVariant as any) && "animate" in (animationVariant as any)) {
+        return {
+          hidden: (animationVariant as any).initial,
+          visible: (animationVariant as any).animate,
+        };
+      }
+      return { hidden: { opacity: 0 }, visible: { opacity: 1 } };
+    })();
 
     return (
       <motion.div

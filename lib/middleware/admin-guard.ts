@@ -8,7 +8,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { addSecurityHeaders } from "./security";
 
-import { requireAdmin } from "@/lib/auth/admin-auth";
+import { createMiddlewareSupabaseClient } from "@/lib/supabase/middleware";
+import { logger } from "@/lib/utils/logger";
 
 /**
  * Admin route guard middleware
@@ -23,29 +24,71 @@ export async function adminGuard(
     return null; // Not an admin route, continue
   }
 
-  // Check admin access
-  const adminCheck = await requireAdmin(request);
+  try {
+    const { supabase, response, missingEnv } = createMiddlewareSupabaseClient(request);
 
-  if (!adminCheck.authorized) {
-    // Redirect to signin if not authenticated
-    if (request.nextUrl.pathname.startsWith("/api")) {
-      return adminCheck.response || NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    // Fail-closed for admin routes if auth cannot be evaluated
+    if (!supabase || missingEnv) {
+      const res = NextResponse.json(
+        { error: "Service temporarily unavailable" },
+        { status: 503 }
+      );
+      addSecurityHeaders(res);
+      return res;
     }
 
-    const signInUrl = new URL("/signin", request.url);
-    signInUrl.searchParams.set("redirect", path);
-    const response = NextResponse.redirect(signInUrl);
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      const signInUrl = new URL("/signin", request.url);
+      signInUrl.searchParams.set("redirect", path);
+      const res = NextResponse.redirect(signInUrl);
+      addSecurityHeaders(res);
+      return res;
+    }
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (profileError) {
+      logger.warn("Admin role lookup failed in middleware", profileError as any, {
+        path,
+        userId: user.id,
+      });
+      const res = NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      addSecurityHeaders(res);
+      return res;
+    }
+
+    const role = String((profile as any)?.role ?? "");
+    const isAdmin = role === "admin" || role === "super_admin" || role === "financial_admin";
+
+    if (!isAdmin) {
+      const res = NextResponse.redirect(new URL("/signin?error=admin_access_required", request.url));
+      addSecurityHeaders(res);
+      return res;
+    }
+
+    // Return the response instance so auth cookies (if any) are preserved.
     addSecurityHeaders(response);
+    // Avoid leaking user identifiers/roles in response headers.
     return response;
+  } catch (error) {
+    // Fail-closed for admin routes
+    logger.error(
+      "Admin guard middleware error",
+      error instanceof Error ? error : new Error(String(error)),
+      { path }
+    );
+    const res = NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    addSecurityHeaders(res);
+    return res;
   }
-
-  // Add admin headers
-  const response = NextResponse.next();
-  addSecurityHeaders(response);
-  response.headers.set("X-Admin-User", adminCheck.user?.email || "");
-  response.headers.set("X-Admin-Role", adminCheck.user?.role || "");
-
-  return response;
 }
 
 /**
@@ -61,26 +104,65 @@ export async function financialAdminGuard(
     return null;
   }
 
-  // Require financial admin role
-  const { requireAdminRole } = await import("@/lib/auth/admin-auth");
-  const { AdminRole } = await import("@/lib/auth/admin-auth");
+  try {
+    const { supabase, response, missingEnv } = createMiddlewareSupabaseClient(request);
 
-  const adminCheck = await requireAdminRole(request, AdminRole.FINANCIAL_ADMIN);
-
-  if (!adminCheck.authorized) {
-    if (request.nextUrl.pathname.startsWith("/api")) {
-      return adminCheck.response || NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    if (!supabase || missingEnv) {
+      const res = NextResponse.json(
+        { error: "Service temporarily unavailable" },
+        { status: 503 }
+      );
+      addSecurityHeaders(res);
+      return res;
     }
 
-    const response = NextResponse.redirect(new URL("/admin?error=financial_access_required", request.url));
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      const signInUrl = new URL("/signin", request.url);
+      signInUrl.searchParams.set("redirect", path);
+      const res = NextResponse.redirect(signInUrl);
+      addSecurityHeaders(res);
+      return res;
+    }
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (profileError) {
+      logger.warn("Financial admin role lookup failed in middleware", profileError as any, {
+        path,
+        userId: user.id,
+      });
+      const res = NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      addSecurityHeaders(res);
+      return res;
+    }
+
+    const role = String((profile as any)?.role ?? "");
+    const hasFinancialAccess = role === "financial_admin" || role === "super_admin";
+
+    if (!hasFinancialAccess) {
+      const res = NextResponse.redirect(new URL("/admin?error=financial_access_required", request.url));
+      addSecurityHeaders(res);
+      return res;
+    }
+
     addSecurityHeaders(response);
     return response;
+  } catch (error) {
+    logger.error(
+      "Financial admin guard middleware error",
+      error instanceof Error ? error : new Error(String(error)),
+      { path }
+    );
+    const res = NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    addSecurityHeaders(res);
+    return res;
   }
-
-  const response = NextResponse.next();
-  addSecurityHeaders(response);
-  response.headers.set("X-Admin-User", adminCheck.user?.email || "");
-  response.headers.set("X-Admin-Role", adminCheck.user?.role || "");
-
-  return response;
 }

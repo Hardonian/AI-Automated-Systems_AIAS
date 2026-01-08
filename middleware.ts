@@ -17,6 +17,16 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const ip = getClientIP(request);
 
+  // Skip middleware for static files and API routes (handled separately)
+  if (
+    path.startsWith("/_next") ||
+    path.startsWith("/api") ||
+    path.startsWith("/static") ||
+    path.match(/\.(ico|png|jpg|jpeg|svg|gif|webp|woff|woff2|ttf|eot)$/)
+  ) {
+    return NextResponse.next();
+  }
+
   try {
     // Check admin access first (before rate limiting)
     const adminCheck = await adminGuard(request);
@@ -32,6 +42,15 @@ export async function middleware(request: NextRequest) {
     
     if (isProtectedPath) {
       const sessionCheck = await requireSession(request);
+      // Fail-closed if auth cannot be evaluated (e.g. missing env) for protected routes
+      if (sessionCheck.missingEnv) {
+        const response = NextResponse.json(
+          { error: "Service temporarily unavailable" },
+          { status: 503 }
+        );
+        addSecurityHeaders(response);
+        return response;
+      }
       if (sessionCheck.redirect) {
         return sessionCheck.redirect;
       }
@@ -44,22 +63,20 @@ export async function middleware(request: NextRequest) {
       }
     }
   } catch (error) {
-    // Middleware errors should not crash - log and continue
+    // Middleware errors should not crash public routes.
+    // For protected/admin routes, we must fail-closed to avoid accidental auth bypass.
     logger.error("Middleware error", error instanceof Error ? error : new Error(String(error)), {
       path,
       ip,
     });
-    // Continue with request (fail open for middleware)
-  }
-
-  // Skip middleware for static files and API routes (handled separately)
-  if (
-    path.startsWith("/_next") ||
-    path.startsWith("/api") ||
-    path.startsWith("/static") ||
-    path.match(/\.(ico|png|jpg|jpeg|svg|gif|webp|woff|woff2|ttf|eot)$/)
-  ) {
-    return NextResponse.next();
+    const protectedPaths = ["/dashboard", "/workflows", "/billing", "/settings", "/admin"];
+    const isProtectedPath = protectedPaths.some((protectedPath) => path.startsWith(protectedPath));
+    if (isProtectedPath) {
+      const response = NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      addSecurityHeaders(response);
+      return response;
+    }
+    // Continue with request (fail open for public routes only)
   }
 
   // Detect suspicious activity (wrap in try-catch)
@@ -107,6 +124,12 @@ export async function middleware(request: NextRequest) {
 
   // Add security headers
   addSecurityHeaders(response);
+
+  // Ensure internal review routes are not indexed by crawlers
+  if (path.startsWith("/_internal/review")) {
+    response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+    response.headers.set("Cache-Control", "no-store");
+  }
 
   // Add rate limit headers
   response.headers.set("X-RateLimit-Limit", "200");

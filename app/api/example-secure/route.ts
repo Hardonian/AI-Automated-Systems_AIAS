@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { createGETHandler, createPOSTHandler } from '@/lib/api/route-handler';
 import { securityMonitor } from '@/lib/monitoring/security-monitor';
 import { queryOptimizer } from '@/lib/performance/query-optimizer';
-import { tenantIsolation } from '@/lib/security/tenant-isolation';
+import { getTenantIsolation } from '@/lib/security/tenant-isolation';
 
 // Validation schema
 const createWorkflowSchema = z.object({
@@ -36,7 +36,7 @@ export const GET = createGETHandler(async (context) => {
   }
   
   // Validate tenant access
-  const access = await tenantIsolation.validateAccess(tenantId, userId);
+  const access = await getTenantIsolation().validateAccess(tenantId, userId);
   if (!access.allowed) {
     await securityMonitor.logEvent({
       type: 'unauthorized_access',
@@ -56,7 +56,7 @@ export const GET = createGETHandler(async (context) => {
   }
   
   // Check resource limits
-  const limits = await tenantIsolation.checkLimits(tenantId, 'workflows');
+  const limits = await getTenantIsolation().checkLimits(tenantId, 'workflows');
   if (!limits.allowed) {
     return NextResponse.json(
       {
@@ -108,7 +108,7 @@ export const POST = createPOSTHandler(async (context) => {
   }
   
   // Validate tenant access with permission
-  const access = await tenantIsolation.validateAccess(
+  const access = await getTenantIsolation().validateAccess(
     tenantId,
     userId,
     'workflow:create'
@@ -134,7 +134,7 @@ export const POST = createPOSTHandler(async (context) => {
   }
   
   // Check resource limits
-  const limits = await tenantIsolation.checkLimits(tenantId, 'workflows', 1);
+  const limits = await getTenantIsolation().checkLimits(tenantId, 'workflows', 1);
   if (!limits.allowed) {
     await securityMonitor.logEvent({
       type: 'rate_limit',
@@ -169,7 +169,7 @@ export const POST = createPOSTHandler(async (context) => {
   // const workflow = await createWorkflow(tenantId, body);
   
   // Record usage
-  await tenantIsolation.recordUsage(tenantId, 'workflows', 1);
+  await getTenantIsolation().recordUsage(tenantId, 'workflows', 1);
   
   // Invalidate cache
   await queryOptimizer.invalidateTableCache('workflows', tenantId);

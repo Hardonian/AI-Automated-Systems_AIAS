@@ -4,14 +4,10 @@
  * Provides utilities for checking admin access and protecting admin routes.
  */
 
-import { createClient } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-import { env } from "@/lib/env";
-
-
-const supabase = createClient(env.supabase.url, env.supabase.anonKey);
+import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { serverLogger } from "@/lib/utils/logger";
 
 export interface AdminUser {
   id: string;
@@ -27,18 +23,22 @@ export async function isAdmin(userId?: string): Promise<boolean> {
   if (!userId) {return false;}
 
   try {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", userId)
-      .single();
+    const supabase = await createServerSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // Never evaluate admin status for a different user in a user-scoped context.
+    if (!user || user.id !== userId) {
+      return false;
+    }
+
+    const { data, error } = await supabase.from("profiles").select("role").eq("id", userId).single();
 
     if (error || !data) {return false;}
 
     // Check if user has admin role
     return data.role === "admin" || data.role === "super_admin";
   } catch (error) {
-    console.error("Error checking admin status:", error);
+    serverLogger.error("Error checking admin status", error instanceof Error ? error : new Error(String(error)));
     return false;
   }
 }
@@ -48,35 +48,31 @@ export async function isAdmin(userId?: string): Promise<boolean> {
  */
 export async function getAdminUser(): Promise<AdminUser | null> {
   try {
-    const cookieStore = await cookies();
-    const authToken = cookieStore.get("sb-access-token")?.value;
+    const supabase = await createServerSupabaseClient();
 
-    if (!authToken) {return null;}
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {return null;}
 
-    // Verify token and get user
-    const { data: { user }, error } = await supabase.auth.getUser(authToken);
-
-    if (error || !user) {return null;}
-
-    // Check admin status
-    const adminStatus = await isAdmin(user.id);
-    if (!adminStatus) {return null;}
-
-    // Get profile
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", user.id)
       .single();
 
+    if (profileError || !profile) {return null;}
+
+    const role = String((profile as any)?.role ?? "");
+    const adminStatus = role === "admin" || role === "super_admin" || role === "financial_admin";
+    if (!adminStatus) {return null;}
+
     return {
       id: user.id,
       email: user.email || "",
-      role: profile?.role || "admin",
+      role,
       isAdmin: true,
     };
   } catch (error) {
-    console.error("Error getting admin user:", error);
+    serverLogger.error("Error getting admin user", error instanceof Error ? error : new Error(String(error)));
     return null;
   }
 }

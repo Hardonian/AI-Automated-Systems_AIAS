@@ -5,13 +5,24 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
+import { useRuntimeUiConfig } from "@/lib/runtime-ui/use-runtime-ui-config";
 
 export function EnhancedStickyCTA() {
+  const { data: uiConfig } = useRuntimeUiConfig();
+
+  const enabled = uiConfig?.flags?.stickyCtaEnabled !== false;
+  const sticky = uiConfig?.copy?.stickyCta;
+
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
   const [timeLeft, setTimeLeft] = useState("");
 
   useEffect(() => {
+    if (!enabled) {
+      setIsVisible(false);
+      return;
+    }
+
     // Calculate time until end of day for urgency
     const updateTime = () => {
       const now = new Date();
@@ -29,12 +40,18 @@ export function EnhancedStickyCTA() {
       }
     };
 
-    updateTime();
-    const interval = setInterval(updateTime, 60000);
+    if (sticky?.showCountdown !== false) {
+      updateTime();
+    }
+    const interval = setInterval(() => {
+      if (sticky?.showCountdown !== false) {
+        updateTime();
+      }
+    }, 60000);
 
     const handleScroll = () => {
-      // Show after scrolling 400px
-      if (window.scrollY > 400 && !isDismissed) {
+      const threshold = sticky?.showAfterScrollPx ?? 400;
+      if (window.scrollY > threshold && !isDismissed) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
@@ -46,17 +63,24 @@ export function EnhancedStickyCTA() {
       window.removeEventListener("scroll", handleScroll);
       clearInterval(interval);
     };
-  }, [isDismissed]);
+  }, [enabled, isDismissed, sticky?.showAfterScrollPx, sticky?.showCountdown]);
 
   // Check localStorage for dismissal
   useEffect(() => {
+    if (sticky?.dismissible === false) {
+      setIsDismissed(false);
+      return;
+    }
     const dismissed = localStorage.getItem("cta-dismissed");
     if (dismissed === "true") {
       setIsDismissed(true);
     }
-  }, []);
+  }, [sticky?.dismissible]);
 
   const handleDismiss = () => {
+    if (sticky?.dismissible === false) {
+      return;
+    }
     setIsDismissed(true);
     setIsVisible(false);
     localStorage.setItem("cta-dismissed", "true");
@@ -66,7 +90,7 @@ export function EnhancedStickyCTA() {
     }, 24 * 60 * 60 * 1000);
   };
 
-  if (!isVisible || isDismissed) {return null;}
+  if (!enabled || !isVisible || isDismissed) {return null;}
 
   return (
     <AnimatePresence>
@@ -86,18 +110,27 @@ export function EnhancedStickyCTA() {
               <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
                 <Sparkles aria-hidden="true" className="h-4 w-4 text-white animate-pulse" />
                 <div className="font-bold text-sm md:text-base text-white">
-                  Ready to Transform Your Business?
+                  {sticky?.heading ?? "Ready to Transform Your Business?"}
                 </div>
               </div>
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs md:text-sm text-white/90">
-                <span>Schedule a free strategy call</span>
-                <span className="hidden sm:inline">•</span>
-                <span>See our builds</span>
-                <span className="hidden sm:inline">•</span>
-                <span className="flex items-center gap-1">
-                  <Clock aria-hidden="true" className="h-3 w-3" />
-                  {timeLeft} left today
-                </span>
+                {(sticky?.items?.length ? sticky.items : ["Schedule a free strategy call", "See our builds"]).map(
+                  (item, idx, arr) => (
+                    <span key={idx} className="flex items-center gap-2">
+                      <span>{item}</span>
+                      {idx < arr.length - 1 ? <span className="hidden sm:inline">•</span> : null}
+                    </span>
+                  )
+                )}
+                {sticky?.showCountdown !== false ? (
+                  <>
+                    <span className="hidden sm:inline">•</span>
+                    <span className="flex items-center gap-1">
+                      <Clock aria-hidden="true" className="h-3 w-3" />
+                      {timeLeft} left today
+                    </span>
+                  </>
+                ) : null}
               </div>
             </div>
 
@@ -108,22 +141,27 @@ export function EnhancedStickyCTA() {
                 className="flex-1 sm:flex-none h-9 md:h-10 text-xs md:text-sm font-bold bg-white text-primary hover:bg-white/90 shadow-lg hover:shadow-xl transition-all hover:scale-105 min-h-[36px]" 
                 size="sm"
               >
-                <Link aria-label="Schedule a free strategy call" href="/demo">
+                <Link
+                  aria-label={sticky?.primaryCta?.label ?? "Schedule a free strategy call"}
+                  href={sticky?.primaryCta?.href ?? "/demo"}
+                >
                   <span className="flex items-center justify-center gap-1">
-                    Schedule Call
+                    {sticky?.primaryCta?.label ?? "Schedule Call"}
                     <ArrowRight aria-hidden="true" className="h-3 w-3 md:h-4 md:w-4" />
                   </span>
                 </Link>
               </Button>
-              <Button
-                aria-label="Dismiss this message"
-                className="h-9 w-9 md:h-10 md:w-10 p-0 text-white hover:bg-white/20 hover:text-white min-h-[36px] min-w-[36px]"
-                size="sm"
-                variant="ghost"
-                onClick={handleDismiss}
-              >
-                <X aria-hidden="true" className="h-4 w-4 md:h-5 md:w-5" />
-              </Button>
+              {sticky?.dismissible === false ? null : (
+                <Button
+                  aria-label="Dismiss this message"
+                  className="h-9 w-9 md:h-10 md:w-10 p-0 text-white hover:bg-white/20 hover:text-white min-h-[36px] min-w-[36px]"
+                  size="sm"
+                  variant="ghost"
+                  onClick={handleDismiss}
+                >
+                  <X aria-hidden="true" className="h-4 w-4 md:h-5 md:w-5" />
+                </Button>
+              )}
             </div>
           </div>
         </div>

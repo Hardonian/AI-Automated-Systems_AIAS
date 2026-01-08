@@ -270,4 +270,18 @@ export class TenantIsolationService {
   }
 }
 
-export const tenantIsolation = new TenantIsolationService();
+let _tenantIsolation: TenantIsolationService | null = null;
+
+/**
+ * Lazy singleton accessor.
+ *
+ * Why: Avoid constructing Supabase clients at module import time. This prevents
+ * test and build environments (and some serverless cold-start paths) from
+ * crashing due to missing/placeholder environment configuration.
+ */
+export function getTenantIsolation(): TenantIsolationService {
+  if (!_tenantIsolation) {
+    _tenantIsolation = new TenantIsolationService();
+  }
+  return _tenantIsolation;
+}

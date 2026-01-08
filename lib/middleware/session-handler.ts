@@ -5,8 +5,8 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-import { createClient } from "@/lib/supabase/server";
 import { logger } from "@/lib/utils/logger";
+import { createMiddlewareSupabaseClient } from "@/lib/supabase/middleware";
 
 export interface SessionCheckResult {
   valid: boolean;
@@ -14,6 +14,16 @@ export interface SessionCheckResult {
   needsRefresh: boolean;
   userId?: string;
   redirect?: NextResponse;
+  /**
+   * If middleware creates/updates cookies (e.g. auth cookies), callers should return this response.
+   * For simple `getUser()` checks this is usually identical to `NextResponse.next()`.
+   */
+  response?: NextResponse;
+  /**
+   * True when auth could not be checked due to missing required env vars.
+   * Callers should fail-closed for protected routes.
+   */
+  missingEnv?: boolean;
 }
 
 /**
@@ -21,8 +31,22 @@ export interface SessionCheckResult {
  */
 export async function checkSession(request: NextRequest): Promise<SessionCheckResult> {
   try {
-    const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const { supabase, response, missingEnv } = createMiddlewareSupabaseClient(request);
+
+    if (!supabase) {
+      return {
+        valid: false,
+        expired: false,
+        needsRefresh: false,
+        response,
+        missingEnv,
+      };
+    }
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     // No user = not authenticated (not an error for public routes)
     if (!user || authError) {
@@ -30,44 +54,16 @@ export async function checkSession(request: NextRequest): Promise<SessionCheckRe
         valid: false,
         expired: false,
         needsRefresh: false,
+        response,
       };
     }
 
-    // Check if session exists and is valid
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-
-    if (!session || sessionError) {
-      // Session expired or invalid
-      return {
-        valid: false,
-        expired: true,
-        needsRefresh: false,
-        userId: user.id,
-      };
-    }
-
-    // Check if session is close to expiry (within 5 minutes)
-    const expiresAt = session.expires_at ? session.expires_at * 1000 : Date.now();
-    const timeUntilExpiry = expiresAt - Date.now();
-    const fiveMinutes = 5 * 60 * 1000;
-
-    if (timeUntilExpiry < fiveMinutes && timeUntilExpiry > 0) {
-      // Try to refresh session
-      try {
-        const { data: refreshedSession, error: refreshError } = await supabase.auth.refreshSession();
-        
-        if (refreshedSession?.session && !refreshError) {
-          return {
-            valid: true,
-            expired: false,
-            needsRefresh: true,
-            userId: user.id,
-          };
-        }
-      } catch (refreshErr) {
-        logger.warn("Failed to refresh session", { userId: user.id, error: refreshErr });
-      }
-    }
+    // NOTE:
+    // Middleware runs on the Edge runtime. Session refresh in middleware requires
+    // carefully returning the response instance that received updated cookies.
+    // To avoid subtle auth divergence between preview/prod (and to keep middleware
+    // fast and deterministic), we treat "has user" as "authenticated" here and
+    // let refresh happen in the normal app/auth flow.
 
     // Session is valid
     return {
@@ -75,6 +71,7 @@ export async function checkSession(request: NextRequest): Promise<SessionCheckRe
       expired: false,
       needsRefresh: false,
       userId: user.id,
+      response,
     };
   } catch (error) {
     logger.error("Error checking session", error instanceof Error ? error : new Error(String(error)));

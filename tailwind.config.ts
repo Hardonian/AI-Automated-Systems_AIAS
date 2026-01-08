@@ -69,7 +69,7 @@ export default {
         "2xl": "calc(var(--radius) + 8px)",
       },
       boxShadow: {
-        card: "0 6px 24px rgba(0,0,0,0.08)",
+        card: "var(--shadow-card, 0 6px 24px rgba(0,0,0,0.08))",
       },
       keyframes: {
         "in-fade": { from: { opacity: "0" }, to: { opacity: "1" } },

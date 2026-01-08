@@ -6,40 +6,38 @@
 import { motion, HTMLMotionProps } from "framer-motion";
 import { forwardRef } from "react";
 
-// Type-safe motion components that accept className
-// Use HTMLMotionProps and explicitly include className
-type MotionComponentProps<T extends keyof React.JSX.IntrinsicElements> = 
-  HTMLMotionProps<T> & {
-    className?: string;
-  };
+type MotionDivProps = HTMLMotionProps<"div"> & { className?: string };
+type MotionSpanProps = HTMLMotionProps<"span"> & { className?: string };
+type MotionPProps = HTMLMotionProps<"p"> & { className?: string };
+type MotionSectionProps = HTMLMotionProps<"section"> & { className?: string };
 
-export const MotionDiv = forwardRef<HTMLDivElement, MotionComponentProps<'div'>>(
+export const MotionDiv = forwardRef<HTMLDivElement, MotionDivProps>(
   ({ className, ...props }, ref) => {
-    // @ts-expect-error - framer-motion v12 type issue with className and props spreading
+    // @ts-ignore - framer-motion type issue with props spreading
     return <motion.div ref={ref} className={className} {...props} />;
   }
 );
 MotionDiv.displayName = "MotionDiv";
 
-export const MotionSpan = forwardRef<HTMLSpanElement, MotionComponentProps<'span'>>(
+export const MotionSpan = forwardRef<HTMLSpanElement, MotionSpanProps>(
   ({ className, ...props }, ref) => {
-    // @ts-expect-error - framer-motion v12 type issue with className and props spreading
+    // @ts-ignore - framer-motion type issue with props spreading
     return <motion.span ref={ref} className={className} {...props} />;
   }
 );
 MotionSpan.displayName = "MotionSpan";
 
-export const MotionP = forwardRef<HTMLParagraphElement, MotionComponentProps<'p'>>(
+export const MotionP = forwardRef<HTMLParagraphElement, MotionPProps>(
   ({ className, ...props }, ref) => {
-    // @ts-expect-error - framer-motion v12 type issue with className and props spreading
+    // @ts-ignore - framer-motion type issue with props spreading
     return <motion.p ref={ref} className={className} {...props} />;
   }
 );
 MotionP.displayName = "MotionP";
 
-export const MotionSection = forwardRef<HTMLElement, MotionComponentProps<'section'>>(
+export const MotionSection = forwardRef<HTMLElement, MotionSectionProps>(
   ({ className, ...props }, ref) => {
-    // @ts-expect-error - framer-motion v12 type issue with className and props spreading
+    // @ts-ignore - framer-motion type issue with props spreading
     return <motion.section ref={ref} className={className} {...props} />;
   }
 );

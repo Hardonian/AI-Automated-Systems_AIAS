@@ -74,7 +74,10 @@ describe.skipIf(!shouldRunTests)("Webhook Pipeline Smoke Test", () => {
 
     // Create test webhook endpoint
     const { data: secretData } = await supabase.rpc("generate_webhook_secret");
-    testWebhookSecret = secretData as string;
+    if (!secretData || typeof secretData !== "string") {
+      throw new Error("Failed to generate webhook secret");
+    }
+    testWebhookSecret = secretData;
 
     const { data: webhook, error: webhookError } = await supabase
       .from("webhook_endpoints")

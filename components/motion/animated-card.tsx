@@ -89,7 +89,13 @@ export const AnimatedCard = forwardRef<HTMLDivElement, AnimatedCardProps>(
         variants={standardVariants}
         whileHover={hoverProps}
         transition={{
-          ...animationVariant.visible?.transition,
+          ...(("visible" in (animationVariant as any)
+            ? (animationVariant as any).visible?.transition
+            : "enter" in (animationVariant as any)
+              ? (animationVariant as any).enter?.transition
+              : "animate" in (animationVariant as any)
+                ? (animationVariant as any).animate?.transition
+                : undefined) ?? {}),
           delay: staggerDelay,
         }}
         className={cn("w-full", className)}

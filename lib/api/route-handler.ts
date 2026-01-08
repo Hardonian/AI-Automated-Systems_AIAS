@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { validateInput, checkRequestSize, maskSensitiveData } from '../security/api-security';
-import { tenantIsolation } from '../security/tenant-isolation';
+import { getTenantIsolation } from '../security/tenant-isolation';
 // Lazy import cacheService to support Edge runtime
 // Cache is only available in Node.js runtime, not Edge
 // In Edge runtime, caching is disabled
@@ -79,10 +79,13 @@ export function createRouteHandler(
     // Cache request body to avoid consuming it multiple times
     let cachedBody: string | null = null;
     let cachedBodyJson: unknown | null = null;
+
+    // Preserve original body readers (NextRequest body is a one-time stream)
+    const originalText = request.text.bind(request);
     
     const getBodyText = async (): Promise<string> => {
       if (cachedBody === null) {
-        cachedBody = await request.text();
+        cachedBody = await originalText();
       }
       return cachedBody;
     };
@@ -94,6 +97,20 @@ export function createRouteHandler(
       }
       return cachedBodyJson;
     };
+
+    // Provide a request object whose `.text()` / `.json()` are backed by the cache.
+    // This ensures handlers can safely read the body multiple times.
+    const cachedRequest = new Proxy(request as any, {
+      get(target, prop) {
+        if (prop === "text") {
+          return getBodyText;
+        }
+        if (prop === "json") {
+          return getBodyJson;
+        }
+        return Reflect.get(target, prop);
+      },
+    }) as NextRequest;
     
     // Wrap handler execution with timeout
     const executeHandler = async (): Promise<NextResponse> => {
@@ -171,7 +188,7 @@ export function createRouteHandler(
         
         // Validate tenant access
         if (userId) {
-          const access = await tenantIsolation.validateAccess(
+          const access = await getTenantIsolation().validateAccess(
             tenantId,
             userId,
             normalizedOptions.requiredPermission
@@ -208,7 +225,8 @@ export function createRouteHandler(
               : [];
             const error = new ValidationError(
               'Invalid request body',
-              errorDetails
+              errorDetails,
+              { validationErrors: errorDetails }
             );
             const formatted = formatError(error);
             return NextResponse.json(
@@ -224,7 +242,7 @@ export function createRouteHandler(
           );
           const formatted = formatError(validationError);
           return NextResponse.json(
-            { error: formatted.message },
+            { error: formatted.message, details: formatted.details },
             { status: formatted.statusCode }
           );
         }
@@ -253,7 +271,7 @@ export function createRouteHandler(
       
       // Create context
       const context: RouteContext = {
-        request,
+        request: cachedRequest,
         userId,
         tenantId,
       };

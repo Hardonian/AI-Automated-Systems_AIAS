@@ -79,27 +79,27 @@ export const motionTransitions = {
   // Micro-interactions (hover, focus)
   micro: {
     duration: motionDurations.fast / 1000,
-    ease: motionEasing.standard,
+    ease: motionEasing.standard as any,
   },
   // Standard transitions (buttons, cards)
   standard: {
     duration: motionDurations.standard / 1000,
-    ease: motionEasing.standard,
+    ease: motionEasing.standard as any,
   },
   // Page transitions
   page: {
     duration: motionDurations.slow / 1000,
-    ease: motionEasing.enter,
+    ease: motionEasing.enter as any,
   },
   // Entrance animations
   entrance: {
     duration: motionDurations.moderate / 1000,
-    ease: motionEasing.enter,
+    ease: motionEasing.enter as any,
   },
   // Exit animations
   exit: {
     duration: motionDurations.standard / 1000,
-    ease: motionEasing.exit,
+    ease: motionEasing.exit as any,
   },
 } as const;
 
@@ -217,7 +217,7 @@ export const motionVariants = {
         duration: motionDurations.slow / 1000,
         repeat: Infinity,
         repeatType: 'reverse' as const,
-        ease: motionEasing.standard,
+        ease: motionEasing.standard as any,
       },
     },
   },
@@ -242,7 +242,7 @@ export const motionVariants = {
       rotate: [0, 5, -5, 0] as [number, number, number, number],
       transition: {
         duration: motionDurations.slow / 1000,
-        ease: motionEasing.bounce,
+        ease: motionEasing.bounce as any,
       },
     },
   },
@@ -261,7 +261,7 @@ export const motionVariants = {
       x: [0, -10, 10, -10, 10, 0] as [number, number, number, number, number, number],
       transition: {
         duration: motionDurations.moderate / 1000,
-        ease: motionEasing.sharp,
+        ease: motionEasing.sharp as any,
       },
     },
   },

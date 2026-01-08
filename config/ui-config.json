@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "tokens": {
+    "radiusRem": 0.5,
+    "cardShadow": "0 6px 24px rgba(0,0,0,0.08)",
+    "density": "comfortable"
+  },
+  "flags": {
+    "stickyCtaEnabled": true
+  },
+  "notices": {
+    "topBanner": {
+      "enabled": false,
+      "tone": "info",
+      "message": "",
+      "cta": {
+        "label": "Learn more",
+        "href": "/demo"
+      }
+    }
+  },
+  "copy": {
+    "stickyCta": {
+      "heading": "Ready to Transform Your Business?",
+      "items": [
+        "Schedule a free strategy call",
+        "See our builds"
+      ],
+      "primaryCta": {
+        "label": "Schedule Call",
+        "href": "/demo"
+      },
+      "dismissible": true,
+      "showCountdown": true,
+      "showAfterScrollPx": 400
+    }
+  }
+}
+

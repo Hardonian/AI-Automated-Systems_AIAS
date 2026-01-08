@@ -17,6 +17,8 @@ import { OrganizationSchema, WebSiteSchema } from "@/components/seo/structured-d
 import { ThemeProvider } from "@/components/theme-provider";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { Toaster } from "@/components/ui/toaster";
+import { RuntimeTopBanner } from "@/components/runtime-ui/RuntimeTopBanner";
+import { RuntimeUiConfigApplier } from "@/components/runtime-ui/RuntimeUiConfigApplier";
 import { ReactQueryProvider } from "@/lib/data/react-query";
 import { env, getOptionalEnv } from "@/lib/env";
 import { SkipLink } from "@/components/accessibility/skip-link";
@@ -202,11 +204,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <FocusVisibleStyles />
         <EnhancedErrorBoundary>
           <ReactQueryProvider>
+            <RuntimeUiConfigApplier />
             <TelemetryProvider>
               <ThemeProvider>
                 <SmoothScroll>
                 {/* Accessibility: Skip to main content link */}
                 <SkipLink />
+                <RuntimeTopBanner />
                 <Header />
                 <main 
                   aria-label="Main content" 

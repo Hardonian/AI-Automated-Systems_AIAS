@@ -51,6 +51,7 @@ export type OnboardingEvent =
   | { type: "SELECT_INTEGRATION"; provider: IntegrationProvider }
   | { type: "CREATE_WORKFLOW" }
   | { type: "TEST_WORKFLOW" }
+  | { type: "CANCEL" }
   | { type: "RETRY" }
   | { type: "RESET" }
   | { type: "COMPLETE" };
@@ -197,7 +198,8 @@ export const onboardingMachine = createMachine(
         }),
         invoke: {
           id: "connectIntegration",
-          src: ({ context }) => {
+          // Cast for XState v5 invoke typing (this machine uses a v4-style inline promise service).
+          src: (({ context }: { context: OnboardingContext }) => {
             if (!context.selectedIntegration) {
               throw new Error("No integration selected");
             }
@@ -207,7 +209,7 @@ export const onboardingMachine = createMachine(
                 setTimeout(() => reject(new Error("Connection timeout. Please try again.")), 10000)
               ),
             ]);
-          },
+          }) as any,
           onDone: {
             target: "creatingWorkflow",
             actions: assign({
@@ -264,7 +266,8 @@ export const onboardingMachine = createMachine(
         }),
         invoke: {
           id: "createWorkflow",
-          src: ({ context }) => {
+          // Cast for XState v5 invoke typing (this machine uses a v4-style inline promise service).
+          src: (({ context }: { context: OnboardingContext }) => {
             if (!context.selectedIntegration) {
               throw new Error("No integration selected");
             }
@@ -274,7 +277,7 @@ export const onboardingMachine = createMachine(
                 setTimeout(() => reject(new Error("Workflow creation timeout. Please try again.")), 15000)
               ),
             ]);
-          },
+          }) as any,
           onDone: {
             target: "testingWorkflow",
             actions: assign({
@@ -332,12 +335,14 @@ export const onboardingMachine = createMachine(
         }),
         invoke: {
           id: "testWorkflow",
-          src: () => Promise.race([
-            testWorkflow(),
-            new Promise((_, reject) =>
-              setTimeout(() => reject(new Error("Workflow test timeout. Please try again.")), 8000)
-            ),
-          ]),
+          // Cast for XState v5 invoke typing (this machine uses a v4-style inline promise service).
+          src: (() =>
+            Promise.race([
+              testWorkflow(),
+              new Promise((_, reject) =>
+                setTimeout(() => reject(new Error("Workflow test timeout. Please try again.")), 8000)
+              ),
+            ])) as any,
           onDone: {
             target: "complete",
             actions: assign({
@@ -474,6 +479,3 @@ export const onboardingMachine = createMachine(
     },
   }
 );
-
-// Export types
-export type { OnboardingContext, OnboardingEvent };

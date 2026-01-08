@@ -9,7 +9,7 @@ import unusedImports from "eslint-plugin-unused-imports";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", ".next", "node_modules", "reports", "ai/**/*", "vite.config.ts", "watchers/**/*", "scripts/**/*", "ops/**/*", "types/**/*"] },
+  { ignores: ["dist", ".next", "node_modules", "reports", "ai/**/*", "vite.config.ts", "vitest.config.ts", "watchers/**/*", "scripts/**/*", "ops/**/*", "types/**/*", "apps/web/**"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],

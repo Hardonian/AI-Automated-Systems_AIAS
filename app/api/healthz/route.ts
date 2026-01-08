@@ -18,6 +18,10 @@ export const dynamic = "force-dynamic";
 interface HealthCheckResult {
   ok: boolean;
   timestamp: string;
+  /**
+   * Back-compat alias for errorMessage (some callers/tests expect `error`)
+   */
+  error?: string;
   errorMessage?: string;
   checks?: Record<string, boolean>;
   db?: {
@@ -63,6 +67,8 @@ export async function GET(): Promise<NextResponse<HealthCheckResult>> {
     const errorMessage = error instanceof Error ? error.message : String(error);
     checks.ok = false;
     checks.errorMessage = `Environment validation failed: ${errorMessage}`;
+    checks.error = checks.errorMessage;
+    checks.total_latency_ms = Date.now() - startTime;
     return NextResponse.json(checks as HealthCheckResult, { status: 503 });
   }
 
@@ -84,7 +90,9 @@ export async function GET(): Promise<NextResponse<HealthCheckResult>> {
         ok: false,
         timestamp: new Date().toISOString(),
         errorMessage: formatted.message,
+        error: formatted.message,
         checks: formatted.details as Record<string, boolean>,
+        total_latency_ms: Date.now() - startTime,
       },
       { status: formatted.statusCode }
     );

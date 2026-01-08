@@ -16,7 +16,7 @@ Supabase Dashboard → Settings → API holds the canonical values for all Supab
 
 | Variable | Description | Where to Find |
 |----------|-------------|---------------|
-| `DATABASE_URL` | PostgreSQL connection string | Construct from service role key (or use UpStash Postgres) |
+| `DATABASE_URL` | PostgreSQL connection string | Use Supabase Postgres password / pooler password (or use UpStash Postgres) |
 | `DIRECT_URL` | Direct PostgreSQL connection (for migrations) | Same as DATABASE_URL or UpStash Postgres direct URL |
 | `UPSTASH_POSTGRES_URL` | UpStash Postgres connection string (optional) | UpStash Console → Database → Connection String |
 | `UPSTASH_POSTGRES_DIRECT_URL` | UpStash Postgres direct connection (optional) | UpStash Console → Database → Direct Connection |
@@ -30,7 +30,7 @@ Supabase Dashboard → Settings → API holds the canonical values for all Supab
 
 #### Option 1: Supabase PostgreSQL
 ```
-postgresql://postgres:{SUPABASE_SERVICE_ROLE_KEY}@db.{SUPABASE_PROJECT_REF}.supabase.co:5432/postgres?sslmode=require
+postgresql://postgres:{SUPABASE_DB_PASSWORD}@db.{SUPABASE_PROJECT_REF}.supabase.co:5432/postgres?sslmode=require
 ```
 
 #### Option 2: UpStash Postgres (Recommended for Prisma)

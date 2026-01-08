@@ -51,7 +51,7 @@ Created `docs/PRISMA_MIGRATIONS_SETUP.md` with:
 
 1. Go to your repository: **Settings → Secrets and variables → Actions**
 2. Add the following secrets:
-   - **`DATABASE_URL`**: `postgresql://postgres:BPBWVQFqUzGA6W3V@db.pegqwxcukwqzbjuinwmf.supabase.co:5432/postgres?sslmode=require`
+   - **`DATABASE_URL`**: `postgresql://postgres:<password>@db.<project_ref>.supabase.co:5432/postgres?sslmode=require`
    - **`DIRECT_URL`** (optional): Same as DATABASE_URL if not set separately
 
 ### Optional: Configure Environment Protection

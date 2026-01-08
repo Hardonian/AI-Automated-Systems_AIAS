@@ -7,7 +7,15 @@ import os
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
-DATABASE_URL = "postgresql://postgres.pegqwxcukwqzbjuinwmf:BPBWVQFqUzGA6W3V@aws-1-us-east-1.pooler.supabase.com:5432/postgres"
+DATABASE_URL = (
+    os.environ.get("DATABASE_URL")
+    or os.environ.get("DATABASE_POOLER_URL")
+    or os.environ.get("SUPABASE_DB_URL")
+)
+if not DATABASE_URL:
+    raise SystemExit(
+        "Missing DATABASE_URL (or DATABASE_POOLER_URL / SUPABASE_DB_URL). Refusing to run."
+    )
 
 def execute_sql_file(file_path, capture_output=False):
     """Execute SQL file and optionally capture output"""

@@ -17,7 +17,7 @@ Add the following secrets to your GitHub repository:
 
 1. **`DATABASE_POOLER_URL`** (Primary)
    - Format: `postgresql://postgres.{project_ref}:[password]@aws-1-us-east-1.pooler.supabase.com:5432/postgres`
-   - Example: `postgresql://postgres.pegqwxcukwqzbjuinwmf:[BPBWVQFqUzGA6W3V]@aws-1-us-east-1.pooler.supabase.com:5432/postgres`
+   - Example: `postgresql://postgres.<project_ref>:<password>@aws-1-us-east-1.pooler.supabase.com:5432/postgres`
    - Used for: All database operations including migrations
 
 2. **`DATABASE_POOLER_DIRECT_URL`** (Optional)

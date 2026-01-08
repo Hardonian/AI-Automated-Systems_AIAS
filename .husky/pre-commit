@@ -10,3 +10,23 @@ pnpm type-check || {
 
 # Run lint-staged for formatting and linting
 npx lint-staged
+
+# Quick secrets scan on staged files (best-effort; prevents obvious credential commits)
+echo "🔒 Running quick secrets scan on staged files..."
+STAGED_FILES=$(git diff --cached --name-only -z --diff-filter=ACMR | tr '\0' '\n')
+if [ -n "$STAGED_FILES" ]; then
+  # Scan only staged file contents (not full repo) to keep this fast.
+  git diff --cached --name-only -z --diff-filter=ACMR | xargs -0 rg -n --no-heading -S "postgresql://[^\\s]+:[^\\s]+@" && {
+    echo "❌ Potential credential detected: postgresql://user:password@..."
+    echo "   Use environment variables and placeholders; never commit real DB URLs."
+    exit 1
+  }
+  git diff --cached --name-only -z --diff-filter=ACMR | xargs -0 rg -n --no-heading -S "SUPABASE_SERVICE_ROLE_KEY\\s*=\\s*['\"][^'\"]+['\"]" && {
+    echo "❌ Potential secret detected: SUPABASE_SERVICE_ROLE_KEY=\"...\""
+    exit 1
+  }
+  git diff --cached --name-only -z --diff-filter=ACMR | xargs -0 rg -n --no-heading -S "sk_live_[0-9A-Za-z]{16,}|AKIA[0-9A-Z]{16}|xox[baprs]-[0-9A-Za-z-]{10,}" && {
+    echo "❌ Potential API key detected in staged changes."
+    exit 1
+  }
+fi

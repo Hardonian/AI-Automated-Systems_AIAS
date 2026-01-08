@@ -47,9 +47,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 SUPABASE_PROJECT_REF={project-ref}
 
-# Construct from Supabase credentials
-DATABASE_URL=postgresql://postgres:${SUPABASE_SERVICE_ROLE_KEY}@db.{project-ref}.supabase.co:5432/postgres?sslmode=require
-DIRECT_URL=postgresql://postgres:${SUPABASE_SERVICE_ROLE_KEY}@db.{project-ref}.supabase.co:5432/postgres?sslmode=require
+# Construct from Supabase *database* credentials (NOT the service role key)
+# Use the Postgres password / pooler password from Supabase.
+SUPABASE_DB_PASSWORD=your-database-password-here
+DATABASE_URL=postgresql://postgres:${SUPABASE_DB_PASSWORD}@db.{project-ref}.supabase.co:5432/postgres?sslmode=require
+DIRECT_URL=postgresql://postgres:${SUPABASE_DB_PASSWORD}@db.{project-ref}.supabase.co:5432/postgres?sslmode=require
 
 # Generate with: openssl rand -base64 32
 NEXTAUTH_SECRET=your-generated-secret-here

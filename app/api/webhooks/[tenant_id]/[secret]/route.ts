@@ -14,6 +14,7 @@
  * 6. Returns 202 Accepted immediately
  */
 
+import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
@@ -21,6 +22,7 @@ import { env } from "@/lib/env";
 import { SystemError, ValidationError, formatError } from "@/lib/errors";
 import { assertCanExecuteRun } from "@/lib/entitlements/server-gates";
 import { logger } from "@/lib/logging/structured-logger";
+import { getClientIP, rateLimit } from "@/lib/utils/rate-limit";
 import { workflowExecutorWithLogs } from "@/lib/workflows/executor-with-logs";
 
 export const runtime = "nodejs"; // Required for crypto operations
@@ -38,42 +40,46 @@ async function verifyWebhookSecret(
   tenantId: string,
   secret: string
 ): Promise<{ valid: boolean; endpoint?: { id: string; system_id: string } }> {
-  const { data: endpoint, error } = await supabase
+  // Avoid using the secret as a DB filter so the DB can't become an oracle.
+  // We fetch the enabled endpoints for this tenant and do a timing-safe compare in-process.
+  const { data: endpoints, error } = await supabase
     .from("webhook_endpoints")
-    .select("id, system_id, secret, enabled")
+    .select("id, system_id, secret")
     .eq("tenant_id", tenantId)
-    .eq("secret", secret)
     .eq("enabled", true)
-    .single();
+    .limit(50);
 
-  if (error || !endpoint) {
+  if (error || !endpoints || endpoints.length === 0) {
     return { valid: false };
   }
 
-  // Constant-time comparison to prevent timing attacks
-  const storedSecret = endpoint.secret;
-  const providedSecret = secret;
-  
-  if (storedSecret.length !== providedSecret.length) {
-    return { valid: false };
+  for (const endpoint of endpoints) {
+    const storedSecret = String((endpoint as any)?.secret ?? "");
+    const providedSecret = secret;
+    if (!storedSecret || !providedSecret) {
+      continue;
+    }
+
+    // timingSafeEqual requires equal-length buffers.
+    const a = Buffer.from(storedSecret);
+    const b = Buffer.from(providedSecret);
+    if (a.length !== b.length) {
+      continue;
+    }
+    if (!crypto.timingSafeEqual(a, b)) {
+      continue;
+    }
+
+    return {
+      valid: true,
+      endpoint: {
+        id: (endpoint as any).id,
+        system_id: (endpoint as any).system_id,
+      },
+    };
   }
 
-  let isValid = true;
-  for (let i = 0; i < storedSecret.length; i++) {
-    isValid = isValid && storedSecret[i] === providedSecret[i];
-  }
-
-  if (!isValid) {
-    return { valid: false };
-  }
-
-  return {
-    valid: true,
-    endpoint: {
-      id: endpoint.id,
-      system_id: endpoint.system_id,
-    },
-  };
+  return { valid: false };
 }
 
 /**
@@ -203,7 +209,18 @@ export async function POST(
   { params }: { params: { tenant_id: string; secret: string } }
 ): Promise<NextResponse> {
   try {
-    const { tenant_id: tenantId, secret } = params;
+    const { tenant_id: tenantId } = params;
+
+    // Prefer secret in header to avoid secrets in URLs (logs/referrers/history).
+    // Backwards compatible: if secret path segment is not a placeholder, we accept it.
+    const secretFromHeader =
+      request.headers.get("x-webhook-secret")?.trim() ||
+      request.headers.get("x-webhook-signature")?.trim() ||
+      "";
+
+    const pathSecret = (params.secret || "").trim();
+    const isPlaceholderSecret = pathSecret === "_" || pathSecret === "header";
+    const secret = isPlaceholderSecret ? secretFromHeader : pathSecret;
 
     // Validate tenant_id format (UUID)
     if (!tenantId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
@@ -215,16 +232,37 @@ export async function POST(
       );
     }
 
+    // Basic brute-force protection (secret guessing).
+    // NOTE: In-memory limiter is best-effort; for production, prefer Redis/KV.
+    const ip = getClientIP(request);
+    const limit = rateLimit(`webhook:${tenantId}:${ip}`, 60, 60 * 1000); // 60/min per tenant+ip
+    if (!limit.allowed) {
+      const response = NextResponse.json(
+        { error: "Too many requests" },
+        { status: 429, headers: { "Retry-After": String(Math.ceil((limit.resetTime - Date.now()) / 1000)) } }
+      );
+      response.headers.set("Cache-Control", "no-store");
+      return response;
+    }
+
+    if (!secret) {
+      const response = NextResponse.json({ error: "Invalid webhook endpoint" }, { status: 404 });
+      response.headers.set("Cache-Control", "no-store");
+      return response;
+    }
+
     // Verify webhook secret
     const verification = await verifyWebhookSecret(tenantId, secret);
     if (!verification.valid || !verification.endpoint) {
       // Don't reveal whether tenant_id or secret is wrong (security)
       const error = new ValidationError("Invalid webhook endpoint");
       const formatted = formatError(error);
-      return NextResponse.json(
+      const response = NextResponse.json(
         { error: formatted.message },
         { status: 404 } // 404 to not reveal existence
       );
+      response.headers.set("Cache-Control", "no-store");
+      return response;
     }
 
     // Parse payload
@@ -273,7 +311,7 @@ export async function POST(
     );
 
     // Return 202 Accepted immediately
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         received: true,
         run_id: runId,
@@ -281,6 +319,8 @@ export async function POST(
       },
       { status: 202 }
     );
+    response.headers.set("Cache-Control", "no-store");
+    return response;
   } catch (error) {
     const systemError = new SystemError(
       "Webhook processing error",
@@ -292,9 +332,11 @@ export async function POST(
     });
 
     const formatted = formatError(systemError);
-    return NextResponse.json(
+    const response = NextResponse.json(
       { error: formatted.message },
       { status: formatted.statusCode }
     );
+    response.headers.set("Cache-Control", "no-store");
+    return response;
   }
 }

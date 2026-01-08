@@ -582,6 +582,11 @@ ALTER TABLE IF EXISTS public.artifacts ENABLE ROW LEVEL SECURITY;
 -- ============================================================================
 
 -- Drop existing policies if they exist (for idempotency)
+DROP POLICY IF EXISTS "Members can view tenants" ON public.tenants;
+DROP POLICY IF EXISTS "Users can view tenant memberships" ON public.tenant_members;
+DROP POLICY IF EXISTS "Admins can manage tenant memberships" ON public.tenant_members;
+DROP POLICY IF EXISTS "Service role can manage tenant memberships" ON public.tenant_members;
+
 DROP POLICY IF EXISTS "Users can view agents in their tenant" ON public.agents;
 DROP POLICY IF EXISTS "Users can create agents in their tenant" ON public.agents;
 DROP POLICY IF EXISTS "Users can update agents in their tenant" ON public.agents;
@@ -604,8 +609,10 @@ DROP POLICY IF EXISTS "Users can view their telemetry events" ON public.telemetr
 DROP POLICY IF EXISTS "Users can create telemetry events" ON public.telemetry_events;
 DROP POLICY IF EXISTS "Users can view their workflow execution logs" ON public.workflow_execution_logs;
 DROP POLICY IF EXISTS "System can create workflow execution logs" ON public.workflow_execution_logs;
+DROP POLICY IF EXISTS "Service role can create workflow execution logs" ON public.workflow_execution_logs;
 DROP POLICY IF EXISTS "Users can view their agent execution logs" ON public.agent_execution_logs;
 DROP POLICY IF EXISTS "System can create agent execution logs" ON public.agent_execution_logs;
+DROP POLICY IF EXISTS "Service role can create agent execution logs" ON public.agent_execution_logs;
 DROP POLICY IF EXISTS "Users can view their error logs" ON public.error_logs;
 DROP POLICY IF EXISTS "Users can create error logs" ON public.error_logs;
 DROP POLICY IF EXISTS "Performance metrics are readable by all authenticated users" ON public.performance_metrics;
@@ -615,10 +622,61 @@ DROP POLICY IF EXISTS "Users can update webhook endpoints in their tenant" ON pu
 DROP POLICY IF EXISTS "Users can delete webhook endpoints in their tenant" ON public.webhook_endpoints;
 DROP POLICY IF EXISTS "Users can view artifacts in their tenant" ON public.artifacts;
 DROP POLICY IF EXISTS "System can create artifacts" ON public.artifacts;
+DROP POLICY IF EXISTS "Service role can create artifacts" ON public.artifacts;
+
+-- ----------------------------------------------------------------------------
+-- Tenancy policies (critical)
+-- ----------------------------------------------------------------------------
+-- Tenants: members can view tenants they belong to.
+CREATE POLICY "Members can view tenants"
+  ON public.tenants FOR SELECT
+  TO authenticated
+  USING (
+    id IN (
+      SELECT tenant_id
+      FROM public.tenant_members
+      WHERE user_id = auth.uid() AND status = 'active'
+    )
+  );
+
+-- Tenant memberships:
+-- - any user can view their own membership rows
+-- - admins can view all membership rows within their tenant
+CREATE POLICY "Users can view tenant memberships"
+  ON public.tenant_members FOR SELECT
+  TO authenticated
+  USING (
+    user_id = auth.uid()
+    OR EXISTS (
+      SELECT 1
+      FROM public.tenant_members tm
+      WHERE tm.tenant_id = tenant_members.tenant_id
+        AND tm.user_id = auth.uid()
+        AND tm.status = 'active'
+        AND tm.role = 'admin'
+    )
+  );
+
+-- NOTE: Membership creation/removal should be server-controlled.
+-- If you later need self-service invites, add tightly-scoped policies for that flow.
+CREATE POLICY "Admins can manage tenant memberships"
+  ON public.tenant_members FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    EXISTS (
+      SELECT 1
+      FROM public.tenant_members tm
+      WHERE tm.tenant_id = tenant_members.tenant_id
+        AND tm.user_id = auth.uid()
+        AND tm.status = 'active'
+        AND tm.role = 'admin'
+    )
+  );
 
 -- Agents RLS Policies
 CREATE POLICY "Users can view agents in their tenant"
   ON public.agents FOR SELECT
+  TO authenticated
   USING (
     tenant_id IN (
       SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
@@ -627,6 +685,7 @@ CREATE POLICY "Users can view agents in their tenant"
 
 CREATE POLICY "Users can create agents in their tenant"
   ON public.agents FOR INSERT
+  TO authenticated
   WITH CHECK (
     tenant_id IN (
       SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
@@ -635,6 +694,7 @@ CREATE POLICY "Users can create agents in their tenant"
 
 CREATE POLICY "Users can update agents in their tenant"
   ON public.agents FOR UPDATE
+  TO authenticated
   USING (
     tenant_id IN (
       SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
@@ -643,6 +703,7 @@ CREATE POLICY "Users can update agents in their tenant"
 
 CREATE POLICY "Users can delete agents in their tenant"
   ON public.agents FOR DELETE
+  TO authenticated
   USING (
     tenant_id IN (
       SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
@@ -652,15 +713,32 @@ CREATE POLICY "Users can delete agents in their tenant"
 -- Agent Executions RLS Policies
 CREATE POLICY "Users can view their agent executions"
   ON public.agent_executions FOR SELECT
-  USING (user_id = auth.uid() OR user_id IS NULL);
+  TO authenticated
+  USING (
+    user_id = auth.uid()
+    AND (
+      tenant_id IS NULL OR tenant_id IN (
+        SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
+      )
+    )
+  );
 
 CREATE POLICY "Users can create agent executions"
   ON public.agent_executions FOR INSERT
-  WITH CHECK (user_id = auth.uid() OR user_id IS NULL);
+  TO authenticated
+  WITH CHECK (
+    user_id = auth.uid()
+    AND (
+      tenant_id IS NULL OR tenant_id IN (
+        SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
+      )
+    )
+  );
 
 -- Workflows RLS Policies
 CREATE POLICY "Users can view workflows in their tenant"
   ON public.workflows FOR SELECT
+  TO authenticated
   USING (
     tenant_id IN (
       SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
@@ -669,6 +747,7 @@ CREATE POLICY "Users can view workflows in their tenant"
 
 CREATE POLICY "Users can create workflows in their tenant"
   ON public.workflows FOR INSERT
+  TO authenticated
   WITH CHECK (
     tenant_id IN (
       SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
@@ -677,6 +756,7 @@ CREATE POLICY "Users can create workflows in their tenant"
 
 CREATE POLICY "Users can update workflows in their tenant"
   ON public.workflows FOR UPDATE
+  TO authenticated
   USING (
     tenant_id IN (
       SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
@@ -685,6 +765,7 @@ CREATE POLICY "Users can update workflows in their tenant"
 
 CREATE POLICY "Users can delete workflows in their tenant"
   ON public.workflows FOR DELETE
+  TO authenticated
   USING (
     tenant_id IN (
       SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
@@ -694,30 +775,46 @@ CREATE POLICY "Users can delete workflows in their tenant"
 -- Workflow Executions RLS Policies
 CREATE POLICY "Users can view their workflow executions"
   ON public.workflow_executions FOR SELECT
+  TO authenticated
   USING (
-    user_id = auth.uid() OR user_id IS NULL OR
-    tenant_id IN (
+    (user_id = auth.uid() AND (
+      tenant_id IS NULL OR tenant_id IN (
+        SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
+      )
+    ))
+    OR (user_id IS NULL AND tenant_id IN (
       SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
-    )
+    ))
   );
 
 CREATE POLICY "Users can create workflow executions"
   ON public.workflow_executions FOR INSERT
-  WITH CHECK (user_id = auth.uid() OR user_id IS NULL);
+  TO authenticated
+  WITH CHECK (
+    user_id = auth.uid()
+    AND (
+      tenant_id IS NULL OR tenant_id IN (
+        SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
+      )
+    )
+  );
 
 -- Subscriptions RLS Policies
 CREATE POLICY "Users can view their subscriptions"
   ON public.subscriptions FOR SELECT
+  TO authenticated
   USING (user_id = auth.uid() OR tenant_id IN (
     SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
   ));
 
 CREATE POLICY "Users can create subscriptions"
   ON public.subscriptions FOR INSERT
+  TO authenticated
   WITH CHECK (user_id = auth.uid());
 
 CREATE POLICY "Users can update their subscriptions"
   ON public.subscriptions FOR UPDATE
+  TO authenticated
   USING (user_id = auth.uid() OR tenant_id IN (
     SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active' AND role = 'admin'
   ));
@@ -725,112 +822,167 @@ CREATE POLICY "Users can update their subscriptions"
 -- Usage Metrics RLS Policies
 CREATE POLICY "Users can view their usage metrics"
   ON public.usage_metrics FOR SELECT
+  TO authenticated
   USING (user_id = auth.uid() OR tenant_id IN (
     SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
   ));
 
 CREATE POLICY "Users can create usage metrics"
   ON public.usage_metrics FOR INSERT
-  WITH CHECK (user_id = auth.uid() OR user_id IS NULL);
+  TO authenticated
+  WITH CHECK (
+    user_id = auth.uid()
+    AND tenant_id IN (
+      SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
+    )
+  );
 
 -- Billing Events RLS Policies
 CREATE POLICY "Users can view their billing events"
   ON public.billing_events FOR SELECT
+  TO authenticated
   USING (user_id = auth.uid());
 
 -- Telemetry Events RLS Policies
 CREATE POLICY "Users can view their telemetry events"
   ON public.telemetry_events FOR SELECT
-  USING (user_id = auth.uid() OR user_id IS NULL OR tenant_id IN (
-    SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
-  ));
+  TO authenticated
+  USING (
+    user_id = auth.uid()
+    OR (tenant_id IS NOT NULL AND tenant_id IN (
+      SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
+    ))
+  );
 
 CREATE POLICY "Users can create telemetry events"
   ON public.telemetry_events FOR INSERT
-  WITH CHECK (user_id = auth.uid() OR user_id IS NULL);
+  TO authenticated
+  WITH CHECK (user_id = auth.uid());
 
 -- Workflow Execution Logs RLS Policies
 CREATE POLICY "Users can view their workflow execution logs"
   ON public.workflow_execution_logs FOR SELECT
-  USING (user_id = auth.uid() OR user_id IS NULL OR tenant_id IN (
-    SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
-  ));
+  TO authenticated
+  USING (
+    (user_id = auth.uid())
+    OR (tenant_id IS NOT NULL AND tenant_id IN (
+      SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
+    ))
+  );
 
-CREATE POLICY "System can create workflow execution logs"
+CREATE POLICY "Service role can create workflow execution logs"
   ON public.workflow_execution_logs FOR INSERT
+  TO service_role
   WITH CHECK (true);
 
 -- Agent Execution Logs RLS Policies
 CREATE POLICY "Users can view their agent execution logs"
   ON public.agent_execution_logs FOR SELECT
-  USING (user_id = auth.uid() OR user_id IS NULL OR tenant_id IN (
-    SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
-  ));
+  TO authenticated
+  USING (
+    user_id = auth.uid()
+    AND (
+      tenant_id IS NULL OR tenant_id IN (
+        SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
+      )
+    )
+  );
 
-CREATE POLICY "System can create agent execution logs"
+CREATE POLICY "Service role can create agent execution logs"
   ON public.agent_execution_logs FOR INSERT
+  TO service_role
   WITH CHECK (true);
 
 -- Error Logs RLS Policies
 CREATE POLICY "Users can view their error logs"
   ON public.error_logs FOR SELECT
-  USING (user_id = auth.uid() OR user_id IS NULL OR tenant_id IN (
-    SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
-  ));
+  TO authenticated
+  USING (
+    (user_id = auth.uid())
+    OR (tenant_id IS NOT NULL AND tenant_id IN (
+      SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
+    ))
+  );
 
 CREATE POLICY "Users can create error logs"
   ON public.error_logs FOR INSERT
-  WITH CHECK (user_id = auth.uid() OR user_id IS NULL);
+  TO authenticated
+  WITH CHECK (user_id = auth.uid() AND (tenant_id IS NULL OR tenant_id IN (
+    SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
+  )));
 
 -- Performance Metrics RLS Policies
 CREATE POLICY "Performance metrics are readable by all authenticated users"
   ON public.performance_metrics FOR SELECT
+  TO authenticated
   USING (auth.role() = 'authenticated');
 
 -- Webhook Endpoints RLS Policies
 CREATE POLICY "Users can view webhook endpoints in their tenant"
   ON public.webhook_endpoints FOR SELECT
+  TO authenticated
   USING (
     tenant_id IN (
-      SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
+      SELECT tenant_id
+      FROM public.tenant_members
+      WHERE user_id = auth.uid()
+        AND status = 'active'
+        AND role IN ('admin', 'billing')
     )
   );
 
 CREATE POLICY "Users can create webhook endpoints in their tenant"
   ON public.webhook_endpoints FOR INSERT
+  TO authenticated
   WITH CHECK (
     tenant_id IN (
-      SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
+      SELECT tenant_id
+      FROM public.tenant_members
+      WHERE user_id = auth.uid()
+        AND status = 'active'
+        AND role IN ('admin', 'billing')
     )
   );
 
 CREATE POLICY "Users can update webhook endpoints in their tenant"
   ON public.webhook_endpoints FOR UPDATE
+  TO authenticated
   USING (
     tenant_id IN (
-      SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
+      SELECT tenant_id
+      FROM public.tenant_members
+      WHERE user_id = auth.uid()
+        AND status = 'active'
+        AND role IN ('admin', 'billing')
     )
   );
 
 CREATE POLICY "Users can delete webhook endpoints in their tenant"
   ON public.webhook_endpoints FOR DELETE
+  TO authenticated
   USING (
     tenant_id IN (
-      SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
+      SELECT tenant_id
+      FROM public.tenant_members
+      WHERE user_id = auth.uid()
+        AND status = 'active'
+        AND role IN ('admin', 'billing')
     )
   );
 
 -- Artifacts RLS Policies
 CREATE POLICY "Users can view artifacts in their tenant"
   ON public.artifacts FOR SELECT
+  TO authenticated
   USING (
     tenant_id IN (
       SELECT tenant_id FROM public.tenant_members WHERE user_id = auth.uid() AND status = 'active'
     )
   );
 
-CREATE POLICY "System can create artifacts"
+CREATE POLICY "Service role can create artifacts"
   ON public.artifacts FOR INSERT
+  TO service_role
   WITH CHECK (true);
 
 -- ============================================================================
@@ -881,9 +1033,24 @@ REVOKE ALL ON ALL SEQUENCES IN SCHEMA public FROM public;
 
 -- Grant to authenticated role (RLS will enforce access)
 GRANT USAGE ON SCHEMA public TO authenticated;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO authenticated;
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO authenticated;
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO authenticated;
+GRANT SELECT ON public.user_tenants TO authenticated;
+
+-- Client-facing tables (scoped grants; RLS still applies)
+GRANT SELECT ON public.tenants TO authenticated;
+GRANT SELECT ON public.tenant_members TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.agents TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.agent_executions TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.workflows TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.workflow_executions TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.subscriptions TO authenticated;
+GRANT SELECT, INSERT ON public.usage_metrics TO authenticated;
+GRANT SELECT ON public.billing_events TO authenticated;
+GRANT SELECT, INSERT ON public.telemetry_events TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.webhook_endpoints TO authenticated;
+
+-- Intentionally NOT granted to `authenticated` (server-only / sensitive-by-default):
+-- - workflow_execution_logs, agent_execution_logs, error_logs, artifacts, performance_metrics
+-- - generate_webhook_secret(): should be server/service-only
 
 -- Grant to anon role (limited, RLS will enforce access)
 GRANT USAGE ON SCHEMA public TO anon;

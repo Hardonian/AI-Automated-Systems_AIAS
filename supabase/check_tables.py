@@ -1,8 +1,22 @@
 #!/usr/bin/env python3
-"""Check which intended tables exist"""
+"""Check which intended tables exist
+
+SECURITY: This script must never embed credentials in source control.
+Provide the connection string via environment variables.
+"""
+import os
+
 import psycopg2
 
-DATABASE_URL = "postgresql://postgres.pegqwxcukwqzbjuinwmf:BPBWVQFqUzGA6W3V@aws-1-us-east-1.pooler.supabase.com:5432/postgres"
+DATABASE_URL = (
+    os.environ.get("DATABASE_URL")
+    or os.environ.get("DATABASE_POOLER_URL")
+    or os.environ.get("SUPABASE_DB_URL")
+)
+if not DATABASE_URL:
+    raise SystemExit(
+        "Missing DATABASE_URL (or DATABASE_POOLER_URL / SUPABASE_DB_URL). Refusing to run."
+    )
 
 conn = psycopg2.connect(DATABASE_URL)
 cur = conn.cursor()

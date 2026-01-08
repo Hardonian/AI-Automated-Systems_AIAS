@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { ReviewClient } from "./review-client";
+
 import { getAdminUser } from "@/lib/auth/admin-auth";
 import { getPublicRuntimeUiConfig } from "@/lib/runtime-ui/server";
-
-import { ReviewClient } from "./review-client";
 
 export const metadata: Metadata = {
   title: "Internal Review",
@@ -23,25 +23,10 @@ export const metadata: Metadata = {
   },
 };
 
-function getEnvLabel() {
-  const vercelEnv = process.env.VERCEL_ENV; // 'production' | 'preview' | 'development'
-  if (vercelEnv) {
-    return `vercel:${vercelEnv}`;
-  }
-  return process.env.NODE_ENV ?? "unknown";
-}
-
-function isPreviewOrDev() {
-  const vercelEnv = process.env.VERCEL_ENV;
-  if (vercelEnv === "preview" || vercelEnv === "development") {
-    return true;
-  }
-  return process.env.NODE_ENV !== "production";
-}
-
 export default async function InternalReviewPage() {
-  const envLabel = getEnvLabel();
-  const previewOrDev = isPreviewOrDev();
+  const vercelEnv = process.env.VERCEL_ENV; // 'production' | 'preview' | 'development'
+  const envLabel = vercelEnv ? `vercel:${vercelEnv}` : (process.env.NODE_ENV ?? "unknown");
+  const previewOrDev = vercelEnv === "preview" || vercelEnv === "development" || process.env.NODE_ENV !== "production";
 
   let adminUser = null;
   try {
@@ -58,6 +43,6 @@ export default async function InternalReviewPage() {
 
   const { config, source } = await getPublicRuntimeUiConfig();
 
-  return <ReviewClient config={config} envLabel={envLabel} source={source} />;
+  return <ReviewClient canEdit={!!adminUser} config={config} envLabel={envLabel} source={source} />;
 }
 

@@ -4,8 +4,6 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { NextRequest } from "next/server";
-import Stripe from "stripe";
 
 import { checkIdempotencyKey, recordIdempotencyKey } from "@/lib/billing/idempotency";
 
@@ -92,6 +90,7 @@ describe("Stripe Webhook Idempotency", () => {
     // In real implementation, this would return the cached response
     const secondCheck = await checkIdempotencyKey(idempotencyKey);
     // Note: This test is simplified - actual implementation would check Supabase
+    expect(secondCheck).toBeDefined();
   });
 
   it("should handle expired idempotency keys", async () => {

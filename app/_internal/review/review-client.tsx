@@ -1,8 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-
 import Link from "next/link";
+import { useMemo, useState } from "react";
 
 import { PageLoader } from "@/components/loading-states";
 import { Button } from "@/components/ui/button";
@@ -12,8 +11,21 @@ import type { RuntimeUiConfig } from "@/lib/runtime-ui/runtime-ui-config";
 
 type ReviewState = "default" | "loading" | "empty" | "error";
 
-export function ReviewClient(props: { config: RuntimeUiConfig; source: string; envLabel: string }) {
+async function getCsrfToken(): Promise<string | null> {
+  try {
+    const r = await fetch("/api/csrf", { method: "GET", credentials: "same-origin" });
+    if (!r.ok) {return null;}
+    const data = (await r.json()) as { token?: string };
+    return data.token ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export function ReviewClient(props: { config: RuntimeUiConfig; source: string; envLabel: string; canEdit: boolean }) {
   const [state, setState] = useState<ReviewState>("default");
+  const [draft, setDraft] = useState(() => JSON.stringify(props.config, null, 2));
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
   const criticalRoutes = useMemo(
     () => [
@@ -145,8 +157,8 @@ export function ReviewClient(props: { config: RuntimeUiConfig; source: string; e
         <CardContent className="space-y-3">
           <Button
             variant="outline"
-            onClick={async () => {
-              await navigator.clipboard.writeText(JSON.stringify(props.config, null, 2));
+            onClick={() => {
+              void navigator.clipboard.writeText(JSON.stringify(props.config, null, 2));
             }}
           >
             Copy JSON
@@ -156,6 +168,72 @@ export function ReviewClient(props: { config: RuntimeUiConfig; source: string; e
           </pre>
         </CardContent>
       </Card>
+
+      {props.canEdit ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Update runtime UI config (admin)</CardTitle>
+            <CardDescription>
+              Saves to DB-backed runtime config. Requires same-origin + CSRF token.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <textarea
+              className="w-full min-h-[240px] rounded-md border border-border bg-background p-3 font-mono text-xs"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+            />
+            <div className="flex gap-2 items-center">
+              <Button
+                onClick={() => {
+                  void (async () => {
+                    setSaveStatus("saving");
+                    const csrf = await getCsrfToken();
+                    if (!csrf) {
+                      setSaveStatus("error");
+                      return;
+                    }
+
+                    let parsed: unknown;
+                    try {
+                      parsed = JSON.parse(draft);
+                    } catch {
+                      setSaveStatus("error");
+                      return;
+                    }
+
+                    const r = await fetch("/api/admin/ui-config", {
+                      method: "POST",
+                      credentials: "same-origin",
+                      headers: {
+                        "content-type": "application/json",
+                        "x-csrf-token": csrf,
+                      },
+                      body: JSON.stringify({ config: parsed }),
+                    });
+
+                    if (!r.ok) {
+                      setSaveStatus("error");
+                      return;
+                    }
+                    setSaveStatus("saved");
+                  })();
+                }}
+                disabled={saveStatus === "saving"}
+              >
+                {saveStatus === "saving" ? "Saving…" : "Save"}
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                {saveStatus === "saved"
+                  ? "Saved. Refresh to see applied values."
+                  : saveStatus === "error"
+                    ? "Save failed. Check JSON + auth."
+                    : null}
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
     </div>
   );
 }

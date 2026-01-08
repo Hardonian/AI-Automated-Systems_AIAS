@@ -5,7 +5,7 @@ import { coerceRuntimeUiConfig, DEFAULT_RUNTIME_UI_CONFIG, type RuntimeUiConfig 
 type UiConfigResponse =
   | {
       config: RuntimeUiConfig;
-      source: "edge-config" | "file" | "default";
+      source: "edge-config" | "db" | "file" | "default";
       timestamp: string;
     }
   | { error: string };

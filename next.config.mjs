@@ -8,7 +8,6 @@ const __dirname = path.dirname(__filename);
 const isRemoteBuild =
   process.env.CI === 'true' ||
   process.env.VERCEL === '1' ||
-  process.env.VERCEL === 'true' ||
   process.env.BUILDER_IO === 'true' ||
   process.env.FUSION_BUILDER === 'true';
 

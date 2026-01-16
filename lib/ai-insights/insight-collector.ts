@@ -146,10 +146,18 @@ export async function collectInsights(): Promise<WeeklyInsights> {
       }
     }
 
-    // Calculate summary
-    const highImpact = insights.filter((i) => i.impact === "high").length;
-    const lowEffort = insights.filter((i) => i.effort === "low").length;
-    const quickWins = insights.filter((i) => i.impact === "high" && i.effort === "low");
+    // Calculate summary with single pass instead of multiple filters
+    const summary = insights.reduce(
+      (acc, i) => {
+        if (i.impact === "high") acc.highImpact++;
+        if (i.effort === "low") acc.lowEffort++;
+        if (i.impact === "high" && i.effort === "low") acc.quickWins.push(i);
+        return acc;
+      },
+      { highImpact: 0, lowEffort: 0, quickWins: [] as typeof insights }
+    );
+
+    const { highImpact, lowEffort, quickWins } = summary;
 
     // Sort by priority
     insights.sort((a, b) => b.priority - a.priority);

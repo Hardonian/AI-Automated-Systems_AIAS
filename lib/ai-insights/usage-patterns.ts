@@ -133,10 +133,18 @@ export async function detectIncompleteWorkflows(): Promise<Array<{
   recommendation: string;
 }>> {
   try {
-    // Get workflows that are created but never executed
+    // Get workflows with execution counts in a single query to avoid N+1
+    // Using a subquery to count executions per workflow
     const { data: workflows } = await supabase
       .from("workflows")
-      .select("id, user_id, name, enabled, created_at");
+      .select(`
+        id,
+        user_id,
+        name,
+        enabled,
+        created_at,
+        workflow_executions(count)
+      `);
 
     if (!workflows) {
       return [];
@@ -150,11 +158,8 @@ export async function detectIncompleteWorkflows(): Promise<Array<{
     }> = [];
 
     for (const workflow of workflows) {
-      // Check if workflow has been executed
-      const { count: executionCount } = await supabase
-        .from("workflow_executions")
-        .select("id", { count: "exact", head: true })
-        .eq("workflow_id", workflow.id);
+      // Get execution count from the joined data
+      const executionCount = (workflow.workflow_executions as unknown as Array<unknown>)?.length || 0;
 
       if (executionCount === 0) {
         const daysSinceCreation = Math.floor(

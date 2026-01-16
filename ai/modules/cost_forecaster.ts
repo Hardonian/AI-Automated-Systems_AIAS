@@ -299,10 +299,18 @@ export class CostForecaster {
     const x = historical.map((_, i) => i);
     const y = historical;
 
-    const sumX = x.reduce((a, b) => a + b, 0);
-    const sumY = y.reduce((a, b) => a + b, 0);
-    const sumXY = x.reduce((sum, xi, i) => sum + xi * (y[i] ?? 0), 0);
-    const sumXX = x.reduce((sum, xi) => sum + xi * xi, 0);
+    // Combine all reduce operations into a single pass for better performance
+    const sums = x.reduce(
+      (acc, xi, i) => ({
+        sumX: acc.sumX + xi,
+        sumY: acc.sumY + (y[i] ?? 0),
+        sumXY: acc.sumXY + xi * (y[i] ?? 0),
+        sumXX: acc.sumXX + xi * xi,
+      }),
+      { sumX: 0, sumY: 0, sumXY: 0, sumXX: 0 }
+    );
+
+    const { sumX, sumY, sumXY, sumXX } = sums;
 
     const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
     const intercept = (sumY - slope * sumX) / n;

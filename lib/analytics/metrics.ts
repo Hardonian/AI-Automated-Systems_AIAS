@@ -99,12 +99,17 @@ export async function calculateTimeToActivation(days: number = 30): Promise<numb
     .eq("type", "user_activated")
     .gte("created_at", startDate.toISOString());
 
+  // Create a Map for O(1) lookups instead of O(n) find() operations
+  const signupMap = new Map(
+    signups?.map((s: { user_id: string; created_at: string }) => [s.user_id, s.created_at]) || []
+  );
+
   const activationTimes: number[] = [];
 
   for (const activation of activations || []) {
-    const signup = signups?.find((s: { user_id: string }) => s.user_id === activation.user_id);
-    if (signup) {
-      const signupTime = new Date(signup.created_at).getTime();
+    const signupCreatedAt = signupMap.get(activation.user_id);
+    if (signupCreatedAt) {
+      const signupTime = new Date(signupCreatedAt).getTime();
       const activationTime = new Date(activation.created_at).getTime();
       activationTimes.push(activationTime - signupTime);
     }

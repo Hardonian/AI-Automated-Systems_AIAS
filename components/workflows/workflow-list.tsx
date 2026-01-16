@@ -5,7 +5,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -34,7 +34,7 @@ export function WorkflowList({ userId, tenantId }: WorkflowListProps) {
       // const response = await fetch(`/api/workflows?userId=${userId}`);
       // const data = await response.json();
       // setWorkflows(data.workflows);
-      
+
       // Mock data for now
       setWorkflows([]);
     } catch (error) {
@@ -44,9 +44,14 @@ export function WorkflowList({ userId, tenantId }: WorkflowListProps) {
     }
   };
 
-  const filteredWorkflows = workflows.filter(workflow =>
-    workflow.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    workflow.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  // Memoize filtered workflows to avoid re-filtering on every render
+  const filteredWorkflows = useMemo(
+    () =>
+      workflows.filter(workflow =>
+        workflow.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        workflow.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [workflows, searchQuery]
   );
 
   if (loading) {

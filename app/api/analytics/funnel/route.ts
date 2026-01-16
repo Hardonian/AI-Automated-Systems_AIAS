@@ -114,24 +114,31 @@ export async function GET(request: NextRequest) {
       overallActivation: signup > 0 ? (activation / signup) * 100 : 0,
     };
 
-    return NextResponse.json({
-      period: "last_30_days",
-      stages: {
-        signup,
-        onboarding_start: onboarding,
-        integration_connect: integration,
-        workflow_create: workflow,
-        workflow_execute: execution,
-        activated: activation,
+    return NextResponse.json(
+      {
+        period: "last_30_days",
+        stages: {
+          signup,
+          onboarding_start: onboarding,
+          integration_connect: integration,
+          workflow_create: workflow,
+          workflow_execute: execution,
+          activated: activation,
+        },
+        conversionRates,
+        dropOffPoints: {
+          signupToOnboarding: signup - onboarding,
+          onboardingToIntegration: onboarding - integration,
+          integrationToWorkflow: integration - workflow,
+          workflowToExecute: workflow - execution,
+        },
       },
-      conversionRates,
-      dropOffPoints: {
-        signupToOnboarding: signup - onboarding,
-        onboardingToIntegration: onboarding - integration,
-        integrationToWorkflow: integration - workflow,
-        workflowToExecute: workflow - execution,
-      },
-    });
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        },
+      }
+    );
   } catch (error) {
     logger.error("Error in GET /api/analytics/funnel", error instanceof Error ? error : undefined);
     return handleApiError(error, "Failed to get funnel data");

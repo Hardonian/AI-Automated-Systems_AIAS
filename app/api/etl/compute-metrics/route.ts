@@ -143,23 +143,31 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
       // Store computed metrics (assuming metrics_daily table exists)
       let recordsInserted = 0;
-      for (const [date, metrics] of metricsByDate.entries()) {
-        const { error: upsertError } = await supabase.from("metrics_daily").upsert({
-          date: metrics.date,
-          total_spend_cents: metrics.total_spend_cents,
-          total_clicks: metrics.total_clicks,
-          total_impressions: metrics.total_impressions,
-          total_conversions: metrics.total_conversions,
-          platforms: metrics.platforms,
-        }, {
+
+      // Batch insert all metrics at once
+      const metricsToInsert = Array.from(metricsByDate.values()).map(metrics => ({
+        date: metrics.date,
+        total_spend_cents: metrics.total_spend_cents,
+        total_clicks: metrics.total_clicks,
+        total_impressions: metrics.total_impressions,
+        total_conversions: metrics.total_conversions,
+        platforms: metrics.platforms,
+      }));
+
+      const { error: upsertError, count } = await supabase
+        .from("metrics_daily")
+        .upsert(metricsToInsert, {
           onConflict: "date",
+          count: "exact",
         });
 
-        if (upsertError) {
-          logger.warn("Failed to insert metrics", { error: upsertError.message, date });
-        } else {
-          recordsInserted++;
-        }
+      if (upsertError) {
+        logger.warn("Failed to batch insert metrics", {
+          error: upsertError.message,
+          metricCount: metricsToInsert.length
+        });
+      } else {
+        recordsInserted = count || metricsToInsert.length;
       }
 
       const duration = Date.now() - startTime;

@@ -105,25 +105,33 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // Store data in database (assuming spend table exists)
     let recordsInserted = 0;
     if (data.data && data.data.length > 0) {
-      for (const ad of data.data) {
+      // Batch insert all ad performance data at once
+      const adsToInsert = data.data.map(ad => {
         const conversions = ad.actions?.find((a) => a.action_type === "purchase")?.value || "0";
-        
-        const { error } = await supabase.from("spend").upsert({
+        return {
           platform: "meta",
           date: ad.date_start,
           spend_cents: Math.round(parseFloat(ad.spend) * 100),
           clicks: parseInt(ad.clicks, 10) || 0,
           impressions: parseInt(ad.impressions, 10) || 0,
           conversions: parseInt(conversions, 10) || 0,
-        }, {
+        };
+      });
+
+      const { error, count } = await supabase
+        .from("spend")
+        .upsert(adsToInsert, {
           onConflict: "platform,date",
+          count: "exact",
         });
 
-        if (error) {
-          logger.warn("Failed to insert Meta ad data", { error: error.message, date: ad.date_start });
-        } else {
-          recordsInserted++;
-        }
+      if (error) {
+        logger.warn("Failed to batch insert Meta ad data", {
+          error: error.message,
+          adCount: data.data.length
+        });
+      } else {
+        recordsInserted = count || data.data.length;
       }
     }
 

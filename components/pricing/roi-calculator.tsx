@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,16 +12,32 @@ export function ROICalculator() {
   const [hourlyRate, setHourlyRate] = useState<string>("50");
   const [plan, setPlan] = useState<"starter" | "pro">("starter");
 
-  const hours = parseFloat(hoursPerWeek) || 0;
-  const rate = parseFloat(hourlyRate) || 0;
-  const planCost = plan === "starter" ? 49 : 149;
+  // Memoize all calculations to avoid recalculating on every render
+  const calculations = useMemo(() => {
+    const hours = parseFloat(hoursPerWeek) || 0;
+    const rate = parseFloat(hourlyRate) || 0;
+    const planCost = plan === "starter" ? 49 : 149;
 
-  const monthlyHoursSaved = hours * 4.33; // Average weeks per month
-  const monthlyValue = monthlyHoursSaved * rate;
-  const annualValue = monthlyValue * 12;
-  const annualCost = planCost * 12;
-  const netAnnualSavings = annualValue - annualCost;
-  const roi = annualValue > 0 ? ((annualValue - annualCost) / annualCost) * 100 : 0;
+    const monthlyHoursSaved = hours * 4.33; // Average weeks per month
+    const monthlyValue = monthlyHoursSaved * rate;
+    const annualValue = monthlyValue * 12;
+    const annualCost = planCost * 12;
+    const netAnnualSavings = annualValue - annualCost;
+    const roi = annualValue > 0 ? ((annualValue - annualCost) / annualCost) * 100 : 0;
+
+    return {
+      hours,
+      rate,
+      monthlyHoursSaved,
+      monthlyValue,
+      annualValue,
+      annualCost,
+      netAnnualSavings,
+      roi,
+    };
+  }, [hoursPerWeek, hourlyRate, plan]);
+
+  const { hours, rate, monthlyHoursSaved, monthlyValue, annualValue, annualCost, netAnnualSavings, roi } = calculations;
 
   return (
     <Card className="mt-12">

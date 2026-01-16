@@ -1,4 +1,5 @@
-import { readFileSync, existsSync } from "fs";
+import { readFile } from "fs/promises";
+import { existsSync } from "fs";
 import { join } from "path";
 
 import { NextResponse } from "next/server";
@@ -32,10 +33,11 @@ export async function GET() {
 
     // Fallback to file-based flags (development/local)
     const flagsPath = join(process.cwd(), "featureflags", "flags.json");
-    
+
     if (existsSync(flagsPath)) {
-      const flags = JSON.parse(readFileSync(flagsPath, "utf-8"));
-      
+      const fileContent = await readFile(flagsPath, "utf-8");
+      const flags = JSON.parse(fileContent);
+
       // Extract trust-related flags
       const trustFlags = {
         trust_audit_enabled: flags.trust_audit_enabled ?? true,

@@ -111,17 +111,24 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({
-      mrr: Math.round(mrr),
-      arr: Math.round(arr),
-      totalRevenue: Math.round(mrr * 6), // Placeholder
-      activeSubscriptions,
-      churnRate,
-      averageRevenuePerUser: Math.round(averageRevenuePerUser * 100) / 100,
-      planDistribution,
-      revenueByMonth,
-      note: "Revenue data is calculated from database. For accurate revenue, integrate with billing provider (Stripe/Paddle).",
-    });
+    return NextResponse.json(
+      {
+        mrr: Math.round(mrr),
+        arr: Math.round(arr),
+        totalRevenue: Math.round(mrr * 6), // Placeholder
+        activeSubscriptions,
+        churnRate,
+        averageRevenuePerUser: Math.round(averageRevenuePerUser * 100) / 100,
+        planDistribution,
+        revenueByMonth,
+        note: "Revenue data is calculated from database. For accurate revenue, integrate with billing provider (Stripe/Paddle).",
+      },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        },
+      }
+    );
   } catch (error) {
     logger.error("Error in GET /api/analytics/revenue", error instanceof Error ? error : undefined);
     return handleApiError(error, "Failed to get revenue data");

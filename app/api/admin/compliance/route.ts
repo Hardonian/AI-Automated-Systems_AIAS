@@ -1,4 +1,5 @@
-import { readFileSync, existsSync } from 'fs';
+import { readFile } from 'fs/promises';
+import { existsSync } from 'fs';
 import { join } from 'path';
 
 import { createClient } from '@supabase/supabase-js';
@@ -11,9 +12,10 @@ export async function GET() {
   try {
     // Try to read from generated JSON file first
     const jsonPath = join(process.cwd(), 'app', 'admin', 'compliance.json');
-    
+
     if (existsSync(jsonPath)) {
-      const compliance = JSON.parse(readFileSync(jsonPath, 'utf-8'));
+      const fileContent = await readFile(jsonPath, 'utf-8');
+      const compliance = JSON.parse(fileContent);
       return NextResponse.json(compliance);
     }
 

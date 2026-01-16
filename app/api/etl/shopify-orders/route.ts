@@ -124,31 +124,38 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
       // Store orders in database (assuming orders table exists)
       if (data.orders && data.orders.length > 0) {
-        for (const order of data.orders) {
-          const { error } = await supabase.from("orders").upsert({
-            shopify_id: order.id.toString(),
-            order_number: order.order_number,
-            email: order.email,
-            created_at: order.created_at,
-            total_cents: Math.round(parseFloat(order.total_price) * 100),
-            currency: order.currency,
-            source: order.source_name,
-            metadata: {
-              subtotal: order.subtotal_price,
-              shipping: order.total_shipping_price_set.shop_money.amount,
-              tax: order.total_tax,
-              discounts: order.total_discounts,
-              line_items: order.line_items,
-            },
-          }, {
+        // Batch insert all orders at once instead of individual upserts
+        const ordersToInsert = data.orders.map(order => ({
+          shopify_id: order.id.toString(),
+          order_number: order.order_number,
+          email: order.email,
+          created_at: order.created_at,
+          total_cents: Math.round(parseFloat(order.total_price) * 100),
+          currency: order.currency,
+          source: order.source_name,
+          metadata: {
+            subtotal: order.subtotal_price,
+            shipping: order.total_shipping_price_set.shop_money.amount,
+            tax: order.total_tax,
+            discounts: order.total_discounts,
+            line_items: order.line_items,
+          },
+        }));
+
+        const { error, count } = await supabase
+          .from("orders")
+          .upsert(ordersToInsert, {
             onConflict: "shopify_id",
+            count: "exact",
           });
 
-          if (error) {
-            logger.warn("Failed to insert Shopify order", { error: error.message, orderId: order.id });
-          } else {
-            recordsInserted++;
-          }
+        if (error) {
+          logger.warn("Failed to batch insert Shopify orders", {
+            error: error.message,
+            orderCount: data.orders.length
+          });
+        } else {
+          recordsInserted += count || data.orders.length;
         }
       }
 

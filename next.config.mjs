@@ -5,6 +5,12 @@ import path from 'path';
 const require = createRequire(import.meta.url);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const isRemoteBuild =
+  process.env.CI === 'true' ||
+  process.env.VERCEL === '1' ||
+  process.env.VERCEL === 'true' ||
+  process.env.BUILDER_IO === 'true' ||
+  process.env.FUSION_BUILDER === 'true';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -111,6 +117,9 @@ const nextConfig = {
   },
   // Bundle optimization
   webpack: (config, { isServer }) => {
+    if (isRemoteBuild) {
+      config.cache = { type: 'memory' };
+    }
     // Ignore pg module and migrations in webpack (server-only)
     config.externals = config.externals || [];
     if (isServer) {

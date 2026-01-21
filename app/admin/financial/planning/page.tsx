@@ -16,6 +16,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { getAccessibleDocuments } from "@/lib/admin/business-planning-access";
 import { checkAdminAccess, AdminRole, hasAdminRole } from "@/lib/auth/admin-auth";
 
+export const dynamic = "force-dynamic";
+
 export default async function BusinessPlanningPage() {
   // Check admin access
   const adminCheck = await checkAdminAccess();

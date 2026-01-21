@@ -19,7 +19,7 @@ export const GET = createGETHandler(
     const { request } = context;
     
     // Get provider from URL
-    const provider = request.nextUrl.pathname.split("/")[2];
+    const [, , provider] = request.nextUrl.pathname.split("/");
     if (!provider) {
       return NextResponse.json(
         { error: "Provider required" },
@@ -90,7 +90,7 @@ export const GET = createGETHandler(
 
       // Track integration connected event
       try {
-        await track(userId, {
+        track(userId, {
           type: "integration_connected",
           path: `/api/integrations/${provider}/callback`,
           meta: {

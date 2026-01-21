@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
 
     // Track workflow created event
     try {
-      await track(user.id, {
+      track(user.id, {
         type: "workflow_created",
         path: "/api/v1/workflows",
         meta: {
@@ -191,7 +191,7 @@ export async function POST(request: NextRequest) {
 
       // User is activated if they have at least one integration and one workflow
       if ((integrations && integrations.length > 0) && (existingWorkflows && existingWorkflows.length > 0)) {
-        await track(user.id, {
+        track(user.id, {
           type: "user_activated",
           path: "/api/v1/workflows",
           meta: {

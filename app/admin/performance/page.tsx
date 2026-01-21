@@ -11,7 +11,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -49,15 +49,7 @@ export default function PerformanceDashboard() {
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<'1h' | '24h' | '7d'>('1h');
 
-  useEffect(() => {
-    void fetchMetrics();
-    const interval = setInterval(() => {
-      void fetchMetrics();
-    }, 30000); // Refresh every 30 seconds
-    return () => clearInterval(interval);
-  }, [timeRange]);
-
-  async function fetchMetrics() {
+  const fetchMetrics = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/metrics?range=${timeRange}`);
       const data = await response.json();
@@ -70,7 +62,15 @@ export default function PerformanceDashboard() {
       });
       setLoading(false);
     }
-  }
+  }, [timeRange]);
+
+  useEffect(() => {
+    void fetchMetrics();
+    const interval = setInterval(() => {
+      void fetchMetrics();
+    }, 30000); // Refresh every 30 seconds
+    return () => clearInterval(interval);
+  }, [fetchMetrics]);
 
   if (loading) {
     return (

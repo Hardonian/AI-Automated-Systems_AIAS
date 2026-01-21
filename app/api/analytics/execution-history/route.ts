@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
 
     executions?.forEach((execution: { started_at?: string; status?: string }) => {
       if (!execution.started_at) {return;}
-      const dateStr = new Date(execution.started_at).toISOString().split("T")[0]; // YYYY-MM-DD
+      const [dateStr] = new Date(execution.started_at).toISOString().split("T"); // YYYY-MM-DD
       if (!dateStr) {return;}
       if (!grouped[dateStr]) {
         grouped[dateStr] = { completed: 0, failed: 0 };
@@ -70,9 +70,10 @@ export async function GET(request: NextRequest) {
     for (let i = 29; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
-      const dateStr = date.toISOString().split("T")[0];
+      const [dateStr] = date.toISOString().split("T");
       const groupData = dateStr ? grouped[dateStr] : undefined;
-      const finalDateStr = dateStr || new Date().toISOString().split('T')[0] || '';
+      const [fallbackDate] = new Date().toISOString().split("T");
+      const finalDateStr = dateStr || fallbackDate || "";
       result.push({
         date: finalDateStr,
         completed: groupData?.completed || 0,

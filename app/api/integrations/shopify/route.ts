@@ -77,7 +77,7 @@ export const POST = createPOSTHandler(
 
     // Track integration connected event
     try {
-      await track(user.id, {
+      track(user.id, {
         type: "integration_connected",
         path: "/api/integrations/shopify",
         meta: {
@@ -104,7 +104,7 @@ export const POST = createPOSTHandler(
 
       // User is activated if they have at least one integration and one workflow
       if (workflows && workflows.length > 0) {
-        await track(user.id, {
+        track(user.id, {
           type: "user_activated",
           path: "/api/integrations/shopify",
           meta: {

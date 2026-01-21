@@ -78,7 +78,7 @@ export const POST = createPOSTHandler(
     const body = await request.json();
     const validated = createWorkflowSchema.parse(body);
 
-    const { data: workflow, error } = await (supabase as any)
+    const { data: workflow, error } = await supabase
       .from('workflows')
       .insert({
         ...validated,

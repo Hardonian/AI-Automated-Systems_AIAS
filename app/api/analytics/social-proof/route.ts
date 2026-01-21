@@ -41,7 +41,7 @@ export async function GET() {
       activeUsers: activeUsers || 0,
       workflowsCreated: workflowsCreated || 0,
     });
-  } catch (error) {
+  } catch {
     // Return sample data on error
     return NextResponse.json({
       recentSignups: 127,

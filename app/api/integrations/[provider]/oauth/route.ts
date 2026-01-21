@@ -14,7 +14,7 @@ export const GET = createGETHandler(
     const { request } = context;
     
     // Get provider from URL
-    const provider = request.nextUrl.pathname.split("/")[2];
+    const [, , provider] = request.nextUrl.pathname.split("/");
     if (!provider) {
       return NextResponse.json(
         { error: "Provider required" },

@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
     });
 
     try {
-      await track(user.id, {
+      track(user.id, {
         type: "edge_ai_model_created",
         path: "/api/edge/models",
         meta: {

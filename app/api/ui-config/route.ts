@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
-import { getPublicRuntimeUiConfig } from "@/lib/runtime-ui/server";
-import { addSecurityHeaders } from "@/lib/middleware/security";
 import { logger } from "@/lib/logging/structured-logger";
+import { addSecurityHeaders } from "@/lib/middleware/security";
+import { getPublicRuntimeUiConfig } from "@/lib/runtime-ui/server";
 
 export const runtime = "nodejs";
 
@@ -40,4 +40,3 @@ export async function GET() {
     return response;
   }
 }
-

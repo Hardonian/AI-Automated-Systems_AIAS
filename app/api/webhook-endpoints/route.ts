@@ -3,8 +3,8 @@
  * Create and manage tenant-scoped webhook endpoints
  */
 
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { handleApiError } from "@/lib/api/route-handler";
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         tenant_id: endpoint.tenant_id,
         system_id: endpoint.system_id,
         webhook_url: webhookUrl,
-        secret: secret,
+        secret,
         name: endpoint.name,
         description: endpoint.description,
         enabled: endpoint.enabled,
@@ -172,7 +172,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       tenant_id: endpoint.tenant_id,
       system_id: endpoint.system_id,
       webhook_url: webhookUrl,
-      secret: secret, // Return secret only on creation
+      secret, // Return secret only on creation
       name: endpoint.name,
       description: endpoint.description,
       enabled: endpoint.enabled,

@@ -38,7 +38,7 @@ export const GET = createGETHandler(async (context) => {
   // Validate tenant access
   const access = await getTenantIsolation().validateAccess(tenantId, userId);
   if (!access.allowed) {
-    await securityMonitor.logEvent({
+    securityMonitor.logEvent({
       type: 'unauthorized_access',
       severity: 'medium',
       userId,
@@ -115,7 +115,7 @@ export const POST = createPOSTHandler(async (context) => {
   );
   
   if (!access.allowed) {
-    await securityMonitor.logEvent({
+    securityMonitor.logEvent({
       type: 'unauthorized_access',
       severity: 'medium',
       userId,
@@ -136,7 +136,7 @@ export const POST = createPOSTHandler(async (context) => {
   // Check resource limits
   const limits = await getTenantIsolation().checkLimits(tenantId, 'workflows', 1);
   if (!limits.allowed) {
-    await securityMonitor.logEvent({
+    securityMonitor.logEvent({
       type: 'rate_limit',
       severity: 'low',
       userId,

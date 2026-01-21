@@ -3,7 +3,6 @@ import Stripe from "stripe";
 import { z } from "zod";
 
 import { checkIdempotencyKey, recordIdempotencyKey } from "@/lib/billing/idempotency";
-
 import { env } from "@/lib/env";
 import { SystemError, ValidationError, formatError } from "@/lib/errors";
 import { logger } from "@/lib/logging/structured-logger";
@@ -15,17 +14,29 @@ import { safeStripe, safeSupabase } from "@/lib/utils/server-guards";
 // CRITICAL: This route MUST use Node.js runtime (not Edge) for raw body access
 export const runtime = "nodejs";
 
-// Initialize Stripe and Supabase clients safely
-let stripe: Stripe | undefined;
-let supabase: ReturnType<typeof safeSupabase> | undefined;
+// Initialize Stripe and Supabase clients lazily (avoid build-time side effects)
+let stripe: Stripe | null = null;
+let supabase: ReturnType<typeof safeSupabase> | null = null;
 
-try {
-  stripe = safeStripe();
-  supabase = safeSupabase(true); // Use service role for webhook
-} catch (error) {
-  // Will be caught by route handler
-  logger.error("Failed to initialize Stripe/Supabase in webhook", error instanceof Error ? error : new Error(String(error)));
-}
+const initializeStripeClients = () => {
+  if (stripe && supabase) {
+    return { stripe, supabase };
+  }
+
+  try {
+    stripe = safeStripe();
+    supabase = safeSupabase(true); // Use service role for webhook
+    return { stripe, supabase };
+  } catch (error) {
+    logger.error(
+      "Failed to initialize Stripe/Supabase in webhook",
+      error instanceof Error ? error : new Error(String(error))
+    );
+    stripe = null;
+    supabase = null;
+    return { stripe, supabase };
+  }
+};
 
 
 interface WebhookResponse {
@@ -40,6 +51,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<WebhookRespon
   const startTime = Date.now();
   const sig = req.headers.get("stripe-signature");
   const {webhookSecret} = env.stripe;
+  const { stripe, supabase } = initializeStripeClients();
 
   // Guard: Ensure Stripe and Supabase are initialized
   if (!stripe || !supabase) {

@@ -91,7 +91,6 @@ export function getOpenTelemetry() {
   }
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     return require("@opentelemetry/api");
   } catch {
     return null;

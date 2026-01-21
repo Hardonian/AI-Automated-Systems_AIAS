@@ -2,7 +2,7 @@
 
 import { CheckCircle2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,13 +26,7 @@ export default function ResultsPage() {
   const [loading, setLoading] = useState(false);
   const [executed, setExecuted] = useState(false);
 
-  useEffect(() => {
-    if (workflowId && !executed) {
-      executeWorkflow();
-    }
-  }, [workflowId]);
-
-  async function executeWorkflow() {
+  const executeWorkflow = useCallback(async () => {
     if (!workflowId) {return;}
 
     setLoading(true);
@@ -62,7 +56,7 @@ export default function ResultsPage() {
 
       // Track workflow execution completion
       const userId = localStorage.getItem("user_id") || "anonymous";
-      await track(userId, {
+      track(userId, {
         type: "workflow_executed",
         path: "/onboarding/results",
         meta: {
@@ -89,7 +83,13 @@ export default function ResultsPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [workflowId]);
+
+  useEffect(() => {
+    if (workflowId && !executed) {
+      void executeWorkflow();
+    }
+  }, [workflowId, executed, executeWorkflow]);
 
   function handleComplete() {
     router.push("/onboarding/complete");

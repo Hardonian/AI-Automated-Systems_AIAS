@@ -109,18 +109,18 @@ export async function GET(): Promise<NextResponse<HealthCheckResult>> {
       const triedTables: string[] = [];
       
       // Try profiles table (core table that should exist)
-      const profilesCheck = await supabaseService.from("profiles").select("id").limit(1);
-      if (profilesCheck.error) {
+      const { error: profilesError } = await supabaseService.from("profiles").select("id").limit(1);
+      if (profilesError) {
         triedTables.push("profiles");
         // Try workflows table as fallback
-        const workflowsCheck = await supabaseService.from("workflows").select("id").limit(1);
-        if (workflowsCheck.error) {
+        const { error: workflowsError } = await supabaseService.from("workflows").select("id").limit(1);
+        if (workflowsError) {
           triedTables.push("workflows");
           // Try tenants table as last resort
-          const tenantsCheck = await supabaseService.from("tenants").select("id").limit(1);
-          if (tenantsCheck.error) {
+          const { error: tenantsError } = await supabaseService.from("tenants").select("id").limit(1);
+          if (tenantsError) {
             triedTables.push("tenants");
-            error = tenantsCheck.error;
+            error = tenantsError;
           }
         } else {
           error = null; // workflows table exists, DB is accessible

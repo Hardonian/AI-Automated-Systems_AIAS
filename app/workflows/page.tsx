@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: "Manage and monitor your AI workflows and automations. Create, execute, and optimize your business processes.",
 };
 
+export const dynamic = "force-dynamic";
+
 async function getWorkflows() {
   try {
     const supabase = await createClient();

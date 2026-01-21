@@ -22,6 +22,8 @@ export interface AutopilotWorkflow {
   enabled: boolean;
 }
 
+export type AutopilotWorkflowInput = Omit<AutopilotWorkflow, "id">;
+
 export interface WorkflowAction {
   type: 'send_email' | 'assign_to_sales' | 'sync_crm' | 'start_nurturing' | 'update_score' | 'notify';
   config: Record<string, unknown>;
@@ -357,7 +359,7 @@ class AutopilotWorkflowService {
   /**
    * Create workflow
    */
-  async createWorkflow(workflow: AutopilotWorkflow, tenantId?: string): Promise<string> {
+  async createWorkflow(workflow: AutopilotWorkflowInput, tenantId?: string): Promise<string> {
     const { data, error } = await this.supabase
       .from('autopilot_workflows')
       .insert({

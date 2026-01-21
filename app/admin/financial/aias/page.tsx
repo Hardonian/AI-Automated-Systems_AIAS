@@ -14,6 +14,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { checkAdminAccess, AdminRole, hasAdminRole } from "@/lib/auth/admin-auth";
 
+export const dynamic = "force-dynamic";
+
 export default async function AIASFinancialPage() {
   // Check admin access
   const adminCheck = await checkAdminAccess();

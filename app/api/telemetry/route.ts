@@ -153,7 +153,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<TelemetryResp
     );
 
     if (error) {
-      const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+      const errorObj = error instanceof Error ? error : new Error(String(error));
       const systemError = new SystemError(
         "Failed to store telemetry",
         errorObj,

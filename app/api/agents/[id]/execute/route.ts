@@ -83,7 +83,7 @@ export async function POST(
         metrics: 'metrics' in result ? result.metrics || null : null,
         started_at: 'startedAt' in result ? result.startedAt : null,
         completed_at: 'completedAt' in result ? result.completedAt : null,
-      } as any);
+      });
 
     if (dbError) {
       logger.error('Error saving execution to database', new Error(dbError.message), {

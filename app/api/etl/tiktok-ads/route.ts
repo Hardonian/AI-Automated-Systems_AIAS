@@ -120,23 +120,26 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // Store data in database
     let recordsInserted = 0;
     if (data.data?.list && data.data.list.length > 0) {
-      for (const ad of data.data.list) {
-        const { error } = await supabase.from("spend").upsert({
-          platform: "tiktok",
-          date: ad.stat_time_day,
-          spend_cents: Math.round(parseFloat(ad.spend) * 100),
-          clicks: parseInt(ad.click, 10) || 0,
-          impressions: parseInt(ad.impression, 10) || 0,
-          conversions: parseInt(ad.conversion, 10) || 0,
-        }, {
-          onConflict: "platform,date",
-        });
+      const entries = data.data.list.map((ad) => ({
+        platform: "tiktok",
+        date: ad.stat_time_day,
+        spend_cents: Math.round(parseFloat(ad.spend) * 100),
+        clicks: parseInt(ad.click, 10) || 0,
+        impressions: parseInt(ad.impression, 10) || 0,
+        conversions: parseInt(ad.conversion, 10) || 0,
+      }));
 
-        if (error) {
-          logger.warn("Failed to insert TikTok ad data", { error: error.message, date: ad.stat_time_day });
-        } else {
-          recordsInserted++;
-        }
+      const { data: upsertedRows, error } = await supabase
+        .from("spend")
+        .upsert(entries, {
+          onConflict: "platform,date",
+        })
+        .select("platform");
+
+      if (error) {
+        logger.warn("Failed to insert TikTok ad data", { error: error.message });
+      } else {
+        recordsInserted = upsertedRows?.length ?? entries.length;
       }
     }
 

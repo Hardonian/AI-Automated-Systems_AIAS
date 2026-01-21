@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/admin-auth";
 import { logger } from "@/lib/logging/structured-logger";
 import { addSecurityHeaders } from "@/lib/middleware/security";
+import { writeRuntimeUiConfigToDb } from "@/lib/runtime-ui/db";
 import { coerceRuntimeUiConfig } from "@/lib/runtime-ui/runtime-ui-config";
 import { getPublicRuntimeUiConfig } from "@/lib/runtime-ui/server";
-import { writeRuntimeUiConfigToDb } from "@/lib/runtime-ui/db";
 import { getClientIP, rateLimit } from "@/lib/utils/rate-limit";
 
 export const runtime = "nodejs";
@@ -82,7 +82,11 @@ export async function POST(request: NextRequest) {
     return response;
   }
 
-  const config = coerceRuntimeUiConfig((raw as any)?.config ?? raw);
+  const payload =
+    typeof raw === "object" && raw !== null && "config" in raw
+      ? (raw as { config: unknown }).config
+      : raw;
+  const config = coerceRuntimeUiConfig(payload);
   const result = await writeRuntimeUiConfigToDb(config);
 
   if (!result.ok) {
@@ -105,4 +109,3 @@ export async function POST(request: NextRequest) {
   response.headers.set("Cache-Control", "no-store");
   return response;
 }
-

@@ -8,7 +8,7 @@ import { z } from 'zod';
 
 import { createPOSTHandler, createGETHandler } from '@/lib/api/route-handler';
 import { env } from '@/lib/env';
-import { autopilotWorkflowService } from '@/lib/lead-generation/autopilot-workflows';
+import { autopilotWorkflowService, type AutopilotWorkflowInput } from '@/lib/lead-generation/autopilot-workflows';
 
 
 export const dynamic = 'force-dynamic';
@@ -27,10 +27,10 @@ const createWorkflowSchema = z.object({
 
 export const POST = createPOSTHandler(
   async (context) => {
-    const body = createWorkflowSchema.parse(await context.request.json());
+    const body: AutopilotWorkflowInput = createWorkflowSchema.parse(await context.request.json());
     const tenantId = context.tenantId || undefined;
-    
-    const workflowId = await autopilotWorkflowService.createWorkflow(body as any, tenantId);
+
+    const workflowId = await autopilotWorkflowService.createWorkflow(body, tenantId);
     
     return NextResponse.json({ success: true, workflowId });
   },

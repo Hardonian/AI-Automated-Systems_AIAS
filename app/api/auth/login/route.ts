@@ -67,7 +67,7 @@ export const POST = createPOSTHandler(
 
     // Track user active event (for retention tracking)
     try {
-      await track(authData.user.id, {
+      track(authData.user.id, {
         type: "user_active",
         path: "/api/auth/login",
         meta: {

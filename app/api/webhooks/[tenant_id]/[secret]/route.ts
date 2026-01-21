@@ -15,12 +15,13 @@
  */
 
 import crypto from "crypto";
-import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 
+import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
+
+import { assertCanExecuteRun } from "@/lib/entitlements/server-gates";
 import { env } from "@/lib/env";
 import { SystemError, ValidationError, formatError } from "@/lib/errors";
-import { assertCanExecuteRun } from "@/lib/entitlements/server-gates";
 import { logger } from "@/lib/logging/structured-logger";
 import { getClientIP, rateLimit } from "@/lib/utils/rate-limit";
 import { workflowExecutorWithLogs } from "@/lib/workflows/executor-with-logs";
@@ -32,6 +33,12 @@ const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 interface WebhookPayload {
   [key: string]: unknown;
 }
+
+type WebhookEndpointRow = {
+  id: string;
+  system_id: string;
+  secret: string | null;
+};
 
 /**
  * Verify webhook secret matches stored secret
@@ -49,12 +56,13 @@ async function verifyWebhookSecret(
     .eq("enabled", true)
     .limit(50);
 
-  if (error || !endpoints || endpoints.length === 0) {
+  const endpointRows = (endpoints ?? []) as WebhookEndpointRow[];
+  if (error || endpointRows.length === 0) {
     return { valid: false };
   }
 
-  for (const endpoint of endpoints) {
-    const storedSecret = String((endpoint as any)?.secret ?? "");
+  for (const endpoint of endpointRows) {
+    const storedSecret = String(endpoint.secret ?? "");
     const providedSecret = secret;
     if (!storedSecret || !providedSecret) {
       continue;
@@ -73,8 +81,8 @@ async function verifyWebhookSecret(
     return {
       valid: true,
       endpoint: {
-        id: (endpoint as any).id,
-        system_id: (endpoint as any).system_id,
+        id: endpoint.id,
+        system_id: endpoint.system_id,
       },
     };
   }

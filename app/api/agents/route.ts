@@ -71,7 +71,7 @@ export const POST = createPOSTHandler(
         ...validated,
         created_by: user.id,
         tenant_id: body.tenantId || null,
-      } as any)
+      })
       .select()
       .single();
 

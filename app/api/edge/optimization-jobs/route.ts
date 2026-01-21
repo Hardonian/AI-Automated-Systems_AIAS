@@ -174,7 +174,7 @@ export async function POST(request: NextRequest) {
     });
 
     try {
-      await track(user.id, {
+      track(user.id, {
         type: "edge_ai_optimization_job_created",
         path: "/api/edge/optimization-jobs",
         meta: {

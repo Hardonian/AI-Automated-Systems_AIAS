@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import ChallengeCard from "@/components/gamification/ChallengeCard";
 import { supabase } from "@/lib/supabase/client";
@@ -26,13 +26,7 @@ export default function ChallengesPage() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [filter, setFilter] = useState<"all" | "weekly" | "monthly" | "seasonal">("all");
 
-  useEffect(() => {
-    loadChallenges().catch((error) => {
-      logger.error("Failed to load challenges", error instanceof Error ? error : new Error(String(error)));
-    });
-  }, [filter]);
-
-  async function loadChallenges() {
+  const loadChallenges = useCallback(async () => {
     let query = supabase.from("challenges").select("*").order("created_at", { ascending: false });
     
     if (filter !== "all") {
@@ -41,7 +35,13 @@ export default function ChallengesPage() {
     
     const { data } = await query;
     if (data) {setChallenges(data);}
-  }
+  }, [filter]);
+
+  useEffect(() => {
+    void loadChallenges().catch((error) => {
+      logger.error("Failed to load challenges", error instanceof Error ? error : new Error(String(error)));
+    });
+  }, [loadChallenges]);
 
   const active = challenges.filter(c => new Date(c.end_date) > new Date());
   const upcoming = challenges.filter(c => new Date(c.start_date) > new Date());

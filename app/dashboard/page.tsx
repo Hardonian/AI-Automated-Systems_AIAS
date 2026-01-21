@@ -11,6 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { enrichWithExternalData, generateSampleMetrics, getIndustryBenchmarks } from "@/lib/data-enrichment";
 import type { Database } from "@/src/integrations/supabase/types";
+
+export const dynamic = "force-dynamic";
 /**
  * Public Dashboard: "Loud & High" Social Proof Metrics
  * 

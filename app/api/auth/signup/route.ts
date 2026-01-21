@@ -108,6 +108,7 @@ export async function POST(request: NextRequest) {
     // Send welcome email (async, don't wait)
     const supabaseUrl = env.supabase.url;
     const supabaseServiceKey = env.supabase.serviceRoleKey;
+    const [firstName] = (validated.fullName ?? "").split(" ");
     if (supabaseServiceKey && supabaseUrl) {
       fetch(`${supabaseUrl}/functions/v1/welcome-email`, {
         method: "POST",
@@ -118,7 +119,7 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           userId: authData.user.id,
           email: validated.email,
-          firstName: validated.fullName?.split(" ")[0] || "there",
+          firstName: firstName || "there",
         }),
       }).catch((error) => {
         logger.warn("Failed to send welcome email", { error: error instanceof Error ? error.message : String(error) });
@@ -136,7 +137,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       // Return first validation error in user-friendly format
-      const firstError = error.errors[0];
+      const [firstError] = error.errors;
       return NextResponse.json(
         { 
           error: firstError?.message || "Please check your input and try again.",

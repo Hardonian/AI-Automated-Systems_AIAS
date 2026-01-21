@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
+import { logger } from "@/lib/logging/structured-logger";
+
 function getResendClient() {
   const apiKey = process.env.RESEND_API_KEY;
   return apiKey ? new Resend(apiKey) : null;
@@ -36,11 +38,14 @@ export async function POST(request: Request) {
       return NextResponse.json(data);
     } else {
       // Fallback for when no API key is set (e.g. dev/preview)
-      console.log("Contact form submitted (Simulation):", { name, email, message });
+      logger.info("Contact form submitted (simulation)", { name, email, message });
       return NextResponse.json({ success: true, simulated: true });
     }
   } catch (error) {
-    console.error("Error sending email:", error);
+    logger.error(
+      "Error sending email",
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

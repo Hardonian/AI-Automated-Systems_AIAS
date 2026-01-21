@@ -18,7 +18,6 @@ import { useState, type ReactNode } from "react";
 let ReactQueryDevtools: React.ComponentType<{ initialIsOpen?: boolean }> | null = null;
 if (process.env.NODE_ENV === "development" && typeof window !== "undefined") {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     ReactQueryDevtools = require("@tanstack/react-query-devtools").ReactQueryDevtools;
   } catch {
     // DevTools not installed - that's okay

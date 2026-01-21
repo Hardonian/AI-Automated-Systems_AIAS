@@ -1,6 +1,6 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import Confetti from "@/components/gamification/Confetti";
 import { LoadingState, ErrorState } from "@/components/ui/empty-state";
@@ -17,26 +17,7 @@ export default function BillingSuccessPage() {
   const [verified, setVerified] = useState(false);
   const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    if (sessionId) {
-      verifySubscription().catch((err) => {
-        setError(err instanceof Error ? err.message : "Failed to verify subscription");
-        setLoading(false);
-      });
-    } else {
-      setError("Missing session ID");
-      setLoading(false);
-    }
-    
-    return () => {
-      if (pollIntervalRef.current) {
-        clearInterval(pollIntervalRef.current);
-        pollIntervalRef.current = null;
-      }
-    };
-  }, [sessionId]);
-
-  async function verifySubscription(): Promise<void> {
+  const verifySubscription = useCallback(async (): Promise<void> => {
     // Clear any existing poll interval
     if (pollIntervalRef.current) {
       clearInterval(pollIntervalRef.current);
@@ -118,7 +99,26 @@ export default function BillingSuccessPage() {
       setError(err instanceof Error ? err.message : "Failed to verify subscription");
       setLoading(false);
     }
-  }
+  }, [router]);
+
+  useEffect(() => {
+    if (sessionId) {
+      void verifySubscription().catch((err) => {
+        setError(err instanceof Error ? err.message : "Failed to verify subscription");
+        setLoading(false);
+      });
+    } else {
+      setError("Missing session ID");
+      setLoading(false);
+    }
+    
+    return () => {
+      if (pollIntervalRef.current) {
+        clearInterval(pollIntervalRef.current);
+        pollIntervalRef.current = null;
+      }
+    };
+  }, [sessionId, verifySubscription]);
 
   if (loading) {
     return (

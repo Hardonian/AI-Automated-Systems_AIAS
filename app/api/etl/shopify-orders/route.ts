@@ -95,12 +95,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         params.append("page_info", pageInfo);
       }
 
+      // eslint-disable-next-line no-await-in-loop -- Shopify pagination requires sequential requests.
       const response = await fetch(`${shopifyUrl}?${params}`);
       if (!response.ok) {
+        // eslint-disable-next-line no-await-in-loop -- Error body depends on sequential response.
         const errorText = await response.text();
         throw new Error(`Shopify API error: ${response.statusText} - ${errorText}`);
       }
 
+      // eslint-disable-next-line no-await-in-loop -- Parsing each page sequentially.
       const data = await response.json() as {
         orders: Array<{
           id: number;
@@ -142,6 +145,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           },
         }));
 
+        // eslint-disable-next-line no-await-in-loop -- Must upsert each page before continuing pagination.
         const { data: upsertedRows, error } = await supabase
           .from("orders")
           .upsert(ordersToInsert, {

@@ -11,7 +11,7 @@ export default function JournalPage(){
     hapticTap();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {return;}
-    const { data: _data, error } = await supabase
+    const { data: _data, error } = await (supabase as any)
       .from("journal_entries")
       .insert({ user_id: user.id, body: text })
       .select("*")

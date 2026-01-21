@@ -50,7 +50,7 @@ cp .env.local.example .env.local
 # Edit .env.local with your values
 
 # Generate Prisma Client
-cd apps/web && pnpm prisma generate && cd ../..
+pnpm db:generate
 
 # Start development server
 pnpm dev

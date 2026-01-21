@@ -142,12 +142,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           },
         }));
 
-        const { error, count } = await supabase
+        const { data: upsertedRows, error } = await supabase
           .from("orders")
           .upsert(ordersToInsert, {
             onConflict: "shopify_id",
-            count: "exact",
-          });
+          })
+          .select("shopify_id");
 
         if (error) {
           logger.warn("Failed to batch insert Shopify orders", {
@@ -155,7 +155,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             orderCount: data.orders.length
           });
         } else {
-          recordsInserted += count || data.orders.length;
+          recordsInserted += upsertedRows?.length ?? data.orders.length;
         }
       }
 

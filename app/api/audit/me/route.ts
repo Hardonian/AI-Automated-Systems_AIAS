@@ -1,39 +1,23 @@
 // [STAKE+TRUST:BEGIN:audit_api]
-import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
 import { logger } from "@/lib/logging/structured-logger";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 export const runtime = "edge";
 
 export async function GET() {
   try {
-    // Load environment variables dynamically
-    const { env } = await import("@/lib/env");
-    const supabaseUrl = env.supabase.url;
-    const supabaseKey = env.supabase.anonKey;
+    const supabase = await createServerSupabaseClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!supabaseUrl || !supabaseKey) {
-      return NextResponse.json(
-        { error: "Supabase configuration missing" },
-        { status: 500 }
-      );
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const supa = createClient(supabaseUrl, supabaseKey);
-
-    // TODO: Replace with real auth user id from session
-    // For now, this is a placeholder that would need proper authentication
-    // const { data: { user } } = await supa.auth.getUser();
-    // if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    // const userId = user.id;
-
-    // Placeholder: In production, get userId from authenticated session
-    const userId = "me"; // This should be replaced with actual auth
-
-    const { data, error } = await supa
+    const { data, error } = await supabase
       .from("audit_log")
       .select("*")
-      .eq("user_id", userId)
+      .eq("user_id", user.id)
       .order("ts", { ascending: false })
       .limit(100);
 
@@ -47,6 +31,12 @@ export async function GET() {
 
     return NextResponse.json({ rows: data || [] });
   } catch (error) {
+    if (error instanceof Error && error.message.includes("Missing required Supabase environment variables")) {
+      return NextResponse.json(
+        { error: "Service temporarily unavailable" },
+        { status: 503 }
+      );
+    }
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     logger.error("Audit log API error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
     return NextResponse.json(

@@ -37,7 +37,21 @@ export async function middleware(request: NextRequest) {
     if (financialCheck) {return financialCheck;}
 
     // Check session for protected routes (dashboard, workflows, billing, etc.)
-    const protectedPaths = ["/dashboard", "/workflows", "/billing", "/settings", "/admin"];
+    const protectedPaths = [
+      "/dashboard",
+      "/workflows",
+      "/billing",
+      "/settings",
+      "/admin",
+      "/account",
+      "/onboarding",
+      "/journal",
+      "/community",
+      "/challenges",
+      "/leaderboard",
+      "/play",
+      "/playground",
+    ];
     const isProtectedPath = protectedPaths.some((protectedPath) => path.startsWith(protectedPath));
     
     if (isProtectedPath) {
@@ -69,7 +83,21 @@ export async function middleware(request: NextRequest) {
       path,
       ip,
     });
-    const protectedPaths = ["/dashboard", "/workflows", "/billing", "/settings", "/admin"];
+    const protectedPaths = [
+      "/dashboard",
+      "/workflows",
+      "/billing",
+      "/settings",
+      "/admin",
+      "/account",
+      "/onboarding",
+      "/journal",
+      "/community",
+      "/challenges",
+      "/leaderboard",
+      "/play",
+      "/playground",
+    ];
     const isProtectedPath = protectedPaths.some((protectedPath) => path.startsWith(protectedPath));
     if (isProtectedPath) {
       const response = NextResponse.json({ error: "Unauthorized" }, { status: 403 });

@@ -20,6 +20,19 @@ import type { Database } from "@/src/integrations/supabase/types";
  * Now includes Supabase Realtime subscriptions for live updates.
  */
 
+type ActivityEntry = {
+  activity_type: string | null;
+  created_at: string | null;
+  metadata: unknown;
+};
+
+type TopPost = {
+  id: string | number;
+  title: string | null;
+  view_count: number | null;
+  created_at: string | null;
+};
+
 async function getKPIData(): Promise<{
   newUsersThisWeek: number;
   totalUsers: number;
@@ -103,7 +116,7 @@ async function getKPIData(): Promise<{
   }
 }
 
-async function getRecentActivity() {
+async function getRecentActivity(): Promise<ActivityEntry[]> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -125,13 +138,13 @@ async function getRecentActivity() {
       .order("created_at", { ascending: false })
       .limit(10);
 
-    return data || [];
+    return (data || []) as ActivityEntry[];
   } catch {
     return [];
   }
 }
 
-async function getTopPosts() {
+async function getTopPosts(): Promise<TopPost[]> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -153,7 +166,7 @@ async function getTopPosts() {
       .order("view_count", { ascending: false })
       .limit(5);
 
-    return data || [];
+    return (data || []) as TopPost[];
   } catch {
     return [];
   }
@@ -184,14 +197,15 @@ export default async function DashboardPage() {
     if (user) {
       // Get user profile to determine plan
       const { data: profile } = await supabase
-        .from("profiles")
+        .from("profiles" as any)
         .select("subscription_tier, created_at")
         .eq("id", user.id)
         .single();
       
-      if (profile) {
+      const profileData = profile as { subscription_tier?: string | null; created_at?: string | null } | null;
+      if (profileData) {
         // Map subscription_tier to userPlan
-        const tier = profile.subscription_tier?.toLowerCase() || "free";
+        const tier = profileData.subscription_tier?.toLowerCase() || "free";
         if (tier === "starter" || tier === "pro" || tier === "enterprise") {
           userPlan = tier as "starter" | "pro";
         } else if (tier === "trial") {
@@ -385,7 +399,7 @@ export default async function DashboardPage() {
           <CardContent className="pt-6">
             {topPosts.length > 0 ? (
               <div className="space-y-3">
-                {topPosts.map((post: { id: string; title?: string; view_count?: number }) => (
+                {topPosts.map((post) => (
                   <div key={post.id} className="flex justify-between items-center">
                     <span className="text-sm truncate flex-1">
                       {post.title || `Post #${post.id}`}
@@ -417,7 +431,7 @@ export default async function DashboardPage() {
         <CardContent className="pt-6">
           {recentActivity.length > 0 ? (
             <div className="space-y-2">
-              {recentActivity.map((activity: { activity_type?: string; created_at?: string; metadata?: unknown }, idx: number) => (
+              {recentActivity.map((activity, idx) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between p-2 rounded-lg bg-muted/50"

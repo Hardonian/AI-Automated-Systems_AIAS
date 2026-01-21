@@ -31,12 +31,17 @@ export async function isAdmin(userId?: string): Promise<boolean> {
       return false;
     }
 
-    const { data, error } = await supabase.from("profiles").select("role").eq("id", userId).single();
+    const { data, error } = await supabase
+      .from("profiles" as any)
+      .select("role")
+      .eq("id", userId)
+      .single();
 
     if (error || !data) {return false;}
 
     // Check if user has admin role
-    return data.role === "admin" || data.role === "super_admin";
+    const profileData = data as { role?: string } | null;
+    return profileData?.role === "admin" || profileData?.role === "super_admin";
   } catch (error) {
     serverLogger.error("Error checking admin status", error instanceof Error ? error : new Error(String(error)));
     return false;

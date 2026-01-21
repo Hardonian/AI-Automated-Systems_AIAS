@@ -118,12 +118,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         };
       });
 
-      const { error, count } = await supabase
+      const { data: upsertedRows, error } = await supabase
         .from("spend")
         .upsert(adsToInsert, {
           onConflict: "platform,date",
-          count: "exact",
-        });
+        })
+        .select("date");
 
       if (error) {
         logger.warn("Failed to batch insert Meta ad data", {
@@ -131,7 +131,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           adCount: data.data.length
         });
       } else {
-        recordsInserted = count || data.data.length;
+        recordsInserted = upsertedRows?.length ?? data.data.length;
       }
     }
 

@@ -154,12 +154,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         platforms: metrics.platforms,
       }));
 
-      const { error: upsertError, count } = await supabase
+      const { data: upsertedRows, error: upsertError } = await supabase
         .from("metrics_daily")
         .upsert(metricsToInsert, {
           onConflict: "date",
-          count: "exact",
-        });
+        })
+        .select("date");
 
       if (upsertError) {
         logger.warn("Failed to batch insert metrics", {
@@ -167,7 +167,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           metricCount: metricsToInsert.length
         });
       } else {
-        recordsInserted = count || metricsToInsert.length;
+        recordsInserted = upsertedRows?.length ?? metricsToInsert.length;
       }
 
       const duration = Date.now() - startTime;

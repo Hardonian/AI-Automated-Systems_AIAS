@@ -122,13 +122,17 @@ const consultancyBuilds = [
 
 export default async function CaseStudiesPage() {
   // Get user plan from database
-  const supabase = await createServerSupabaseClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  
   let userPlan: PlanTier = "free";
-  if (user) {
-    const userData = await getUserPlanData(user.id);
-    userPlan = userData.plan;
+  try {
+    const supabase = await createServerSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
+  
+    if (user) {
+      const userData = await getUserPlanData(user.id);
+      userPlan = userData.plan;
+    }
+  } catch {
+    userPlan = "free";
   }
 
   return (

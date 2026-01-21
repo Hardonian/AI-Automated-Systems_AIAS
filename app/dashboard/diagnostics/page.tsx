@@ -46,13 +46,13 @@ export default function DiagnosticsPage() {
   const [data, setData] = useState<DiagnosticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const supabase = createClient();
 
   const fetchDiagnostics = async () => {
     try {
       setLoading(true);
       setError(null);
 
+      const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         setError("Not authenticated");
@@ -61,22 +61,23 @@ export default function DiagnosticsPage() {
 
       // Get user's tenant
       const { data: membership } = await supabase
-        .from("tenant_members")
+        .from("tenant_members" as any)
         .select("tenant_id, role")
         .eq("user_id", user.id)
         .eq("status", "active")
         .single();
 
-      if (!membership || membership.role !== "admin") {
+      const membershipData = membership as { tenant_id: string; role: string } | null;
+      if (!membershipData || membershipData.role !== "admin") {
         setError("Admin access required");
         return;
       }
 
-      const tenantId = membership.tenant_id;
+      const tenantId = membershipData.tenant_id;
 
       // Fetch last webhook
       const { data: lastWebhook } = await supabase
-        .from("workflow_executions")
+        .from("workflow_executions" as any)
         .select("id, started_at, tenant_id, status, metadata")
         .eq("tenant_id", tenantId)
         .eq("metadata->>trigger_type", "webhook")
@@ -86,7 +87,7 @@ export default function DiagnosticsPage() {
 
       // Fetch last run
       const { data: lastRun } = await supabase
-        .from("workflow_executions")
+        .from("workflow_executions" as any)
         .select("id, workflow_id, status, started_at, completed_at")
         .eq("tenant_id", tenantId)
         .order("started_at", { ascending: false })
@@ -95,13 +96,14 @@ export default function DiagnosticsPage() {
 
       // Fetch entitlements (simplified - would use server-side gates in production)
       const { data: subscription } = await supabase
-        .from("subscriptions")
+        .from("subscriptions" as any)
         .select("tier")
         .eq("tenant_id", tenantId)
         .eq("status", "active")
         .single();
 
-      const plan = subscription?.tier || "free";
+      const subscriptionData = subscription as { tier?: string } | null;
+      const plan = subscriptionData?.tier || "free";
       const planLimits = {
         free: { maxSystems: 3, maxWebhooks: 5, maxRunsPerMonth: 100 },
         starter: { maxSystems: 20, maxWebhooks: 50, maxRunsPerMonth: 10000 },
@@ -112,13 +114,13 @@ export default function DiagnosticsPage() {
 
       // Count usage
       const { count: systemsCount } = await supabase
-        .from("workflows")
+        .from("workflows" as any)
         .select("*", { count: "exact", head: true })
         .eq("tenant_id", tenantId)
         .eq("enabled", true);
 
       const { count: webhooksCount } = await supabase
-        .from("webhook_endpoints")
+        .from("webhook_endpoints" as any)
         .select("*", { count: "exact", head: true })
         .eq("tenant_id", tenantId)
         .eq("enabled", true);
@@ -126,43 +128,58 @@ export default function DiagnosticsPage() {
       const now = new Date();
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
       const { count: runsCount } = await supabase
-        .from("workflow_executions")
+        .from("workflow_executions" as any)
         .select("*", { count: "exact", head: true })
         .eq("tenant_id", tenantId)
         .gte("started_at", monthStart.toISOString());
 
       // Queue health
       const { count: pendingCount } = await supabase
-        .from("workflow_executions")
+        .from("workflow_executions" as any)
         .select("*", { count: "exact", head: true })
         .eq("tenant_id", tenantId)
         .eq("status", "pending");
 
       const { count: runningCount } = await supabase
-        .from("workflow_executions")
+        .from("workflow_executions" as any)
         .select("*", { count: "exact", head: true })
         .eq("tenant_id", tenantId)
         .eq("status", "running");
 
       const { count: failedCount } = await supabase
-        .from("workflow_executions")
+        .from("workflow_executions" as any)
         .select("*", { count: "exact", head: true })
         .eq("tenant_id", tenantId)
         .eq("status", "failed");
 
+      const lastWebhookData = lastWebhook as {
+        id: string;
+        started_at: string;
+        tenant_id: string;
+        status: string;
+      } | null;
+
+      const lastRunData = lastRun as {
+        id: string;
+        workflow_id: string;
+        status: string;
+        started_at: string;
+        completed_at: string | null;
+      } | null;
+
       setData({
-        lastWebhook: lastWebhook ? {
-          id: lastWebhook.id,
-          received_at: lastWebhook.started_at,
-          tenant_id: lastWebhook.tenant_id,
-          status: lastWebhook.status,
+        lastWebhook: lastWebhookData ? {
+          id: lastWebhookData.id,
+          received_at: lastWebhookData.started_at,
+          tenant_id: lastWebhookData.tenant_id,
+          status: lastWebhookData.status,
         } : null,
-        lastRun: lastRun ? {
-          id: lastRun.id,
-          workflow_id: lastRun.workflow_id,
-          status: lastRun.status,
-          started_at: lastRun.started_at,
-          completed_at: lastRun.completed_at,
+        lastRun: lastRunData ? {
+          id: lastRunData.id,
+          workflow_id: lastRunData.workflow_id,
+          status: lastRunData.status,
+          started_at: lastRunData.started_at,
+          completed_at: lastRunData.completed_at,
         } : null,
         entitlements: {
           plan,

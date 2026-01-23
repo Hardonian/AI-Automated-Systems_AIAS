@@ -8,7 +8,7 @@ import flagsConfig from "@/config/flags.json";
 
 export interface FeatureFlag {
   enabled: boolean;
-  env: "development" | "staging" | "production";
+  env?: "development" | "staging" | "production";
   description?: string;
   created?: string;
 }
@@ -27,9 +27,17 @@ export interface FlagsConfig {
  */
 function getCurrentEnv(): "development" | "staging" | "production" {
   if (typeof process !== "undefined") {
-    const env = process.env.NODE_ENV || process.env.NEXT_PUBLIC_APP_ENV || "production";
-    if (env === "development") {return "development";}
-    if (env === "staging" || env === "preview") {return "staging";}
+    const appEnv = process.env.NEXT_PUBLIC_APP_ENV;
+    const nodeEnv = process.env.NODE_ENV;
+
+    // Check NEXT_PUBLIC_APP_ENV first (allows explicit staging/preview)
+    if (appEnv === "staging" || appEnv === "preview") {return "staging";}
+    if (appEnv === "development") {return "development";}
+    if (appEnv === "production") {return "production";}
+
+    // Fall back to NODE_ENV
+    if (nodeEnv === "development") {return "development";}
+    if (nodeEnv === "test") {return "development";} // Treat test as development
   }
   return "production";
 }
@@ -39,7 +47,7 @@ function getCurrentEnv(): "development" | "staging" | "production" {
  * Respects environment restrictions (staging-only flags won't work in production)
  */
 export function isFlagEnabled(flagKey: string): boolean {
-  const flag = (flagsConfig as FlagsConfig).flags[flagKey];
+  const flag = (flagsConfig as unknown as FlagsConfig).flags[flagKey];
   
   if (!flag) {
     // Flag doesn't exist, return false
@@ -61,7 +69,7 @@ export function isFlagEnabled(flagKey: string): boolean {
  * Get flag configuration
  */
 export function getFlag(flagKey: string): FeatureFlag | null {
-  const flag = (flagsConfig as FlagsConfig).flags[flagKey];
+  const flag = (flagsConfig as unknown as FlagsConfig).flags[flagKey];
   return flag || null;
 }
 
@@ -72,7 +80,7 @@ export function getAllFlags(): Record<string, boolean> {
   const currentEnv = getCurrentEnv();
   const result: Record<string, boolean> = {};
   
-  for (const [key, flag] of Object.entries((flagsConfig as FlagsConfig).flags)) {
+  for (const [key, flag] of Object.entries((flagsConfig as unknown as FlagsConfig).flags)) {
     // Only include flags that are allowed in current environment
     if (!flag.env || flag.env === currentEnv) {
       result[key] = flag.enabled;
@@ -108,7 +116,7 @@ export function getFlagMetadata(): {
   const currentEnv = getCurrentEnv();
   const enabledFlags: string[] = [];
   
-  for (const [key, flag] of Object.entries((flagsConfig as FlagsConfig).flags)) {
+  for (const [key, flag] of Object.entries((flagsConfig as unknown as FlagsConfig).flags)) {
     if (isFlagEnabled(key)) {
       enabledFlags.push(key);
     }
@@ -116,7 +124,7 @@ export function getFlagMetadata(): {
   
   return {
     currentEnv,
-    flags: (flagsConfig as FlagsConfig).flags,
+    flags: (flagsConfig as unknown as FlagsConfig).flags,
     enabledFlags,
   };
 }

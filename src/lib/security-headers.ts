@@ -170,12 +170,15 @@ export class SecurityHeaders {
    */
   getDevelopmentHeaders(): Record<string, string> {
     const headers = this.getHeaders();
-    
+
     // Relax CSP for development
-    headers['Content-Security-Policy'] = headers['Content-Security-Policy']
-      .replace("'unsafe-inline'", "'unsafe-inline' 'unsafe-eval'")
-      .replace('frame-ancestors \'none\'', 'frame-ancestors \'self\'');
-    
+    const csp = headers['Content-Security-Policy'];
+    if (csp) {
+      headers['Content-Security-Policy'] = csp
+        .replace("'unsafe-inline'", "'unsafe-inline' 'unsafe-eval'")
+        .replace('frame-ancestors \'none\'', 'frame-ancestors \'self\'');
+    }
+
     return headers;
   }
 

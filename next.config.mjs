@@ -16,14 +16,7 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  
-  // Enable ESLint during builds for production quality
-  // Note: Warnings are allowed during build, but errors will fail the build
-  eslint: {
-    ignoreDuringBuilds: true, // Allow warnings during build, errors caught in CI
-    dirs: ['app', 'components', 'lib', 'middleware'],
-  },
-  
+
   // Enable TypeScript checking - catch real bugs before deployment
   typescript: {
     ignoreBuildErrors: false,
@@ -77,6 +70,8 @@ const nextConfig = {
     // Reduce memory usage during build
     webpackBuildWorker: true,
   },
+  // Turbopack configuration (empty to silence Next.js 16 warnings)
+  turbopack: {},
   // Ensure proper file tracing for Vercel deployments (optimized for speed)
   outputFileTracingIncludes: {
     '/api/**': ['./lib/**', './components/**'],

@@ -1,14 +1,17 @@
 import { config } from '@ai-consultancy/config';
 import { Queue, Worker, Job } from 'bullmq';
 import { Redis } from 'ioredis';
+import type { Redis as RedisType } from 'ioredis';
 
 // import { AIGenerators } from './ai/generators'; // Temporarily disabled due to build issues
 import { prisma } from './database';
 // Note: aiClient import reserved for future AI queue processing
 import { logger } from './observability';
 
-// Create Redis connection with proper typing for ES modules
-const connection = new Redis(config.redis.url || 'redis://localhost:6379');
+// Create Redis connection with proper typing for ES modules - type as RedisType to satisfy ioredis 5.9.2
+const connection: RedisType = new Redis(
+  config.redis.url || 'redis://localhost:6379'
+);
 
 // Queue definitions
 export const feedIngestQueue = new Queue('feeds:ingest', { connection });
@@ -46,7 +49,7 @@ export interface BillingSyncJob {
 export class QueueProcessors {
   static async processFeedIngest(job: Job<FeedIngestJob>): Promise<void> {
     const { sourceId, data, metadata: _metadata } = job.data;
-    
+
     try {
       // Update ingest event status
       const ingestEvent = await prisma.ingestEvent.create({
@@ -102,25 +105,33 @@ export class QueueProcessors {
       });
 
       // Update ingest event
-      const existingStats = ingestEvent.stats && typeof ingestEvent.stats === 'object' && !Array.isArray(ingestEvent.stats)
-        ? ingestEvent.stats as Record<string, unknown>
-        : {};
+      const existingStats =
+        ingestEvent.stats &&
+        typeof ingestEvent.stats === 'object' &&
+        !Array.isArray(ingestEvent.stats)
+          ? (ingestEvent.stats as Record<string, unknown>)
+          : {};
       await prisma.ingestEvent.update({
         where: { id: ingestEvent.id },
         data: {
           status: 'COMPLETED',
           stats: {
-            ...(existingStats.startedAt ? { startedAt: existingStats.startedAt } : {}),
+            ...(existingStats.startedAt
+              ? { startedAt: existingStats.startedAt }
+              : {}),
             completedAt: new Date().toISOString(),
             recordsProcessed: processedData.length,
           },
         },
       });
 
-      logger.info({ sourceId, recordCount: processedData.length }, `Processed ${processedData.length} records for source ${sourceId}`);
+      logger.info(
+        { sourceId, recordCount: processedData.length },
+        `Processed ${processedData.length} records for source ${sourceId}`
+      );
     } catch (error: unknown) {
       logger.error({ err: error, sourceId }, 'Feed ingest error');
-      
+
       // Update ingest event with error
       await prisma.ingestEvent.updateMany({
         where: { sourceId },
@@ -136,7 +147,7 @@ export class QueueProcessors {
 
   static async processAIGenerate(job: Job<AIGenerateJob>): Promise<unknown> {
     const { type, userId, data, metadata: _metadata } = job.data;
-    
+
     try {
       let result: unknown;
 
@@ -144,10 +155,30 @@ export class QueueProcessors {
       // TODO: Re-enable when AI module build issues are resolved
       switch (type) {
         case 'audit': {
-          const website: string = typeof data.website === 'string' ? data.website : String(data.website);
-          const auditType: 'seo' | 'performance' | 'accessibility' | 'security' | 'comprehensive' = 
-            typeof data.type === 'string' && ['seo', 'performance', 'accessibility', 'security', 'comprehensive'].includes(data.type)
-              ? data.type as 'seo' | 'performance' | 'accessibility' | 'security' | 'comprehensive'
+          const website: string =
+            typeof data.website === 'string'
+              ? data.website
+              : String(data.website);
+          const auditType:
+            | 'seo'
+            | 'performance'
+            | 'accessibility'
+            | 'security'
+            | 'comprehensive' =
+            typeof data.type === 'string' &&
+            [
+              'seo',
+              'performance',
+              'accessibility',
+              'security',
+              'comprehensive',
+            ].includes(data.type)
+              ? (data.type as
+                  | 'seo'
+                  | 'performance'
+                  | 'accessibility'
+                  | 'security'
+                  | 'comprehensive')
               : 'comprehensive';
           // Stub result - AI generation temporarily disabled
           result = {
@@ -156,24 +187,67 @@ export class QueueProcessors {
             criticalIssues: [],
             quickWins: [],
             estimatedImpact: 'AI generation temporarily disabled',
-            nextSteps: ['Re-enable AI module when build issues are resolved']
+            nextSteps: ['Re-enable AI module when build issues are resolved'],
           };
           break;
         }
         case 'estimate': {
-          const projectType: 'website' | 'ecommerce' | 'saas' | 'mobile' | 'ai-integration' = 
-            typeof data.projectType === 'string' && ['website', 'ecommerce', 'saas', 'mobile', 'ai-integration'].includes(data.projectType)
-              ? data.projectType as 'website' | 'ecommerce' | 'saas' | 'mobile' | 'ai-integration'
+          const projectType:
+            | 'website'
+            | 'ecommerce'
+            | 'saas'
+            | 'mobile'
+            | 'ai-integration' =
+            typeof data.projectType === 'string' &&
+            [
+              'website',
+              'ecommerce',
+              'saas',
+              'mobile',
+              'ai-integration',
+            ].includes(data.projectType)
+              ? (data.projectType as
+                  | 'website'
+                  | 'ecommerce'
+                  | 'saas'
+                  | 'mobile'
+                  | 'ai-integration')
               : 'website';
-          const scope: { pages: number; features: string[]; integrations: string[]; timeline: 'rush' | 'standard' | 'flexible' } = 
-            typeof data.scope === 'object' && data.scope !== null ? data.scope as { pages: number; features: string[]; integrations: string[]; timeline: 'rush' | 'standard' | 'flexible' } : { pages: 0, features: [], integrations: [], timeline: 'standard' };
-          const requirementsData = typeof data.requirements === 'object' && data.requirements !== null ? data.requirements as Record<string, unknown> : {};
-          const requirements: { design: boolean; development: boolean; testing: boolean; deployment: boolean; maintenance: boolean } = { 
+          const scope: {
+            pages: number;
+            features: string[];
+            integrations: string[];
+            timeline: 'rush' | 'standard' | 'flexible';
+          } =
+            typeof data.scope === 'object' && data.scope !== null
+              ? (data.scope as {
+                  pages: number;
+                  features: string[];
+                  integrations: string[];
+                  timeline: 'rush' | 'standard' | 'flexible';
+                })
+              : {
+                  pages: 0,
+                  features: [],
+                  integrations: [],
+                  timeline: 'standard',
+                };
+          const requirementsData =
+            typeof data.requirements === 'object' && data.requirements !== null
+              ? (data.requirements as Record<string, unknown>)
+              : {};
+          const requirements: {
+            design: boolean;
+            development: boolean;
+            testing: boolean;
+            deployment: boolean;
+            maintenance: boolean;
+          } = {
             design: Boolean(requirementsData.design),
             development: Boolean(requirementsData.development),
             testing: Boolean(requirementsData.testing),
             deployment: Boolean(requirementsData.deployment),
-            maintenance: Boolean(requirementsData.maintenance)
+            maintenance: Boolean(requirementsData.maintenance),
           };
           // Stub result - AI generation temporarily disabled
           result = {
@@ -182,22 +256,64 @@ export class QueueProcessors {
             phases: [],
             assumptions: ['AI generation temporarily disabled'],
             risks: [],
-            recommendations: ['Re-enable AI module when build issues are resolved']
+            recommendations: [
+              'Re-enable AI module when build issues are resolved',
+            ],
           };
           break;
         }
         case 'content': {
-          const topic: string = typeof data.topic === 'string' ? data.topic : String(data.topic);
-          const contentType: 'blog-post' | 'social-media' | 'email' | 'ad-copy' | 'product-description' = 
-            typeof data.type === 'string' && ['blog-post', 'social-media', 'email', 'ad-copy', 'product-description'].includes(data.type)
-              ? data.type as 'blog-post' | 'social-media' | 'email' | 'ad-copy' | 'product-description'
+          const topic: string =
+            typeof data.topic === 'string' ? data.topic : String(data.topic);
+          const contentType:
+            | 'blog-post'
+            | 'social-media'
+            | 'email'
+            | 'ad-copy'
+            | 'product-description' =
+            typeof data.type === 'string' &&
+            [
+              'blog-post',
+              'social-media',
+              'email',
+              'ad-copy',
+              'product-description',
+            ].includes(data.type)
+              ? (data.type as
+                  | 'blog-post'
+                  | 'social-media'
+                  | 'email'
+                  | 'ad-copy'
+                  | 'product-description')
               : 'blog-post';
-          const tone: 'professional' | 'casual' | 'technical' | 'creative' | 'persuasive' = 
-            typeof data.tone === 'string' && ['professional', 'casual', 'technical', 'creative', 'persuasive'].includes(data.tone)
-              ? data.tone as 'professional' | 'casual' | 'technical' | 'creative' | 'persuasive'
+          const tone:
+            | 'professional'
+            | 'casual'
+            | 'technical'
+            | 'creative'
+            | 'persuasive' =
+            typeof data.tone === 'string' &&
+            [
+              'professional',
+              'casual',
+              'technical',
+              'creative',
+              'persuasive',
+            ].includes(data.tone)
+              ? (data.tone as
+                  | 'professional'
+                  | 'casual'
+                  | 'technical'
+                  | 'creative'
+                  | 'persuasive')
               : 'professional';
-          const targetAudience: string | undefined = typeof data.targetAudience === 'string' ? data.targetAudience : undefined;
-          const keywords: string[] | undefined = Array.isArray(data.keywords) ? data.keywords.map(k => String(k)) : undefined;
+          const targetAudience: string | undefined =
+            typeof data.targetAudience === 'string'
+              ? data.targetAudience
+              : undefined;
+          const keywords: string[] | undefined = Array.isArray(data.keywords)
+            ? data.keywords.map(k => String(k))
+            : undefined;
           // Stub result - AI generation temporarily disabled
           result = {
             title: `Content Plan for ${topic}`,
@@ -205,22 +321,45 @@ export class QueueProcessors {
             targetKeywords: keywords || [],
             estimatedReadTime: 5,
             callToAction: 'AI generation temporarily disabled',
-            socialMediaVariants: []
+            socialMediaVariants: [],
           };
           break;
         }
         case 'workflow': {
-          const businessType: string = typeof data.businessType === 'string' ? data.businessType : String(data.businessType);
-          const goals: string[] = Array.isArray(data.goals) ? data.goals.map(g => String(g)) : [];
-          const currentProcesses: string[] = Array.isArray(data.currentProcesses) ? data.currentProcesses.map(p => String(p)) : [];
-          const painPoints: string[] = Array.isArray(data.painPoints) ? data.painPoints.map(p => String(p)) : [];
-          const budget: 'low' | 'medium' | 'high' = 
-            typeof data.budget === 'string' && ['low', 'medium', 'high'].includes(data.budget)
-              ? data.budget as 'low' | 'medium' | 'high'
+          const businessType: string =
+            typeof data.businessType === 'string'
+              ? data.businessType
+              : String(data.businessType);
+          const goals: string[] = Array.isArray(data.goals)
+            ? data.goals.map(g => String(g))
+            : [];
+          const currentProcesses: string[] = Array.isArray(
+            data.currentProcesses
+          )
+            ? data.currentProcesses.map(p => String(p))
+            : [];
+          const painPoints: string[] = Array.isArray(data.painPoints)
+            ? data.painPoints.map(p => String(p))
+            : [];
+          const budget: 'low' | 'medium' | 'high' =
+            typeof data.budget === 'string' &&
+            ['low', 'medium', 'high'].includes(data.budget)
+              ? (data.budget as 'low' | 'medium' | 'high')
               : 'medium';
-          const timeline: 'immediate' | '1-3months' | '3-6months' | '6-12months' = 
-            typeof data.timeline === 'string' && ['immediate', '1-3months', '3-6months', '6-12months'].includes(data.timeline)
-              ? data.timeline as 'immediate' | '1-3months' | '3-6months' | '6-12months'
+          const timeline:
+            | 'immediate'
+            | '1-3months'
+            | '3-6months'
+            | '6-12months' =
+            typeof data.timeline === 'string' &&
+            ['immediate', '1-3months', '3-6months', '6-12months'].includes(
+              data.timeline
+            )
+              ? (data.timeline as
+                  | 'immediate'
+                  | '1-3months'
+                  | '3-6months'
+                  | '6-12months')
               : '3-6months';
           // Stub result - AI generation temporarily disabled
           result = {
@@ -230,7 +369,7 @@ export class QueueProcessors {
             integrations: [],
             metrics: [],
             estimatedROI: 'N/A',
-            implementationTimeline: 'N/A'
+            implementationTimeline: 'N/A',
           };
           break;
         }
@@ -240,14 +379,17 @@ export class QueueProcessors {
 
       // Store AI run record
       // Map type to valid AiRunKind enum value
-      const aiRunKindMap: Record<string, 'AUDIT' | 'ESTIMATE' | 'CONTENT_GENERATION' | 'WORKFLOW_GENERATION'> = {
+      const aiRunKindMap: Record<
+        string,
+        'AUDIT' | 'ESTIMATE' | 'CONTENT_GENERATION' | 'WORKFLOW_GENERATION'
+      > = {
         audit: 'AUDIT',
         estimate: 'ESTIMATE',
         content: 'CONTENT_GENERATION',
         workflow: 'WORKFLOW_GENERATION',
       };
       const kind = aiRunKindMap[type] || 'ESTIMATE';
-      
+
       await prisma.aiRun.create({
         data: {
           userId,
@@ -258,11 +400,13 @@ export class QueueProcessors {
           tokensOut: 0,
           cost: 0,
           durationMs: 0,
-          metadata: JSON.parse(JSON.stringify({
-            type,
-            data,
-            result,
-          })),
+          metadata: JSON.parse(
+            JSON.stringify({
+              type,
+              data,
+              result,
+            })
+          ),
         },
       });
 
@@ -276,7 +420,7 @@ export class QueueProcessors {
 
   static async processReportPdf(job: Job<ReportPdfJob>): Promise<void> {
     const { reportId, userId: _userId, data } = job.data;
-    
+
     try {
       // Update report status
       await prisma.report.update({
@@ -302,7 +446,7 @@ export class QueueProcessors {
       logger.info({ reportId }, `Generated PDF report ${reportId}`);
     } catch (error: unknown) {
       logger.error({ err: error, reportId }, 'PDF generation error');
-      
+
       await prisma.report.update({
         where: { id: reportId },
         data: { status: 'FAILED' },
@@ -314,11 +458,14 @@ export class QueueProcessors {
 
   static async processBillingSync(job: Job<BillingSyncJob>): Promise<void> {
     const { orgId, subscriptionId, event } = job.data;
-    
+
     try {
       // Sync subscription data with Stripe
       // This would fetch the latest subscription data and update the database
-      logger.info({ orgId, subscriptionId, event }, `Syncing billing for org ${orgId}, subscription ${subscriptionId}, event ${event}`);
+      logger.info(
+        { orgId, subscriptionId, event },
+        `Syncing billing for org ${orgId}, subscription ${subscriptionId}, event ${event}`
+      );
     } catch (error: unknown) {
       logger.error({ err: error, orgId, subscriptionId }, 'Billing sync error');
       throw error;
@@ -326,26 +473,50 @@ export class QueueProcessors {
   }
 
   // Helper methods for data processing
-  private static async processShopifyData(data: Record<string, unknown>): Promise<Record<string, unknown>[]> {
+  private static async processShopifyData(
+    data: Record<string, unknown>
+  ): Promise<Record<string, unknown>[]> {
     // Process Shopify product data
-    const {products} = data;
+    const { products } = data;
     if (products !== undefined && Array.isArray(products)) {
       return products.map((product: unknown): Record<string, unknown> => {
-        const productRecord: Record<string, unknown> = typeof product === 'object' && product !== null ? product as Record<string, unknown> : {};
-        const {variants} = productRecord;
-        const variantsArray: unknown[] = Array.isArray(variants) ? variants : [];
-        const firstVariant: Record<string, unknown> = variantsArray[0] !== undefined && typeof variantsArray[0] === 'object' && variantsArray[0] !== null ? variantsArray[0] as Record<string, unknown> : {};
-        const {price} = firstVariant;
-        const priceString: string = typeof price === 'string' ? price : String(price ?? '0');
-        const {tags} = productRecord;
+        const productRecord: Record<string, unknown> =
+          typeof product === 'object' && product !== null
+            ? (product as Record<string, unknown>)
+            : {};
+        const { variants } = productRecord;
+        const variantsArray: unknown[] = Array.isArray(variants)
+          ? variants
+          : [];
+        const firstVariant: Record<string, unknown> =
+          variantsArray[0] !== undefined &&
+          typeof variantsArray[0] === 'object' &&
+          variantsArray[0] !== null
+            ? (variantsArray[0] as Record<string, unknown>)
+            : {};
+        const { price } = firstVariant;
+        const priceString: string =
+          typeof price === 'string' ? price : String(price ?? '0');
+        const { tags } = productRecord;
         const tagsString: string = typeof tags === 'string' ? tags : '';
         return {
-          name: typeof productRecord.title === 'string' ? productRecord.title : String(productRecord.title ?? ''),
-          description: typeof productRecord.body_html === 'string' ? productRecord.body_html : String(productRecord.body_html ?? ''),
+          name:
+            typeof productRecord.title === 'string'
+              ? productRecord.title
+              : String(productRecord.title ?? ''),
+          description:
+            typeof productRecord.body_html === 'string'
+              ? productRecord.body_html
+              : String(productRecord.body_html ?? ''),
           price: parseFloat(priceString),
           currency: 'USD',
-          category: typeof productRecord.product_type === 'string' ? productRecord.product_type : String(productRecord.product_type ?? ''),
-          tags: tagsString ? tagsString.split(',').map((tag: string): string => tag.trim()) : [],
+          category:
+            typeof productRecord.product_type === 'string'
+              ? productRecord.product_type
+              : String(productRecord.product_type ?? ''),
+          tags: tagsString
+            ? tagsString.split(',').map((tag: string): string => tag.trim())
+            : [],
           metadata: {
             shopifyId: productRecord.id,
             handle: productRecord.handle,
@@ -359,33 +530,47 @@ export class QueueProcessors {
     return [];
   }
 
-  private static async processGoogleTrendsData(_data: Record<string, unknown>): Promise<Record<string, unknown>[]> {
+  private static async processGoogleTrendsData(
+    _data: Record<string, unknown>
+  ): Promise<Record<string, unknown>[]> {
     // Process Google Trends CSV data
     // This would parse CSV and extract trend data
     return [];
   }
 
-  private static async processTikTokData(_data: Record<string, unknown>): Promise<Record<string, unknown>[]> {
+  private static async processTikTokData(
+    _data: Record<string, unknown>
+  ): Promise<Record<string, unknown>[]> {
     // Process TikTok Business API data
     return [];
   }
 
-  private static async processAliExpressData(_data: Record<string, unknown>): Promise<Record<string, unknown>[]> {
+  private static async processAliExpressData(
+    _data: Record<string, unknown>
+  ): Promise<Record<string, unknown>[]> {
     // Process AliExpress CSV data
     return [];
   }
 
-  private static async processGenericCsvData(_data: Record<string, unknown>): Promise<Record<string, unknown>[]> {
+  private static async processGenericCsvData(
+    _data: Record<string, unknown>
+  ): Promise<Record<string, unknown>[]> {
     // Process generic CSV data
     return [];
   }
 
-  private static async processGenericJsonData(_data: Record<string, unknown>): Promise<Record<string, unknown>[]> {
+  private static async processGenericJsonData(
+    _data: Record<string, unknown>
+  ): Promise<Record<string, unknown>[]> {
     // Process generic JSON data
     return [];
   }
 
-  private static async storeProcessedData(type: string, data: Record<string, unknown>[], _orgId: string): Promise<void> {
+  private static async storeProcessedData(
+    type: string,
+    data: Record<string, unknown>[],
+    _orgId: string
+  ): Promise<void> {
     // Store processed data in appropriate tables
     // Note: This is a simplified implementation - in production, you'd want proper type validation
     switch (type) {
@@ -423,30 +608,38 @@ export class QueueProcessors {
     }
   }
 
-  private static async generatePdf(_data: Record<string, unknown>): Promise<Buffer> {
+  private static async generatePdf(
+    _data: Record<string, unknown>
+  ): Promise<Buffer> {
     // This would use a PDF generation library like Puppeteer or @react-pdf/renderer
     // For now, return a dummy buffer
     return Buffer.from('PDF content would be generated here');
   }
 
-  private static async uploadPdf(_buffer: Buffer, reportId: string): Promise<string> {
+  private static async uploadPdf(
+    _buffer: Buffer,
+    reportId: string
+  ): Promise<string> {
     // Get Supabase URL from environment variables dynamically
-    const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL || 
-                       process.env.SUPABASE_URL || 
-                       '';
-    
+    const supabaseUrl: string =
+      process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '';
+
     if (!supabaseUrl) {
-      throw new Error('SUPABASE_URL environment variable is required for PDF upload');
+      throw new Error(
+        'SUPABASE_URL environment variable is required for PDF upload'
+      );
     }
-    
+
     // Extract project ref from Supabase URL to construct storage URL
-    const matchResult: RegExpMatchArray | null = supabaseUrl.match(/https?:\/\/([^.]+)\.supabase\.co/);
+    const matchResult: RegExpMatchArray | null = supabaseUrl.match(
+      /https?:\/\/([^.]+)\.supabase\.co/
+    );
     const projectRef: string = matchResult?.[1] ?? '';
-    
+
     if (!projectRef) {
       throw new Error('Invalid Supabase URL format');
     }
-    
+
     return `https://${projectRef}.supabase.co/storage/v1/object/public/reports/${reportId}.pdf`;
   }
 }
@@ -463,7 +656,9 @@ export function startWorkers(): void {
   new Worker('reports:pdf', QueueProcessors.processReportPdf, { connection });
 
   // Billing sync worker
-  new Worker('billing:sync', QueueProcessors.processBillingSync, { connection });
+  new Worker('billing:sync', QueueProcessors.processBillingSync, {
+    connection,
+  });
 
   logger.info('All queue workers started');
 }

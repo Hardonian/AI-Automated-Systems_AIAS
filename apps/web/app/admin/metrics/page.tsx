@@ -1,0 +1,380 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { logger } from "@/lib/logging/structured-logger";
+
+interface MetricsData {
+  performance: {
+    webVitals: {
+      LCP?: number;
+      CLS?: number;
+      INP?: number;
+      TTFB?: number;
+      FCP?: number;
+    };
+    supabase: {
+      avgLatencyMs?: number;
+      queryTime?: number;
+      rowCount?: number;
+    };
+    expo: {
+      bundleMB?: number;
+      duration?: number;
+      buildSuccess?: boolean;
+    };
+    ci: {
+      avgBuildMin?: number;
+      successRate?: number;
+      queueLength?: number;
+    };
+  };
+  status: "healthy" | "degraded" | "error";
+  lastUpdated: string;
+  sources?: Record<string, {
+    latest: Record<string, unknown>;
+    count: number;
+    lastUpdated: string;
+  }>;
+  trends?: Record<string, {
+    average: number;
+    min: number;
+    max: number;
+    count: number;
+  }>;
+}
+
+export default function MetricsDashboard() {
+  const [metrics, setMetrics] = useState<MetricsData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    void fetchMetrics();
+    // Refresh every 60 seconds
+    const interval = setInterval(() => {
+      void fetchMetrics();
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  async function fetchMetrics() {
+    try {
+      const response = await fetch("/api/metrics");
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const data = await response.json();
+      setMetrics(data);
+      setError(null);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to fetch metrics";
+      setError(errorMessage);
+      logger.error("Failed to fetch metrics", err instanceof Error ? err : new Error(String(err)), {
+        component: "MetricsPage",
+        action: "fetchMetrics",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="text-center">Loading metrics...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto p-6">
+        <Card className="border-red-500">
+          <CardHeader>
+            <CardTitle>Error Loading Metrics</CardTitle>
+            <CardDescription>{error}</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!metrics) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="text-center">No metrics available</div>
+      </div>
+    );
+  }
+
+  const statusColor =
+    metrics.status === "healthy"
+      ? "text-green-600"
+      : metrics.status === "degraded"
+      ? "text-yellow-600"
+      : "text-red-600";
+
+  return (
+    <div className="container mx-auto p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold">Performance Intelligence Dashboard</h1>
+          <p className="text-muted-foreground mt-2">
+            Real-time metrics from all connected services
+          </p>
+        </div>
+        <div className="text-right">
+          <div className={`text-lg font-semibold ${statusColor}`}>
+            Status: {metrics.status.toUpperCase()}
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Last updated: {new Date(metrics.lastUpdated).toLocaleString()}
+          </div>
+        </div>
+      </div>
+
+      {/* Web Vitals */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Web Vitals</CardTitle>
+          <CardDescription>Core Web Vitals from Vercel Analytics & Telemetry</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <MetricCard
+              good={metrics.performance.webVitals.LCP ? metrics.performance.webVitals.LCP <= 2500 : undefined}
+              label="LCP (Largest Contentful Paint)"
+              threshold={2500}
+              unit="ms"
+              value={metrics.performance.webVitals.LCP}
+            />
+            <MetricCard
+              good={metrics.performance.webVitals.CLS ? metrics.performance.webVitals.CLS <= 0.1 : undefined}
+              label="CLS (Cumulative Layout Shift)"
+              threshold={0.1}
+              unit=""
+              value={metrics.performance.webVitals.CLS}
+            />
+            <MetricCard
+              good={metrics.performance.webVitals.INP ? metrics.performance.webVitals.INP <= 200 : undefined}
+              label="INP (Interaction to Next Paint)"
+              threshold={200}
+              unit="ms"
+              value={metrics.performance.webVitals.INP}
+            />
+            <MetricCard
+              good={metrics.performance.webVitals.TTFB ? metrics.performance.webVitals.TTFB <= 800 : undefined}
+              label="TTFB (Time to First Byte)"
+              threshold={800}
+              unit="ms"
+              value={metrics.performance.webVitals.TTFB}
+            />
+            <MetricCard
+              good={metrics.performance.webVitals.FCP ? metrics.performance.webVitals.FCP <= 1800 : undefined}
+              label="FCP (First Contentful Paint)"
+              threshold={1800}
+              unit="ms"
+              value={metrics.performance.webVitals.FCP}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Supabase Metrics */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Supabase Performance</CardTitle>
+          <CardDescription>Database query performance and latency</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <MetricCard
+              good={metrics.performance.supabase.avgLatencyMs ? metrics.performance.supabase.avgLatencyMs <= 200 : undefined}
+              label="Average Latency"
+              unit="ms"
+              value={metrics.performance.supabase.avgLatencyMs}
+            />
+            <MetricCard
+              label="Query Time"
+              unit="ms"
+              value={metrics.performance.supabase.queryTime}
+            />
+            <MetricCard
+              label="Row Count"
+              unit="rows"
+              value={metrics.performance.supabase.rowCount}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Expo Metrics */}
+      {metrics.performance.expo.bundleMB && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Expo Build Metrics</CardTitle>
+            <CardDescription>Mobile app bundle size and build performance</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <MetricCard
+                good={metrics.performance.expo.bundleMB ? metrics.performance.expo.bundleMB <= 30 : undefined}
+                label="Bundle Size"
+                threshold={30}
+                unit="MB"
+                value={metrics.performance.expo.bundleMB}
+              />
+              <MetricCard
+                label="Build Duration"
+                unit="min"
+                value={metrics.performance.expo.duration}
+              />
+              <MetricCard
+                good={metrics.performance.expo.buildSuccess}
+                label="Build Success"
+                value={metrics.performance.expo.buildSuccess ? "Yes" : "No"}
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* CI Metrics */}
+      {metrics.performance.ci.avgBuildMin && (
+        <Card>
+          <CardHeader>
+            <CardTitle>CI/CD Performance</CardTitle>
+            <CardDescription>GitHub Actions build times and success rates</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <MetricCard
+                label="Average Build Time"
+                unit="min"
+                value={metrics.performance.ci.avgBuildMin}
+              />
+              <MetricCard
+                good={metrics.performance.ci.successRate ? metrics.performance.ci.successRate >= 95 : undefined}
+                label="Success Rate"
+                unit="%"
+                value={metrics.performance.ci.successRate}
+              />
+              <MetricCard
+                good={metrics.performance.ci.queueLength ? metrics.performance.ci.queueLength <= 3 : undefined}
+                label="Queue Length"
+                unit="pending"
+                value={metrics.performance.ci.queueLength}
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Trends */}
+      {metrics.trends && Object.keys(metrics.trends).length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>7-Day Trends</CardTitle>
+            <CardDescription>Moving averages and trends</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {Object.entries(metrics.trends).map(([source, trend]) => {
+                const trendData = trend as {
+                  average?: number;
+                  min?: number;
+                  max?: number;
+                  count?: number;
+                };
+                return (
+                <div key={source} className="border-b pb-4 last:border-0">
+                  <div className="font-semibold capitalize mb-2">{source}</div>
+                  <div className="grid grid-cols-4 gap-4 text-sm">
+                    <div>
+                      <span className="text-muted-foreground">Average:</span>{" "}
+                      <span className="font-mono">{trendData.average?.toFixed(2) ?? "—"}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Min:</span>{" "}
+                      <span className="font-mono">{trendData.min?.toFixed(2) ?? "—"}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Max:</span>{" "}
+                      <span className="font-mono">{trendData.max?.toFixed(2) ?? "—"}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Samples:</span>{" "}
+                      <span className="font-mono">{trendData.count ?? 0}</span>
+                    </div>
+                  </div>
+                </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Raw JSON View */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Raw Metrics Data</CardTitle>
+          <CardDescription>JSON representation of all collected metrics</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <pre className="bg-muted p-4 rounded-lg overflow-auto text-xs">
+            {JSON.stringify(metrics, null, 2)}
+          </pre>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function MetricCard({
+  label,
+  value,
+  unit,
+  good,
+  threshold,
+}: {
+  label: string;
+  value?: number | string;
+  unit?: string;
+  good?: boolean;
+  threshold?: number;
+}) {
+  if (value === undefined || value === null) {
+    return (
+      <div className="p-4 border rounded-lg">
+        <div className="text-sm text-muted-foreground">{label}</div>
+        <div className="text-2xl font-bold mt-2">—</div>
+      </div>
+    );
+  }
+
+  const displayValue = typeof value === "number" ? value.toFixed(2) : value;
+  const colorClass =
+    good === undefined
+      ? "text-foreground"
+      : good
+      ? "text-green-600"
+      : "text-red-600";
+
+  return (
+    <div className="p-4 border rounded-lg">
+      <div className="text-sm text-muted-foreground">{label}</div>
+      <div className={`text-2xl font-bold mt-2 ${colorClass}`}>
+        {displayValue}
+        {unit && <span className="text-lg ml-1">{unit}</span>}
+      </div>
+      {threshold !== undefined && typeof value === "number" && (
+        <div className="text-xs text-muted-foreground mt-1">
+          Threshold: {threshold}{unit}
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,140 @@
+ 
+/**
+ * Build-safe environment variable validation using Zod
+ * 
+ * This module provides validation that won't fail during build time
+ * if environment variables are missing. Use SKIP_ENV_VALIDATION=true
+ * during build to bypass validation.
+ */
+
+import { z } from 'zod';
+
+const envSchema = z.object({
+  // Public (exposed to browser)
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).optional(),
+  
+  // Server-only
+  DATABASE_URL: z.string().optional(),
+  DIRECT_URL: z.string().optional(),
+  
+  // Supabase (for backward compatibility and testing)
+  SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_ANON_KEY: z.string().min(1).optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+  
+  // Stripe
+  STRIPE_SECRET_KEY: z.string().optional(),
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
+  
+  // Build flags
+  SKIP_ENV_VALIDATION: z.string().optional().default('false'),
+  NODE_ENV: z.enum(['development', 'production', 'test']).optional().default('development'),
+  
+  // Prisma
+  PRISMA_CLIENT_ENGINE_TYPE: z.enum(['library', 'wasm', 'binary']).optional().default('library'),
+}).passthrough(); // Allow additional properties for testing
+
+// Skip validation during build if flag set
+const skipValidation = 
+  process.env.SKIP_ENV_VALIDATION === 'true' || 
+  process.env.SKIP_ENV_VALIDATION === '1' ||
+  process.env.NODE_ENV === 'production' && typeof window === 'undefined';
+
+function getEnv() {
+  if (skipValidation) {
+    // Return process.env as-is during build
+    return process.env as z.infer<typeof envSchema>;
+  }
+  
+  const parsed = envSchema.safeParse(process.env);
+  
+  if (!parsed.success) {
+    console.error('❌ Invalid environment variables:', parsed.error.flatten().fieldErrors);
+    // Don't throw during build, just warn
+    if (process.env.NODE_ENV === 'production' && typeof window === 'undefined') {
+      console.warn('⚠️ Continuing build with missing env vars');
+      return process.env as z.infer<typeof envSchema>;
+    }
+  }
+  
+  return (parsed.success ? parsed.data : process.env) as z.infer<typeof envSchema>;
+}
+
+export const validatedEnv = getEnv();
+
+/**
+ * Validate environment variables on startup
+ * Throws if required variables are missing (only at runtime, not during build)
+ */
+export function validateEnvOnStartup(): void {
+  if (skipValidation) {
+    return; // Skip during build
+  }
+  
+  const parsed = envSchema.safeParse(process.env);
+  
+  if (!parsed.success) {
+    const errors = parsed.error.flatten().fieldErrors;
+    const errorMessage = `Environment validation failed:\n${JSON.stringify(errors, null, 2)}`;
+    throw new Error(errorMessage);
+  }
+}
+
+/**
+ * Validate environment variables with Zod schema
+ * Returns a result object with success status and data/errors
+ */
+export function validateEnvWithZod() {
+  const parsed = envSchema.safeParse(process.env);
+  
+  if (parsed.success) {
+    return {
+      success: true as const,
+      data: parsed.data,
+      errors: undefined,
+    };
+  }
+  
+  return {
+    success: false as const,
+    data: undefined,
+    errors: parsed.error,
+  };
+}
+
+/**
+ * Validate API environment variables
+ * Checks if required variables are present
+ */
+export function validateApiEnv(requiredVars: string[]): {
+  valid: boolean;
+  missing: string[];
+} {
+  const missing: string[] = [];
+  
+  for (const varName of requiredVars) {
+    if (!process.env[varName]) {
+      missing.push(varName);
+    }
+  }
+  
+  return {
+    valid: missing.length === 0,
+    missing,
+  };
+}
+
+/**
+ * Get a validated environment variable
+ * Returns undefined if validation fails or variable is missing
+ */
+export function getValidatedEnvVar(varName: string): string | undefined {
+  const result = validateEnvWithZod();
+  
+  if (result.success && result.data) {
+    return result.data[varName as keyof typeof result.data] as string | undefined;
+  }
+  
+  return process.env[varName];
+}

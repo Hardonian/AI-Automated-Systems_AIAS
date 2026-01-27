@@ -1,0 +1,282 @@
+/**
+ * Centralized Environment Variable Management
+ * 
+ * This module provides a single source of truth for all environment variables.
+ * It ensures that:
+ * 1. All variables are loaded dynamically at runtime
+ * 2. Required variables are validated
+ * 3. No hardcoded values exist in the codebase
+ * 4. Variables can be sourced from Vercel, Supabase, or GitHub Actions
+ * 
+ * Environment variables are automatically available from:
+ * - Vercel: Set in Vercel Dashboard → Settings → Environment Variables
+ * - Supabase: Set in Supabase Dashboard → Settings → API
+ * - GitHub Actions: Set in Repository → Settings → Secrets and variables → Actions
+ * - Local: Set in .env.local (not committed to git)
+ */
+
+/**
+ * Runtime environment detection
+ */
+function getRuntimeEnv(): 'vercel' | 'github' | 'local' | 'unknown' {
+  if (typeof process !== 'undefined') {
+    if (process.env.VERCEL) {return 'vercel';}
+    if (process.env.GITHUB_ACTIONS) {return 'github';}
+    if (process.env.NODE_ENV === 'development') {return 'local';}
+  }
+  return 'unknown';
+}
+
+/**
+ * Get environment variable with validation
+ * Works in both Node.js and Edge runtime environments
+ * Build-safe: During `next build` (or when SKIP_ENV_VALIDATION=true), returns placeholders instead of throwing
+ */
+function getEnvVar(key: string, required: boolean = true, defaultValue?: string): string {
+  const skipEnvValidation =
+    typeof process !== 'undefined' &&
+    (process.env.SKIP_ENV_VALIDATION === 'true' || process.env.SKIP_ENV_VALIDATION === '1');
+
+  // Next.js sets NEXT_PHASE during build. This avoids hard-failing deployments
+  // when API routes import env-dependent modules at build time.
+  const isNextBuild =
+    typeof process !== 'undefined' && process.env.NEXT_PHASE === 'phase-production-build';
+  
+  // Check process.env (Node.js/Next.js)
+  let value: string | undefined;
+  
+  // Edge runtime compatibility: process.env is available but may be limited
+  if (typeof process !== 'undefined') {
+    try {
+      value = process.env[key];
+    } catch (e) {
+      // Edge runtime may not have full process.env access
+    }
+  }
+  
+  // Check import.meta.env (Vite/Edge runtime)
+  // Note: import.meta is only available in Vite builds, not in Next.js/Node.js
+  // Skip this check to avoid Edge runtime issues
+  // Vite environment variables should be prefixed with VITE_ and will be available via process.env in Next.js
+  
+  // Use default if provided
+  if (!value && defaultValue !== undefined) {
+    value = defaultValue;
+  }
+  
+  // During build (or when explicitly skipping validation), return placeholders for required vars.
+  // These placeholders should be syntactically valid to avoid crashing module initialization.
+  const shouldUsePlaceholder = (isNextBuild || skipEnvValidation) && required && !value;
+
+  if (shouldUsePlaceholder) {
+    // Database URLs should be valid connection strings (not https://...)
+    if (key === 'DATABASE_URL' || key === 'DIRECT_URL' || key.endsWith('_POSTGRES_URL') || key.endsWith('_POSTGRES_DIRECT_URL')) {
+      return 'postgresql://placeholder:placeholder@localhost:5432/placeholder?schema=public';
+    }
+
+    // Supabase URLs should be valid URLs
+    if (key.includes('SUPABASE_URL')) {
+      return 'https://placeholder.supabase.co';
+    }
+
+    if (key.includes('URL') || key.includes('url')) {
+      return 'https://placeholder.example.com';
+    }
+    if (key.includes('KEY') || key.includes('SECRET') || key.includes('PASSWORD')) {
+      return 'placeholder-key-32-chars-long-exactly';
+    }
+    return `placeholder-${key}`;
+  }
+
+  // Validate required variables
+  if (required && !value) {
+    const runtime = getRuntimeEnv();
+    throw new Error(
+      `Missing required environment variable: ${key}\n` +
+      `Runtime: ${runtime}\n` +
+      `Please set this variable in:\n` +
+      `- Vercel: Dashboard → Settings → Environment Variables\n` +
+      `- Supabase: Dashboard → Settings → API\n` +
+      `- GitHub Actions: Repository → Settings → Secrets\n` +
+      `- Local: .env.local file`
+    );
+  }
+  
+  return value || '';
+}
+
+/**
+ * Environment variable configuration
+ * All variables are loaded dynamically at runtime
+ */
+export const env = {
+  // Supabase Configuration - Check multiple possible env var names
+  supabase: {
+    url: getEnvVar('NEXT_PUBLIC_SUPABASE_URL', false) || getEnvVar('SUPABASE_URL', true),
+    anonKey: getEnvVar('NEXT_PUBLIC_SUPABASE_ANON_KEY', false) || getEnvVar('SUPABASE_ANON_KEY', true),
+    serviceRoleKey: getEnvVar('SUPABASE_SERVICE_ROLE_KEY', true),
+    jwtSecret: getEnvVar('SUPABASE_JWT_SECRET', false),
+  },
+  
+  // Database Configuration
+  // Priority: DATABASE_POOLER_URL (from GitHub Secrets) > UPSTASH_POSTGRES_URL > DATABASE_URL
+  database: {
+    url: getEnvVar('DATABASE_POOLER_URL', false) || getEnvVar('UPSTASH_POSTGRES_URL', false) || getEnvVar('DATABASE_URL', true),
+    directUrl: getEnvVar('DATABASE_POOLER_DIRECT_URL', false) || getEnvVar('UPSTASH_POSTGRES_DIRECT_URL', false) || getEnvVar('DIRECT_URL', false),
+  },
+  
+  // Application Configuration
+  app: {
+    env: getEnvVar('NEXT_PUBLIC_APP_ENV', false, 'production'),
+    siteUrl: getEnvVar('NEXT_PUBLIC_SITE_URL', false) || 
+             getEnvVar('NEXT_PUBLIC_APP_URL', false) || 
+             getEnvVar('NEXTAUTH_URL', false) || 
+             '',
+    nextAuthUrl: getEnvVar('NEXTAUTH_URL', false),
+    nextAuthSecret: getEnvVar('NEXTAUTH_SECRET', false),
+    logLevel: getEnvVar('LOG_LEVEL', false, 'info'),
+  },
+  
+  // OAuth Configuration
+  oauth: {
+    github: {
+      clientId: getEnvVar('GITHUB_CLIENT_ID', false),
+      clientSecret: getEnvVar('GITHUB_CLIENT_SECRET', false),
+    },
+    google: {
+      clientId: getEnvVar('GOOGLE_CLIENT_ID', false),
+      clientSecret: getEnvVar('GOOGLE_CLIENT_SECRET', false),
+    },
+  },
+  
+  // Stripe Configuration
+  stripe: {
+    secretKey: getEnvVar('STRIPE_SECRET_KEY', false),
+    publishableKey: getEnvVar('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY', false),
+    webhookSecret: getEnvVar('STRIPE_WEBHOOK_SECRET', false),
+  },
+  
+  // Storage Configuration
+  storage: {
+    uploadBucket: getEnvVar('NEXT_PUBLIC_UPLOAD_BUCKET', false, 'public'),
+    signingSecret: getEnvVar('SIGNING_SECRET', false),
+  },
+  
+  // Vercel Configuration (for CI/CD)
+  vercel: {
+    token: getEnvVar('VERCEL_TOKEN', false),
+  },
+  
+  // Supabase CLI Configuration (for migrations)
+  supabaseCli: {
+    accessToken: getEnvVar('SUPABASE_ACCESS_TOKEN', false),
+    projectRef: getEnvVar('SUPABASE_PROJECT_REF', false),
+  },
+  
+  // Email Configuration
+  email: {
+    fromEmail: getEnvVar('EMAIL_FROM', false, 'inquiries@aiautomatedsystems.ca'),
+    fromName: getEnvVar('EMAIL_FROM_NAME', false, 'AI Automated Systems'),
+    replyTo: getEnvVar('EMAIL_REPLY_TO', false, 'inquiries@aiautomatedsystems.ca'),
+    supportEmail: getEnvVar('SUPPORT_EMAIL', false, 'support@aiautomatedsystems.ca'),
+    inquiriesEmail: getEnvVar('INQUIRIES_EMAIL', false, 'inquiries@aiautomatedsystems.ca'),
+    cadenceEnabled: getEnvVar('EMAIL_CADENCE_ENABLED', false, 'true') === 'true',
+    cadenceScheduleHour: parseInt(getEnvVar('EMAIL_CADENCE_SCHEDULE_HOUR', false, '9')),
+    cadenceScheduleTimezone: getEnvVar('EMAIL_CADENCE_SCHEDULE_TIMEZONE', false, 'UTC'),
+    trackingEnabled: getEnvVar('EMAIL_TRACKING_ENABLED', false, 'true') === 'true',
+    analyticsEnabled: getEnvVar('EMAIL_ANALYTICS_ENABLED', false, 'true') === 'true',
+  },
+  
+  // Resend Configuration
+  resend: {
+    apiKey: getEnvVar('RESEND_API_KEY', false),
+  },
+  
+  // SendGrid Configuration
+  sendgrid: {
+    apiKey: getEnvVar('SENDGRID_API_KEY', false),
+  },
+  
+  // SMTP Configuration
+  smtp: {
+    host: getEnvVar('SMTP_HOST', false),
+    port: parseInt(getEnvVar('SMTP_PORT', false, '587')),
+    user: getEnvVar('SMTP_USER', false),
+    password: getEnvVar('SMTP_PASSWORD', false),
+    secure: getEnvVar('SMTP_SECURE', false, 'false') === 'true',
+  },
+  
+  // Content Marketing Configuration
+  content: {
+    blogEnabled: getEnvVar('BLOG_ENABLED', false, 'true') === 'true',
+    blogPostsPerPage: parseInt(getEnvVar('BLOG_POSTS_PER_PAGE', false, '10')),
+  },
+
+  // Feature Flags
+  features: {
+    emailCadence: getEnvVar('NEXT_PUBLIC_FEATURE_EMAIL_CADENCE', false, 'true') === 'true',
+    contentMarketing: getEnvVar('NEXT_PUBLIC_FEATURE_CONTENT_MARKETING', false, 'true') === 'true',
+    socialMedia: getEnvVar('NEXT_PUBLIC_FEATURE_SOCIAL_MEDIA', false, 'true') === 'true',
+    analytics: getEnvVar('NEXT_PUBLIC_FEATURE_ANALYTICS', false, 'true') === 'true',
+  },
+
+  // Runtime information
+  runtime: {
+    env: getRuntimeEnv(),
+    isProduction: getEnvVar('NODE_ENV', false, 'development') === 'production',
+    isDevelopment: getEnvVar('NODE_ENV', false, 'development') === 'development',
+  },
+} as const;
+
+/**
+ * Validate all required environment variables at startup
+ * Call this in your app initialization
+ */
+export function validateEnv(): { valid: boolean; errors: string[] } {
+  const errors: string[] = [];
+  
+  try {
+    // Validate required Supabase vars (check multiple possible names)
+    if (!env.supabase.url) {
+      errors.push('NEXT_PUBLIC_SUPABASE_URL or SUPABASE_URL is required');
+    }
+    if (!env.supabase.anonKey) {
+      errors.push('NEXT_PUBLIC_SUPABASE_ANON_KEY or SUPABASE_ANON_KEY is required');
+    }
+    if (!env.supabase.serviceRoleKey) {
+      errors.push('SUPABASE_SERVICE_ROLE_KEY is required');
+    }
+    if (!env.database.url) {
+      errors.push('DATABASE_URL is required');
+    }
+  } catch (error: unknown) {
+    errors.push(error instanceof Error ? error.message : String(error));
+  }
+  
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
+}
+
+/**
+ * Get environment variable safely (returns undefined if not set)
+ * Use this for optional variables
+ */
+export function getOptionalEnv(key: string): string | undefined {
+  try {
+    return getEnvVar(key, false);
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Export individual getters for convenience
+ */
+export const getSupabaseUrl = () => env.supabase.url;
+export const getSupabaseAnonKey = () => env.supabase.anonKey;
+export const getSupabaseServiceKey = () => env.supabase.serviceRoleKey;
+export const getDatabaseUrl = () => env.database.url;
+export const getStripeSecretKey = () => env.stripe.secretKey;
+export const getStripeWebhookSecret = () => env.stripe.webhookSecret;

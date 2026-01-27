@@ -1,0 +1,292 @@
+import { Code, Workflow, Zap, Shield, BarChart, Users, Building2, Globe, HeartPulse, ShoppingBag } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { ServiceSchema } from "@/components/seo/structured-data";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Consultancy Services — Custom AI Platform Development | AIAS",
+  description: "Custom AI platform development, workflow automation architecture, and AI agent design. From strategy to deployment. See our work: TokPulse, Hardonia Suite.",
+};
+
+const services = [
+  {
+    icon: Code,
+    title: "Custom AI Platform Development",
+    description: "We architect and build complete AI platforms from the ground up — not integrations. TokPulse and Hardonia Suite showcase our full-stack development capabilities.",
+    deliverables: [
+      "Platform architecture & design",
+      "Custom AI agent development",
+      "Real-time analytics engines",
+      "Scalable infrastructure",
+    ],
+    timeline: "8-16 weeks",
+  },
+  {
+    icon: Building2,
+    title: "Settler — Payment & Settlement Platform",
+    description: "Enterprise-grade payment processing and settlement platform. Built for high-volume transactions, compliance, and seamless integrations. Perfect for marketplaces, SaaS, and fintech.",
+    deliverables: [
+      "Payment processing infrastructure",
+      "Settlement & escrow services",
+      "Multi-currency support",
+      "Compliance & security",
+    ],
+    timeline: "Custom",
+    link: "/settler",
+    badge: "Partner Product",
+  },
+  {
+    icon: Zap,
+    title: "Edge AI Accelerator Studio",
+    description: "Optimize and deploy AI models for edge devices, NPUs, and local inference. Model quantization, benchmarking, and deployment tools for Jetson, Android, AI PCs, and more.",
+    deliverables: [
+      "Model optimization & quantization",
+      "Device profiling & benchmarking",
+      "Edge deployment packages",
+      "SDK scaffolds & integration support",
+    ],
+    timeline: "2-8 weeks",
+    link: "/edge-ai",
+  },
+  {
+    icon: Workflow,
+    title: "Workflow Automation Architecture",
+    description: "Design and implement intelligent automation systems that understand your business logic and make decisions autonomously.",
+    deliverables: [
+      "Process analysis & mapping",
+      "Automation strategy",
+      "Custom workflow builders",
+      "Integration architecture",
+    ],
+    timeline: "4-12 weeks",
+  },
+  {
+    icon: Zap,
+    title: "AI Agent Design & Development",
+    description: "Build custom AI agents that handle complex tasks, learn from data, and adapt to your unique business needs.",
+    deliverables: [
+      "Agent architecture design",
+      "Training data preparation",
+      "Model fine-tuning",
+      "Deployment & monitoring",
+    ],
+    timeline: "4-8 weeks",
+  },
+  {
+    icon: BarChart,
+    title: "Analytics & Intelligence Platforms",
+    description: "Create real-time analytics platforms with predictive capabilities. See TokPulse for TikTok analytics example.",
+    deliverables: [
+      "Data pipeline architecture",
+      "Real-time dashboards",
+      "Predictive analytics",
+      "Custom reporting",
+    ],
+    timeline: "6-12 weeks",
+  },
+  {
+    icon: Shield,
+    title: "Enterprise Security & Compliance",
+    description: "Build with security-first architecture. PIPEDA compliant, SOC 2 ready, enterprise-grade encryption.",
+    deliverables: [
+      "Security architecture review",
+      "Compliance implementation",
+      "Access control systems",
+      "Audit logging",
+    ],
+    timeline: "2-4 weeks",
+  },
+  {
+    icon: Users,
+    title: "Ongoing Support & Optimization",
+    description: "Continuous improvement, monitoring, and optimization. We stay with you after launch.",
+    deliverables: [
+      "Performance monitoring",
+      "Feature enhancements",
+      "Bug fixes & updates",
+      "Strategic consulting",
+    ],
+    timeline: "Ongoing",
+  },
+];
+
+import { MobileStickyCTA } from "@/components/layout/mobile-sticky-cta";
+
+export default function ServicesPage() {
+  return (
+    <>
+      <ServiceSchema />
+      <MobileStickyCTA primaryHref="/demo" primaryLabel="Book Consultation" secondaryHref="/pricing" secondaryLabel="See Pricing" />
+      <div className="container py-16">
+      <div className="text-center mb-16 max-w-3xl mx-auto px-4">
+        <h1 className="text-4xl md:text-5xl font-bold mb-6">
+          AIAS Consultancy — Custom Development Services
+        </h1>
+        <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
+          Need something custom? We build complete AI platforms, automation systems, 
+          and intelligent agents tailored to your business. See our work: TokPulse, Hardonia Suite.
+        </p>
+        <div 
+          aria-label="Service Comparison" 
+          className="p-6 md:p-8 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg mb-8"
+          role="region"
+        >
+          <h2 className="text-lg md:text-xl font-semibold mb-4">SaaS vs. Consulting — Which Do You Need?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+            <div>
+              <h3 className="font-semibold mb-3 text-base">AIAS Platform (SaaS)</h3>
+              <p className="text-sm text-muted-foreground mb-3">Choose if you want:</p>
+              <ul className="text-sm space-y-2 text-muted-foreground mb-4">
+                <li>• Self-serve automation ($49-149/month)</li>
+                <li>• Pre-built templates and integrations</li>
+                <li>• Quick setup (30 minutes)</li>
+                <li>• Standard workflows</li>
+              </ul>
+              <Button asChild className="w-full" size="sm" variant="outline">
+                <Link href="/pricing">View SaaS Plans</Link>
+              </Button>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-3 text-base">AIAS Consultancy (Custom)</h3>
+              <p className="text-sm text-muted-foreground mb-3">Choose if you need:</p>
+              <ul className="text-sm space-y-2 text-muted-foreground mb-4">
+                <li>• Custom platform development</li>
+                <li>• Unique business requirements</li>
+                <li>• Full-stack development (8-16 weeks)</li>
+                <li>• Ongoing support and optimization</li>
+              </ul>
+              <Button asChild className="w-full" size="sm" variant="outline">
+                <Link href="/demo">Schedule Consultation</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button asChild size="lg">
+            <Link href="/demo">Schedule Strategy Call</Link>
+          </Button>
+          <Button asChild size="lg" variant="outline">
+            <Link href="/case-studies">See Our Builds</Link>
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 px-4">
+        {services.map((service) => {
+          const Icon = service.icon;
+          return (
+            <Card key={service.title} className="h-full">
+              <CardHeader className="pb-4">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Icon className="h-6 w-6 text-primary" />
+                  </div>
+                  {"badge" in service && service.badge && (
+                    <Badge className="ml-auto" variant="secondary">
+                      {service.badge}
+                    </Badge>
+                  )}
+                </div>
+                <CardTitle className="text-xl mb-3">{service.title}</CardTitle>
+                <CardDescription className="text-base leading-relaxed">{service.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="space-y-5">
+                  <div>
+                    <h4 className="font-semibold text-sm mb-3">Deliverables:</h4>
+                    <ul className="space-y-2">
+                      {service.deliverables.map((item, idx) => (
+                        <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2 leading-relaxed">
+                          <span className="text-primary mt-1">•</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="pt-4 border-t">
+                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                      <strong>Typical Timeline:</strong> {service.timeline}
+                    </p>
+                    {"link" in service && service.link && (
+                      <Button asChild className="w-full" size="sm" variant="outline">
+                        <Link href={service.link}>Learn More</Link>
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      <div className="mb-16 px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">Industries We Serve</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Our custom platforms are tailored to the unique regulatory and operational needs of these sectors.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="hover:shadow-lg transition-shadow border-t-4 border-t-blue-500">
+            <CardHeader>
+              <ShoppingBag className="h-8 w-8 text-blue-500 mb-2" />
+              <CardTitle className="text-lg">E-Commerce</CardTitle>
+              <CardDescription>
+                Inventory sync, multi-channel automation, and AI customer support.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+          <Card className="hover:shadow-lg transition-shadow border-t-4 border-t-green-500">
+            <CardHeader>
+              <BarChart className="h-8 w-8 text-green-500 mb-2" />
+              <CardTitle className="text-lg">Fintech</CardTitle>
+              <CardDescription>
+                Compliance reporting, transaction analysis, and fraud detection.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+          <Card className="hover:shadow-lg transition-shadow border-t-4 border-t-red-500">
+            <CardHeader>
+              <HeartPulse className="h-8 w-8 text-red-500 mb-2" />
+              <CardTitle className="text-lg">Healthcare</CardTitle>
+              <CardDescription>
+                HIPAA/PIPEDA compliant patient scheduling and document processing.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+          <Card className="hover:shadow-lg transition-shadow border-t-4 border-t-purple-500">
+            <CardHeader>
+              <Globe className="h-8 w-8 text-purple-500 mb-2" />
+              <CardTitle className="text-lg">Logistics</CardTitle>
+              <CardDescription>
+                Route optimization, fleet management, and automated dispatch.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </div>
+      </div>
+
+      <div className="bg-muted/50 rounded-lg p-8 md:p-10 text-center px-4">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Build Your Custom AI Platform?</h2>
+        <p className="text-muted-foreground mb-6 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
+          Schedule a strategy call to discuss your project. We'll review your needs, 
+          share relevant case studies, and outline a custom solution.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button asChild size="lg">
+            <Link href="/demo">Schedule Strategy Call</Link>
+          </Button>
+          <Button asChild size="lg" variant="outline">
+            <Link href="/case-studies">View Case Studies</Link>
+          </Button>
+        </div>
+      </div>
+    </div>
+    </>
+  );
+}

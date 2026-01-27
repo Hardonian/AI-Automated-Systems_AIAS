@@ -1,41 +1,85 @@
 > Archived on 2025-11-12. Superseded by: (see docs/final index)
 
+# Pull Request
+
+## Type
+<!-- Check all that apply -->
+- [ ] `auto/security` - Security fix or improvement
+- [ ] `auto/perf` - Performance optimization
+- [ ] `auto/docs` - Documentation update
+- [ ] `auto/maint` - Maintenance or dependency update
+- [ ] Feature - New feature
+- [ ] Bugfix - Bug fix
+- [ ] Refactor - Code refactoring
+- [ ] Other - Please describe
+
 ## Description
+<!-- Provide a clear description of the changes -->
 
-Brief description of changes
+## SLO Impact Assessment
+<!-- How does this change affect SLOs? -->
+- [ ] No impact on SLOs
+- [ ] Improves performance (TTFB, API P95, LCP)
+- [ ] May impact performance (describe below)
+- [ ] Security improvement
+- [ ] Cost optimization
 
-## Type of Change
+**Details:**
+<!-- If SLO impact, describe expected changes -->
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Documentation update
-- [ ] Performance improvement
-- [ ] Code refactoring
+## Risk Assessment
+<!-- Risk level and mitigation -->
+- [ ] Low risk - No breaking changes
+- [ ] Medium risk - Requires testing
+- [ ] High risk - Requires careful review
+
+**Mitigation:**
+<!-- Describe how risks are mitigated -->
+
+## Rollback Plan
+<!-- How can this be rolled back if issues occur? -->
+- [ ] Revert commit
+- [ ] Feature flag disable
+- [ ] Database migration rollback (if applicable)
+- [ ] Other: <!-- describe -->
+
+**Rollback Steps:**
+<!-- If applicable, provide specific rollback steps -->
 
 ## Testing
+<!-- How was this tested? -->
+- [ ] Unit tests added/updated
+- [ ] Integration tests added/updated
+- [ ] Manual testing performed
+- [ ] Performance testing performed
+- [ ] Security testing performed
 
-- [ ] Unit tests pass
-- [ ] Integration tests pass
-- [ ] E2E tests pass
-- [ ] Manual testing completed
+**Test Results:**
+<!-- Link to test results or describe manual testing -->
 
 ## Checklist
-
+<!-- Pre-merge checklist -->
 - [ ] Code follows project style guidelines
 - [ ] Self-review completed
-- [ ] Documentation updated
-- [ ] Tests added/updated
-- [ ] No breaking changes (or breaking changes documented)
-
-## Screenshots (if applicable)
-
-Add screenshots to help explain your changes
-
-## Additional Notes
-
-Any additional information about the changes
+- [ ] Comments added for complex logic
+- [ ] Documentation updated (if applicable)
+- [ ] No new warnings or errors
+- [ ] Tests pass locally
+- [ ] CI/CD checks pass
+- [ ] SLO impact assessed
+- [ ] Rollback plan documented
 
 ## Related Issues
+<!-- Link related issues -->
+Closes #
+Related to #
 
-Closes #(issue number)
+## Screenshots / Evidence
+<!-- If applicable, add screenshots or evidence of changes -->
+
+## Additional Notes
+<!-- Any additional context or notes -->
+
+---
+
+**Reviewers:** Please verify SLO impact assessment and rollback plan before approving.

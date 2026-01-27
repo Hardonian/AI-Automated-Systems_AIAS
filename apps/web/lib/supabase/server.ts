@@ -1,0 +1,112 @@
+import { createServerClient as createSupabaseServerClient } from '@supabase/ssr';
+import type { SupabaseClient as TypedSupabaseClient } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
+
+import type { Database } from '@/types/supabase';
+
+// Less strictly typed client that works with any table
+type PermissiveDatabase = {
+  public: {
+    Tables: {
+      [key: string]: {
+        Row: Record<string, unknown>
+        Insert: Record<string, unknown> | Record<string, unknown>[]
+        Update: Record<string, unknown>
+      }
+    }
+    Views: Record<string, { Row: Record<string, unknown> }>
+    Functions: Record<string, { Args: Record<string, unknown>; Returns: unknown }>
+    Enums: Record<string, string>
+  }
+}
+
+type PermissiveClient = TypedSupabaseClient<PermissiveDatabase>
+
+/**
+ * Create Supabase server client for use in Server Components and API routes
+ * 
+ * CRITICAL: Throws hard error immediately if required env vars are missing.
+ * This ensures runtime failures are caught early, not silently ignored.
+ * 
+ * Uses @supabase/ssr for Next.js 15 compatibility with proper cookie handling.
+ * Build-safe: During build (when SKIP_ENV_VALIDATION=true), returns placeholder
+ * to prevent build failures. At runtime, throws hard error if vars are missing.
+ */
+export async function createServerSupabaseClient() {
+  // Next.js 15: cookies() must be awaited
+  const cookieStore = await cookies();
+  
+  // Type-safe access: process.env is string | undefined
+  const supabaseUrl: string | undefined = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey: string | undefined = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  // Build-safe check: Skip validation during build
+  const isBuildTime = process.env.SKIP_ENV_VALIDATION === 'true' || 
+                      process.env.SKIP_ENV_VALIDATION === '1' ||
+                      (process.env.NODE_ENV !== 'production');
+  
+  // Hard error at runtime if missing (production safety)
+  if (!supabaseUrl || !supabaseKey) {
+    if (!isBuildTime) {
+      // Runtime: Throw hard error immediately - do not fail silently
+      throw new Error(
+        `Missing required Supabase environment variables. ` +
+        `NEXT_PUBLIC_SUPABASE_URL: ${supabaseUrl ? 'set' : 'MISSING'}, ` +
+        `NEXT_PUBLIC_SUPABASE_ANON_KEY: ${supabaseKey ? 'set' : 'MISSING'}`
+      );
+    }
+    // Build-time: Return placeholder to prevent build failures
+    const placeholderClient = createSupabaseServerClient<Database>(
+      'https://placeholder.supabase.co',
+      'placeholder-key',
+      {
+        cookies: {
+          getAll() { return cookieStore.getAll() },
+          setAll(cookiesToSet: Array<{ name: string; value: string; options?: { path?: string; maxAge?: number; domain?: string; sameSite?: 'lax' | 'strict' | 'none'; secure?: boolean } }>) {
+            // Note: This often throws in Server Components, handle gracefully
+            try {
+              cookiesToSet.forEach(({ name, value, options }) => 
+                cookieStore.set(name, value, options)
+              );
+            } catch {
+              // Ignore cookie setting errors during build/SSR
+            }
+          },
+        },
+      }
+    );
+    return placeholderClient as unknown as PermissiveClient;
+  }
+  
+  const client = createSupabaseServerClient<Database>(
+    supabaseUrl,
+    supabaseKey,
+    {
+      cookies: {
+        getAll() { return cookieStore.getAll() },
+        setAll(cookiesToSet: Array<{ name: string; value: string; options?: { path?: string; maxAge?: number; domain?: string; sameSite?: 'lax' | 'strict' | 'none'; secure?: boolean } }>) {
+          // Note: This often throws in Server Components, handle gracefully
+          try {
+            cookiesToSet.forEach(({ name, value, options }) => 
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // Ignore cookie setting errors during build/SSR
+          }
+        },
+      },
+    }
+  );
+  // Return a less strictly typed client that works with any table name
+  return client as unknown as PermissiveClient;
+}
+
+// Legacy export for backwards compatibility - renamed to avoid conflict
+export async function createServerClient() {
+  return createServerSupabaseClient();
+}
+
+// Export alias for createClient (used by API routes)
+export async function createClient() {
+  return createServerSupabaseClient();
+}

@@ -4,9 +4,21 @@ import Stripe from 'stripe';
 import { prisma } from './database';
 import { logger } from './observability';
 
-const stripe = new Stripe(config.stripe.secretKey || '', {
-  apiVersion: '2025-12-15.clover' as any, // Use latest - bypass strict type check
-});
+// Lazy initialize Stripe to avoid build-time errors
+let stripeInstance: Stripe | null = null;
+
+function getStripe(): Stripe {
+  if (!stripeInstance) {
+    const secretKey = config.stripe.secretKey;
+    if (!secretKey) {
+      throw new Error('STRIPE_SECRET_KEY is required');
+    }
+    stripeInstance = new Stripe(secretKey, {
+      apiVersion: '2025-12-15.clover' as any,
+    });
+  }
+  return stripeInstance;
+}
 
 export interface CreateCheckoutSessionParams {
   priceId: string;
@@ -44,52 +56,52 @@ export class PaymentService {
       sessionParams.customer_email = params.customerEmail;
     }
 
-    return stripe.checkout.sessions.create(sessionParams);
+    return getStripe().checkout.sessions.create(sessionParams);
   }
 
   static async createBillingPortalSession(
     params: CreateBillingPortalSessionParams
   ) {
-    return stripe.billingPortal.sessions.create({
+    return getStripe().billingPortal.sessions.create({
       customer: params.customerId,
       return_url: params.returnUrl,
     });
   }
 
   static async getCustomer(customerId: string) {
-    return stripe.customers.retrieve(customerId);
+    return getStripe().customers.retrieve(customerId);
   }
 
   static async getSubscription(subscriptionId: string) {
-    return stripe.subscriptions.retrieve(subscriptionId);
+    return getStripe().subscriptions.retrieve(subscriptionId);
   }
 
   static async cancelSubscription(subscriptionId: string) {
-    return stripe.subscriptions.cancel(subscriptionId);
+    return getStripe().subscriptions.cancel(subscriptionId);
   }
 
   static async updateSubscription(
     subscriptionId: string,
     params: Stripe.SubscriptionUpdateParams
   ) {
-    return stripe.subscriptions.update(subscriptionId, params);
+    return getStripe().subscriptions.update(subscriptionId, params);
   }
 
   static async listInvoices(customerId: string, limit = 10) {
-    return stripe.invoices.list({
+    return getStripe().invoices.list({
       customer: customerId,
       limit,
     });
   }
 
   static async getUpcomingInvoice(customerId: string) {
-    return (stripe.invoices as any).retrieveUpcoming({
+    return (getStripe().invoices as any).retrieveUpcoming({
       customer: customerId,
     });
   }
 
   static async createUsageRecord(subscriptionItemId: string, quantity: number) {
-    return (stripe.subscriptionItems as any).createUsageRecord(
+    return (getStripe().subscriptionItems as any).createUsageRecord(
       subscriptionItemId,
       {
         quantity,
@@ -100,7 +112,7 @@ export class PaymentService {
 
   static async verifyWebhookSignature(payload: string, signature: string) {
     try {
-      return stripe.webhooks.constructEvent(
+      return getStripe().webhooks.constructEvent(
         payload,
         signature,
         config.stripe.webhookSecret || ''

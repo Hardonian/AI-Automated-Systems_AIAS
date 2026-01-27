@@ -164,3 +164,7 @@ export const POST = createPOSTHandler(
     // Errors are automatically tracked by route handler
   }
 );
+// Force dynamic rendering to prevent build-time execution
+export const dynamic = 'force-dynamic';
+// Force dynamic rendering to prevent build-time execution
+export const dynamic = 'force-dynamic';

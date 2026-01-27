@@ -22,7 +22,7 @@
     "lighthouse": "lighthouse-ci autorun"
   },
   "dependencies": {
-    "next": "^15.5.7",
+    "next": "15.5.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "@prisma/client": "^5.22.0",

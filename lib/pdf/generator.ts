@@ -22,7 +22,9 @@ export interface PDFContent {
  * Generate PDF using PDFKit (lightweight, server-side)
  * Note: This requires pdfkit package
  */
-export async function generatePDFWithPDFKit(content: PDFContent): Promise<Buffer> {
+export async function generatePDFWithPDFKit(
+  content: PDFContent
+): Promise<Buffer> {
   try {
     // Dynamic import to avoid requiring pdfkit in all environments
     const PDFDocument = (await import('pdfkit')).default;
@@ -62,7 +64,10 @@ export async function generatePDFWithPDFKit(content: PDFContent): Promise<Buffer
       doc.on('error', reject);
     });
   } catch (error) {
-    const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+    const errorObj: Error =
+      (error as any) instanceof Error
+        ? (error as Error)
+        : new Error(String(error));
     logger.error('Failed to generate PDF with PDFKit', errorObj);
     throw error;
   }
@@ -81,7 +86,7 @@ export async function generatePDFWithPuppeteer(
 ): Promise<Buffer> {
   try {
     // Dynamic import to avoid requiring puppeteer in all environments
-    const puppeteer = await import('puppeteer');
+    const puppeteer = await import('puppeteer' as string);
     const browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -106,7 +111,10 @@ export async function generatePDFWithPuppeteer(
     logger.info('PDF generated with Puppeteer', { size: pdf.length });
     return Buffer.from(pdf);
   } catch (error) {
-    const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+    const errorObj: Error =
+      (error as any) instanceof Error
+        ? (error as Error)
+        : new Error(String(error));
     logger.error('Failed to generate PDF with Puppeteer', errorObj);
     throw error;
   }
@@ -115,7 +123,10 @@ export async function generatePDFWithPuppeteer(
 /**
  * Generate System Prompts PDF (10-page master guide)
  */
-export async function generateSystemPromptsPDF(_email: string, name: string): Promise<Buffer> {
+export async function generateSystemPromptsPDF(
+  _email: string,
+  name: string
+): Promise<Buffer> {
   const content: PDFContent = {
     title: 'Master System Prompts Guide',
     metadata: {
@@ -130,7 +141,8 @@ export async function generateSystemPromptsPDF(_email: string, name: string): Pr
       },
       {
         heading: 'Understanding System Prompts',
-        content: 'System prompts define the role, behavior, and constraints of an AI assistant. They set the context, tone, and boundaries for AI interactions. A well-crafted system prompt ensures consistent, accurate, and useful AI responses.',
+        content:
+          'System prompts define the role, behavior, and constraints of an AI assistant. They set the context, tone, and boundaries for AI interactions. A well-crafted system prompt ensures consistent, accurate, and useful AI responses.',
       },
       {
         heading: 'Best Practices for System Prompts',
@@ -212,7 +224,10 @@ For more help, visit our documentation or contact support at support@aias-platfo
 /**
  * Generate HTML content for PDF (alternative method)
  */
-export function generateSystemPromptsHTML(_email: string, name: string): string {
+export function generateSystemPromptsHTML(
+  _email: string,
+  name: string
+): string {
   return `
 <!DOCTYPE html>
 <html>

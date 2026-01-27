@@ -1,13 +1,13 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
-import { env } from "@/lib/env";
-import { SystemError, ValidationError, formatError } from "@/lib/errors";
-import { logger } from "@/lib/logging/structured-logger";
-import { recordError } from "@/lib/utils/error-detection";
-import { retry } from "@/lib/utils/retry";
-export const runtime = "edge";
+import { env } from '@/lib/env';
+import { SystemError, ValidationError, formatError } from '@/lib/errors';
+import { logger } from '@/lib/logging/structured-logger';
+import { recordError } from '@/lib/utils/error-detection';
+import { retry } from '@/lib/utils/retry';
+export const runtime = 'edge';
 
 interface TelemetryResponse {
   success: boolean;
@@ -35,13 +35,15 @@ const telemetrySchema = z.object({
  * Receives performance beacons from client-side code
  * Stores anonymized metrics to metrics_log table
  */
-export async function POST(req: NextRequest): Promise<NextResponse<TelemetryResponse>> {
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<TelemetryResponse>> {
   try {
     let body: unknown;
     try {
       body = await req.json();
     } catch {
-      const validationError = new ValidationError("Invalid JSON body");
+      const validationError = new ValidationError('Invalid JSON body');
       const formatted = formatError(validationError);
       return NextResponse.json(
         { success: false, error: formatted.message },
@@ -53,8 +55,11 @@ export async function POST(req: NextRequest): Promise<NextResponse<TelemetryResp
     const validationResult = telemetrySchema.safeParse(body);
     if (!validationResult.success) {
       const error = new ValidationError(
-        "Invalid telemetry data",
-        validationResult.error.errors.map(e => ({ path: e.path.map(String), message: e.message }))
+        'Invalid telemetry data',
+        validationResult.error.errors.map(e => ({
+          path: e.path.map(String),
+          message: e.message,
+        }))
       );
       const formatted = formatError(error);
       return NextResponse.json(
@@ -63,7 +68,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<TelemetryResp
       );
     }
 
-    const {data} = validationResult;
+    const { data } = validationResult;
 
     // Extract performance data
     const {
@@ -82,11 +87,11 @@ export async function POST(req: NextRequest): Promise<NextResponse<TelemetryResp
     } = data;
 
     // Check if Expo telemetry is enabled
-    const expoTelemetryEnabled = process.env.EXPO_PUBLIC_TELEMETRY === "true";
-    
+    const expoTelemetryEnabled = process.env.EXPO_PUBLIC_TELEMETRY === 'true';
+
     // Only accept TTI from Expo if telemetry is enabled
-    if (platform && platform !== "web" && !expoTelemetryEnabled) {
-      const error = new ValidationError("Expo telemetry not enabled");
+    if (platform && platform !== 'web' && !expoTelemetryEnabled) {
+      const error = new ValidationError('Expo telemetry not enabled');
       const formatted = formatError(error);
       return NextResponse.json(
         { success: false, error: formatted.message },
@@ -95,12 +100,13 @@ export async function POST(req: NextRequest): Promise<NextResponse<TelemetryResp
     }
 
     // Anonymize IP (don't store full IP)
-    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
-    const anonymizedIp = `${clientIp.split(".").slice(0, 2).join(".")  }.x.x`;
+    const clientIp =
+      req.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown';
+    const anonymizedIp = `${clientIp.split('.').slice(0, 2).join('.')}.x.x`;
 
     // Prepare metric payload
     const metric = {
-      url: url || "/",
+      url: url || '/',
       ttfb: ttfb || null,
       lcp: lcp || null,
       cls: cls || null,
@@ -109,7 +115,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<TelemetryResp
       fid: fid || null,
       tti: tti || null, // Time to Interactive (Expo/mobile)
       timestamp: ts || Date.now(),
-      platform: platform || "web",
+      platform: platform || 'web',
       // Anonymized metadata
       userAgent: userAgent ? userAgent.substring(0, 100) : null,
       connection: connection || null,
@@ -129,12 +135,12 @@ export async function POST(req: NextRequest): Promise<NextResponse<TelemetryResp
     );
 
     // Determine source based on platform
-    const source = platform && platform !== "web" ? "expo" : "telemetry";
-    
+    const source = platform && platform !== 'web' ? 'expo' : 'telemetry';
+
     // Retry database insert with exponential backoff
     const { error } = await retry(
       async () => {
-        const result = await supabase.from("metrics_log").insert({
+        const result = await supabase.from('metrics_log').insert({
           source,
           metric,
         });
@@ -147,20 +153,29 @@ export async function POST(req: NextRequest): Promise<NextResponse<TelemetryResp
         maxAttempts: 3,
         initialDelayMs: 500,
         onRetry: (attempt, err) => {
-          logger.warn(`Retrying telemetry insert (attempt ${attempt})`, { error: err.message });
+          logger.warn(`Retrying telemetry insert (attempt ${attempt})`, {
+            error: err.message,
+          });
         },
       }
     );
 
     if (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error && typeof error === 'object' && 'message' in error
+          ? (error as Error)
+          : new Error(String(error));
       const systemError = new SystemError(
-        "Failed to store telemetry",
+        'Failed to store telemetry',
         errorObj,
         { source, platform }
       );
-      recordError(systemError, { endpoint: '/api/telemetry', source, platform });
-      logger.error("Error storing telemetry", systemError);
+      recordError(systemError, {
+        endpoint: '/api/telemetry',
+        source,
+        platform,
+      });
+      logger.error('Error storing telemetry', systemError);
       // Don't fail the request - telemetry is best effort
       return NextResponse.json(
         { success: false, error: systemError.message },
@@ -174,11 +189,11 @@ export async function POST(req: NextRequest): Promise<NextResponse<TelemetryResp
     );
   } catch (error: unknown) {
     const systemError = new SystemError(
-      "Telemetry ingestion error",
+      'Telemetry ingestion error',
       error instanceof Error ? error : new Error(String(error))
     );
     recordError(systemError, { endpoint: '/api/telemetry' });
-    logger.error("Telemetry ingestion error", systemError);
+    logger.error('Telemetry ingestion error', systemError);
     // Always return success to avoid breaking client-side code
     return NextResponse.json(
       {

@@ -13,11 +13,13 @@ const connection: RedisType = new Redis(
   config.redis.url || 'redis://localhost:6379'
 );
 
-// Queue definitions
-export const feedIngestQueue = new Queue('feeds:ingest', { connection });
-export const aiGenerateQueue = new Queue('ai:generate', { connection });
-export const reportPdfQueue = new Queue('reports:pdf', { connection });
-export const billingSyncQueue = new Queue('billing:sync', { connection });
+// Queue definitions - use 'as any' to bypass ioredis 5.9.2 strict typing in BullMQ
+export const feedIngestQueue = new Queue('feeds:ingest', { connection } as any);
+export const aiGenerateQueue = new Queue('ai:generate', { connection } as any);
+export const reportPdfQueue = new Queue('reports:pdf', { connection } as any);
+export const billingSyncQueue = new Queue('billing:sync', {
+  connection,
+} as any);
 
 // Job types
 export interface FeedIngestJob {
@@ -647,18 +649,24 @@ export class QueueProcessors {
 // Start workers
 export function startWorkers(): void {
   // Feed ingest worker
-  new Worker('feeds:ingest', QueueProcessors.processFeedIngest, { connection });
+  new Worker('feeds:ingest', QueueProcessors.processFeedIngest, {
+    connection,
+  } as any);
 
   // AI generate worker
-  new Worker('ai:generate', QueueProcessors.processAIGenerate, { connection });
+  new Worker('ai:generate', QueueProcessors.processAIGenerate, {
+    connection,
+  } as any);
 
   // Report PDF worker
-  new Worker('reports:pdf', QueueProcessors.processReportPdf, { connection });
+  new Worker('reports:pdf', QueueProcessors.processReportPdf, {
+    connection,
+  } as any);
 
   // Billing sync worker
   new Worker('billing:sync', QueueProcessors.processBillingSync, {
     connection,
-  });
+  } as any);
 
   logger.info('All queue workers started');
 }

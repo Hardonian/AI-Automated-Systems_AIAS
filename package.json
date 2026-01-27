@@ -370,7 +370,7 @@
       "react-dom": "$react-dom",
       "@types/react": "$@types/react",
       "@types/react-dom": "$@types/react-dom",
-      "next": "^15.5.7",
+      "next": "^15.5.10",
       "@babel/core": "^7.28.6",
       "@playwright/test": "^1.58.0",
       "playwright": "^1.58.0",

@@ -15,12 +15,27 @@ import { logger } from '@/lib/logging/structured-logger';
 import { telemetry } from '@/lib/monitoring/enhanced-telemetry';
 import { retry } from '@/lib/utils/retry';
 
-// Load environment variables dynamically - no hardcoded values
-const stripe = new Stripe(env.stripe.secretKey!, {
-  apiVersion: '2025-12-15.clover', // Using latest compatible version
-});
+// Lazy initialize Stripe to avoid build-time errors
+// Only create the client when actually needed during runtime
+let stripeInstance: Stripe | null = null;
+
+function getStripe(): Stripe {
+  if (!stripeInstance) {
+    const secretKey = env.stripe.secretKey;
+    if (!secretKey) {
+      throw new Error('STRIPE_SECRET_KEY is required');
+    }
+    stripeInstance = new Stripe(secretKey, {
+      apiVersion: '2025-12-15.clover' as any,
+    });
+  }
+  return stripeInstance;
+}
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+
+// Force dynamic rendering to prevent build-time execution
+export const dynamic = 'force-dynamic';
 
 // const XP_MULTIPLIERS: Record<string, number> = {
 //   starter: 1.25,
@@ -87,7 +102,7 @@ export const POST = createPOSTHandler(
     // Retry Stripe API call with exponential backoff
     const session = await retry(
       async () => {
-        return await stripe.checkout.sessions.create({
+        return await getStripe().checkout.sessions.create({
           mode: 'subscription',
           payment_method_types: ['card'],
           line_items: [{ price: priceId, quantity: 1 }],

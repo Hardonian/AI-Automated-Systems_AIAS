@@ -4,11 +4,11 @@
  * Used when webhooks are missed or database is out of sync
  */
 
-import Stripe from "stripe";
+import Stripe from 'stripe';
 
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { safeStripe, safeSupabase } from "@/lib/utils/server-guards";
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
+import { safeStripe, safeSupabase } from '@/lib/utils/server-guards';
 
 /**
  * Reconcile subscription status for a user
@@ -23,28 +23,28 @@ export async function reconcileUserSubscription(
 
     // Get user's Stripe customer ID from database
     const { data: user } = await supabase
-      .from("profiles")
-      .select("id, stripe_customer_id")
-      .eq("id", userId)
+      .from('profiles')
+      .select('id, stripe_customer_id')
+      .eq('id', userId)
       .single();
 
     if (!user?.stripe_customer_id) {
-      return { success: false, error: "User has no Stripe customer ID" };
+      return { success: false, error: 'User has no Stripe customer ID' };
     }
 
     // Get active subscriptions from Stripe
     const subscriptions = await stripe.subscriptions.list({
       customer: user.stripe_customer_id,
-      status: "all",
+      status: 'all',
       limit: 10,
     });
 
     if (subscriptions.data.length === 0) {
       // No active subscriptions in Stripe, mark as canceled in DB
       await supabase
-        .from("subscriptions")
-        .update({ status: "CANCELED" })
-        .eq("stripeCustomerId", user.stripe_customer_id);
+        .from('subscriptions')
+        .update({ status: 'CANCELED' })
+        .eq('stripeCustomerId', user.stripe_customer_id);
 
       return { success: true, subscription: null };
     }
@@ -53,50 +53,59 @@ export async function reconcileUserSubscription(
     const latestSubscription = subscriptions.data[0];
 
     if (!latestSubscription) {
-      return { success: false, error: "No active subscription found" };
+      return { success: false, error: 'No active subscription found' };
     }
 
     // Update database with latest status
     const { data: org } = await supabase
-      .from("organizations")
-      .select("id")
-      .eq("owner_id", userId)
+      .from('organizations')
+      .select('id')
+      .eq('owner_id', userId)
       .single();
 
     if (!org) {
-      return { success: false, error: "User has no organization" };
+      return { success: false, error: 'User has no organization' };
     }
 
-    const statusMap: Record<string, "ACTIVE" | "CANCELED" | "PAST_DUE" | "UNPAID" | "TRIALING"> = {
-      active: "ACTIVE",
-      canceled: "CANCELED",
-      past_due: "PAST_DUE",
-      unpaid: "UNPAID",
-      trialing: "TRIALING",
+    const statusMap: Record<
+      string,
+      'ACTIVE' | 'CANCELED' | 'PAST_DUE' | 'UNPAID' | 'TRIALING'
+    > = {
+      active: 'ACTIVE',
+      canceled: 'CANCELED',
+      past_due: 'PAST_DUE',
+      unpaid: 'UNPAID',
+      trialing: 'TRIALING',
     };
-    const normalizedStatus = latestSubscription.status.toLowerCase().replace("-", "_");
+    const normalizedStatus = latestSubscription.status
+      .toLowerCase()
+      .replace('-', '_');
 
     const subscriptionData = {
       org_id: org.id,
-      status: statusMap[normalizedStatus] || "ACTIVE",
+      status: statusMap[normalizedStatus] || 'ACTIVE',
       stripeCustomerId: latestSubscription.customer as string,
       stripeSubscriptionId: latestSubscription.id,
       stripePriceId: latestSubscription.items.data[0]?.price.id,
-      currentPeriodStart: new Date(latestSubscription.current_period_start * 1000),
-      currentPeriodEnd: new Date(latestSubscription.current_period_end * 1000),
+      currentPeriodStart: new Date(
+        (latestSubscription as any).current_period_start * 1000
+      ),
+      currentPeriodEnd: new Date(
+        (latestSubscription as any).current_period_end * 1000
+      ),
       cancelAtPeriodEnd: latestSubscription.cancel_at_period_end,
     };
 
     const { data: updated, error } = await supabase
-      .from("subscriptions")
+      .from('subscriptions')
       .upsert(subscriptionData, {
-        onConflict: "stripeSubscriptionId",
+        onConflict: 'stripeSubscriptionId',
       })
       .select()
       .single();
 
     if (error) {
-      logger.error("Failed to reconcile subscription", error);
+      logger.error('Failed to reconcile subscription', error);
       return { success: false, error: error.message };
     }
 
@@ -109,18 +118,20 @@ export async function reconcileUserSubscription(
         enterprise: 2.0,
       };
 
-      await supabase.from("subscription_tiers").upsert({
+      await supabase.from('subscription_tiers').upsert({
         user_id: metadata.userId,
         tier: metadata.tier,
         xp_multiplier: XP_MULTIPLIERS[metadata.tier] || 1.0,
-        expires_at: new Date(latestSubscription.current_period_end * 1000).toISOString(),
+        expires_at: new Date(
+          (latestSubscription as any).current_period_end * 1000
+        ).toISOString(),
       });
     }
 
     return { success: true, subscription: updated };
   } catch (error) {
     const err = error instanceof Error ? error : new Error(String(error));
-    logger.error("Reconciliation failed", err);
+    logger.error('Reconciliation failed', err);
     return { success: false, error: err.message };
   }
 }
@@ -144,9 +155,9 @@ export async function reconcileAllSubscriptions(): Promise<{
 
     // Get all users with Stripe customer IDs
     const { data: users } = await supabase
-      .from("profiles")
-      .select("id, stripe_customer_id")
-      .not("stripe_customer_id", "is", null);
+      .from('profiles')
+      .select('id, stripe_customer_id')
+      .not('stripe_customer_id', 'is', null);
 
     if (!users || users.length === 0) {
       return { success: true, processed: 0, errors: 0, errorsList: [] };
@@ -159,7 +170,10 @@ export async function reconcileAllSubscriptions(): Promise<{
           processed++;
         } else {
           errors++;
-          errorsList.push({ userId: user.id, error: result.error || "Unknown error" });
+          errorsList.push({
+            userId: user.id,
+            error: result.error || 'Unknown error',
+          });
         }
       } catch (error) {
         errors++;
@@ -172,14 +186,20 @@ export async function reconcileAllSubscriptions(): Promise<{
 
     return { success: true, processed, errors, errorsList };
   } catch (error) {
-    logger.error("Bulk reconciliation failed", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Bulk reconciliation failed',
+      error instanceof Error ? error : new Error(String(error))
+    );
     return {
       success: false,
       processed,
       errors,
       errorsList: [
         ...errorsList,
-        { userId: "bulk", error: error instanceof Error ? error.message : String(error) },
+        {
+          userId: 'bulk',
+          error: error instanceof Error ? error.message : String(error),
+        },
       ],
     };
   }

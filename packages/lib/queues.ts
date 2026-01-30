@@ -1,7 +1,6 @@
 import { config } from '@ai-consultancy/config';
 import { Queue, Worker, Job } from 'bullmq';
-import { Redis } from 'ioredis';
-import type { Redis as RedisType } from 'ioredis';
+import { Redis, type Redis as RedisType } from 'ioredis';
 
 // import { AIGenerators } from './ai/generators'; // Temporarily disabled due to build issues
 import { prisma } from './database';

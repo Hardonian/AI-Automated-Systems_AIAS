@@ -6,18 +6,28 @@
 import { NextResponse } from 'next/server';
 
 import { agentDefinitionSchema } from '@/lib/agents/schema';
-import { createGETHandler, createPOSTHandler, RouteContext } from '@/lib/api/route-handler';
+import {
+  createGETHandler,
+  createPOSTHandler,
+  RouteContext,
+} from '@/lib/api/route-handler';
 import { createClient } from '@/lib/supabase/server';
 
-const createAgentSchema = agentDefinitionSchema.omit({ id: true, createdAt: true, updatedAt: true });
+const createAgentSchema = agentDefinitionSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
 
 export const GET = createGETHandler(
   async (context: RouteContext) => {
     const { request } = context;
-    
+
     // Get authenticated user (Supabase uses cookies, not Bearer tokens)
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -53,10 +63,12 @@ export const GET = createGETHandler(
 export const POST = createPOSTHandler(
   async (context: RouteContext) => {
     const { request } = context;
-    
+
     // Get authenticated user (Supabase uses cookies, not Bearer tokens)
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -71,7 +83,7 @@ export const POST = createPOSTHandler(
         ...validated,
         created_by: user.id,
         tenant_id: body.tenantId || null,
-      })
+      } as any)
       .select()
       .single();
 

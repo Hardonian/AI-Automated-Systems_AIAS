@@ -21,7 +21,7 @@ let stripeInstance: Stripe | null = null;
 
 function getStripe(): Stripe {
   if (!stripeInstance) {
-    const secretKey = env.stripe.secretKey;
+    const {secretKey} = env.stripe;
     if (!secretKey) {
       throw new Error('STRIPE_SECRET_KEY is required');
     }

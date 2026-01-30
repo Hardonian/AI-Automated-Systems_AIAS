@@ -1,18 +1,18 @@
 import Stripe from 'stripe';
 
-// Check available methods on stripe.invoices and stripe.subscriptionItems
+// Diagnostic script to check Stripe API methods
+// This is intentionally bypassing type checking for runtime inspection
 const stripe = new Stripe('sk_test_dummy', {
-  apiVersion: '2025-12-15.clover' as any, // bypass type check to inspect API
+  apiVersion: '2025-12-15.clover' as unknown as Stripe.LatestApiVersion,
 });
 
-console.log(
+console.info(
   'Invoice methods:',
   Object.getOwnPropertyNames(Object.getPrototypeOf(stripe.invoices))
 );
-console.log(
+console.info(
   'SubscriptionItem methods:',
   Object.getOwnPropertyNames(Object.getPrototypeOf(stripe.subscriptionItems))
 );
 
-// Try to find the correct method names
 export {};

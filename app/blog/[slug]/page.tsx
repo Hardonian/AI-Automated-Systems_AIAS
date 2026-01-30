@@ -1,27 +1,40 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-import { CommentsSection } from "@/components/blog/comments-section";
-import { AffiliateDisclosure } from "@/components/monetization/affiliate-disclosure";
-import { AffiliateLink } from "@/components/monetization/affiliate-link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getArticleBySlug, getLatestArticles, type BlogArticle } from "@/lib/blog/articles";
-import { sanitizeHTMLServer } from "@/lib/utils/sanitize-html";
+import { CommentsSection } from '@/components/blog/comments-section';
+import { AffiliateDisclosure } from '@/components/monetization/affiliate-disclosure';
+import { AffiliateLink } from '@/components/monetization/affiliate-link';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  getArticleBySlug,
+  getLatestArticles,
+  type BlogArticle,
+} from '@/lib/blog/articles';
+import { sanitizeHTMLServer } from '@/lib/utils/sanitize-html';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const article = getArticleBySlug(params.slug);
-  
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const article = getArticleBySlug(slug);
+
   if (!article) {
     return {
-      title: "Article Not Found",
+      title: 'Article Not Found',
     };
   }
 
@@ -34,109 +47,133 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export async function generateStaticParams() {
   const articles = getLatestArticles(100);
-  return articles.map((article) => ({
+  return articles.map(article => ({
     slug: article.slug,
   }));
 }
 
-export default function BlogArticlePage({ params }: PageProps) {
-  const article = getArticleBySlug(params.slug);
-  const relatedArticles = getLatestArticles(3).filter(a => a.slug !== params.slug);
+export default async function BlogArticlePage({ params }: PageProps) {
+  const { slug } = await params;
+  const article = getArticleBySlug(slug);
+  const relatedArticles = getLatestArticles(3).filter(a => a.slug !== slug);
 
   if (!article) {
     notFound();
   }
 
   return (
-    <div className="container py-16 max-w-4xl">
+    <div className='container max-w-4xl py-16'>
       <article>
         {/* Back to Blog */}
-        <div className="mb-6">
-          <Link className="text-sm text-muted-foreground hover:underline" href="/blog">
+        <div className='mb-6'>
+          <Link
+            className='text-sm text-muted-foreground hover:underline'
+            href='/blog'
+          >
             ← Back to Blog
           </Link>
         </div>
 
         {/* Article Header */}
-        <header className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
+        <header className='mb-8'>
+          <div className='mb-4 flex items-center gap-2'>
+            <span className='rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary'>
               {article.category}
             </span>
             {article.systemsThinking && (
-              <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
+              <span className='rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary'>
                 🧠 Systems Thinking
               </span>
             )}
             {article.genAIContentEngine && (
-              <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
+              <span className='rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary'>
                 🤖 GenAI Content Engine
               </span>
             )}
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{article.title}</h1>
-          <p className="text-xl text-muted-foreground mb-6">{article.excerpt}</p>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <h1 className='mb-4 text-4xl font-bold md:text-5xl'>
+            {article.title}
+          </h1>
+          <p className='mb-6 text-xl text-muted-foreground'>
+            {article.excerpt}
+          </p>
+          <div className='flex items-center gap-4 text-sm text-muted-foreground'>
             <span>By {article.author}</span>
             <span>•</span>
             <time dateTime={article.publishedDate}>
-              {new Date(article.publishedDate).toLocaleDateString("en-CA", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
+              {new Date(article.publishedDate).toLocaleDateString('en-CA', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
               })}
             </time>
           </div>
         </header>
 
         {/* Affiliate Disclosure */}
-        {(article.tags.includes("shopify") || article.tags.includes("wave") || article.tags.includes("stripe") || article.tags.includes("notion") || article.tags.includes("zapier")) && (
-          <div className="mb-6">
+        {(article.tags.includes('shopify') ||
+          article.tags.includes('wave') ||
+          article.tags.includes('stripe') ||
+          article.tags.includes('notion') ||
+          article.tags.includes('zapier')) && (
+          <div className='mb-6'>
             <AffiliateDisclosure />
           </div>
         )}
 
         {/* Article Content */}
-        <div className="prose prose-lg dark:prose-invert max-w-none mb-12">
+        <div className='prose prose-lg mb-12 max-w-none dark:prose-invert'>
           {article.content ? (
-            <div dangerouslySetInnerHTML={{ __html: sanitizeHTMLServer(article.content) }} />
+            <div
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHTMLServer(article.content),
+              }}
+            />
           ) : (
             <ArticleContent article={article} />
           )}
 
           {/* Systems Thinking Callout */}
           {article.systemsThinking && (
-            <div className="bg-primary/10 border-l-4 border-primary p-6 my-8 rounded-r-lg">
-              <h3 className="font-semibold text-lg mb-2">🧠 Systems Thinking Perspective</h3>
-              <p className="text-muted-foreground">
-                This article emphasizes systems thinking — THE critical skill for the AI age. 
-                Systems thinking is what makes you stand out in the job market, succeed in business, 
-                and achieve optimal outcomes.
+            <div className='my-8 rounded-r-lg border-l-4 border-primary bg-primary/10 p-6'>
+              <h3 className='mb-2 text-lg font-semibold'>
+                🧠 Systems Thinking Perspective
+              </h3>
+              <p className='text-muted-foreground'>
+                This article emphasizes systems thinking — THE critical skill
+                for the AI age. Systems thinking is what makes you stand out in
+                the job market, succeed in business, and achieve optimal
+                outcomes.
               </p>
             </div>
           )}
 
           {/* GenAI Content Engine Callout */}
           {article.genAIContentEngine && (
-            <div className="bg-primary/10 border-l-4 border-primary p-6 my-8 rounded-r-lg">
-              <h3 className="font-semibold text-lg mb-2">🤖 GenAI Content Engine</h3>
-              <p className="text-muted-foreground mb-4">
-                This article was analyzed and optimized using our GenAI Content Engine with systems thinking.
+            <div className='my-8 rounded-r-lg border-l-4 border-primary bg-primary/10 p-6'>
+              <h3 className='mb-2 text-lg font-semibold'>
+                🤖 GenAI Content Engine
+              </h3>
+              <p className='mb-4 text-muted-foreground'>
+                This article was analyzed and optimized using our GenAI Content
+                Engine with systems thinking.
               </p>
-              <Button asChild variant="outline">
-                <Link href="/genai-content-engine">Try GenAI Content Engine</Link>
+              <Button asChild variant='outline'>
+                <Link href='/genai-content-engine'>
+                  Try GenAI Content Engine
+                </Link>
               </Button>
             </div>
           )}
         </div>
 
         {/* Tags */}
-        <div className="mb-12">
-          <div className="flex flex-wrap gap-2">
-            {article.tags.map((tag) => (
+        <div className='mb-12'>
+          <div className='flex flex-wrap gap-2'>
+            {article.tags.map(tag => (
               <span
                 key={tag}
-                className="px-3 py-1 rounded-full bg-muted text-muted-foreground text-sm"
+                className='rounded-full bg-muted px-3 py-1 text-sm text-muted-foreground'
               >
                 #{tag}
               </span>
@@ -146,26 +183,34 @@ export default function BlogArticlePage({ params }: PageProps) {
       </article>
 
       {/* Comments Section */}
-      <CommentsSection articleSlug={params.slug} />
+      <CommentsSection articleSlug={slug} />
 
       {/* Related Articles */}
       {relatedArticles.length > 0 && (
-        <section className="mt-16">
-          <h2 className="text-2xl font-bold mb-6">Related Articles</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {relatedArticles.map((related) => (
-              <Card key={related.slug} className="hover:shadow-lg transition-shadow">
+        <section className='mt-16'>
+          <h2 className='mb-6 text-2xl font-bold'>Related Articles</h2>
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
+            {relatedArticles.map(related => (
+              <Card
+                key={related.slug}
+                className='transition-shadow hover:shadow-lg'
+              >
                 <CardHeader>
-                  <CardTitle className="text-lg">
-                    <Link className="hover:underline" href={`/blog/${related.slug}`}>
+                  <CardTitle className='text-lg'>
+                    <Link
+                      className='hover:underline'
+                      href={`/blog/${related.slug}`}
+                    >
                       {related.title}
                     </Link>
                   </CardTitle>
-                  <CardDescription className="text-sm">{related.excerpt}</CardDescription>
+                  <CardDescription className='text-sm'>
+                    {related.excerpt}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Link
-                    className="text-sm text-primary hover:underline"
+                    className='text-sm text-primary hover:underline'
                     href={`/blog/${related.slug}`}
                   >
                     Read more →
@@ -178,18 +223,21 @@ export default function BlogArticlePage({ params }: PageProps) {
       )}
 
       {/* CTA */}
-      <div className="mt-12 text-center bg-muted/50 rounded-lg p-8">
-        <h2 className="text-2xl font-bold mb-4">Want More Systems Thinking Content?</h2>
-        <p className="text-muted-foreground mb-6">
-          Get daily articles on systems thinking, AI automation, and business success. 
-          Plus RSS feed of AI and tech news analyzed through systems thinking.
+      <div className='mt-12 rounded-lg bg-muted/50 p-8 text-center'>
+        <h2 className='mb-4 text-2xl font-bold'>
+          Want More Systems Thinking Content?
+        </h2>
+        <p className='mb-6 text-muted-foreground'>
+          Get daily articles on systems thinking, AI automation, and business
+          success. Plus RSS feed of AI and tech news analyzed through systems
+          thinking.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild size="lg">
-            <Link href="/blog">View All Articles</Link>
+        <div className='flex flex-col justify-center gap-4 sm:flex-row'>
+          <Button asChild size='lg'>
+            <Link href='/blog'>View All Articles</Link>
           </Button>
-          <Button asChild size="lg" variant="outline">
-            <Link href="/rss-news">AI & Tech News Feed</Link>
+          <Button asChild size='lg' variant='outline'>
+            <Link href='/rss-news'>AI & Tech News Feed</Link>
           </Button>
         </div>
       </div>
@@ -200,18 +248,30 @@ export default function BlogArticlePage({ params }: PageProps) {
 // Component to render article content with affiliate links
 function ArticleContent({ article }: { article: BlogArticle }) {
   // Check if article has affiliate-related tags
-  const hasAffiliateContent = article.tags.some((tag: string) => 
-    ["shopify", "wave", "stripe", "notion", "zapier", "make", "automation", "e-commerce", "accounting"].includes(tag.toLowerCase())
+  const hasAffiliateContent = article.tags.some((tag: string) =>
+    [
+      'shopify',
+      'wave',
+      'stripe',
+      'notion',
+      'zapier',
+      'make',
+      'automation',
+      'e-commerce',
+      'accounting',
+    ].includes(tag.toLowerCase())
   );
 
   if (!hasAffiliateContent) {
     return (
-      <div className="space-y-4">
-        <p className="text-muted-foreground">
-          Full article content will be displayed here. This is a placeholder for the article body.
+      <div className='space-y-4'>
+        <p className='text-muted-foreground'>
+          Full article content will be displayed here. This is a placeholder for
+          the article body.
         </p>
-        <p className="text-muted-foreground">
-          The article will be fully formatted with proper headings, paragraphs, images, and formatting.
+        <p className='text-muted-foreground'>
+          The article will be fully formatted with proper headings, paragraphs,
+          images, and formatting.
         </p>
       </div>
     );
@@ -219,71 +279,83 @@ function ArticleContent({ article }: { article: BlogArticle }) {
 
   // Render content with affiliate links based on article tags
   return (
-    <div className="space-y-6">
-      <p className="text-lg">
-        {article.excerpt}
-      </p>
-      
-      {article.tags.includes("shopify") && (
-        <div className="space-y-4">
+    <div className='space-y-6'>
+      <p className='text-lg'>{article.excerpt}</p>
+
+      {article.tags.includes('shopify') && (
+        <div className='space-y-4'>
           <h2>E-Commerce Automation with Shopify</h2>
           <p>
-            If you're running an e-commerce store, <AffiliateLink product="Shopify">Shopify</AffiliateLink> is one of the most powerful platforms 
-            for Canadian businesses. Automating your Shopify store can save you 10+ hours per week on order processing, 
+            If you're running an e-commerce store,{' '}
+            <AffiliateLink product='Shopify'>Shopify</AffiliateLink> is one of
+            the most powerful platforms for Canadian businesses. Automating your
+            Shopify store can save you 10+ hours per week on order processing,
             inventory management, and customer support.
           </p>
         </div>
       )}
 
-      {article.tags.includes("wave") && (
-        <div className="space-y-4">
+      {article.tags.includes('wave') && (
+        <div className='space-y-4'>
           <h2>Accounting Automation with Wave</h2>
           <p>
-            <AffiliateLink product="Wave">Wave Accounting</AffiliateLink> is a Canadian-made accounting tool that's perfect for small businesses. 
-            Automating your bookkeeping with Wave can save you 5+ hours per week on invoicing, expense tracking, and financial reporting.
+            <AffiliateLink product='Wave'>Wave Accounting</AffiliateLink> is a
+            Canadian-made accounting tool that's perfect for small businesses.
+            Automating your bookkeeping with Wave can save you 5+ hours per week
+            on invoicing, expense tracking, and financial reporting.
           </p>
         </div>
       )}
 
-      {article.tags.includes("stripe") && (
-        <div className="space-y-4">
+      {article.tags.includes('stripe') && (
+        <div className='space-y-4'>
           <h2>Payment Processing with Stripe</h2>
           <p>
-            <AffiliateLink product="Stripe">Stripe</AffiliateLink> offers powerful payment processing with excellent Canadian support. 
-            Automating payment workflows can reduce manual errors and save time on reconciliation.
+            <AffiliateLink product='Stripe'>Stripe</AffiliateLink> offers
+            powerful payment processing with excellent Canadian support.
+            Automating payment workflows can reduce manual errors and save time
+            on reconciliation.
           </p>
         </div>
       )}
 
-      {article.tags.includes("notion") && (
-        <div className="space-y-4">
+      {article.tags.includes('notion') && (
+        <div className='space-y-4'>
           <h2>Productivity with Notion</h2>
           <p>
-            <AffiliateLink product="Notion">Notion</AffiliateLink> is an excellent tool for knowledge management and productivity. 
-            When combined with systems thinking, it becomes a powerful platform for organizing your business processes.
+            <AffiliateLink product='Notion'>Notion</AffiliateLink> is an
+            excellent tool for knowledge management and productivity. When
+            combined with systems thinking, it becomes a powerful platform for
+            organizing your business processes.
           </p>
         </div>
       )}
 
-      {article.tags.includes("automation") && (
-        <div className="space-y-4">
+      {article.tags.includes('automation') && (
+        <div className='space-y-4'>
           <h2>Automation Tools</h2>
           <p>
-            While tools like <AffiliateLink product="Zapier">Zapier</AffiliateLink> and <AffiliateLink product="Make">Make</AffiliateLink> are powerful, 
-            they require systems thinking to design effective workflows. Automation alone isn't enough — you need to understand 
-            the systems you're automating.
+            While tools like{' '}
+            <AffiliateLink product='Zapier'>Zapier</AffiliateLink> and{' '}
+            <AffiliateLink product='Make'>Make</AffiliateLink> are powerful,
+            they require systems thinking to design effective workflows.
+            Automation alone isn't enough — you need to understand the systems
+            you're automating.
           </p>
         </div>
       )}
 
-      <div className="bg-primary/10 border-l-4 border-primary p-6 rounded-r-lg">
-        <h3 className="font-semibold text-lg mb-2">Ready to Start Automating?</h3>
-        <p className="text-muted-foreground mb-4">
-          AIAS Platform helps Canadian businesses automate their workflows with AI agents. 
-          Connect Shopify, Wave, Stripe, and 100+ other tools. Start your free trial today.
+      <div className='rounded-r-lg border-l-4 border-primary bg-primary/10 p-6'>
+        <h3 className='mb-2 text-lg font-semibold'>
+          Ready to Start Automating?
+        </h3>
+        <p className='mb-4 text-muted-foreground'>
+          AIAS Platform helps Canadian businesses automate their workflows with
+          AI agents. Connect Shopify, Wave, Stripe, and 100+ other tools. Start
+          your free trial today.
         </p>
         <Button asChild>
-          <Link href="/signup">Start Free Trial</Link>
+          <Link href='/signup'>Start Free Trial</Link>
         </Button>
       </div>
     </div>

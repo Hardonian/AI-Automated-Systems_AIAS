@@ -1,19 +1,19 @@
 /**
  * Business Planning Documents API
- * 
+ *
  * Protected API for accessing business planning documents.
  * Requires Financial Admin access.
  * Documents are read from internal/private/ directories (encrypted with git-crypt).
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { getBusinessPlanningDocument } from "@/lib/admin/business-planning-access";
-import { requireAdminRole, AdminRole } from "@/lib/auth/admin-auth";
-import { logger } from "@/lib/logging/structured-logger";
-import { addSecurityHeaders } from "@/lib/middleware/security";
+import { getBusinessPlanningDocument } from '@/lib/admin/business-planning-access';
+import { requireAdminRole, AdminRole } from '@/lib/auth/admin-auth';
+import { logger } from '@/lib/logging/structured-logger';
+import { addSecurityHeaders } from '@/lib/middleware/security';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/admin/financial/planning/[id]
@@ -21,36 +21,46 @@ export const dynamic = "force-dynamic";
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
+
     // Check financial admin access
-    const adminCheck = await requireAdminRole(request, AdminRole.FINANCIAL_ADMIN);
+    const adminCheck = await requireAdminRole(
+      request,
+      AdminRole.FINANCIAL_ADMIN
+    );
 
     if (!adminCheck.authorized) {
-      return adminCheck.response || NextResponse.json(
-        { error: "Unauthorized: Financial Admin access required" },
-        { status: 403 }
+      return (
+        adminCheck.response ||
+        NextResponse.json(
+          { error: 'Unauthorized: Financial Admin access required' },
+          { status: 403 }
+        )
       );
     }
 
-    const documentId = params.id;
+    const documentId = id;
     const document = getBusinessPlanningDocument(documentId);
 
     if (!document) {
       return NextResponse.json(
-        { error: "Document not found" },
+        { error: 'Document not found' },
         { status: 404 }
       );
     }
 
     // Check user has access to this document
-    const hasAccess = adminCheck.user?.role === "super_admin" ||
-      (adminCheck.user?.role === "financial_admin" && document.requiresAccess !== "super_admin");
+    const hasAccess =
+      adminCheck.user?.role === 'super_admin' ||
+      (adminCheck.user?.role === 'financial_admin' &&
+        document.requiresAccess !== 'super_admin');
 
     if (!hasAccess) {
       return NextResponse.json(
-        { error: "Insufficient permissions for this document" },
+        { error: 'Insufficient permissions for this document' },
         { status: 403 }
       );
     }
@@ -66,20 +76,24 @@ export async function GET(
         location: document.location,
         encrypted: document.encrypted,
       },
-      message: "Document is stored in encrypted format",
-      note: "In production, this endpoint would decrypt and return the actual document content",
+      message: 'Document is stored in encrypted format',
+      note: 'In production, this endpoint would decrypt and return the actual document content',
       accessLevel: document.requiresAccess,
     });
 
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    logger.error("Error accessing business planning document", error instanceof Error ? error : new Error(String(error)), {
-      component: "BusinessPlanningAPI",
-      action: "GET",
-    });
+    logger.error(
+      'Error accessing business planning document',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        component: 'BusinessPlanningAPI',
+        action: 'GET',
+      }
+    );
     return NextResponse.json(
-      { error: "Failed to access document" },
+      { error: 'Failed to access document' },
       { status: 500 }
     );
   }

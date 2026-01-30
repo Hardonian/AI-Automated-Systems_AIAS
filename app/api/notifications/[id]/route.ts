@@ -1,10 +1,10 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
-import { handleApiError } from "@/lib/api/route-handler";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { handleApiError } from '@/lib/api/route-handler';
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -14,7 +14,7 @@ const notificationUpdateSchema = z.object({
   archived: z.boolean().optional(),
 });
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 /**
  * PATCH /api/notifications/[id]
@@ -22,32 +22,31 @@ export const dynamic = "force-dynamic";
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
+
     // Get user from auth header or cookie
-    const authHeader = request.headers.get("authorization");
-    const token = authHeader?.startsWith("Bearer ") 
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.startsWith('Bearer ')
       ? authHeader.substring(7)
-      : request.cookies.get("sb-access-token")?.value;
+      : request.cookies.get('sb-access-token')?.value;
 
     if (!token) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
+
     if (authError || !user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const notificationId = params.id;
+    const notificationId = id;
     const body = await request.json();
     const updateData = notificationUpdateSchema.parse(body);
 
@@ -67,37 +66,48 @@ export async function PATCH(
     }
 
     const { data: notification, error } = await supabase
-      .from("notifications")
+      .from('notifications')
       .update(updates)
-      .eq("id", notificationId)
-      .eq("user_id", user.id) // Ensure user owns this notification
+      .eq('id', notificationId)
+      .eq('user_id', user.id) // Ensure user owns this notification
       .select()
       .single();
 
     if (error) {
-      logger.error("Failed to update notification", error instanceof Error ? error : new Error(String(error)), { notificationId, userId: user.id });
-      return handleApiError(error, "Failed to update notification");
+      logger.error(
+        'Failed to update notification',
+        error instanceof Error ? error : new Error(String(error)),
+        { notificationId, userId: user.id }
+      );
+      return handleApiError(error, 'Failed to update notification');
     }
 
     if (!notification) {
       return NextResponse.json(
-        { error: "Notification not found" },
+        { error: 'Notification not found' },
         { status: 404 }
       );
     }
 
-    logger.info("Notification updated", { notificationId, userId: user.id, updates });
+    logger.info('Notification updated', {
+      notificationId,
+      userId: user.id,
+      updates,
+    });
 
     return NextResponse.json({ notification });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation error", details: error.errors },
+        { error: 'Validation error', details: error.errors },
         { status: 400 }
       );
     }
-    logger.error("Error in PATCH /api/notifications/[id]", error instanceof Error ? error : undefined);
-    return handleApiError(error, "Failed to update notification");
+    logger.error(
+      'Error in PATCH /api/notifications/[id]',
+      error instanceof Error ? error : undefined
+    );
+    return handleApiError(error, 'Failed to update notification');
   }
 }
 
@@ -107,49 +117,55 @@ export async function PATCH(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
+
     // Get user from auth header or cookie
-    const authHeader = request.headers.get("authorization");
-    const token = authHeader?.startsWith("Bearer ") 
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.startsWith('Bearer ')
       ? authHeader.substring(7)
-      : request.cookies.get("sb-access-token")?.value;
+      : request.cookies.get('sb-access-token')?.value;
 
     if (!token) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
+
     if (authError || !user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const notificationId = params.id;
+    const notificationId = id;
 
     const { error } = await supabase
-      .from("notifications")
+      .from('notifications')
       .delete()
-      .eq("id", notificationId)
-      .eq("user_id", user.id); // Ensure user owns this notification
+      .eq('id', notificationId)
+      .eq('user_id', user.id); // Ensure user owns this notification
 
     if (error) {
-      logger.error("Failed to delete notification", error instanceof Error ? error : new Error(String(error)), { notificationId, userId: user.id });
-      return handleApiError(error, "Failed to delete notification");
+      logger.error(
+        'Failed to delete notification',
+        error instanceof Error ? error : new Error(String(error)),
+        { notificationId, userId: user.id }
+      );
+      return handleApiError(error, 'Failed to delete notification');
     }
 
-    logger.info("Notification deleted", { notificationId, userId: user.id });
+    logger.info('Notification deleted', { notificationId, userId: user.id });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    logger.error("Error in DELETE /api/notifications/[id]", error instanceof Error ? error : undefined);
-    return handleApiError(error, "Failed to delete notification");
+    logger.error(
+      'Error in DELETE /api/notifications/[id]',
+      error instanceof Error ? error : undefined
+    );
+    return handleApiError(error, 'Failed to delete notification');
   }
 }

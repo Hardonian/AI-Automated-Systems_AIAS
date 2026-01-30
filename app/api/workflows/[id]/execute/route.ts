@@ -13,11 +13,14 @@ import { workflowExecutor } from '@/lib/workflows/executor';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -27,7 +30,7 @@ export async function POST(
     const { input, tenantId, sync } = body;
 
     const context = workflowExecutionContextSchema.parse({
-      workflowId: params.id,
+      workflowId: id,
       userId: user.id,
       tenantId: tenantId || null,
       input: input || {},
@@ -37,7 +40,7 @@ export async function POST(
 
     // Log execution start
     observabilityService.logWorkflowExecution({
-      workflowId: params.id,
+      workflowId: id,
       userId: user.id,
       tenantId: tenantId || undefined,
       status: 'started',
@@ -51,7 +54,7 @@ export async function POST(
 
     // Log execution completion
     observabilityService.logWorkflowExecution({
-      workflowId: params.id,
+      workflowId: id,
       userId: user.id,
       tenantId: tenantId || undefined,
       status: result.status === 'completed' ? 'completed' : 'failed',
@@ -70,7 +73,7 @@ export async function POST(
     const { error: dbError } = await supabase
       .from('workflow_executions')
       .insert({
-        workflow_id: params.id,
+        workflow_id: id,
         user_id: user.id,
         tenant_id: tenantId || null,
         status: result.status,
@@ -81,24 +84,33 @@ export async function POST(
         state: result.state || null,
         started_at: result.startedAt,
         completed_at: result.completedAt || null,
-      });
+      } as any);
 
     if (dbError) {
-      logger.error('Error saving execution to database', new Error(dbError.message), {
-        component: 'WorkflowExecuteAPI',
-        action: 'POST',
-        workflowId: params.id,
-        userId: user.id,
-      });
+      logger.error(
+        'Error saving execution to database',
+        new Error(dbError.message),
+        {
+          component: 'WorkflowExecuteAPI',
+          action: 'POST',
+          workflowId: id,
+          userId: user.id,
+        }
+      );
     }
 
     return NextResponse.json({ result });
   } catch (error) {
-    logger.error('Error executing workflow', error instanceof Error ? error : new Error(String(error)), {
-      component: 'WorkflowExecuteAPI',
-      action: 'POST',
-      workflowId: params.id,
-    });
+    const { id: workflowIdForError } = await params;
+    logger.error(
+      'Error executing workflow',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        component: 'WorkflowExecuteAPI',
+        action: 'POST',
+        workflowId: workflowIdForError,
+      }
+    );
     return NextResponse.json(
       { error: 'Failed to execute workflow' },
       { status: 500 }

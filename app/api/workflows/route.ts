@@ -5,20 +5,30 @@
 
 import { NextResponse } from 'next/server';
 
-import { createGETHandler, createPOSTHandler, RouteContext } from '@/lib/api/route-handler';
+import {
+  createGETHandler,
+  createPOSTHandler,
+  RouteContext,
+} from '@/lib/api/route-handler';
 import { canCreateWorkflow } from '@/lib/entitlements/check';
 import { createClient } from '@/lib/supabase/server';
 import { workflowDefinitionSchema } from '@/lib/workflows/dsl';
 
-const createWorkflowSchema = workflowDefinitionSchema.omit({ id: true, createdAt: true, updatedAt: true });
+const createWorkflowSchema = workflowDefinitionSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
 
 export const GET = createGETHandler(
   async (context: RouteContext) => {
     const { request } = context;
-    
+
     // Get authenticated user (Supabase uses cookies, not Bearer tokens)
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -54,10 +64,12 @@ export const GET = createGETHandler(
 export const POST = createPOSTHandler(
   async (context: RouteContext) => {
     const { request } = context;
-    
+
     // Get authenticated user (Supabase uses cookies, not Bearer tokens)
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -67,7 +79,7 @@ export const POST = createPOSTHandler(
     const entitlementCheck = await canCreateWorkflow(user.id);
     if (!entitlementCheck.allowed) {
       return NextResponse.json(
-        { 
+        {
           error: entitlementCheck.reason || 'Workflow limit reached',
           upgradePlan: entitlementCheck.upgradePlan,
         },
@@ -84,7 +96,7 @@ export const POST = createPOSTHandler(
         ...validated,
         created_by: user.id,
         tenant_id: (body as { tenantId?: string }).tenantId || null,
-      })
+      } as any)
       .select()
       .single();
 

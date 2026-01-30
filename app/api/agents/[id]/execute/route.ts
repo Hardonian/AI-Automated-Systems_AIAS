@@ -13,11 +13,14 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -27,7 +30,7 @@ export async function POST(
     const { input, tenantId, sync } = body;
 
     const context = agentExecutionContextSchema.parse({
-      agentId: params.id,
+      agentId: id,
       userId: user.id,
       tenantId: tenantId || null,
       input: input || {},
@@ -36,7 +39,7 @@ export async function POST(
 
     // Log execution start
     observabilityService.logAgentExecution({
-      agentId: params.id,
+      agentId: id,
       userId: user.id,
       tenantId: tenantId || undefined,
       status: 'started',
@@ -53,54 +56,79 @@ export async function POST(
     // Log execution completion
     const isCompleted = result.status === 'completed';
     const isFailed = result.status === 'failed';
-    const logStatus = isCompleted ? 'completed' as const : isFailed ? 'failed' as const : 'started' as const;
+    const logStatus = isCompleted
+      ? ('completed' as const)
+      : isFailed
+        ? ('failed' as const)
+        : ('started' as const);
     observabilityService.logAgentExecution({
-      agentId: params.id,
+      agentId: id,
       userId: user.id,
       tenantId: tenantId || undefined,
       status: logStatus,
-      startedAt: 'startedAt' in result && result.startedAt ? result.startedAt : new Date().toISOString(),
-      completedAt: 'completedAt' in result && result.completedAt ? result.completedAt : undefined,
+      startedAt:
+        'startedAt' in result && result.startedAt
+          ? result.startedAt
+          : new Date().toISOString(),
+      completedAt:
+        'completedAt' in result && result.completedAt
+          ? result.completedAt
+          : undefined,
       duration: 'metrics' in result ? result.metrics?.duration : undefined,
       tokenUsage: 'metrics' in result ? result.metrics?.tokenUsage : undefined,
       cost: 'metrics' in result ? result.metrics?.cost : undefined,
       input: context.input,
-      output: 'output' in result ? (result.output as Record<string, unknown> | undefined) : undefined,
-      error: 'error' in result ? (result.error && typeof result.error === 'object' ? result.error as { message: string; code?: string } : { message: String(result.error) }) : undefined,
+      output:
+        'output' in result
+          ? (result.output as Record<string, unknown> | undefined)
+          : undefined,
+      error:
+        'error' in result
+          ? result.error && typeof result.error === 'object'
+            ? (result.error as { message: string; code?: string })
+            : { message: String(result.error) }
+          : undefined,
     });
 
     // Save to database
-    const { error: dbError } = await supabase
-      .from('agent_executions')
-      .insert({
-        agent_id: params.id,
-        user_id: user.id,
-        tenant_id: tenantId || null,
-        status: result.status,
-        input: context.input,
-        output: 'output' in result ? result.output || null : null,
-        error: 'error' in result ? result.error || null : null,
-        metrics: 'metrics' in result ? result.metrics || null : null,
-        started_at: 'startedAt' in result ? result.startedAt : null,
-        completed_at: 'completedAt' in result ? result.completedAt : null,
-      });
+    const { error: dbError } = await supabase.from('agent_executions').insert({
+      agent_id: id,
+      user_id: user.id,
+      tenant_id: tenantId || null,
+      status: result.status,
+      input: context.input,
+      output: 'output' in result ? result.output || null : null,
+      error: 'error' in result ? result.error || null : null,
+      metrics: 'metrics' in result ? result.metrics || null : null,
+      started_at: 'startedAt' in result ? result.startedAt : null,
+      completed_at: 'completedAt' in result ? result.completedAt : null,
+    } as any);
 
     if (dbError) {
-      logger.error('Error saving execution to database', new Error(dbError.message), {
-        component: 'AgentExecuteAPI',
-        action: 'POST',
-        agentId: params.id,
-        userId: user.id,
-      });
+      logger.error(
+        'Error saving execution to database',
+        new Error(dbError.message),
+        {
+          component: 'AgentExecuteAPI',
+          action: 'POST',
+          agentId: id,
+          userId: user.id,
+        }
+      );
     }
 
     return NextResponse.json({ result });
   } catch (error) {
-    logger.error('Error executing agent', error instanceof Error ? error : new Error(String(error)), {
-      component: 'AgentExecuteAPI',
-      action: 'POST',
-      agentId: params.id,
-    });
+    const { id } = await params;
+    logger.error(
+      'Error executing agent',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        component: 'AgentExecuteAPI',
+        action: 'POST',
+        agentId: id,
+      }
+    );
     return NextResponse.json(
       { error: 'Failed to execute agent' },
       { status: 500 }

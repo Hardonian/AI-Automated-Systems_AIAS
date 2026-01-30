@@ -9,7 +9,7 @@ let stripeInstance: Stripe | null = null;
 
 function getStripe(): Stripe {
   if (!stripeInstance) {
-    const secretKey = config.stripe.secretKey;
+    const {secretKey} = config.stripe;
     if (!secretKey) {
       throw new Error('STRIPE_SECRET_KEY is required');
     }

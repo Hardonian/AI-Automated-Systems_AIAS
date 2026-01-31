@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main, develop]
   schedule:
-    - cron: '0 * * * *'  # Hourly synthetic monitors
+    - cron: '0 * * * *' # Hourly synthetic monitors
   workflow_dispatch:
 
 env:
@@ -14,6 +14,49 @@ env:
   PNPM_VERSION: '8.15.0'
 
 jobs:
+  oss-guard:
+    name: OSS Safety Guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for internal/ directory in git
+        run: |
+          if git ls-files | grep -q "^internal/"; then
+            echo "❌ ERROR: internal/ directory contains tracked files!"
+            echo "The following internal files are tracked (should be in .gitignore):"
+            git ls-files | grep "^internal/"
+            exit 1
+          fi
+          echo "✅ No internal files tracked in git"
+      - name: Check for agent/planning docs at root
+        run: |
+          PROHIBITED=(
+            "AUDIT_REPORT.md"
+            "FINAL_COMPLETE_REPORT.md"
+            "FINAL_IMPLEMENTATION_REPORT.md"
+            "PERFORMANCE_ANALYSIS.md"
+            "REPOSITORY_CLEANUP_REPORT.md"
+            "investor_narrative.yaml"
+            "pitch_assets.yaml"
+            "pricing_models.yaml"
+            "agent-notes/"
+            "planning/"
+            "strategy/"
+          )
+          VIOLATIONS=()
+          for file in "${PROHIBITED[@]}"; do
+            if [ -e "$file" ]; then
+              VIOLATIONS+=("$file")
+            fi
+          done
+          if [ ${#VIOLATIONS[@]} -gt 0 ]; then
+            echo "❌ ERROR: Internal documents found at repository root!"
+            echo "These should be moved to internal/ directory:"
+            printf '%s\n' "${VIOLATIONS[@]}"
+            exit 1
+          fi
+          echo "✅ No internal documents at repository root"
+
   ops-doctor:
     name: Ops Doctor Check
     runs-on: ubuntu-latest

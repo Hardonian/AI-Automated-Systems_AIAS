@@ -161,3 +161,10 @@ coverage/
 # Archive (keep structure but ignore large files if needed)
 archive/**/*.log
 archive/**/*.tmp
+
+# Internal documentation (not for public repo)
+# These files should never be committed to the public repository
+internal/
+!internal/.gitkeep
+!internal/**/.gitkeep
+!internal/README.md

@@ -1,7 +1,10 @@
 name: Docs Guard
 on:
   pull_request:
+    branches: [main, develop]
   push:
+    branches: [main, develop]
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -13,6 +16,35 @@ jobs:
           chmod +x tools/docs-tidy.sh
       - name: Dry-run tidy
         run: bash tools/docs-tidy.sh --plan
+
+      - name: Block internal docs from being tracked
+        run: |
+          set -e
+          # Check if any internal/ files are tracked (should be gitignored)
+          internal_tracked=$(git ls-files | grep -E "^internal/" || true)
+          if [ -n "$internal_tracked" ]; then
+            echo "ERROR: Internal files are tracked in git (should be gitignored):"
+            echo "$internal_tracked"
+            exit 1
+          fi
+
+          # Check if archive/old_docs/ files are tracked
+          archive_tracked=$(git ls-files | grep -E "^archive/old_docs/" || true)
+          if [ -n "$archive_tracked" ]; then
+            echo "ERROR: Archive old_docs are tracked in git (should be gitignored):"
+            echo "$archive_tracked"
+            exit 1
+          fi
+
+          # Check for new agent/planning/strategy docs in wrong locations
+          forbidden=$(git ls-files | grep -Ei '(^docs/|^archive/)(.*)(agent|planning|strategy|internal|yc/|techstars|seed-round|investor)' || true)
+          if [ -n "$forbidden" ]; then
+            echo "WARNING: Potential internal docs found in public locations:"
+            echo "$forbidden"
+          fi
+
+          echo "✅ Internal docs check passed"
+
       - name: Block draft leakage
         run: |
           set -e
@@ -20,6 +52,6 @@ jobs:
           echo "$leaks" | grep -E '^(docs/final/|README\.md|[^/]+\.md)' && {
             echo "Draft-like file leaked into final/root:"; echo "$leaks"; exit 2;
           } || true
-          if ! grep -q '^/internal/private/\*\*$' .gitignore 2>/dev/null; then
-            echo "/internal/private/** must be git-ignored"; exit 3;
+          if ! grep -q '^internal/' .gitignore 2>/dev/null; then
+            echo "internal/ must be git-ignored"; exit 3;
           fi

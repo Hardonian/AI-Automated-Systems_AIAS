@@ -5,16 +5,19 @@ Comprehensive agent behavior profiling, trust scoring, and governance for AIAS.
 ## Components
 
 ### 1. Analyzer (`analyzer.py`)
+
 - Analyzes historical agent traces
 - Profiles decision entropy, tool overuse, failure loops, hallucination markers
 - Computes Trust Scores per agent version
 
 ### 2. Trust Ledger (`trust_ledger.py`)
+
 - Immutable trust score history
 - Blockchain-style verification
 - Trust degradation tracking
 
 ### 3. Profiler (`profiler.py`)
+
 - Real-time behavior profiling
 - Anomaly detection
 - Pattern recognition

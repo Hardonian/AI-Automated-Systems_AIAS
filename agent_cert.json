@@ -1,0 +1,259 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "aias-agent-certification-schema",
+  "title": "AIAS Agent Certification Schema",
+  "description": "Certification schema for AIAS governed agents",
+  "type": "object",
+  "required": [
+    "cert_id",
+    "agent_id",
+    "agent_version",
+    "issued_at",
+    "expires_at",
+    "trust_score",
+    "governance_level",
+    "certification_status",
+    "criteria",
+    "signatures"
+  ],
+  "properties": {
+    "cert_id": {
+      "type": "string",
+      "description": "Unique certification identifier",
+      "pattern": "^CERT-[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}$"
+    },
+    "agent_id": {
+      "type": "string",
+      "description": "Unique agent identifier"
+    },
+    "agent_version": {
+      "type": "string",
+      "description": "Agent version string (semver)"
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of issuance"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of expiration"
+    },
+    "trust_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Computed trust score (0.0 - 1.0)"
+    },
+    "governance_level": {
+      "type": "string",
+      "enum": ["certified", "supervised", "restricted", "quarantined"],
+      "description": "Current governance level"
+    },
+    "certification_status": {
+      "type": "string",
+      "enum": ["pending", "issued", "suspended", "revoked", "expired"],
+      "description": "Current certification status"
+    },
+    "criteria": {
+      "type": "object",
+      "required": [
+        "fsm_compliance",
+        "tool_discipline",
+        "performance",
+        "latency",
+        "hallucination_rate"
+      ],
+      "properties": {
+        "fsm_compliance": {
+          "type": "object",
+          "required": ["rate", "invalid_transitions", "passed"],
+          "properties": {
+            "rate": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "invalid_transitions": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "passed": { "type": "boolean" },
+            "threshold": {
+              "type": "number",
+              "default": 0.95
+            }
+          }
+        },
+        "tool_discipline": {
+          "type": "object",
+          "required": ["score", "overuse_rate", "unique_tools", "passed"],
+          "properties": {
+            "score": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "overuse_rate": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "unique_tools": { "type": "integer" },
+            "passed": { "type": "boolean" },
+            "threshold": {
+              "type": "number",
+              "default": 0.8
+            }
+          }
+        },
+        "performance": {
+          "type": "object",
+          "required": ["success_rate", "failure_rate", "passed"],
+          "properties": {
+            "success_rate": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "failure_rate": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "passed": { "type": "boolean" },
+            "threshold": {
+              "type": "number",
+              "default": 0.95
+            }
+          }
+        },
+        "latency": {
+          "type": "object",
+          "required": ["avg_ms", "p95_ms", "p99_ms", "violations", "passed"],
+          "properties": {
+            "avg_ms": { "type": "number" },
+            "p95_ms": { "type": "number" },
+            "p99_ms": { "type": "number" },
+            "violations": { "type": "integer" },
+            "passed": { "type": "boolean" },
+            "threshold_ms": {
+              "type": "number",
+              "default": 5000
+            }
+          }
+        },
+        "hallucination_rate": {
+          "type": "object",
+          "required": ["rate", "markers_found", "passed"],
+          "properties": {
+            "rate": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "markers_found": { "type": "integer" },
+            "passed": { "type": "boolean" },
+            "threshold": {
+              "type": "number",
+              "default": 0.05
+            }
+          }
+        }
+      }
+    },
+    "policy_compliance": {
+      "type": "object",
+      "properties": {
+        "policies_checked": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "violations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "policy": { "type": "string" },
+              "severity": {
+                "type": "string",
+                "enum": ["low", "medium", "high", "critical"]
+              },
+              "details": { "type": "string" }
+            }
+          }
+        },
+        "passed": { "type": "boolean" }
+      }
+    },
+    "signatures": {
+      "type": "object",
+      "required": ["analyzer", "governance"],
+      "properties": {
+        "analyzer": {
+          "type": "object",
+          "required": ["signature", "algorithm", "timestamp"],
+          "properties": {
+            "signature": { "type": "string" },
+            "algorithm": {
+              "type": "string",
+              "default": "SHA256"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "governance": {
+          "type": "object",
+          "required": ["signature", "algorithm", "timestamp"],
+          "properties": {
+            "signature": { "type": "string" },
+            "algorithm": {
+              "type": "string",
+              "default": "SHA256"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "audit": {
+          "type": "object",
+          "properties": {
+            "signature": { "type": "string" },
+            "algorithm": { "type": "string" },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "auditor": { "type": "string" }
+          }
+        }
+      }
+    },
+    "revocation": {
+      "type": "object",
+      "properties": {
+        "revoked_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "reason": { "type": "string" },
+        "revoked_by": { "type": "string" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "analysis_window_days": { "type": "integer" },
+        "traces_analyzed": { "type": "integer" },
+        "certified_by": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

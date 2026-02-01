@@ -6,6 +6,8 @@ describe('Environment Variables', () => {
   beforeEach(() => {
     vi.resetModules();
     process.env = { ...originalEnv };
+    // Skip env validation during tests
+    process.env.SKIP_ENV_VALIDATION = 'true';
   });
 
   afterEach(() => {

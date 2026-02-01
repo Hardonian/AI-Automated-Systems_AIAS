@@ -14,6 +14,8 @@ describe('lib/env-validation', () => {
     if (process.env.NODE_ENV) {
       delete (process.env as any).NODE_ENV;
     }
+    // Skip env validation during tests
+    process.env.SKIP_ENV_VALIDATION = 'true';
     vi.resetModules();
   });
 

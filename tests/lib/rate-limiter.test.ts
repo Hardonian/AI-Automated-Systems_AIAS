@@ -1,4 +1,65 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+// Mock the rate limiter module - must be defined inside the factory due to hoisting
+vi.mock('@/lib/performance/rate-limiter', () => {
+  const mockInMemoryStore = new Map<
+    string,
+    { count: number; resetTime: number }
+  >();
+
+  return {
+    rateLimiter: {
+      checkRateLimit: async (
+        pathname: string,
+        identifier: string,
+        config: { windowMs: number; maxRequests: number }
+      ) => {
+        const key = `rate_limit:${pathname}:${identifier}`;
+        const now = Date.now();
+        const entry = mockInMemoryStore.get(key);
+
+        // Cleanup expired entries
+        if (entry && entry.resetTime < now) {
+          mockInMemoryStore.delete(key);
+        }
+
+        const currentEntry = mockInMemoryStore.get(key);
+
+        if (!currentEntry) {
+          // New window
+          const resetTime = now + config.windowMs;
+          mockInMemoryStore.set(key, { count: 1, resetTime });
+          return {
+            allowed: true,
+            remaining: config.maxRequests - 1,
+            resetTime,
+          };
+        }
+
+        // Increment count
+        currentEntry.count++;
+        mockInMemoryStore.set(key, currentEntry);
+
+        if (currentEntry.count > config.maxRequests) {
+          return {
+            allowed: false,
+            remaining: 0,
+            resetTime: currentEntry.resetTime,
+          };
+        }
+
+        return {
+          allowed: true,
+          remaining: config.maxRequests - currentEntry.count,
+          resetTime: currentEntry.resetTime,
+        };
+      },
+      clear: () => {
+        mockInMemoryStore.clear();
+      },
+    },
+  };
+});
 
 import { rateLimiter } from '@/lib/performance/rate-limiter';
 

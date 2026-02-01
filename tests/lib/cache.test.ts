@@ -2,9 +2,66 @@
  * Tests for Cache Service
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-// import { vi } from 'vitest';
+// Mock the cache service to avoid Redis connections during tests
+vi.mock('@/lib/performance/cache', () => {
+  const mockInMemoryCache = new Map<
+    string,
+    { data: unknown; expiresAt: number; tags?: string[] }
+  >();
+  const maxSize = 1000;
+
+  return {
+    cacheService: {
+      async get<T>(key: string) {
+        const entry = mockInMemoryCache.get(key);
+        if (!entry) {
+          return null;
+        }
+        if (Date.now() > entry.expiresAt) {
+          mockInMemoryCache.delete(key);
+          return null;
+        }
+        return entry.data as T;
+      },
+      async set(
+        key: string,
+        data: unknown,
+        options: { ttl?: number; tags?: string[] } = {}
+      ) {
+        // Evict oldest entries if cache is full
+        if (mockInMemoryCache.size >= maxSize) {
+          const firstKey = mockInMemoryCache.keys().next().value;
+          if (firstKey) {
+            mockInMemoryCache.delete(firstKey);
+          }
+        }
+        const ttl = options.ttl || 300;
+        const expiresAt = Date.now() + ttl * 1000;
+        mockInMemoryCache.set(key, { data, expiresAt, tags: options.tags });
+      },
+      async invalidateByTag(tag: string) {
+        for (const [key, entry] of mockInMemoryCache.entries()) {
+          if (entry.tags?.includes(tag)) {
+            mockInMemoryCache.delete(key);
+          }
+        }
+      },
+      async clear() {
+        mockInMemoryCache.clear();
+      },
+      getStats() {
+        return {
+          size: mockInMemoryCache.size,
+          maxSize,
+          provider: 'in-memory',
+        };
+      },
+    },
+  };
+});
+
 import { cacheService } from '@/lib/performance/cache';
 
 describe('lib/performance/cache', () => {

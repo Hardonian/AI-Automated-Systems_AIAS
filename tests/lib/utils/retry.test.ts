@@ -12,64 +12,148 @@ describe('Retry Utility', () => {
     const fn = vi.fn(async () => {
       attempts++;
       if (attempts < 3) {
-        throw new Error('Failed');
+        const error = new Error('Failed');
+        error.message = 'Network error';
+        throw error;
       }
       return 'success';
     });
 
-    const result = await retry(fn, { maxRetries: 3, delay: 10 } as any);
+    const result = await retry(fn, { maxAttempts: 3, initialDelayMs: 10 });
     expect(result).toBe('success');
     expect(fn).toHaveBeenCalledTimes(3);
   });
 
   it('should fail after max retries', async () => {
     const fn = vi.fn(async () => {
-      throw new Error('Always fails');
+      const error = new Error('Always fails');
+      error.message = 'Network timeout';
+      throw error;
     });
 
-    await expect(retry(fn, { maxRetries: 2, delay: 10 } as any)).rejects.toThrow();
-    expect(fn).toHaveBeenCalledTimes(3); // Initial + 2 retries
+    await expect(
+      retry(fn, { maxAttempts: 2, initialDelayMs: 10 })
+    ).rejects.toThrow();
+    expect(fn).toHaveBeenCalledTimes(2);
   });
 
   it('should respect retry delay', async () => {
     const start = Date.now();
     const fn = vi.fn(async () => {
-      throw new Error('Fail');
+      const error = new Error('Fail');
+      error.message = 'ECONNREFUSED';
+      throw error;
     });
 
     try {
-      await retry(fn, { maxRetries: 1, delay: 100 } as any);
+      await retry(fn, { maxAttempts: 2, initialDelayMs: 50 });
     } catch {
       // Expected to fail
     }
 
     const duration = Date.now() - start;
-    expect(duration).toBeGreaterThanOrEqual(100);
+    expect(duration).toBeGreaterThanOrEqual(40); // Allow small variance
+  });
+
+  it('should not retry non-retryable errors', async () => {
+    const fn = vi.fn(async () => {
+      throw new Error('Non-retryable error');
+    });
+
+    await expect(
+      retry(fn, { maxAttempts: 3, initialDelayMs: 10 })
+    ).rejects.toThrow();
+    expect(fn).toHaveBeenCalledTimes(1); // Should not retry
   });
 });
 
 describe('Circuit Breaker', () => {
   it('should open after failure threshold', async () => {
-    const breaker = new CircuitBreaker(3) as any;
-    (breaker as any).resetTimeout = 1000;
+    const breaker = new CircuitBreaker(3, 1000);
+    const failingFn = async () => {
+      throw new Error('Service error');
+    };
 
     // Fail 3 times
-    for (let i = 0; i < 3; i++) {
-      (breaker as any).recordFailure();
-    }
+    await expect(breaker.execute(failingFn)).rejects.toThrow();
+    await expect(breaker.execute(failingFn)).rejects.toThrow();
+    await expect(breaker.execute(failingFn)).rejects.toThrow();
 
-    expect((breaker as any).isOpen()).toBe(true);
+    // Circuit should be open now
+    expect(breaker.getState()).toBe('open');
   });
 
   it('should reset after timeout', async () => {
-    const breaker = new CircuitBreaker(2) as any;
-    (breaker as any).resetTimeout = 100;
+    const breaker = new CircuitBreaker(2, 100); // 100ms reset timeout
+    const failingFn = async () => {
+      throw new Error('Service error');
+    };
 
-    (breaker as any).recordFailure();
-    (breaker as any).recordFailure();
-    expect((breaker as any).isOpen()).toBe(true);
+    // Fail 2 times to open circuit
+    await expect(breaker.execute(failingFn)).rejects.toThrow();
+    await expect(breaker.execute(failingFn)).rejects.toThrow();
+    expect(breaker.getState()).toBe('open');
 
+    // Wait for reset timeout
     await new Promise(resolve => setTimeout(resolve, 150));
-    expect((breaker as any).isOpen()).toBe(false);
+
+    // Circuit should transition to half-open on next attempt
+    // but will still fail if function fails
+    await expect(breaker.execute(failingFn)).rejects.toThrow();
+    expect(breaker.getState()).toBe('open'); // Reopens after failure
+  });
+
+  it('should close circuit on success', async () => {
+    const breaker = new CircuitBreaker(3, 1000);
+    let shouldFail = true;
+
+    const fn = async () => {
+      if (shouldFail) {
+        throw new Error('Service error');
+      }
+      return 'success';
+    };
+
+    // Fail twice
+    await expect(breaker.execute(fn)).rejects.toThrow();
+    await expect(breaker.execute(fn)).rejects.toThrow();
+
+    // Succeed on third attempt
+    shouldFail = false;
+    const result = await breaker.execute(fn);
+
+    expect(result).toBe('success');
+    expect(breaker.getState()).toBe('closed');
+  });
+
+  it('should throw when circuit is open', async () => {
+    const breaker = new CircuitBreaker(1, 60000); // Long reset timeout
+    const failingFn = async () => {
+      throw new Error('Service error');
+    };
+
+    // Fail once to open circuit
+    await expect(breaker.execute(failingFn)).rejects.toThrow();
+    expect(breaker.getState()).toBe('open');
+
+    // Next call should throw circuit breaker error
+    await expect(breaker.execute(failingFn)).rejects.toThrow(
+      'Circuit breaker is open'
+    );
+  });
+
+  it('should reset circuit manually', async () => {
+    const breaker = new CircuitBreaker(1, 60000);
+    const failingFn = async () => {
+      throw new Error('Service error');
+    };
+
+    // Open circuit
+    await expect(breaker.execute(failingFn)).rejects.toThrow();
+    expect(breaker.getState()).toBe('open');
+
+    // Reset
+    breaker.reset();
+    expect(breaker.getState()).toBe('closed');
   });
 });

@@ -1,0 +1,141 @@
+name: Update Visual Regression Baselines
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to update baselines on'
+        required: true
+        default: 'main'
+        type: string
+      reason:
+        description: 'Reason for baseline update'
+        required: true
+        type: string
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '8'
+  BASE_URL: 'http://localhost:3000'
+
+concurrency:
+  group: visual-baseline-update
+  cancel-in-progress: false
+
+jobs:
+  update-baselines:
+    name: Update Visual Baselines
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Git
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Build application
+        run: pnpm build
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+          SKIP_DB: 'true'
+
+      - name: Start production server
+        run: |
+          pnpm start &
+          npx wait-on ${{ env.BASE_URL }} --timeout 60000
+        env:
+          PORT: '3000'
+
+      - name: Update visual baselines
+        run: pnpm test:visual:update
+        env:
+          CI: 'true'
+          BASE_URL: ${{ env.BASE_URL }}
+
+      - name: Check for baseline changes
+        id: check_changes
+        run: |
+          if [ -n "$(git status --porcelain tests/e2e/__screenshots__/ 2>/dev/null)" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push baselines
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git add tests/e2e/__screenshots__/
+          git commit -m "chore: update visual regression baselines
+
+          Reason: ${{ github.event.inputs.reason }}
+
+          - Triggered by: ${{ github.actor }}
+          - Branch: ${{ github.event.inputs.branch }}
+          - Workflow: ${{ github.run_id }}"
+          git push origin ${{ github.event.inputs.branch }}
+
+      - name: Comment on commit
+        if: steps.check_changes.outputs.has_changes == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: commit } = await github.rest.repos.getCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: '${{ github.event.inputs.branch }}'
+            });
+
+            await github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: commit.sha,
+              body: `📸 Visual regression baselines updated\n\nReason: ${{ github.event.inputs.reason }}\nTriggered by: @${{ github.actor }}`
+            });
+
+      - name: No changes summary
+        if: steps.check_changes.outputs.has_changes == 'false'
+        run: |
+          echo "ℹ️ No visual baseline changes detected. Screenshots match current baselines."
+
+      - name: Upload new baselines
+        if: steps.check_changes.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: updated-visual-baselines
+          path: tests/e2e/__screenshots__/
+          retention-days: 30

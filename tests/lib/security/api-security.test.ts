@@ -11,26 +11,42 @@ import {
 
 describe('API Security Utilities', () => {
   describe('sanitizeInput', () => {
-    it('should remove script tags', () => {
-      const input = 'Hello <script>alert("xss")</script> World';
+    it('should remove null bytes and control characters', () => {
+      const input = 'Hello \x00World\x01\x02';
       const sanitized = sanitizeInput(input);
-      expect(sanitized).not.toContain('<script>');
+      expect(sanitized).not.toContain('\x00');
       expect(sanitized).toContain('Hello');
       expect(sanitized).toContain('World');
+    });
+
+    it('should trim whitespace', () => {
+      const input = '  Hello World  ';
+      const sanitized = sanitizeInput(input);
+      expect(sanitized).toBe('Hello World');
     });
 
     it('should handle empty strings', () => {
       expect(sanitizeInput('')).toBe('');
     });
 
-    it('should preserve safe HTML', () => {
+    it('should preserve safe HTML (does not remove tags)', () => {
       const input = 'Hello <strong>World</strong>';
       const sanitized = sanitizeInput(input);
-      expect(sanitized).toBeTruthy();
+      // sanitizeInput only removes control chars, not HTML tags
+      expect(sanitized).toBe('Hello <strong>World</strong>');
     });
   });
 
   describe('sanitizeHTML', () => {
+    it('should remove script tags', () => {
+      const html = 'Hello <script>alert("xss")</script> World';
+      const sanitized = sanitizeHTML(html);
+      expect(sanitized).not.toContain('<script>');
+      expect(sanitized).not.toContain('</script>');
+      expect(sanitized).toContain('Hello');
+      expect(sanitized).toContain('World');
+    });
+
     it('should remove dangerous HTML', () => {
       const html = '<div onclick="alert(1)">Click me</div>';
       const sanitized = sanitizeHTML(html);
@@ -61,7 +77,7 @@ describe('API Security Utilities', () => {
     it('should detect XSS attempts', () => {
       expect(detectXSS('<script>alert("xss")</script>')).toBe(true);
       // Avoid triggering eslint `no-script-url` while still testing detection
-      const jsUrl = ["java", "script:alert(1)"].join("");
+      const jsUrl = ['java', 'script:alert(1)'].join('');
       expect(detectXSS(jsUrl)).toBe(true);
       expect(detectXSS('<img src=x onerror=alert(1)>')).toBe(true);
     });
@@ -82,10 +98,8 @@ describe('API Security Utilities', () => {
       const data = { name: 'Test', age: 25 };
       const result = validateRequestBody(schema, data);
 
-      expect((result as any).success).toBe(true);
-      if ((result as any).success) {
-        expect((result as any).data).toEqual(data);
-      }
+      // validateRequestBody returns the data directly on success
+      expect(result).toEqual(data);
     });
 
     it('should reject invalid data', () => {
@@ -94,9 +108,11 @@ describe('API Security Utilities', () => {
       });
 
       const data = { email: 'invalid-email' };
-      const result = validateRequestBody(schema, data);
 
-      expect((result as any).success).toBe(false);
+      // validateRequestBody throws on invalid data
+      expect(() => validateRequestBody(schema, data)).toThrow(
+        'Invalid request body'
+      );
     });
   });
 });

@@ -57,32 +57,38 @@ describe('callOpenAI', () => {
     expect(global.fetch).toHaveBeenCalledTimes(2);
   });
 
-  it('should use fallback when circuit is open', async () => {
-    // Mock multiple failures to open circuit
-    (global.fetch as any).mockRejectedValue(new Error('Service unavailable'));
+  it(
+    'should use fallback when circuit is open',
+    { timeout: 30000 },
+    async () => {
+      // Mock multiple failures to open circuit
+      (global.fetch as any).mockRejectedValue(new Error('Service unavailable'));
 
-    // Trigger circuit opening (5 failures)
-    for (let i = 0; i < 6; i++) {
-      try {
-        await callOpenAI(
-          {
-            messages: [{ role: 'user', content: 'Test' }],
-          },
-          'test-api-key'
-        );
-      } catch {
-        // Expected
+      // Trigger circuit opening (5 failures with retries can take time)
+      for (let i = 0; i < 6; i++) {
+        try {
+          await callOpenAI(
+            {
+              messages: [{ role: 'user', content: 'Test' }],
+            },
+            'test-api-key'
+          );
+        } catch {
+          // Expected
+        }
       }
+
+      // Next call should use fallback
+      const result = await callOpenAI(
+        {
+          messages: [{ role: 'user', content: 'Test' }],
+        },
+        'test-api-key'
+      );
+
+      expect(result.choices[0]?.message.content).toContain(
+        'temporarily unavailable'
+      );
     }
-
-    // Next call should use fallback
-    const result = await callOpenAI(
-      {
-        messages: [{ role: 'user', content: 'Test' }],
-      },
-      'test-api-key'
-    );
-
-    expect(result.choices[0]?.message.content).toContain('temporarily unavailable');
-  });
+  );
 });

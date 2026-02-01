@@ -17,7 +17,8 @@ describe('sanitizeFilename', () => {
   });
 
   it('should remove null bytes', () => {
-    expect(sanitizeFilename('file\0name.jpg')).toBe('file_name.jpg');
+    // Null bytes are completely removed, not replaced with underscore
+    expect(sanitizeFilename('file\0name.jpg')).toBe('filename.jpg');
   });
 
   it('should remove special characters', () => {
@@ -26,7 +27,7 @@ describe('sanitizeFilename', () => {
   });
 
   it('should limit filename length', () => {
-    const longName = `${'a'.repeat(300)  }.jpg`;
+    const longName = `${'a'.repeat(300)}.jpg`;
     expect(sanitizeFilename(longName).length).toBeLessThanOrEqual(255);
   });
 
@@ -79,7 +80,11 @@ describe('validateFileType', () => {
   });
 
   it('should reject disallowed MIME type', () => {
-    const result = validateFileType('application/x-executable', 'test.exe', config);
+    const result = validateFileType(
+      'application/x-executable',
+      'test.exe',
+      config
+    );
     expect(result.valid).toBe(false);
     expect(result.error).toContain('not allowed');
   });

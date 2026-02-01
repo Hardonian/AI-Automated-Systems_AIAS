@@ -1,20 +1,18 @@
 /**
  * Rescue Email Function
  * Sends rescue emails to users at risk of churning
- * 
+ *
  * Deploy: supabase functions deploy rescue-email
  * Schedule: Run daily at 10 AM UTC via cron
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+serve(async req => {
+  const corsHeaders = getCorsHeaders(req.headers.get('origin'));
 
-serve(async (req) => {
   // Handle CORS
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -57,7 +55,9 @@ serve(async (req) => {
       }
 
       const lastActivity = new Date(lastEvent.created_at);
-      const daysInactive = Math.floor((Date.now() - lastActivity.getTime()) / (1000 * 60 * 60 * 24));
+      const daysInactive = Math.floor(
+        (Date.now() - lastActivity.getTime()) / (1000 * 60 * 60 * 24)
+      );
 
       // Send rescue email if inactive for 7+ days
       if (daysInactive >= 7 && daysInactive < 30) {

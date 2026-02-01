@@ -1,18 +1,14 @@
 /**
  * Daily Cleanup Function
  * Runs daily to clean up old data and maintain database hygiene
- * 
+ *
  * Deploy: supabase functions deploy daily-cleanup
  * Schedule: Run daily at 2 AM UTC via cron
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 interface CleanupResult {
   table: string;
@@ -21,7 +17,9 @@ interface CleanupResult {
   error?: string;
 }
 
-serve(async (req) => {
+serve(async req => {
+  const corsHeaders = getCorsHeaders(req.headers.get('origin'));
+
   // Handle CORS
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -120,8 +118,8 @@ serve(async (req) => {
     // 4. Clean up orphaned records
     try {
       // Delete workflow executions without workflows
-      const { data: orphanedExecutions, error: orphanError } = await supabase
-        .rpc('cleanup_orphaned_executions');
+      const { data: orphanedExecutions, error: orphanError } =
+        await supabase.rpc('cleanup_orphaned_executions');
 
       results.push({
         table: 'orphaned_executions',

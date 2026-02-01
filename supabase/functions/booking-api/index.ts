@@ -1,22 +1,38 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 // Validation schema
 const bookingRequestSchema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(100, "Name too long (max 100 characters)"),
-  email: z.string().trim().email("Invalid email address").max(255, "Email too long"),
-  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number").optional().or(z.literal('')),
-  company: z.string().max(200, "Company name too long (max 200 characters)").optional(),
-  meetingType: z.enum(['video', 'phone', 'chat'], { errorMap: () => ({ message: "Invalid meeting type" }) }),
-  date: z.string().min(1, "Date is required"),
-  time: z.string().min(1, "Time is required"),
-  notes: z.string().max(2000, "Notes too long (max 2000 characters)").optional(),
+  name: z
+    .string()
+    .trim()
+    .min(1, 'Name is required')
+    .max(100, 'Name too long (max 100 characters)'),
+  email: z
+    .string()
+    .trim()
+    .email('Invalid email address')
+    .max(255, 'Email too long'),
+  phone: z
+    .string()
+    .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number')
+    .optional()
+    .or(z.literal('')),
+  company: z
+    .string()
+    .max(200, 'Company name too long (max 200 characters)')
+    .optional(),
+  meetingType: z.enum(['video', 'phone', 'chat'], {
+    errorMap: () => ({ message: 'Invalid meeting type' }),
+  }),
+  date: z.string().min(1, 'Date is required'),
+  time: z.string().min(1, 'Time is required'),
+  notes: z
+    .string()
+    .max(2000, 'Notes too long (max 2000 characters)')
+    .optional(),
 });
 
 // Initialize Supabase client - Load from environment variables dynamically
@@ -26,7 +42,7 @@ const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 if (!supabaseUrl || !supabaseServiceKey) {
   throw new Error(
     'Missing required environment variables: SUPABASE_URL and/or SUPABASE_SERVICE_ROLE_KEY\n' +
-    'Please set these variables in Supabase Dashboard → Settings → API'
+      'Please set these variables in Supabase Dashboard → Settings → API'
   );
 }
 
@@ -38,7 +54,7 @@ async function checkRateLimit(identifier: string): Promise<boolean> {
     p_identifier: identifier,
     p_endpoint: 'booking-api',
     p_max_requests: 5,
-    p_window_seconds: 300
+    p_window_seconds: 300,
   });
 
   if (error) {
@@ -49,31 +65,42 @@ async function checkRateLimit(identifier: string): Promise<boolean> {
   return data === true;
 }
 
-serve(async (req) => {
+serve(async req => {
+  const corsHeaders = getCorsHeaders(req.headers.get('origin'));
+
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     const body = await req.json();
-    
+
     // Validate input with Zod
     const validation = bookingRequestSchema.safeParse(body);
     if (!validation.success) {
       return new Response(
         JSON.stringify({ error: validation.error.errors[0].message }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
       );
     }
 
-    const { name, email, phone, company, meetingType, date, time, notes } = validation.data;
+    const { name, email, phone, company, meetingType, date, time, notes } =
+      validation.data;
 
     // Distributed rate limiting by email
     const isAllowed = await checkRateLimit(email);
     if (!isAllowed) {
       return new Response(
-        JSON.stringify({ error: 'Too many booking requests. Please try again in 5 minutes.' }),
-        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({
+          error: 'Too many booking requests. Please try again in 5 minutes.',
+        }),
+        {
+          status: 429,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
       );
     }
 
@@ -111,42 +138,53 @@ serve(async (req) => {
 
       if (calendlyApiKey && calendlyEventTypeUri) {
         // Create Calendly event
-        const startDateTime = new Date(`${bookingData.requested_date}T${bookingData.requested_time}`);
+        const startDateTime = new Date(
+          `${bookingData.requested_date}T${bookingData.requested_time}`
+        );
         const endDateTime = new Date(startDateTime.getTime() + 30 * 60 * 1000);
-        
-        const calendlyResponse = await fetch('https://api.calendly.com/scheduled_events', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${calendlyApiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            event_type: calendlyEventTypeUri,
-            invitees: [{ email: bookingData.email, name: bookingData.name }],
-            start_time: startDateTime.toISOString(),
-            end_time: endDateTime.toISOString(),
-            location: bookingData.meeting_type === 'video' 
-              ? { type: 'zoom', location: 'Zoom Meeting' }
-              : bookingData.meeting_type === 'phone'
-              ? { type: 'phone', location: bookingData.phone || 'Phone Call' }
-              : { type: 'calendly', location: 'Calendly Chat' },
-            notes: bookingData.notes || '',
-          }),
-        });
-        
+
+        const calendlyResponse = await fetch(
+          'https://api.calendly.com/scheduled_events',
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${calendlyApiKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              event_type: calendlyEventTypeUri,
+              invitees: [{ email: bookingData.email, name: bookingData.name }],
+              start_time: startDateTime.toISOString(),
+              end_time: endDateTime.toISOString(),
+              location:
+                bookingData.meeting_type === 'video'
+                  ? { type: 'zoom', location: 'Zoom Meeting' }
+                  : bookingData.meeting_type === 'phone'
+                    ? {
+                        type: 'phone',
+                        location: bookingData.phone || 'Phone Call',
+                      }
+                    : { type: 'calendly', location: 'Calendly Chat' },
+              notes: bookingData.notes || '',
+            }),
+          }
+        );
+
         if (calendlyResponse.ok) {
           const event = await calendlyResponse.json();
           meetingLink = event.location?.location || event.uri;
         }
       } else if (calComApiKey && calComEventTypeId) {
         // Create Cal.com booking
-        const startDateTime = new Date(`${bookingData.requested_date}T${bookingData.requested_time}`);
+        const startDateTime = new Date(
+          `${bookingData.requested_date}T${bookingData.requested_time}`
+        );
         const endDateTime = new Date(startDateTime.getTime() + 30 * 60 * 1000);
-        
+
         const calComResponse = await fetch('https://api.cal.com/v1/bookings', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${calComApiKey}`,
+            Authorization: `Bearer ${calComApiKey}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -162,7 +200,7 @@ serve(async (req) => {
             },
           }),
         });
-        
+
         if (calComResponse.ok) {
           const event = await calComResponse.json();
           meetingLink = event.location;
@@ -171,7 +209,7 @@ serve(async (req) => {
     } catch (error) {
       console.error('Failed to create calendar event:', error);
     }
-    
+
     // Send confirmation email
     try {
       const resendKey = Deno.env.get('RESEND_API_KEY');
@@ -183,7 +221,7 @@ serve(async (req) => {
         await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${resendKey}`,
+            Authorization: `Bearer ${resendKey}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -208,39 +246,46 @@ serve(async (req) => {
         await fetch('https://api.sendgrid.com/v3/mail/send', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${sendgridKey}`,
+            Authorization: `Bearer ${sendgridKey}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: { email: 'inquiries@aiautomatedsystems.ca', name: 'AI Automated Systems' },
-            personalizations: [{
-              to: [{ email: bookingData.email }],
-              subject: `Booking Confirmed: ${bookingData.meeting_type} Meeting`,
-            }],
-            content: [{
-              type: 'text/html',
-              value: `<h1>Booking Confirmed!</h1><p>Hi ${bookingData.name}, your meeting on ${bookingData.requested_date} at ${bookingData.requested_time} has been confirmed.</p>`,
-            }],
+            from: {
+              email: 'inquiries@aiautomatedsystems.ca',
+              name: 'AI Automated Systems',
+            },
+            personalizations: [
+              {
+                to: [{ email: bookingData.email }],
+                subject: `Booking Confirmed: ${bookingData.meeting_type} Meeting`,
+              },
+            ],
+            content: [
+              {
+                type: 'text/html',
+                value: `<h1>Booking Confirmed!</h1><p>Hi ${bookingData.name}, your meeting on ${bookingData.requested_date} at ${bookingData.requested_time} has been confirmed.</p>`,
+              },
+            ],
           }),
         });
       }
     } catch (error) {
       console.error('Failed to send confirmation email:', error);
     }
-    
+
     // Store in CRM
     try {
       const crmProvider = Deno.env.get('CRM_PROVIDER');
       const hubspotKey = Deno.env.get('HUBSPOT_API_KEY');
-      
+
       if (crmProvider === 'hubspot' && hubspotKey) {
         const [firstName, ...lastNameParts] = bookingData.name.split(' ');
         const lastName = lastNameParts.join(' ') || '';
-        
+
         await fetch('https://api.hubapi.com/crm/v3/objects/contacts', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${hubspotKey}`,
+            Authorization: `Bearer ${hubspotKey}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -261,18 +306,20 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: 'Booking request received. You will receive a confirmation email shortly.' 
+      JSON.stringify({
+        success: true,
+        message:
+          'Booking request received. You will receive a confirmation email shortly.',
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     console.error('Error in booking-api:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(
-      JSON.stringify({ error: errorMessage }),
-      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error';
+    return new Response(JSON.stringify({ error: errorMessage }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
 });

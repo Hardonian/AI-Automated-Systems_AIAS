@@ -5,11 +5,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 interface SearchRequest {
   query: string;
@@ -28,7 +24,9 @@ interface SearchResult {
   rank?: number;
 }
 
-serve(async (req) => {
+serve(async req => {
+  const corsHeaders = getCorsHeaders(req.headers.get('origin'));
+
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -47,16 +45,19 @@ serve(async (req) => {
     );
 
     // Parse request body
-    const { query, namespace, limit = 10, threshold = 0.5, hybrid = true }: SearchRequest = await req.json();
+    const {
+      query,
+      namespace,
+      limit = 10,
+      threshold = 0.5,
+      hybrid = true,
+    }: SearchRequest = await req.json();
 
     if (!query || query.trim().length === 0) {
-      return new Response(
-        JSON.stringify({ error: 'Query is required' }),
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Query is required' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     // Generate embedding for the query
@@ -71,7 +72,7 @@ serve(async (req) => {
         query_embedding: embedding,
         match_threshold: threshold,
         match_count: limit,
-        filter_namespace: namespace || null
+        filter_namespace: namespace || null,
       });
 
       if (error) throw error;
@@ -82,7 +83,7 @@ serve(async (req) => {
         query_embedding: embedding,
         match_threshold: threshold,
         match_count: limit,
-        filter_namespace: namespace || null
+        filter_namespace: namespace || null,
       });
 
       if (error) throw error;
@@ -96,7 +97,7 @@ serve(async (req) => {
       content: result.content,
       metadata: result.metadata,
       similarity: result.similarity,
-      rank: result.rank || result.similarity
+      rank: result.rank || result.similarity,
     }));
 
     // Log search for analytics
@@ -109,21 +110,20 @@ serve(async (req) => {
         results: formattedResults,
         total: formattedResults.length,
         hybrid,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
       }
     );
-
   } catch (error) {
     console.error('Search error:', error);
-    
+
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Internal server error',
-        message: error.message 
+        message: error.message,
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -138,7 +138,7 @@ serve(async (req) => {
  */
 async function generateEmbedding(text: string): Promise<number[]> {
   const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
-  
+
   if (!openaiApiKey) {
     throw new Error('OPENAI_API_KEY environment variable is required');
   }
@@ -146,18 +146,20 @@ async function generateEmbedding(text: string): Promise<number[]> {
   const response = await fetch('https://api.openai.com/v1/embeddings', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${openaiApiKey}`,
+      Authorization: `Bearer ${openaiApiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       model: 'text-embedding-3-small',
       input: text,
-      encoding_format: 'float'
+      encoding_format: 'float',
     }),
   });
 
   if (!response.ok) {
-    throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `OpenAI API error: ${response.status} ${response.statusText}`
+    );
   }
 
   const data = await response.json();
@@ -168,9 +170,9 @@ async function generateEmbedding(text: string): Promise<number[]> {
  * Log search for analytics
  */
 async function logSearch(
-  query: string, 
-  namespace: string | undefined, 
-  resultCount: number, 
+  query: string,
+  namespace: string | undefined,
+  resultCount: number,
   hybrid: boolean
 ): Promise<void> {
   try {
@@ -179,15 +181,15 @@ async function logSearch(
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    await supabaseClient
-      .from('ai_search_logs')
-      .insert([{
+    await supabaseClient.from('ai_search_logs').insert([
+      {
         query,
         namespace: namespace || 'all',
         result_count: resultCount,
         hybrid_search: hybrid,
-        created_at: new Date().toISOString()
-      }]);
+        created_at: new Date().toISOString(),
+      },
+    ]);
   } catch (error) {
     console.warn('Failed to log search:', error);
     // Don't throw - logging failure shouldn't break the search

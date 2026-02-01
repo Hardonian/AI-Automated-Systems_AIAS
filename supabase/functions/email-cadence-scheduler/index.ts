@@ -1,18 +1,14 @@
 /**
  * Email Cadence Scheduler Function
  * Runs daily to send lifecycle emails based on user trial dates and activity
- * 
+ *
  * Deploy: supabase functions deploy email-cadence-scheduler
  * Schedule: Run daily at 9 AM UTC via cron
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 interface User {
   id: string;
@@ -29,7 +25,9 @@ interface User {
   industry?: string;
 }
 
-serve(async (req) => {
+serve(async req => {
+  const corsHeaders = getCorsHeaders(req.headers.get('origin'));
+
   // Handle CORS
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -53,55 +51,75 @@ serve(async (req) => {
     }
 
     const today = new Date();
-    const emailsSent: Array<{ userId: string; type: string; success: boolean }> = [];
+    const emailsSent: Array<{
+      userId: string;
+      type: string;
+      success: boolean;
+    }> = [];
 
     for (const user of trialUsers || []) {
       if (!user.trial_start_date) continue;
 
       const trialStart = new Date(user.trial_start_date);
-      const trialEnd = user.trial_end_date ? new Date(user.trial_end_date) : null;
-      
-      const daysSinceStart = Math.floor((today.getTime() - trialStart.getTime()) / (1000 * 60 * 60 * 24));
-      const daysRemaining = trialEnd 
-        ? Math.max(0, Math.ceil((trialEnd.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)))
+      const trialEnd = user.trial_end_date
+        ? new Date(user.trial_end_date)
+        : null;
+
+      const daysSinceStart = Math.floor(
+        (today.getTime() - trialStart.getTime()) / (1000 * 60 * 60 * 24)
+      );
+      const daysRemaining = trialEnd
+        ? Math.max(
+            0,
+            Math.ceil(
+              (trialEnd.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+            )
+          )
         : 0;
 
       // Determine which email to send
       let emailType: string | null = null;
-      
+
       if (daysSinceStart === 0) {
         emailType = 'trial_welcome';
       } else if (daysSinceStart === 7) {
         emailType = 'trial_day7';
-      } else if (daysRemaining === 5 || daysRemaining === 3 || daysRemaining === 1) {
+      } else if (
+        daysRemaining === 5 ||
+        daysRemaining === 3 ||
+        daysRemaining === 1
+      ) {
         emailType = 'trial_ending';
       }
 
       if (emailType) {
         // Call email API to send email
         // In production, this would call your email service
-        const emailResult = await fetch(`${supabaseUrl}/functions/v1/send-lifecycle-email`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${supabaseServiceKey}`,
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            emailType,
-            userData: {
-              id: user.id,
-              email: user.email,
-              firstName: user.first_name,
-              lastName: user.last_name,
-              planName: user.plan_name,
-              trialStartDate: user.trial_start_date,
-              trialEndDate: user.trial_end_date,
-              workflowCount: user.workflow_count || 0,
-              integrationCount: user.integration_count || 0,
+        const emailResult = await fetch(
+          `${supabaseUrl}/functions/v1/send-lifecycle-email`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${supabaseServiceKey}`,
             },
-          }),
-        });
+            body: JSON.stringify({
+              userId: user.id,
+              emailType,
+              userData: {
+                id: user.id,
+                email: user.email,
+                firstName: user.first_name,
+                lastName: user.last_name,
+                planName: user.plan_name,
+                trialStartDate: user.trial_start_date,
+                trialEndDate: user.trial_end_date,
+                workflowCount: user.workflow_count || 0,
+                integrationCount: user.integration_count || 0,
+              },
+            }),
+          }
+        );
 
         emailsSent.push({
           userId: user.id,

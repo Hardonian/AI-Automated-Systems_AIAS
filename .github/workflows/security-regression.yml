@@ -1,0 +1,177 @@
+name: Security Regression Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run daily at midnight UTC
+    - cron: '0 0 * * *'
+
+jobs:
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run npm audit
+        run: |
+          pnpm audit --audit-level high --json > audit-results.json || true
+
+      - name: Check for critical vulnerabilities
+        run: |
+          CRITICAL_COUNT=$(cat audit-results.json | jq '[.vulnerabilities[] | select(.severity == "critical")] | length')
+          if [ "$CRITICAL_COUNT" -gt 0 ]; then
+            echo "❌ Found $CRITICAL_COUNT critical vulnerabilities"
+            cat audit-results.json | jq '.vulnerabilities[] | select(.severity == "critical")'
+            exit 1
+          fi
+          echo "✅ No critical vulnerabilities found"
+
+  csp-headers:
+    name: CSP Headers Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify CSP implementation
+        run: |
+          # Check that CSP module exists
+          if [ ! -f "lib/security/csp.ts" ]; then
+            echo "❌ CSP module not found"
+            exit 1
+          fi
+
+          # Check that unsafe-inline is not used (should use nonces instead)
+          if grep -r "unsafe-inline" lib/security/csp.ts; then
+            echo "⚠️  Warning: unsafe-inline found in CSP (should use nonces)"
+          fi
+
+          echo "✅ CSP implementation verified"
+
+  cors-security:
+    name: CORS Security Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for CORS wildcards
+        run: |
+          # Check for any remaining CORS wildcards in Supabase functions
+          WILDCARD_COUNT=$(grep -r "Access-Control-Allow-Origin.*\*" supabase/functions/*/index.ts 2>/dev/null | wc -l)
+          if [ "$WILDCARD_COUNT" -gt 0 ]; then
+            echo "❌ Found $WILDCARD_COUNT files with CORS wildcard (*)"
+            grep -r "Access-Control-Allow-Origin.*\*" supabase/functions/*/index.ts
+            exit 1
+          fi
+          echo "✅ No CORS wildcards found"
+
+  auth-security:
+    name: Auth Security Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check JWT verification implementation
+        run: |
+          # Verify that route-handler.ts uses jose for JWT verification
+          if ! grep -q "jwtVerify" lib/api/route-handler.ts; then
+            echo "❌ JWT verification with jose not found in route-handler"
+            exit 1
+          fi
+
+          # Check that x-user-id header extraction is not used alone
+          if grep -q "request.headers.get('x-user-id')" lib/api/route-handler.ts; then
+            echo "❌ Insecure x-user-id header extraction found"
+            exit 1
+          fi
+
+          echo "✅ JWT verification properly implemented"
+
+  code-quality:
+    name: Security Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for dangerous patterns
+        run: |
+          # Check for eval() usage
+          EVAL_COUNT=$(grep -r "eval(" --include="*.ts" --include="*.tsx" lib/ app/ components/ 2>/dev/null | grep -v "eslint-disable" | wc -l)
+          if [ "$EVAL_COUNT" -gt 0 ]; then
+            echo "❌ Found $EVAL_COUNT eval() usages"
+            grep -r "eval(" --include="*.ts" --include="*.tsx" lib/ app/ components/ | grep -v "eslint-disable"
+            exit 1
+          fi
+
+          # Check for @ts-ignore without justification
+          TS_IGNORE_COUNT=$(grep -r "@ts-ignore" --include="*.ts" --include="*.tsx" lib/ app/ components/ 2>/dev/null | grep -v "@ts-expect-error" | wc -l)
+          if [ "$TS_IGNORE_COUNT" -gt 0 ]; then
+            echo "⚠️  Found $TS_IGNORE_COUNT @ts-ignore annotations"
+          fi
+
+          echo "✅ No dangerous patterns found"
+
+  typecheck:
+    name: TypeScript Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run type check
+        run: pnpm typecheck
+
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs:
+      [
+        security-audit,
+        csp-headers,
+        cors-security,
+        auth-security,
+        code-quality,
+        typecheck,
+      ]
+    if: always()
+    steps:
+      - name: Summary
+        run: |
+          echo "## Security Regression Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Audit | ${{ needs.security-audit.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| CSP Headers | ${{ needs.csp-headers.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| CORS Security | ${{ needs.cors-security.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Auth Security | ${{ needs.auth-security.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Code Quality | ${{ needs.code-quality.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Type Check | ${{ needs.typecheck.result }} |" >> $GITHUB_STEP_SUMMARY

@@ -1,7 +1,7 @@
 /**
  * Distributed Rate Limiting Service
  * Supports Redis (ioredis) and Vercel KV with in-memory fallback
- * 
+ *
  * Production-ready rate limiting with:
  * - Distributed state via Redis/Vercel KV
  * - Automatic fallback to in-memory for development
@@ -27,7 +27,8 @@ interface RateLimitResult {
 
 class RateLimiter {
   private redis: Redis | null = null;
-  private inMemoryStore: Map<string, { count: number; resetTime: number }> = new Map();
+  private inMemoryStore: Map<string, { count: number; resetTime: number }> =
+    new Map();
   private useRedis: boolean = false;
   private useVercelKV: boolean = false;
 
@@ -42,7 +43,7 @@ class RateLimiter {
       try {
         this.redis = new Redis(redisUrl, {
           maxRetriesPerRequest: 3,
-          retryStrategy: (times) => {
+          retryStrategy: times => {
             const delay = Math.min(times * 50, 2000);
             return delay;
           },
@@ -58,9 +59,12 @@ class RateLimiter {
         });
         return;
       } catch (error) {
-        logger.warn('Redis connection failed, falling back to in-memory rate limiting', {
-          error: error instanceof Error ? error.message : String(error),
-        });
+        logger.warn(
+          'Redis connection failed, falling back to in-memory rate limiting',
+          {
+            error: error instanceof Error ? error.message : String(error),
+          }
+        );
         this.redis = null;
       }
     }
@@ -98,14 +102,14 @@ class RateLimiter {
     try {
       // Use Redis INCR with TTL
       const count = await this.redis.incr(key);
-      
+
       if (count === 1) {
         // First request in window, set TTL
         await this.redis.expire(key, windowSeconds);
       }
 
       const ttl = await this.redis.ttl(key);
-      const resetTime = now + (ttl * 1000);
+      const resetTime = now + ttl * 1000;
 
       if (count > config.maxRequests) {
         return {
@@ -121,10 +125,14 @@ class RateLimiter {
         resetTime,
       };
     } catch (error) {
-      logger.error('Redis rate limit check failed', error instanceof Error ? error : new Error(String(error)), {
-        key,
-        config,
-      });
+      logger.error(
+        'Redis rate limit check failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          key,
+          config,
+        }
+      );
       throw error;
     }
   }
@@ -146,7 +154,7 @@ class RateLimiter {
     try {
       // Get current count using Vercel KV SDK
       const entry = await kv.get<{ count: number; resetTime: number }>(key);
-      
+
       let count = 1;
       if (entry && entry.resetTime > now) {
         count = entry.count + 1;
@@ -170,10 +178,14 @@ class RateLimiter {
         resetTime,
       };
     } catch (error) {
-      logger.error('Vercel KV rate limit check failed', error instanceof Error ? error : new Error(String(error)), {
-        key,
-        config,
-      });
+      logger.error(
+        'Vercel KV rate limit check failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          key,
+          config,
+        }
+      );
       throw error;
     }
   }
@@ -243,11 +255,14 @@ class RateLimiter {
       try {
         return await this.checkRateLimitRedis(key, config);
       } catch (error) {
-        logger.warn('Redis rate limit check failed, falling back to in-memory', {
-          error: error instanceof Error ? error.message : String(error),
-          key,
-          fallback: 'in-memory',
-        });
+        logger.warn(
+          'Redis rate limit check failed, falling back to in-memory',
+          {
+            error: error instanceof Error ? error.message : String(error),
+            key,
+            fallback: 'in-memory',
+          }
+        );
         // Fall through to in-memory
       }
     }
@@ -257,11 +272,14 @@ class RateLimiter {
       try {
         return await this.checkRateLimitVercelKV(key, config);
       } catch (error) {
-        logger.warn('Vercel KV rate limit check failed, falling back to in-memory', {
-          error: error instanceof Error ? error.message : String(error),
-          key,
-          fallback: 'in-memory',
-        });
+        logger.warn(
+          'Vercel KV rate limit check failed, falling back to in-memory',
+          {
+            error: error instanceof Error ? error.message : String(error),
+            key,
+            fallback: 'in-memory',
+          }
+        );
         // Fall through to in-memory
       }
     }
@@ -280,6 +298,13 @@ class RateLimiter {
         this.inMemoryStore.delete(key);
       }
     }
+  }
+
+  /**
+   * Clear all in-memory store entries (for testing)
+   */
+  clear(): void {
+    this.inMemoryStore.clear();
   }
 
   /**

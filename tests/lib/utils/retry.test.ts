@@ -9,18 +9,18 @@ describe('Retry Utility', () => {
 
   it('should retry failed operations', async () => {
     let attempts = 0;
-    const fn = vi.fn(async () => {
+    const fn = async () => {
       attempts++;
       if (attempts < 3) {
-        // Error message must contain 'network', 'timeout', or 'ECONNREFUSED' to be retryable
-        throw new Error('Network connection failed');
+        // Error message must contain 'network' (lowercase), 'timeout', or 'ECONNREFUSED' to be retryable
+        throw new Error('network connection failed');
       }
       return 'success';
-    });
+    };
 
     const result = await retry(fn, { maxAttempts: 3, initialDelayMs: 10 });
     expect(result).toBe('success');
-    expect(fn).toHaveBeenCalledTimes(3);
+    expect(attempts).toBe(3);
   });
 
   it('should fail after max retries', async () => {

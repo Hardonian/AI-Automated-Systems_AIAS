@@ -12,9 +12,8 @@ describe('Retry Utility', () => {
     const fn = vi.fn(async () => {
       attempts++;
       if (attempts < 3) {
-        const error = new Error('Failed');
-        error.message = 'Network error';
-        throw error;
+        // Error message must contain 'network', 'timeout', or 'ECONNREFUSED' to be retryable
+        throw new Error('Network connection failed');
       }
       return 'success';
     });

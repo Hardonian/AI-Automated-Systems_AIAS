@@ -37,7 +37,7 @@
     "react-hook-form": "^7.48.2",
     "@hookform/resolvers": "^3.3.2",
     "openai": "^4.20.1",
-    "@anthropic-ai/sdk": "^0.9.1",
+    "@anthropic-ai/sdk": "^0.72.1",
     "@google/generative-ai": "^0.2.1",
     "ai": "^5.0.52",
     "class-variance-authority": "^0.7.0",

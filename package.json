@@ -106,7 +106,7 @@
     "react-resizable-panels": "^2.1.9",
     "react-router-dom": "^6.30.3",
     "recharts": "^2.15.4",
-    "resend": "^2.1.0",
+    "resend": "^6.9.1",
     "rss-parser": "^3.13.0",
     "sonner": "^1.7.4",
     "stripe": "^20.2.0",

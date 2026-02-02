@@ -7,7 +7,7 @@ import { SystemError, ValidationError, formatError } from '@/lib/errors';
 import { logger } from '@/lib/logging/structured-logger';
 import { recordError } from '@/lib/utils/error-detection';
 import { retry } from '@/lib/utils/retry';
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 interface TelemetryResponse {
   success: boolean;

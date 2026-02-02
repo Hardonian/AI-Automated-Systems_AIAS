@@ -1,28 +1,40 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { createGETHandler } from "@/lib/api/route-handler";
-import { workflowTemplates, getTemplatesByCategory } from "@/lib/workflows/templates";
+import { createGETHandler } from '@/lib/api/route-handler';
+import {
+  workflowTemplates,
+  getTemplatesByCategory,
+} from '@/lib/workflows/templates';
 
-export const runtime = "edge";
+export const runtime = 'nodejs';
 
 /**
  * GET /api/workflows/templates
  * Get workflow templates
  */
 export const GET = createGETHandler(
-  async (context) => {
+  async context => {
     const { request } = context;
-    const category = request.nextUrl.searchParams.get("category");
-    const integration = request.nextUrl.searchParams.get("integration");
+    const category = request.nextUrl.searchParams.get('category');
+    const integration = request.nextUrl.searchParams.get('integration');
 
     let templates = workflowTemplates;
 
     if (category) {
-      templates = getTemplatesByCategory(category as "ecommerce" | "accounting" | "communication" | "productivity" | "marketing");
+      templates = getTemplatesByCategory(
+        category as
+          | 'ecommerce'
+          | 'accounting'
+          | 'communication'
+          | 'productivity'
+          | 'marketing'
+      );
     }
 
     if (integration) {
-      templates = templates.filter((t) => t.requiredIntegrations.includes(integration));
+      templates = templates.filter(t =>
+        t.requiredIntegrations.includes(integration)
+      );
     }
 
     return NextResponse.json({

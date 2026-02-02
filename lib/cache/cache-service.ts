@@ -1,6 +1,6 @@
 /**
  * Distributed Caching Service
- * 
+ *
  * Supports Redis (ioredis) and Vercel KV with in-memory fallback
  * Provides query result caching and API response caching
  */
@@ -8,6 +8,10 @@
 import Redis from 'ioredis';
 
 import { logger } from '@/lib/logging/structured-logger';
+
+const isBuildPhase =
+  process.env.NEXT_PHASE === 'phase-production-build' ||
+  process.env.NEXT_PHASE === 'phase-export';
 
 interface CacheConfig {
   ttlSeconds: number;
@@ -22,7 +26,8 @@ interface CacheResult<T> {
 
 class CacheService {
   private redis: Redis | null = null;
-  private inMemoryStore: Map<string, { value: unknown; expiresAt: number }> = new Map();
+  private inMemoryStore: Map<string, { value: unknown; expiresAt: number }> =
+    new Map();
   private useRedis: boolean = false;
   private useVercelKV: boolean = false;
   private keyPrefix: string = 'cache:';
@@ -32,13 +37,16 @@ class CacheService {
   }
 
   private async initialize(): Promise<void> {
+    if (isBuildPhase) {
+      return;
+    }
     // Try Redis first
     const redisUrl = process.env.REDIS_URL;
     if (redisUrl) {
       try {
         this.redis = new Redis(redisUrl, {
           maxRetriesPerRequest: 3,
-          retryStrategy: (times) => {
+          retryStrategy: times => {
             const delay = Math.min(times * 50, 2000);
             return delay;
           },
@@ -53,9 +61,12 @@ class CacheService {
         });
         return;
       } catch (error) {
-        logger.warn('Redis connection failed, falling back to in-memory cache', {
-          error: error instanceof Error ? error.message : String(error),
-        });
+        logger.warn(
+          'Redis connection failed, falling back to in-memory cache',
+          {
+            error: error instanceof Error ? error.message : String(error),
+          }
+        );
         this.redis = null;
       }
     }
@@ -103,9 +114,13 @@ class CacheService {
         value: JSON.parse(value) as T,
       };
     } catch (error) {
-      logger.error('Redis get failed', error instanceof Error ? error : new Error(String(error)), {
-        key,
-      });
+      logger.error(
+        'Redis get failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          key,
+        }
+      );
       return {
         hit: false,
         error: error instanceof Error ? error.message : String(error),
@@ -116,7 +131,11 @@ class CacheService {
   /**
    * Set in Redis
    */
-  private async setInRedis(key: string, value: unknown, ttlSeconds: number): Promise<void> {
+  private async setInRedis(
+    key: string,
+    value: unknown,
+    ttlSeconds: number
+  ): Promise<void> {
     if (!this.redis) {
       throw new Error('Redis not initialized');
     }
@@ -124,10 +143,14 @@ class CacheService {
     try {
       await this.redis.setex(key, ttlSeconds, JSON.stringify(value));
     } catch (error) {
-      logger.error('Redis set failed', error instanceof Error ? error : new Error(String(error)), {
-        key,
-        ttlSeconds,
-      });
+      logger.error(
+        'Redis set failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          key,
+          ttlSeconds,
+        }
+      );
       throw error;
     }
   }
@@ -164,9 +187,13 @@ class CacheService {
         value: JSON.parse(data.result) as T,
       };
     } catch (error) {
-      logger.error('Vercel KV get failed', error instanceof Error ? error : new Error(String(error)), {
-        key,
-      });
+      logger.error(
+        'Vercel KV get failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          key,
+        }
+      );
       return {
         hit: false,
         error: error instanceof Error ? error.message : String(error),
@@ -177,7 +204,11 @@ class CacheService {
   /**
    * Set in Vercel KV
    */
-  private async setInVercelKV(key: string, value: unknown, ttlSeconds: number): Promise<void> {
+  private async setInVercelKV(
+    key: string,
+    value: unknown,
+    ttlSeconds: number
+  ): Promise<void> {
     const kvUrl = process.env.KV_REST_API_URL;
     const kvToken = process.env.KV_REST_API_TOKEN;
 
@@ -198,10 +229,14 @@ class CacheService {
         }),
       });
     } catch (error) {
-      logger.error('Vercel KV set failed', error instanceof Error ? error : new Error(String(error)), {
-        key,
-        ttlSeconds,
-      });
+      logger.error(
+        'Vercel KV set failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          key,
+          ttlSeconds,
+        }
+      );
       throw error;
     }
   }
@@ -231,7 +266,7 @@ class CacheService {
    * Set in in-memory cache
    */
   private setInMemory(key: string, value: unknown, ttlSeconds: number): void {
-    const expiresAt = Date.now() + (ttlSeconds * 1000);
+    const expiresAt = Date.now() + ttlSeconds * 1000;
     this.inMemoryStore.set(key, {
       value,
       expiresAt,
@@ -296,7 +331,7 @@ class CacheService {
    */
   async set(key: string, value: unknown, config: CacheConfig): Promise<void> {
     const cacheKey = this.getCacheKey(key, config.keyPrefix);
-    const {ttlSeconds} = config;
+    const { ttlSeconds } = config;
 
     // Try Redis first
     if (this.useRedis && this.redis) {
@@ -380,7 +415,9 @@ class CacheService {
    */
   generateQueryKey(table: string, filters: Record<string, any>): string {
     const filterStr = JSON.stringify(filters);
-    const hash = Buffer.from(filterStr).toString('base64').replace(/[^a-zA-Z0-9]/g, '');
+    const hash = Buffer.from(filterStr)
+      .toString('base64')
+      .replace(/[^a-zA-Z0-9]/g, '');
     return `query:${table}:${hash}`;
   }
 
@@ -389,7 +426,9 @@ class CacheService {
    */
   generateApiKey(pathname: string, params: Record<string, any>): string {
     const paramStr = JSON.stringify(params);
-    const hash = Buffer.from(paramStr).toString('base64').replace(/[^a-zA-Z0-9]/g, '');
+    const hash = Buffer.from(paramStr)
+      .toString('base64')
+      .replace(/[^a-zA-Z0-9]/g, '');
     return `api:${pathname}:${hash}`;
   }
 
@@ -416,7 +455,7 @@ export function withCache<T>(
   config: CacheConfig,
   fn: () => Promise<T>
 ): Promise<T> {
-  return cacheService.get<T>(key, config.keyPrefix).then(async (result) => {
+  return cacheService.get<T>(key, config.keyPrefix).then(async result => {
     if (result.hit && result.value !== undefined) {
       return result.value;
     }

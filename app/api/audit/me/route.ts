@@ -1,46 +1,61 @@
 // [STAKE+TRUST:BEGIN:audit_api]
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { logger } from "@/lib/logging/structured-logger";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
-export const runtime = "edge";
+import { logger } from '@/lib/logging/structured-logger';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
+export const runtime = 'nodejs';
 
 export async function GET() {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { data, error } = await supabase
-      .from("audit_log")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("ts", { ascending: false })
+      .from('audit_log')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('ts', { ascending: false })
       .limit(100);
 
     if (error) {
-      logger.error("Audit log query error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
+      logger.error(
+        'Audit log query error:',
+        error instanceof Error ? error : new Error(String(error)),
+        { component: 'route', action: 'unknown' }
+      );
       return NextResponse.json(
-        { error: "Failed to fetch audit log", details: error.message },
+        { error: 'Failed to fetch audit log', details: error.message },
         { status: 500 }
       );
     }
 
     return NextResponse.json({ rows: data || [] });
   } catch (error) {
-    if (error instanceof Error && error.message.includes("Missing required Supabase environment variables")) {
+    if (
+      error instanceof Error &&
+      error.message.includes('Missing required Supabase environment variables')
+    ) {
       return NextResponse.json(
-        { error: "Service temporarily unavailable" },
+        { error: 'Service temporarily unavailable' },
         { status: 503 }
       );
     }
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    logger.error("Audit log API error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error';
+    logger.error(
+      'Audit log API error:',
+      error instanceof Error ? error : new Error(String(error)),
+      { component: 'route', action: 'unknown' }
+    );
     return NextResponse.json(
-      { error: "Internal server error", details: errorMessage },
+      { error: 'Internal server error', details: errorMessage },
       { status: 500 }
     );
   }

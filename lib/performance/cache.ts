@@ -1,7 +1,7 @@
 /**
  * Distributed Caching Service
  * Supports Redis, Vercel KV, and in-memory fallback
- * 
+ *
  * Production-ready caching with:
  * - Distributed state via Redis/Vercel KV
  * - Automatic fallback to in-memory for development
@@ -13,6 +13,10 @@
 import Redis from 'ioredis';
 
 import { logger } from '@/lib/logging/structured-logger';
+
+const isBuildPhase =
+  process.env.NEXT_PHASE === 'phase-production-build' ||
+  process.env.NEXT_PHASE === 'phase-export';
 
 interface CacheEntry {
   data: unknown;
@@ -38,13 +42,16 @@ class CacheService {
   }
 
   private async initialize(): Promise<void> {
+    if (isBuildPhase) {
+      return;
+    }
     // Try Redis first
     const redisUrl = process.env.REDIS_URL;
     if (redisUrl) {
       try {
         this.redis = new Redis(redisUrl, {
           maxRetriesPerRequest: 3,
-          retryStrategy: (times) => {
+          retryStrategy: times => {
             const delay = Math.min(times * 50, 2000);
             return delay;
           },
@@ -60,9 +67,12 @@ class CacheService {
         });
         return;
       } catch (error) {
-        logger.warn('Redis connection failed, falling back to in-memory cache', {
-          error: error instanceof Error ? error.message : String(error),
-        });
+        logger.warn(
+          'Redis connection failed, falling back to in-memory cache',
+          {
+            error: error instanceof Error ? error.message : String(error),
+          }
+        );
         this.redis = null;
       }
     }
@@ -93,7 +103,9 @@ class CacheService {
 
     try {
       const value = await this.redis.get(key);
-      if (!value) {return null;}
+      if (!value) {
+        return null;
+      }
 
       const entry: CacheEntry = JSON.parse(value);
       if (Date.now() > entry.expiresAt) {
@@ -103,9 +115,13 @@ class CacheService {
 
       return entry.data as T;
     } catch (error) {
-      logger.error('Redis cache get failed', error instanceof Error ? error : new Error(String(error)), {
-        key,
-      });
+      logger.error(
+        'Redis cache get failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          key,
+        }
+      );
       throw error;
     }
   }
@@ -113,7 +129,11 @@ class CacheService {
   /**
    * Set cached value in Redis
    */
-  private async setInRedis(key: string, data: unknown, options: CacheOptions): Promise<void> {
+  private async setInRedis(
+    key: string,
+    data: unknown,
+    options: CacheOptions
+  ): Promise<void> {
     if (!this.redis) {
       throw new Error('Redis not initialized');
     }
@@ -139,9 +159,13 @@ class CacheService {
         }
       }
     } catch (error) {
-      logger.error('Redis cache set failed', error instanceof Error ? error : new Error(String(error)), {
-        key,
-      });
+      logger.error(
+        'Redis cache set failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          key,
+        }
+      );
       throw error;
     }
   }
@@ -169,7 +193,9 @@ class CacheService {
       }
 
       const data = await response.json();
-      if (!data.result) {return null;}
+      if (!data.result) {
+        return null;
+      }
 
       const entry: CacheEntry = JSON.parse(data.result);
       if (Date.now() > entry.expiresAt) {
@@ -179,9 +205,13 @@ class CacheService {
 
       return entry.data as T;
     } catch (error) {
-      logger.error('Vercel KV cache get failed', error instanceof Error ? error : new Error(String(error)), {
-        key,
-      });
+      logger.error(
+        'Vercel KV cache get failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          key,
+        }
+      );
       throw error;
     }
   }
@@ -189,7 +219,11 @@ class CacheService {
   /**
    * Set cached value in Vercel KV
    */
-  private async setInVercelKV(key: string, data: unknown, options: CacheOptions): Promise<void> {
+  private async setInVercelKV(
+    key: string,
+    data: unknown,
+    options: CacheOptions
+  ): Promise<void> {
     const kvUrl = process.env.KV_REST_API_URL;
     const kvToken = process.env.KV_REST_API_TOKEN;
 
@@ -223,11 +257,14 @@ class CacheService {
       if (options.tags && options.tags.length > 0) {
         for (const tag of options.tags) {
           const tagKey = `cache:tag:${tag}`;
-          const tagResponse = await fetch(`${kvUrl}/get/${encodeURIComponent(tagKey)}`, {
-            headers: {
-              Authorization: `Bearer ${kvToken}`,
-            },
-          });
+          const tagResponse = await fetch(
+            `${kvUrl}/get/${encodeURIComponent(tagKey)}`,
+            {
+              headers: {
+                Authorization: `Bearer ${kvToken}`,
+              },
+            }
+          );
 
           let tagKeys: string[] = [];
           if (tagResponse.ok) {
@@ -252,9 +289,13 @@ class CacheService {
         }
       }
     } catch (error) {
-      logger.error('Vercel KV cache set failed', error instanceof Error ? error : new Error(String(error)), {
-        key,
-      });
+      logger.error(
+        'Vercel KV cache set failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          key,
+        }
+      );
       throw error;
     }
   }
@@ -266,7 +307,9 @@ class CacheService {
     const kvUrl = process.env.KV_REST_API_URL;
     const kvToken = process.env.KV_REST_API_TOKEN;
 
-    if (!kvUrl || !kvToken) {return;}
+    if (!kvUrl || !kvToken) {
+      return;
+    }
 
     try {
       await fetch(`${kvUrl}/delete/${encodeURIComponent(key)}`, {
@@ -288,7 +331,9 @@ class CacheService {
    */
   async get<T>(key: string, options: CacheOptions = {}): Promise<T | null> {
     // Add tenant prefix if provided
-    const fullKey = options.tenantId ? `tenant:${options.tenantId}:${key}` : key;
+    const fullKey = options.tenantId
+      ? `tenant:${options.tenantId}:${key}`
+      : key;
 
     // Try Redis first
     if (this.useRedis && this.redis) {
@@ -323,9 +368,15 @@ class CacheService {
   /**
    * Set cached value (tries Redis/KV first, falls back to in-memory)
    */
-  async set(key: string, data: unknown, options: CacheOptions = {}): Promise<void> {
+  async set(
+    key: string,
+    data: unknown,
+    options: CacheOptions = {}
+  ): Promise<void> {
     // Add tenant prefix if provided
-    const fullKey = options.tenantId ? `tenant:${options.tenantId}:${key}` : key;
+    const fullKey = options.tenantId
+      ? `tenant:${options.tenantId}:${key}`
+      : key;
 
     // Try Redis first
     if (this.useRedis && this.redis) {
@@ -364,7 +415,9 @@ class CacheService {
    */
   private getFromMemory<T>(key: string): T | null {
     const entry = this.inMemoryCache.get(key);
-    if (!entry) {return null;}
+    if (!entry) {
+      return null;
+    }
 
     if (Date.now() > entry.expiresAt) {
       this.inMemoryCache.delete(key);
@@ -411,10 +464,13 @@ class CacheService {
         await this.redis.del(tagKey);
         return;
       } catch (error) {
-        logger.warn('Redis tag invalidation failed, falling back to in-memory', {
-          error: error instanceof Error ? error.message : String(error),
-          tag,
-        });
+        logger.warn(
+          'Redis tag invalidation failed, falling back to in-memory',
+          {
+            error: error instanceof Error ? error.message : String(error),
+            tag,
+          }
+        );
         // Fall through to in-memory
       }
     }
@@ -427,11 +483,14 @@ class CacheService {
         const kvToken = process.env.KV_REST_API_TOKEN;
 
         if (kvUrl && kvToken) {
-          const response = await fetch(`${kvUrl}/get/${encodeURIComponent(tagKey)}`, {
-            headers: {
-              Authorization: `Bearer ${kvToken}`,
-            },
-          });
+          const response = await fetch(
+            `${kvUrl}/get/${encodeURIComponent(tagKey)}`,
+            {
+              headers: {
+                Authorization: `Bearer ${kvToken}`,
+              },
+            }
+          );
 
           if (response.ok) {
             const data = await response.json();
@@ -447,10 +506,13 @@ class CacheService {
         }
         return;
       } catch (error) {
-        logger.warn('Vercel KV tag invalidation failed, falling back to in-memory', {
-          error: error instanceof Error ? error.message : String(error),
-          tag,
-        });
+        logger.warn(
+          'Vercel KV tag invalidation failed, falling back to in-memory',
+          {
+            error: error instanceof Error ? error.message : String(error),
+            tag,
+          }
+        );
         // Fall through to in-memory
       }
     }
@@ -490,7 +552,11 @@ class CacheService {
     return {
       size: this.inMemoryCache.size,
       maxSize: this.maxSize,
-      provider: this.useRedis ? 'redis' : this.useVercelKV ? 'vercel-kv' : 'in-memory',
+      provider: this.useRedis
+        ? 'redis'
+        : this.useVercelKV
+          ? 'vercel-kv'
+          : 'in-memory',
     };
   }
 
@@ -507,13 +573,14 @@ class CacheService {
 }
 
 // Singleton instance (server-side only)
-export const cacheService = typeof window === 'undefined'
-  ? new CacheService()
-  : ({
-      get: async () => null,
-      set: async () => {},
-      invalidateByTag: async () => {},
-      clear: async () => {},
-      getStats: () => ({ size: 0, maxSize: 1000, provider: 'client-side' }),
-      close: async () => {},
-    } as unknown as CacheService);
+export const cacheService =
+  typeof window === 'undefined'
+    ? new CacheService()
+    : ({
+        get: async () => null,
+        set: async () => {},
+        invalidateByTag: async () => {},
+        clear: async () => {},
+        getStats: () => ({ size: 0, maxSize: 1000, provider: 'client-side' }),
+        close: async () => {},
+      } as unknown as CacheService);

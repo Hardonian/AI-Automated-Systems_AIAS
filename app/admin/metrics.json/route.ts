@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /**
  * Admin Metrics Endpoint
  * Returns performance metrics placeholders for Vercel Analytics integration
- * 
+ *
  * This endpoint is protected by middleware.ts admin authentication
  */
 export async function GET() {

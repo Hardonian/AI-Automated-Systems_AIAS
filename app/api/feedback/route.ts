@@ -10,7 +10,7 @@ import { telemetry } from '@/lib/monitoring/enhanced-telemetry';
 import { recordError } from '@/lib/utils/error-detection';
 import { retry } from '@/lib/utils/retry';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 interface FeedbackResponse {
   ok: boolean;

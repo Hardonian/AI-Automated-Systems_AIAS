@@ -14,6 +14,10 @@ import Redis from 'ioredis';
 
 import { logger } from '@/lib/logging/structured-logger';
 
+const isBuildPhase =
+  process.env.NEXT_PHASE === 'phase-production-build' ||
+  process.env.NEXT_PHASE === 'phase-export';
+
 interface RateLimitConfig {
   windowMs: number;
   maxRequests: number;
@@ -37,6 +41,9 @@ class RateLimiter {
   }
 
   private async initialize(): Promise<void> {
+    if (isBuildPhase) {
+      return;
+    }
     // Try Redis first
     const redisUrl = process.env.REDIS_URL;
     if (redisUrl) {

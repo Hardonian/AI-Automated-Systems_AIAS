@@ -1,13 +1,13 @@
-import { NextResponse } from "next/server";
-import { z } from "zod";
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
 
-import { createPOSTHandler } from "@/lib/api/route-handler";
-import { env } from "@/lib/env";
-import { NetworkError } from "@/lib/errors";
-import { logger } from "@/lib/logging/structured-logger";
-import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
-import { retry } from "@/lib/utils/retry";
-export const runtime = "edge";
+import { createPOSTHandler } from '@/lib/api/route-handler';
+import { env } from '@/lib/env';
+import { NetworkError } from '@/lib/errors';
+import { logger } from '@/lib/logging/structured-logger';
+import { telemetry } from '@/lib/monitoring/enhanced-telemetry';
+import { retry } from '@/lib/utils/retry';
+export const runtime = 'nodejs';
 
 // interface IngestResponse {
 //   success?: boolean;
@@ -18,11 +18,13 @@ export const runtime = "edge";
  * Event ingestion schema
  * Validates event payload structure
  */
-const eventSchema = z.object({
-  type: z.string().min(1),
-  data: z.record(z.unknown()).optional(),
-  timestamp: z.string().datetime().optional(),
-}).passthrough(); // Allow additional fields
+const eventSchema = z
+  .object({
+    type: z.string().min(1),
+    data: z.record(z.unknown()).optional(),
+    timestamp: z.string().datetime().optional(),
+  })
+  .passthrough(); // Allow additional fields
 
 /**
  * Event ingestion endpoint
@@ -30,13 +32,13 @@ const eventSchema = z.object({
  * Migrated to use route handler utility for consistent error handling
  */
 export const POST = createPOSTHandler(
-  async (context) => {
+  async context => {
     const { request } = context;
     const startTime = Date.now();
     const body = await request.text();
 
     if (!body || body.length === 0) {
-      throw new Error("Request body is required");
+      throw new Error('Request body is required');
     }
 
     // Validate JSON structure (non-blocking)
@@ -44,7 +46,10 @@ export const POST = createPOSTHandler(
       const parsed = JSON.parse(body);
       const validation = eventSchema.safeParse(parsed);
       if (!validation.success) {
-        logger.warn("Event validation warnings:", { component: "route", ...validation.error.errors });
+        logger.warn('Event validation warnings:', {
+          component: 'route',
+          ...validation.error.errors,
+        });
       }
     } catch {
       // Invalid JSON - will be caught by route handler
@@ -53,15 +58,18 @@ export const POST = createPOSTHandler(
     // Retry Supabase Edge Function call with exponential backoff
     const response = await retry(
       async () => {
-        const r = await fetch(`${env.supabase.url}/functions/v1/ingest-events`, {
-          method: "POST",
-          headers: { 
-            "content-type":"application/json", 
-            "authorization": `Bearer ${env.supabase.anonKey}` 
-          },
-          body,
-          signal: AbortSignal.timeout(10000), // 10 second timeout
-        });
+        const r = await fetch(
+          `${env.supabase.url}/functions/v1/ingest-events`,
+          {
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json',
+              authorization: `Bearer ${env.supabase.anonKey}`,
+            },
+            body,
+            signal: AbortSignal.timeout(10000), // 10 second timeout
+          }
+        );
 
         if (!r.ok) {
           throw new NetworkError(
@@ -78,8 +86,8 @@ export const POST = createPOSTHandler(
         initialDelayMs: 1000,
         onRetry: (attempt, err) => {
           logger.warn(`Retrying ingest (attempt ${attempt})`, {
-            component: "IngestAPI",
-            action: "retry",
+            component: 'IngestAPI',
+            action: 'retry',
             attempt,
             error: err.message,
           });
@@ -89,21 +97,24 @@ export const POST = createPOSTHandler(
 
     const responseText = await response.text();
     const duration = Date.now() - startTime;
-    
+
     // Track performance
     telemetry.trackPerformance({
-      name: "event_ingest",
+      name: 'event_ingest',
       value: duration,
-      unit: "ms",
-      tags: { status: response.ok ? "success" : "error", statusCode: response.status.toString() },
+      unit: 'ms',
+      tags: {
+        status: response.ok ? 'success' : 'error',
+        statusCode: response.status.toString(),
+      },
     });
-    
-    return new NextResponse(responseText, { 
-      status: response.status, 
-      headers: { 
-        "content-type":"application/json",
-        "X-Response-Time": `${duration}ms`
-      } 
+
+    return new NextResponse(responseText, {
+      status: response.status,
+      headers: {
+        'content-type': 'application/json',
+        'X-Response-Time': `${duration}ms`,
+      },
     });
   },
   {

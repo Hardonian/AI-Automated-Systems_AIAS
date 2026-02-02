@@ -1,23 +1,23 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { createGETHandler } from "@/lib/api/route-handler";
-import { getTemplate } from "@/lib/workflows/templates";
+import { createGETHandler } from '@/lib/api/route-handler';
+import { getTemplate } from '@/lib/workflows/templates';
 
-export const runtime = "edge";
+export const runtime = 'nodejs';
 
 /**
  * GET /api/workflows/templates/[id]
  * Get a specific workflow template by ID
  */
 export const GET = createGETHandler(
-  async (context) => {
+  async context => {
     const { request } = context;
-    
+
     // Get template ID from URL
-    const templateId = request.nextUrl.pathname.split("/").pop();
+    const templateId = request.nextUrl.pathname.split('/').pop();
     if (!templateId) {
       return NextResponse.json(
-        { error: "Template ID required" },
+        { error: 'Template ID required' },
         { status: 400 }
       );
     }
@@ -26,7 +26,7 @@ export const GET = createGETHandler(
 
     if (!template) {
       return NextResponse.json(
-        { error: "Template not found" },
+        { error: 'Template not found' },
         { status: 404 }
       );
     }

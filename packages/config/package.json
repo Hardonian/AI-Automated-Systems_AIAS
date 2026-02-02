@@ -6,7 +6,7 @@
   "types": "./index.ts",
   "scripts": {
     "build": "tsc --build",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --build --pretty false"
   },
   "dependencies": {
     "zod": "^3.22.4"

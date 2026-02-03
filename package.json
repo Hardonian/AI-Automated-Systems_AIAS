@@ -169,6 +169,7 @@
     "deploy:doctor": "tsx scripts/deploy-doctor.ts",
     "env:doctor": "tsx scripts/env-doctor.ts",
     "smoke": "tsx scripts/smoke.ts",
+    "jobforge:admin": "tsx scripts/jobforge-admin.ts",
     "ops": "tsx ops/cli.ts",
     "analyze": "npm run build:analyze",
     "a11y": "pa11y-ci",

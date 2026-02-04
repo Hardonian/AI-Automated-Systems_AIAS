@@ -38,8 +38,22 @@ interface EmailTemplate {
   body: string;
 }
 
+const TEMPLATE_TOKEN_REGEX = /\{\{(firstName|lastName|company|email)\}\}/g;
+
+function applyTemplateReplacements(
+  input: string,
+  replacements: Record<string, string>
+): string {
+  return input.replace(TEMPLATE_TOKEN_REGEX, (_match, token: string) => {
+    return replacements[token] ?? '';
+  });
+}
+
 class LeadNurturingService {
-  private supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+  private supabase = createClient(
+    env.supabase.url,
+    env.supabase.serviceRoleKey
+  );
 
   /**
    * Start nurturing sequence for lead
@@ -90,10 +104,14 @@ class LeadNurturingService {
       try {
         await this.executeStep(step);
       } catch (error) {
-        logger.error('Failed to execute nurturing step', error instanceof Error ? error : new Error(String(error)), {
-          stepId: step.id,
-          leadId: step.lead_id,
-        });
+        logger.error(
+          'Failed to execute nurturing step',
+          error instanceof Error ? error : new Error(String(error)),
+          {
+            stepId: step.id,
+            leadId: step.lead_id,
+          }
+        );
       }
     }
   }
@@ -116,7 +134,11 @@ class LeadNurturingService {
 
     // Check if lead is still qualified for sequence
     if (lead.qualified || lead.status === 'converted') {
-      await this.updateStepStatus(step.id, 'skipped', 'Lead already qualified/converted');
+      await this.updateStepStatus(
+        step.id,
+        'skipped',
+        'Lead already qualified/converted'
+      );
       return;
     }
 
@@ -130,13 +152,20 @@ class LeadNurturingService {
     }
 
     // Check conditions
-    if (stepConfig.conditions && !this.checkConditions(lead, stepConfig.conditions)) {
+    if (
+      stepConfig.conditions &&
+      !this.checkConditions(lead, stepConfig.conditions)
+    ) {
       await this.updateStepStatus(step.id, 'skipped', 'Conditions not met');
       return;
     }
 
     // Send email
-    await this.sendNurturingEmail(lead, stepConfig.emailTemplate, step.tenant_id);
+    await this.sendNurturingEmail(
+      lead,
+      stepConfig.emailTemplate,
+      step.tenant_id
+    );
 
     // Update step status
     await this.updateStepStatus(step.id, 'completed');
@@ -159,9 +188,9 @@ class LeadNurturingService {
    * Send nurturing email
    */
   private async sendNurturingEmail(
-    lead: { 
-      id: string; 
-      email?: string; 
+    lead: {
+      id: string;
+      email?: string;
       name?: string;
       first_name?: string;
       last_name?: string;
@@ -174,22 +203,24 @@ class LeadNurturingService {
   ): Promise<void> {
     // Validate email exists
     if (!lead.email) {
-      throw new Error(`Cannot send nurturing email: lead ${lead.id} has no email address`);
+      throw new Error(
+        `Cannot send nurturing email: lead ${lead.id} has no email address`
+      );
     }
 
     // Try to get template from our template library first
     const template = getTemplateById(templateId);
-    
+
     // If not found, try database (for custom templates)
     if (!template) {
       const dbTemplate = await this.getEmailTemplate(templateId, tenantId);
       if (!dbTemplate) {
         throw new Error(`Template ${templateId} not found`);
       }
-      
+
       // Use database template
       const personalized = this.personalizeEmail(dbTemplate, lead);
-      
+
       // Send via email service
       const result = await emailService.send({
         to: lead.email,
@@ -229,14 +260,19 @@ class LeadNurturingService {
     };
 
     // Send via email service
-    const result = await emailService.sendTemplate(templateId, lead.email, variables, {
-      tags: ['nurturing', templateId],
-      metadata: {
-        leadId: lead.id,
-        templateId,
-        tenantId: tenantId || '',
-      },
-    });
+    const result = await emailService.sendTemplate(
+      templateId,
+      lead.email,
+      variables,
+      {
+        tags: ['nurturing', templateId],
+        metadata: {
+          leadId: lead.id,
+          templateId,
+          tenantId: tenantId || '',
+        },
+      }
+    );
 
     if (!result.success) {
       throw new Error(result.error || 'Failed to send email');
@@ -254,24 +290,31 @@ class LeadNurturingService {
   /**
    * Personalize email (for database templates)
    */
-  private personalizeEmail(template: EmailTemplate, lead: { name?: string; email?: string; company?: string; first_name?: string; last_name?: string }): { subject: string; body: string } {
-    let subject = template.subject || '';
-    let body = template.body || '';
+  private personalizeEmail(
+    template: EmailTemplate,
+    lead: {
+      name?: string;
+      email?: string;
+      company?: string;
+      first_name?: string;
+      last_name?: string;
+    }
+  ): { subject: string; body: string } {
+    const nameParts = lead.name?.split(' ') ?? [];
+    const firstName = lead.first_name || nameParts[0] || 'there';
+    const lastName = lead.last_name || nameParts.slice(1).join(' ') || '';
 
-    // Replace placeholders
-    const replacements: Record<string, string> = {
-      '{{firstName}}': lead.first_name || lead.name?.split(' ')[0] || 'there',
-      '{{lastName}}': lead.last_name || lead.name?.split(' ').slice(1).join(' ') || '',
-      '{{company}}': lead.company || 'your company',
-      '{{email}}': lead.email || '',
+    const replacements = {
+      firstName,
+      lastName,
+      company: lead.company || 'your company',
+      email: lead.email || '',
     };
 
-    for (const [key, value] of Object.entries(replacements)) {
-      subject = subject.replace(new RegExp(key, 'g'), value);
-      body = body.replace(new RegExp(key, 'g'), value);
-    }
-
-    return { subject, body };
+    return {
+      subject: applyTemplateReplacements(template.subject || '', replacements),
+      body: applyTemplateReplacements(template.body || '', replacements),
+    };
   }
 
   /**
@@ -286,7 +329,9 @@ class LeadNurturingService {
     const sequence = await this.getSequence(sequenceId);
     const step = sequence?.steps[stepOrder];
 
-    if (!step) {return;}
+    if (!step) {
+      return;
+    }
 
     const scheduledAt = new Date();
     scheduledAt.setDate(scheduledAt.getDate() + step.delay);
@@ -304,7 +349,10 @@ class LeadNurturingService {
   /**
    * Check conditions
    */
-  private checkConditions(lead: Record<string, unknown>, conditions: Record<string, unknown>): boolean {
+  private checkConditions(
+    lead: Record<string, unknown>,
+    conditions: Record<string, unknown>
+  ): boolean {
     // Simple condition checking - can be enhanced
     for (const [key, value] of Object.entries(conditions)) {
       if (lead[key] !== value) {
@@ -317,7 +365,9 @@ class LeadNurturingService {
   /**
    * Get sequence
    */
-  private async getSequence(sequenceId: string): Promise<NurturingSequence | null> {
+  private async getSequence(
+    sequenceId: string
+  ): Promise<NurturingSequence | null> {
     const { data } = await this.supabase
       .from('nurturing_sequences')
       .select('*')
@@ -330,8 +380,14 @@ class LeadNurturingService {
   /**
    * Get email template
    */
-  private async getEmailTemplate(templateId: string, tenantId?: string): Promise<{ subject: string; body: string } | null> {
-    let query = this.supabase.from('email_templates').select('*').eq('id', templateId);
+  private async getEmailTemplate(
+    templateId: string,
+    tenantId?: string
+  ): Promise<{ subject: string; body: string } | null> {
+    let query = this.supabase
+      .from('email_templates')
+      .select('*')
+      .eq('id', templateId);
 
     if (tenantId) {
       query = query.eq('tenant_id', tenantId);
@@ -344,7 +400,10 @@ class LeadNurturingService {
   /**
    * Check existing sequence
    */
-  private async checkExistingSequence(leadId: string, sequenceId: string): Promise<boolean> {
+  private async checkExistingSequence(
+    leadId: string,
+    sequenceId: string
+  ): Promise<boolean> {
     const { data } = await this.supabase
       .from('nurturing_schedule')
       .select('id')
@@ -359,7 +418,11 @@ class LeadNurturingService {
   /**
    * Enroll lead
    */
-  private async enrollLead(leadId: string, sequenceId: string, tenantId?: string): Promise<void> {
+  private async enrollLead(
+    leadId: string,
+    sequenceId: string,
+    tenantId?: string
+  ): Promise<void> {
     await this.supabase.from('nurturing_enrollments').insert({
       lead_id: leadId,
       sequence_id: sequenceId,
@@ -389,7 +452,10 @@ class LeadNurturingService {
   /**
    * Complete sequence
    */
-  private async completeSequence(leadId: string, sequenceId: string): Promise<void> {
+  private async completeSequence(
+    leadId: string,
+    sequenceId: string
+  ): Promise<void> {
     await this.supabase
       .from('nurturing_enrollments')
       .update({
@@ -402,7 +468,10 @@ class LeadNurturingService {
   /**
    * Track event
    */
-  private async trackEvent(event: string, properties: Record<string, unknown>): Promise<void> {
+  private async trackEvent(
+    event: string,
+    properties: Record<string, unknown>
+  ): Promise<void> {
     try {
       await fetch('/api/telemetry/ingest', {
         method: 'POST',

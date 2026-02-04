@@ -25,6 +25,106 @@ export interface LeadScore {
   recommendations: string[];
 }
 
+export function calculateBehavioralScoreFromActivities(
+  activities: Array<{ activity_type: string; created_at: string }>
+): number {
+  if (!activities || activities.length === 0) {
+    return 0;
+  }
+
+  const highValueActivities = new Set([
+    'demo_requested',
+    'pricing_viewed',
+    'trial_started',
+  ]);
+  const activityTypes = new Set<string>();
+  const recentCutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  let hasRecentActivity = false;
+  let hasHighValue = false;
+
+  for (const activity of activities) {
+    activityTypes.add(activity.activity_type);
+    if (!hasRecentActivity) {
+      const createdAt = new Date(activity.created_at).getTime();
+      if (createdAt > recentCutoff) {
+        hasRecentActivity = true;
+      }
+    }
+    if (!hasHighValue && highValueActivities.has(activity.activity_type)) {
+      hasHighValue = true;
+    }
+  }
+
+  let score = 0;
+  score += Math.min(activities.length * 2, 10);
+  score += Math.min(activityTypes.size * 2, 10);
+  if (hasRecentActivity) {
+    score += 5;
+  }
+  if (hasHighValue) {
+    score += 5;
+  }
+
+  return Math.min(score, 30);
+}
+
+export function calculateEngagementScoreFromData(
+  emails:
+    | Array<{ opened?: boolean; clicked?: boolean; replied?: boolean }>
+    | null
+    | undefined,
+  sessions: Array<{ duration?: number; page_views?: number }> | null | undefined
+): number {
+  let score = 0;
+
+  if (emails && emails.length > 0) {
+    let opened = 0;
+    let clicked = 0;
+    let replied = 0;
+
+    for (const email of emails) {
+      if (email.opened) {
+        opened += 1;
+      }
+      if (email.clicked) {
+        clicked += 1;
+      }
+      if (email.replied) {
+        replied += 1;
+      }
+    }
+
+    score += Math.min(opened * 2, 8);
+    score += Math.min(clicked * 3, 6);
+    score += replied * 6;
+  }
+
+  if (sessions && sessions.length > 0) {
+    let totalTime = 0;
+    let pageViews = 0;
+
+    for (const session of sessions) {
+      totalTime += session.duration || 0;
+      pageViews += session.page_views || 0;
+    }
+
+    if (totalTime > 300) {
+      score += 3;
+    }
+    if (pageViews > 5) {
+      score += 3;
+    }
+  }
+
+  return Math.min(score, 20);
+}
+
+type LeadScoringData = {
+  activities: Array<{ activity_type: string; created_at: string }>;
+  emails: Array<{ opened?: boolean; clicked?: boolean; replied?: boolean }>;
+  sessions: Array<{ duration?: number; page_views?: number }>;
+};
+
 interface Lead {
   id: string;
   email?: string;
@@ -48,7 +148,10 @@ interface Lead {
 }
 
 class LeadScoringService {
-  private supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+  private supabase = createClient(
+    env.supabase.url,
+    env.supabase.serviceRoleKey
+  );
 
   /**
    * Calculate comprehensive lead score
@@ -60,10 +163,21 @@ class LeadScoringService {
       throw new Error('Lead not found');
     }
 
+    const scoringData = await this.fetchScoringData(leadId);
+
     // Calculate factor scores
     const demographic = await this.calculateDemographicScore(lead);
-    const behavioral = await this.calculateBehavioralScore(leadId, tenantId);
-    const engagement = await this.calculateEngagementScore(leadId, tenantId);
+    const behavioral = await this.calculateBehavioralScore(
+      leadId,
+      tenantId,
+      scoringData.activities
+    );
+    const engagement = await this.calculateEngagementScore(
+      leadId,
+      tenantId,
+      scoringData.emails,
+      scoringData.sessions
+    );
     const fit = await this.calculateFitScore(lead, tenantId);
 
     const factors: LeadScoringFactors = {
@@ -106,7 +220,16 @@ class LeadScoringService {
   /**
    * Calculate demographic score
    */
-  private async calculateDemographicScore(lead: { email?: string; name?: string; first_name?: string; last_name?: string; company?: string; phone?: string; job_title?: string; metadata?: { company_size?: string; [key: string]: unknown } }): Promise<number> {
+  private async calculateDemographicScore(lead: {
+    email?: string;
+    name?: string;
+    first_name?: string;
+    last_name?: string;
+    company?: string;
+    phone?: string;
+    job_title?: string;
+    metadata?: { company_size?: string; [key: string]: unknown };
+  }): Promise<number> {
     let score = 0;
 
     // Email quality
@@ -120,8 +243,12 @@ class LeadScoringService {
     }
 
     // Name completeness
-    if (lead.first_name) {score += 3;}
-    if (lead.last_name) {score += 3;}
+    if (lead.first_name) {
+      score += 3;
+    }
+    if (lead.last_name) {
+      score += 3;
+    }
 
     // Company information
     if (lead.company) {
@@ -136,7 +263,9 @@ class LeadScoringService {
     }
 
     // Phone number
-    if (lead.phone) {score += 5;}
+    if (lead.phone) {
+      score += 5;
+    }
 
     return Math.min(score, 30);
   }
@@ -144,88 +273,109 @@ class LeadScoringService {
   /**
    * Calculate behavioral score
    */
-  private async calculateBehavioralScore(leadId: string, _tenantId?: string): Promise<number> {
-    let score = 0;
+  private async calculateBehavioralScore(
+    leadId: string,
+    _tenantId?: string,
+    activities?: Array<{ activity_type: string; created_at: string }>
+  ): Promise<number> {
+    if (activities) {
+      return calculateBehavioralScoreFromActivities(activities);
+    }
 
-    // Get lead activities
-    const { data: activities } = await this.supabase
+    const { data } = await this.supabase
       .from('lead_activities')
       .select('*')
       .eq('lead_id', leadId)
       .order('created_at', { ascending: false })
       .limit(50);
 
-    if (!activities || activities.length === 0) {return 0;}
-
-    // Activity frequency
-    const activityCount = activities.length;
-    score += Math.min(activityCount * 2, 10);
-
-    // Activity types
-    const activityTypes = new Set(activities.map((a: { activity_type: string }) => a.activity_type));
-    score += Math.min(activityTypes.size * 2, 10);
-
-    // Recent activity bonus
-    const recentActivity = activities.filter(
-      (a: { created_at: string }) => new Date(a.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000
+    return calculateBehavioralScoreFromActivities(
+      (data as Array<{ activity_type: string; created_at: string }>) || []
     );
-    if (recentActivity.length > 0) {
-      score += 5;
-    }
-
-    // High-value activities
-    const highValueActivities = ['demo_requested', 'pricing_viewed', 'trial_started'];
-    const hasHighValue = activities.some((a: { activity_type: string }) => highValueActivities.includes(a.activity_type));
-    if (hasHighValue) {
-      score += 5;
-    }
-
-    return Math.min(score, 30);
   }
 
   /**
    * Calculate engagement score
    */
-  private async calculateEngagementScore(leadId: string, _tenantId?: string): Promise<number> {
-    let score = 0;
+  private async calculateEngagementScore(
+    leadId: string,
+    _tenantId?: string,
+    emails?: Array<{ opened?: boolean; clicked?: boolean; replied?: boolean }>,
+    sessions?: Array<{ duration?: number; page_views?: number }>
+  ): Promise<number> {
+    if (emails || sessions) {
+      return calculateEngagementScoreFromData(emails, sessions);
+    }
 
-    // Email engagement
-    const { data: emails } = await this.supabase
+    const { data: fetchedEmails } = await this.supabase
       .from('email_interactions')
       .select('*')
       .eq('lead_id', leadId);
 
-    if (emails && emails.length > 0) {
-      const opened = emails.filter((e: { opened?: boolean }) => e.opened).length;
-      const clicked = emails.filter((e: { clicked?: boolean }) => e.clicked).length;
-      const replied = emails.filter((e: { replied?: boolean }) => e.replied).length;
-
-      score += Math.min(opened * 2, 8);
-      score += Math.min(clicked * 3, 6);
-      score += replied * 6;
-    }
-
-    // Website engagement
-    const { data: sessions } = await this.supabase
+    const { data: fetchedSessions } = await this.supabase
       .from('lead_sessions')
       .select('*')
       .eq('lead_id', leadId);
+    return calculateEngagementScoreFromData(
+      fetchedEmails as
+        | Array<{ opened?: boolean; clicked?: boolean; replied?: boolean }>
+        | null
+        | undefined,
+      fetchedSessions as
+        | Array<{ duration?: number; page_views?: number }>
+        | null
+        | undefined
+    );
+  }
 
-    if (sessions && sessions.length > 0) {
-      const totalTime = sessions.reduce((sum: number, s: { duration?: number }) => sum + (s.duration || 0), 0);
-      const pageViews = sessions.reduce((sum: number, s: { page_views?: number }) => sum + (s.page_views || 0), 0);
+  private async fetchScoringData(leadId: string): Promise<LeadScoringData> {
+    const [activitiesResult, emailsResult, sessionsResult] = await Promise.all([
+      this.supabase
+        .from('lead_activities')
+        .select('*')
+        .eq('lead_id', leadId)
+        .order('created_at', { ascending: false })
+        .limit(50),
+      this.supabase
+        .from('email_interactions')
+        .select('*')
+        .eq('lead_id', leadId),
+      this.supabase.from('lead_sessions').select('*').eq('lead_id', leadId),
+    ]);
 
-      if (totalTime > 300) {score += 3;} // 5+ minutes
-      if (pageViews > 5) {score += 3;} // 5+ pages
-    }
-
-    return Math.min(score, 20);
+    return {
+      activities:
+        (activitiesResult.data as Array<{
+          activity_type: string;
+          created_at: string;
+        }>) || [],
+      emails:
+        (emailsResult.data as Array<{
+          opened?: boolean;
+          clicked?: boolean;
+          replied?: boolean;
+        }>) || [],
+      sessions:
+        (sessionsResult.data as Array<{
+          duration?: number;
+          page_views?: number;
+        }>) || [],
+    };
   }
 
   /**
    * Calculate fit score
    */
-  private async calculateFitScore(lead: { email?: string; source?: string; company?: string; campaign?: string; metadata?: { industry?: string; budget?: string; [key: string]: unknown } }, _tenantId?: string): Promise<number> {
+  private async calculateFitScore(
+    lead: {
+      email?: string;
+      source?: string;
+      company?: string;
+      campaign?: string;
+      metadata?: { industry?: string; budget?: string; [key: string]: unknown };
+    },
+    _tenantId?: string
+  ): Promise<number> {
     let score = 0;
 
     // Source quality
@@ -237,7 +387,9 @@ class LeadScoringService {
     // Campaign quality
     if (lead.campaign) {
       const highValueCampaigns = ['enterprise', 'partnership', 'webinar'];
-      if (highValueCampaigns.some(c => lead.campaign!.toLowerCase().includes(c))) {
+      if (
+        highValueCampaigns.some(c => lead.campaign!.toLowerCase().includes(c))
+      ) {
         score += 5;
       } else {
         score += 2;
@@ -265,19 +417,28 @@ class LeadScoringService {
    * Determine priority
    */
   private determinePriority(score: number): 'hot' | 'warm' | 'cold' {
-    if (score >= 80) {return 'hot';}
-    if (score >= 50) {return 'warm';}
+    if (score >= 80) {
+      return 'hot';
+    }
+    if (score >= 50) {
+      return 'warm';
+    }
     return 'cold';
   }
 
   /**
    * Generate recommendations
    */
-  private generateRecommendations(factors: LeadScoringFactors, total: number): string[] {
+  private generateRecommendations(
+    factors: LeadScoringFactors,
+    total: number
+  ): string[] {
     const recommendations: string[] = [];
 
     if (factors.demographic < 20) {
-      recommendations.push('Collect more demographic information (company, phone, etc.)');
+      recommendations.push(
+        'Collect more demographic information (company, phone, etc.)'
+      );
     }
 
     if (factors.behavioral < 15) {
@@ -285,7 +446,9 @@ class LeadScoringService {
     }
 
     if (factors.engagement < 10) {
-      recommendations.push('Send targeted email campaigns to increase engagement');
+      recommendations.push(
+        'Send targeted email campaigns to increase engagement'
+      );
     }
 
     if (factors.fit < 10) {
@@ -306,7 +469,10 @@ class LeadScoringService {
   /**
    * Get lead data
    */
-  private async getLead(leadId: string, tenantId?: string): Promise<Lead | null> {
+  private async getLead(
+    leadId: string,
+    tenantId?: string
+  ): Promise<Lead | null> {
     let query = this.supabase.from('leads').select('*').eq('id', leadId);
 
     if (tenantId) {
@@ -344,7 +510,10 @@ class LeadScoringService {
   /**
    * Batch score leads
    */
-  async batchScoreLeads(leadIds: string[], tenantId?: string): Promise<LeadScore[]> {
+  async batchScoreLeads(
+    leadIds: string[],
+    tenantId?: string
+  ): Promise<LeadScore[]> {
     const scores: LeadScore[] = [];
 
     for (const leadId of leadIds) {
@@ -352,9 +521,13 @@ class LeadScoringService {
         const score = await this.calculateScore(leadId, tenantId);
         scores.push(score);
       } catch (error) {
-        logger.error('Failed to score lead', error instanceof Error ? error : new Error(String(error)), {
-          leadId,
-        });
+        logger.error(
+          'Failed to score lead',
+          error instanceof Error ? error : new Error(String(error)),
+          {
+            leadId,
+          }
+        );
       }
     }
 

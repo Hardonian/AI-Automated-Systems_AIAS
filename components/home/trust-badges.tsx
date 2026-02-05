@@ -5,10 +5,12 @@ import {
   Award,
   CheckCircle2,
   Users,
-  TrendingUp,
   Clock,
   Globe,
   Lock,
+  Target,
+  FileText,
+  Zap,
 } from 'lucide-react';
 
 import { Card, CardContent } from '@/components/ui/card';
@@ -19,100 +21,96 @@ import {
   GRID_GAPS,
 } from '@/lib/design-tokens';
 
-const metrics = [
+const deliverables = [
   {
-    icon: CheckCircle2,
-    value: '100%',
-    label: 'Projects Delivered On Time',
-    description: 'Every custom platform delivered as promised',
-    color: 'text-green-500',
-    bgColor: 'bg-green-500/10',
+    icon: FileText,
+    title: 'Automation Blueprint',
+    description: 'FSM + triggers + guardrails documented',
+    gradient: 'from-blue-500 to-cyan-500',
   },
   {
-    icon: TrendingUp,
-    value: '40%',
-    label: 'Average ROI Increase',
-    description: 'Clients see measurable business impact',
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-500/10',
+    icon: Target,
+    title: 'Agent Runbooks',
+    description: 'Prompt contracts and operational procedures',
+    gradient: 'from-green-500 to-emerald-500',
+  },
+  {
+    icon: Zap,
+    title: 'Connector Map',
+    description: 'APIs, webhooks, and queues defined',
+    gradient: 'from-purple-500 to-pink-500',
+  },
+  {
+    icon: Shield,
+    title: 'Observability Pack',
+    description: 'Logs, alerts, and error budgets',
+    gradient: 'from-orange-500 to-red-500',
+  },
+];
+
+const guardrails = [
+  {
+    icon: Lock,
+    title: 'Least Privilege',
+    description: 'Agents access only what they need',
+  },
+  {
+    icon: Shield,
+    title: 'PII Handling',
+    description: 'Sensitive data properly masked',
+  },
+  {
+    icon: CheckCircle2,
+    title: 'Audit Logs',
+    description: 'Every action is traceable',
   },
   {
     icon: Users,
-    value: '2,000+',
-    label: 'Active Users',
-    description: 'Trusted by businesses worldwide',
-    color: 'text-purple-500',
-    bgColor: 'bg-purple-500/10',
+    title: 'Human-in-the-Loop',
+    description: 'Critical decisions reviewed by humans',
   },
+];
+
+const reliability = [
   {
     icon: Clock,
-    value: '8-16',
-    label: 'Weeks Average Timeline',
-    description: 'From strategy to deployment',
-    color: 'text-orange-500',
-    bgColor: 'bg-orange-500/10',
-  },
-];
-
-const certifications = [
-  {
-    name: 'PIPEDA Compliant',
-    icon: Shield,
-    description: 'Canadian privacy law compliance',
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-500/10',
+    title: 'Retries + Backoff',
+    description: 'Graceful degradation on failures',
   },
   {
-    name: 'SOC 2 Ready',
-    icon: Lock,
-    description: 'Enterprise security standards',
-    color: 'text-green-500',
-    bgColor: 'bg-green-500/10',
-  },
-  {
-    name: 'ISO 27001 Aligned',
     icon: Award,
-    description: 'Information security management',
-    color: 'text-purple-500',
-    bgColor: 'bg-purple-500/10',
+    title: 'Circuit Breakers',
+    description: 'Prevent cascade failures',
   },
   {
-    name: '99.9% Uptime SLA',
-    icon: CheckCircle2,
-    description: 'Guaranteed reliability',
-    color: 'text-orange-500',
-    bgColor: 'bg-orange-500/10',
+    icon: Target,
+    title: 'Idempotency Keys',
+    description: 'Safe retry without duplication',
   },
-];
-
-const clientTypes = [
-  'E-Commerce Brands',
-  'Marketing Agencies',
-  'Enterprise Companies',
-  'SaaS Platforms',
-  'Healthcare Organizations',
-  'Financial Services',
-  'Retail Businesses',
-  'Tech Startups',
 ];
 
 export function TrustBadges() {
   return (
     <section
-      aria-label='Trust signals and social proof'
-      className={getSectionClasses('default', 'muted')}
+      aria-label='Deliverables and responsible AI practices'
+      className={getSectionClasses('default', 'default')}
     >
       <div className={getContainerClasses('wide')}>
-        {/* Metrics */}
-        <div className='mb-16'>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
+          {...({ className: 'mb-16' } as any)}
+        >
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
             whileInView={{ opacity: 1, y: 0 }}
-            {...({ className: `${TYPOGRAPHY.h3} text-center mb-4` } as any)}
+            {...({ className: `${TYPOGRAPHY.h2} text-center mb-4` } as any)}
           >
-            Proven Results
+            What We Deliver
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -120,21 +118,21 @@ export function TrustBadges() {
             viewport={{ once: true }}
             whileInView={{ opacity: 1, y: 0 }}
             {...({
-              className: `text-center text-muted-foreground mb-8 ${TYPOGRAPHY.body}`,
+              className: `text-center text-muted-foreground ${TYPOGRAPHY.body}`,
             } as any)}
           >
-            Real numbers from real businesses using our platforms
+            Concrete artifacts you own after every engagement
           </motion.p>
           <div
             className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 ${GRID_GAPS.default}`}
           >
-            {metrics.map((metric, index) => {
-              const Icon = metric.icon;
+            {deliverables.map((item, index) => {
+              const Icon = item.icon;
               return (
                 <motion.div
-                  key={metric.label}
+                  key={item.title}
                   initial={{ opacity: 0, y: 20 }}
-                  transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+                  transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
                   viewport={{ once: true }}
                   whileHover={{ y: -4, scale: 1.02 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -142,23 +140,18 @@ export function TrustBadges() {
                   <Card className='h-full border-2 text-center transition-all hover:border-primary/50 hover:shadow-lg'>
                     <CardContent className='px-4 pb-6 pt-6'>
                       <div
-                        className={`h-12 w-12 rounded-lg md:h-14 md:w-14 ${metric.bgColor} mx-auto mb-4 flex items-center justify-center`}
+                        className={`mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${item.gradient}`}
                       >
                         <Icon
                           aria-hidden='true'
-                          className={`h-6 w-6 md:h-7 md:w-7 ${metric.color}`}
+                          className='h-6 w-6 text-white'
                         />
                       </div>
-                      <div
-                        className={`${TYPOGRAPHY.stat} ${metric.color} mb-2`}
-                      >
-                        {metric.value}
-                      </div>
                       <div className={`font-bold ${TYPOGRAPHY.bodySmall} mb-1`}>
-                        {metric.label}
+                        {item.title}
                       </div>
-                      <div className='text-xs text-muted-foreground md:text-sm'>
-                        {metric.description}
+                      <div className='text-sm text-muted-foreground'>
+                        {item.description}
                       </div>
                     </CardContent>
                   </Card>
@@ -166,27 +159,43 @@ export function TrustBadges() {
               );
             })}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Certifications */}
-        <div className='mb-16'>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
+          {...({ className: 'mb-16' } as any)}
+        >
           <motion.h3
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
             whileInView={{ opacity: 1, y: 0 }}
-            {...({ className: `${TYPOGRAPHY.h4} text-center mb-8` } as any)}
+            {...({ className: `${TYPOGRAPHY.h3} text-center mb-8` } as any)}
           >
-            Security & Compliance
+            Responsible Agentic Ops
           </motion.h3>
-          <div
-            className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 ${GRID_GAPS.default}`}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true }}
+            whileInView={{ opacity: 1, y: 0 }}
+            {...({
+              className: `text-center text-muted-foreground ${TYPOGRAPHY.body} mb-8`,
+            } as any)}
           >
-            {certifications.map((cert, index) => {
-              const Icon = cert.icon;
+            Built-in guardrails and reliability patterns for every deployment
+          </motion.p>
+          <div
+            className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${GRID_GAPS.default}`}
+          >
+            {guardrails.map((item, index) => {
+              const Icon = item.icon;
               return (
                 <motion.div
-                  key={cert.name}
+                  key={item.title}
                   initial={{ opacity: 0, y: 20 }}
                   transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
                   viewport={{ once: true }}
@@ -196,22 +205,20 @@ export function TrustBadges() {
                   <Card className='h-full border-2 transition-all hover:border-primary/50 hover:shadow-lg'>
                     <CardContent className='px-4 pb-6 pt-6'>
                       <div className='flex items-center gap-4'>
-                        <div
-                          className={`h-12 w-12 rounded-lg md:h-14 md:w-14 ${cert.bgColor} flex flex-shrink-0 items-center justify-center`}
-                        >
+                        <div className='flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10'>
                           <Icon
                             aria-hidden='true'
-                            className={`h-6 w-6 md:h-7 md:w-7 ${cert.color}`}
+                            className='h-6 w-6 text-primary'
                           />
                         </div>
                         <div className='flex-1'>
                           <div
                             className={`font-bold ${TYPOGRAPHY.bodySmall} mb-1`}
                           >
-                            {cert.name}
+                            {item.title}
                           </div>
-                          <div className='text-xs text-muted-foreground md:text-sm'>
-                            {cert.description}
+                          <div className='text-sm text-muted-foreground'>
+                            {item.description}
                           </div>
                         </div>
                       </div>
@@ -221,48 +228,60 @@ export function TrustBadges() {
               );
             })}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Client Types */}
-        <div className='text-center'>
-          <motion.h3
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
+          {...({ className: 'mb-12' } as any)}
+        >
+          <motion.h4
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
             whileInView={{ opacity: 1, y: 0 }}
-            {...({ className: `${TYPOGRAPHY.h4} mb-6` } as any)}
+            {...({ className: `${TYPOGRAPHY.h4} text-center mb-6` } as any)}
           >
-            Trusted By Industry Leaders
-          </motion.h3>
-          <motion.div
-            initial={{ opacity: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1 }}
-            {...({
-              className:
-                'flex flex-wrap items-center justify-center gap-3 md:gap-4',
-            } as any)}
+            Reliability Engineering
+          </motion.h4>
+          <div
+            className={`grid grid-cols-1 sm:grid-cols-3 ${GRID_GAPS.default}`}
           >
-            {clientTypes.map((type, index) => (
-              <motion.div
-                key={type}
-                initial={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3, delay: 0.2 + index * 0.05 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                {...({
-                  className: `px-4 py-2 md:px-5 md:py-2.5 rounded-full bg-card border-2 border-border hover:border-primary/50 ${TYPOGRAPHY.bodySmall} font-semibold transition-all hover:shadow-md`,
-                } as any)}
-              >
-                {type}
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+            {reliability.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ y: -4, scale: 1.02 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                >
+                  <Card className='h-full border-2 text-center transition-all hover:border-primary/50 hover:shadow-lg'>
+                    <CardContent className='px-4 pb-6 pt-6'>
+                      <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10'>
+                        <Icon
+                          aria-hidden='true'
+                          className='h-6 w-6 text-primary'
+                        />
+                      </div>
+                      <div className={`font-bold ${TYPOGRAPHY.bodySmall} mb-1`}>
+                        {item.title}
+                      </div>
+                      <div className='text-sm text-muted-foreground'>
+                        {item.description}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
 
-        {/* Additional trust indicators */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -275,22 +294,15 @@ export function TrustBadges() {
           >
             <div className='flex items-center gap-2 font-semibold text-foreground'>
               <Globe aria-hidden='true' className='h-5 w-5 text-primary' />
-              <span>🇨🇦 Built in Canada</span>
+              <span>🇨🇦 Canadian Operations</span>
             </div>
             <div className='flex items-center gap-2 font-semibold text-foreground'>
-              <Globe aria-hidden='true' className='h-5 w-5 text-primary' />
-              <span>🌍 Serving Global Clients</span>
+              <Lock aria-hidden='true' className='h-5 w-5 text-primary' />
+              <span>Privacy-First Approach</span>
             </div>
             <div className='flex items-center gap-2 font-semibold text-foreground'>
-              <Shield aria-hidden='true' className='h-5 w-5 text-primary' />
-              <span>🔒 Enterprise Security</span>
-            </div>
-            <div className='flex items-center gap-2 font-semibold text-foreground'>
-              <CheckCircle2
-                aria-hidden='true'
-                className='h-5 w-5 text-primary'
-              />
-              <span>⭐ 4.9/5 Customer Rating</span>
+              <Award aria-hidden='true' className='h-5 w-5 text-primary' />
+              <span>Systems Thinking Methodology</span>
             </div>
           </div>
         </motion.div>

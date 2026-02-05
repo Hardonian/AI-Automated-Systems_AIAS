@@ -1,284 +1,243 @@
-import { CheckCircle2, Search, Code, Rocket, Shield, Users, ArrowRight } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
+import type { Metadata } from 'next';
+import {
+  ArrowRight,
+  CheckCircle2,
+  Target,
+  Users,
+  FileText,
+  Rocket,
+} from 'lucide-react';
 
-import { ServiceSchema } from "@/components/seo/structured-data";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 export const metadata: Metadata = {
-  title: "Our Process — How We Build Custom AI Platforms | AIAS Consultancy",
-  description: "From discovery to deployment. See how AIAS Consultancy works with clients to build custom AI platforms. Transparent process, clear timelines, proven results.",
+  title: 'Process — AI Automated Systems | How Engagements Work',
+  description:
+    'Our engagement model: Pilot, Scale, Enable. Practical phases to ship reliable automation.',
 };
 
-const processSteps = [
+const phases = [
   {
-    phase: "Phase 1",
-    title: "Discovery & Strategy",
-    duration: "1-2 weeks",
-    icon: Search,
-    description: "We start by understanding your business, challenges, and goals. This isn't a sales call — it's a strategic consultation.",
-    deliverables: [
-      "Business needs analysis",
-      "Technical requirements gathering",
-      "Stakeholder interviews",
-      "Competitive landscape review",
-      "ROI projections & success metrics",
-      "Project roadmap & timeline",
-    ],
-    outcome: "Clear project scope, architecture plan, and success criteria.",
-  },
-  {
-    phase: "Phase 2",
-    title: "Architecture & Design",
-    duration: "2-3 weeks",
-    icon: Code,
-    description: "We design the technical architecture, user flows, and system integrations. Every decision is documented and reviewed.",
-    deliverables: [
-      "Technical architecture design",
-      "System integration mapping",
-      "User experience flows",
-      "Data model design",
-      "Security & compliance plan",
-      "Development sprint planning",
-    ],
-    outcome: "Complete technical blueprint ready for development.",
-  },
-  {
-    phase: "Phase 3",
-    title: "Development & Testing",
-    duration: "4-12 weeks",
+    title: 'Pilot',
+    duration: '2-4 weeks',
+    tagline: 'Ship your first workflow',
     icon: Rocket,
-    description: "Agile development with weekly demos. You see progress every step of the way. No surprises, no scope creep.",
-    deliverables: [
-      "Weekly progress demos",
-      "Custom AI agent development",
-      "Platform feature implementation",
-      "Integration development",
-      "Automated testing suite",
-      "Performance optimization",
+    description:
+      'Focused engagement to design, build, and deploy your first production automation.',
+    activities: [
+      'Discovery session to identify highest-value use case',
+      'Workflow design with state machines and error handling',
+      'Build and iterative testing',
+      'Observability and monitoring setup',
+      'Governance baseline configuration',
     ],
-    outcome: "Fully functional platform ready for deployment.",
+    outcomes: [
+      '1-2 production workflows shipped',
+      'Complete documentation and runbooks',
+      'Error budget and SLA defined',
+      'Hand-off to your team',
+    ],
   },
   {
-    phase: "Phase 4",
-    title: "Deployment & Launch",
-    duration: "1-2 weeks",
-    icon: Shield,
-    description: "We handle deployment, security hardening, and launch support. Your platform goes live smoothly.",
-    deliverables: [
-      "Production deployment",
-      "Security audit & hardening",
-      "Performance monitoring setup",
-      "Team training & documentation",
-      "Launch support & troubleshooting",
-      "Post-launch optimization plan",
+    title: 'Scale',
+    duration: '6-12 weeks',
+    tagline: 'Expand automation across workflows',
+    icon: Target,
+    description:
+      'Expand automation to additional workflows and integrate with more systems.',
+    activities: [
+      'Additional workflow design and build',
+      'Integration with enterprise systems',
+      'Advanced observability and alerting',
+      'Cross-workflow orchestration',
+      'Performance optimization',
     ],
-    outcome: "Platform live, team trained, ready to scale.",
+    outcomes: [
+      '3-8 production workflows',
+      'Integrated system architecture',
+      'Comprehensive monitoring dashboard',
+      'Internal capability to extend patterns',
+    ],
   },
   {
-    phase: "Phase 5",
-    title: "Support & Optimization",
-    duration: "Ongoing",
+    title: 'Enable',
+    duration: 'Ongoing',
+    tagline: 'Build internal capability',
     icon: Users,
-    description: "We stay with you after launch. Continuous monitoring, improvements, and strategic consulting.",
-    deliverables: [
-      "24/7 monitoring & alerts",
-      "Performance optimization",
-      "Feature enhancements",
-      "Bug fixes & updates",
-      "Strategic consulting",
-      "Quarterly reviews",
+    description:
+      'Ongoing support to train your team and iterate on automations.',
+    activities: [
+      'Workshop training for your team',
+      'Office hours for questions and support',
+      'Iterative improvements based on feedback',
+      'Pattern documentation and knowledge transfer',
     ],
-    outcome: "Platform continuously improving, ROI increasing.",
+    outcomes: [
+      'Trained internal team',
+      'Internal playbook for new workflows',
+      'Ongoing support agreement',
+      'Continuous improvement process',
+    ],
   },
 ];
 
 const principles = [
   {
-    title: "Transparency",
-    description: "Weekly demos, clear timelines, no hidden costs. You always know where we stand.",
+    title: 'Practical First',
+    description:
+      'We ship working code, not PDFs. Every engagement produces tangible artifacts you own.',
   },
   {
-    title: "Collaboration",
-    description: "We work with your team, not just for them. Knowledge transfer is built into every phase.",
+    title: 'Systems Thinking',
+    description:
+      'We analyze your whole operation, not just isolated problems. Workflows connect to systems.',
   },
   {
-    title: "Quality",
-    description: "Enterprise-grade code, security-first architecture, scalable design. Built to last.",
+    title: 'Human-Centered',
+    description:
+      'Humans stay in the loop for critical decisions. Automation augments, not replaces.',
   },
   {
-    title: "Results",
-    description: "We measure success by your outcomes. ROI tracking, performance metrics, business impact.",
+    title: 'Operable from Day One',
+    description:
+      'Every automation includes runbooks, monitoring, and error handling. No fragile prototypes.',
   },
 ];
 
 export default function ProcessPage() {
   return (
-    <>
-      <ServiceSchema />
-      <div className="container py-16">
-        <div className="text-center mb-16 max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            How We Build Custom AI Platforms
+    <main className='min-h-screen'>
+      <section className='bg-gradient-to-b from-muted/30 via-background to-muted/30 px-4 py-20'>
+        <div className='container mx-auto max-w-4xl text-center'>
+          <span className='mb-6 inline-block rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary'>
+            Our Engagement Model
+          </span>
+          <h1 className='mb-6 text-4xl font-extrabold leading-[1.1] tracking-tight md:text-5xl lg:text-6xl'>
+            Pilot → Scale → Enable
           </h1>
-          <p className="text-xl text-muted-foreground mb-6">
-            From discovery to deployment, we follow a proven process that ensures your platform 
-            delivers real business value. Transparent, collaborative, results-driven.
+          <p className='mb-8 text-lg leading-relaxed text-muted-foreground md:text-xl'>
+            Three practical phases to go from concept to production automation,
+            with capability-building woven throughout.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg">
-              <Link href="/demo">Schedule Strategy Call</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/case-studies">See Results</Link>
-            </Button>
-          </div>
         </div>
+      </section>
 
-        {/* Process Steps */}
-        <div className="space-y-12 mb-16">
-          {processSteps.map((step, index) => {
-            const Icon = step.icon;
+      <section className='px-4 py-20'>
+        <div className='container mx-auto max-w-6xl space-y-12'>
+          {phases.map(phase => {
+            const Icon = phase.icon;
             return (
-              <div key={step.phase} className="relative">
-                {/* Connection line */}
-                {index < processSteps.length - 1 && (
-                  <div className="absolute left-6 top-20 bottom-0 w-0.5 bg-primary/20 hidden md:block" />
-                )}
-                
-                <Card className="relative overflow-hidden border-2">
-                  <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
-                  <CardHeader className="bg-muted/50">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <Icon className="h-6 w-6 text-primary" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="text-sm font-medium text-primary">{step.phase}</span>
-                          <span className="text-sm text-muted-foreground">•</span>
-                          <span className="text-sm text-muted-foreground">{step.duration}</span>
-                        </div>
-                        <CardTitle className="text-2xl mb-2">{step.title}</CardTitle>
-                        <CardDescription className="text-base">{step.description}</CardDescription>
-                      </div>
+              <Card key={phase.title} className='border-2'>
+                <CardHeader>
+                  <div className='flex flex-col gap-4 md:flex-row md:items-center'>
+                    <div className='flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10'>
+                      <Icon className='h-8 w-8 text-primary' />
                     </div>
-                  </CardHeader>
-                  <CardContent className="pt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <div>
-                        <h4 className="font-semibold mb-3 flex items-center gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-primary" />
-                          Deliverables
-                        </h4>
-                        <ul className="space-y-2">
-                          {step.deliverables.map((item, idx) => (
-                            <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
-                              <span className="text-primary mt-1">•</span>
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
+                    <div className='flex-1'>
+                      <div className='mb-1 flex items-center gap-3'>
+                        <h2 className='text-2xl font-bold'>{phase.title}</h2>
+                        <span className='rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary'>
+                          {phase.duration}
+                        </span>
                       </div>
-                      <div className="bg-primary/5 p-4 rounded-lg">
-                        <h4 className="font-semibold mb-2">Outcome</h4>
-                        <p className="text-sm text-muted-foreground">{step.outcome}</p>
-                      </div>
+                      <p className='text-lg font-medium text-primary'>
+                        {phase.tagline}
+                      </p>
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className='grid grid-cols-1 gap-8 lg:grid-cols-3'>
+                    <div className='lg:col-span-1'>
+                      <p className='mb-6 text-muted-foreground'>
+                        {phase.description}
+                      </p>
+                      <Button asChild variant='outline'>
+                        <a href='/contact'>
+                          Start a {phase.title}
+                          <ArrowRight className='ml-2 h-4 w-4' />
+                        </a>
+                      </Button>
+                    </div>
+                    <div className='lg:col-span-1'>
+                      <h3 className='mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider'>
+                        <Target className='h-4 w-4' />
+                        Key Activities
+                      </h3>
+                      <ul className='space-y-3'>
+                        {phase.activities.map((activity, i) => (
+                          <li key={i} className='flex items-start gap-3'>
+                            <CheckCircle2 className='mt-0.5 h-5 w-5 flex-shrink-0 text-primary' />
+                            <span className='text-sm'>{activity}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className='lg:col-span-1'>
+                      <h3 className='mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider'>
+                        <FileText className='h-4 w-4' />
+                        Deliverables
+                      </h3>
+                      <ul className='space-y-3'>
+                        {phase.outcomes.map((outcome, i) => (
+                          <li key={i} className='flex items-start gap-3'>
+                            <ArrowRight className='mt-0.5 h-5 w-5 flex-shrink-0 text-primary' />
+                            <span className='text-sm'>{outcome}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             );
           })}
         </div>
+      </section>
 
-        {/* Principles */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8">Our Principles</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {principles.map((principle) => (
-              <Card key={principle.title} className="h-full">
-                <CardHeader>
-                  <CardTitle className="text-lg">{principle.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">{principle.description}</p>
+      <section className='bg-muted/30 px-4 py-20'>
+        <div className='container mx-auto max-w-4xl'>
+          <div className='mb-12 text-center'>
+            <h2 className='mb-4 text-3xl font-extrabold md:text-4xl'>
+              Our Principles
+            </h2>
+            <p className='text-lg text-muted-foreground'>
+              What sets our engagements apart.
+            </p>
+          </div>
+          <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+            {principles.map(principle => (
+              <Card
+                key={principle.title}
+                className='border-2 transition-colors hover:border-primary/50'
+              >
+                <CardContent className='p-6'>
+                  <h3 className='mb-2 text-lg font-bold'>{principle.title}</h3>
+                  <p className='text-muted-foreground'>
+                    {principle.description}
+                  </p>
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* Timeline Example */}
-        <Card className="mb-16 border-primary/20">
-          <CardHeader>
-            <CardTitle className="text-2xl">Typical Project Timeline</CardTitle>
-            <CardDescription>
-              Example: Custom AI Platform (similar to TokPulse or Hardonia Suite)
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
-                <div className="w-24 text-sm font-medium">Weeks 1-2</div>
-                <div className="flex-1">
-                  <div className="font-semibold mb-1">Discovery & Strategy</div>
-                  <div className="text-sm text-muted-foreground">Requirements, architecture planning, roadmap</div>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
-                <div className="w-24 text-sm font-medium">Weeks 3-5</div>
-                <div className="flex-1">
-                  <div className="font-semibold mb-1">Architecture & Design</div>
-                  <div className="text-sm text-muted-foreground">Technical design, integrations, security plan</div>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
-                <div className="w-24 text-sm font-medium">Weeks 6-14</div>
-                <div className="flex-1">
-                  <div className="font-semibold mb-1">Development & Testing</div>
-                  <div className="text-sm text-muted-foreground">Agile sprints, weekly demos, testing</div>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
-                <div className="w-24 text-sm font-medium">Weeks 15-16</div>
-                <div className="flex-1">
-                  <div className="font-semibold mb-1">Deployment & Launch</div>
-                  <div className="text-sm text-muted-foreground">Production deployment, training, go-live</div>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 p-4 bg-primary/5 rounded-lg border border-primary/20">
-                <div className="w-24 text-sm font-medium">Ongoing</div>
-                <div className="flex-1">
-                  <div className="font-semibold mb-1">Support & Optimization</div>
-                  <div className="text-sm text-muted-foreground">Monitoring, improvements, strategic consulting</div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* CTA */}
-        <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg p-8 text-center">
-          <h2 className="text-2xl font-bold mb-4">Ready to Start Your Project?</h2>
-          <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Schedule a strategy call to discuss your custom AI platform. We'll review your needs, 
-            share relevant case studies, and outline a clear process tailored to your project.
+      <section className='px-4 py-20'>
+        <div className='container mx-auto max-w-4xl text-center'>
+          <h2 className='mb-6 text-3xl font-extrabold md:text-4xl'>
+            Ready to Start?
+          </h2>
+          <p className='mb-8 text-lg text-muted-foreground'>
+            Book a discovery call to discuss your specific context and see if we
+            are a good fit.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg">
-              <Link href="/demo">
-                Schedule Strategy Call
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/case-studies">View Case Studies</Link>
-            </Button>
-          </div>
+          <Button asChild size='lg'>
+            <a href='/contact'>Book a Discovery Call</a>
+          </Button>
         </div>
-      </div>
-    </>
+      </section>
+    </main>
   );
 }

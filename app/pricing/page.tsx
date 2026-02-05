@@ -1,358 +1,230 @@
-import { Check } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
+import { Check } from 'lucide-react';
+import type { Metadata } from 'next';
+import Link from 'next/link';
 
-import { MobileStickyCTA } from "@/components/layout/mobile-sticky-cta";
-import { FeatureComparison } from "@/components/pricing/feature-comparison";
-import { PricingAnalytics } from "@/components/pricing/PricingAnalytics";
-import { ROICalculator } from "@/components/pricing/roi-calculator";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { MobileStickyCTA } from '@/components/layout/mobile-sticky-cta';
+import { PricingAnalytics } from '@/components/pricing/PricingAnalytics';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
 export const metadata: Metadata = {
-  title: "Pricing — AIAS Platform | Starting at $49/month | Multi-Currency Support",
-  description: "Affordable AI automation for businesses worldwide. Free plan available. Starting at $49/month (CAD/USD/EUR). Multi-currency support. Cancel anytime.",
+  title: 'Pricing — AI Automated Systems | Engagement Packages',
+  description:
+    'Practical engagement packages for automation consulting. Pilot, Scale, and Enable phases.',
 };
 
 const plans = [
   {
-    name: "Free",
-    price: "$0",
-    period: "month",
-    tagline: "Perfect for trying AIAS Platform",
-    description: "Get started with AI automation at no cost. Perfect for testing workflows, learning the platform, and automating small tasks.",
+    name: 'Pilot',
+    price: 'From $15,000',
+    period: 'project',
+    tagline: 'Ship your first automation',
+    description:
+      'Focused 2-4 week engagement to design, build, and deploy your first production workflow.',
     features: [
-      "3 automation workflows",
-      "100 automations per month",
-      "Basic templates to get started",
-      "Community support and resources",
-      "No credit card required",
+      '1-2 production workflows shipped',
+      'Complete documentation and runbooks',
+      'Observability and monitoring setup',
+      'Governance baseline configuration',
+      'Knowledge transfer session',
     ],
-    cta: "Start Free",
-    href: "/signup",
-    popular: false,
-    annualPrice: null,
-    isBeta: false,
-  },
-  {
-    name: "Starter",
-    price: "$49",
-    period: "month",
-    tagline: "For solo operators and small businesses",
-    description: "Everything you need to automate your business operations. Save 10+ hours per week with AI-powered workflows and Canadian-first integrations.",
-    features: [
-      "5 automation workflows",
-      "10,000 automations per month",
-      "10+ pre-built templates for common workflows",
-      "5+ Canadian integrations available (Shopify, Wave, and more)",
-      "Personalized news feed based on your goals",
-      "Email campaign analysis",
-      "Optional setup call ($99 one-time)",
-      "Email support",
-      "Analytics dashboard",
-      "Multi-currency support (CAD/USD/EUR)",
-      "Cancel anytime",
-    ],
-    cta: "Start Free Trial",
-    href: "/signup",
+    cta: 'Start a Pilot',
+    href: '/contact',
     popular: true,
-    annualPrice: "$490",
-    annualSavings: "$98",
-    annualDiscount: "20%",
-    isBeta: true,
   },
   {
-    name: "Pro",
-    price: "$149",
-    period: "month",
-    tagline: "For small teams (2-10 employees)",
-    description: "Advanced features for growing teams. Scale and automate with priority support and enhanced analytics.",
+    name: 'Scale',
+    price: 'From $50,000',
+    period: 'project',
+    tagline: 'Expand across workflows',
+    description:
+      '6-12 week engagement to expand automation to additional workflows and systems.',
     features: [
-      "20 automation workflows",
-      "50,000 automations per month",
-      "25+ workflow templates",
-      "15+ integrations available",
-      "Personalized news feed & insights",
-      "Full email campaign diagnostics",
-      "Optional setup call ($99 one-time)",
-      "Priority support (24h response)",
-      "Analytics & reporting",
-      "API access",
-      "Team collaboration (coming soon)",
-      "Advanced analytics (coming soon)",
+      '3-8 production workflows',
+      'Integration with enterprise systems',
+      'Advanced observability and alerting',
+      'Cross-workflow orchestration',
+      'Internal capability building',
     ],
-    cta: "Start Free Trial",
-    href: "/signup",
+    cta: 'Discuss Scale',
+    href: '/contact',
     popular: false,
-    annualPrice: "$1,490",
-    annualSavings: "$298",
-    annualDiscount: "20%",
-    isBeta: true,
   },
   {
-    name: "Enterprise",
-    price: "Custom",
-    period: "project",
-    tagline: "For custom AI platforms & consultancy",
-    description: "Full-stack custom development, dedicated support, and enterprise-grade security. Built for your specific business needs.",
+    name: 'Enable',
+    price: 'From $5,000',
+    period: 'month',
+    tagline: 'Ongoing partnership',
+    description:
+      'Continuous support to train your team and iterate on automations.',
     features: [
-      "Custom AI platform development",
-      "Unlimited workflows & automations",
-      "Dedicated account manager",
-      "SLA & 99.9% uptime guarantee",
-      "On-premise deployment options",
-      "Custom security & compliance",
-      "Priority 24/7 phone support",
-      "Quarterly strategy reviews",
+      'Monthly workshop training',
+      'Office hours (4 hours/month)',
+      'Pattern documentation support',
+      'Priority response for issues',
+      'Quarterly capability review',
     ],
-    cta: "Book Consultation",
-    href: "/demo",
+    cta: 'Start Enable',
+    href: '/contact',
     popular: false,
-    annualPrice: null,
-    isBeta: false,
   },
 ];
 
-
 export default function PricingPage() {
   return (
-    <div className="container py-12 md:py-16 px-4">
-      <MobileStickyCTA primaryHref="/signup" primaryLabel="Start Free Trial" secondaryHref="/demo" secondaryLabel="Book Demo" />
+    <div className='container px-4 py-12 md:py-16'>
+      <MobileStickyCTA primaryHref='/contact' primaryLabel='Book a Call' />
       <PricingAnalytics />
-      <div className="text-center mb-12 px-4">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-          Simple, Transparent Pricing
+      <div className='mb-12 px-4 text-center'>
+        <h1 className='mb-6 text-4xl font-extrabold md:text-5xl lg:text-6xl'>
+          Engagement Packages
         </h1>
-        <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">
-          Multi-currency support: CAD, USD, EUR, GBP, and more. Prices shown in your local currency. Cancel anytime.
+        <p className='mx-auto mb-8 max-w-3xl text-lg leading-relaxed text-muted-foreground md:text-xl'>
+          Practical consulting engagements to design, deploy, and train your
+          team on reliable agentic automation.
         </p>
-        <div className="mt-6 mb-8 p-4 md:p-5 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg max-w-3xl mx-auto">
-          <p className="text-sm md:text-base text-amber-900 dark:text-amber-100 leading-relaxed">
-            <strong>Note:</strong> Starter and Pro plans are in Beta. Some features are in active development. 
-            See our <Link className="underline" href="/help">help center</Link> for current availability.
-          </p>
-        </div>
-        <div className="mt-4 inline-flex flex-wrap items-center justify-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-full bg-primary/10 text-primary text-sm md:text-base font-semibold border border-primary/20">
-          <span>🇨🇦 Built in Canada</span>
+        <div className='mt-6 inline-flex flex-wrap items-center justify-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary md:px-6 md:py-3 md:text-base'>
+          <span>🇨🇦 Canadian Operations</span>
           <span>•</span>
-          <span>🌍 Global Pricing</span>
+          <span>Systems Thinking Approach</span>
           <span>•</span>
-          <span>💳 Multi-Currency Support</span>
+          <span>Practical Delivery</span>
         </div>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm md:text-base text-muted-foreground">
-          <span className="flex items-center gap-2">
-            <Check aria-hidden="true" className="h-4 w-4 text-green-500" />
-            No credit card required
+        <div className='mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground md:text-base'>
+          <span className='flex items-center gap-2'>
+            <Check aria-hidden='true' className='h-4 w-4 text-green-500' />
+            No fake metrics
           </span>
-          <span className="flex items-center gap-2">
-            <Check aria-hidden="true" className="h-4 w-4 text-green-500" />
-            30-day free trial
+          <span className='flex items-center gap-2'>
+            <Check aria-hidden='true' className='h-4 w-4 text-green-500' />
+            Tangible deliverables
           </span>
-          <span className="flex items-center gap-2">
-            <Check aria-hidden="true" className="h-4 w-4 text-green-500" />
-            Cancel anytime
+          <span className='flex items-center gap-2'>
+            <Check aria-hidden='true' className='h-4 w-4 text-green-500' />
+            Teams trained
           </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto mb-12 px-4">
-        {plans.map((plan) => (
+      <div className='mx-auto mb-12 grid max-w-6xl grid-cols-1 gap-6 px-4 md:grid-cols-3 md:gap-8'>
+        {plans.map(plan => (
           <Card
             key={plan.name}
             className={`relative transition-all hover:shadow-xl ${
-              plan.popular 
-                ? "border-2 border-primary shadow-2xl scale-105 md:scale-110 bg-gradient-to-br from-primary/5 to-transparent" 
-                : "border-2 hover:border-primary/50"
+              plan.popular
+                ? 'scale-105 border-2 border-primary bg-gradient-to-br from-primary/5 to-transparent shadow-2xl md:scale-110'
+                : 'border-2 hover:border-primary/50'
             }`}
           >
             {plan.popular && (
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                <span className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium">
-                  Most Popular
-                </span>
-              </div>
-            )}
-            {plan.isBeta && (
-              <div className="absolute -top-4 right-4">
-                <span className="bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-                  Beta
+              <div className='absolute -top-4 left-1/2 -translate-x-1/2'>
+                <span className='rounded-full bg-primary px-4 py-1 text-sm font-medium text-primary-foreground'>
+                  Most Common Starting Point
                 </span>
               </div>
             )}
             <CardHeader>
-              <CardTitle className="text-2xl">{plan.name}</CardTitle>
-              <CardDescription className="text-sm font-medium text-primary mt-1">
+              <CardTitle className='text-2xl'>{plan.name}</CardTitle>
+              <CardDescription className='mt-1 text-sm font-medium text-primary'>
                 {plan.tagline}
               </CardDescription>
-              <div className="mt-4">
-                <span className="text-4xl font-bold">{plan.price}</span>
-                <span className="text-muted-foreground">/{plan.period}</span>
-                <p className="text-xs text-muted-foreground mt-1">Multi-currency available</p>
+              <div className='mt-4'>
+                <span className='text-4xl font-bold'>{plan.price}</span>
+                <span className='text-muted-foreground'>/{plan.period}</span>
               </div>
-              {plan.annualPrice && (
-                <div className="mt-2">
-                  <span className="text-sm text-muted-foreground line-through">
-                    ${(parseInt(plan.price.replace('$', ''), 10) * 12).toLocaleString()}/year
-                  </span>
-                  <span className="text-sm font-medium text-primary ml-2">
-                    {plan.annualPrice}/year (save {plan.annualSavings}) • Save {plan.annualDiscount}
-                  </span>
-                </div>
-              )}
-              <CardDescription className="mt-3 text-sm leading-relaxed">{plan.description}</CardDescription>
+              <CardDescription className='mt-3 text-sm leading-relaxed'>
+                {plan.description}
+              </CardDescription>
             </CardHeader>
-            <CardContent className="pt-6">
-              <ul className="space-y-3 mb-8">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">{feature}</span>
+            <CardContent className='pt-6'>
+              <ul className='mb-8 space-y-3'>
+                {plan.features.map(feature => (
+                  <li key={feature} className='flex items-start gap-2'>
+                    <Check className='mt-0.5 h-5 w-5 flex-shrink-0 text-primary' />
+                    <span className='text-sm'>{feature}</span>
                   </li>
                 ))}
               </ul>
               <Button
                 asChild
-                className="w-full h-12 md:h-14 text-base md:text-lg font-bold shadow-lg hover:shadow-xl transition-all hover:scale-105"
-                size="lg"
-                variant={plan.popular ? "default" : "outline"}
+                className='h-12 w-full text-base font-bold shadow-lg transition-all hover:scale-105 hover:shadow-xl md:h-14 md:text-lg'
+                size='lg'
+                variant={plan.popular ? 'default' : 'outline'}
               >
-                <Link aria-label={`${plan.cta} - ${plan.name} plan`} href={plan.href}>
+                <Link
+                  aria-label={`${plan.cta} - ${plan.name}`}
+                  href={plan.href}
+                >
                   {plan.cta}
                 </Link>
               </Button>
-              {plan.popular && (
-                <p className="text-center text-xs md:text-sm text-muted-foreground mt-3">
-                  ✨ Most popular choice
-                </p>
-              )}
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <div className="max-w-3xl mx-auto space-y-6 px-4">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Frequently Asked Questions</h2>
+      <div className='mx-auto max-w-3xl space-y-6 px-4'>
+        <div className='mb-8 text-center'>
+          <h2 className='mb-4 text-2xl font-bold md:text-3xl'>
+            What&apos;s Included
+          </h2>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>What currencies and payment methods do you accept?</CardTitle>
+            <CardTitle>Every Engagement Includes</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground leading-relaxed">
-              We accept all major credit cards (Visa, Mastercard, American Express) via Stripe. 
-              Multi-currency support: CAD, USD, EUR, GBP, AUD, and more. Prices display in your local currency. 
-              Taxes (GST/HST, VAT) are calculated automatically.
-            </p>
+            <ul className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
+              {[
+                'Complete source code ownership',
+                'Documentation and runbooks',
+                'Observability and monitoring',
+                'Governance framework',
+                'Knowledge transfer sessions',
+                'Post-launch support window',
+              ].map(item => (
+                <li key={item} className='flex items-center gap-2 text-sm'>
+                  <Check className='h-4 w-4 flex-shrink-0 text-primary' />
+                  {item}
+                </li>
+              ))}
+            </ul>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Can I cancel anytime?</CardTitle>
+            <CardTitle>Not Included</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground leading-relaxed">
-              Yes! Cancel anytime. You'll keep access until the end of your billing period.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Do you offer annual discounts?</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground leading-relaxed">
-              Yes! Save 20% with annual billing. Starter: $490/year (save $98). Pro: $1,490/year (save $298).
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Is there a free trial?</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground leading-relaxed">
-              Yes! Start with our free plan (3 workflows, 100 automations/month) or get a 30-day free trial of any paid plan. 
-              No credit card required.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>What Canadian integrations do you support?</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground leading-relaxed">
-              Shopify and Wave Accounting are available now. More integrations (RBC, TD, Interac, etc.) 
-              available. See our <Link className="text-primary hover:underline" href="/integrations">integrations page</Link> for the full list.
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>What does "Beta" mean?</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground leading-relaxed">
-              Beta means we're actively building and improving features. Some features are in development, and we're 
-              adding new capabilities based on user feedback. You'll have access to all current features, 
-              and we'll notify you as new features launch.
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>What's the difference between workflows and agents?</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground leading-relaxed">
-              Workflows are AI-powered automation sequences that connect your tools and automate repetitive tasks. 
-              Each workflow handles multiple steps and conditions. Think of them as automation assistants that 
-              work 24/7 to save you time.
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Can I get help setting up?</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground leading-relaxed">
-              Yes! We offer optional setup calls ($99 one-time) to help you get started quickly. Our team will help 
-              you connect integrations, set up workflows, and answer questions. 
-              <Link className="text-primary hover:underline ml-1" href="/demo">Book a setup call</Link>.
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>What happens if I exceed automation limits?</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground leading-relaxed">
-              If you approach your monthly automation limit, we'll notify you. You can upgrade to a higher plan or 
-              purchase additional credits. We'll never cut off your automations mid-month—you'll have options 
-              to continue seamlessly.
-            </p>
+            <ul className='space-y-2 text-sm text-muted-foreground'>
+              <li>
+                • Ongoing hosting or infrastructure costs (billed directly by
+                providers)
+              </li>
+              <li>• Third-party API costs (billed by respective services)</li>
+              <li>
+                • Legal or compliance review (your legal team&apos;s
+                responsibility)
+              </li>
+            </ul>
           </CardContent>
         </Card>
       </div>
 
-      <FeatureComparison />
-
-      <ROICalculator />
-
-      <div className="text-center mt-12">
-        <p className="text-muted-foreground mb-4">
-          Need a custom plan for your team?
+      <div className='mt-12 text-center'>
+        <p className='mb-4 text-muted-foreground'>
+          Want a productized offering for teams with internal capability?
         </p>
-        <Button asChild variant="outline">
-          <Link href="/demo">Contact Sales</Link>
+        <Button asChild variant='outline'>
+          <Link href='/saas'>View SaaS Options</Link>
         </Button>
       </div>
     </div>

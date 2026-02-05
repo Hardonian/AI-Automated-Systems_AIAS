@@ -22,7 +22,7 @@ export default async function HomePage() {
   let content;
   try {
     content = await loadAIASContent();
-  } catch (error) {
+  } catch {
     content = null;
   }
 

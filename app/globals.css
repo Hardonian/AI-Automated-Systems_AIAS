@@ -2,49 +2,149 @@
 @tailwind components;
 @tailwind utilities;
 
+/**
+ * AIAS Design System - Canonical Token Set
+ * 
+ * PHILOSOPHY:
+ * - Light-first, modern consultancy aesthetic
+ * - Minimal token surface for maximum consistency
+ * - HSL color format for easy theme manipulation
+ * - No dark mode by default (light theme enforced)
+ * 
+ * EXTENDING SAFELY:
+ * - Add semantic variants (e.g., --primary-subtle) before adding new base colors
+ * - Use the existing spacing scale (2, 4, 6, 8, 12, 16, 20, 24, 32, 40, 48, 64)
+ * - Prefer CSS variables over Tailwind arbitrary values
+ * - Test contrast ratios when adding new text/background combinations
+ * 
+ * DO NOT CHANGE CASUALLY:
+ * - Primary brand color (--primary) without stakeholder approval
+ * - Base font families (--font-heading, --font-body)
+ * - Border radius base (--radius) as it cascades to all components
+ * - Focus ring color/style (accessibility requirement)
+ */
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* ========================================
+       CORE SURFACE COLORS
+       ======================================== */
+    --bg: 0 0% 100%;
+    --surface: 0 0% 100%;
+    --surface-muted: 210 40% 96.1%;
+
+    /* ========================================
+       TEXT COLORS
+       ======================================== */
+    --text: 222.2 84% 4.9%;
+    --text-muted: 215.4 16.3% 46.9%;
+    --text-inverse: 210 40% 98%;
+
+    /* ========================================
+       PRIMARY BRAND
+       ======================================== */
+    --primary: 221.2 83.2% 53.3%;
+    --primary-hover: 221.2 83.2% 45%;
+    --primary-foreground: 210 40% 98%;
+    --primary-subtle: 221.2 83.2% 95%;
+
+    /* ========================================
+       SECONDARY / ACCENT
+       ======================================== */
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    /* ========================================
+       FEEDBACK COLORS
+       ======================================== */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --success: 142 76% 36%;
+    --success-foreground: 210 40% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222.2 47.4% 11.2%;
+
+    /* ========================================
+       UI ELEMENTS
+       ======================================== */
+    --border: 214.3 31.8% 91.4%;
+    --border-subtle: 214.3 31.8% 85%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --focus-ring: 221.2 83.2% 53.3%;
+
+    /* ========================================
+       COMPONENT-SPECIFIC
+       ======================================== */
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+
+    /* ========================================
+       DATA VISUALIZATION
+       ======================================== */
+    --chart-1: 221.2 83.2% 53.3%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 0 84.2% 60.2%;
+    --chart-5: 270 60% 55%;
+    --chart-6: 189 94% 43%;
+
+    /* ========================================
+       GEOMETRY
+       ======================================== */
     --radius: 0.5rem;
+    --radius-sm: calc(var(--radius) - 2px);
+    --radius-md: var(--radius);
+    --radius-lg: calc(var(--radius) + 4px);
+    --radius-xl: calc(var(--radius) + 8px);
+
+    /* ========================================
+       SHADOWS
+       ======================================== */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md:
+      0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-lg:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
     --shadow-card: 0 6px 24px rgba(0, 0, 0, 0.08);
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --shadow-focus: 0 0 0 2px hsl(var(--bg)), 0 0 0 4px hsl(var(--focus-ring));
+
+    /* ========================================
+       TYPOGRAPHY
+       ======================================== */
+    --font-heading:
+      var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+    --font-body: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+    --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+    /* ========================================
+       GRID BACKGROUND (for hero sections)
+       ======================================== */
+    --grid-line: 0 0% 50% / 0.03;
+    --grid-line-dense: 0 0% 50% / 0.05;
   }
 
+  /* ========================================
+     DARK MODE DISABLED BY DEFAULT
+     ======================================== */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    /* Dark mode variables defined but not actively used.
+       Uncomment and customize if dark mode is enabled later. */
+    --bg: 222.2 84% 4.9%;
+    --surface: 222.2 84% 4.9%;
+    --surface-muted: 217.2 32.6% 17.5%;
+    --text: 210 40% 98%;
+    --text-muted: 215 20.2% 65.1%;
     --primary: 217.2 91.2% 59.8%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
@@ -52,12 +152,15 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 94.1%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
     --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.35);
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --grid-line: 0 0% 100% / 0.05;
+    --grid-line-dense: 0 0% 100% / 0.08;
   }
 }
 
@@ -65,84 +168,145 @@
   * {
     @apply border-border;
   }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Selection styling */
+  ::selection {
+    background-color: hsl(var(--primary) / 0.2);
+    color: hsl(var(--text));
   }
 }
 
-/* Accessibility: Skip link */
-.skip-link {
-  position: absolute;
-  left: -9999px;
-  z-index: 999;
-}
+@layer components {
+  /* ========================================
+     GRID BACKGROUND UTILITY
+     ======================================== */
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, hsl(var(--grid-line)) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--grid-line)) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
 
-.skip-link:focus {
-  left: 1rem;
-  top: 1rem;
-  padding: 0.5rem 1rem;
-  background: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-  border-radius: 0.375rem;
-  text-decoration: none;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
+  .grid-bg-dense {
+    background-image:
+      linear-gradient(
+        to right,
+        hsl(var(--grid-line-dense)) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        hsl(var(--grid-line-dense)) 1px,
+        transparent 1px
+      );
+    background-size: 24px 24px;
+  }
 
-/* Accessibility: Focus visible */
-*:focus-visible {
-  outline: 2px solid hsl(var(--ring));
-  outline-offset: 2px;
-}
+  /* ========================================
+     FOCUS STATES
+     ======================================== */
+  .focus-ring {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
 
-*:focus:not(:focus-visible) {
-  outline: none;
-}
+  .focus-ring-visible:focus-visible {
+    outline: 2px solid hsl(var(--focus-ring));
+    outline-offset: 2px;
+  }
 
-/* Accessibility: Screen reader only */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
+  /* ========================================
+     TEXT UTILITIES
+     ======================================== */
+  .text-balance {
+    text-wrap: balance;
+  }
 
-.sr-only:focus,
-.sr-only:active {
-  position: static;
-  width: auto;
-  height: auto;
-  padding: inherit;
-  margin: inherit;
-  overflow: visible;
-  clip: auto;
-  white-space: normal;
-}
-
-/* Accessibility: Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent;
   }
 }
 
-/* Performance: Optimize font rendering */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
+@layer utilities {
+  /* ========================================
+     ACCESSIBILITY: Skip link
+     ======================================== */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    z-index: 999;
+  }
 
-/* Performance: Optimize image rendering */
-img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  .skip-link:focus {
+    left: 1rem;
+    top: 1rem;
+    padding: 0.5rem 1rem;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-radius: var(--radius);
+    text-decoration: none;
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* ========================================
+     ACCESSIBILITY: Screen reader only
+     ======================================== */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .sr-only:focus,
+  .sr-only:active {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+
+  /* ========================================
+     ACCESSIBILITY: Reduced motion
+     ======================================== */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* ========================================
+     IMAGE OPTIMIZATION
+     ======================================== */
+  .img-crisp {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
 }

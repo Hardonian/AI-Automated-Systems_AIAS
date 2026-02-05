@@ -3,6 +3,22 @@ import { NextRequest } from 'next/server';
 
 export const runtime = 'nodejs';
 
+/**
+ * OG Image Design Tokens
+ * These colors mirror the design system in globals.css
+ * but use hex format for ImageResponse compatibility
+ */
+const OG_COLORS = {
+  // Primary brand - matches hsl(221.2 83.2% 53.3%)
+  primary: '#3b82f6',
+  // Dark backgrounds for contrast
+  bgDark: '#0a0a0a',
+  bgGradientTop: '#1a1a1a',
+  // Text colors
+  textPrimary: '#ffffff',
+  textSecondary: '#a0a0a0',
+} as const;
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -20,8 +36,8 @@ export async function GET(request: NextRequest) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#0a0a0a',
-          backgroundImage: 'linear-gradient(to bottom, #1a1a1a, #0a0a0a)',
+          backgroundColor: OG_COLORS.bgDark,
+          backgroundImage: `linear-gradient(to bottom, ${OG_COLORS.bgGradientTop}, ${OG_COLORS.bgDark})`,
         }}
       >
         <div
@@ -38,7 +54,7 @@ export async function GET(request: NextRequest) {
             style={{
               fontSize: '72px',
               fontWeight: 'bold',
-              color: '#ffffff',
+              color: OG_COLORS.textPrimary,
               marginBottom: '24px',
               lineHeight: '1.2',
             }}
@@ -48,7 +64,7 @@ export async function GET(request: NextRequest) {
           <p
             style={{
               fontSize: '32px',
-              color: '#a0a0a0',
+              color: OG_COLORS.textSecondary,
               lineHeight: '1.5',
               maxWidth: '900px',
             }}
@@ -60,7 +76,7 @@ export async function GET(request: NextRequest) {
               display: 'flex',
               marginTop: '48px',
               fontSize: '24px',
-              color: '#3b82f6',
+              color: OG_COLORS.primary,
             }}
           >
             aiautomatedsystems.ca

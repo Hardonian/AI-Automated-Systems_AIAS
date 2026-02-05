@@ -24,27 +24,23 @@ import {
 const deliverables = [
   {
     icon: FileText,
-    title: 'Automation Blueprint',
+    title: 'Workflow Blueprints',
     description: 'FSM + triggers + guardrails documented',
-    gradient: 'from-blue-500 to-cyan-500',
   },
   {
     icon: Target,
     title: 'Agent Runbooks',
     description: 'Prompt contracts and operational procedures',
-    gradient: 'from-green-500 to-emerald-500',
   },
   {
     icon: Zap,
-    title: 'Connector Map',
+    title: 'Connector Maps',
     description: 'APIs, webhooks, and queues defined',
-    gradient: 'from-purple-500 to-pink-500',
   },
   {
     icon: Shield,
-    title: 'Observability Pack',
+    title: 'Observability Setup',
     description: 'Logs, alerts, and error budgets',
-    gradient: 'from-orange-500 to-red-500',
   },
 ];
 
@@ -52,22 +48,22 @@ const guardrails = [
   {
     icon: Lock,
     title: 'Least Privilege',
-    description: 'Agents access only what they need',
+    description: 'Agents access only the minimum required permissions',
   },
   {
     icon: Shield,
     title: 'PII Handling',
-    description: 'Sensitive data properly masked',
+    description: 'Sensitive data masked and properly protected',
   },
   {
     icon: CheckCircle2,
-    title: 'Audit Logs',
-    description: 'Every action is traceable',
+    title: 'Audit Trails',
+    description: 'Every action traceable for compliance',
   },
   {
     icon: Users,
     title: 'Human-in-the-Loop',
-    description: 'Critical decisions reviewed by humans',
+    description: 'Critical decisions require human approval',
   },
 ];
 
@@ -75,17 +71,17 @@ const reliability = [
   {
     icon: Clock,
     title: 'Retries + Backoff',
-    description: 'Graceful degradation on failures',
+    description: 'Graceful handling of transient failures',
   },
   {
     icon: Award,
     title: 'Circuit Breakers',
-    description: 'Prevent cascade failures',
+    description: 'Prevent cascade failures across systems',
   },
   {
     icon: Target,
     title: 'Idempotency Keys',
-    description: 'Safe retry without duplication',
+    description: 'Safe retries without duplicate actions',
   },
 ];
 
@@ -134,17 +130,15 @@ export function TrustBadges() {
                   initial={{ opacity: 0, y: 20 }}
                   transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
                   viewport={{ once: true }}
-                  whileHover={{ y: -4, scale: 1.02 }}
+                  whileHover={{ y: -4 }}
                   whileInView={{ opacity: 1, y: 0 }}
                 >
-                  <Card className='h-full border-2 text-center transition-all hover:border-primary/50 hover:shadow-lg'>
+                  <Card className='h-full border transition-all hover:border-primary/50'>
                     <CardContent className='px-4 pb-6 pt-6'>
-                      <div
-                        className={`mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${item.gradient}`}
-                      >
+                      <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10'>
                         <Icon
                           aria-hidden='true'
-                          className='h-6 w-6 text-white'
+                          className='h-6 w-6 text-primary'
                         />
                       </div>
                       <div className={`font-bold ${TYPOGRAPHY.bodySmall} mb-1`}>

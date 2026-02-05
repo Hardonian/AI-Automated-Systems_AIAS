@@ -52,20 +52,19 @@ export function Footer() {
               </h3>
             </div>
             <p className='mb-6 max-w-sm text-sm leading-relaxed md:text-base'>
-              Custom AI platforms, workflow automation systems, and intelligent
-              agents. AI Automated Systems builds complete solutions (like
-              TokPulse and Hardonia Suite) while the AIAS Platform powers
-              business automation for our SaaS customers.
+              We help organizations design, deploy, and operate reliable agentic
+              automations while training teams to run them safely and
+              productively. Canadian operations, systems thinking approach.
             </p>
             <div className='flex flex-wrap gap-2 text-xs'>
               <span className='rounded-full bg-primary/10 px-2 py-1 font-medium text-primary'>
-                🚀 Custom Builds
+                Workflow Design
               </span>
               <span className='rounded-full bg-primary/10 px-2 py-1 font-medium text-primary'>
-                🤖 AI Agents
+                Training & Enablement
               </span>
               <span className='rounded-full bg-primary/10 px-2 py-1 font-medium text-primary'>
-                🇨🇦 Built in Canada
+                Governance & Ops
               </span>
             </div>
 
@@ -100,16 +99,14 @@ export function Footer() {
           </motion.div>
           {[
             {
-              title: 'Product',
+              title: 'Services',
               links: [
                 { href: '/services', label: 'Consulting Services' },
-                { href: '/portfolio', label: 'Portfolio' },
                 { href: '/process', label: 'Our Process' },
+                { href: '/use-cases', label: 'Use Cases' },
+                { href: '/training', label: 'Training' },
                 { href: '/case-studies', label: 'Case Studies' },
-                { href: '/showcase', label: 'Showcase' },
                 { href: '/saas', label: 'SaaS Platform' },
-                { href: '/pricing', label: 'Engagement Packages' },
-                { href: '/features', label: 'Platform Features' },
               ],
             },
             {

@@ -34,27 +34,22 @@ const siteUrl = env.app.siteUrl || 'https://aiautomatedsystems.ca';
 
 export const metadata: Metadata = {
   ...generateSEOMetadata({
-    title:
-      'AI Automated Systems | Custom AI Platform Development & Workflow Automation',
+    title: 'AI Automated Systems | Agentic Automation Consultancy',
     description:
-      'We build custom AI platforms and intelligent automation systems. Pilot → Scale → Enable engagement model. Canadian operations, systems thinking approach.',
+      'We help organizations design, deploy, and operate reliable agentic automations while training teams to run them safely and productively. Pilot → Scale → Enable engagement model.',
     canonical: '/',
     keywords: [
-      'custom AI platforms',
-      'AI development',
-      'AI Automated Systems',
-      'AI automation',
+      'agentic automation',
+      'AI consultancy',
       'workflow automation',
-      'custom AI solutions',
-      'AI platform development',
-      'business automation',
-      'Canadian AI development',
-      'enterprise AI',
       'AI agents',
+      'automation training',
       'systems thinking',
-      'PIPEDA compliant',
-      'Canadian data residency',
-      'enterprise security',
+      'human-in-the-loop',
+      'operational reliability',
+      'Canadian AI consultancy',
+      'enterprise automation',
+      'governance and guardrails',
     ],
   }),
   authors: [{ name: 'AI Automated Systems', url: siteUrl }],
@@ -79,10 +74,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title:
-      'AI Automated Systems — Custom AI Platform Development | Canadian-Built',
+    title: 'AI Automated Systems | Agentic Automation Consultancy',
     description:
-      'We build custom AI platforms — not integrations. See TokPulse and Hardonia Suite. From strategy to deployment. Schedule a strategy call.',
+      'We help organizations design, deploy, and operate reliable agentic automations while training teams to run them safely and productively.',
     type: 'website',
     url: siteUrl,
     siteName: 'AI Automated Systems',
@@ -90,23 +84,23 @@ export const metadata: Metadata = {
     alternateLocale: ['en_CA'],
     images: [
       {
-        url: `${siteUrl}/api/og?title=${encodeURIComponent('AI Automated Systems')}&description=${encodeURIComponent('Custom AI Platform Development')}`,
+        url: `${siteUrl}/api/og?title=${encodeURIComponent('AI Automated Systems')}&description=${encodeURIComponent('Agentic Automation Consultancy')}`,
         width: 1200,
         height: 630,
-        alt: 'AI Automated Systems — Custom AI Platform Development',
+        alt: 'AI Automated Systems | Agentic Automation Consultancy',
         type: 'image/png',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Automated Systems — Custom AI Platform Development',
+    title: 'AI Automated Systems | Agentic Automation Consultancy',
     description:
-      'We build custom AI platforms — not integrations. See TokPulse and Hardonia Suite. From strategy to deployment.',
+      'We help organizations design, deploy, and operate reliable agentic automations while training teams to run them safely and productively.',
     creator: '@aias_platform',
     site: '@aias_platform',
     images: [
-      `${siteUrl}/api/og?title=${encodeURIComponent('AI Automated Systems')}&description=${encodeURIComponent('Custom AI Platform Development')}`,
+      `${siteUrl}/api/og?title=${encodeURIComponent('AI Automated Systems')}&description=${encodeURIComponent('Agentic Automation Consultancy')}`,
     ],
   },
   robots: {

@@ -1,22 +1,47 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { TrendingUp, Activity, Heart, AlertTriangle, CheckCircle2, Users, AlertCircle } from "lucide-react";
-import { useState, useEffect } from "react";
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from "recharts";
+import { motion } from 'framer-motion';
+import {
+  TrendingUp,
+  Activity,
+  Heart,
+  AlertTriangle,
+  CheckCircle2,
+  Users,
+  AlertCircle,
+} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Cell,
+} from 'recharts';
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { logger } from "@/lib/logging/structured-logger";
-
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { logger } from '@/lib/logging/structured-logger';
 
 interface CustomerHealth {
   id: string;
   company: string;
   tier: string;
   healthScore: number;
-  status: "green" | "yellow" | "red";
+  status: 'green' | 'yellow' | 'red';
   usage: {
     activeUsers: number;
     workflowsRunning: number;
@@ -53,11 +78,9 @@ interface HealthSummary {
   };
 }
 
-const COLORS = {
-  green: "#10b981",
-  yellow: "#eab308",
-  red: "#ef4444",
-};
+import { CHART_COLORS } from '@/lib/chart-colors';
+
+const COLORS = CHART_COLORS.status;
 
 export function CustomerHealthDashboardEnhanced() {
   const [customers, setCustomers] = useState<CustomerHealth[]>([]);
@@ -71,36 +94,46 @@ export function CustomerHealthDashboardEnhanced() {
 
   const fetchHealthData = async () => {
     try {
-      const response = await fetch("/api/admin/metrics/customer-health");
+      const response = await fetch('/api/admin/metrics/customer-health');
       const data = await response.json();
       setCustomers(data.customers || []);
       setSummary(data.summary || null);
       setHistoricalTrend(data.historicalTrend || []);
     } catch (error) {
-      logger.error("Error fetching health data", error instanceof Error ? error : new Error(String(error)), {
-        component: "CustomerHealthDashboardEnhanced",
-        action: "fetchHealthData",
-      });
+      logger.error(
+        'Error fetching health data',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          component: 'CustomerHealthDashboardEnhanced',
+          action: 'fetchHealthData',
+        }
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, { label: string; className: string; icon: any }> = {
+    const variants: Record<
+      string,
+      { label: string; className: string; icon: any }
+    > = {
       green: {
-        label: "Healthy",
-        className: "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg",
+        label: 'Healthy',
+        className:
+          'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg',
         icon: CheckCircle2,
       },
       yellow: {
-        label: "At Risk",
-        className: "bg-gradient-to-r from-yellow-500 to-amber-600 text-white shadow-lg",
+        label: 'At Risk',
+        className:
+          'bg-gradient-to-r from-yellow-500 to-amber-600 text-white shadow-lg',
         icon: AlertTriangle,
       },
       red: {
-        label: "Critical",
-        className: "bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-lg",
+        label: 'Critical',
+        className:
+          'bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-lg',
         icon: AlertTriangle,
       },
     };
@@ -110,7 +143,7 @@ export function CustomerHealthDashboardEnhanced() {
 
     return (
       <Badge className={variant?.className || ''}>
-        <Icon className="mr-1 h-3 w-3" />
+        <Icon className='mr-1 h-3 w-3' />
         {variant?.label || status}
       </Badge>
     );
@@ -118,31 +151,36 @@ export function CustomerHealthDashboardEnhanced() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-12">
+      <div className='flex items-center justify-center p-12'>
         <motion.div
           animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          {...({ className: "rounded-full h-12 w-12 border-b-2 border-blue-600" } as any)}
+          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+          {...({
+            className: 'rounded-full h-12 w-12 border-b-2 border-blue-600',
+          } as any)}
         />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       {/* Hero Section */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: -20 }}
-        {...({ className: "relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600 p-8 text-white shadow-2xl" } as any)}
+        {...({
+          className:
+            'relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600 p-8 text-white shadow-2xl',
+        } as any)}
       >
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-        <div className="relative z-10">
-          <h2 className="text-3xl font-bold mb-2 flex items-center gap-2">
-            <Heart className="h-8 w-8" />
+        <div className='relative z-10'>
+          <h2 className='mb-2 flex items-center gap-2 text-3xl font-bold'>
+            <Heart className='h-8 w-8' />
             Customer Health Dashboard
           </h2>
-          <p className="text-green-100 text-lg">
+          <p className='text-lg text-green-100'>
             Monitor customer health scores and identify at-risk accounts
           </p>
         </div>
@@ -154,77 +192,83 @@ export function CustomerHealthDashboardEnhanced() {
           animate={{ opacity: 1, y: 0 }}
           initial={{ opacity: 0, y: 20 }}
           transition={{ delay: 0.1 }}
-          {...({ className: "grid gap-4 md:grid-cols-4" } as any)}
+          {...({ className: 'grid gap-4 md:grid-cols-4' } as any)}
         >
-          <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white shadow-lg hover:shadow-xl transition-all">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Activity className="h-4 w-4 text-blue-600" />
+          <Card className='border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white shadow-lg transition-all hover:shadow-xl'>
+            <CardHeader className='pb-2'>
+              <CardTitle className='flex items-center gap-2 text-sm font-medium'>
+                <Activity className='h-4 w-4 text-blue-600' />
                 Average Health Score
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-blue-600">{summary.avgHealthScore}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Target: 80+ {summary.avgHealthScore >= 80 ? "✅" : "⚠️"}
+              <div className='text-3xl font-bold text-blue-600'>
+                {summary.avgHealthScore}
+              </div>
+              <p className='mt-1 text-xs text-muted-foreground'>
+                Target: 80+ {summary.avgHealthScore >= 80 ? '✅' : '⚠️'}
               </p>
-              <div className="mt-2 h-2 bg-blue-100 rounded-full overflow-hidden">
+              <div className='mt-2 h-2 overflow-hidden rounded-full bg-blue-100'>
                 <motion.div
                   animate={{ width: `${summary.avgHealthScore}%` }}
                   initial={{ width: 0 }}
                   transition={{ duration: 1, delay: 0.3 }}
-                  {...({ className: "h-full bg-gradient-to-r from-blue-500 to-blue-600" } as any)}
+                  {...({
+                    className:
+                      'h-full bg-gradient-to-r from-blue-500 to-blue-600',
+                  } as any)}
                 />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-white shadow-lg hover:shadow-xl transition-all">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+          <Card className='border-2 border-green-200 bg-gradient-to-br from-green-50 to-white shadow-lg transition-all hover:shadow-xl'>
+            <CardHeader className='pb-2'>
+              <CardTitle className='flex items-center gap-2 text-sm font-medium'>
+                <CheckCircle2 className='h-4 w-4 text-green-600' />
                 Healthy Customers
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-green-600">
+              <div className='text-3xl font-bold text-green-600'>
                 {summary.distribution.green.count}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {summary.distribution.green.percentage.toFixed(1)}% (Target: {summary.target.greenPercentage}%)
+              <p className='mt-1 text-xs text-muted-foreground'>
+                {summary.distribution.green.percentage.toFixed(1)}% (Target:{' '}
+                {summary.target.greenPercentage}%)
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-yellow-200 bg-gradient-to-br from-yellow-50 to-white shadow-lg hover:shadow-xl transition-all">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-yellow-600" />
+          <Card className='border-2 border-yellow-200 bg-gradient-to-br from-yellow-50 to-white shadow-lg transition-all hover:shadow-xl'>
+            <CardHeader className='pb-2'>
+              <CardTitle className='flex items-center gap-2 text-sm font-medium'>
+                <AlertTriangle className='h-4 w-4 text-yellow-600' />
                 At Risk
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-yellow-600">
+              <div className='text-3xl font-bold text-yellow-600'>
                 {summary.distribution.yellow.count}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className='mt-1 text-xs text-muted-foreground'>
                 {summary.distribution.yellow.percentage.toFixed(1)}%
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-red-200 bg-gradient-to-br from-red-50 to-white shadow-lg hover:shadow-xl transition-all">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-red-600" />
+          <Card className='border-2 border-red-200 bg-gradient-to-br from-red-50 to-white shadow-lg transition-all hover:shadow-xl'>
+            <CardHeader className='pb-2'>
+              <CardTitle className='flex items-center gap-2 text-sm font-medium'>
+                <AlertTriangle className='h-4 w-4 text-red-600' />
                 Critical
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-red-600">
+              <div className='text-3xl font-bold text-red-600'>
                 {summary.distribution.red.count}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className='mt-1 text-xs text-muted-foreground'>
                 {summary.distribution.red.percentage.toFixed(1)}%
               </p>
             </CardContent>
@@ -232,42 +276,80 @@ export function CustomerHealthDashboardEnhanced() {
         </motion.div>
       )}
 
-      <Tabs className="space-y-4" defaultValue="overview">
-        <TabsList className="bg-white shadow-md">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="customers">Customer List</TabsTrigger>
-          <TabsTrigger value="trends">Trends</TabsTrigger>
+      <Tabs className='space-y-4' defaultValue='overview'>
+        <TabsList className='bg-white shadow-md'>
+          <TabsTrigger value='overview'>Overview</TabsTrigger>
+          <TabsTrigger value='customers'>Customer List</TabsTrigger>
+          <TabsTrigger value='trends'>Trends</TabsTrigger>
         </TabsList>
 
-        <TabsContent className="space-y-4" value="overview">
+        <TabsContent className='space-y-4' value='overview'>
           {/* Health Distribution Chart */}
           {summary && (
-            <Card className="shadow-lg">
+            <Card className='shadow-lg'>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="h-5 w-5" />
+                <CardTitle className='flex items-center gap-2'>
+                  <Users className='h-5 w-5' />
                   Health Score Distribution
                 </CardTitle>
-                <CardDescription>Customer health status breakdown</CardDescription>
+                <CardDescription>
+                  Customer health status breakdown
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer height={300} width="100%">
-                  <BarChart data={[
-                    { name: "Healthy", value: summary.distribution.green.count, target: summary.totalCustomers * (summary.target.greenPercentage / 100) },
-                    { name: "At Risk", value: summary.distribution.yellow.count, target: summary.totalCustomers * (summary.target.yellowPercentage / 100) },
-                    { name: "Critical", value: summary.distribution.red.count, target: summary.totalCustomers * (summary.target.redPercentage / 100) },
-                  ]}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
+                <ResponsiveContainer height={300} width='100%'>
+                  <BarChart
+                    data={[
+                      {
+                        name: 'Healthy',
+                        value: summary.distribution.green.count,
+                        target:
+                          summary.totalCustomers *
+                          (summary.target.greenPercentage / 100),
+                      },
+                      {
+                        name: 'At Risk',
+                        value: summary.distribution.yellow.count,
+                        target:
+                          summary.totalCustomers *
+                          (summary.target.yellowPercentage / 100),
+                      },
+                      {
+                        name: 'Critical',
+                        value: summary.distribution.red.count,
+                        target:
+                          summary.totalCustomers *
+                          (summary.target.redPercentage / 100),
+                      },
+                    ]}
+                  >
+                    <CartesianGrid strokeDasharray='3 3' />
+                    <XAxis dataKey='name' />
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="value" radius={[8, 8, 0, 0]}>
-                      {["Healthy", "At Risk", "Critical"].map((name) => (
-                        <Cell key={name} fill={COLORS[name === "Healthy" ? "green" : name === "At Risk" ? "yellow" : "red"]} />
+                    <Bar dataKey='value' radius={[8, 8, 0, 0]}>
+                      {['Healthy', 'At Risk', 'Critical'].map(name => (
+                        <Cell
+                          key={name}
+                          fill={
+                            COLORS[
+                              name === 'Healthy'
+                                ? 'green'
+                                : name === 'At Risk'
+                                  ? 'yellow'
+                                  : 'red'
+                            ]
+                          }
+                        />
                       ))}
                     </Bar>
-                    <Bar dataKey="target" fill="#94a3b8" name="Target" radius={[8, 8, 0, 0]} />
+                    <Bar
+                      dataKey='target'
+                      fill='#94a3b8'
+                      name='Target'
+                      radius={[8, 8, 0, 0]}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -276,24 +358,39 @@ export function CustomerHealthDashboardEnhanced() {
 
           {/* Historical Trend */}
           {historicalTrend.length > 0 && (
-            <Card className="shadow-lg">
+            <Card className='shadow-lg'>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
+                <CardTitle className='flex items-center gap-2'>
+                  <TrendingUp className='h-5 w-5' />
                   Health Score Trend
                 </CardTitle>
-                <CardDescription>Average health score over time</CardDescription>
+                <CardDescription>
+                  Average health score over time
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer height={300} width="100%">
+                <ResponsiveContainer height={300} width='100%'>
                   <LineChart data={historicalTrend}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
+                    <CartesianGrid strokeDasharray='3 3' />
+                    <XAxis dataKey='month' />
                     <YAxis domain={[0, 100]} />
                     <Tooltip />
                     <Legend />
-                    <Line dataKey="avgHealthScore" dot={{ r: 5 }} name="Avg Health Score" stroke="#3b82f6" strokeWidth={3} type="monotone" />
-                    <Line dataKey="greenPercentage" name="Healthy %" stroke="#10b981" strokeWidth={2} type="monotone" />
+                    <Line
+                      dataKey='avgHealthScore'
+                      dot={{ r: 5 }}
+                      name='Avg Health Score'
+                      stroke='#3b82f6'
+                      strokeWidth={3}
+                      type='monotone'
+                    />
+                    <Line
+                      dataKey='greenPercentage'
+                      name='Healthy %'
+                      stroke='#10b981'
+                      strokeWidth={2}
+                      type='monotone'
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -301,51 +398,79 @@ export function CustomerHealthDashboardEnhanced() {
           )}
         </TabsContent>
 
-        <TabsContent className="space-y-4" value="customers">
-          <Card className="shadow-lg">
+        <TabsContent className='space-y-4' value='customers'>
+          <Card className='shadow-lg'>
             <CardHeader>
               <CardTitle>Customer Health Scores</CardTitle>
-              <CardDescription>Detailed health metrics for each customer</CardDescription>
+              <CardDescription>
+                Detailed health metrics for each customer
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className='space-y-4'>
                 {customers.map((customer, index) => (
                   <motion.div
                     key={customer.id}
                     animate={{ opacity: 1, x: 0 }}
                     initial={{ opacity: 0, x: -20 }}
                     transition={{ delay: index * 0.1 }}
-                    {...({ className: "border-2 rounded-xl p-6 space-y-3 bg-gradient-to-br from-white to-gray-50 hover:shadow-lg transition-all" } as any)}
+                    {...({
+                      className:
+                        'border-2 rounded-xl p-6 space-y-3 bg-gradient-to-br from-white to-gray-50 hover:shadow-lg transition-all',
+                    } as any)}
                   >
-                    <div className="flex items-center justify-between">
+                    <div className='flex items-center justify-between'>
                       <div>
-                        <h3 className="font-bold text-xl">{customer.company}</h3>
-                        <p className="text-sm text-muted-foreground">{customer.tier} Tier</p>
+                        <h3 className='text-xl font-bold'>
+                          {customer.company}
+                        </h3>
+                        <p className='text-sm text-muted-foreground'>
+                          {customer.tier} Tier
+                        </p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className='flex items-center gap-2'>
                         {getStatusBadge(customer.status)}
-                        <div className="text-3xl font-bold" style={{ color: COLORS[customer.status] }}>
+                        <div
+                          className='text-3xl font-bold'
+                          style={{ color: COLORS[customer.status] }}
+                        >
                           {customer.healthScore}
                         </div>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div className="bg-blue-50 rounded-lg p-3">
-                        <p className="text-muted-foreground text-xs mb-1">Active Users</p>
-                        <p className="font-bold text-blue-600">{customer.usage.activeUsers}%</p>
+                    <div className='grid grid-cols-2 gap-4 md:grid-cols-4'>
+                      <div className='rounded-lg bg-blue-50 p-3'>
+                        <p className='mb-1 text-xs text-muted-foreground'>
+                          Active Users
+                        </p>
+                        <p className='font-bold text-blue-600'>
+                          {customer.usage.activeUsers}%
+                        </p>
                       </div>
-                      <div className="bg-purple-50 rounded-lg p-3">
-                        <p className="text-muted-foreground text-xs mb-1">Workflows</p>
-                        <p className="font-bold text-purple-600">{customer.usage.workflowsRunning}</p>
+                      <div className='rounded-lg bg-purple-50 p-3'>
+                        <p className='mb-1 text-xs text-muted-foreground'>
+                          Workflows
+                        </p>
+                        <p className='font-bold text-purple-600'>
+                          {customer.usage.workflowsRunning}
+                        </p>
                       </div>
-                      <div className="bg-green-50 rounded-lg p-3">
-                        <p className="text-muted-foreground text-xs mb-1">NPS</p>
-                        <p className="font-bold text-green-600">{customer.satisfaction.nps}/10</p>
+                      <div className='rounded-lg bg-green-50 p-3'>
+                        <p className='mb-1 text-xs text-muted-foreground'>
+                          NPS
+                        </p>
+                        <p className='font-bold text-green-600'>
+                          {customer.satisfaction.nps}/10
+                        </p>
                       </div>
-                      <div className="bg-amber-50 rounded-lg p-3">
-                        <p className="text-muted-foreground text-xs mb-1">Support Tickets</p>
-                        <p className="font-bold text-amber-600">{customer.engagement.supportTickets}/mo</p>
+                      <div className='rounded-lg bg-amber-50 p-3'>
+                        <p className='mb-1 text-xs text-muted-foreground'>
+                          Support Tickets
+                        </p>
+                        <p className='font-bold text-amber-600'>
+                          {customer.engagement.supportTickets}/mo
+                        </p>
                       </div>
                     </div>
                   </motion.div>
@@ -355,24 +480,43 @@ export function CustomerHealthDashboardEnhanced() {
           </Card>
         </TabsContent>
 
-        <TabsContent className="space-y-4" value="trends">
+        <TabsContent className='space-y-4' value='trends'>
           {historicalTrend.length > 0 && (
-            <Card className="shadow-lg">
+            <Card className='shadow-lg'>
               <CardHeader>
                 <CardTitle>Health Score Trends</CardTitle>
                 <CardDescription>Health distribution over time</CardDescription>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer height={400} width="100%">
+                <ResponsiveContainer height={400} width='100%'>
                   <LineChart data={historicalTrend}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
+                    <CartesianGrid strokeDasharray='3 3' />
+                    <XAxis dataKey='month' />
                     <YAxis domain={[0, 100]} />
                     <Tooltip />
                     <Legend />
-                    <Line dataKey="greenPercentage" dot={{ r: 5 }} name="Healthy %" stroke="#10b981" strokeWidth={3} type="monotone" />
-                    <Line dataKey="yellowPercentage" name="At Risk %" stroke="#eab308" strokeWidth={2} type="monotone" />
-                    <Line dataKey="redPercentage" name="Critical %" stroke="#ef4444" strokeWidth={2} type="monotone" />
+                    <Line
+                      dataKey='greenPercentage'
+                      dot={{ r: 5 }}
+                      name='Healthy %'
+                      stroke='#10b981'
+                      strokeWidth={3}
+                      type='monotone'
+                    />
+                    <Line
+                      dataKey='yellowPercentage'
+                      name='At Risk %'
+                      stroke='#eab308'
+                      strokeWidth={2}
+                      type='monotone'
+                    />
+                    <Line
+                      dataKey='redPercentage'
+                      name='Critical %'
+                      stroke='#ef4444'
+                      strokeWidth={2}
+                      type='monotone'
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               </CardContent>

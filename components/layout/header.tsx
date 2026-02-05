@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 export function Header() {
   return (
     <header
-      className='sticky top-0 z-50 border-b border-border/50 bg-bg/80 shadow-sm backdrop-blur-md'
+      className='bg-bg/80 sticky top-0 z-50 border-b border-border/50 shadow-sm backdrop-blur-md'
       role='banner'
     >
       <div className='container flex h-16 items-center justify-between'>
@@ -41,7 +41,7 @@ export function Header() {
             { href: '/use-cases', label: 'Use Cases' },
             { href: '/training', label: 'Training' },
             { href: '/responsible-ai', label: 'Responsible AI' },
-            { href: '/saas', label: 'SaaS' },
+            { href: '/resources', label: 'Resources' },
           ].map((item, index) => (
             <motion.div
               key={item.href}
@@ -70,11 +70,11 @@ export function Header() {
           >
             <Button
               asChild
-              className='ml-2 min-h-[44px] font-semibold shadow-md transition-all hover:scale-105 hover:shadow-lg'
+              className='ml-4 min-h-[44px] font-semibold'
               size='sm'
             >
               <Link aria-label='Book a discovery call' href='/contact'>
-                Book a Call
+                Book a discovery call
               </Link>
             </Button>
           </motion.div>

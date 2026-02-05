@@ -44,7 +44,7 @@ export function ContentDrivenHero({ content }: ContentDrivenHeroProps) {
         <div className='absolute inset-0 bg-gradient-to-br from-primary/20 via-background via-50% to-accent/10' />
         <div className='absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.2),transparent_50%)]' />
         <div className='absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(139,92,246,0.15),transparent_50%)]' />
-        <div className='absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px]' />
+        <div className='grid-bg absolute inset-0' />
 
         <div
           className={getContainerClasses(
@@ -117,7 +117,7 @@ export function ContentDrivenHero({ content }: ContentDrivenHeroProps) {
             {content.subtitle && (
               <TextReveal
                 as='h1'
-                className='mt-2 block animate-gradient bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] bg-clip-text text-transparent md:mt-4'
+                className='animate-gradient mt-2 block bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] bg-clip-text text-transparent md:mt-4'
                 delay={0.5}
                 staggerDelay={0.05}
               >

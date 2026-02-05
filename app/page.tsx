@@ -1,12 +1,9 @@
 import dynamic from 'next/dynamic';
 
 import { ContentDrivenFAQ } from '@/components/content/ContentDrivenFAQ';
-import { ContentDrivenFeatures } from '@/components/content/ContentDrivenFeatures';
 import { ContentDrivenHero } from '@/components/content/ContentDrivenHero';
-import { CTAEnhanced } from '@/components/home/cta-enhanced';
-import { SettlerShowcase } from '@/components/home/settler-showcase';
-import { StatsSection } from '@/components/home/stats-section';
 import { TrustBadges } from '@/components/home/trust-badges';
+import { Testimonials } from '@/components/home/testimonials';
 import {
   FAQSchema,
   ProfessionalServiceSchema,
@@ -14,24 +11,6 @@ import {
 import { KeyboardNavEnhancement } from '@/components/accessibility/keyboard-nav';
 import { loadAIASContent } from '@/lib/content/loader';
 
-const Testimonials = dynamic(
-  () =>
-    import('@/components/home/testimonials').then(mod => ({
-      default: mod.Testimonials,
-    })),
-  {
-    loading: () => <div aria-label='Loading workflows' className='py-16' />,
-  }
-);
-const CaseStudyPreview = dynamic(
-  () =>
-    import('@/components/home/case-study-preview').then(mod => ({
-      default: mod.CaseStudyPreview,
-    })),
-  {
-    loading: () => <div aria-label='Loading use cases' className='py-16' />,
-  }
-);
 const FAQ = dynamic(
   () => import('@/components/home/faq').then(mod => ({ default: mod.FAQ })),
   {
@@ -58,53 +37,40 @@ export default async function HomePage() {
       <ProfessionalServiceSchema />
       <FAQSchema faqs={homepageFAQs} />
       {content ? <ContentDrivenHero content={content.hero} /> : <Hero />}
-      <StatsSection />
-      <TrustBadges />
-      <CaseStudyPreview />
-      <SettlerShowcase />
-      {content ? (
-        <ContentDrivenFeatures content={content.features} />
-      ) : (
-        <Features />
-      )}
+      <DeliverablesSection />
       <Testimonials />
+      <EngagementModel />
+      <TrustBadges />
       {content ? <ContentDrivenFAQ content={content.faq} /> : <FAQ />}
       <ConversionCTA />
-      <div className='py-16'>
-        <CTAEnhanced
-          showSocialProof={false}
-          showUrgency={false}
-          urgency='low'
-        />
-      </div>
     </>
   );
 }
 
 function Hero() {
   return (
-    <section className='relative overflow-hidden bg-gradient-to-b from-muted/30 via-background to-muted/30'>
+    <section className='border-b border-border bg-background'>
       <div className='container mx-auto px-4 py-20 md:py-28 lg:py-32'>
         <div className='mx-auto max-w-4xl text-center'>
-          <h1 className='mb-6 bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-4xl font-extrabold leading-[1.1] tracking-tight text-transparent md:text-5xl lg:text-6xl xl:text-7xl'>
-            Agentic Automation That Actually Ships Inside Your Org
+          <h1 className='mb-6 text-4xl font-bold leading-[1.15] tracking-tight text-foreground md:text-5xl lg:text-6xl'>
+            We help organizations design, deploy, and operate reliable agentic
+            automations
           </h1>
           <p className='mx-auto mb-8 max-w-3xl text-lg leading-relaxed text-muted-foreground md:text-xl lg:text-2xl'>
-            We design, deploy, and train teams to run reliable automations and
-            AI agents—without chaos.
+            While training teams to run them safely and productively.
           </p>
           <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
             <a
               href='/contact'
-              className='inline-flex min-h-[44px] items-center justify-center rounded-full bg-primary px-8 py-4 text-base font-bold text-primary-foreground transition-colors hover:bg-primary/90'
+              className='inline-flex min-h-[44px] items-center justify-center rounded-md bg-primary px-8 py-4 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary/90'
             >
-              Book a Discovery Call
+              Book a discovery call
             </a>
             <a
               href='/use-cases'
-              className='inline-flex min-h-[44px] items-center justify-center rounded-full bg-muted px-8 py-4 text-base font-medium text-foreground transition-colors hover:bg-muted/80'
+              className='inline-flex min-h-[44px] items-center justify-center rounded-md border border-border bg-background px-8 py-4 text-base font-medium text-foreground transition-colors hover:bg-muted'
             >
-              See Example Workflows
+              View example workflows
             </a>
           </div>
         </div>
@@ -113,51 +79,61 @@ function Hero() {
   );
 }
 
-function Features() {
-  const features = [
+function DeliverablesSection() {
+  const deliverables = [
     {
-      title: 'Workflow Design & Implementation',
+      title: 'Workflow Blueprints',
       description:
-        'End-to-end automation development with proper state machines, error handling, and monitoring.',
+        'Complete documentation: triggers, states, tools, and human-in-the-loop gates.',
     },
     {
-      title: 'Agent Training & Enablement',
+      title: 'Prompt Contracts',
       description:
-        'Workshops and pair-building sessions to transfer knowledge to your team.',
+        'Versioned prompts with evaluation criteria and expected output schemas.',
     },
     {
-      title: 'Governance & Compliance',
+      title: 'Connector Maps',
       description:
-        'Policy frameworks, audit trails, and human-in-the-loop checkpoints built-in.',
+        'APIs, queues, and webhooks defined with authentication and rate limiting.',
     },
     {
-      title: 'Reliability Engineering',
+      title: 'Operational Runbooks',
       description:
-        'Circuit breakers, retries, and observability to keep automations running smoothly.',
+        'Escalation procedures, failure handling, and rollback procedures documented.',
+    },
+    {
+      title: 'Observability Setup',
+      description:
+        'Logs, alerts, and error budgets configured for production monitoring.',
+    },
+    {
+      title: 'Governance Packs',
+      description:
+        'Permissions matrix, HITL configuration, and audit trail specifications.',
     },
   ];
 
   return (
-    <section className='px-4 py-20'>
+    <section className='bg-muted/30 px-4 py-20'>
       <div className='container mx-auto max-w-6xl'>
         <div className='mb-12 text-center'>
-          <h2 className='mb-4 text-3xl font-extrabold md:text-4xl lg:text-5xl'>
-            Our Services
+          <h2 className='mb-4 text-3xl font-bold md:text-4xl'>
+            What We Deliver
           </h2>
           <p className='mx-auto max-w-2xl text-lg text-muted-foreground'>
-            Practical expertise in building and operating agentic systems.
+            Concrete artifacts your team owns after every engagement.
           </p>
         </div>
-        <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8'>
-          {features.map(feature => (
+        <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8'>
+          {deliverables.map(item => (
             <div
-              key={feature.title}
-              className='rounded-2xl border-2 bg-card p-6 transition-colors hover:border-primary/50 lg:p-8'
+              key={item.title}
+              className='rounded-lg border bg-card p-6 transition-colors hover:border-primary/50'
             >
-              <h3 className='mb-3 text-xl font-bold md:text-2xl'>
-                {feature.title}
-              </h3>
-              <p className='text-muted-foreground'>{feature.description}</p>
+              <h3 className='mb-2 text-lg font-semibold'>{item.title}</h3>
+              <p className='text-sm text-muted-foreground'>
+                {item.description}
+              </p>
             </div>
           ))}
         </div>
@@ -166,28 +142,98 @@ function Features() {
   );
 }
 
+function EngagementModel() {
+  const phases = [
+    {
+      step: '01',
+      title: 'Pilot',
+      duration: '2-4 weeks',
+      description:
+        'Ship your first production workflow. Focused engagement to prove value.',
+    },
+    {
+      step: '02',
+      title: 'Scale',
+      duration: '6-12 weeks',
+      description:
+        'Expand to additional workflows and integrate with enterprise systems.',
+    },
+    {
+      step: '03',
+      title: 'Enable',
+      duration: 'Ongoing',
+      description:
+        'Train your team and establish internal capability to build independently.',
+    },
+  ];
+
+  return (
+    <section className='px-4 py-20'>
+      <div className='container mx-auto max-w-6xl'>
+        <div className='mb-12 text-center'>
+          <h2 className='mb-4 text-3xl font-bold md:text-4xl'>
+            Engagement Model
+          </h2>
+          <p className='mx-auto max-w-2xl text-lg text-muted-foreground'>
+            Pilot → Scale → Enable. Practical phases with capability-building
+            woven throughout.
+          </p>
+        </div>
+        <div className='grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8'>
+          {phases.map(phase => (
+            <div
+              key={phase.title}
+              className='rounded-lg border bg-card p-8 transition-colors hover:border-primary/50'
+            >
+              <div className='mb-4 text-4xl font-bold text-primary/30'>
+                {phase.step}
+              </div>
+              <h3 className='mb-2 text-xl font-semibold'>{phase.title}</h3>
+              <p className='mb-4 text-sm font-medium text-primary'>
+                {phase.duration}
+              </p>
+              <p className='text-sm text-muted-foreground'>
+                {phase.description}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className='mt-12 text-center'>
+          <a
+            href='/process'
+            className='inline-flex min-h-[44px] items-center justify-center rounded-md border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted'
+          >
+            Learn about our process
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function ConversionCTA() {
   return (
-    <section className='bg-muted/30 px-4 py-20'>
+    <section className='border-t border-border bg-muted/30 px-4 py-20'>
       <div className='container mx-auto max-w-4xl text-center'>
-        <h2 className='mb-4 text-3xl font-extrabold md:text-4xl'>
-          Ready to Ship Reliable Automation?
+        <h2 className='mb-4 text-3xl font-bold md:text-4xl'>
+          Ready to discuss your use case?
         </h2>
         <p className='mb-8 text-lg text-muted-foreground'>
-          Book a discovery call to discuss your specific use case.
+          Book a discovery call. We will review your context and outline how we
+          might help.
         </p>
         <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
           <a
             href='/contact'
-            className='inline-flex min-h-[44px] items-center justify-center rounded-full bg-primary px-8 py-4 text-base font-bold text-primary-foreground transition-colors hover:bg-primary/90'
+            className='inline-flex min-h-[44px] items-center justify-center rounded-md bg-primary px-8 py-4 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary/90'
           >
-            Book a Discovery Call
+            Book a discovery call
           </a>
           <a
-            href='/process'
-            className='inline-flex min-h-[44px] items-center justify-center rounded-full bg-muted px-8 py-4 text-base font-medium text-foreground transition-colors hover:bg-muted/80'
+            href='/services'
+            className='inline-flex min-h-[44px] items-center justify-center rounded-md border border-border bg-background px-8 py-4 text-base font-medium text-foreground transition-colors hover:bg-muted'
           >
-            See Our Process
+            View services
           </a>
         </div>
       </div>

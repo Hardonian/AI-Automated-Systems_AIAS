@@ -15,25 +15,21 @@ const outcomes = [
     icon: Zap,
     label: 'Faster Intake → Triage → Action',
     description: 'Reduced time from request to resolution',
-    gradient: 'from-blue-500 to-cyan-500',
   },
   {
     icon: Users,
     label: 'Less Manual Ops Overhead',
     description: 'Reusable patterns reduce repeated work',
-    gradient: 'from-green-500 to-emerald-500',
   },
   {
     icon: Shield,
     label: 'Clear Governance + Audit Trails',
-    description: 'Full visibility into every automated decision',
-    gradient: 'from-purple-500 to-pink-500',
+    description: 'Full visibility into automated decisions',
   },
   {
     icon: TrendingUp,
     label: 'Reusable Agent Patterns',
     description: 'Runbooks you can apply across workflows',
-    gradient: 'from-orange-500 to-red-500',
   },
 ];
 
@@ -58,19 +54,12 @@ export function StatsSection() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -5 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                {...({ className: 'text-center group' } as any)}
+                {...({ className: 'text-center' } as any)}
               >
-                <motion.div
-                  transition={{ type: 'spring', stiffness: 300 }}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  {...({
-                    className: `inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${outcome.gradient} mb-4 shadow-lg group-hover:shadow-xl transition-shadow`,
-                  } as any)}
-                >
-                  <Icon className='h-8 w-8 text-white' />
-                </motion.div>
+                <div className='mb-4 inline-flex h-16 w-16 items-center justify-center rounded-xl bg-primary/10'>
+                  <Icon className='h-8 w-8 text-primary' />
+                </div>
                 <div className={`${TYPOGRAPHY.h4} mb-2`}>{outcome.label}</div>
                 <div
                   className={`${TYPOGRAPHY.bodySmall} text-muted-foreground`}

@@ -53,11 +53,11 @@ function Hero() {
       <div className='container mx-auto px-4 py-20 md:py-28 lg:py-32'>
         <div className='mx-auto max-w-4xl text-center'>
           <h1 className='mb-6 text-4xl font-bold leading-[1.15] tracking-tight text-foreground md:text-5xl lg:text-6xl'>
-            We help organizations design, deploy, and operate reliable agentic
-            automations
+            We design workflows that assist teams with complex processes
           </h1>
           <p className='mx-auto mb-8 max-w-3xl text-lg leading-relaxed text-muted-foreground md:text-xl lg:text-2xl'>
-            While training teams to run them safely and productively.
+            Human-in-the-loop automation aligned with your governance. Knowledge
+            transfer included. Artifacts remain with your organization.
           </p>
           <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
             <a
@@ -149,21 +149,21 @@ function EngagementModel() {
       title: 'Pilot',
       duration: '2-4 weeks',
       description:
-        'Ship your first production workflow. Focused engagement to prove value.',
+        'Design and deploy your first workflow with documented handoff procedures.',
     },
     {
       step: '02',
       title: 'Scale',
       duration: '6-12 weeks',
       description:
-        'Expand to additional workflows and integrate with enterprise systems.',
+        'Expand to additional workflows aligned with your internal controls and approval structures.',
     },
     {
       step: '03',
       title: 'Enable',
       duration: 'Ongoing',
       description:
-        'Train your team and establish internal capability to build independently.',
+        'Knowledge transfer and training. Your team operates independently with artifacts that remain with your organization.',
     },
   ];
 

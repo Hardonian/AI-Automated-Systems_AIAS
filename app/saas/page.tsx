@@ -72,9 +72,9 @@ export default function SaasPage() {
             Build Automations Independently
           </h1>
           <p className='mb-8 text-lg leading-relaxed text-muted-foreground md:text-xl'>
-            Productized platform for teams who already have internal capability
-            to design and operate agentic automation. Focus on building—we
-            handle the infrastructure.
+            Self-service platform for teams with internal capability to design
+            and operate workflows. We provide infrastructure; your team
+            maintains control and ownership.
           </p>
           <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
             <Button asChild size='lg'>

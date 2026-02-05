@@ -112,7 +112,7 @@ export default function TrainingPage() {
       <section className='px-4 py-20'>
         <div className='container mx-auto max-w-6xl'>
           <div className='grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8'>
-            {workshops.map((workshop, index) => (
+            {workshops.map(workshop => (
               <Card
                 key={workshop.title}
                 className='flex h-full flex-col border-2 transition-colors hover:border-primary/50'

@@ -1,9 +1,6 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import { createRequire } from 'module';
 
 import { logger } from '@/lib/logging/structured-logger';
-
-const JOBFORGE_SDK_MODULE = '@jobforge/sdk-ts';
 
 export interface JobForgeConfig {
   enabled: boolean;
@@ -53,8 +50,6 @@ export interface JobForgeClientLike {
   getJob?(jobId: string, tenantId: string): Promise<JobForgeJob | null>;
 }
 
-const requireFn = createRequire(import.meta.url);
-
 function getEnvValue(key: string): string {
   if (typeof process !== 'undefined' && process.env) {
     return process.env[key] || '';
@@ -68,23 +63,6 @@ function parseEnabledFlag(
 ): boolean {
   const normalized = (value ?? fallback).toLowerCase();
   return ['1', 'true', 'yes'].includes(normalized);
-}
-
-function canLoadJobForgeSdk(): boolean {
-  try {
-    requireFn.resolve(JOBFORGE_SDK_MODULE);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function loadJobForgeSdk(): Promise<unknown | null> {
-  if (!canLoadJobForgeSdk()) {
-    return null;
-  }
-  const moduleName = JOBFORGE_SDK_MODULE;
-  return import(moduleName);
 }
 
 function parseTenantProjectMap(raw?: string): Record<string, string> {
@@ -268,28 +246,6 @@ async function getJobForgeClient(
   config: JobForgeConfig
 ): Promise<JobForgeClientLike> {
   assertJobForgeEnabled(config);
-
-  const sdkModule = await loadJobForgeSdk();
-  if (
-    sdkModule &&
-    typeof sdkModule === 'object' &&
-    'JobForgeClient' in sdkModule
-  ) {
-    const JobForgeClient = (
-      sdkModule as {
-        JobForgeClient?: new (cfg: {
-          supabaseUrl: string;
-          supabaseKey: string;
-        }) => JobForgeClientLike;
-      }
-    ).JobForgeClient;
-    if (JobForgeClient) {
-      return new JobForgeClient({
-        supabaseUrl: config.supabaseUrl ?? '',
-        supabaseKey: config.supabaseServiceRoleKey ?? '',
-      });
-    }
-  }
 
   const supabase = createClient(
     config.supabaseUrl ?? '',

@@ -4,7 +4,7 @@ This guide documents the JobForge adapter, admin console, and CLI workflows for 
 
 ## Overview
 
-The JobForge integration uses the JobForge TypeScript SDK when available (`@jobforge/sdk-ts`). If the SDK is not installed, the adapter falls back to Supabase RPC calls so the same job queue can be used without additional dependencies.
+The JobForge integration uses Supabase RPC calls for job queue operations. No external SDK is required.
 
 Key behaviors:
 

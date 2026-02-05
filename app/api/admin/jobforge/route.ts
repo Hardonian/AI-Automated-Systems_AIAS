@@ -48,7 +48,6 @@ export async function GET(request: NextRequest) {
       defaultTenantId: config.defaultTenantId || null,
       defaultProjectId: config.defaultProjectId || null,
       tenantProjectMap: parseTenantProjectMap(config.tenantProjectMapRaw),
-      sdkModule: '@jobforge/sdk-ts',
     });
   } catch (error) {
     const serialized = serializeJobForgeError(error);

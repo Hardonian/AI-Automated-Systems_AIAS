@@ -2,6 +2,13 @@ import dynamic from 'next/dynamic';
 
 import { ContentDrivenFAQ } from '@/components/content/ContentDrivenFAQ';
 import { ContentDrivenHero } from '@/components/content/ContentDrivenHero';
+import { OutcomesSection } from '@/components/home/outcomes-section';
+import { ProofSection } from '@/components/home/proof-section';
+import { SimpleHero } from '@/components/home/simple-hero';
+import { SystemsSection } from '@/components/home/systems-section';
+import { DeliverablesSection } from '@/components/home/deliverables-section';
+import { EngagementModel } from '@/components/home/engagement-model';
+import { ConversionCTA } from '@/components/home/conversion-cta';
 import { TrustBadges } from '@/components/home/trust-badges';
 import { Testimonials } from '@/components/home/testimonials';
 import {
@@ -36,7 +43,10 @@ export default async function HomePage() {
       <KeyboardNavEnhancement />
       <ProfessionalServiceSchema />
       <FAQSchema faqs={homepageFAQs} />
-      {content ? <ContentDrivenHero content={content.hero} /> : <Hero />}
+      {content ? <ContentDrivenHero content={content.hero} /> : <SimpleHero />}
+      <OutcomesSection />
+      <ProofSection />
+      <SystemsSection />
       <DeliverablesSection />
       <Testimonials />
       <EngagementModel />
@@ -44,199 +54,5 @@ export default async function HomePage() {
       {content ? <ContentDrivenFAQ content={content.faq} /> : <FAQ />}
       <ConversionCTA />
     </>
-  );
-}
-
-function Hero() {
-  return (
-    <section className='border-b border-border bg-background'>
-      <div className='container mx-auto px-4 py-20 md:py-28 lg:py-32'>
-        <div className='mx-auto max-w-4xl text-center'>
-          <h1 className='mb-6 text-4xl font-bold leading-[1.15] tracking-tight text-foreground md:text-5xl lg:text-6xl'>
-            We design workflows that assist teams with complex processes
-          </h1>
-          <p className='mx-auto mb-8 max-w-3xl text-lg leading-relaxed text-muted-foreground md:text-xl lg:text-2xl'>
-            Human-in-the-loop automation aligned with your governance. Knowledge
-            transfer included. Artifacts remain with your organization.
-          </p>
-          <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
-            <a
-              href='/contact'
-              className='inline-flex min-h-[44px] items-center justify-center rounded-md bg-primary px-8 py-4 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary/90'
-            >
-              Book a discovery call
-            </a>
-            <a
-              href='/use-cases'
-              className='inline-flex min-h-[44px] items-center justify-center rounded-md border border-border bg-background px-8 py-4 text-base font-medium text-foreground transition-colors hover:bg-muted'
-            >
-              View example workflows
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function DeliverablesSection() {
-  const deliverables = [
-    {
-      title: 'Workflow Blueprints',
-      description:
-        'Complete documentation: triggers, states, tools, and human-in-the-loop gates.',
-    },
-    {
-      title: 'Prompt Contracts',
-      description:
-        'Versioned prompts with evaluation criteria and expected output schemas.',
-    },
-    {
-      title: 'Connector Maps',
-      description:
-        'APIs, queues, and webhooks defined with authentication and rate limiting.',
-    },
-    {
-      title: 'Operational Runbooks',
-      description:
-        'Escalation procedures, failure handling, and rollback procedures documented.',
-    },
-    {
-      title: 'Observability Setup',
-      description:
-        'Logs, alerts, and error budgets configured for production monitoring.',
-    },
-    {
-      title: 'Governance Packs',
-      description:
-        'Permissions matrix, HITL configuration, and audit trail specifications.',
-    },
-  ];
-
-  return (
-    <section className='bg-muted/30 px-4 py-20'>
-      <div className='container mx-auto max-w-6xl'>
-        <div className='mb-12 text-center'>
-          <h2 className='mb-4 text-3xl font-bold md:text-4xl'>
-            What We Deliver
-          </h2>
-          <p className='mx-auto max-w-2xl text-lg text-muted-foreground'>
-            Concrete artifacts your team owns after every engagement.
-          </p>
-        </div>
-        <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8'>
-          {deliverables.map(item => (
-            <div
-              key={item.title}
-              className='rounded-lg border bg-card p-6 transition-colors hover:border-primary/50'
-            >
-              <h3 className='mb-2 text-lg font-semibold'>{item.title}</h3>
-              <p className='text-sm text-muted-foreground'>
-                {item.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function EngagementModel() {
-  const phases = [
-    {
-      step: '01',
-      title: 'Pilot',
-      duration: '2-4 weeks',
-      description:
-        'Design and deploy your first workflow with documented handoff procedures.',
-    },
-    {
-      step: '02',
-      title: 'Scale',
-      duration: '6-12 weeks',
-      description:
-        'Expand to additional workflows aligned with your internal controls and approval structures.',
-    },
-    {
-      step: '03',
-      title: 'Enable',
-      duration: 'Ongoing',
-      description:
-        'Knowledge transfer and training. Your team operates independently with artifacts that remain with your organization.',
-    },
-  ];
-
-  return (
-    <section className='px-4 py-20'>
-      <div className='container mx-auto max-w-6xl'>
-        <div className='mb-12 text-center'>
-          <h2 className='mb-4 text-3xl font-bold md:text-4xl'>
-            Engagement Model
-          </h2>
-          <p className='mx-auto max-w-2xl text-lg text-muted-foreground'>
-            Pilot → Scale → Enable. Practical phases with capability-building
-            woven throughout.
-          </p>
-        </div>
-        <div className='grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8'>
-          {phases.map(phase => (
-            <div
-              key={phase.title}
-              className='rounded-lg border bg-card p-8 transition-colors hover:border-primary/50'
-            >
-              <div className='mb-4 text-4xl font-bold text-primary/30'>
-                {phase.step}
-              </div>
-              <h3 className='mb-2 text-xl font-semibold'>{phase.title}</h3>
-              <p className='mb-4 text-sm font-medium text-primary'>
-                {phase.duration}
-              </p>
-              <p className='text-sm text-muted-foreground'>
-                {phase.description}
-              </p>
-            </div>
-          ))}
-        </div>
-        <div className='mt-12 text-center'>
-          <a
-            href='/process'
-            className='inline-flex min-h-[44px] items-center justify-center rounded-md border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted'
-          >
-            Learn about our process
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ConversionCTA() {
-  return (
-    <section className='border-t border-border bg-muted/30 px-4 py-20'>
-      <div className='container mx-auto max-w-4xl text-center'>
-        <h2 className='mb-4 text-3xl font-bold md:text-4xl'>
-          Ready to discuss your use case?
-        </h2>
-        <p className='mb-8 text-lg text-muted-foreground'>
-          Book a discovery call. We will review your context and outline how we
-          might help.
-        </p>
-        <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
-          <a
-            href='/contact'
-            className='inline-flex min-h-[44px] items-center justify-center rounded-md bg-primary px-8 py-4 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary/90'
-          >
-            Book a discovery call
-          </a>
-          <a
-            href='/services'
-            className='inline-flex min-h-[44px] items-center justify-center rounded-md border border-border bg-background px-8 py-4 text-base font-medium text-foreground transition-colors hover:bg-muted'
-          >
-            View services
-          </a>
-        </div>
-      </div>
-    </section>
   );
 }

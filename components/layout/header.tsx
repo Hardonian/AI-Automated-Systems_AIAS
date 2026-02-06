@@ -10,14 +10,14 @@ import { Button } from '@/components/ui/button';
 export function Header() {
   return (
     <header
-      className='bg-bg/80 sticky top-0 z-50 border-b border-border/50 shadow-sm backdrop-blur-md'
+      className='sticky top-0 z-50 border-b border-border/50 bg-background/80 shadow-sm backdrop-blur-md'
       role='banner'
     >
       <div className='container flex h-16 items-center justify-between'>
         <motion.div
-          animate={{ opacity: 1, x: 0 }}
-          initial={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.3 }}
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
         >
           <Link
             aria-label='AI Automated Systems - Home'
@@ -36,18 +36,21 @@ export function Header() {
 
         <nav aria-label='Primary' className='hidden items-center gap-1 md:flex'>
           {[
+            { href: '/systems', label: 'Systems' },
+            { href: '/case-studies', label: 'Work' },
             { href: '/services', label: 'Services' },
             { href: '/process', label: 'Process' },
-            { href: '/use-cases', label: 'Use Cases' },
-            { href: '/training', label: 'Training' },
-            { href: '/responsible-ai', label: 'Responsible AI' },
-            { href: '/resources', label: 'Resources' },
+            { href: '/pricing', label: 'Pricing' },
           ].map((item, index) => (
             <motion.div
               key={item.href}
+              initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
-              initial={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
+              transition={{
+                duration: 0.2,
+                delay: index * 0.03,
+                ease: [0.22, 1, 0.36, 1],
+              }}
             >
               <Link
                 aria-label={`Navigate to ${item.label}`}
@@ -66,15 +69,15 @@ export function Header() {
           <motion.div
             animate={{ opacity: 1, scale: 1 }}
             initial={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.3, delay: 0.4 }}
+            transition={{ duration: 0.2, delay: 0.3 }}
           >
             <Button
               asChild
-              className='ml-4 min-h-[44px] font-semibold'
+              className='hover:shadow-glow ml-4 min-h-[44px] font-semibold shadow-md'
               size='sm'
             >
-              <Link aria-label='Book a discovery call' href='/contact'>
-                Book a discovery call
+              <Link aria-label='Book a build sprint' href='/contact'>
+                Book a Build Sprint
               </Link>
             </Button>
           </motion.div>

@@ -111,7 +111,16 @@ export function createRouteHandler(
     const getBodyJson = async (): Promise<unknown> => {
       if (cachedBodyJson === null) {
         const bodyText = await getBodyText();
-        cachedBodyJson = JSON.parse(bodyText);
+        try {
+          cachedBodyJson = JSON.parse(bodyText);
+        } catch (parseError) {
+          throw new ValidationError('Invalid JSON body', undefined, {
+            originalError:
+              parseError instanceof Error
+                ? parseError.message
+                : String(parseError),
+          });
+        }
       }
       return cachedBodyJson;
     };
@@ -329,6 +338,11 @@ export function createRouteHandler(
               );
               return response;
             }
+          } else {
+            logger.warn('Cache service unavailable in Edge runtime', {
+              path: request.nextUrl.pathname,
+              method: request.method,
+            });
           }
         }
 
@@ -360,6 +374,11 @@ export function createRouteHandler(
                 ttl: normalizedOptions.cache.ttl,
                 tenantId: tenantId || undefined,
                 tags: normalizedOptions.cache.tags,
+              });
+            } else {
+              logger.warn('Cache service unavailable in Edge runtime', {
+                path: request.nextUrl.pathname,
+                method: request.method,
               });
             }
             response.headers.set('X-Cache', 'MISS');
@@ -395,8 +414,17 @@ export function createRouteHandler(
               method: request.method,
             },
           });
-        } catch {
-          // Telemetry import failed, continue without tracking
+        } catch (telemetryError) {
+          // Telemetry import failed, log with fallback
+          logger.warn('Telemetry tracking failed', {
+            error:
+              telemetryError instanceof Error
+                ? telemetryError.message
+                : String(telemetryError),
+            path: request.nextUrl.pathname,
+            method: request.method,
+            duration: errorDuration,
+          });
         }
 
         const systemError = new SystemError(

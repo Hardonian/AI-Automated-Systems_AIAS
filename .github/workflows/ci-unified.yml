@@ -71,7 +71,6 @@ jobs:
     name: Security Scan
     runs-on: ubuntu-latest
     needs: [typecheck]
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -214,21 +213,21 @@ jobs:
           set -euo pipefail
           REQUIRED_FILES=(".next/BUILD_ID" ".next/package.json")
           REQUIRED_DIRS=(".next/static" ".next/server")
-          
+
           for file in "${REQUIRED_FILES[@]}"; do
             if [ ! -f "$file" ]; then
               echo "❌ Missing required file: $file"
               exit 1
             fi
           done
-          
+
           for dir in "${REQUIRED_DIRS[@]}"; do
             if [ ! -d "$dir" ]; then
               echo "❌ Missing required directory: $dir"
               exit 1
             fi
           done
-          
+
           echo "✅ All required build artifacts present"
 
       - name: Comment on PR
@@ -241,14 +240,14 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
-            
+
             const botComment = comments.find(comment => 
               comment.user.type === 'Bot' && 
               comment.body.includes('Vercel Build Check')
             );
-            
+
             const body = `## ✅ Vercel Build Check Passed\n\nThis PR has been validated for Vercel deployment:\n\n- ✅ vercel.json configuration valid\n- ✅ Application builds successfully\n- ✅ Build output validated\n- ✅ All required artifacts present\n\n**Ready for Vercel deployment!**`;
-            
+
             if (botComment) {
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
@@ -421,17 +420,17 @@ jobs:
           PR_NUMBER="${{ github.event.pull_request.number }}"
           BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
           COMMIT_SHA="${{ github.event.pull_request.head.sha }}"
-          
+
           if [ -z "${{ secrets.VERCEL_TOKEN }}" ] || [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
             echo "⚠️ Vercel secrets not configured, skipping deployment status"
             echo "preview_status=unknown" >> $GITHUB_OUTPUT
             exit 0
           fi
-          
+
           PREVIEW_RESPONSE=$(curl -s \
             -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
             "https://api.vercel.com/v6/deployments?projectId=${{ secrets.VERCEL_PROJECT_ID }}&target=preview&limit=20")
-          
+
           if echo "$PREVIEW_RESPONSE" | jq -e '.deployments' > /dev/null 2>&1; then
             PREVIEW_DEPLOYMENT=$(echo "$PREVIEW_RESPONSE" | jq -r --arg sha "$COMMIT_SHA" '.deployments[] | select(.meta.githubCommitSha == $sha) | {url: .url, state: .readyState, uid: .uid}' | jq -s '.[0] // empty')
             
@@ -469,11 +468,11 @@ jobs:
           script: |
             const prNumber = context.payload.pull_request?.number;
             if (!prNumber) return;
-            
+
             const previewStatus = '${{ steps.get_deployments.outputs.preview_status }}';
             const previewUrl = '${{ steps.get_deployments.outputs.preview_url }}';
             const previewLogsUrl = '${{ steps.get_deployments.outputs.preview_logs_url }}';
-            
+
             const getBadge = (status) => {
               switch(status) {
                 case 'success': return '![Success](https://img.shields.io/badge/status-success-brightgreen)';
@@ -482,35 +481,35 @@ jobs:
                 default: return '![Unknown](https://img.shields.io/badge/status-unknown-lightgrey)';
               }
             };
-            
+
             const body = `## 🚀 Vercel Build Status
-            
+
             > **Live build status updates** - Click links below to view build logs in Vercel dashboard
-            
+
             ### Preview Deployment
-            
+
             ${getBadge(previewStatus)}
-            
+
             ${previewUrl ? `- **Preview URL:** [${previewUrl}](${previewUrl})` : '- **Status:** Preview deployment not yet available'}
             - **Build Logs:** [View in Vercel](${previewLogsUrl || 'https://vercel.com'})
-            
+
             ---
-            
+
             💡 **Tip:** Click the "View in Vercel" links above to check detailed build logs and deployment status.
-            
+
             *Last updated: ${new Date().toISOString()}*`;
-            
+
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
             });
-            
+
             const botComment = comments.find(comment => 
               comment.user.type === 'Bot' && 
               comment.body.includes('🚀 Vercel Build Status')
             );
-            
+
             if (botComment) {
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,

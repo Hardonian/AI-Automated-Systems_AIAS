@@ -126,7 +126,10 @@ async function gh(path: string): Promise<any> {
   } else {
     console.log('✅ Post-deploy verification passed.');
   }
-})().catch(e => {
-  console.error(e);
+})().catch((error: unknown) => {
+  console.error(
+    'Post-deploy verification failed:',
+    error instanceof Error ? error.message : String(error)
+  );
   process.exit(1);
 });

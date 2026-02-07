@@ -20,8 +20,8 @@ export function ConversionCTA() {
         </p>
         <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
           <Button asChild size='lg' className='min-h-[48px] px-8'>
-            <Link href='/contact'>
-              Book a discovery call
+            <Link href='/demo'>
+              Try Live Demo
               <ArrowRight className='ml-2 h-4 w-4' />
             </Link>
           </Button>
@@ -31,7 +31,7 @@ export function ConversionCTA() {
             variant='outline'
             className='min-h-[48px] px-8'
           >
-            <Link href='/services'>View services</Link>
+            <Link href='/contact'>Book a discovery call</Link>
           </Button>
         </div>
       </div>

@@ -24,8 +24,8 @@ export function SimpleHero() {
           </p>
           <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
             <Button asChild size='lg' className='min-h-[48px] px-8'>
-              <Link href='/contact'>
-                Book a discovery call
+              <Link href='/demo'>
+                Try Live Demo
                 <ArrowRight className='ml-2 h-4 w-4' />
               </Link>
             </Button>
@@ -35,7 +35,7 @@ export function SimpleHero() {
               variant='outline'
               className='min-h-[48px] px-8'
             >
-              <Link href='/use-cases'>See what we automate</Link>
+              <Link href='/contact'>Book a discovery call</Link>
             </Button>
           </div>
           <p className='mt-6 text-sm text-muted-foreground'>

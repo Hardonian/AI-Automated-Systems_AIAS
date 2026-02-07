@@ -76,8 +76,8 @@ export function Header() {
               className='hover:shadow-glow ml-4 min-h-[44px] font-semibold shadow-md'
               size='sm'
             >
-              <Link aria-label='Book a build sprint' href='/contact'>
-                Book a Build Sprint
+              <Link aria-label='Try Live Demo' href='/demo'>
+                Try Live Demo
               </Link>
             </Button>
           </motion.div>

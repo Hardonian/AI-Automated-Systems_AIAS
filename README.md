@@ -14,6 +14,24 @@ AIAS Platform is a multi-tenant SaaS application built with Next.js 15, TypeScri
 - **Analytics & Insights**: Real-time dashboards, usage analytics, and performance metrics
 - **Integrations**: Shopify, Wave Accounting, and custom API integrations
 
+## Live Demo & Interactive Showcase
+
+Experience the power of AIAS Platform firsthand with our **Interactive Control Plane**.
+
+- **[Try Live Demo](/demo)**: Run a sandboxed data reconciliation agent and see real-time executive reporting.
+- **Deterministic Mechanics**: Observe how our agents produce verifiable evidence (JSON) alongside human-readable summaries (Markdown).
+- **Threshold Logic**: See how our systems decide when to automate and when to flag for human review.
+
+## Consultancy Engagement Model
+
+We don't just sell software; we architect solutions. Our engagement model is designed for rapid value delivery:
+
+1. **Pilot**: 30-day rapid prototype of a high-impact workflow.
+2. **Scale**: Full deployment across your organization with custom agent kernels.
+3. **Enable**: Training and handoff to your internal teams for long-term sustainability.
+
+[Book a discovery call](https://calendly.com/aias-platform) to discuss your specific automation needs.
+
 ## Tech Stack
 
 - **Framework**: Next.js 15 (App Router)
@@ -63,12 +81,14 @@ The application will be available at `http://localhost:3000`.
 See [`.env.local.example`](.env.local.example) for complete configuration.
 
 **Minimum required:**
+
 - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
 - `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key
 - `DATABASE_URL` - PostgreSQL connection string
 
 **Optional (for full features):**
+
 - `STRIPE_SECRET_KEY` - Stripe secret key (billing)
 - `RESEND_API_KEY` - Resend API key (email)
 - `OPENAI_API_KEY` - OpenAI API key (AI features)
@@ -138,6 +158,7 @@ The platform uses a multi-tier architecture:
 5. **External Services**: Stripe, Resend, OpenAI
 
 Multi-tenant isolation is enforced at multiple layers:
+
 - Middleware validates tenant access
 - Row-Level Security (RLS) policies filter data by tenant_id
 - Cache keys prefixed with tenant_id
@@ -245,6 +266,7 @@ pnpm lighthouse
 ### CI/CD
 
 The project uses GitHub Actions for CI/CD:
+
 - Lint and type checking on every PR
 - Tests run on every PR
 - Build verification

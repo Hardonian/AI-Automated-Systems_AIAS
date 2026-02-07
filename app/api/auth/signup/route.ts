@@ -1,26 +1,22 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
-import { trackSignup } from "@/lib/analytics/funnel-tracking";
-import { handleApiError } from "@/lib/api/route-handler";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { rateLimit, getClientIP } from "@/lib/utils/rate-limit";
+import { trackSignup } from '@/lib/analytics/funnel-tracking';
+import { handleApiError } from '@/lib/api/route-handler';
+import { signupSchema as standardizedSignupSchema } from '@/lib/api/schemas';
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
+import { rateLimit, getClientIP } from '@/lib/utils/rate-limit';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
-const signupSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string()
-    .min(8, "Password must be at least 8 characters long")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/\d/, "Password must contain at least one number"),
+// Extend standardized schema with additional fields specific to this route
+const signupSchema = standardizedSignupSchema.extend({
   fullName: z.string().optional(),
 });
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 /**
  * POST /api/auth/signup
@@ -31,25 +27,27 @@ export async function POST(request: NextRequest) {
     // Rate limiting: 3 signups per hour per IP
     const ip = getClientIP(request);
     const limit = rateLimit(ip, 3, 60 * 60 * 1000);
-    
+
     if (!limit.allowed) {
       return NextResponse.json(
-        { 
-          error: "Too many signup attempts. Please try again later.",
-          retryAfter: Math.ceil((limit.resetTime - Date.now()) / 1000)
+        {
+          error: 'Too many signup attempts. Please try again later.',
+          retryAfter: Math.ceil((limit.resetTime - Date.now()) / 1000),
         },
-        { 
+        {
           status: 429,
           headers: {
-            "Retry-After": String(Math.ceil((limit.resetTime - Date.now()) / 1000)),
-            "X-RateLimit-Limit": "3",
-            "X-RateLimit-Remaining": "0",
-            "X-RateLimit-Reset": String(limit.resetTime),
-          }
+            'Retry-After': String(
+              Math.ceil((limit.resetTime - Date.now()) / 1000)
+            ),
+            'X-RateLimit-Limit': '3',
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': String(limit.resetTime),
+          },
         }
       );
     }
-    
+
     const body = await request.json();
     const validated = signupSchema.parse(body);
 
@@ -65,37 +63,43 @@ export async function POST(request: NextRequest) {
     });
 
     if (authError || !authData.user) {
-      logger.error("Failed to create user", authError instanceof Error ? authError : new Error(String(authError)));
-      // User-friendly error messages
-      let errorMessage = "Failed to create account. Please try again.";
-      if (authError?.message?.includes("already registered")) {
-        errorMessage = "An account with this email already exists. Please sign in instead.";
-      } else if (authError?.message?.includes("password")) {
-        errorMessage = "Password does not meet requirements. Please use a stronger password.";
-      }
-      return NextResponse.json(
-        { error: errorMessage },
-        { status: 400 }
+      logger.error(
+        'Failed to create user',
+        authError instanceof Error ? authError : new Error(String(authError))
       );
+      // User-friendly error messages
+      let errorMessage = 'Failed to create account. Please try again.';
+      if (authError?.message?.includes('already registered')) {
+        errorMessage =
+          'An account with this email already exists. Please sign in instead.';
+      } else if (authError?.message?.includes('password')) {
+        errorMessage =
+          'Password does not meet requirements. Please use a stronger password.';
+      }
+      return NextResponse.json({ error: errorMessage }, { status: 400 });
     }
 
     // Create profile
-    const { error: profileError } = await supabase
-      .from("profiles")
-      .insert({
-        id: authData.user.id,
-        email: validated.email,
-        full_name: validated.fullName || null,
-        subscription_tier: "trial",
-        trial_started_at: new Date().toISOString(),
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      });
+    const { error: profileError } = await supabase.from('profiles').insert({
+      id: authData.user.id,
+      email: validated.email,
+      full_name: validated.fullName || null,
+      subscription_tier: 'trial',
+      trial_started_at: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
 
     if (profileError) {
-      logger.error("Failed to create profile", profileError instanceof Error ? profileError : new Error(String(profileError)), {
-        userId: authData.user.id,
-      });
+      logger.error(
+        'Failed to create profile',
+        profileError instanceof Error
+          ? profileError
+          : new Error(String(profileError)),
+        {
+          userId: authData.user.id,
+        }
+      );
       // Don't fail signup if profile creation fails - user can still log in
     }
 
@@ -108,21 +112,23 @@ export async function POST(request: NextRequest) {
     // Send welcome email (async, don't wait)
     const supabaseUrl = env.supabase.url;
     const supabaseServiceKey = env.supabase.serviceRoleKey;
-    const [firstName] = (validated.fullName ?? "").split(" ");
+    const [firstName] = (validated.fullName ?? '').split(' ');
     if (supabaseServiceKey && supabaseUrl) {
       fetch(`${supabaseUrl}/functions/v1/welcome-email`, {
-        method: "POST",
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${supabaseServiceKey}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           userId: authData.user.id,
           email: validated.email,
-          firstName: firstName || "there",
+          firstName: firstName || 'there',
         }),
-      }).catch((error) => {
-        logger.warn("Failed to send welcome email", { error: error instanceof Error ? error.message : String(error) });
+      }).catch(error => {
+        logger.warn('Failed to send welcome email', {
+          error: error instanceof Error ? error.message : String(error),
+        });
       });
     }
 
@@ -132,20 +138,21 @@ export async function POST(request: NextRequest) {
         id: authData.user.id,
         email: authData.user.email,
       },
-      message: "Account created successfully",
+      message: 'Account created successfully',
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
       // Return first validation error in user-friendly format
       const [firstError] = error.errors;
       return NextResponse.json(
-        { 
-          error: firstError?.message || "Please check your input and try again.",
-          field: firstError?.path?.[0]
+        {
+          error:
+            firstError?.message || 'Please check your input and try again.',
+          field: firstError?.path?.[0],
         },
         { status: 400 }
       );
     }
-    return handleApiError(error, "Failed to create account");
+    return handleApiError(error, 'Failed to create account');
   }
 }

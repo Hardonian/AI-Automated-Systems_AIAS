@@ -79,6 +79,11 @@ jobs:
     name: Unit Tests
     runs-on: ubuntu-latest
     needs: [typecheck]
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -89,7 +94,7 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run test -- --run
+      - run: pnpm run test -- --run --shard=${{ matrix.shard }}/4
       - uses: codecov/codecov-action@v3
         if: always()
         with:
@@ -357,18 +362,44 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
       - run: mkdir -p reports
-      - run: pnpm run typecheck || echo "Type check completed"
-        continue-on-error: true
-      - run: pnpm run lint || echo "Lint completed"
-        continue-on-error: true
-      - run: pnpm run prune:exports || echo "Export pruning completed"
-        continue-on-error: true
-      - run: pnpm run scan:usage || echo "Usage scan completed"
-        continue-on-error: true
-      - run: pnpm run audit:deps || echo "Dependency audit completed"
-        continue-on-error: true
-      - run: pnpm run lint:unused || echo "Unused lint check completed"
-        continue-on-error: true
+
+      # Critical checks that should fail the job
+      - name: Type check
+        run: pnpm run typecheck
+
+      - name: Lint check
+        run: pnpm run lint
+
+      # Dead code detection - now fails the job if issues found
+      - name: Check for unused exports
+        run: |
+          echo "Checking for unused exports..."
+          pnpm run prune:exports > reports/ts-prune.txt 2>&1
+          if [ -s reports/ts-prune.txt ] && grep -v "^$" reports/ts-prune.txt | grep -v "Export pruning completed" > /dev/null; then
+            echo "❌ Found unused exports:"
+            cat reports/ts-prune.txt
+            exit 1
+          fi
+          echo "✅ No unused exports found"
+
+      - name: Check for unused dependencies
+        run: |
+          echo "Checking for unused dependencies..."
+          pnpm run scan:usage > reports/knip.json 2>&1 || true
+          echo "✅ Dependency scan completed"
+
+      # Security and audit checks
+      - name: Security audit
+        run: |
+          echo "Running security audit..."
+          pnpm run audit:security
+
+      - name: Unused lint check
+        run: |
+          echo "Checking for unused eslint directives..."
+          pnpm run lint:unused > reports/eslint-unused.json 2>&1 || true
+          echo "✅ Unused lint check completed"
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:

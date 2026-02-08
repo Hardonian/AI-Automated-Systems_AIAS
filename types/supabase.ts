@@ -1,12 +1,9 @@
-// Supabase Database Types
-// This file provides type definitions for Supabase database operations
-//
-// NOTE: For production, regenerate types using:
-//   pnpm tsx scripts/regenerate-supabase-types.ts
-//   Or: supabase gen types typescript --project-id <PROJECT_REF> > types/supabase.ts
-//
-// This is a workaround type definition that allows Supabase operations to work
-// without strict schema types. For full type safety, regenerate from your schema.
+/**
+ * Supabase Type Stubs
+ *
+ * Supabase has been removed. These minimal types exist only so that
+ * files still importing `Database` or `Json` from this module compile.
+ */
 
 export type Json =
   | string
@@ -16,40 +13,18 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-// Generic table definition with flexible Insert type
-// Using 'any' for Insert to bypass strict type checking during development
-// This allows inserting objects with any shape while maintaining some type safety
-export type TableDef = {
-  Row: Record<string, unknown>;
-  Insert: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  Update: Record<string, unknown>;
-};
-
-// Database interface - permissive structure that works with Supabase's type system
-// The key is that Supabase uses conditional types that return 'never' if a table
-// doesn't exist. By defining all possible tables, we avoid the 'never' type.
 export type Database = {
   public: {
-    Tables: {
-      [tableName: string]: TableDef;
-      agents: TableDef;
-      agent_executions: TableDef;
-      workflows: TableDef;
-      workflow_executions: TableDef;
-    };
-    Views: {
-      [viewName: string]: {
+    Tables: Record<
+      string,
+      {
         Row: Record<string, unknown>;
-      };
-    };
-    Functions: {
-      [functionName: string]: {
-        Args: Record<string, unknown>;
-        Returns: unknown;
-      };
-    };
-    Enums: {
-      [enumName: string]: string;
-    };
+        Insert: Record<string, unknown>;
+        Update: Record<string, unknown>;
+      }
+    >;
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+    Enums: Record<string, never>;
   };
 };

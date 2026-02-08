@@ -21,7 +21,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@supabase/supabase-js": ["./lib/shims/supabase-js"],
+      "@supabase/ssr": ["./lib/shims/supabase-ssr"]
     },
     "baseUrl": ".",
     "typeRoots": ["./node_modules/@types", "./types"],

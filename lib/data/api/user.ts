@@ -1,11 +1,11 @@
 /**
  * User Data Access Layer
- * 
+ *
  * Centralized functions for fetching user data from Supabase.
  * These functions are used by React Query hooks.
  */
 
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from '@/lib/supabase/client';
 
 export interface UserProfile {
   id: string;
@@ -21,9 +21,12 @@ export interface UserProfile {
  */
 export async function getCurrentUser(): Promise<UserProfile | null> {
   const supabase = createClient();
-  
-  const { data: { user }, error } = await supabase.auth.getUser();
-  
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
   if (error || !user) {
     return null;
   }
@@ -41,13 +44,14 @@ export async function getCurrentUser(): Promise<UserProfile | null> {
 /**
  * Get user profile by ID
  */
-export async function getUserProfile(userId: string): Promise<UserProfile | null> {
+export async function getUserProfile(
+  userId: string
+): Promise<UserProfile | null> {
   const supabase = createClient();
-  
-  const { data, error } = await (supabase
-    .from("profiles") as any)
-    .select("*")
-    .eq("id", userId)
+
+  const { data, error } = await (supabase.from('profiles') as any)
+    .select('*')
+    .eq('id', userId)
     .single();
 
   if (error || !data) {
@@ -69,19 +73,18 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
  */
 export async function updateUserProfile(
   userId: string,
-  updates: Partial<Pick<UserProfile, "name" | "avatar_url">>
+  updates: Partial<Pick<UserProfile, 'name' | 'avatar_url'>>
 ): Promise<UserProfile> {
   const supabase = createClient();
-  
-  const { data, error } = await (supabase
-    .from("profiles") as any)
+
+  const { data, error } = await (supabase.from('profiles') as any)
     .update(updates)
-    .eq("id", userId)
+    .eq('id', userId)
     .select()
     .single();
 
   if (error || !data) {
-    throw new Error(error?.message || "Failed to update profile");
+    throw new Error(error?.message || 'Failed to update profile');
   }
 
   const profileData = data as {
@@ -112,17 +115,17 @@ export function onAuthStateChange(
   callback: (user: UserProfile | null) => void
 ): () => void {
   const supabase = createClient();
-  
-  const { data: { subscription } } = supabase.auth.onAuthStateChange(
-    async (_event, session) => {
-      if (session?.user) {
-        const profile = await getCurrentUser();
-        callback(profile);
-      } else {
-        callback(null);
-      }
+
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange(async (_event: any, session: any) => {
+    if (session?.user) {
+      const profile = await getCurrentUser();
+      callback(profile);
+    } else {
+      callback(null);
     }
-  );
+  });
 
   return () => {
     subscription.unsubscribe();

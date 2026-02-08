@@ -3,10 +3,10 @@
  * Handles session expiry and refresh for authenticated users
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { logger } from "@/lib/utils/logger";
-import { createMiddlewareSupabaseClient } from "@/lib/supabase/middleware";
+import { logger } from '@/lib/utils/logger';
+import { createMiddlewareSupabaseClient } from '@/lib/supabase/middleware';
 
 export interface SessionCheckResult {
   valid: boolean;
@@ -29,9 +29,12 @@ export interface SessionCheckResult {
 /**
  * Check if user session is valid and handle expiry
  */
-export async function checkSession(request: NextRequest): Promise<SessionCheckResult> {
+export async function checkSession(
+  request: NextRequest
+): Promise<SessionCheckResult> {
   try {
-    const { supabase, response, missingEnv } = createMiddlewareSupabaseClient(request);
+    const { supabase, response, missingEnv } =
+      createMiddlewareSupabaseClient(request);
 
     if (!supabase) {
       return {
@@ -43,10 +46,12 @@ export async function checkSession(request: NextRequest): Promise<SessionCheckRe
       };
     }
 
+    const supabaseClient: any = supabase;
+
     const {
       data: { user },
       error: authError,
-    } = await supabase.auth.getUser();
+    } = await supabaseClient.auth.getUser();
 
     // No user = not authenticated (not an error for public routes)
     if (!user || authError) {
@@ -74,7 +79,10 @@ export async function checkSession(request: NextRequest): Promise<SessionCheckRe
       response,
     };
   } catch (error) {
-    logger.error("Error checking session", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Error checking session',
+      error instanceof Error ? error : new Error(String(error))
+    );
     return {
       valid: false,
       expired: false,
@@ -86,13 +94,15 @@ export async function checkSession(request: NextRequest): Promise<SessionCheckRe
 /**
  * Require valid session for protected routes
  */
-export async function requireSession(request: NextRequest): Promise<SessionCheckResult> {
+export async function requireSession(
+  request: NextRequest
+): Promise<SessionCheckResult> {
   const sessionCheck = await checkSession(request);
 
   if (!sessionCheck.valid) {
     const url = request.nextUrl.clone();
-    url.pathname = "/signin";
-    url.searchParams.set("redirect", request.nextUrl.pathname);
+    url.pathname = '/signin';
+    url.searchParams.set('redirect', request.nextUrl.pathname);
 
     return {
       ...sessionCheck,

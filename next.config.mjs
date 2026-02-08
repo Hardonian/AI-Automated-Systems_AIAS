@@ -35,19 +35,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**.supabase.co",
-      },
-      {
-        protocol: "https",
-        hostname: "**.supabase.in",
-      },
-      {
-        protocol: "https",
         hostname: "images.unsplash.com",
-      },
-      {
-        protocol: "https",
-        hostname: "cdn.shopify.com",
       },
     ],
   },
@@ -134,6 +122,10 @@ const nextConfig = {
     config.resolve.alias['@/lib'] = path.resolve(rootDir, 'lib');
     config.resolve.alias['@/app'] = path.resolve(rootDir, 'app');
     config.resolve.alias['@'] = rootDir;
+
+    // Supabase removed — redirect package imports to local shims
+    config.resolve.alias['@supabase/supabase-js'] = path.resolve(rootDir, 'lib/shims/supabase-js.ts');
+    config.resolve.alias['@supabase/ssr'] = path.resolve(rootDir, 'lib/shims/supabase-ssr.ts');
     
     if (!isServer) {
       // Optimize client bundle
@@ -217,11 +209,11 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co https://*.supabase.in https://browser.sentry-cdn.com https://vercel.live",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://browser.sentry-cdn.com https://vercel.live",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com data:",
               "img-src 'self' data: https: blob:",
-              "connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co wss://*.supabase.in https://*.sentry.io https://vitals.vercel-insights.com",
+              "connect-src 'self' https://*.sentry.io https://vitals.vercel-insights.com",
               "frame-src 'self'",
               "object-src 'none'",
               "base-uri 'self'",

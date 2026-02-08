@@ -1,41 +1,29 @@
 /**
- * Type-safe helpers for Supabase operations
- * These helpers work around Supabase's strict type checking
- * while maintaining runtime safety
+ * Typed Helpers Stub
+ *
+ * Supabase has been removed. All typed helpers are no-ops.
  */
 
-import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Database } from '@/types/supabase'
-
-/**
- * Type-safe insert helper that works with any table
- */
 export async function typedInsert<T extends Record<string, unknown>>(
-  client: SupabaseClient<Database>,
-  table: string,
-  values: T | T[]
+  _client: any,
+  _table: string,
+  _values: T | T[]
 ) {
-  return client.from(table).insert(values as any)
+  return { data: null, error: null };
 }
 
-/**
- * Type-safe update helper that works with any table
- */
 export async function typedUpdate<T extends Record<string, unknown>>(
-  client: SupabaseClient<Database>,
-  table: string,
-  values: Partial<T>
+  _client: any,
+  _table: string,
+  _values: Partial<T>
 ) {
-  return (client.from(table) as any).update(values as any)
+  return { data: null, error: null };
 }
 
-/**
- * Type-safe upsert helper that works with any table
- */
 export async function typedUpsert<T extends Record<string, unknown>>(
-  client: SupabaseClient<Database>,
-  table: string,
-  values: T | T[]
+  _client: any,
+  _table: string,
+  _values: T | T[]
 ) {
-  return client.from(table).upsert(values as any)
+  return { data: null, error: null };
 }

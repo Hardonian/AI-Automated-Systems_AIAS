@@ -142,8 +142,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
         <link href='https://fonts.googleapis.com' rel='dns-prefetch' />
         <link href='https://fonts.gstatic.com' rel='dns-prefetch' />
-        <link href='https://*.supabase.co' rel='dns-prefetch' />
-        <link href='https://*.supabase.in' rel='dns-prefetch' />
 
         {/* Preload critical resources */}
         <link

@@ -28,23 +28,24 @@ export async function initializeEdgeAIStorage(): Promise<void> {
   try {
     // Check if buckets exist, create if not
     const { data: buckets } = await supabase.storage.listBuckets();
-    const bucketNames = buckets?.map(b => b.name) || [];
+    const bucketNames = buckets?.map((b: any) => b.name) || [];
 
     for (const [key, bucketName] of Object.entries(EDGE_AI_BUCKETS)) {
       if (!bucketNames.includes(bucketName)) {
         const { error } = await supabase.storage.createBucket(bucketName, {
           public: false, // Private buckets for security
           fileSizeLimit: key === 'models' ? 2147483648 : 1073741824, // 2GB for models, 1GB for artifacts
-          allowedMimeTypes: key === 'models' 
-            ? [
-                'application/octet-stream',
-                'application/x-onnx',
-                'application/x-tflite',
-                'application/x-gguf',
-                'application/x-coreml',
-                'application/x-tensorrt',
-              ]
-            : null, // Allow all for artifacts
+          allowedMimeTypes:
+            key === 'models'
+              ? [
+                  'application/octet-stream',
+                  'application/x-onnx',
+                  'application/x-tflite',
+                  'application/x-gguf',
+                  'application/x-coreml',
+                  'application/x-tensorrt',
+                ]
+              : null, // Allow all for artifacts
         });
 
         if (error) {
@@ -55,7 +56,10 @@ export async function initializeEdgeAIStorage(): Promise<void> {
       }
     }
   } catch (error) {
-    logger.error('Failed to initialize Edge AI storage', error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Failed to initialize Edge AI storage',
+      error instanceof Error ? error : new Error(String(error))
+    );
     throw error;
   }
 }
@@ -69,7 +73,12 @@ export async function uploadModelFile(
   userId: string,
   modelId: string,
   format: EdgeAIModelFormat
-): Promise<{ success: boolean; filePath?: string; fileUrl?: string; error?: string }> {
+): Promise<{
+  success: boolean;
+  filePath?: string;
+  fileUrl?: string;
+  error?: string;
+}> {
   try {
     // Determine MIME type based on format
     const mimeTypes: Record<EdgeAIModelFormat, string> = {
@@ -88,7 +97,9 @@ export async function uploadModelFile(
     // Sanitize filename
     const sanitizedFilename = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
     const timestamp = Date.now();
-    const fileExtension = sanitizedFilename.substring(sanitizedFilename.lastIndexOf('.'));
+    const fileExtension = sanitizedFilename.substring(
+      sanitizedFilename.lastIndexOf('.')
+    );
     const uniqueFilename = `${modelId}-${timestamp}${fileExtension}`;
 
     // Build storage path
@@ -148,11 +159,15 @@ export async function uploadModelFile(
       fileUrl: urlData?.signedUrl,
     };
   } catch (error) {
-    logger.error('Model file upload error', error instanceof Error ? error : new Error(String(error)), {
-      filename,
-      userId,
-      modelId,
-    });
+    logger.error(
+      'Model file upload error',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        filename,
+        userId,
+        modelId,
+      }
+    );
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred',
@@ -169,11 +184,18 @@ export async function uploadArtifact(
   userId: string,
   artifactId: string,
   artifactType: string
-): Promise<{ success: boolean; filePath?: string; fileUrl?: string; error?: string }> {
+): Promise<{
+  success: boolean;
+  filePath?: string;
+  fileUrl?: string;
+  error?: string;
+}> {
   try {
     const sanitizedFilename = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
     const timestamp = Date.now();
-    const fileExtension = sanitizedFilename.substring(sanitizedFilename.lastIndexOf('.'));
+    const fileExtension = sanitizedFilename.substring(
+      sanitizedFilename.lastIndexOf('.')
+    );
     const uniqueFilename = `${artifactId}-${timestamp}${fileExtension}`;
 
     // Build storage path based on artifact type
@@ -232,11 +254,15 @@ export async function uploadArtifact(
       fileUrl: urlData?.signedUrl,
     };
   } catch (error) {
-    logger.error('Artifact upload error', error instanceof Error ? error : new Error(String(error)), {
-      filename,
-      userId,
-      artifactId,
-    });
+    logger.error(
+      'Artifact upload error',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        filename,
+        userId,
+        artifactId,
+      }
+    );
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred',
@@ -257,7 +283,9 @@ export async function getModelDownloadUrl(
       .createSignedUrl(filePath, expiresIn);
 
     if (error) {
-      logger.error('Failed to generate model download URL', error, { filePath });
+      logger.error('Failed to generate model download URL', error, {
+        filePath,
+      });
       return {
         success: false,
         error: error.message,
@@ -269,9 +297,13 @@ export async function getModelDownloadUrl(
       url: data.signedUrl,
     };
   } catch (error) {
-    logger.error('Error generating model download URL', error instanceof Error ? error : new Error(String(error)), {
-      filePath,
-    });
+    logger.error(
+      'Error generating model download URL',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        filePath,
+      }
+    );
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred',
@@ -292,7 +324,9 @@ export async function getArtifactDownloadUrl(
       .createSignedUrl(filePath, expiresIn);
 
     if (error) {
-      logger.error('Failed to generate artifact download URL', error, { filePath });
+      logger.error('Failed to generate artifact download URL', error, {
+        filePath,
+      });
       return {
         success: false,
         error: error.message,
@@ -304,9 +338,13 @@ export async function getArtifactDownloadUrl(
       url: data.signedUrl,
     };
   } catch (error) {
-    logger.error('Error generating artifact download URL', error instanceof Error ? error : new Error(String(error)), {
-      filePath,
-    });
+    logger.error(
+      'Error generating artifact download URL',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        filePath,
+      }
+    );
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred',
@@ -317,21 +355,28 @@ export async function getArtifactDownloadUrl(
 /**
  * Delete model file from storage
  */
-export async function deleteModelFile(filePath: string): Promise<{ success: boolean; error?: string }> {
+export async function deleteModelFile(
+  filePath: string
+): Promise<{ success: boolean; error?: string }> {
   return deleteFileSecure(filePath, EDGE_AI_BUCKETS.models);
 }
 
 /**
  * Delete artifact from storage
  */
-export async function deleteArtifact(filePath: string): Promise<{ success: boolean; error?: string }> {
+export async function deleteArtifact(
+  filePath: string
+): Promise<{ success: boolean; error?: string }> {
   return deleteFileSecure(filePath, EDGE_AI_BUCKETS.artifacts);
 }
 
 /**
  * Get file size from storage
  */
-export async function getFileSize(filePath: string, bucket: keyof typeof EDGE_AI_BUCKETS): Promise<number | null> {
+export async function getFileSize(
+  filePath: string,
+  bucket: keyof typeof EDGE_AI_BUCKETS
+): Promise<number | null> {
   try {
     const { data, error } = await supabase.storage
       .from(EDGE_AI_BUCKETS[bucket])
@@ -345,7 +390,11 @@ export async function getFileSize(filePath: string, bucket: keyof typeof EDGE_AI
 
     return data[0]?.metadata?.size || null;
   } catch (error) {
-    logger.error('Error getting file size', error instanceof Error ? error : new Error(String(error)), { filePath });
+    logger.error(
+      'Error getting file size',
+      error instanceof Error ? error : new Error(String(error)),
+      { filePath }
+    );
     return null;
   }
 }

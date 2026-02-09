@@ -1,6 +1,6 @@
 # Systems Scorecard
 
-**Last Updated:** 2026-02-02
+**Last Updated:** 2026-02-09
 
 ## Key Metrics
 

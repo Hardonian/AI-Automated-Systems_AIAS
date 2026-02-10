@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { siteContent } from '@/src/content/site';
 
 export default function NotFound() {
   return (
@@ -34,7 +35,7 @@ export default function NotFound() {
             </Card>
           </Link>
 
-          <Link className='group' href='/services'>
+          <Link className='group' href='/#services'>
             <Card className='h-full border-primary/20 transition-all hover:border-primary/50 hover:shadow-md'>
               <CardContent className='flex items-center gap-4 p-4'>
                 <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/20'>
@@ -50,7 +51,7 @@ export default function NotFound() {
             </Card>
           </Link>
 
-          <Link className='group' href='/help'>
+          <Link className='group' href='/#faq'>
             <Card className='h-full border-primary/20 transition-all hover:border-primary/50 hover:shadow-md'>
               <CardContent className='flex items-center gap-4 p-4'>
                 <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/20'>
@@ -66,7 +67,7 @@ export default function NotFound() {
             </Card>
           </Link>
 
-          <Link className='group' href='/contact'>
+          <Link className='group' href={`mailto:${siteContent.contact.email}`}>
             <Card className='h-full border-primary/20 transition-all hover:border-primary/50 hover:shadow-md'>
               <CardContent className='flex items-center gap-4 p-4'>
                 <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/20'>
@@ -88,7 +89,9 @@ export default function NotFound() {
             Looking for something specific?
           </p>
           <Button asChild className='w-full sm:w-auto' size='lg'>
-            <Link href='/demo'>Book a Strategy Call</Link>
+            <Link href={siteContent.positioning.primaryCTA.href}>
+              {siteContent.positioning.primaryCTA.label}
+            </Link>
           </Button>
         </div>
       </div>

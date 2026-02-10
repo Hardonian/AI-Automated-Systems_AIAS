@@ -1,8 +1,8 @@
 /**
  * Smoke Test
  *
- * Verifies the core "Reality Mode" flow: Landing -> Demo -> Results.
- * This ensures the interactive demo is functional and accessible.
+ * Verifies the core "Reality Mode" flow: Landing -> Workflow Sandbox -> Results.
+ * This ensures the interactive sandbox is functional and accessible.
  *
  * Run with: pnpm test:e2e
  */
@@ -20,51 +20,39 @@ test.describe('Reality Mode Smoke Test', () => {
 
   test('Landing page has unified CTAs', async ({ page }) => {
     // Check for primary CTA
-    const primaryCTA = page.locator('a:has-text("Try Live Demo")').first();
+    const primaryCTA = page
+      .locator('a:has-text("Book a Strategy Call")')
+      .first();
     await expect(primaryCTA).toBeVisible();
-    await expect(primaryCTA).toHaveAttribute('href', '/demo');
+    await expect(primaryCTA).toHaveAttribute('href', /calendly\.com/);
 
     // Check for secondary CTA
     const secondaryCTA = page
-      .locator('a:has-text("Book a discovery call")')
+      .locator('a:has-text("Try the Workflow Sandbox")')
       .first();
     await expect(secondaryCTA).toBeVisible();
   });
 
-  test('Full demo flow: Landing -> Demo -> Execute -> Results', async ({
+  test('Workflow sandbox flow: Landing -> Sandbox -> Generate output', async ({
     page,
   }) => {
-    // 1. Navigate to Demo page via CTA
-    const primaryCTA = page.locator('a:has-text("Try Live Demo")').first();
-    await primaryCTA.click();
-    await expect(page).toHaveURL(/\/demo/);
+    const sandboxCTA = page
+      .locator('a:has-text("Try the Workflow Sandbox")')
+      .first();
+    await sandboxCTA.click();
+    await expect(page).toHaveURL(/#workflow-sandbox/);
 
-    // 2. Verify Demo page content
-    await expect(page.locator('h1')).toContainText(/Live Demo/i);
-    await expect(page.locator('text=Control Plane')).toBeVisible();
+    await page.getByLabel('Problem Domain').click();
+    await page.getByRole('option', { name: 'Invoice Processing' }).click();
 
-    // 3. Trigger Demo Execution
-    const executeButton = page.locator(
-      'button:has-text("Trigger Sandboxed Agent")'
+    await page.getByLabel('Constraints (e.g. "Must keep human in loop")').fill(
+      'Human approval required for exceptions'
     );
-    await expect(executeButton).toBeVisible();
-    await executeButton.click();
+    await page.getByLabel('Current Tech Stack').fill('HubSpot, Slack, Google Drive');
 
-    // 4. Wait for results
-    // The demo has a simulated delay, so we wait for the results container
-    await expect(page.locator('text=Executive Summary')).toBeVisible({
-      timeout: 15000,
-    });
-    await expect(page.locator('text=Evidence (JSON)')).toBeVisible();
+    await page.getByRole('button', { name: 'Simulate Workflow' }).click();
 
-    // 5. Verify Markdown results
-    const summary = page.locator('.prose');
-    await expect(summary).toBeVisible();
-    await expect(summary).toContainText(/Reconciliation Report/i);
-
-    // 6. Verify JSON results
-    const jsonOutput = page.locator('pre');
-    await expect(jsonOutput).toBeVisible();
-    await expect(jsonOutput).toContainText(/"status":/i);
+    await expect(page.getByText('Agentic Execution Plan')).toBeVisible();
+    await expect(page.getByText('Configure Ingestion Webhook')).toBeVisible();
   });
 });

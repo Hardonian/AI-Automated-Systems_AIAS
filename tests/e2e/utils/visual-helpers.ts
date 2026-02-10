@@ -393,15 +393,11 @@ export const viewports = {
  */
 export const criticalRoutes = [
   { path: '/', name: 'homepage', auth: false },
-  { path: '/signin', name: 'signin', auth: false },
-  { path: '/signup', name: 'signup', auth: false },
-  { path: '/pricing', name: 'pricing', auth: false },
-  { path: '/features', name: 'features', auth: false },
-  { path: '/about', name: 'about', auth: false },
-  { path: '/contact', name: 'contact', auth: false },
   { path: '/blog', name: 'blog', auth: false },
-  { path: '/workflows', name: 'workflows', auth: false },
-  { path: '/dashboard', name: 'dashboard', auth: true },
+  { path: '/privacy', name: 'privacy', auth: false },
+  { path: '/terms', name: 'terms', auth: false },
+  { path: '/#workflow-sandbox', name: 'workflow-sandbox', auth: false },
+  { path: '/#secret-sauce', name: 'secret-sauce', auth: false },
 ];
 
 /**

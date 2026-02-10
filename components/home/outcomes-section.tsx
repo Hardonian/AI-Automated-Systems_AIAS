@@ -57,7 +57,7 @@ const deliverables = [
     icon: Shield,
     title: 'Governance & Security',
     items: [
-      'Audit trails (Supabase)',
+      'Audit trails & event logs',
       'SOC2-ready controls',
       'PIPEDA compliance framework',
     ],

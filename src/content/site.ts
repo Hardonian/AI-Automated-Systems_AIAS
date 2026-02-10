@@ -4,6 +4,16 @@ export interface SiteConfig {
     tagline: string;
     description: string;
   };
+  navigation: {
+    primary: Array<{
+      label: string;
+      href: string;
+    }>;
+    resources: Array<{
+      label: string;
+      href: string;
+    }>;
+  };
   positioning: {
     subheading: string;
     primaryCTA: {
@@ -14,6 +24,10 @@ export interface SiteConfig {
       label: string;
       href: string;
     }; // Demo/Sandbox
+  };
+  contact: {
+    email: string;
+    responseTime: string;
   };
   services: Array<{
     title: string;
@@ -57,6 +71,24 @@ export interface SiteConfig {
       artifactJsonTemplate: string;
     };
   };
+  secretSauce: {
+    title: string;
+    description: string;
+    pillars: Array<{
+      title: string;
+      description: string;
+      highlights: string[];
+    }>;
+  };
+  optimizationHotspots: {
+    title: string;
+    description: string;
+    areas: Array<{
+      title: string;
+      impact: string;
+      improvements: string[];
+    }>;
+  };
   testimonials: Array<{
     quote: string;
     author: string;
@@ -84,6 +116,24 @@ export interface SiteConfig {
     copyright: string;
     legalLinks: Array<{ label: string; href: string }>;
   };
+  legal: {
+    privacy: {
+      title: string;
+      lastUpdated: string;
+      sections: Array<{
+        heading: string;
+        body: string;
+      }>;
+    };
+    terms: {
+      title: string;
+      lastUpdated: string;
+      sections: Array<{
+        heading: string;
+        body: string;
+      }>;
+    };
+  };
 }
 
 export const siteContent: SiteConfig = {
@@ -102,8 +152,26 @@ export const siteContent: SiteConfig = {
     },
     secondaryCTA: {
       label: 'Try the Workflow Sandbox',
-      href: '#workflow-sandbox',
+      href: '/#workflow-sandbox',
     },
+  },
+  navigation: {
+    primary: [
+      { label: 'Services', href: '/#services' },
+      { label: 'Process', href: '/#process' },
+      { label: 'Proof', href: '/#proof' },
+      { label: 'Secret Sauce', href: '/#secret-sauce' },
+      { label: 'FAQ', href: '/#faq' },
+    ],
+    resources: [
+      { label: 'Workflow Sandbox', href: '/#workflow-sandbox' },
+      { label: 'Example Engagements', href: '/#engagements' },
+      { label: 'Insights', href: '/blog' },
+    ],
+  },
+  contact: {
+    email: 'hello@aiautomatedsystems.ca',
+    responseTime: 'Replies within 2 business days.',
   },
   services: [
     {
@@ -197,7 +265,12 @@ export const siteContent: SiteConfig = {
           id: 'problem',
           label: 'Problem Domain',
           type: 'select',
-          options: ['Invoice Processing', 'Customer Support Triaging', 'Data Enrichment', 'c'],
+          options: [
+            'Invoice Processing',
+            'Customer Support Triaging',
+            'Data Enrichment',
+            'Quality Assurance Review',
+          ],
         },
         {
           id: 'constraints',
@@ -255,9 +328,89 @@ export const siteContent: SiteConfig = {
     "confidence": 0.98,
     "estimated_runtime_ms": 450
   }
-}
+      }
 `,
     },
+  },
+  secretSauce: {
+    title: 'Our Secret Sauce: Determinism with Enterprise Craft',
+    description:
+      'Every engagement is anchored in predictable workflows, auditable decisions, and shared ownership. We build systems your team can trust, operate, and extend long after launch.',
+    pillars: [
+      {
+        title: 'Deterministic Planning Layer',
+        description:
+          'We map the workflow before automation starts, so every step has explicit inputs, gates, and fallbacks.',
+        highlights: [
+          'Workflow blueprints with state transitions',
+          'Human-in-the-loop checkpoints',
+          'Versioned decision logic and audit trails',
+        ],
+      },
+      {
+        title: 'Operational Reliability',
+        description:
+          'We optimize for uptime, safety, and observability so leaders can track outcomes without guesswork.',
+        highlights: [
+          'Error budgets and escalation paths',
+          'Telemetry dashboards and alerting',
+          'Security-first data handling',
+        ],
+      },
+      {
+        title: 'Client Enablement',
+        description:
+          'Your team receives playbooks, training, and artifacts to run the system without dependency on us.',
+        highlights: [
+          'Runbooks + SOPs tailored to each workflow',
+          'Team training sessions and enablement decks',
+          'Executive summaries for stakeholder alignment',
+        ],
+      },
+    ],
+  },
+  optimizationHotspots: {
+    title: 'Hot Path Optimizations We Deliver',
+    description:
+      'We prioritize the highest-throughput workflows first, then harden the paths that unlock the most compounding ROI.',
+    areas: [
+      {
+        title: 'Intake & Data Quality',
+        impact: 'Reduce time-to-action by eliminating noisy or incomplete inputs.',
+        improvements: [
+          'Schema validation + enrichment rules',
+          'Automated data deduplication',
+          'Confidence scoring with escalation paths',
+        ],
+      },
+      {
+        title: 'Decision & Routing Logic',
+        impact: 'Ensure every request hits the right workflow, tool, and human owner.',
+        improvements: [
+          'Deterministic routing matrices',
+          'Fallback playbooks when confidence dips',
+          'Cross-team handoff automation',
+        ],
+      },
+      {
+        title: 'Execution & Monitoring',
+        impact: 'Protect against drift while keeping delivery timelines fast.',
+        improvements: [
+          'Execution guardrails with rollback paths',
+          'Real-time metrics tied to outcomes',
+          'Post-run reviews with improvement backlog',
+        ],
+      },
+      {
+        title: 'Change Management',
+        impact: 'Keep humans aligned while systems scale.',
+        improvements: [
+          'Stakeholder-ready change logs',
+          'Training and enablement checklists',
+          'Quarterly optimization sprints',
+        ],
+      },
+    ],
   },
   testimonials: [
     {
@@ -319,5 +472,59 @@ export const siteContent: SiteConfig = {
       { label: 'Privacy Policy', href: '/privacy' },
       { label: 'Terms of Service', href: '/terms' },
     ],
+  },
+  legal: {
+    privacy: {
+      title: 'Privacy Policy',
+      lastUpdated: 'January 2026',
+      sections: [
+        {
+          heading: 'Overview',
+          body:
+            'We collect only the information needed to respond to inquiries, deliver consulting engagements, and improve our services. We do not sell personal data.',
+        },
+        {
+          heading: 'What We Collect',
+          body:
+            'Contact details you provide via email or scheduling links, plus usage analytics for our website. We avoid collecting sensitive data unless explicitly required for an engagement.',
+        },
+        {
+          heading: 'How We Use Data',
+          body:
+            'We use data to respond to requests, manage projects, and deliver operational insights. Data is retained only as long as needed for the engagement and compliance requirements.',
+        },
+        {
+          heading: 'Your Rights',
+          body:
+            'You can request access, updates, or deletion of your information by emailing hello@aiautomatedsystems.ca.',
+        },
+      ],
+    },
+    terms: {
+      title: 'Terms of Service',
+      lastUpdated: 'January 2026',
+      sections: [
+        {
+          heading: 'Engagement Scope',
+          body:
+            'Consulting services are scoped per engagement statement and require mutual agreement before work begins. Deliverables and timelines are outlined in writing.',
+        },
+        {
+          heading: 'Client Responsibilities',
+          body:
+            'Clients provide timely access to required stakeholders, data, and systems. Delays in access may affect timelines and outcomes.',
+        },
+        {
+          heading: 'Confidentiality',
+          body:
+            'Both parties agree to keep confidential information private and secure. We handle data in line with PIPEDA-informed practices.',
+        },
+        {
+          heading: 'Liability',
+          body:
+            'We strive for reliable systems, but final deployment decisions remain with the client. Liability is limited to the fees paid for the applicable engagement.',
+        },
+      ],
+    },
   },
 };

@@ -5,11 +5,11 @@ import { ArrowRight, FileText, Target, CheckCircle2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
-  getSectionClasses,
   getContainerClasses,
   TYPOGRAPHY,
   GRID_GAPS,
 } from '@/lib/design-tokens';
+import Link from 'next/link';
 
 const workflows = [
   {
@@ -88,7 +88,10 @@ const workflows = [
 
 export function Testimonials() {
   return (
-    <section className='relative overflow-hidden bg-muted/20 py-20'>
+    <section
+      className='relative overflow-hidden bg-muted/20 py-20'
+      id='engagements'
+    >
       <div className={getContainerClasses('wide')}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -189,10 +192,10 @@ export function Testimonials() {
           {...({ className: 'text-center mt-12' } as any)}
         >
           <Button asChild size='lg'>
-            <a href='/use-cases'>
-              View All Use Cases
+            <Link href='/blog'>
+              View Insight Library
               <ArrowRight className='ml-2 h-4 w-4' />
-            </a>
+            </Link>
           </Button>
         </motion.div>
       </div>

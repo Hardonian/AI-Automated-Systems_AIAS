@@ -1,5 +1,3 @@
-import dynamic from 'next/dynamic';
-
 import { ContentDrivenFAQ } from '@/components/content/ContentDrivenFAQ';
 import { ContentDrivenHero } from '@/components/content/ContentDrivenHero';
 import { OutcomesSection } from '@/components/home/outcomes-section';
@@ -10,6 +8,8 @@ import { EngagementModel } from '@/components/home/engagement-model';
 import { ConversionCTA } from '@/components/home/conversion-cta';
 import { TrustBadges } from '@/components/home/trust-badges';
 import { Testimonials } from '@/components/home/testimonials';
+import { SecretSauceSection } from '@/components/home/secret-sauce-section';
+import { WorkflowSandbox } from '@/components/home/workflow-sandbox';
 import {
   FAQSchema,
   ProfessionalServiceSchema,
@@ -74,6 +74,8 @@ export default function HomePage() {
       <ProofSection />
       <SystemsSection />
       <DeliverablesSection />
+      <SecretSauceSection />
+      <WorkflowSandbox />
       <Testimonials />
       <EngagementModel />
       <TrustBadges />

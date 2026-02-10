@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { siteContent } from '@/src/content/site';
 
 export function ConversionCTA() {
   return (
@@ -20,8 +21,8 @@ export function ConversionCTA() {
         </p>
         <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
           <Button asChild size='lg' className='min-h-[48px] px-8'>
-            <Link href='/demo'>
-              Try Live Demo
+            <Link href={siteContent.positioning.primaryCTA.href}>
+              {siteContent.positioning.primaryCTA.label}
               <ArrowRight className='ml-2 h-4 w-4' />
             </Link>
           </Button>
@@ -31,7 +32,9 @@ export function ConversionCTA() {
             variant='outline'
             className='min-h-[48px] px-8'
           >
-            <Link href='/contact'>Book a discovery call</Link>
+            <Link href={`mailto:${siteContent.contact.email}`}>
+              Email {siteContent.contact.email}
+            </Link>
           </Button>
         </div>
       </div>

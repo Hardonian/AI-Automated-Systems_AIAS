@@ -84,13 +84,13 @@ export function WorkflowsEmptyState() {
     <EmptyStateEnhanced
       action={{
         label: 'Create Workflow',
-        href: '/onboarding/create-workflow',
+        href: '/#workflow-sandbox',
       }}
       description='Create your first workflow to start automating your business processes. Workflows help you connect multiple agents and tools together.'
       icon={Sparkles}
       secondaryAction={{
-        label: 'Browse Templates',
-        href: '/templates',
+        label: 'Explore Insights',
+        href: '/blog',
       }}
       title='No workflows yet'
     />

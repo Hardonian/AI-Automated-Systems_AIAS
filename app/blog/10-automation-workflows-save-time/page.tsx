@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
+import { siteContent } from '@/src/content/site';
 import { Card, CardContent } from '@/components/ui/card';
 
 export const metadata: Metadata = {
@@ -252,18 +253,20 @@ export default function AutomationWorkflowsPage() {
             Ready to Automate Your Business?
           </h2>
           <p className='mb-6 text-muted-foreground'>
-            Start your free trial and create your first automation in 5 minutes.
-            No credit card required.
+            Share your workflow goals and we will map a reliable automation
+            plan.
           </p>
           <div className='flex flex-col justify-center gap-4 sm:flex-row'>
             <Button asChild size='lg'>
-              <Link href='/signup'>
-                Start Free Trial
+              <Link href={siteContent.positioning.primaryCTA.href}>
+                {siteContent.positioning.primaryCTA.label}
                 <ArrowRight className='ml-2 h-4 w-4' />
               </Link>
             </Button>
             <Button asChild size='lg' variant='outline'>
-              <Link href='/templates'>Browse Templates</Link>
+              <Link href={`mailto:${siteContent.contact.email}`}>
+                Email {siteContent.contact.email}
+              </Link>
             </Button>
           </div>
         </CardContent>
@@ -275,7 +278,7 @@ export default function AutomationWorkflowsPage() {
         <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
           <Link
             className='block rounded-lg border p-4 transition-colors hover:border-primary'
-            href='/systems-thinking'
+            href='/#secret-sauce'
           >
             <h4 className='mb-2 font-semibold'>
               Systems Thinking: The Critical Skill for the AI Age
@@ -286,7 +289,7 @@ export default function AutomationWorkflowsPage() {
           </Link>
           <Link
             className='block rounded-lg border p-4 transition-colors hover:border-primary'
-            href='/automation-guide'
+            href='/#workflow-sandbox'
           >
             <h4 className='mb-2 font-semibold'>
               Business Automation: Complete Guide

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { siteContent } from '@/src/content/site';
 
 interface MobileStickyCTAProps {
   primaryLabel?: string;
@@ -14,10 +15,10 @@ interface MobileStickyCTAProps {
 }
 
 export function MobileStickyCTA({
-  primaryLabel = 'Book Strategy Call',
-  primaryHref = '/demo',
-  secondaryLabel = 'View Pricing',
-  secondaryHref = '/pricing',
+  primaryLabel = siteContent.positioning.primaryCTA.label,
+  primaryHref = siteContent.positioning.primaryCTA.href,
+  secondaryLabel = 'Email Us',
+  secondaryHref = `mailto:${siteContent.contact.email}`,
 }: MobileStickyCTAProps) {
   const [isVisible, setIsVisible] = useState(false);
 

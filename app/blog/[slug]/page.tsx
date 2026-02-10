@@ -17,6 +17,7 @@ import {
   type BlogArticle,
 } from '@/lib/blog/articles';
 import { sanitizeHTMLServer } from '@/lib/utils/sanitize-html';
+import { siteContent } from '@/src/content/site';
 
 interface PageProps {
   params: Promise<{
@@ -201,7 +202,9 @@ export default async function BlogArticlePage({ params }: PageProps) {
             <Link href='/blog'>View All Articles</Link>
           </Button>
           <Button asChild size='lg' variant='outline'>
-            <Link href='/rss-news'>AI & Tech News Feed</Link>
+            <Link href={`mailto:${siteContent.contact.email}`}>
+              Request RSS Access
+            </Link>
           </Button>
         </div>
       </div>
@@ -285,7 +288,9 @@ function ArticleContent({ article }: { article: BlogArticle }) {
           AI agents. Connect Shopify, Wave, Stripe, and 100+ other tools.
         </p>
         <Button asChild>
-          <Link href='/contact'>Request Access</Link>
+          <Link href={siteContent.positioning.primaryCTA.href}>
+            {siteContent.positioning.primaryCTA.label}
+          </Link>
         </Button>
       </div>
     </div>

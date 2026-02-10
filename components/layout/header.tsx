@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { MobileNav } from '@/components/layout/mobile-nav';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
+import { siteContent } from '@/src/content/site';
 
 export function Header() {
   return (
@@ -35,13 +36,7 @@ export function Header() {
         </motion.div>
 
         <nav aria-label='Primary' className='hidden items-center gap-1 md:flex'>
-          {[
-            { href: '/systems', label: 'Systems' },
-            { href: '/case-studies', label: 'Work' },
-            { href: '/services', label: 'Services' },
-            { href: '/process', label: 'Process' },
-            { href: '/pricing', label: 'Pricing' },
-          ].map((item, index) => (
+          {siteContent.navigation.primary.map((item, index) => (
             <motion.div
               key={item.href}
               initial={{ opacity: 0, y: -4 }}
@@ -76,8 +71,11 @@ export function Header() {
               className='hover:shadow-glow ml-4 min-h-[44px] font-semibold shadow-md'
               size='sm'
             >
-              <Link aria-label='Try Live Demo' href='/demo'>
-                Try Live Demo
+              <Link
+                aria-label={siteContent.positioning.primaryCTA.label}
+                href={siteContent.positioning.primaryCTA.href}
+              >
+                {siteContent.positioning.primaryCTA.label}
               </Link>
             </Button>
           </motion.div>

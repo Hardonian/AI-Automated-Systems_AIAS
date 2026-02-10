@@ -67,11 +67,11 @@ export const metadata: Metadata = {
     alternateLocale: ['en_CA'],
     images: [
       {
-        url: `${siteUrl}/api/og?title=${encodeURIComponent('AI Automated Systems')}&description=${encodeURIComponent('Agentic Automation Consultancy')}`,
+        url: `${siteUrl}/placeholder.svg`,
         width: 1200,
         height: 630,
         alt: 'AI Automated Systems | Agentic Automation Consultancy',
-        type: 'image/png',
+        type: 'image/svg+xml',
       },
     ],
   },
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
     creator: '@aias_platform',
     site: '@aias_platform',
     images: [
-      `${siteUrl}/api/og?title=${encodeURIComponent('AI Automated Systems')}&description=${encodeURIComponent('Agentic Automation Consultancy')}`,
+      `${siteUrl}/placeholder.svg`,
     ],
   },
   robots: {
@@ -132,9 +132,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           rel='preload'
           type='font/woff2'
         />
-
-        <link href='/signup' rel='prefetch' />
-        <link href='/pricing' rel='prefetch' />
 
         <link href='/manifest.json' rel='manifest' />
         <meta content='#3b82f6' name='theme-color' />

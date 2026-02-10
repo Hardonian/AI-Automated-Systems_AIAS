@@ -4,7 +4,6 @@ import { ContentDrivenFAQ } from '@/components/content/ContentDrivenFAQ';
 import { ContentDrivenHero } from '@/components/content/ContentDrivenHero';
 import { OutcomesSection } from '@/components/home/outcomes-section';
 import { ProofSection } from '@/components/home/proof-section';
-import { SimpleHero } from '@/components/home/simple-hero';
 import { SystemsSection } from '@/components/home/systems-section';
 import { DeliverablesSection } from '@/components/home/deliverables-section';
 import { EngagementModel } from '@/components/home/engagement-model';
@@ -16,7 +15,7 @@ import {
   ProfessionalServiceSchema,
 } from '@/components/seo/structured-data';
 import { KeyboardNavEnhancement } from '@/components/accessibility/keyboard-nav';
-import { loadAIASContent } from '@/lib/content/loader';
+import { siteContent, SiteConfig } from '@/src/content/site';
 
 const FAQ = dynamic(
   () => import('@/components/home/faq').then(mod => ({ default: mod.FAQ })),
@@ -25,25 +24,58 @@ const FAQ = dynamic(
   }
 );
 
-export default async function HomePage() {
-  let content;
-  try {
-    content = await loadAIASContent();
-  } catch {
-    content = null;
-  }
+// Mapper function to adapt SiteConfig to component props
+const mapHeroContent = (config: SiteConfig) => ({
+  title: config.brand.tagline,
+  subtitle: config.positioning.subheading,
+  description: config.brand.description,
+  backgroundVariant: 'gradient' as const,
+  primaryCta: {
+    visible: true,
+    label: config.positioning.primaryCTA.label,
+    href: config.positioning.primaryCTA.href,
+  },
+  secondaryCta: {
+    visible: true,
+    label: config.positioning.secondaryCTA.label,
+    href: config.positioning.secondaryCTA.href,
+  },
+  badgeText: 'New: Agentic Workflow Engine',
+  socialProof: [
+    { icon: '🚀', text: '10x Faster Deployment' },
+    { icon: '🔒', text: 'Enterprise Secure' },
+  ],
+  trustBadges: [
+    { icon: 'shield', text: 'SOC 2 Ready' },
+    { icon: 'globe', text: 'Global Scale' },
+  ],
+});
 
-  const homepageFAQs =
-    content?.faq?.categories.flatMap(cat =>
-      cat.questions.map(q => ({ question: q.question, answer: q.answer }))
-    ) || [];
+const mapFAQContent = (config: SiteConfig) => ({
+  sectionTitle: 'Frequently Asked Questions',
+  sectionSubtitle: 'Everything you need to know about our agentic consulting services.',
+  categories: [
+    {
+      category: 'General',
+      questions: config.faq.map(q => ({
+        question: q.question,
+        answer: q.answer,
+      })),
+    },
+  ],
+});
+
+export default function HomePage() {
+  const heroContent = mapHeroContent(siteContent);
+  const faqContent = mapFAQContent(siteContent);
+  const homepageFAQs = siteContent.faq;
 
   return (
     <>
       <KeyboardNavEnhancement />
       <ProfessionalServiceSchema />
       <FAQSchema faqs={homepageFAQs} />
-      {content ? <ContentDrivenHero content={content.hero} /> : <SimpleHero />}
+      <ContentDrivenHero content={heroContent} />
       <OutcomesSection />
       <ProofSection />
       <SystemsSection />
@@ -51,7 +83,7 @@ export default async function HomePage() {
       <Testimonials />
       <EngagementModel />
       <TrustBadges />
-      {content ? <ContentDrivenFAQ content={content.faq} /> : <FAQ />}
+      <ContentDrivenFAQ content={faqContent} />
       <ConversionCTA />
     </>
   );

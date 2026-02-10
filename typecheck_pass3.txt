@@ -1,0 +1,20 @@
+ΓÇëWARNΓÇë Unsupported engine: wanted: {"node":"^20.18.0 || ^22.0.0"} (current: {"node":"v24.13.0","pnpm":"8.15.0"})
+
+> aias-platform@1.1.0 typecheck C:\Users\scott\Documents\GitHub\AI-Automated-Systems_AIAS
+> tsc --noEmit
+
+app/billing/page.tsx(4,31): error TS2307: Cannot find module '@/components/billing/SubscriptionPlans' or its corresponding type declarations.
+components/performance/WebVitalsTracker.tsx(5,39): error TS2307: Cannot find module '@/lib/performance/vitals' or its corresponding type declarations.
+lib/api/route-handler.ts(13,8): error TS2307: Cannot find module '../security/api-security' or its corresponding type declarations.
+lib/api/route-handler.ts(14,36): error TS2307: Cannot find module '../security/tenant-isolation' or its corresponding type declarations.
+lib/api/route-handler.ts(46,29): error TS2307: Cannot find module '@/lib/performance/timeout-handler' or its corresponding type declarations.
+lib/billing/reconciliation.ts(11,42): error TS2307: Cannot find module '@/lib/utils/server-guards' or its corresponding type declarations.
+lib/canary/flags.ts(6,30): error TS2307: Cannot find module '@/lib/performance/cache' or its corresponding type declarations.
+lib/canary/monitor.ts(7,30): error TS2307: Cannot find module '@/lib/performance/cache' or its corresponding type declarations.
+lib/lead-generation/lead-capture.ts(13,30): error TS2307: Cannot find module '@/lib/performance/cache' or its corresponding type declarations.
+lib/utils/dompurify-wrapper.ts(41,7): error TS2307: Cannot find module './dompurify-server' or its corresponding type declarations.
+lib/workflows/executor-enhanced.ts(14,29): error TS2307: Cannot find module '@/lib/performance/rate-limiter' or its corresponding type declarations.
+src/components/AutomationDashboard.tsx(32,36): error TS2307: Cannot find module '@/src/lib/automation' or its corresponding type declarations.
+src/components/PartnershipPortal.tsx(37,55): error TS2307: Cannot find module '@/lib/partnerships' or its corresponding type declarations.
+src/components/PerformanceMonitor.tsx(3,38): error TS2307: Cannot find module '@/lib/observability' or its corresponding type declarations.
+ΓÇëELIFECYCLEΓÇë Command failed with exit code 1.

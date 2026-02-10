@@ -82,7 +82,7 @@ export default function SignUpPage() {
             className='h-12 w-full text-base font-semibold'
             size='lg'
           >
-            <Link href='/api/auth/signup'>Create Account</Link>
+            <Link href='/contact'>Request Access</Link>
           </Button>
           <p className='text-center text-sm text-muted-foreground md:text-base'>
             Already have an account?{' '}

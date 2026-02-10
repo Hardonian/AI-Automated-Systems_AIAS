@@ -4,15 +4,8 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 
-import AgentProvider from '@/components/agent/AgentProvider';
-import { UTMTracker } from '@/components/analytics/utm-tracker';
-import { PerformanceHUD } from '@/components/dev/performance-hud';
-import { EnhancedStickyCTA } from '@/components/layout/enhanced-sticky-cta';
 import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
-import { WebVitalsTracker } from '@/components/performance/WebVitalsTracker';
-import { PerformanceBeacon } from '@/components/performance-beacon';
-import { PWARegistration } from '@/components/pwa-registration';
 import {
   OrganizationSchema,
   WebSiteSchema,
@@ -20,14 +13,10 @@ import {
 import { ThemeProvider } from '@/components/theme-provider';
 import { SmoothScroll } from '@/components/ui/SmoothScroll';
 import { Toaster } from '@/components/ui/toaster';
-import { RuntimeTopBanner } from '@/components/runtime-ui/RuntimeTopBanner';
-import { RuntimeUiConfigApplier } from '@/components/runtime-ui/RuntimeUiConfigApplier';
-import { ReactQueryProvider } from '@/lib/data/react-query';
 import { env, getOptionalEnv } from '@/lib/env';
 import { SkipLink } from '@/components/accessibility/skip-link';
 import { FocusVisibleStyles } from '@/components/accessibility/focus-visible';
 import { EnhancedErrorBoundary } from '@/lib/error-handling/error-boundary-enhanced';
-import { TelemetryProvider } from '@/lib/monitoring/telemetry-provider';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
 const siteUrl = env.app.siteUrl || 'https://aiautomatedsystems.ca';
@@ -59,10 +48,6 @@ export const metadata: Metadata = {
   classification: 'Business Software',
   icons: [
     { rel: 'icon', url: '/favicon.ico' },
-    // Note: Additional icon files can be added when available
-    // { rel: "apple-touch-icon", url: "/apple-touch-icon.png", sizes: "180x180" },
-    // { rel: "icon", type: "image/png", sizes: "32x32", url: "/favicon-32x32.png" },
-    // { rel: "icon", type: "image/png", sizes: "16x16", url: "/favicon-16x16.png" },
   ],
   manifest: '/manifest.json',
   metadataBase: new URL(siteUrl),
@@ -133,7 +118,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html suppressHydrationWarning dir={isRTL ? 'rtl' : 'ltr'} lang={locale}>
       <head>
-        {/* Performance: Resource hints */}
         <link href='https://fonts.googleapis.com' rel='preconnect' />
         <link
           crossOrigin='anonymous'
@@ -143,7 +127,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link href='https://fonts.googleapis.com' rel='dns-prefetch' />
         <link href='https://fonts.gstatic.com' rel='dns-prefetch' />
 
-        {/* Preload critical resources */}
         <link
           as='font'
           crossOrigin='anonymous'
@@ -152,11 +135,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           type='font/woff2'
         />
 
-        {/* Prefetch likely next pages */}
         <link href='/signup' rel='prefetch' />
         <link href='/pricing' rel='prefetch' />
 
-        {/* PWA */}
         <link href='/manifest.json' rel='manifest' />
         <meta content='#3b82f6' name='theme-color' />
         <meta content='yes' name='apple-mobile-web-app-capable' />
@@ -166,7 +147,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           name='apple-mobile-web-app-title'
         />
 
-        {/* SEO: Enhanced meta tags */}
         <meta
           content='width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover'
           name='viewport'
@@ -175,7 +155,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <meta content='yes' name='mobile-web-app-capable' />
         <meta content='AI Automated Systems' name='application-name' />
 
-        {/* Service Worker - Use Next.js Script component for better security */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -191,45 +170,30 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           id='service-worker-registration'
         />
 
-        {/* Structured Data */}
         <OrganizationSchema />
         <WebSiteSchema />
       </head>
       <body className='min-h-dvh antialiased'>
         <FocusVisibleStyles />
         <EnhancedErrorBoundary>
-          <ReactQueryProvider>
-            <RuntimeUiConfigApplier />
-            <TelemetryProvider>
-              <ThemeProvider>
-                <SmoothScroll>
-                  {/* Accessibility: Skip to main content link */}
-                  <SkipLink />
-                  <RuntimeTopBanner />
-                  <Header />
-                  <main
-                    aria-label='Main content'
-                    className='min-h-[calc(100vh-8rem)]'
-                    id='main'
-                    role='main'
-                  >
-                    {children}
-                  </main>
-                  <Footer />
-                  <Analytics />
-                  <SpeedInsights />
-                  <EnhancedStickyCTA />
-                  <Toaster />
-                  <PWARegistration />
-                  <PerformanceHUD />
-                  <PerformanceBeacon />
-                  <WebVitalsTracker />
-                  <AgentProvider />
-                  <UTMTracker />
-                </SmoothScroll>
-              </ThemeProvider>
-            </TelemetryProvider>
-          </ReactQueryProvider>
+          <ThemeProvider>
+            <SmoothScroll>
+              <SkipLink />
+              <Header />
+              <main
+                aria-label='Main content'
+                className='min-h-[calc(100vh-8rem)]'
+                id='main'
+                role='main'
+              >
+                {children}
+              </main>
+              <Footer />
+              <Analytics />
+              <SpeedInsights />
+              <Toaster />
+            </SmoothScroll>
+          </ThemeProvider>
         </EnhancedErrorBoundary>
       </body>
     </html>

@@ -28,8 +28,6 @@ export default tseslint.config(
       'scripts/**/*',
       'ops/**/*',
       'types/**/*',
-      'apps/web/**',
-      'supabase/functions/**/*',
       'tailwind.config.ts',
       'src/**',
     ],

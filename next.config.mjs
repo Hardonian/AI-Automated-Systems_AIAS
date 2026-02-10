@@ -7,25 +7,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const isRemoteBuild =
   process.env.CI === 'true' ||
-  process.env.VERCEL === '1' ||
-  process.env.BUILDER_IO === 'true' ||
-  process.env.FUSION_BUILDER === 'true';
+  process.env.VERCEL === '1';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  output: 'export',
+  distDir: 'out',
 
-  // Enable TypeScript checking - catch real bugs before deployment
   typescript: {
     ignoreBuildErrors: false,
   },
 
-  // Removed standalone output for faster builds
   images: {
+    unoptimized: true,
     formats: ['image/avif', 'image/webp'],
-    // Reduced sizes for faster builds (still covers all common breakpoints)
     deviceSizes: [640, 828, 1200, 1920, 2048],
     imageSizes: [16, 32, 64, 96, 128, 256],
     minimumCacheTTL: 60,
@@ -39,7 +37,7 @@ const nextConfig = {
       },
     ],
   },
-  // Package optimization (moved to experimental in Next.js 15)
+
   experimental: {
     optimizePackageImports: [
       'lucide-react',
@@ -47,76 +45,35 @@ const nextConfig = {
       '@radix-ui/react-select',
       '@radix-ui/react-accordion',
       '@radix-ui/react-alert-dialog',
-      '@radix-ui/react-dropdown-menu',
-      '@radix-ui/react-popover',
-      '@radix-ui/react-tooltip',
-      '@radix-ui/react-dropdown-menu',
       'framer-motion',
       'recharts',
       '@tanstack/react-query',
     ],
-    // Reduce memory usage during build
     webpackBuildWorker: true,
   },
-  // Turbopack configuration (empty to silence Next.js 16 warnings)
+
   turbopack: {},
-  // Ensure proper file tracing for Vercel deployments (optimized for speed)
-  outputFileTracingIncludes: {
-    '/api/**': ['./lib/**', './components/**'],
-  },
-  // Reduce file tracing overhead (memory optimization for Vercel builds)
-  outputFileTracingExcludes: {
-    '/api/**': [
-      '**/node_modules/**',
-      '**/.next/**',
-      '**/tests/**',
-      '**/*.test.ts',
-      '**/*.spec.ts',
-      '**/docs/**',
-      '**/archive/**',
-      '**/scripts/**',
-      '**/watchers/**',
-      '**/ops/**',
-      '**/ai/**',
-      '**/supabase/functions/**',
-    ],
-  },
-  // Performance optimizations
+
   compiler: {
     removeConsole:
       process.env.NODE_ENV === 'production'
         ? {
-            exclude: ['error', 'warn', 'info'], // Keep error, warn, and info for production logging
-          }
+          exclude: ['error', 'warn', 'info'],
+        }
         : false,
-    // Enable SWC minification (default in Next.js 15)
-    // Additional optimizations
   },
-  // Optimize production builds
-  productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundles
-  generateEtags: true, // Enable ETags for better caching
-  // Reduce memory usage
+
+  productionBrowserSourceMaps: false,
+  generateEtags: true,
+
   onDemandEntries: {
     maxInactiveAge: 25 * 1000,
     pagesBufferLength: 2,
   },
-  // Bundle optimization
+
   webpack: (config, { isServer }) => {
     if (isRemoteBuild) {
       config.cache = { type: 'memory' };
-    }
-    // Ignore pg module and migrations in webpack (server-only)
-    config.externals = config.externals || [];
-    if (isServer) {
-      config.externals.push('pg', 'pg-native', '@prisma/client');
-      // Exclude ioredis from client bundle (Node.js only)
-      config.externals.push('ioredis');
-    }
-
-    // Ignore migrations module during build analysis
-    config.resolve.alias = config.resolve.alias || {};
-    if (!isServer) {
-      config.resolve.alias['@/lib/database/migrations'] = false;
     }
 
     // Add path aliases for webpack resolution (resolve from workspace root)
@@ -126,118 +83,7 @@ const nextConfig = {
     config.resolve.alias['@/app'] = path.resolve(rootDir, 'app');
     config.resolve.alias['@'] = rootDir;
 
-    // Supabase removed — redirect package imports to local shims
-    config.resolve.alias['@supabase/supabase-js'] = path.resolve(
-      rootDir,
-      'lib/shims/supabase-js.ts'
-    );
-    config.resolve.alias['@supabase/ssr'] = path.resolve(
-      rootDir,
-      'lib/shims/supabase-ssr.ts'
-    );
-
-    if (!isServer) {
-      // Optimize client bundle
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          chunks: 'all',
-          cacheGroups: {
-            default: false,
-            vendors: false,
-            framework: {
-              name: 'framework',
-              chunks: 'all',
-              test: /(?<!node_modules.*)[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|use-subscription)[\\/]/,
-              priority: 40,
-              enforce: true,
-            },
-            lib: {
-              test: /[\\/]node_modules[\\/]/,
-              name(module) {
-                const packageName = module.context.match(
-                  /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-                )?.[1];
-                return `lib-${packageName?.replace('@', '')}`;
-              },
-              priority: 30,
-              minChunks: 1,
-              reuseExistingChunk: true,
-            },
-            commons: {
-              name: 'commons',
-              minChunks: 2,
-              priority: 20,
-            },
-            shared: {
-              name: 'shared',
-              minChunks: 2,
-              priority: 10,
-              reuseExistingChunk: true,
-            },
-          },
-        },
-      };
-    }
     return config;
-  },
-  // Vercel optimizations (swcMinify is default in Next.js 15)
-  // Security headers
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on',
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
-          {
-            key: 'Permissions-Policy',
-            value:
-              'camera=(), microphone=(), geolocation=(), interest-cohort=()',
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=31536000; includeSubDomains; preload',
-          },
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://browser.sentry-cdn.com https://vercel.live",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' https://fonts.gstatic.com data:",
-              "img-src 'self' data: https: blob:",
-              "connect-src 'self' https://*.sentry.io https://vitals.vercel-insights.com",
-              "frame-src 'self'",
-              "object-src 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
-              "frame-ancestors 'self'",
-              'upgrade-insecure-requests',
-              'report-uri /api/csp-report',
-            ].join('; '),
-          },
-        ],
-      },
-    ];
   },
 };
 

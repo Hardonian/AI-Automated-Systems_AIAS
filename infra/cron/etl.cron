@@ -1,6 +1,0 @@
-# Nightly ETL Cron Job
-# Runs at 1 AM UTC (8 PM ET previous day)
-# Install: crontab -e
-# Add: 0 1 * * * cd /path/to/project && TZ=America/Toronto tsx scripts/etl/pull_events.ts && tsx scripts/etl/pull_ads_source_a.ts && tsx scripts/etl/pull_ads_source_b.ts && tsx scripts/etl/compute_metrics.ts --cron
-
-0 1 * * * cd /workspace && TZ=America/Toronto tsx scripts/etl/pull_events.ts && tsx scripts/etl/pull_ads_source_a.ts && tsx scripts/etl/pull_ads_source_b.ts && tsx scripts/etl/compute_metrics.ts --cron

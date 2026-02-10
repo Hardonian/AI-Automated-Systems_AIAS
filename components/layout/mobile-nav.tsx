@@ -108,7 +108,7 @@ export function MobileNav() {
                 href='/signup'
                 onClick={() => setOpen(false)}
               >
-                Start Free Trial
+                Request Access
               </Link>
             </Button>
             <Button

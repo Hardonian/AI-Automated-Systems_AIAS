@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { AffiliateLink } from '@/components/monetization/affiliate-link';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -21,7 +20,6 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   const articles = getLatestArticles(14); // All existing articles
   const featuredArticles = getFeaturedArticles();
-  // const categories = ["Systems Thinking", "GenAI", "E-Commerce", "Automation", "Compliance", "AI", "Productivity", "Career", "Business", "Education"]; // Will be used for filtering
 
   return (
     <div className='container py-16'>
@@ -193,8 +191,7 @@ export default function BlogPage() {
           <p className='mb-4 text-muted-foreground'>
             <strong>New articles published daily.</strong> Each article is
             analyzed through systems thinking and optimized for SEO, user
-            experience, and conversion. GenAI Content Engine helps create and
-            optimize content.
+            experience, and conversion.
           </p>
           <div className='grid grid-cols-1 gap-4 text-sm md:grid-cols-3'>
             <div>
@@ -226,40 +223,26 @@ export default function BlogPage() {
         </CardContent>
       </Card>
 
-      {/* GenAI Content Engine */}
+      {/* Tools Section */}
       <Card className='mb-8 border-primary/20 bg-primary/10'>
         <CardHeader>
-          <CardTitle className='text-2xl'>GenAI Content Engine</CardTitle>
-          <CardDescription>
-            Convert your blog posts into optimized website pages automatically
-          </CardDescription>
+          <CardTitle className='text-2xl'>Automation & Systems Tools</CardTitle>
         </CardHeader>
         <CardContent className='space-y-4'>
           <p className='text-muted-foreground'>
-            Upload your blog posts and articles. Our GenAI Content Engine uses
-            systems thinking to analyze your content from 6 perspectives (SEO,
-            UX, structure, conversion, technical, systems), then automatically
-            generates optimized website pages with proper SEO, user experience,
-            and conversion optimization.
-          </p>
-          <p className='text-sm text-muted-foreground'>
-            <strong>Systems Thinking Tools:</strong> When building your content
-            system, consider
-            <AffiliateLink product='Notion'> Notion</AffiliateLink> for
-            interconnected knowledge management,
-            <AffiliateLink product='Zapier'> Zapier</AffiliateLink> for process
+            When building your content system, consider <strong>Notion</strong> for
+            interconnected knowledge management, <strong>Zapier</strong> for process
             automation (remember: automation alone isn't enough — apply systems
-            thinking), or
-            <AffiliateLink product='Make'> Make</AffiliateLink> for advanced
+            thinking), or <strong>Make</strong> for advanced
             workflow orchestration. Each tool is powerful, but systems thinking
             ensures they work together effectively.
           </p>
           <div className='flex flex-col gap-4 sm:flex-row'>
             <Button asChild>
-              <Link href='/genai-content-engine'>Try GenAI Content Engine</Link>
+              <Link href='/demo'>Schedule Strategy Call</Link>
             </Button>
             <Button asChild variant='outline'>
-              <Link href='/systems-thinking'>Learn About Systems Thinking</Link>
+              <Link href='/contact'>Request Access</Link>
             </Button>
           </div>
         </CardContent>

@@ -14,15 +14,10 @@ import {
   FAQSchema,
   ProfessionalServiceSchema,
 } from '@/components/seo/structured-data';
-import { KeyboardNavEnhancement } from '@/components/accessibility/keyboard-nav';
+
 import { siteContent, SiteConfig } from '@/src/content/site';
 
-const FAQ = dynamic(
-  () => import('@/components/home/faq').then(mod => ({ default: mod.FAQ })),
-  {
-    loading: () => <div aria-label='Loading FAQ' className='py-16' />,
-  }
-);
+
 
 // Mapper function to adapt SiteConfig to component props
 const mapHeroContent = (config: SiteConfig) => ({
@@ -72,7 +67,6 @@ export default function HomePage() {
 
   return (
     <>
-      <KeyboardNavEnhancement />
       <ProfessionalServiceSchema />
       <FAQSchema faqs={homepageFAQs} />
       <ContentDrivenHero content={heroContent} />

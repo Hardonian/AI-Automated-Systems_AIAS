@@ -13,9 +13,6 @@ import {
   Play,
   Workflow,
   Zap,
-  ChevronDown,
-  Copy,
-  Check,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -29,11 +26,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
 import {
   getContainerClasses,
   getSectionClasses,
@@ -49,8 +41,6 @@ const cliDemos = [
     badge: 'CLI Tool',
     command: 'pnpm run doctor',
     output: `✓ Environment variables validated
-✓ Database connection healthy
-✓ Redis connection established
 ✓ Build configuration valid
 ✓ All routes render without errors
 ✓ Dependencies up to date
@@ -158,7 +148,7 @@ const artifactCards = [
     description:
       'State machine diagrams, checkpoint flows, and error handling patterns',
     icon: GitBranch,
-    href: '/docs/architecture/control-plane',
+    href: '/contact',
     verified: true,
   },
   {
@@ -166,14 +156,14 @@ const artifactCards = [
     description:
       'Versioned prompts with evaluation criteria and output schemas',
     icon: Shield,
-    href: '/docs/prompts/contracts',
+    href: '/contact',
     verified: true,
   },
   {
     title: 'Runbook Templates',
     description: 'Escalation procedures, rollback steps, and incident response',
     icon: Zap,
-    href: '/docs/runbooks',
+    href: '/contact',
     verified: true,
   },
 ];
@@ -181,18 +171,11 @@ const artifactCards = [
 export function ProofSection() {
   const [activeDemo, setActiveDemo] = useState(cliDemos[0]!);
   const [copiedCommand, setCopiedCommand] = useState<string | null>(null);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const copyCommand = (command: string) => {
     navigator.clipboard.writeText(command);
     setCopiedCommand(command);
     setTimeout(() => setCopiedCommand(null), 2000);
-  };
-
-  const copyToClipboard = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
   };
 
   return (
@@ -268,11 +251,10 @@ export function ProofSection() {
                 <button
                   key={demo.id}
                   onClick={() => setActiveDemo(demo)}
-                  className={`w-full rounded-xl border p-4 text-left transition-all ${
-                    activeDemo?.id === demo.id
+                  className={`w-full rounded-xl border p-4 text-left transition-all ${activeDemo?.id === demo.id
                       ? 'border-primary bg-primary/5'
                       : 'border-border bg-card hover:border-primary/50'
-                  }`}
+                    }`}
                 >
                   <div className='flex items-center justify-between'>
                     <div className='flex items-center gap-3'>
@@ -451,7 +433,7 @@ export function ProofSection() {
           </div>
           <div className='mt-6 text-center'>
             <Button asChild variant='outline'>
-              <Link href='/use-cases'>
+              <Link href='/blog'>
                 View All Workflow Patterns
                 <ArrowRight className='ml-2 h-4 w-4' />
               </Link>
@@ -493,7 +475,7 @@ export function ProofSection() {
                       variant='ghost'
                       className='px-0 text-primary hover:text-primary/80'
                     >
-                      <Link href={artifact.href}>View artifact →</Link>
+                      <Link href='/contact'>View artifact →</Link>
                     </Button>
                   </CardContent>
                 </Card>
@@ -551,7 +533,7 @@ export function ProofSection() {
               <ul className='space-y-2 text-sm text-muted-foreground'>
                 <li>• Actions & Updates</li>
                 <li>• Notifications</li>
-                <li>• Audit Trails</li>
+                <li>• Audit Trails (Log Store)</li>
                 <li>• Reports</li>
               </ul>
             </div>
@@ -580,7 +562,7 @@ export function ProofSection() {
             </p>
             <div className='flex flex-col gap-3 sm:flex-row'>
               <Button asChild size='lg'>
-                <Link href='/demo'>
+                <Link href='/contact'>
                   <Play className='mr-2 h-4 w-4' />
                   Book a Demo
                 </Link>

@@ -52,7 +52,9 @@ const nextConfig = {
     webpackBuildWorker: true,
   },
 
-  turbopack: {},
+  turbopack: {
+    root: '.',
+  },
 
   compiler: {
     removeConsole:
@@ -81,6 +83,7 @@ const nextConfig = {
     config.resolve.alias['@/components'] = path.resolve(rootDir, 'components');
     config.resolve.alias['@/lib'] = path.resolve(rootDir, 'lib');
     config.resolve.alias['@/app'] = path.resolve(rootDir, 'app');
+    config.resolve.alias['@/src'] = path.resolve(rootDir, 'src');
     config.resolve.alias['@'] = rootDir;
 
     return config;

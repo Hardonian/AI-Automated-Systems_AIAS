@@ -11,11 +11,9 @@ import {
   WebSiteSchema,
 } from '@/components/seo/structured-data';
 import { ThemeProvider } from '@/components/theme-provider';
-import { SmoothScroll } from '@/components/ui/SmoothScroll';
+
 import { Toaster } from '@/components/ui/toaster';
 import { env, getOptionalEnv } from '@/lib/env';
-import { SkipLink } from '@/components/accessibility/skip-link';
-import { FocusVisibleStyles } from '@/components/accessibility/focus-visible';
 import { EnhancedErrorBoundary } from '@/lib/error-handling/error-boundary-enhanced';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
@@ -174,25 +172,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <WebSiteSchema />
       </head>
       <body className='min-h-dvh antialiased'>
-        <FocusVisibleStyles />
         <EnhancedErrorBoundary>
           <ThemeProvider>
-            <SmoothScroll>
-              <SkipLink />
-              <Header />
-              <main
-                aria-label='Main content'
-                className='min-h-[calc(100vh-8rem)]'
-                id='main'
-                role='main'
-              >
-                {children}
-              </main>
-              <Footer />
-              <Analytics />
-              <SpeedInsights />
-              <Toaster />
-            </SmoothScroll>
+            <Header />
+            <main
+              aria-label='Main content'
+              className='min-h-[calc(100vh-8rem)]'
+              id='main'
+              role='main'
+            >
+              {children}
+            </main>
+            <Footer />
+            <Analytics />
+            <SpeedInsights />
+            <Toaster />
           </ThemeProvider>
         </EnhancedErrorBoundary>
       </body>

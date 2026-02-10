@@ -279,7 +279,7 @@ test.describe('Visual Regression - Component States', () => {
     await page.goto(baseURL);
     await waitForPageStability(page);
 
-    const header = page.locator('header').first();
+    const header = page.getByTestId('header-nav-cluster').first();
     if ((await header.count()) > 0) {
       await expect(header).toHaveScreenshot('component-header-desktop.png', {
         animations: 'disabled',
@@ -293,7 +293,7 @@ test.describe('Visual Regression - Component States', () => {
     await page.goto(baseURL);
     await waitForPageStability(page);
 
-    const header = page.locator('header').first();
+    const header = page.getByTestId('header-nav-cluster').first();
     if ((await header.count()) > 0) {
       await expect(header).toHaveScreenshot(
         'component-header-mobile-closed.png',
@@ -312,15 +312,13 @@ test.describe('Visual Regression - Component States', () => {
 
     // Try to find and click mobile menu button
     const menuButton = page
-      .locator(
-        'button[aria-label*="menu"], button[aria-label*="Menu"], header button'
-      )
+      .locator('[data-testid="mobile-nav-trigger"]')
       .first();
     if ((await menuButton.count()) > 0) {
       await menuButton.click();
       await page.waitForTimeout(100); // Allow transition to complete
 
-      await expect(page.locator('header').first()).toHaveScreenshot(
+      await expect(page.getByTestId('header-nav-cluster').first()).toHaveScreenshot(
         'component-header-mobile-open.png',
         {
           animations: 'disabled',
@@ -334,7 +332,7 @@ test.describe('Visual Regression - Component States', () => {
     await page.goto(baseURL);
     await waitForPageStability(page);
 
-    const footer = page.locator('footer').first();
+    const footer = page.getByTestId('footer-legal-cluster').first();
     if ((await footer.count()) > 0) {
       await expect(footer).toHaveScreenshot('component-footer-desktop.png', {
         animations: 'disabled',

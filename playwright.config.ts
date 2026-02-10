@@ -188,6 +188,27 @@ export default defineConfig({
         '{testDir}/__screenshots__/{projectName}/{testFilePath}/{arg}{ext}',
     },
 
+
+    // Landscape mobile viewport - 667x375 (ultra-short mobile landscape)
+    {
+      name: 'visual-landscape-mobile',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 667, height: 375 },
+        deviceScaleFactor: 2,
+        userAgent:
+          'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15A372 Safari/604.1',
+        hasTouch: true,
+        isMobile: true,
+        launchOptions: {
+          args: ['--force-color-profile=srgb'],
+        },
+      },
+      testMatch: /.*\.visual\.spec\.ts/,
+      snapshotPathTemplate:
+        '{testDir}/__screenshots__/{projectName}/{testFilePath}/{arg}{ext}',
+    },
+
     // UI CONSISTENCY AUDIT PROJECTS
     // Dark mode tests
     {

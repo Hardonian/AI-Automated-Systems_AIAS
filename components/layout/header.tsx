@@ -12,6 +12,7 @@ export function Header() {
   return (
     <header
       className='sticky top-0 z-50 border-b border-border/50 bg-background/80 shadow-sm backdrop-blur-md'
+      data-testid='header-nav-cluster'
       role='banner'
     >
       <div className='container flex h-16 items-center justify-between'>
@@ -35,7 +36,11 @@ export function Header() {
           </Link>
         </motion.div>
 
-        <nav aria-label='Primary' className='hidden items-center gap-1 md:flex'>
+        <nav
+          aria-label='Primary'
+          className='hidden items-center gap-1 md:flex'
+          data-testid='header-primary-nav'
+        >
           {siteContent.navigation.primary.map((item, index) => (
             <motion.div
               key={item.href}

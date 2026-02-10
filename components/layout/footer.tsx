@@ -11,6 +11,7 @@ export function Footer() {
     <footer
       aria-label='Site footer'
       className='mt-auto border-t border-border bg-gradient-to-b from-background to-muted/20 py-12 text-sm text-muted-foreground md:py-16'
+      data-testid='footer-legal-cluster'
       role='contentinfo'
     >
       <div className='container'>
@@ -105,7 +106,10 @@ export function Footer() {
           whileInView={{ opacity: 1 }}
           {...({ className: 'mt-12 pt-8 border-t border-border' } as any)}
         >
-          <div className='mb-8 flex flex-wrap justify-center gap-4 text-xs text-muted-foreground'>
+          <div
+            className='mb-8 flex flex-wrap justify-center gap-4 text-xs text-muted-foreground'
+            data-testid='footer-legal-links'
+          >
             {[
               ...siteContent.footer.legalLinks,
               {

@@ -35,15 +35,10 @@ const mapHeroContent = (config: SiteConfig) => ({
     label: config.positioning.secondaryCTA.label,
     href: config.positioning.secondaryCTA.href,
   },
-  badgeText: 'New: Agentic Workflow Engine',
-  socialProof: [
-    { icon: '🚀', text: '10x Faster Deployment' },
-    { icon: '🔒', text: 'Enterprise Secure' },
-  ],
-  trustBadges: [
-    { icon: 'shield', text: 'SOC 2 Ready' },
-    { icon: 'globe', text: 'Global Scale' },
-  ],
+  badgeText: config.positioning.badgeText,
+  impactCardsLabel: config.positioning.impactCardsLabel,
+  socialProof: config.positioning.socialProof,
+  trustBadges: config.positioning.trustBadges,
 });
 
 const mapFAQContent = (config: SiteConfig) => ({

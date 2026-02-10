@@ -9,7 +9,7 @@ import type { HeroContent } from '@/components/content/types';
 export function ContentDrivenHero({ content }: { content: HeroContent }) {
   return (
     <section
-      className='relative flex min-h-[68vh] items-center overflow-hidden py-12 md:min-h-[78vh] md:py-20'
+      className='relative flex min-h-[68vh] items-center overflow-hidden py-12 [@media(max-height:420px)]:min-h-[100svh] [@media(max-height:420px)]:items-start [@media(max-height:420px)]:py-4 md:min-h-[78vh] md:py-20'
       id='top'
     >
       <div className='absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-accent/10' />
@@ -36,7 +36,10 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
               {content.description}
             </p>
 
-            <div className='flex flex-wrap justify-center gap-3 lg:justify-start'>
+            <div
+              className='flex flex-wrap justify-center gap-3 lg:justify-start'
+              data-testid='hero-cta-group'
+            >
               {content.primaryCta?.visible && (
                 <Button asChild size='lg' className='min-h-[48px] px-6 text-base font-bold'>
                   <Link href={content.primaryCta.href}>
@@ -60,21 +63,36 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
             </div>
           </div>
 
-          <aside className='mx-auto w-full max-w-md rounded-2xl border border-border/70 bg-card/90 p-5 shadow-lg backdrop-blur'>
+          <aside
+            className='mx-auto w-full max-w-md rounded-2xl border border-border/70 bg-card/90 p-5 shadow-lg backdrop-blur'
+            data-testid='hero-impact-card-container'
+          >
             <p className='mb-4 text-sm font-semibold uppercase tracking-wide text-muted-foreground'>
-              At-a-glance impact
+              {content.impactCardsLabel ?? 'At-a-glance impact'}
             </p>
-            <div className='grid gap-3 sm:grid-cols-2'>
-              {content.socialProof?.map(item => (
-                <div key={item.text} className='rounded-xl border bg-background p-3'>
-                  <p className='text-sm font-medium text-foreground'>{item.icon} {item.text}</p>
-                </div>
-              ))}
-              {content.trustBadges?.map(item => (
-                <div key={item.text} className='rounded-xl border bg-background p-3'>
-                  <p className='text-sm font-medium text-foreground'>✓ {item.text}</p>
-                </div>
-              ))}
+            <div className='grid gap-3 sm:grid-cols-2' data-testid='hero-impact-card-grid'>
+              <div className='contents' data-testid='hero-social-proof-grid'>
+                {content.socialProof?.map(item => (
+                  <div
+                    key={item.text}
+                    className='rounded-xl border bg-background p-3'
+                    data-testid='hero-social-proof-card'
+                  >
+                    <p className='text-sm font-medium text-foreground'>{item.icon} {item.text}</p>
+                  </div>
+                ))}
+              </div>
+              <div className='contents' data-testid='hero-trust-badge-grid'>
+                {content.trustBadges?.map(item => (
+                  <div
+                    key={item.text}
+                    className='rounded-xl border bg-background p-3'
+                    data-testid='hero-trust-badge-card'
+                  >
+                    <p className='text-sm font-medium text-foreground'>✓ {item.text}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </aside>
         </div>

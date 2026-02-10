@@ -18,6 +18,8 @@ export interface SiteConfig {
   };
   positioning: {
     subheading: string;
+    badgeText: string;
+    impactCardsLabel: string;
     primaryCTA: {
       label: string;
       href: string;
@@ -26,6 +28,14 @@ export interface SiteConfig {
       label: string;
       href: string;
     }; // Demo/Sandbox
+    socialProof: Array<{
+      icon: string;
+      text: string;
+    }>;
+    trustBadges: Array<{
+      icon: string;
+      text: string;
+    }>;
   };
   contact: {
     email: string;
@@ -148,6 +158,8 @@ const rawSiteContent: SiteConfig = {
   positioning: {
     subheading:
       'Stop playing with chatbots. Start building intelligent, deterministic workflows that drive real ROI.',
+    badgeText: 'New: Agentic Workflow Engine',
+    impactCardsLabel: 'At-a-glance impact',
     primaryCTA: {
       label: 'Book a Strategy Call',
       href: 'https://calendly.com/aias-consulting/strategy-call',
@@ -156,6 +168,14 @@ const rawSiteContent: SiteConfig = {
       label: 'Try the Workflow Sandbox',
       href: '/#workflow-sandbox',
     },
+    socialProof: [
+      { icon: '🚀', text: '10x Faster Deployment' },
+      { icon: '🔒', text: 'Enterprise Secure' },
+    ],
+    trustBadges: [
+      { icon: 'shield', text: 'SOC 2 Ready' },
+      { icon: 'globe', text: 'Global Scale' },
+    ],
   },
   navigation: {
     primary: [
@@ -539,6 +559,8 @@ const siteContentSchema = z.object({
   }),
   positioning: z.object({
     subheading: z.string().min(1),
+    badgeText: z.string().min(1),
+    impactCardsLabel: z.string().min(1),
     primaryCTA: z.object({
       label: z.string().min(1),
       href: z.string().min(1),
@@ -547,6 +569,18 @@ const siteContentSchema = z.object({
       label: z.string().min(1),
       href: z.string().min(1),
     }),
+    socialProof: z.array(
+      z.object({
+        icon: z.string().min(1),
+        text: z.string().min(1),
+      })
+    ),
+    trustBadges: z.array(
+      z.object({
+        icon: z.string().min(1),
+        text: z.string().min(1),
+      })
+    ),
   }),
   contact: z.object({
     email: z.string().email(),

@@ -74,7 +74,7 @@ test.describe('Visual Regression - Navigation', () => {
     await page.goto(baseURL);
     await waitForPageStability(page);
 
-    const nav = page.locator('nav, [role="navigation"], header').first();
+    const nav = page.getByTestId('header-nav-cluster').first();
 
     if ((await nav.count()) > 0) {
       await expect(nav).toHaveScreenshot('navigation-header.png', {

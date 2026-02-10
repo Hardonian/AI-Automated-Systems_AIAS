@@ -4,6 +4,7 @@ export interface HeroContent {
   description: string;
   backgroundVariant?: 'gradient' | 'plain';
   badgeText?: string;
+  impactCardsLabel?: string;
   primaryCta?: {
     visible: boolean;
     label: string;

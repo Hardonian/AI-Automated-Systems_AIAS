@@ -117,7 +117,8 @@
     "build:analyze": "ANALYZE=true vite build",
     "preview": "next start",
     "prepare": "husky install || true",
-    "test": "pnpm typecheck"
+    "test": "pnpm typecheck",
+    "test:visual:landscape-smoke": "playwright test tests/e2e/hero-breakpoints.visual.spec.ts tests/e2e/landscape-critical.visual.spec.ts --project=visual-landscape-mobile"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",

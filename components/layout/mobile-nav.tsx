@@ -18,6 +18,7 @@ export function MobileNav() {
           aria-expanded={open}
           aria-label='Open navigation menu'
           className='min-h-[44px] min-w-[44px]'
+          data-testid='mobile-nav-trigger'
           size='sm'
           variant='ghost'
         >
@@ -33,6 +34,7 @@ export function MobileNav() {
         <nav
           aria-label='Mobile navigation menu'
           className='mt-8 flex flex-col gap-4'
+          data-testid='mobile-nav-menu'
           role='navigation'
         >
           {siteContent.navigation.primary.map(link => (

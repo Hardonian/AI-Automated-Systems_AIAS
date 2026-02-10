@@ -290,3 +290,8 @@ reports/*.json
 reports/*.txt
 reports/guardian/*.md
 reports/qa-hardening-report.md
+# Playwright visual baselines (binary artifacts kept out of git)
+tests/e2e/__screenshots__/**/*.png
+playwright-report/
+test-results/
+

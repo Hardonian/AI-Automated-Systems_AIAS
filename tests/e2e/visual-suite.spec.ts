@@ -117,40 +117,40 @@ test.describe('Visual Regression - Homepage', () => {
 // AUTH PAGES VISUAL TESTS
 // ============================================
 test.describe('Visual Regression - Authentication', () => {
-  test('signin page - desktop', async ({ page }, testInfo) => {
+  test('privacy page - desktop', async ({ page }, testInfo) => {
     await testRouteVisual(
       page,
       testInfo,
-      { path: '/signin', name: 'signin', auth: false },
+      { path: '/privacy', name: 'privacy', auth: false },
       'desktop'
     );
   });
 
-  test('signin page - mobile', async ({ page }, testInfo) => {
+  test('privacy page - mobile', async ({ page }, testInfo) => {
     await page.setViewportSize(viewports.mobile);
     await testRouteVisual(
       page,
       testInfo,
-      { path: '/signin', name: 'signin', auth: false },
+      { path: '/privacy', name: 'privacy', auth: false },
       'mobile'
     );
   });
 
-  test('signup page - desktop', async ({ page }, testInfo) => {
+  test('terms page - desktop', async ({ page }, testInfo) => {
     await testRouteVisual(
       page,
       testInfo,
-      { path: '/signup', name: 'signup', auth: false },
+      { path: '/terms', name: 'terms', auth: false },
       'desktop'
     );
   });
 
-  test('signup page - mobile', async ({ page }, testInfo) => {
+  test('terms page - mobile', async ({ page }, testInfo) => {
     await page.setViewportSize(viewports.mobile);
     await testRouteVisual(
       page,
       testInfo,
-      { path: '/signup', name: 'signup', auth: false },
+      { path: '/terms', name: 'terms', auth: false },
       'mobile'
     );
   });
@@ -160,48 +160,48 @@ test.describe('Visual Regression - Authentication', () => {
 // MARKETING PAGES VISUAL TESTS
 // ============================================
 test.describe('Visual Regression - Marketing Pages', () => {
-  test('pricing page - desktop', async ({ page }, testInfo) => {
+  test('homepage - desktop', async ({ page }, testInfo) => {
     await testRouteVisual(
       page,
       testInfo,
-      { path: '/pricing', name: 'pricing', auth: false },
+      { path: '/', name: 'homepage', auth: false },
       'desktop'
     );
   });
 
-  test('pricing page - mobile', async ({ page }, testInfo) => {
+  test('homepage - mobile', async ({ page }, testInfo) => {
     await page.setViewportSize(viewports.mobile);
     await testRouteVisual(
       page,
       testInfo,
-      { path: '/pricing', name: 'pricing', auth: false },
+      { path: '/', name: 'homepage', auth: false },
       'mobile'
     );
   });
 
-  test('features page - desktop', async ({ page }, testInfo) => {
+  test('blog page - desktop', async ({ page }, testInfo) => {
     await testRouteVisual(
       page,
       testInfo,
-      { path: '/features', name: 'features', auth: false },
+      { path: '/blog', name: 'blog', auth: false },
       'desktop'
     );
   });
 
-  test('about page - desktop', async ({ page }, testInfo) => {
+  test('workflow sandbox section - desktop', async ({ page }, testInfo) => {
     await testRouteVisual(
       page,
       testInfo,
-      { path: '/about', name: 'about', auth: false },
+      { path: '/#workflow-sandbox', name: 'workflow-sandbox', auth: false },
       'desktop'
     );
   });
 
-  test('contact page - desktop', async ({ page }, testInfo) => {
+  test('secret sauce section - desktop', async ({ page }, testInfo) => {
     await testRouteVisual(
       page,
       testInfo,
-      { path: '/contact', name: 'contact', auth: false },
+      { path: '/#secret-sauce', name: 'secret-sauce', auth: false },
       'desktop'
     );
   });
@@ -220,11 +220,11 @@ test.describe('Visual Regression - Content Pages', () => {
     );
   });
 
-  test('workflows page - desktop', async ({ page }, testInfo) => {
+  test('privacy page - desktop', async ({ page }, testInfo) => {
     await testRouteVisual(
       page,
       testInfo,
-      { path: '/workflows', name: 'workflows', auth: false },
+      { path: '/privacy', name: 'privacy', auth: false },
       'desktop'
     );
   });

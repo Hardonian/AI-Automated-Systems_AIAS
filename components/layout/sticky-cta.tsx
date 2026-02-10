@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight, X } from 'lucide-react';
+import { siteContent } from '@/src/content/site';
 
 export function StickyCTA() {
   const [isVisible, setIsVisible] = useState(false);
@@ -38,8 +39,8 @@ export function StickyCTA() {
           </div>
           <div className='flex items-center gap-2'>
             <Button size='sm' asChild>
-              <Link href='/demo'>
-                Schedule Call
+              <Link href={siteContent.positioning.primaryCTA.href}>
+                {siteContent.positioning.primaryCTA.label}
                 <ArrowRight className='ml-2 h-3 w-3' />
               </Link>
             </Button>

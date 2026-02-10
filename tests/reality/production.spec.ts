@@ -7,54 +7,31 @@ import { test, expect } from '@playwright/test';
 test.describe('Reality Suite - Production Health Checks', () => {
   const prodUrl = process.env.PROD_URL || 'https://your-app.vercel.app';
 
-  test('Homepage loads', async ({ page }) => {
+  test('Homepage loads and renders core CTA', async ({ page }) => {
     await page.goto(prodUrl);
-    await expect(page).toHaveTitle(/AIAS/);
+    await expect(page).toHaveTitle(/AI Automated Systems|AIAS/i);
+    await expect(
+      page.getByRole('link', { name: /Book a Strategy Call/i })
+    ).toBeVisible();
   });
 
-  test('API health endpoint responds', async ({ request }) => {
-    const response = await request.get(`${prodUrl}/api/health`);
-    expect(response.ok()).toBeTruthy();
-    const body = await response.json();
-    expect(body).toHaveProperty('status', 'ok');
+  test('Blog index loads', async ({ page }) => {
+    await page.goto(`${prodUrl}/blog`);
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
 
-  test('Database connectivity', async ({ request }) => {
-    const response = await request.get(`${prodUrl}/api/health/db`);
-    expect(response.ok()).toBeTruthy();
-  });
-
-  test('Auth flow works', async ({ page }) => {
-    await page.goto(`${prodUrl}/login`);
-    // Add auth flow tests
-  });
-});
-
-test.describe('Contract Tests - Supabase', () => {
-  test('Supabase connection', async ({ request }) => {
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const response = await request.get(`${supabaseUrl}/rest/v1/`);
-    expect(response.status()).toBeLessThan(500);
-  });
-});
-
-test.describe('Contract Tests - Webhooks', () => {
-  test('Stripe webhook signature validation', async ({ request }) => {
-    // Test webhook signature validation
-    const payload = JSON.stringify({ type: 'test' });
-    await request.post('/api/webhooks/stripe', {
-      data: payload,
-      headers: {
-        'stripe-signature': 'test-signature',
-      },
-    });
-    // Should validate signature
+  test('Featured blog article loads', async ({ page }) => {
+    await page.goto(`${prodUrl}/blog/10-automation-workflows-save-time`);
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
 });
 
 test.describe('Synthetic Monitors', () => {
-  test('Critical user journey', async ({ page }) => {
-    await page.goto(process.env.PROD_URL || 'https://your-app.vercel.app');
-    // Add critical journey tests
+  const prodUrl = process.env.PROD_URL || 'https://your-app.vercel.app';
+
+  test('Primary CTA points to Calendly', async ({ page }) => {
+    await page.goto(prodUrl);
+    const ctaLink = page.getByRole('link', { name: /Book a Strategy Call/i });
+    await expect(ctaLink).toHaveAttribute('href', /calendly\.com/);
   });
 });

@@ -427,12 +427,9 @@ test.describe('UI Consistency Audit', () => {
   // Audit critical routes across viewports
   const routesToAudit = [
     { path: '/', name: 'homepage' },
-    { path: '/signin', name: 'signin' },
-    { path: '/signup', name: 'signup' },
-    { path: '/pricing', name: 'pricing' },
-    { path: '/features', name: 'features' },
-    { path: '/about', name: 'about' },
-    { path: '/contact', name: 'contact' },
+    { path: '/blog', name: 'blog' },
+    { path: '/privacy', name: 'privacy' },
+    { path: '/terms', name: 'terms' },
   ];
 
   for (const route of routesToAudit) {
@@ -474,7 +471,7 @@ test.describe('UI Consistency Audit', () => {
 
   // Cross-viewport consistency check
   test('cross-viewport navigation consistency', async ({ page }, testInfo) => {
-    const route = '/features';
+    const route = '/';
 
     // Get desktop state
     await page.setViewportSize(viewports.desktop);

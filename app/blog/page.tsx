@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { getLatestArticles, getFeaturedArticles } from '@/lib/blog/articles';
+import { siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = {
   title: 'Blog — Systems Thinking + AI | Daily Articles | AIAS Platform',
@@ -117,7 +118,9 @@ export default function BlogPage() {
           </h2>
           <div className='flex gap-2'>
             <Button asChild size='sm' variant='outline'>
-              <Link href='/rss-news'>AI & Tech News Feed</Link>
+              <Link href={`mailto:${siteContent.contact.email}`}>
+                Request RSS Access
+              </Link>
             </Button>
           </div>
         </div>
@@ -239,10 +242,14 @@ export default function BlogPage() {
           </p>
           <div className='flex flex-col gap-4 sm:flex-row'>
             <Button asChild>
-              <Link href='/demo'>Schedule Strategy Call</Link>
+              <Link href={siteContent.positioning.primaryCTA.href}>
+                {siteContent.positioning.primaryCTA.label}
+              </Link>
             </Button>
             <Button asChild variant='outline'>
-              <Link href='/contact'>Request Access</Link>
+              <Link href={`mailto:${siteContent.contact.email}`}>
+                Email {siteContent.contact.email}
+              </Link>
             </Button>
           </div>
         </CardContent>
@@ -264,7 +271,9 @@ export default function BlogPage() {
             thinking relevance and provided with insights.
           </p>
           <Button asChild>
-            <Link href='/rss-news'>View News Feed</Link>
+            <Link href={`mailto:${siteContent.contact.email}`}>
+              Request RSS Access
+            </Link>
           </Button>
         </CardContent>
       </Card>

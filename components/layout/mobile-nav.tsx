@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { siteContent } from '@/src/content/site';
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -34,81 +35,39 @@ export function MobileNav() {
           className='mt-8 flex flex-col gap-4'
           role='navigation'
         >
-          <Link
-            aria-label='Navigate to Services'
-            className='flex min-h-[44px] items-center text-lg font-medium hover:underline'
-            href='/services'
-            onClick={() => setOpen(false)}
-          >
-            Services
-          </Link>
-          <Link
-            aria-label='Navigate to Process'
-            className='flex min-h-[44px] items-center text-lg font-medium hover:underline'
-            href='/process'
-            onClick={() => setOpen(false)}
-          >
-            Process
-          </Link>
-          <Link
-            aria-label='Navigate to Use Cases'
-            className='flex min-h-[44px] items-center text-lg font-medium hover:underline'
-            href='/use-cases'
-            onClick={() => setOpen(false)}
-          >
-            Use Cases
-          </Link>
-          <Link
-            aria-label='Navigate to Work'
-            className='flex min-h-[44px] items-center text-lg font-medium hover:underline'
-            href='/work'
-            onClick={() => setOpen(false)}
-          >
-            Our Work
-          </Link>
-          <Link
-            aria-label='Navigate to Systems'
-            className='flex min-h-[44px] items-center text-lg font-medium hover:underline'
-            href='/systems'
-            onClick={() => setOpen(false)}
-          >
-            Systems
-          </Link>
-          <Link
-            aria-label='Navigate to Training'
-            className='flex min-h-[44px] items-center text-lg font-medium hover:underline'
-            href='/training'
-            onClick={() => setOpen(false)}
-          >
-            Training
-          </Link>
-          <Link
-            aria-label='Navigate to Blog'
-            className='flex min-h-[44px] items-center text-lg font-medium hover:underline'
-            href='/blog'
-            onClick={() => setOpen(false)}
-          >
-            Blog
-          </Link>
-          <Link
-            aria-label='Navigate to About'
-            className='flex min-h-[44px] items-center text-lg font-medium hover:underline'
-            href='/about'
-            onClick={() => setOpen(false)}
-          >
-            About
-          </Link>
+          {siteContent.navigation.primary.map(link => (
+            <Link
+              key={link.href}
+              aria-label={`Navigate to ${link.label}`}
+              className='flex min-h-[44px] items-center text-lg font-medium hover:underline'
+              href={link.href}
+              onClick={() => setOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
+          {siteContent.navigation.resources.map(link => (
+            <Link
+              key={link.href}
+              aria-label={`Navigate to ${link.label}`}
+              className='flex min-h-[44px] items-center text-lg font-medium hover:underline'
+              href={link.href}
+              onClick={() => setOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
           <div className='space-y-3 border-t pt-4'>
             <Button
               asChild
               className='min-h-[48px] w-full text-base font-bold shadow-lg'
             >
               <Link
-                aria-label='Start your 30-day free trial - no credit card required'
-                href='/signup'
+                aria-label={siteContent.positioning.primaryCTA.label}
+                href={siteContent.positioning.primaryCTA.href}
                 onClick={() => setOpen(false)}
               >
-                Request Access
+                {siteContent.positioning.primaryCTA.label}
               </Link>
             </Button>
             <Button
@@ -117,11 +76,11 @@ export function MobileNav() {
               variant='outline'
             >
               <Link
-                aria-label='Schedule a free strategy call'
-                href='/demo'
+                aria-label={siteContent.positioning.secondaryCTA.label}
+                href={siteContent.positioning.secondaryCTA.href}
                 onClick={() => setOpen(false)}
               >
-                Schedule Call
+                {siteContent.positioning.secondaryCTA.label}
               </Link>
             </Button>
           </div>

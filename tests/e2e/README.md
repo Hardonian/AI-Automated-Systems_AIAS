@@ -38,9 +38,9 @@ pnpm test:audit
 ### Routes Covered
 
 1. **Homepage** (`/`)
-2. **Authentication** (`/signin`, `/signup`)
-3. **Marketing** (`/pricing`, `/features`, `/about`, `/contact`)
-4. **Content** (`/blog`, `/workflows`)
+2. **Legal** (`/privacy`, `/terms`)
+3. **Content** (`/blog`)
+4. **Workflow Sandbox** (`/#workflow-sandbox`)
 5. **Error States** (404 page)
 6. **Components** (header, footer)
 

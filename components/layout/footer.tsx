@@ -1,9 +1,10 @@
 'use client';
 import { motion } from 'framer-motion';
-import { Sparkles, Mail, ArrowRight, Calendar, Github } from 'lucide-react';
+import { Sparkles, ArrowRight, Calendar } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
+import { siteContent } from '@/src/content/site';
 
 export function Footer() {
   return (
@@ -27,21 +28,19 @@ export function Footer() {
               </h3>
             </div>
             <p className='mb-6 max-w-sm text-sm leading-relaxed md:text-base'>
-              We help organizations design, deploy, and operate reliable agentic
-              automations while training teams to run them safely and
-              productively. Canadian operations, systems thinking approach.
+              {siteContent.brand.description}
             </p>
 
             <div className='mb-6 space-y-3'>
               <Button asChild className='w-full'>
-                <Link href='/contact'>
+                <Link href={siteContent.positioning.primaryCTA.href}>
                   <Calendar className='mr-2 h-4 w-4' />
-                  Book a Discovery Call
+                  {siteContent.positioning.primaryCTA.label}
                 </Link>
               </Button>
               <Button asChild variant='outline' className='w-full'>
-                <Link href='/demo'>
-                  Request Demo
+                <Link href={`mailto:${siteContent.contact.email}`}>
+                  Email Us
                   <ArrowRight className='ml-2 h-4 w-4' />
                 </Link>
               </Button>
@@ -61,36 +60,16 @@ export function Footer() {
           </motion.div>
           {[
             {
-              title: 'Services',
-              links: [
-                { href: '/services', label: 'Consulting Services' },
-                { href: '/process', label: 'Our Process' },
-                { href: '/use-cases', label: 'Use Cases' },
-                { href: '/training', label: 'Training' },
-                { href: '/case-studies', label: 'Case Studies' },
-                { href: '/saas', label: 'SaaS Platform' },
-              ],
+              title: 'Explore',
+              links: siteContent.navigation.primary,
             },
             {
               title: 'Resources',
-              links: [
-                { href: '/blog', label: 'Blog (Daily Articles)' },
-                { href: '/rss-news', label: 'AI & Tech News Feed' },
-                { href: '/help', label: 'Help Center' },
-                { href: '/demo', label: 'Book Demo' },
-                { href: '/status', label: 'Status' },
-              ],
+              links: siteContent.navigation.resources,
             },
             {
-              title: 'Company',
-              links: [
-                { href: '/about', label: 'About' },
-                { href: '/showcase', label: 'Consultancy Showcase' },
-                { href: '/why-canadian', label: 'Why Canadian' },
-                { href: '/privacy', label: 'Privacy Policy' },
-                { href: '/terms', label: 'Terms of Service' },
-                { href: '/trust', label: 'Trust Center' },
-              ],
+              title: 'Legal',
+              links: siteContent.footer.legalLinks,
             },
           ].map((section, index) => (
             <motion.div
@@ -128,12 +107,9 @@ export function Footer() {
         >
           <div className='mb-8 flex flex-wrap justify-center gap-4 text-xs text-muted-foreground'>
             {[
-              { href: '/trust', label: 'Trust Center' },
-              { href: '/privacy', label: 'Privacy' },
-              { href: '/status', label: 'Status' },
-              { href: '/help', label: 'Help' },
+              ...siteContent.footer.legalLinks,
               {
-                href: 'mailto:support@aiautomatedsystems.ca',
+                href: `mailto:${siteContent.contact.email}`,
                 label: 'Support',
               },
             ].map(link => (
@@ -197,8 +173,7 @@ export function Footer() {
               </a>
             </div>
             <div className='text-center text-xs leading-relaxed text-muted-foreground md:text-sm'>
-              © {new Date().getFullYear()} AI Automated Systems. All rights
-              reserved.
+              {siteContent.footer.copyright}
               <br />
               <span className='mt-2 inline-block'>
                 Built in Canada 🇨🇦 • Serving the World 🌍

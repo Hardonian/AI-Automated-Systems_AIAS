@@ -31,6 +31,7 @@ import {
   getSectionClasses,
   TYPOGRAPHY,
 } from '@/lib/design-tokens';
+import { siteContent } from '@/src/content/site';
 
 // Real CLI outputs from the repo
 const cliDemos = [
@@ -138,7 +139,7 @@ const realMetrics = [
   {
     label: 'Routes',
     value: '60+',
-    description: 'Pages and API endpoints',
+    description: 'Pages and published sections',
   },
 ];
 
@@ -148,7 +149,7 @@ const artifactCards = [
     description:
       'State machine diagrams, checkpoint flows, and error handling patterns',
     icon: GitBranch,
-    href: '/contact',
+    href: `mailto:${siteContent.contact.email}`,
     verified: true,
   },
   {
@@ -156,14 +157,14 @@ const artifactCards = [
     description:
       'Versioned prompts with evaluation criteria and output schemas',
     icon: Shield,
-    href: '/contact',
+    href: `mailto:${siteContent.contact.email}`,
     verified: true,
   },
   {
     title: 'Runbook Templates',
     description: 'Escalation procedures, rollback steps, and incident response',
     icon: Zap,
-    href: '/contact',
+    href: `mailto:${siteContent.contact.email}`,
     verified: true,
   },
 ];
@@ -475,7 +476,7 @@ export function ProofSection() {
                       variant='ghost'
                       className='px-0 text-primary hover:text-primary/80'
                     >
-                      <Link href='/contact'>View artifact →</Link>
+                      <Link href={artifact.href}>View artifact →</Link>
                     </Button>
                   </CardContent>
                 </Card>
@@ -562,13 +563,13 @@ export function ProofSection() {
             </p>
             <div className='flex flex-col gap-3 sm:flex-row'>
               <Button asChild size='lg'>
-                <Link href='/contact'>
+                <Link href={siteContent.positioning.primaryCTA.href}>
                   <Play className='mr-2 h-4 w-4' />
-                  Book a Demo
+                  {siteContent.positioning.primaryCTA.label}
                 </Link>
               </Button>
               <Button asChild variant='outline' size='lg'>
-                <Link href='/contact'>
+                <Link href={`mailto:${siteContent.contact.email}`}>
                   <FileText className='mr-2 h-4 w-4' />
                   Request Documentation
                 </Link>

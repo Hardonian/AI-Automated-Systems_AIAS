@@ -21,8 +21,8 @@ test.describe('Accessibility Tests', () => {
     });
   });
 
-  test('signup page should be accessible', async ({ page }) => {
-    await page.goto('/signup');
+  test('privacy page should be accessible', async ({ page }) => {
+    await page.goto('/privacy');
     await checkA11y(page, undefined, {
       detailedReport: true,
       detailedReportOptions: { html: true },
@@ -37,8 +37,8 @@ test.describe('Accessibility Tests', () => {
     });
   });
 
-  test('pricing page should be accessible', async ({ page }) => {
-    await page.goto('/pricing');
+  test('terms page should be accessible', async ({ page }) => {
+    await page.goto('/terms');
     await checkA11y(page, undefined, {
       detailedReport: true,
       detailedReportOptions: { html: true },
@@ -70,7 +70,7 @@ test.describe('Accessibility Tests', () => {
   });
 
   test('forms should have labels', async ({ page }) => {
-    await page.goto('/signup');
+    await page.goto('/#workflow-sandbox');
 
     const inputs = await page.locator('input, select, textarea').all();
     for (const input of inputs) {

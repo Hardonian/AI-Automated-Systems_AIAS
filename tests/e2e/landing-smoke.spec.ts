@@ -18,7 +18,7 @@ test.describe('AIAS Landing & Workflow Smoke Test', () => {
     });
 
     test('Workflow Sandbox is functional', async ({ page }) => {
-        await page.goto('/workflow-sandbox');
+        await page.goto('/#workflow-sandbox');
 
         // Check initial state
         await expect(page.getByText('Experience the Workflow Engine')).toBeVisible();
@@ -26,26 +26,17 @@ test.describe('AIAS Landing & Workflow Smoke Test', () => {
         await expect(submitBtn).toBeVisible();
 
         // Fill form
-        // 1. Problem Domain Select
-        // Radix UI Select trigger usually has role combobox
-        await page.getByRole('combobox').click();
-        // Select first option
-        await page.getByRole('option').first().click();
+        await page.getByLabel('Problem Domain').click();
+        await page.getByRole('option', { name: 'Invoice Processing' }).click();
 
-        // 2. Constraints
         await page.fill('#constraints', 'Must comply with PIPEDA');
-
-        // 3. Stack
         await page.fill('#stack', 'Shopify, Slack');
 
         // Submit
         await submitBtn.click();
 
-        // Assert Output (Wait for simulation delay)
-        await expect(page.getByText('Markdown Plan')).toBeVisible({ timeout: 10000 });
-        await expect(page.getByText('JSON Artifact')).toBeVisible();
-
-        // Check if inputs are reflected in output (basic echo check)
+        // Assert Output
+        await expect(page.getByText('Agentic Execution Plan')).toBeVisible({ timeout: 10000 });
         await expect(page.getByText('Must comply with PIPEDA')).toBeVisible();
     });
 

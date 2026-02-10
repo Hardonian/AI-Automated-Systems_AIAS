@@ -50,7 +50,10 @@ describe('BillingService', () => {
         'pro' as SubscriptionTier
       );
 
-      const canceled = await billingService.cancelSubscription(subscription.id, true);
+      const canceled = await billingService.cancelSubscription(
+        subscription.id,
+        true
+      );
       expect(canceled.cancelAtPeriodEnd).toBe(true);
     });
   });

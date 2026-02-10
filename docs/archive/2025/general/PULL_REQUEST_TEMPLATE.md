@@ -3,7 +3,9 @@
 # Pull Request
 
 ## Type
+
 <!-- Check all that apply -->
+
 - [ ] `auto/security` - Security fix or improvement
 - [ ] `auto/perf` - Performance optimization
 - [ ] `auto/docs` - Documentation update
@@ -14,10 +16,13 @@
 - [ ] Other - Please describe
 
 ## Description
+
 <!-- Provide a clear description of the changes -->
 
 ## SLO Impact Assessment
+
 <!-- How does this change affect SLOs? -->
+
 - [ ] No impact on SLOs
 - [ ] Improves performance (TTFB, API P95, LCP)
 - [ ] May impact performance (describe below)
@@ -25,29 +30,38 @@
 - [ ] Cost optimization
 
 **Details:**
+
 <!-- If SLO impact, describe expected changes -->
 
 ## Risk Assessment
+
 <!-- Risk level and mitigation -->
+
 - [ ] Low risk - No breaking changes
 - [ ] Medium risk - Requires testing
 - [ ] High risk - Requires careful review
 
 **Mitigation:**
+
 <!-- Describe how risks are mitigated -->
 
 ## Rollback Plan
+
 <!-- How can this be rolled back if issues occur? -->
+
 - [ ] Revert commit
 - [ ] Feature flag disable
 - [ ] Database migration rollback (if applicable)
 - [ ] Other: <!-- describe -->
 
 **Rollback Steps:**
+
 <!-- If applicable, provide specific rollback steps -->
 
 ## Testing
+
 <!-- How was this tested? -->
+
 - [ ] Unit tests added/updated
 - [ ] Integration tests added/updated
 - [ ] Manual testing performed
@@ -55,10 +69,13 @@
 - [ ] Security testing performed
 
 **Test Results:**
+
 <!-- Link to test results or describe manual testing -->
 
 ## Checklist
+
 <!-- Pre-merge checklist -->
+
 - [ ] Code follows project style guidelines
 - [ ] Self-review completed
 - [ ] Comments added for complex logic
@@ -70,14 +87,18 @@
 - [ ] Rollback plan documented
 
 ## Related Issues
+
 <!-- Link related issues -->
+
 Closes #
 Related to #
 
 ## Screenshots / Evidence
+
 <!-- If applicable, add screenshots or evidence of changes -->
 
 ## Additional Notes
+
 <!-- Any additional context or notes -->
 
 ---

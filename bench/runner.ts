@@ -43,9 +43,10 @@ export async function benchmark<T>(
   }
 
   // Measure memory before (if available)
-  const memoryBefore = typeof process !== "undefined" && process.memoryUsage
-    ? process.memoryUsage().heapUsed
-    : undefined;
+  const memoryBefore =
+    typeof process !== 'undefined' && process.memoryUsage
+      ? process.memoryUsage().heapUsed
+      : undefined;
 
   // Benchmark
   const startTime = performance.now();
@@ -69,9 +70,10 @@ export async function benchmark<T>(
   const totalTime = endTime - startTime;
 
   // Measure memory after (if available)
-  const memoryAfter = typeof process !== "undefined" && process.memoryUsage
-    ? process.memoryUsage().heapUsed
-    : undefined;
+  const memoryAfter =
+    typeof process !== 'undefined' && process.memoryUsage
+      ? process.memoryUsage().heapUsed
+      : undefined;
 
   // Calculate statistics
   const sortedTimes = [...times].sort((a, b) => a - b);
@@ -88,7 +90,8 @@ export async function benchmark<T>(
     minTime,
     maxTime,
     opsPerSecond,
-    memoryUsed: memoryAfter && memoryBefore ? memoryAfter - memoryBefore : undefined,
+    memoryUsed:
+      memoryAfter && memoryBefore ? memoryAfter - memoryBefore : undefined,
   };
 }
 
@@ -124,10 +127,12 @@ export function formatResult(result: BenchmarkResult): string {
   ];
 
   if (result.memoryUsed !== undefined) {
-    lines.push(`  Memory Used: ${(result.memoryUsed / 1024 / 1024).toFixed(2)}MB`);
+    lines.push(
+      `  Memory Used: ${(result.memoryUsed / 1024 / 1024).toFixed(2)}MB`
+    );
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -137,7 +142,7 @@ export async function runBenchmarks(
   benchmarks: Array<{ name: string; fn: () => unknown | Promise<unknown> }>,
   options: BenchmarkOptions = {}
 ): Promise<void> {
-  console.log("Running benchmarks...\n");
+  console.log('Running benchmarks...\n');
 
   const results = await compare(benchmarks, options);
 
@@ -150,5 +155,7 @@ export async function runBenchmarks(
     a.averageTime < b.averageTime ? a : b
   );
 
-  console.log(`\nFastest: ${fastest.name} (${fastest.averageTime.toFixed(4)}ms avg)`);
+  console.log(
+    `\nFastest: ${fastest.name} (${fastest.averageTime.toFixed(4)}ms avg)`
+  );
 }

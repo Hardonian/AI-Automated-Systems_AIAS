@@ -1,6 +1,6 @@
 /**
  * CFO Mode: Idempotency Key Management
- * 
+ *
  * Ensures all financial transactions use idempotency keys to prevent
  * double-charging or double-recording.
  */
@@ -23,7 +23,7 @@ export function generateIdempotencyKey(
     .update(JSON.stringify(requestParams))
     .digest('hex')
     .substring(0, 16);
-  
+
   return `${resourceType}_${resourceId}_${requestHash}_${Date.now()}`;
 }
 
@@ -33,10 +33,7 @@ export function generateIdempotencyKey(
 export async function checkIdempotencyKey(
   idempotencyKey: string
 ): Promise<{ exists: boolean; response?: unknown }> {
-  const supabase = createClient(
-    env.supabase.url,
-    env.supabase.serviceRoleKey
-  );
+  const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
   const { data, error } = await supabase
     .from('idempotency_keys')
@@ -55,7 +52,10 @@ export async function checkIdempotencyKey(
     .eq('idempotency_key', idempotencyKey)
     .single();
 
-  if (expiredCheck?.expires_at && new Date(expiredCheck.expires_at) < new Date()) {
+  if (
+    expiredCheck?.expires_at &&
+    new Date(expiredCheck.expires_at) < new Date()
+  ) {
     return { exists: false };
   }
 
@@ -80,17 +80,13 @@ export async function recordIdempotencyKey(
   responseData: unknown,
   status: 'completed' | 'failed' = 'completed'
 ): Promise<void> {
-  const supabase = createClient(
-    env.supabase.url,
-    env.supabase.serviceRoleKey
-  );
+  const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
   const expiresAt = new Date();
   expiresAt.setHours(expiresAt.getHours() + 24); // 24 hour expiration
 
-  const { error } = await supabase
-    .from('idempotency_keys')
-    .upsert({
+  const { error } = await supabase.from('idempotency_keys').upsert(
+    {
       idempotency_key: idempotencyKey,
       resource_type: resourceType,
       resource_id: resourceId,
@@ -99,9 +95,11 @@ export async function recordIdempotencyKey(
       status,
       expires_at: expiresAt.toISOString(),
       completed_at: status === 'completed' ? new Date().toISOString() : null,
-    }, {
+    },
+    {
       onConflict: 'idempotency_key',
-    });
+    }
+  );
 
   if (error) {
     console.error('Failed to record idempotency key:', error);
@@ -120,16 +118,23 @@ export async function recordLedgerEntry(params: {
   accountType: 'tenant' | 'user' | 'system';
   amountCents: number; // CFO Principle: Integer math (cents)
   currency?: string;
-  transactionType: 'payment' | 'refund' | 'subscription' | 'subscription_cancel' | 'invoice' | 'credit' | 'debit' | 'adjustment' | 'fee' | 'chargeback';
+  transactionType:
+    | 'payment'
+    | 'refund'
+    | 'subscription'
+    | 'subscription_cancel'
+    | 'invoice'
+    | 'credit'
+    | 'debit'
+    | 'adjustment'
+    | 'fee'
+    | 'chargeback';
   sourceType: string;
   sourceId: string;
   description?: string;
   metadata?: Record<string, unknown>;
 }): Promise<{ success: boolean; ledgerId?: string; error?: string }> {
-  const supabase = createClient(
-    env.supabase.url,
-    env.supabase.serviceRoleKey
-  );
+  const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
   try {
     // Check idempotency first

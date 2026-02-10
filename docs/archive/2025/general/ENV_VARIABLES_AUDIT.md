@@ -3,11 +3,13 @@
 # Environment Variables Audit Summary
 
 ## Overview
+
 This document summarizes the audit and fixes applied to ensure all environment variables and secrets are loaded dynamically from GitHub repo secrets, Supabase env, Vercel env, or project `.env` files at runtime.
 
 ## Changes Made
 
 ### 1. SEO Configuration (`src/lib/seo.ts`)
+
 - **Fixed**: Hardcoded URLs replaced with dynamic environment variable loading
 - **Changes**:
   - Added `getBaseUrl()` function that checks multiple env var sources:
@@ -19,12 +21,14 @@ This document summarizes the audit and fixes applied to ensure all environment v
   - `SEOService` constructor now accepts optional baseUrl parameter
 
 ### 2. Partnerships Module (`src/lib/partnerships.ts`)
+
 - **Fixed**: Hardcoded base URL in `createReferralLink()` function
 - **Changes**:
   - Now checks multiple environment variable sources dynamically
   - Supports both Node.js (`process.env`) and Vite (`import.meta.env`) patterns
 
 ### 3. Email Templates (`lib/gamification/email.ts`)
+
 - **Fixed**: Hardcoded app URLs in email templates
 - **Changes**:
   - All email links now check multiple env var sources:
@@ -34,6 +38,7 @@ This document summarizes the audit and fixes applied to ensure all environment v
   - Falls back to `http://localhost:3000` only for local development
 
 ### 4. Queues Module (`packages/lib/queues.ts`)
+
 - **Fixed**: Hardcoded Supabase storage URL
 - **Changes**:
   - `uploadPdf()` now extracts Supabase project ref from `SUPABASE_URL` env var
@@ -41,6 +46,7 @@ This document summarizes the audit and fixes applied to ensure all environment v
   - Validates that `SUPABASE_URL` is set before attempting upload
 
 ### 5. Config Package (`packages/config/index.ts`)
+
 - **Fixed**: Strict validation that failed on missing optional variables
 - **Changes**:
   - Made most environment variables optional (except critical ones)
@@ -49,6 +55,7 @@ This document summarizes the audit and fixes applied to ensure all environment v
   - Provides clear error messages when required vars are missing
 
 ### 6. Notification Center (`src/components/platform/NotificationCenter.tsx`)
+
 - **Fixed**: Hardcoded WebSocket URL
 - **Changes**:
   - WebSocket URL now checks:
@@ -58,6 +65,7 @@ This document summarizes the audit and fixes applied to ensure all environment v
     - Only uses `ws://localhost:8080` as final fallback
 
 ### 7. Supabase Functions
+
 - **Fixed**: Added validation for missing environment variables
 - **Changes**:
   - `booking-api/index.ts`: Added validation for `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`
@@ -76,12 +84,14 @@ The codebase now supports loading environment variables from multiple sources in
 ## Key Environment Variables
 
 ### Required (Core)
+
 - `NEXT_PUBLIC_SUPABASE_URL` or `SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` or `SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `DATABASE_URL`
 
 ### Optional (Application)
+
 - `NEXT_PUBLIC_SITE_URL` or `NEXT_PUBLIC_APP_URL` or `NEXTAUTH_URL` (for app URLs)
 - `NEXT_PUBLIC_WS_URL` or `REACT_APP_WS_URL` (for WebSocket connections)
 - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` (if using Stripe)
@@ -91,6 +101,7 @@ The codebase now supports loading environment variables from multiple sources in
 ## Verification
 
 All hardcoded values have been replaced with dynamic environment variable loading. The codebase:
+
 - ✅ No hardcoded API keys or secrets
 - ✅ No hardcoded URLs (except fallbacks for local development)
 - ✅ All Supabase configurations use env vars

@@ -9,10 +9,7 @@
       "One clear message per section"
     ]
   },
-  "banPhrases": [
-    "click here",
-    "please note"
-  ],
+  "banPhrases": ["click here", "please note"],
   "cta": {
     "standard": "Add to Cart",
     "alternatives": [
@@ -60,11 +57,7 @@
         "Remove unnecessary words",
         "One message per section"
       ],
-      "avoid": [
-        "Long paragraphs",
-        "Redundant phrases",
-        "Multiple messages"
-      ]
+      "avoid": ["Long paragraphs", "Redundant phrases", "Multiple messages"]
     }
   },
   "terminology": {
@@ -81,11 +74,7 @@
   "icuPlaceholders": {
     "preserve": true,
     "format": "ICU MessageFormat",
-    "examples": [
-      "{count}",
-      "{name}",
-      "{date}"
-    ]
+    "examples": ["{count}", "{name}", "{date}"]
   },
   "examples": {
     "good": [

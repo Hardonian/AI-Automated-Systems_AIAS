@@ -150,7 +150,9 @@ function generateHTMLReport(report: TestReport): string {
         </tr>
       </thead>
       <tbody>
-        ${Object.entries(report.endpointStats || {}).map(([endpoint, stats]: [string, any]) => `
+        ${Object.entries(report.endpointStats || {})
+          .map(
+            ([endpoint, stats]: [string, any]) => `
           <tr>
             <td><code>${endpoint}</code></td>
             <td>${stats.requests}</td>
@@ -161,7 +163,9 @@ function generateHTMLReport(report: TestReport): string {
             <td>${stats.p95.toFixed(0)}</td>
             <td>${stats.p99.toFixed(0)}</td>
           </tr>
-        `).join('')}
+        `
+          )
+          .join('')}
       </tbody>
     </table>
 
@@ -175,28 +179,34 @@ function generateHTMLReport(report: TestReport): string {
         </tr>
       </thead>
       <tbody>
-        ${Object.entries(report.statusCodeDistribution || {}).map(([code, count]: [string, any]) => {
-          const total = report.summary.totalRequests;
-          const percentage = ((count / total) * 100).toFixed(2);
-          return `
+        ${Object.entries(report.statusCodeDistribution || {})
+          .map(([code, count]: [string, any]) => {
+            const total = report.summary.totalRequests;
+            const percentage = ((count / total) * 100).toFixed(2);
+            return `
             <tr>
               <td>${code}</td>
               <td>${count}</td>
               <td>${percentage}%</td>
             </tr>
           `;
-        }).join('')}
+          })
+          .join('')}
       </tbody>
     </table>
 
-    ${report.recommendations && report.recommendations.length > 0 ? `
+    ${
+      report.recommendations && report.recommendations.length > 0
+        ? `
       <div class="recommendations">
         <h3>💡 Recommendations</h3>
         <ul>
           ${report.recommendations.map(rec => `<li>${rec}</li>`).join('')}
         </ul>
       </div>
-    ` : ''}
+    `
+        : ''
+    }
   </div>
 </body>
 </html>`;

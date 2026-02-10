@@ -3,14 +3,14 @@
  * Identifies undocumented areas
  */
 
-import { stat , writeFile } from "fs/promises";
+import { stat, writeFile } from 'fs/promises';
 // import { readdir, readFile } from "fs/promises";
-import { join } from "path";
+import { join } from 'path';
 
 interface CoverageIssue {
-  type: "missing_docs" | "outdated_docs" | "incomplete_docs";
+  type: 'missing_docs' | 'outdated_docs' | 'incomplete_docs';
   file: string;
-  severity: "high" | "medium" | "low";
+  severity: 'high' | 'medium' | 'low';
   description: string;
 }
 
@@ -21,20 +21,25 @@ async function checkApiDocsCoverage(): Promise<CoverageIssue[]> {
   const issues: CoverageIssue[] = [];
 
   // Scan API routes
-  const apiRoutes = await scanApiRoutes("app/api");
+  const apiRoutes = await scanApiRoutes('app/api');
 
   // Check if each route has documentation
   for (const route of apiRoutes) {
-    const docPath = join(process.cwd(), "docs", "api", `${route.path.replace("/api/", "")}.md`);
+    const docPath = join(
+      process.cwd(),
+      'docs',
+      'api',
+      `${route.path.replace('/api/', '')}.md`
+    );
     try {
       await stat(docPath);
       // File exists - could check if outdated
     } catch {
       // File doesn't exist
       issues.push({
-        type: "missing_docs",
+        type: 'missing_docs',
         file: route.path,
-        severity: "high",
+        severity: 'high',
         description: `API endpoint ${route.path} has no documentation`,
       });
     }
@@ -59,16 +64,21 @@ async function checkIntegrationDocsCoverage(): Promise<CoverageIssue[]> {
   const issues: CoverageIssue[] = [];
 
   // Check for integration setup docs
-  const integrations = ["shopify", "wave", "slack", "gmail"];
+  const integrations = ['shopify', 'wave', 'slack', 'gmail'];
   for (const integration of integrations) {
-    const docPath = join(process.cwd(), "docs", "integrations", `${integration}-setup.md`);
+    const docPath = join(
+      process.cwd(),
+      'docs',
+      'integrations',
+      `${integration}-setup.md`
+    );
     try {
       await stat(docPath);
     } catch {
       issues.push({
-        type: "missing_docs",
+        type: 'missing_docs',
         file: `integrations/${integration}-setup.md`,
-        severity: "medium",
+        severity: 'medium',
         description: `Integration ${integration} has no setup documentation`,
       });
     }
@@ -81,7 +91,7 @@ async function checkIntegrationDocsCoverage(): Promise<CoverageIssue[]> {
  * Generate coverage report
  */
 async function generateCoverageReport(): Promise<void> {
-  console.log("Checking documentation coverage...");
+  console.log('Checking documentation coverage...');
 
   const [apiIssues, integrationIssues] = await Promise.all([
     checkApiDocsCoverage(),
@@ -98,15 +108,15 @@ async function generateCoverageReport(): Promise<void> {
 ## Summary
 
 - **Total Issues:** ${allIssues.length}
-- **High Severity:** ${allIssues.filter((i) => i.severity === "high").length}
-- **Medium Severity:** ${allIssues.filter((i) => i.severity === "medium").length}
-- **Low Severity:** ${allIssues.filter((i) => i.severity === "low").length}
+- **High Severity:** ${allIssues.filter(i => i.severity === 'high').length}
+- **Medium Severity:** ${allIssues.filter(i => i.severity === 'medium').length}
+- **Low Severity:** ${allIssues.filter(i => i.severity === 'low').length}
 
 ## Issues
 
 ${allIssues
   .map(
-    (issue) => `### ${issue.severity.toUpperCase()}: ${issue.type}
+    issue => `### ${issue.severity.toUpperCase()}: ${issue.type}
 
 **File:** \`${issue.file}\`
 
@@ -115,19 +125,26 @@ ${issue.description}
 ---
 `
   )
-  .join("\n")}
+  .join('\n')}
 
 ## Recommendations
 
-${allIssues.length === 0
-  ? "✅ All documentation is up to date!"
-  : `- Address ${allIssues.filter((i) => i.severity === "high").length} high-severity issues first
-- Create missing documentation for ${allIssues.filter((i) => i.type === "missing_docs").length} items
-- Review and update outdated documentation`}
+${
+  allIssues.length === 0
+    ? '✅ All documentation is up to date!'
+    : `- Address ${allIssues.filter(i => i.severity === 'high').length} high-severity issues first
+- Create missing documentation for ${allIssues.filter(i => i.type === 'missing_docs').length} items
+- Review and update outdated documentation`
+}
 `;
 
-  const outputPath = join(process.cwd(), "docs", "ai-generated", "docs-coverage-report.md");
-  await writeFile(outputPath, markdown, "utf-8");
+  const outputPath = join(
+    process.cwd(),
+    'docs',
+    'ai-generated',
+    'docs-coverage-report.md'
+  );
+  await writeFile(outputPath, markdown, 'utf-8');
 
   console.log(`Coverage report written to ${outputPath}`);
   console.log(`Found ${allIssues.length} issues`);

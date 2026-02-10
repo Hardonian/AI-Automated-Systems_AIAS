@@ -102,7 +102,6 @@ export class CanaryMonitor {
           p95,
           threshold: this.config.latencyThreshold,
         });
-        
       }
     }
   }
@@ -115,7 +114,10 @@ export class CanaryMonitor {
     reason: string,
     details: Record<string, unknown>
   ): Promise<void> {
-    console.error(`🚨 Canary rollback triggered: ${canaryId}`, { reason, details });
+    console.error(`🚨 Canary rollback triggered: ${canaryId}`, {
+      reason,
+      details,
+    });
 
     // Disable canary flag (update environment variable or feature flag)
     // This would typically call your feature flag service or update Vercel env vars
@@ -135,12 +137,12 @@ export class CanaryMonitor {
     // Update feature flag or environment variable
     // Example: Update Vercel env var via API
     const flagName = `CANARY_${canaryId.toUpperCase()}_ENABLED`;
-    
+
     // Store in cache as fallback (if env var update fails)
     await cacheService.set(`canary:${canaryId}:enabled`, false, { ttl: 3600 });
-    
+
     console.log(`Canary ${canaryId} disabled via ${flagName}`);
-    
+
     // TODO: Implement actual flag update via:
     // - Vercel API: vercel env rm ${flagName} production
     // - Feature flag service API
@@ -165,7 +167,7 @@ export class CanaryMonitor {
 
     // Log to audit log or telemetry
     console.log('Rollback event:', event);
-    
+
     // TODO: Send to telemetry/audit service
     // await telemetry.track('canary_rollback', event);
   }
@@ -183,8 +185,10 @@ export class CanaryMonitor {
     // - Email
     // - PagerDuty
     // - Teams webhook
-    
-    console.log(`Team notification: Canary ${canaryId} rolled back - ${reason}`);
+
+    console.log(
+      `Team notification: Canary ${canaryId} rolled back - ${reason}`
+    );
   }
 
   /**

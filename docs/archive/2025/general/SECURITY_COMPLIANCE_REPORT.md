@@ -7,22 +7,24 @@
 
 ## Executive Summary
 
-| Area | Status | Score |
-|------|--------|-------|
-| Secrets Management | ⚠️ | — |
-| Database Security | ⚠️ | — |
-| Dependency Vulnerabilities | ⚠️ | — |
-| Backup Evidence | ⚠️ | — |
-| Compliance | ⚠️ | — |
+| Area                       | Status | Score |
+| -------------------------- | ------ | ----- |
+| Secrets Management         | ⚠️     | —     |
+| Database Security          | ⚠️     | —     |
+| Dependency Vulnerabilities | ⚠️     | —     |
+| Backup Evidence            | ⚠️     | —     |
+| Compliance                 | ⚠️     | —     |
 
 ## Secrets Management
 
 ### Exposed Secrets Scan
+
 - **Secrets Exposed:** {{ secrets_exposed_count }}
 - **High-Risk Exposures:** {{ secrets_high_risk_count }}
 - **Status:** {{ secrets_status }}
 
 ### Secret Rotation
+
 - **Last Rotation:** {{ last_rotation_date }}
 - **Rotation Schedule:** {{ rotation_schedule }}
 - **Status:** {{ rotation_status }}
@@ -30,16 +32,19 @@
 ## Database Security
 
 ### Row Level Security (RLS)
+
 - **RLS Enabled:** {{ rls_enabled }} {{ rls_status }}
 - **Tables Protected:** {{ rls_tables_count }} / {{ total_tables_count }}
 - **Status:** {{ rls_overall_status }}
 
 ### Migration Safety
+
 - **Migration Canary Flag:** `MIGRATION_CANARY` {{ migration_canary_status }}
 - **Destructive SQL Blocked:** {{ destructive_sql_blocked }} {{ destructive_sql_status }}
 - **Last Migration:** {{ last_migration_date }}
 
 ### Backup Evidence
+
 - **Backup Metadata Present:** {{ backup_evidence_present }} {{ backup_evidence_status }}
 - **Last Backup Verified:** {{ last_backup_date }}
 - **Backup Retention:** {{ backup_retention_days }} days
@@ -49,17 +54,20 @@
 ## Dependency Security
 
 ### Vulnerability Scan
+
 - **Critical Vulnerabilities:** {{ vuln_critical_count }}
 - **High Vulnerabilities:** {{ vuln_high_count }}
 - **Moderate Vulnerabilities:** {{ vuln_moderate_count }}
 - **Status:** {{ vuln_status }}
 
 ### License Compliance
+
 - **Restricted Licenses:** {{ restricted_licenses_count }}
 - **License Scan Date:** {{ license_scan_date }}
 - **Status:** {{ license_status }}
 
 ### SBOM (Software Bill of Materials)
+
 - **SBOM Generated:** {{ sbom_generated }} {{ sbom_status }}
 - **SBOM Location:** `/security/sbom.json`
 - **Last Updated:** {{ sbom_last_updated }}
@@ -67,11 +75,13 @@
 ## Compliance
 
 ### Privacy & Data Protection
+
 - **Privacy Policy:** {{ privacy_policy_status }}
 - **Terms of Service:** {{ terms_status }}
 - **Cookie Consent:** {{ cookie_consent_status }}
 
 ### Access Controls
+
 - **Admin Dashboard Protected:** {{ admin_protected }} {{ admin_protection_status }}
 - **API Rate Limiting:** {{ rate_limiting_status }}
 - **Authentication:** {{ auth_status }}
@@ -79,11 +89,13 @@
 ## Incident Response
 
 ### Security Incidents (30d)
+
 - **Total Incidents:** {{ security_incidents_count }}
 - **Resolved:** {{ security_incidents_resolved }}
 - **Open:** {{ security_incidents_open }}
 
 ### Runbooks Available
+
 - ✅ API Latency: `docs/runbooks/api-latency.md`
 - ✅ Build Failure: `docs/runbooks/build-failure.md`
 - ✅ DB Hotspot: `docs/runbooks/db-hotspot.md`

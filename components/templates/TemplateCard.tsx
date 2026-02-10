@@ -1,11 +1,16 @@
-"use client";
+'use client';
 
-import { Clock } from "lucide-react";
+import { Clock } from 'lucide-react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
 interface WorkflowTemplate {
   id: string;
@@ -15,7 +20,7 @@ interface WorkflowTemplate {
   icon: string;
   requiredIntegrations: string[];
   estimatedTimeMinutes: number;
-  difficulty: "easy" | "medium" | "advanced";
+  difficulty: 'easy' | 'medium' | 'advanced';
 }
 
 interface TemplateCardProps {
@@ -24,47 +29,57 @@ interface TemplateCardProps {
   selected?: boolean;
 }
 
-export function TemplateCard({ template, onSelect, selected }: TemplateCardProps) {
+export function TemplateCard({
+  template,
+  onSelect,
+  selected,
+}: TemplateCardProps) {
   const difficultyColors = {
-    easy: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-    medium: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-    advanced: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+    easy: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+    medium:
+      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+    advanced: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
   };
 
   return (
     <Card
       className={`cursor-pointer transition-all hover:shadow-lg ${
-        selected ? "ring-2 ring-primary" : ""
+        selected ? 'ring-2 ring-primary' : ''
       }`}
       onClick={() => onSelect?.(template)}
     >
       <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3">
-            <div className="text-4xl">{template.icon}</div>
+        <div className='flex items-start justify-between'>
+          <div className='flex items-center gap-3'>
+            <div className='text-4xl'>{template.icon}</div>
             <div>
-              <CardTitle className="text-lg">{template.name}</CardTitle>
-              <CardDescription className="mt-1">{template.description}</CardDescription>
+              <CardTitle className='text-lg'>{template.name}</CardTitle>
+              <CardDescription className='mt-1'>
+                {template.description}
+              </CardDescription>
             </div>
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-wrap gap-2 mb-4">
-          <Badge className={difficultyColors[template.difficulty]} variant="outline">
+        <div className='mb-4 flex flex-wrap gap-2'>
+          <Badge
+            className={difficultyColors[template.difficulty]}
+            variant='outline'
+          >
             {template.difficulty}
           </Badge>
-          <Badge className="flex items-center gap-1" variant="outline">
-            <Clock className="h-3 w-3" />
+          <Badge className='flex items-center gap-1' variant='outline'>
+            <Clock className='h-3 w-3' />
             {template.estimatedTimeMinutes} min
           </Badge>
         </div>
 
-        <div className="space-y-2">
-          <div className="text-sm font-medium">Required Integrations:</div>
-          <div className="flex flex-wrap gap-2">
-            {template.requiredIntegrations.map((integration) => (
-              <Badge key={integration} className="text-xs" variant="secondary">
+        <div className='space-y-2'>
+          <div className='text-sm font-medium'>Required Integrations:</div>
+          <div className='flex flex-wrap gap-2'>
+            {template.requiredIntegrations.map(integration => (
+              <Badge key={integration} className='text-xs' variant='secondary'>
                 {integration}
               </Badge>
             ))}
@@ -72,8 +87,11 @@ export function TemplateCard({ template, onSelect, selected }: TemplateCardProps
         </div>
 
         {onSelect && (
-          <Button className="w-full mt-4" variant={selected ? "default" : "outline"}>
-            {selected ? "Selected" : "Select Template"}
+          <Button
+            className='mt-4 w-full'
+            variant={selected ? 'default' : 'outline'}
+          >
+            {selected ? 'Selected' : 'Select Template'}
           </Button>
         )}
       </CardContent>

@@ -1,9 +1,9 @@
 /**
  * Vercel Blob Storage Utility
- * 
+ *
  * Provides a unified interface for file storage using Vercel Blob.
  * Can be used alongside or as an alternative to Supabase Storage.
- * 
+ *
  * Setup:
  * 1. Create a Vercel Blob store in your Vercel dashboard
  * 2. Add BLOB_READ_WRITE_TOKEN to environment variables
@@ -58,13 +58,18 @@ export async function uploadToBlob(
       contentType: blob.contentType,
       contentDisposition: blob.contentDisposition || '',
       size: (blob as unknown as { size?: number }).size || 0,
-      uploadedAt: (blob as unknown as { uploadedAt?: Date }).uploadedAt || new Date(),
+      uploadedAt:
+        (blob as unknown as { uploadedAt?: Date }).uploadedAt || new Date(),
     };
   } catch (error) {
-    logger.error('Vercel Blob upload failed', error instanceof Error ? error : new Error(String(error)), {
-      filename,
-      options,
-    });
+    logger.error(
+      'Vercel Blob upload failed',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        filename,
+        options,
+      }
+    );
     throw error;
   }
 }
@@ -77,9 +82,13 @@ export async function getBlobMetadata(pathname: string) {
     const blob = await head(pathname);
     return blob;
   } catch (error) {
-    logger.error('Failed to get blob metadata', error instanceof Error ? error : new Error(String(error)), {
-      pathname,
-    });
+    logger.error(
+      'Failed to get blob metadata',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        pathname,
+      }
+    );
     throw error;
   }
 }
@@ -92,10 +101,14 @@ export async function listBlobs(prefix?: string, limit = 1000) {
     const { blobs } = await list({ prefix, limit });
     return blobs;
   } catch (error) {
-    logger.error('Failed to list blobs', error instanceof Error ? error : new Error(String(error)), {
-      prefix,
-      limit,
-    });
+    logger.error(
+      'Failed to list blobs',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        prefix,
+        limit,
+      }
+    );
     throw error;
   }
 }
@@ -108,9 +121,13 @@ export async function deleteBlob(pathname: string) {
     await del(pathname);
     logger.info('Blob deleted', { pathname });
   } catch (error) {
-    logger.error('Failed to delete blob', error instanceof Error ? error : new Error(String(error)), {
-      pathname,
-    });
+    logger.error(
+      'Failed to delete blob',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        pathname,
+      }
+    );
     throw error;
   }
 }
@@ -123,9 +140,13 @@ export async function deleteBlobs(pathnames: string[]) {
     await del(pathnames);
     logger.info('Blobs deleted', { count: pathnames.length });
   } catch (error) {
-    logger.error('Failed to delete blobs', error instanceof Error ? error : new Error(String(error)), {
-      count: pathnames.length,
-    });
+    logger.error(
+      'Failed to delete blobs',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        count: pathnames.length,
+      }
+    );
     throw error;
   }
 }

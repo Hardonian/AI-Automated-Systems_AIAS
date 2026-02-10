@@ -1,9 +1,9 @@
-"use client";
-import { useState, useEffect } from "react";
+'use client';
+import { useState, useEffect } from 'react';
 
-import { hapticTap } from "./Haptics";
+import { hapticTap } from './Haptics';
 
-import { supabase } from "@/lib/supabase/client";
+import { supabase } from '@/lib/supabase/client';
 
 interface Notification {
   id: number;
@@ -23,94 +23,125 @@ export default function NotificationsCenter() {
   useEffect(() => {
     loadNotifications();
     const channel = supabase
-      .channel("notifications")
-      .on("postgres_changes", { event: "*", schema: "public", table: "notifications" }, () => {
-        loadNotifications();
-      })
+      .channel('notifications')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'notifications' },
+        () => {
+          loadNotifications();
+        }
+      )
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   async function loadNotifications() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {return;}
-    
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return;
+    }
+
     const { data } = await supabase
-      .from("notifications")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
+      .from('notifications')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
       .limit(20);
-    
+
     if (data) {
       setNotifications(data);
-      setUnreadCount(data.filter((n: { read_at?: string | null }) => !n.read_at).length);
+      setUnreadCount(
+        data.filter((n: { read_at?: string | null }) => !n.read_at).length
+      );
     }
   }
 
   async function markAsRead(id: number) {
     hapticTap();
-    await (supabase.from("notifications") as any).update({ read_at: new Date().toISOString() } as any).eq("id", id);
+    await (supabase.from('notifications') as any)
+      .update({ read_at: new Date().toISOString() } as any)
+      .eq('id', id);
     loadNotifications();
   }
 
   async function markAllAsRead() {
     hapticTap();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {return;}
-    
-    await (supabase
-      .from("notifications") as any)
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return;
+    }
+
+    await (supabase.from('notifications') as any)
       .update({ read_at: new Date().toISOString() } as any)
-      .eq("user_id", user.id)
-      .is("read_at", null);
+      .eq('user_id', user.id)
+      .is('read_at', null);
     loadNotifications();
   }
 
   const unread = notifications.filter(n => !n.read_at);
 
   return (
-    <div className="relative">
+    <div className='relative'>
       <button
-        aria-label="Notifications"
-        className="relative h-10 w-10 rounded-xl bg-muted flex items-center justify-center"
+        aria-label='Notifications'
+        className='relative flex h-10 w-10 items-center justify-center rounded-xl bg-muted'
         onClick={() => setOpen(!open)}
       >
         🔔
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-fg text-xs flex items-center justify-center">
-            {unreadCount > 9 ? "9+" : unreadCount}
+          <span className='text-primary-fg absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs'>
+            {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
       </button>
 
       {open && (
         <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-12 z-50 w-80 max-h-96 overflow-y-auto rounded-2xl border bg-card shadow-lg p-4 space-y-2">
-            <div className="flex items-center justify-between mb-2">
-              <div className="text-sm font-semibold">Notifications</div>
+          <div className='fixed inset-0 z-40' onClick={() => setOpen(false)} />
+          <div className='absolute right-0 top-12 z-50 max-h-96 w-80 space-y-2 overflow-y-auto rounded-2xl border bg-card p-4 shadow-lg'>
+            <div className='mb-2 flex items-center justify-between'>
+              <div className='text-sm font-semibold'>Notifications</div>
               {unread.length > 0 && (
-                <button className="text-xs text-muted-foreground hover:text-foreground" onClick={markAllAsRead}>
+                <button
+                  className='text-xs text-muted-foreground hover:text-foreground'
+                  onClick={markAllAsRead}
+                >
                   Mark all read
                 </button>
               )}
             </div>
-            
+
             {notifications.length === 0 ? (
-              <div className="text-sm text-muted-foreground text-center py-8">No notifications</div>
+              <div className='py-8 text-center text-sm text-muted-foreground'>
+                No notifications
+              </div>
             ) : (
-              notifications.map((notif) => (
+              notifications.map(notif => (
                 <div
                   key={notif.id}
-                  className={`rounded-xl border p-3 cursor-pointer hover:bg-muted/50 ${
-                    !notif.read_at ? "bg-primary/5 border-primary/20" : ""
+                  className={`cursor-pointer rounded-xl border p-3 hover:bg-muted/50 ${
+                    !notif.read_at ? 'border-primary/20 bg-primary/5' : ''
                   }`}
-                  onClick={() => { markAsRead(notif.id); if (notif.link) {window.location.href = notif.link;} }}
+                  onClick={() => {
+                    markAsRead(notif.id);
+                    if (notif.link) {
+                      window.location.href = notif.link;
+                    }
+                  }}
                 >
-                  <div className="text-sm font-semibold">{notif.title}</div>
-                  {notif.body && <div className="text-xs text-muted-foreground mt-1">{notif.body}</div>}
-                  <div className="text-xs text-muted-foreground mt-1">
+                  <div className='text-sm font-semibold'>{notif.title}</div>
+                  {notif.body && (
+                    <div className='mt-1 text-xs text-muted-foreground'>
+                      {notif.body}
+                    </div>
+                  )}
+                  <div className='mt-1 text-xs text-muted-foreground'>
                     {new Date(notif.created_at).toLocaleDateString()}
                   </div>
                 </div>

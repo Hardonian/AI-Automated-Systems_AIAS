@@ -52,6 +52,7 @@ AIAS Platform is a modern, enterprise-grade AI automation platform built with Ne
 ### Frontend Layer
 
 **Technology Stack:**
+
 - Next.js 15 (App Router)
 - React 19
 - TypeScript 5.9
@@ -60,6 +61,7 @@ AIAS Platform is a modern, enterprise-grade AI automation platform built with Ne
 - Framer Motion
 
 **Key Features:**
+
 - Server Components for optimal performance
 - Client Components for interactivity
 - Middleware for security and routing
@@ -68,12 +70,14 @@ AIAS Platform is a modern, enterprise-grade AI automation platform built with Ne
 ### API Layer
 
 **Route Handlers:**
+
 - Located in `app/api/`
 - 43+ API endpoints
 - Unified route handler utilities
 - Built-in security, validation, and error handling
 
 **Key Utilities:**
+
 - `createRouteHandler()` - Secure route handler factory
 - `createGETHandler()` - GET request handler with caching
 - `createPOSTHandler()` - POST request handler
@@ -84,6 +88,7 @@ AIAS Platform is a modern, enterprise-grade AI automation platform built with Ne
 ### Backend Layer
 
 **Supabase:**
+
 - PostgreSQL database
 - Authentication (JWT-based)
 - Row-Level Security (RLS) for multi-tenant isolation
@@ -92,6 +97,7 @@ AIAS Platform is a modern, enterprise-grade AI automation platform built with Ne
 - Edge Functions (Deno runtime)
 
 **Database Schema:**
+
 - Multi-tenant tables with `tenant_id` columns
 - RLS policies for tenant isolation
 - Audit logging tables
@@ -142,11 +148,13 @@ AIAS Platform is a modern, enterprise-grade AI automation platform built with Ne
 ### Multi-Tenant Isolation
 
 **Tenant Identification:**
+
 - Header: `x-tenant-id`
 - Subdomain: `{tenant}.example.com`
 - Query parameter: `?tenantId={id}` (API routes only)
 
 **Isolation Layers:**
+
 1. Middleware validates tenant access
 2. RLS policies filter data by tenant_id
 3. Cache keys prefixed with tenant_id
@@ -175,6 +183,7 @@ AIAS Platform is a modern, enterprise-grade AI automation platform built with Ne
 ## Error Handling
 
 **Error Taxonomy:**
+
 - `ValidationError` (400) - Input validation failures
 - `AuthenticationError` (401) - Auth failures
 - `AuthorizationError` (403) - Permission denied
@@ -185,6 +194,7 @@ AIAS Platform is a modern, enterprise-grade AI automation platform built with Ne
 - `NetworkError` (503) - External service failures
 
 **Error Flow:**
+
 1. Error thrown with appropriate error class
 2. `formatError()` formats for API response
 3. Structured logger records error
@@ -194,12 +204,14 @@ AIAS Platform is a modern, enterprise-grade AI automation platform built with Ne
 ## Logging & Observability
 
 **Structured Logging:**
+
 - JSON-formatted logs
 - Contextual information (userId, requestId, etc.)
 - Log levels: debug, info, warn, error, fatal
 - Production telemetry integration
 
 **Monitoring:**
+
 - Health check endpoints (`/api/healthz`)
 - Performance metrics tracking
 - Error tracking (Sentry integration)
@@ -208,18 +220,21 @@ AIAS Platform is a modern, enterprise-grade AI automation platform built with Ne
 ## Performance Optimizations
 
 **Frontend:**
+
 - Server Components for reduced client bundle
 - Code splitting and lazy loading
 - Image optimization (Next.js Image)
 - Bundle analysis and tree-shaking
 
 **Backend:**
+
 - Database query optimization
 - Connection pooling
 - Response caching
 - Edge runtime for low latency
 
 **Infrastructure:**
+
 - Vercel Edge Network
 - CDN for static assets
 - Redis for distributed caching
@@ -228,12 +243,14 @@ AIAS Platform is a modern, enterprise-grade AI automation platform built with Ne
 ## Deployment Architecture
 
 **Environments:**
+
 - Development (local)
 - Preview (Vercel preview deployments)
 - Staging (optional)
 - Production
 
 **CI/CD Pipeline:**
+
 - GitHub Actions for testing
 - Automated deployments via Vercel
 - Database migrations via Supabase CLI
@@ -242,12 +259,14 @@ AIAS Platform is a modern, enterprise-grade AI automation platform built with Ne
 ## Scalability Considerations
 
 **Horizontal Scaling:**
+
 - Stateless API routes
 - Distributed caching (Redis/KV)
 - Database connection pooling
 - Edge function distribution
 
 **Vertical Scaling:**
+
 - Database query optimization
 - Caching strategies
 - CDN utilization
@@ -294,6 +313,7 @@ AIAS Platform is a modern, enterprise-grade AI automation platform built with Ne
 ## Future Architecture Considerations
 
 **Potential Enhancements:**
+
 - Microservices for specific features
 - Message queue for async processing
 - GraphQL API layer

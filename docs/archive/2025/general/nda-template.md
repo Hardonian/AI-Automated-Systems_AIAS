@@ -102,13 +102,17 @@ Receiving Party acknowledges that:
 **11. SIGNATURES**
 
 **Disclosing Party:**
-_________________________
+
+---
+
 [Name]
 [Title]
 [Date]
 
 **Receiving Party:**
-_________________________
+
+---
+
 [Name]
 [Title]
 [Date]
@@ -130,24 +134,28 @@ Use the same template but modify:
 ## NOTES FOR USE
 
 **When to Use:**
+
 - Before sharing sensitive business information
 - When evaluating vendors/partners
 - During investor discussions
 - When exploring collaborations
 
 **Customization:**
+
 - Specify purpose clearly
 - Set appropriate term (typically 2-5 years)
 - Define Confidential Information scope
 - Adjust for mutual vs. one-way disclosure
 
 **Best Practices:**
+
 - Execute before sharing any sensitive information
 - Mark documents "Confidential" when sharing
 - Keep records of what was disclosed
 - Review periodically for relevance
 
 **Legal Review:**
+
 - Have a lawyer review before use
 - Ensure compliance with applicable laws
 - Consider jurisdiction-specific requirements

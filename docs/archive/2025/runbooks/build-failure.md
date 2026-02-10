@@ -3,6 +3,7 @@
 # Incident Runbook: Build Failure
 
 ## Overview
+
 This runbook guides response to CI/CD build failures blocking deployments.
 
 **Target:** Build success rate ≥ 95%  
@@ -18,6 +19,7 @@ This runbook guides response to CI/CD build failures blocking deployments.
 ## Detection
 
 ### Symptoms
+
 - GitHub Actions workflow failures
 - Deployment blocked
 - Test suite failures
@@ -31,6 +33,7 @@ This runbook guides response to CI/CD build failures blocking deployments.
    - Capture error stack traces
 
 2. **Recent Changes**
+
    ```bash
    git log --since="24 hours ago" --oneline
    git diff HEAD~1 HEAD
@@ -72,26 +75,31 @@ This runbook guides response to CI/CD build failures blocking deployments.
 ### 2. Investigation (5-15 min)
 
 **TypeScript Errors:**
+
 - [ ] Run locally: `npm run typecheck`
 - [ ] Check for type mismatches
 - [ ] Review recent type changes
 
 **Test Failures:**
+
 - [ ] Run locally: `npm test`
 - [ ] Check for flaky tests
 - [ ] Review test environment setup
 
 **Linting Errors:**
+
 - [ ] Run locally: `npm run lint`
 - [ ] Auto-fix if safe: `npm run lint:fix`
 - [ ] Review ESLint config changes
 
 **Build Timeout:**
+
 - [ ] Check build duration history
 - [ ] Review bundle size changes
 - [ ] Check for infinite loops in build scripts
 
 **Dependency Issues:**
+
 - [ ] Verify lock file is committed
 - [ ] Run: `pnpm install`
 - [ ] Check for peer dependency conflicts
@@ -99,12 +107,14 @@ This runbook guides response to CI/CD build failures blocking deployments.
 ### 3. Mitigation (15-30 min)
 
 **Quick Fixes:**
+
 - [ ] Fix TypeScript errors
 - [ ] Update failing tests
 - [ ] Fix linting issues
 - [ ] Add missing dependencies
 
 **If Lock File Issue:**
+
 ```bash
 rm -rf node_modules pnpm-lock.yaml
 pnpm install
@@ -113,11 +123,13 @@ git commit -m "fix: regenerate lock file"
 ```
 
 **If Environment Variable Missing:**
+
 - [ ] Add secret to GitHub repository
 - [ ] Verify secret name matches code
 - [ ] Re-run workflow
 
 **If Test Flakiness:**
+
 - [ ] Mark flaky test with `test.skip()` temporarily
 - [ ] Create issue to fix properly
 - [ ] Re-run workflow
@@ -142,6 +154,7 @@ git commit -m "fix: regenerate lock file"
 ## Common Issues & Solutions
 
 ### TypeScript Compilation Errors
+
 ```bash
 # Run typecheck locally
 npm run typecheck
@@ -153,6 +166,7 @@ npm run typecheck
 ```
 
 ### Test Failures
+
 ```bash
 # Run tests locally
 npm test
@@ -164,6 +178,7 @@ npm test
 ```
 
 ### Dependency Resolution
+
 ```bash
 # Clean install
 rm -rf node_modules pnpm-lock.yaml
@@ -174,6 +189,7 @@ pnpm why <package-name>
 ```
 
 ### Build Timeout
+
 - Check bundle size: `npm run build:analyze`
 - Review webpack/vite config
 - Check for circular dependencies
@@ -181,12 +197,14 @@ pnpm why <package-name>
 ## Escalation
 
 **Escalate if:**
+
 - Production deployment blocked > 2 hours
 - Multiple workflows failing
 - Infrastructure issue suspected
 - Security-related build failure
 
 **Escalation Contacts:**
+
 - On-call engineer
 - DevOps lead
 - Security team (if security-related)

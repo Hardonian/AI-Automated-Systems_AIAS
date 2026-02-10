@@ -1,11 +1,11 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
-import { handleApiError } from "@/lib/api/route-handler";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { track } from "@/lib/telemetry/track";
+import { handleApiError } from '@/lib/api/route-handler';
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
+import { track } from '@/lib/telemetry/track';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -22,7 +22,7 @@ const createBenchmarkRunSchema = z.object({
   benchmark_config: z.record(z.unknown()).optional(),
 });
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/edge/benchmarks
@@ -30,13 +30,13 @@ export const dynamic = "force-dynamic";
  */
 export async function GET(request: NextRequest) {
   try {
-    const authHeader = request.headers.get("authorization");
-    const token = authHeader?.startsWith("Bearer ")
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.startsWith('Bearer ')
       ? authHeader.substring(7)
-      : request.cookies.get("sb-access-token")?.value;
+      : request.cookies.get('sb-access-token')?.value;
 
     if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const {
@@ -45,45 +45,48 @@ export async function GET(request: NextRequest) {
     } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const tenantId = request.headers.get("x-tenant-id") ||
-      new URL(request.url).searchParams.get("tenant_id");
+    const tenantId =
+      request.headers.get('x-tenant-id') ||
+      new URL(request.url).searchParams.get('tenant_id');
 
     let query = supabase
-      .from("edge_ai_benchmark_runs")
-      .select(`
+      .from('edge_ai_benchmark_runs')
+      .select(
+        `
         *,
         edge_ai_models:model_id(id, name),
         edge_ai_optimization_jobs:optimization_job_id(id, name),
         edge_ai_device_profiles:device_profile_id(id, name, device_type)
-      `)
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
+      `
+      )
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
 
     if (tenantId) {
-      query = query.eq("tenant_id", tenantId);
+      query = query.eq('tenant_id', tenantId);
     }
 
     const { data: benchmarks, error } = await query;
 
     if (error) {
       logger.error(
-        "Failed to get benchmark runs",
+        'Failed to get benchmark runs',
         error instanceof Error ? error : new Error(String(error)),
         { userId: user.id }
       );
-      return handleApiError(error, "Failed to retrieve benchmark runs");
+      return handleApiError(error, 'Failed to retrieve benchmark runs');
     }
 
     return NextResponse.json({ benchmarks: benchmarks || [] });
   } catch (error) {
     logger.error(
-      "Error in GET /api/edge/benchmarks",
+      'Error in GET /api/edge/benchmarks',
       error instanceof Error ? error : undefined
     );
-    return handleApiError(error, "Failed to retrieve benchmark runs");
+    return handleApiError(error, 'Failed to retrieve benchmark runs');
   }
 }
 
@@ -93,13 +96,13 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get("authorization");
-    const token = authHeader?.startsWith("Bearer ")
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.startsWith('Bearer ')
       ? authHeader.substring(7)
-      : request.cookies.get("sb-access-token")?.value;
+      : request.cookies.get('sb-access-token')?.value;
 
     if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const {
@@ -108,7 +111,7 @@ export async function POST(request: NextRequest) {
     } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -116,14 +119,14 @@ export async function POST(request: NextRequest) {
 
     // Verify device profile belongs to user or is a template
     const { data: deviceProfile } = await supabase
-      .from("edge_ai_device_profiles")
-      .select("id")
+      .from('edge_ai_device_profiles')
+      .select('id')
       .or(`id.eq.${validatedData.device_profile_id},is_template.eq.true`)
       .single();
 
     if (!deviceProfile) {
       return NextResponse.json(
-        { error: "Device profile not found or access denied" },
+        { error: 'Device profile not found or access denied' },
         { status: 404 }
       );
     }
@@ -131,15 +134,15 @@ export async function POST(request: NextRequest) {
     // Verify model if provided
     if (validatedData.model_id) {
       const { data: model } = await supabase
-        .from("edge_ai_models")
-        .select("id")
-        .eq("id", validatedData.model_id)
-        .eq("user_id", user.id)
+        .from('edge_ai_models')
+        .select('id')
+        .eq('id', validatedData.model_id)
+        .eq('user_id', user.id)
         .single();
 
       if (!model) {
         return NextResponse.json(
-          { error: "Model not found or access denied" },
+          { error: 'Model not found or access denied' },
           { status: 404 }
         );
       }
@@ -148,30 +151,31 @@ export async function POST(request: NextRequest) {
     // Verify optimization job if provided
     if (validatedData.optimization_job_id) {
       const { data: job } = await supabase
-        .from("edge_ai_optimization_jobs")
-        .select("id")
-        .eq("id", validatedData.optimization_job_id)
-        .eq("user_id", user.id)
+        .from('edge_ai_optimization_jobs')
+        .select('id')
+        .eq('id', validatedData.optimization_job_id)
+        .eq('user_id', user.id)
         .single();
 
       if (!job) {
         return NextResponse.json(
-          { error: "Optimization job not found or access denied" },
+          { error: 'Optimization job not found or access denied' },
           { status: 404 }
         );
       }
     }
 
-    const tenantId = request.headers.get("x-tenant-id") ||
-      new URL(request.url).searchParams.get("tenant_id");
+    const tenantId =
+      request.headers.get('x-tenant-id') ||
+      new URL(request.url).searchParams.get('tenant_id');
 
     const { data: benchmark, error } = await supabase
-      .from("edge_ai_benchmark_runs")
+      .from('edge_ai_benchmark_runs')
       .insert({
         ...validatedData,
         user_id: user.id,
         tenant_id: tenantId || null,
-        status: "pending",
+        status: 'pending',
         started_at: new Date().toISOString(),
       })
       .select()
@@ -179,22 +183,22 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       logger.error(
-        "Failed to create benchmark run",
+        'Failed to create benchmark run',
         error instanceof Error ? error : new Error(String(error)),
         { userId: user.id }
       );
-      return handleApiError(error, "Failed to create benchmark run");
+      return handleApiError(error, 'Failed to create benchmark run');
     }
 
-    logger.info("Benchmark run created", {
+    logger.info('Benchmark run created', {
       benchmarkId: benchmark.id,
       userId: user.id,
     });
 
     try {
       track(user.id, {
-        type: "edge_ai_benchmark_created",
-        path: "/api/edge/benchmarks",
+        type: 'edge_ai_benchmark_created',
+        path: '/api/edge/benchmarks',
         meta: {
           benchmark_id: benchmark.id,
           model_id: validatedData.model_id,
@@ -202,10 +206,10 @@ export async function POST(request: NextRequest) {
           device_profile_id: validatedData.device_profile_id,
           timestamp: new Date().toISOString(),
         },
-        app: "web",
+        app: 'web',
       });
     } catch (telemetryError) {
-      logger.warn("Failed to track benchmark creation", {
+      logger.warn('Failed to track benchmark creation', {
         error: telemetryError,
       });
     }
@@ -225,7 +229,10 @@ export async function POST(request: NextRequest) {
         testDatasetPath: validatedData.test_dataset_path,
       });
     } catch (queueError) {
-      logger.warn('Failed to queue benchmark job', { error: queueError, benchmarkId: benchmark.id });
+      logger.warn('Failed to queue benchmark job', {
+        error: queueError,
+        benchmarkId: benchmark.id,
+      });
       // Don't fail the request, job can be queued manually later
     }
 
@@ -233,14 +240,14 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation error", details: error.errors },
+        { error: 'Validation error', details: error.errors },
         { status: 400 }
       );
     }
     logger.error(
-      "Error in POST /api/edge/benchmarks",
+      'Error in POST /api/edge/benchmarks',
       error instanceof Error ? error : undefined
     );
-    return handleApiError(error, "Failed to create benchmark run");
+    return handleApiError(error, 'Failed to create benchmark run');
   }
 }

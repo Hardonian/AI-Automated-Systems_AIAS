@@ -2,7 +2,7 @@
 /**
  * Environment Variable Validation Script
  * Validates all required environment variables are set
- * 
+ *
  * Usage: npm run validate:env
  * Or: npx tsx scripts/validate-env.ts
  */
@@ -119,12 +119,15 @@ function validateAllEnvVars(): ValidationResult[] {
   return results;
 }
 
-function printValidationResults(results: ValidationResult[]): { valid: boolean; errors: string[] } {
+function printValidationResults(results: ValidationResult[]): {
+  valid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
   let allValid = true;
 
   console.log('\n🔍 Environment Variable Validation\n');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
 
   for (const result of results) {
     console.log(`\n📦 ${result.category}`);
@@ -133,9 +136,9 @@ function printValidationResults(results: ValidationResult[]): { valid: boolean; 
     for (const variable of result.variables) {
       const status = variable.set ? '✅' : variable.required ? '❌' : '⚠️ ';
       const required = variable.required ? '(required)' : '(optional)';
-      
+
       console.log(`${status} ${variable.name} ${required}`);
-      
+
       if (variable.value && variable.set) {
         console.log(`   Value: ${variable.value}`);
       }
@@ -147,7 +150,7 @@ function printValidationResults(results: ValidationResult[]): { valid: boolean; 
     }
   }
 
-  console.log(`\n${  '='.repeat(60)}`);
+  console.log(`\n${'='.repeat(60)}`);
 
   if (allValid) {
     console.log('\n✅ All required environment variables are set!\n');
@@ -155,7 +158,9 @@ function printValidationResults(results: ValidationResult[]): { valid: boolean; 
     console.log('\n❌ Missing required environment variables:\n');
     errors.forEach(error => console.log(`   - ${error}`));
     console.log('\n💡 Set these in:');
-    console.log('   - GitHub: Repository → Settings → Secrets and variables → Actions');
+    console.log(
+      '   - GitHub: Repository → Settings → Secrets and variables → Actions'
+    );
     console.log('   - Vercel: Dashboard → Settings → Environment Variables');
     console.log('   - Supabase: Dashboard → Settings → API');
     console.log('   - Local: .env.local file\n');

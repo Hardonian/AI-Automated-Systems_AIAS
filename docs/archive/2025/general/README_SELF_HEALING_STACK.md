@@ -12,23 +12,27 @@ This stack provides a comprehensive self-healing infrastructure for data pipelin
 ## Quick Start
 
 1. **Set up environment variables:**
+
    ```bash
    cp infra/env/.env.example .env
    # Edit .env with your Supabase credentials
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    # Note: If pg is missing, install separately: npm install pg --save-dev --legacy-peer-deps
    ```
 
 3. **Run preflight checks:**
+
    ```bash
    npm run preflight
    ```
 
 4. **Apply migrations:**
+
    ```bash
    supabase db push
    # Or generate delta migration:
@@ -36,6 +40,7 @@ This stack provides a comprehensive self-healing infrastructure for data pipelin
    ```
 
 5. **Verify database:**
+
    ```bash
    npm run verify:db
    ```
@@ -48,11 +53,13 @@ This stack provides a comprehensive self-healing infrastructure for data pipelin
 ## Architecture
 
 ### Phase A: Business Intelligence Audit
+
 - **Location:** `reports/exec/unaligned_audit.md`
 - **Purpose:** Diagnose alignment gaps and value leakage
 - **Output:** Alignment temperature, momentum index, top misfits
 
 ### Phase B: Finance → Automation → Growth
+
 - **Location:** `reports/exec/finance_automation_growth_memo.md`
 - **Components:**
   - Finance model: `models/finance_model.csv`, `models/assumptions.json`
@@ -60,6 +67,7 @@ This stack provides a comprehensive self-healing infrastructure for data pipelin
   - Growth: `growth/portfolio.md`, `growth/experiments/`
 
 ### Phase C: Six-Part System Health Audit
+
 - **Location:** `reports/system/`, `solutions/system/`
 - **Modules:**
   1. Feedback Loops
@@ -70,12 +78,14 @@ This stack provides a comprehensive self-healing infrastructure for data pipelin
   6. Multi-Agent Coherence
 
 ### Phase D: Supabase Delta Migrations
+
 - **Location:** `supabase/migrations/000000000800_upsert_functions.sql`
 - **Scripts:**
   - `scripts/agents/generate_delta_migration.ts` - Introspects DB, writes only missing objects
   - `scripts/agents/verify_db.ts` - Verifies tables, columns, indexes, RLS, policies
 
 ### Phase E: Guardrails Pack
+
 - **Preflight:** `scripts/agents/preflight.ts`
 - **ETL Scripts:** `scripts/etl/*.ts` (all support `--dry-run`)
 - **Data Quality:** `tests/data_quality.sql`, `scripts/agents/run_data_quality.ts`
@@ -83,28 +93,33 @@ This stack provides a comprehensive self-healing infrastructure for data pipelin
 - **Notifications:** `scripts/agents/notify.ts` (Slack integration)
 
 ### Phase F: Master Orchestration
+
 - **Script:** `scripts/orchestrate_master.ts`
 - **Order:** Preflight → Guardrails → System Health → Migrations → ETL → DQ → Doctor → Summary
 
 ## Key Features
 
 ### Idempotent Operations
+
 - All migrations use `IF NOT EXISTS`
 - All scripts safe to re-run
 - No destructive DDL
 
 ### Self-Healing
+
 - System doctor attempts automatic fixes
 - Opens backlog tickets on failure
 - Retries with exponential backoff
 
 ### Data Quality Gates
+
 - NOT NULL checks
 - Freshness validation
 - Duplicate detection
 - Future date prevention
 
 ### CI/CD Integration
+
 - Preflight checks on PR
 - Nightly ETL automation
 - Weekly system health audit
@@ -141,9 +156,11 @@ npm run orchestrate        # Run all phases in order
 ## Environment Variables
 
 **Required:**
+
 - `SUPABASE_DB_URL` - PostgreSQL connection string
 
 **Optional:**
+
 - `SUPABASE_URL` - Supabase project URL
 - `SUPABASE_SERVICE_ROLE_KEY` - Service role key
 - `TZ` - Timezone (default: America/Toronto)
@@ -152,6 +169,7 @@ npm run orchestrate        # Run all phases in order
 - `GENERIC_SOURCE_B_TOKEN` - Source B API token
 
 **ETL Configuration:**
+
 - `RUN_BACKFILL=true|false` - Enable backfill mode
 - `BACKFILL_SOURCES=source_a,source_b,events` - Sources to backfill
 - `BACKFILL_START=YYYY-MM-DD` - Backfill start date
@@ -187,7 +205,7 @@ System doctor creates tickets in `backlog/READY_system_fix_*.md` when failures a
 ✅ Retries with exponential backoff  
 ✅ Dry-run support for ETL  
 ✅ Timezone: America/Toronto  
-✅ Logging produces Markdown reports  
+✅ Logging produces Markdown reports
 
 ## Next Steps
 

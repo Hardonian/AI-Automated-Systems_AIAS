@@ -23,7 +23,13 @@ export async function sbGuard(options: {
   let exitCode = 0;
 
   // Read Prisma schema to get tables
-  const schemaPath = path.join(process.cwd(), 'apps', 'web', 'prisma', 'schema.prisma');
+  const schemaPath = path.join(
+    process.cwd(),
+    'apps',
+    'web',
+    'prisma',
+    'schema.prisma'
+  );
   if (!fs.existsSync(schemaPath)) {
     console.error('❌ Prisma schema not found');
     return 1;
@@ -52,7 +58,12 @@ export async function sbGuard(options: {
 
     // Simulate RLS check
     // In production, this would query: SELECT * FROM pg_policies WHERE tablename = $1
-    const criticalTables = ['users', 'organizations', 'api_keys', 'subscriptions'];
+    const criticalTables = [
+      'users',
+      'organizations',
+      'api_keys',
+      'subscriptions',
+    ];
     if (criticalTables.includes(table.toLowerCase())) {
       result.rlsEnabled = true; // Assume enabled for demo
       result.policies = 2; // Assume policies exist
@@ -68,15 +79,22 @@ export async function sbGuard(options: {
     results.push(result);
 
     const icon = result.issues.length === 0 ? '✅' : '❌';
-    console.log(`${icon} ${result.table}: ${result.rlsEnabled ? 'RLS enabled' : 'RLS disabled'} (${result.policies} policies)`);
+    console.log(
+      `${icon} ${result.table}: ${result.rlsEnabled ? 'RLS enabled' : 'RLS disabled'} (${result.policies} policies)`
+    );
     if (result.issues.length > 0) {
-      result.issues.forEach((issue) => console.log(`   ⚠️  ${issue}`));
+      result.issues.forEach(issue => console.log(`   ⚠️  ${issue}`));
     }
   }
 
   // Generate report
   if (options.report || exitCode !== 0) {
-    const reportPath = path.join(process.cwd(), 'ops', 'reports', 'rls-audit.md');
+    const reportPath = path.join(
+      process.cwd(),
+      'ops',
+      'reports',
+      'rls-audit.md'
+    );
     const reportDir = path.dirname(reportPath);
     if (!fs.existsSync(reportDir)) {
       fs.mkdirSync(reportDir, { recursive: true });
@@ -86,17 +104,17 @@ export async function sbGuard(options: {
     report += `Generated: ${new Date().toISOString()}\n\n`;
     report += `## Summary\n\n`;
     report += `- Total Tables: ${tables.length}\n`;
-    report += `- RLS Enabled: ${results.filter((r) => r.rlsEnabled).length}\n`;
+    report += `- RLS Enabled: ${results.filter(r => r.rlsEnabled).length}\n`;
     report += `- Issues Found: ${results.reduce((sum, r) => sum + r.issues.length, 0)}\n\n`;
     report += `## Detailed Results\n\n`;
 
-    results.forEach((result) => {
+    results.forEach(result => {
       report += `### ${result.table}\n\n`;
       report += `- RLS Enabled: ${result.rlsEnabled ? 'Yes' : 'No'}\n`;
       report += `- Policies: ${result.policies}\n`;
       if (result.issues.length > 0) {
         report += `- Issues:\n`;
-        result.issues.forEach((issue) => {
+        result.issues.forEach(issue => {
           report += `  - ${issue}\n`;
         });
       }
@@ -104,10 +122,10 @@ export async function sbGuard(options: {
     });
 
     report += `## Recommendations\n\n`;
-    const tablesWithoutRLS = results.filter((r) => !r.rlsEnabled);
+    const tablesWithoutRLS = results.filter(r => !r.rlsEnabled);
     if (tablesWithoutRLS.length > 0) {
       report += `### Enable RLS on:\n\n`;
-      tablesWithoutRLS.forEach((r) => {
+      tablesWithoutRLS.forEach(r => {
         report += `- ${r.table}\n`;
       });
       report += `\n`;

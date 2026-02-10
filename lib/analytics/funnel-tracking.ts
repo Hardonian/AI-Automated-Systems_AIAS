@@ -3,16 +3,16 @@
  * Tracks user progression through activation stages
  */
 
-import { logger } from "@/lib/logging/structured-logger";
-import { track } from "@/lib/telemetry/track";
+import { logger } from '@/lib/logging/structured-logger';
+import { track } from '@/lib/telemetry/track';
 
 export type FunnelStage =
-  | "signup"
-  | "onboarding_start"
-  | "integration_connect"
-  | "workflow_create"
-  | "workflow_execute"
-  | "activated";
+  | 'signup'
+  | 'onboarding_start'
+  | 'integration_connect'
+  | 'workflow_create'
+  | 'workflow_execute'
+  | 'activated';
 
 export interface FunnelEvent {
   userId: string;
@@ -31,41 +31,51 @@ export async function trackFunnelStage(
 ): Promise<void> {
   try {
     await track(userId, {
-      type: "funnel_stage",
-      path: "/funnel",
+      type: 'funnel_stage',
+      path: '/funnel',
       meta: {
         stage,
         timestamp: new Date().toISOString(),
         ...metadata,
       },
-      app: "web",
+      app: 'web',
     });
 
-    logger.info("Funnel stage tracked", {
+    logger.info('Funnel stage tracked', {
       userId,
       stage,
       metadata,
     });
   } catch (error) {
-    logger.error("Failed to track funnel stage", error instanceof Error ? error : new Error(String(error)), {
-      userId,
-      stage,
-    });
+    logger.error(
+      'Failed to track funnel stage',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        userId,
+        stage,
+      }
+    );
   }
 }
 
 /**
  * Track signup
  */
-export function trackSignup(userId: string, metadata?: Record<string, unknown>): void {
-  trackFunnelStage(userId, "signup", metadata);
+export function trackSignup(
+  userId: string,
+  metadata?: Record<string, unknown>
+): void {
+  trackFunnelStage(userId, 'signup', metadata);
 }
 
 /**
  * Track onboarding start
  */
-export function trackOnboardingStart(userId: string, metadata?: Record<string, unknown>): void {
-  trackFunnelStage(userId, "onboarding_start", metadata);
+export function trackOnboardingStart(
+  userId: string,
+  metadata?: Record<string, unknown>
+): void {
+  trackFunnelStage(userId, 'onboarding_start', metadata);
 }
 
 /**
@@ -76,7 +86,7 @@ export function trackIntegrationConnect(
   integration: string,
   metadata?: Record<string, unknown>
 ): void {
-  trackFunnelStage(userId, "integration_connect", {
+  trackFunnelStage(userId, 'integration_connect', {
     integration,
     ...metadata,
   });
@@ -90,7 +100,7 @@ export function trackWorkflowCreate(
   workflowId: string,
   metadata?: Record<string, unknown>
 ): void {
-  trackFunnelStage(userId, "workflow_create", {
+  trackFunnelStage(userId, 'workflow_create', {
     workflowId,
     ...metadata,
   });
@@ -104,7 +114,7 @@ export function trackWorkflowExecute(
   workflowId: string,
   metadata?: Record<string, unknown>
 ): void {
-  trackFunnelStage(userId, "workflow_execute", {
+  trackFunnelStage(userId, 'workflow_execute', {
     workflowId,
     ...metadata,
   });
@@ -113,6 +123,9 @@ export function trackWorkflowExecute(
 /**
  * Track activation (all stages complete)
  */
-export function trackActivation(userId: string, metadata?: Record<string, unknown>): void {
-  trackFunnelStage(userId, "activated", metadata);
+export function trackActivation(
+  userId: string,
+  metadata?: Record<string, unknown>
+): void {
+  trackFunnelStage(userId, 'activated', metadata);
 }

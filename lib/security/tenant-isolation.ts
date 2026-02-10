@@ -25,14 +25,11 @@ export interface TenantLimits {
 
 export class TenantIsolationService {
   private supabase;
-  
+
   constructor() {
-    this.supabase = createClient(
-      env.supabase.url,
-      env.supabase.serviceRoleKey
-    );
+    this.supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
   }
-  
+
   /**
    * Get tenant context for user
    */
@@ -43,7 +40,8 @@ export class TenantIsolationService {
     try {
       const { data, error } = await this.supabase
         .from('tenant_members')
-        .select(`
+        .select(
+          `
           tenant_id,
           user_id,
           role,
@@ -52,19 +50,22 @@ export class TenantIsolationService {
             plan_id,
             subscription_plans(permissions)
           )
-        `)
+        `
+        )
         .eq('tenant_id', tenantId)
         .eq('user_id', userId)
         .single();
-      
+
       if (error || !data) {
         return null;
       }
-      
+
       const tenant = Array.isArray(data.tenants) ? data.tenants[0] : null;
-      const subscriptionPlan = Array.isArray(tenant?.subscription_plans) ? tenant.subscription_plans[0] : tenant?.subscription_plans;
+      const subscriptionPlan = Array.isArray(tenant?.subscription_plans)
+        ? tenant.subscription_plans[0]
+        : tenant?.subscription_plans;
       const permissions = subscriptionPlan?.permissions || [];
-      
+
       return {
         tenantId: data.tenant_id,
         userId: data.user_id,
@@ -76,7 +77,7 @@ export class TenantIsolationService {
       return null;
     }
   }
-  
+
   /**
    * Validate tenant access
    */
@@ -86,18 +87,21 @@ export class TenantIsolationService {
     requiredPermission?: string
   ): Promise<{ allowed: boolean; context?: TenantContext }> {
     const context = await this.getTenantContext(tenantId, userId);
-    
+
     if (!context) {
       return { allowed: false };
     }
-    
-    if (requiredPermission && !context.permissions.includes(requiredPermission)) {
+
+    if (
+      requiredPermission &&
+      !context.permissions.includes(requiredPermission)
+    ) {
       return { allowed: false, context };
     }
-    
+
     return { allowed: true, context };
   }
-  
+
   /**
    * Get tenant limits
    */
@@ -105,20 +109,24 @@ export class TenantIsolationService {
     try {
       const { data, error } = await this.supabase
         .from('tenants')
-        .select(`
+        .select(
+          `
           id,
           subscription_plans(limits)
-        `)
+        `
+        )
         .eq('id', tenantId)
         .single();
-      
+
       if (error || !data) {
         return null;
       }
-      
-      const subscriptionPlan = Array.isArray(data.subscription_plans) ? data.subscription_plans[0] : data.subscription_plans;
+
+      const subscriptionPlan = Array.isArray(data.subscription_plans)
+        ? data.subscription_plans[0]
+        : data.subscription_plans;
       const limits = subscriptionPlan?.limits || {};
-      
+
       return {
         workflows: limits.workflows || 0,
         executions: limits.executions || 0,
@@ -132,7 +140,7 @@ export class TenantIsolationService {
       return null;
     }
   }
-  
+
   /**
    * Check if tenant has exceeded limits
    */
@@ -142,26 +150,26 @@ export class TenantIsolationService {
     amount: number = 1
   ): Promise<{ allowed: boolean; remaining: number; limit: number }> {
     const limits = await this.getTenantLimits(tenantId);
-    
+
     if (!limits) {
       return { allowed: false, remaining: 0, limit: 0 };
     }
-    
+
     const limit = limits[resource];
-    
+
     // Get current usage
     const usage = await this.getCurrentUsage(tenantId, resource);
-    
+
     const remaining = Math.max(0, limit - usage);
     const allowed = remaining >= amount;
-    
+
     return {
       allowed,
       remaining,
       limit,
     };
   }
-  
+
   /**
    * Get current usage for a resource
    */
@@ -177,18 +185,18 @@ export class TenantIsolationService {
         .eq('metric_type', resource)
         .gte('period_end', new Date().toISOString())
         .single();
-      
+
       if (error || !data) {
         return 0;
       }
-      
+
       return data.usage_count || 0;
     } catch (error) {
       console.error('Error getting current usage:', error);
       return 0;
     }
   }
-  
+
   /**
    * Record usage for a resource
    */
@@ -201,7 +209,7 @@ export class TenantIsolationService {
       const now = new Date();
       const periodStart = new Date(now.getFullYear(), now.getMonth(), 1);
       const periodEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-      
+
       // Get or create usage record
       const { data: existing } = await this.supabase
         .from('tenant_usage')
@@ -210,7 +218,7 @@ export class TenantIsolationService {
         .eq('metric_type', resource)
         .eq('period_start', periodStart.toISOString())
         .single();
-      
+
       if (existing) {
         // Update existing record
         await this.supabase
@@ -222,21 +230,19 @@ export class TenantIsolationService {
           .eq('id', existing.id);
       } else {
         // Create new record
-        await this.supabase
-          .from('tenant_usage')
-          .insert({
-            tenant_id: tenantId,
-            metric_type: resource,
-            usage_count: amount,
-            period_start: periodStart.toISOString(),
-            period_end: periodEnd.toISOString(),
-          });
+        await this.supabase.from('tenant_usage').insert({
+          tenant_id: tenantId,
+          metric_type: resource,
+          usage_count: amount,
+          period_start: periodStart.toISOString(),
+          period_end: periodEnd.toISOString(),
+        });
       }
     } catch (error) {
       console.error('Error recording usage:', error);
     }
   }
-  
+
   /**
    * Enforce Row-Level Security (RLS) context
    */
@@ -248,24 +254,20 @@ export class TenantIsolationService {
       p_user_id: userId,
     });
   }
-  
+
   /**
    * Create tenant-scoped Supabase client
    */
   createTenantClient(tenantId: string, userId: string) {
-    const client = createClient(
-      env.supabase.url,
-      env.supabase.anonKey,
-      {
-        global: {
-          headers: {
-            'x-tenant-id': tenantId,
-            'x-user-id': userId,
-          },
+    const client = createClient(env.supabase.url, env.supabase.anonKey, {
+      global: {
+        headers: {
+          'x-tenant-id': tenantId,
+          'x-user-id': userId,
         },
-      }
-    );
-    
+      },
+    });
+
     return client;
   }
 }

@@ -28,23 +28,23 @@ jobs:
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
         run: |
           echo "Syncing environment variables from Supabase to GitHub Secrets..."
-          
+
           # Note: This is a placeholder script
           # In production, you would:
           # 1. Use Supabase CLI to fetch environment variables
           # 2. Use GitHub API to update secrets
           # 3. Validate that all required variables are present
-          
+
           echo "Required variables to sync:"
           echo "- NEXT_PUBLIC_SUPABASE_URL"
           echo "- NEXT_PUBLIC_SUPABASE_ANON_KEY"
           echo "- SUPABASE_SERVICE_ROLE_KEY"
           echo "- SUPABASE_JWT_SECRET"
           echo "- DATABASE_URL"
-          
+
           # Example: Use Supabase CLI to get variables
           # supabase secrets list --project-ref $SUPABASE_PROJECT_REF
-          
+
           echo "Environment variable sync completed (manual sync required)"
 
       - name: Sync to Vercel (if Vercel token available)
@@ -65,14 +65,14 @@ jobs:
             "SUPABASE_SERVICE_ROLE_KEY"
             "DATABASE_URL"
           )
-          
+
           MISSING_VARS=()
           for var in "${REQUIRED_VARS[@]}"; do
             if ! gh secret list | grep -q "$var"; then
               MISSING_VARS+=("$var")
             fi
           done
-          
+
           if [ ${#MISSING_VARS[@]} -gt 0 ]; then
             echo "⚠️ Missing required secrets: ${MISSING_VARS[*]}"
             echo "Please add these secrets manually in GitHub Settings → Secrets"

@@ -1,10 +1,14 @@
-"use client";
+'use client';
 
-import { motion, HTMLMotionProps, Variants } from "framer-motion";
-import { motionVariants, prefersReducedMotion, MotionVariant } from "@/lib/style/motion";
-import { forwardRef, ReactNode } from "react";
+import { motion, HTMLMotionProps, Variants } from 'framer-motion';
+import {
+  motionVariants,
+  prefersReducedMotion,
+  MotionVariant,
+} from '@/lib/style/motion';
+import { forwardRef, ReactNode } from 'react';
 
-export interface RevealProps extends Omit<HTMLMotionProps<"div">, "children"> {
+export interface RevealProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   /**
    * Content to reveal
    */
@@ -35,29 +39,32 @@ export interface RevealProps extends Omit<HTMLMotionProps<"div">, "children"> {
 
 /**
  * Reveal - Wrapper component for entrance animations
- * 
+ *
  * Provides consistent reveal animations for content
  * Respects prefers-reduced-motion
  */
 export const Reveal = forwardRef<HTMLDivElement, RevealProps>(
-  ({ 
-    children, 
-    variant = "fadeInUp", 
-    delay = 0, 
-    staggerDelay = 0,
-    immediate = false,
-    className,
-    ...props 
-  }, ref) => {
+  (
+    {
+      children,
+      variant = 'fadeInUp',
+      delay = 0,
+      staggerDelay = 0,
+      immediate = false,
+      className,
+      ...props
+    },
+    ref
+  ) => {
     const reducedMotion = prefersReducedMotion() || immediate;
     const animationVariant = motionVariants[variant] || motionVariants.fadeInUp;
-    
+
     const transition = {
-      ...(("visible" in (animationVariant as any)
+      ...(('visible' in (animationVariant as any)
         ? (animationVariant as any).visible?.transition
-        : "enter" in (animationVariant as any)
+        : 'enter' in (animationVariant as any)
           ? (animationVariant as any).enter?.transition
-          : "animate" in (animationVariant as any)
+          : 'animate' in (animationVariant as any)
             ? (animationVariant as any).animate?.transition
             : undefined) ?? {}),
       delay: delay + staggerDelay,
@@ -65,19 +72,28 @@ export const Reveal = forwardRef<HTMLDivElement, RevealProps>(
 
     // Extract only the standard variant properties (hidden/visible) for TypeScript
     const standardVariants: Variants = (() => {
-      if ("hidden" in (animationVariant as any) && "visible" in (animationVariant as any)) {
+      if (
+        'hidden' in (animationVariant as any) &&
+        'visible' in (animationVariant as any)
+      ) {
         return {
           hidden: (animationVariant as any).hidden,
           visible: (animationVariant as any).visible,
         };
       }
-      if ("enter" in (animationVariant as any) && "exit" in (animationVariant as any)) {
+      if (
+        'enter' in (animationVariant as any) &&
+        'exit' in (animationVariant as any)
+      ) {
         return {
           hidden: (animationVariant as any).exit,
           visible: (animationVariant as any).enter,
         };
       }
-      if ("initial" in (animationVariant as any) && "animate" in (animationVariant as any)) {
+      if (
+        'initial' in (animationVariant as any) &&
+        'animate' in (animationVariant as any)
+      ) {
         return {
           hidden: (animationVariant as any).initial,
           visible: (animationVariant as any).animate,
@@ -89,8 +105,8 @@ export const Reveal = forwardRef<HTMLDivElement, RevealProps>(
     return (
       <motion.div
         ref={ref}
-        initial={reducedMotion ? false : "hidden"}
-        animate="visible"
+        initial={reducedMotion ? false : 'hidden'}
+        animate='visible'
         variants={standardVariants}
         transition={transition}
         className={className}
@@ -102,4 +118,4 @@ export const Reveal = forwardRef<HTMLDivElement, RevealProps>(
   }
 );
 
-Reveal.displayName = "Reveal";
+Reveal.displayName = 'Reveal';

@@ -1,17 +1,17 @@
 /**
  * Workflows Data Access Layer
- * 
+ *
  * Centralized functions for fetching workflow data from Supabase/API.
  */
 
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from '@/lib/supabase/client';
 
 export interface Workflow {
   id: string;
   name: string;
   description?: string;
   template_id?: string;
-  status: "active" | "paused" | "archived";
+  status: 'active' | 'paused' | 'archived';
   created_at: string;
   updated_at: string;
   user_id?: string;
@@ -29,20 +29,20 @@ export interface WorkflowTemplate {
  * Get all workflows for current user
  */
 export async function getWorkflows(filters?: {
-  status?: Workflow["status"];
+  status?: Workflow['status'];
 }): Promise<Workflow[]> {
   const supabase = createClient();
-  
-  let query = supabase.from("workflows").select("*");
+
+  let query = supabase.from('workflows').select('*');
 
   if (filters?.status) {
-    query = query.eq("status", filters.status);
+    query = query.eq('status', filters.status);
   }
 
-  const { data, error } = await query.order("created_at", { ascending: false });
+  const { data, error } = await query.order('created_at', { ascending: false });
 
   if (error) {
-    throw new Error(error.message || "Failed to fetch workflows");
+    throw new Error(error.message || 'Failed to fetch workflows');
   }
 
   return (data || []) as Workflow[];
@@ -51,21 +51,23 @@ export async function getWorkflows(filters?: {
 /**
  * Get workflow by ID
  */
-export async function getWorkflow(workflowId: string): Promise<Workflow | null> {
+export async function getWorkflow(
+  workflowId: string
+): Promise<Workflow | null> {
   const supabase = createClient();
-  
+
   const { data, error } = await supabase
-    .from("workflows")
-    .select("*")
-    .eq("id", workflowId)
+    .from('workflows')
+    .select('*')
+    .eq('id', workflowId)
     .single();
 
   if (error) {
-    if (error.code === "PGRST116") {
+    if (error.code === 'PGRST116') {
       // Not found
       return null;
     }
-    throw new Error(error.message || "Failed to fetch workflow");
+    throw new Error(error.message || 'Failed to fetch workflow');
   }
 
   return data as Workflow;
@@ -77,7 +79,7 @@ export async function getWorkflow(workflowId: string): Promise<Workflow | null> 
 export async function getWorkflowTemplates(): Promise<WorkflowTemplate[]> {
   // Try API route first, fallback to Supabase
   try {
-    const response = await fetch("/api/workflows/templates");
+    const response = await fetch('/api/workflows/templates');
     if (response.ok) {
       const data = await response.json();
       return data.templates || [];
@@ -88,12 +90,12 @@ export async function getWorkflowTemplates(): Promise<WorkflowTemplate[]> {
 
   const supabase = createClient();
   const { data, error } = await supabase
-    .from("workflow_templates")
-    .select("*")
-    .order("name");
+    .from('workflow_templates')
+    .select('*')
+    .order('name');
 
   if (error) {
-    throw new Error(error.message || "Failed to fetch templates");
+    throw new Error(error.message || 'Failed to fetch templates');
   }
 
   return (data || []) as WorkflowTemplate[];
@@ -103,31 +105,31 @@ export async function getWorkflowTemplates(): Promise<WorkflowTemplate[]> {
  * Create workflow
  */
 export async function createWorkflow(
-  workflow: Omit<Workflow, "id" | "created_at" | "updated_at">
+  workflow: Omit<Workflow, 'id' | 'created_at' | 'updated_at'>
 ): Promise<Workflow> {
   const supabase = createClient();
-  
-  const { data, error } = await (supabase
-    .from("workflows") as any)
+
+  const { data, error } = await (supabase.from('workflows') as any)
     .insert(workflow)
     .select()
     .single();
 
   if (error) {
-    throw new Error(error.message || "Failed to create workflow");
+    throw new Error(error.message || 'Failed to create workflow');
   }
 
   // Track workflow creation in funnel (if user_id available)
   if (workflow.user_id) {
     try {
-      const { trackWorkflowCreate } = await import("@/lib/analytics/funnel-tracking");
+      const { trackWorkflowCreate } =
+        await import('@/lib/analytics/funnel-tracking');
       trackWorkflowCreate(workflow.user_id, (data as { id: string }).id, {
         templateId: workflow.template_id,
         timestamp: new Date().toISOString(),
       });
     } catch (trackingError) {
       // Non-critical, continue
-      console.warn("Failed to track workflow creation", trackingError);
+      console.warn('Failed to track workflow creation', trackingError);
     }
   }
 
@@ -139,19 +141,18 @@ export async function createWorkflow(
  */
 export async function updateWorkflow(
   workflowId: string,
-  updates: Partial<Omit<Workflow, "id" | "created_at" | "updated_at">>
+  updates: Partial<Omit<Workflow, 'id' | 'created_at' | 'updated_at'>>
 ): Promise<Workflow> {
   const supabase = createClient();
-  
-  const { data, error } = await (supabase
-    .from("workflows") as any)
+
+  const { data, error } = await (supabase.from('workflows') as any)
     .update(updates)
-    .eq("id", workflowId)
+    .eq('id', workflowId)
     .select()
     .single();
 
   if (error) {
-    throw new Error(error.message || "Failed to update workflow");
+    throw new Error(error.message || 'Failed to update workflow');
   }
 
   return data as Workflow;
@@ -162,13 +163,13 @@ export async function updateWorkflow(
  */
 export async function deleteWorkflow(workflowId: string): Promise<void> {
   const supabase = createClient();
-  
+
   const { error } = await supabase
-    .from("workflows")
+    .from('workflows')
     .delete()
-    .eq("id", workflowId);
+    .eq('id', workflowId);
 
   if (error) {
-    throw new Error(error.message || "Failed to delete workflow");
+    throw new Error(error.message || 'Failed to delete workflow');
   }
 }

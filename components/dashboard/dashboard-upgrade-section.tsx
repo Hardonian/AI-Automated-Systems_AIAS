@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { WelcomeDashboard } from "@/components/dashboard/welcome-dashboard";
-import { UpgradePrompt } from "@/components/monetization/upgrade-prompt";
-import type { PlanTier } from "@/config/plans";
+import { WelcomeDashboard } from '@/components/dashboard/welcome-dashboard';
+import { UpgradePrompt } from '@/components/monetization/upgrade-prompt';
+import type { PlanTier } from '@/config/plans';
 
 interface UserPlanData {
   plan: PlanTier;
@@ -30,11 +30,11 @@ export function DashboardUpgradeSection({
   useEffect(() => {
     async function fetchUserData() {
       try {
-        const response = await fetch("/api/trial/user-data");
+        const response = await fetch('/api/trial/user-data');
         if (response.ok) {
           const data = await response.json();
           setUserData({
-            plan: data.plan || "free",
+            plan: data.plan || 'free',
             trialDaysRemaining: data.trialDaysRemaining,
             isFirstVisit: data.isFirstVisit || false,
             hasCompletedPretest: data.hasCompletedPretest || false,
@@ -43,9 +43,10 @@ export function DashboardUpgradeSection({
           });
         } else {
           // Fallback to localStorage if API fails
-          const pretestCompleted = localStorage.getItem("pretest_completed") === "true";
+          const pretestCompleted =
+            localStorage.getItem('pretest_completed') === 'true';
           setUserData({
-            plan: initialPlan || "free",
+            plan: initialPlan || 'free',
             trialDaysRemaining: null,
             isFirstVisit: initialFirstVisit || false,
             hasCompletedPretest: pretestCompleted,
@@ -55,9 +56,10 @@ export function DashboardUpgradeSection({
         }
       } catch (error) {
         // Fallback to localStorage
-        const pretestCompleted = localStorage.getItem("pretest_completed") === "true";
+        const pretestCompleted =
+          localStorage.getItem('pretest_completed') === 'true';
         setUserData({
-          plan: initialPlan || "free",
+          plan: initialPlan || 'free',
           trialDaysRemaining: null,
           isFirstVisit: initialFirstVisit || false,
           hasCompletedPretest: pretestCompleted,
@@ -77,7 +79,10 @@ export function DashboardUpgradeSection({
   }
 
   // Show welcome dashboard on first visit
-  if (userData.isFirstVisit && (userData.plan === "trial" || userData.plan === "free")) {
+  if (
+    userData.isFirstVisit &&
+    (userData.plan === 'trial' || userData.plan === 'free')
+  ) {
     return (
       <WelcomeDashboard
         hasCompletedPretest={userData.hasCompletedPretest}
@@ -90,13 +95,13 @@ export function DashboardUpgradeSection({
   }
 
   // Show upgrade prompt for trial/free users
-  if (userData.plan === "trial" || userData.plan === "free") {
+  if (userData.plan === 'trial' || userData.plan === 'free') {
     return (
-      <div className="mb-8">
+      <div className='mb-8'>
         <UpgradePrompt
           currentPlan={userData.plan}
           trialDaysRemaining={userData.trialDaysRemaining || undefined}
-          variant="banner"
+          variant='banner'
         />
       </div>
     );

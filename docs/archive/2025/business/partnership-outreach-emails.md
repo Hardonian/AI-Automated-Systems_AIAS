@@ -13,6 +13,7 @@
 **Subject:** Partnership Opportunity — AI Automation for Shopify Stores
 
 **Body:**
+
 ```
 Hi Shopify Partnership Team,
 
@@ -51,6 +52,7 @@ https://aias-platform.com
 **Subject:** Partnership Opportunity — Wave Accounting Automation
 
 **Body:**
+
 ```
 Hi Wave Accounting Team,
 
@@ -89,6 +91,7 @@ https://aias-platform.com
 **Subject:** Partnership Opportunity — Stripe CAD Payment Processing
 
 **Body:**
+
 ```
 Hi Stripe Partnership Team,
 
@@ -127,6 +130,7 @@ https://aias-platform.com
 **Subject:** Partnership Opportunity — Canadian Business Automation
 
 **Body:**
+
 ```
 Hi [Platform Name] Team,
 
@@ -163,6 +167,7 @@ https://aias-platform.com
 ## Follow-Up Templates
 
 ### Follow-Up 1 (After No Response)
+
 ```
 Subject: Re: Partnership Opportunity — AIAS Platform
 
@@ -186,6 +191,7 @@ Founder & CEO, AIAS Platform
 ```
 
 ### Follow-Up 2 (After Positive Response)
+
 ```
 Subject: Re: Partnership Opportunity — Next Steps
 
@@ -214,12 +220,14 @@ Founder & CEO, AIAS Platform
 ## Partnership Best Practices
 
 ### Do's
+
 - ✅ **Research:** Research the partner's platform, integrations, partnership program
 - ✅ **Personalize:** Mention specific integrations, features, or opportunities
 - ✅ **Value Proposition:** Clearly articulate value proposition for both parties
 - ✅ **Follow Up:** Follow up once (if no response)
 
 ### Don'ts
+
 - ❌ **Generic:** Don't send generic, mass emails
 - ❌ **Pushy:** Don't be pushy or aggressive
 - ❌ **Long Emails:** Don't write long, rambling emails
@@ -230,11 +238,13 @@ Founder & CEO, AIAS Platform
 ## Target Partners
 
 ### Canadian Business Platforms
+
 - Shopify, Wave Accounting, Stripe CAD
 - RBC, TD Bank, Interac
 - Canada Post, Google Workspace (Canadian)
 
 ### Integration Partners
+
 - Gmail, Google Calendar, Slack
 - Notion, WhatsApp Business
 - Mailchimp, Calendly

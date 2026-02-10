@@ -1,9 +1,15 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { logger } from "@/lib/logging/structured-logger";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { logger } from '@/lib/logging/structured-logger';
 
 interface FunnelData {
   signups: number;
@@ -37,17 +43,21 @@ export default function PLGFunnelDashboard() {
 
   async function fetchFunnel() {
     try {
-      const response = await fetch("/api/admin/plg-funnel");
+      const response = await fetch('/api/admin/plg-funnel');
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
       const data = await response.json();
       setFunnel(data);
     } catch (err) {
-      logger.error("Failed to fetch funnel", err instanceof Error ? err : new Error(String(err)), {
-        component: "PLGFunnelPage",
-        action: "fetchFunnel",
-      });
+      logger.error(
+        'Failed to fetch funnel',
+        err instanceof Error ? err : new Error(String(err)),
+        {
+          component: 'PLGFunnelPage',
+          action: 'fetchFunnel',
+        }
+      );
       // Use mock data for now
       setFunnel({
         signups: 100,
@@ -77,36 +87,44 @@ export default function PLGFunnelDashboard() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="text-center">Loading PLG funnel...</div>
+      <div className='container mx-auto p-6'>
+        <div className='text-center'>Loading PLG funnel...</div>
       </div>
     );
   }
 
   if (!funnel) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="text-center">No funnel data available</div>
+      <div className='container mx-auto p-6'>
+        <div className='text-center'>No funnel data available</div>
       </div>
     );
   }
 
   const stages = [
-    { label: "Signups", value: funnel.signups, color: "bg-blue-500" },
-    { label: "Onboarding Started", value: funnel.onboardingStarted, color: "bg-purple-500" },
-    { label: "Onboarding Completed", value: funnel.onboardingCompleted, color: "bg-indigo-500" },
-    { label: "Activations", value: funnel.activations, color: "bg-green-500" },
-    { label: "Upgrades", value: funnel.upgrades, color: "bg-yellow-500" },
-    { label: "Referrals", value: funnel.referrals, color: "bg-orange-500" },
+    { label: 'Signups', value: funnel.signups, color: 'bg-blue-500' },
+    {
+      label: 'Onboarding Started',
+      value: funnel.onboardingStarted,
+      color: 'bg-purple-500',
+    },
+    {
+      label: 'Onboarding Completed',
+      value: funnel.onboardingCompleted,
+      color: 'bg-indigo-500',
+    },
+    { label: 'Activations', value: funnel.activations, color: 'bg-green-500' },
+    { label: 'Upgrades', value: funnel.upgrades, color: 'bg-yellow-500' },
+    { label: 'Referrals', value: funnel.referrals, color: 'bg-orange-500' },
   ];
 
-  const maxValue = Math.max(...stages.map((s) => s.value));
+  const maxValue = Math.max(...stages.map(s => s.value));
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className='container mx-auto space-y-6 p-6'>
       <div>
-        <h1 className="text-3xl font-bold">PLG Funnel Dashboard</h1>
-        <p className="text-muted-foreground mt-2">
+        <h1 className='text-3xl font-bold'>PLG Funnel Dashboard</h1>
+        <p className='mt-2 text-muted-foreground'>
           Visual funnel showing conversion rates and drop-off points
         </p>
       </div>
@@ -114,10 +132,12 @@ export default function PLGFunnelDashboard() {
       <Card>
         <CardHeader>
           <CardTitle>Funnel Visualization</CardTitle>
-          <CardDescription>Signup → Activation → Upgrade → Viral</CardDescription>
+          <CardDescription>
+            Signup → Activation → Upgrade → Viral
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className='space-y-4'>
             {stages.map((stage, index) => {
               const width = (stage.value / maxValue) * 100;
               const prevStage = index > 0 ? stages[index - 1] : null;
@@ -126,16 +146,17 @@ export default function PLGFunnelDashboard() {
                 : 100;
 
               return (
-                <div key={stage.label} className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">{stage.label}</span>
-                    <span className="text-sm text-muted-foreground">
-                      {stage.value} {prevStage && `(${conversionRate.toFixed(1)}%)`}
+                <div key={stage.label} className='space-y-2'>
+                  <div className='flex items-center justify-between'>
+                    <span className='font-medium'>{stage.label}</span>
+                    <span className='text-sm text-muted-foreground'>
+                      {stage.value}{' '}
+                      {prevStage && `(${conversionRate.toFixed(1)}%)`}
                     </span>
                   </div>
-                  <div className="w-full bg-muted rounded-full h-8 relative">
+                  <div className='relative h-8 w-full rounded-full bg-muted'>
                     <div
-                      className={`${stage.color} h-8 rounded-full flex items-center justify-end pr-2 text-white text-sm font-medium`}
+                      className={`${stage.color} flex h-8 items-center justify-end rounded-full pr-2 text-sm font-medium text-white`}
                       style={{ width: `${width}%` }}
                     >
                       {stage.value}
@@ -153,26 +174,36 @@ export default function PLGFunnelDashboard() {
           <CardTitle>Conversion Rates</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
-            <div className="flex justify-between">
+          <div className='space-y-2'>
+            <div className='flex justify-between'>
               <span>Signup → Onboarding</span>
-              <span className="font-medium">{funnel.conversionRates.signupToOnboarding.toFixed(1)}%</span>
+              <span className='font-medium'>
+                {funnel.conversionRates.signupToOnboarding.toFixed(1)}%
+              </span>
             </div>
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <span>Onboarding → Completion</span>
-              <span className="font-medium">{funnel.conversionRates.onboardingToCompletion.toFixed(1)}%</span>
+              <span className='font-medium'>
+                {funnel.conversionRates.onboardingToCompletion.toFixed(1)}%
+              </span>
             </div>
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <span>Completion → Activation</span>
-              <span className="font-medium">{funnel.conversionRates.completionToActivation.toFixed(1)}%</span>
+              <span className='font-medium'>
+                {funnel.conversionRates.completionToActivation.toFixed(1)}%
+              </span>
             </div>
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <span>Activation → Upgrade</span>
-              <span className="font-medium">{funnel.conversionRates.activationToUpgrade.toFixed(1)}%</span>
+              <span className='font-medium'>
+                {funnel.conversionRates.activationToUpgrade.toFixed(1)}%
+              </span>
             </div>
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <span>Upgrade → Referral</span>
-              <span className="font-medium">{funnel.conversionRates.upgradeToReferral.toFixed(1)}%</span>
+              <span className='font-medium'>
+                {funnel.conversionRates.upgradeToReferral.toFixed(1)}%
+              </span>
             </div>
           </div>
         </CardContent>
@@ -184,22 +215,30 @@ export default function PLGFunnelDashboard() {
           <CardDescription>Where users exit the funnel</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
-            <div className="flex justify-between">
+          <div className='space-y-2'>
+            <div className='flex justify-between'>
               <span>Signup → Onboarding</span>
-              <span className="font-medium text-red-600">{funnel.dropOffRates.signupToOnboarding.toFixed(1)}%</span>
+              <span className='font-medium text-red-600'>
+                {funnel.dropOffRates.signupToOnboarding.toFixed(1)}%
+              </span>
             </div>
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <span>Onboarding → Completion</span>
-              <span className="font-medium text-red-600">{funnel.dropOffRates.onboardingToCompletion.toFixed(1)}%</span>
+              <span className='font-medium text-red-600'>
+                {funnel.dropOffRates.onboardingToCompletion.toFixed(1)}%
+              </span>
             </div>
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <span>Completion → Activation</span>
-              <span className="font-medium text-red-600">{funnel.dropOffRates.completionToActivation.toFixed(1)}%</span>
+              <span className='font-medium text-red-600'>
+                {funnel.dropOffRates.completionToActivation.toFixed(1)}%
+              </span>
             </div>
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <span>Activation → Upgrade</span>
-              <span className="font-medium text-red-600">{funnel.dropOffRates.activationToUpgrade.toFixed(1)}%</span>
+              <span className='font-medium text-red-600'>
+                {funnel.dropOffRates.activationToUpgrade.toFixed(1)}%
+              </span>
             </div>
           </div>
         </CardContent>

@@ -1,36 +1,39 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextRequest, NextResponse } from "next/server";
+import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
 
-import { handleApiError } from "@/lib/api/route-handler";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { handleApiError } from '@/lib/api/route-handler';
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/analytics/revenue
  * Get revenue metrics and analytics
- * 
+ *
  * NOTE: This is a scaffold - actual revenue data should come from billing provider
  */
 export async function GET(request: NextRequest) {
   try {
     // Get user from auth (admin only in production)
-    const authHeader = request.headers.get("authorization");
-    const token = authHeader?.startsWith("Bearer ")
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.startsWith('Bearer ')
       ? authHeader.substring(7)
-      : request.cookies.get("sb-access-token")?.value;
+      : request.cookies.get('sb-access-token')?.value;
 
     if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // TODO: Add admin check in production
@@ -38,15 +41,15 @@ export async function GET(request: NextRequest) {
 
     // Get subscription counts by plan
     const { data: subscriptions } = await supabase
-      .from("user_subscriptions")
-      .select("plan_id, subscription_plans(tier, price_monthly)")
-      .eq("status", "active");
+      .from('user_subscriptions')
+      .select('plan_id, subscription_plans(tier, price_monthly)')
+      .eq('status', 'active');
 
     // Get profiles with subscription tiers
     const { data: profiles } = await supabase
-      .from("profiles")
-      .select("subscription_tier")
-      .in("subscription_tier", ["starter", "pro", "enterprise"]);
+      .from('profiles')
+      .select('subscription_tier')
+      .in('subscription_tier', ['starter', 'pro', 'enterprise']);
 
     // Calculate revenue metrics
     const planCounts: Record<string, { count: number; revenue: number }> = {
@@ -60,7 +63,7 @@ export async function GET(request: NextRequest) {
       const plan = sub.subscription_plans;
       if (plan && typeof plan === 'object' && !Array.isArray(plan)) {
         const planObj = plan as { tier?: string; price_monthly?: number };
-        const tier = planObj.tier?.toLowerCase() || "starter";
+        const tier = planObj.tier?.toLowerCase() || 'starter';
         if (tier && tier in planCounts) {
           planCounts[tier]!.count++;
           const price = planObj.price_monthly || 0;
@@ -71,7 +74,7 @@ export async function GET(request: NextRequest) {
 
     // Count from profiles (fallback)
     profiles?.forEach((profile: { subscription_tier?: string }) => {
-      const tier = profile.subscription_tier?.toLowerCase() || "starter";
+      const tier = profile.subscription_tier?.toLowerCase() || 'starter';
       if (tier && tier in planCounts) {
         planCounts[tier]!.count++;
         // Use default prices if not in subscriptions table
@@ -94,8 +97,12 @@ export async function GET(request: NextRequest) {
 
     const mrr = planDistribution.reduce((sum, p) => sum + p.revenue, 0);
     const arr = mrr * 12;
-    const activeSubscriptions = planDistribution.reduce((sum, p) => sum + p.count, 0);
-    const averageRevenuePerUser = activeSubscriptions > 0 ? mrr / activeSubscriptions : 0;
+    const activeSubscriptions = planDistribution.reduce(
+      (sum, p) => sum + p.count,
+      0
+    );
+    const averageRevenuePerUser =
+      activeSubscriptions > 0 ? mrr / activeSubscriptions : 0;
 
     // Calculate churn (placeholder - would need historical data)
     const churnRate = 5.0; // Placeholder
@@ -106,7 +113,10 @@ export async function GET(request: NextRequest) {
       const date = new Date();
       date.setMonth(date.getMonth() - i);
       revenueByMonth.push({
-        month: date.toLocaleDateString("en-US", { month: "short", year: "numeric" }),
+        month: date.toLocaleDateString('en-US', {
+          month: 'short',
+          year: 'numeric',
+        }),
         revenue: mrr * (1 - (11 - i) * 0.05), // Placeholder growth
       });
     }
@@ -121,16 +131,19 @@ export async function GET(request: NextRequest) {
         averageRevenuePerUser: Math.round(averageRevenuePerUser * 100) / 100,
         planDistribution,
         revenueByMonth,
-        note: "Revenue data is calculated from database. For accurate revenue, integrate with billing provider (Stripe/Paddle).",
+        note: 'Revenue data is calculated from database. For accurate revenue, integrate with billing provider (Stripe/Paddle).',
       },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
         },
       }
     );
   } catch (error) {
-    logger.error("Error in GET /api/analytics/revenue", error instanceof Error ? error : undefined);
-    return handleApiError(error, "Failed to get revenue data");
+    logger.error(
+      'Error in GET /api/analytics/revenue',
+      error instanceof Error ? error : undefined
+    );
+    return handleApiError(error, 'Failed to get revenue data');
   }
 }

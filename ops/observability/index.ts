@@ -20,8 +20,10 @@ export function initObservability() {
 
   const sdk = new NodeSDK({
     resource: resourceFromAttributes({
-      [SemanticResourceAttributes.SERVICE_NAME]: process.env.OTEL_SERVICE_NAME || 'aias-platform',
-      [SemanticResourceAttributes.SERVICE_VERSION]: process.env.npm_package_version || '1.0.0',
+      [SemanticResourceAttributes.SERVICE_NAME]:
+        process.env.OTEL_SERVICE_NAME || 'aias-platform',
+      [SemanticResourceAttributes.SERVICE_VERSION]:
+        process.env.npm_package_version || '1.0.0',
     }),
     traceExporter: process.env.OTEL_EXPORTER_OTLP_ENDPOINT
       ? new OTLPTraceExporter({
@@ -52,9 +54,12 @@ export const requestCounter = meter.createCounter('http_requests_total', {
   description: 'Total HTTP requests',
 });
 
-export const requestDuration = meter.createHistogram('http_request_duration_ms', {
-  description: 'HTTP request duration in milliseconds',
-});
+export const requestDuration = meter.createHistogram(
+  'http_request_duration_ms',
+  {
+    description: 'HTTP request duration in milliseconds',
+  }
+);
 
 export const errorCounter = meter.createCounter('http_errors_total', {
   description: 'Total HTTP errors',

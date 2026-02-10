@@ -68,7 +68,7 @@ describe('POST /api/telemetry/ingest', () => {
     });
 
     const res = await POST(req);
-    
+
     expect(res.status).toBeGreaterThanOrEqual(400);
   });
 
@@ -79,7 +79,7 @@ describe('POST /api/telemetry/ingest', () => {
     });
 
     const res = await POST(req);
-    
+
     expect(res.status).toBeGreaterThanOrEqual(400);
   });
 
@@ -97,13 +97,13 @@ describe('POST /api/telemetry/ingest', () => {
     });
 
     const res = await POST(req);
-    
+
     expect(res.status).toBe(500);
   });
 
   it('should track performance metrics', async () => {
     const { telemetry } = await import('@/lib/monitoring/enhanced-telemetry');
-    
+
     (global.fetch as any).mockResolvedValueOnce({
       ok: true,
       status: 200,
@@ -117,7 +117,7 @@ describe('POST /api/telemetry/ingest', () => {
     });
 
     await POST(req);
-    
+
     expect(telemetry.trackPerformance).toHaveBeenCalled();
   });
 });

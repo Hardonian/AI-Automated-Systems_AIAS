@@ -1,44 +1,52 @@
-import { Workflow, Zap, Shield, Smartphone } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
+import { Workflow, Zap, Shield, Smartphone } from 'lucide-react';
+import type { Metadata } from 'next';
+import Link from 'next/link';
 
-import { MobileOptimizedLayout } from "@/components/mobile/mobile-optimized-layout";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { MobileOptimizedLayout } from '@/components/mobile/mobile-optimized-layout';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
 export const metadata: Metadata = {
-  title: "Mobile App — AI Automated Systems",
-  description: "Secure mobile-first experience for AI Automated Systems",
+  title: 'Mobile App — AI Automated Systems',
+  description: 'Secure mobile-first experience for AI Automated Systems',
 };
 
 export default function MobilePage() {
   return (
     <MobileOptimizedLayout>
-      <div className="space-y-6">
-        <div className="text-center space-y-4">
-          <div className="flex justify-center">
-            <Smartphone className="h-16 w-16 text-primary" />
+      <div className='space-y-6'>
+        <div className='space-y-4 text-center'>
+          <div className='flex justify-center'>
+            <Smartphone className='h-16 w-16 text-primary' />
           </div>
-          <h1 className="text-3xl font-bold">AI Automated Systems Mobile</h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Access your workflows and automations securely from any device. 
-            Optimized for mobile with offline support and enterprise-grade security.
+          <h1 className='text-3xl font-bold'>AI Automated Systems Mobile</h1>
+          <p className='mx-auto max-w-2xl text-muted-foreground'>
+            Access your workflows and automations securely from any device.
+            Optimized for mobile with offline support and enterprise-grade
+            security.
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
           <Card>
             <CardHeader>
-              <div className="flex items-center space-x-2">
-                <Shield className="h-5 w-5 text-primary" />
+              <div className='flex items-center space-x-2'>
+                <Shield className='h-5 w-5 text-primary' />
                 <CardTitle>Secure</CardTitle>
               </div>
               <CardDescription>
-                Enterprise-grade security with encrypted communications and secure API endpoints
+                Enterprise-grade security with encrypted communications and
+                secure API endpoints
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <ul className='space-y-2 text-sm text-muted-foreground'>
                 <li>• End-to-end encryption</li>
                 <li>• Secure authentication</li>
                 <li>• Penetration tested</li>
@@ -48,16 +56,17 @@ export default function MobilePage() {
 
           <Card>
             <CardHeader>
-              <div className="flex items-center space-x-2">
-                <Zap className="h-5 w-5 text-primary" />
+              <div className='flex items-center space-x-2'>
+                <Zap className='h-5 w-5 text-primary' />
                 <CardTitle>Fast</CardTitle>
               </div>
               <CardDescription>
-                Optimized for mobile with offline support and intelligent caching
+                Optimized for mobile with offline support and intelligent
+                caching
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <ul className='space-y-2 text-sm text-muted-foreground'>
                 <li>• Offline mode</li>
                 <li>• Smart caching</li>
                 <li>• Instant load</li>
@@ -67,8 +76,8 @@ export default function MobilePage() {
 
           <Card>
             <CardHeader>
-              <div className="flex items-center space-x-2">
-                <Workflow className="h-5 w-5 text-primary" />
+              <div className='flex items-center space-x-2'>
+                <Workflow className='h-5 w-5 text-primary' />
                 <CardTitle>Full Featured</CardTitle>
               </div>
               <CardDescription>
@@ -76,7 +85,7 @@ export default function MobilePage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <ul className='space-y-2 text-sm text-muted-foreground'>
                 <li>• Workflow management</li>
                 <li>• Real-time updates</li>
                 <li>• Push notifications</li>
@@ -85,31 +94,40 @@ export default function MobilePage() {
           </Card>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild size="lg">
-            <Link href="/dashboard">Go to Dashboard</Link>
+        <div className='flex flex-col justify-center gap-4 sm:flex-row'>
+          <Button asChild size='lg'>
+            <Link href='/dashboard'>Go to Dashboard</Link>
           </Button>
-          <Button asChild size="lg" variant="outline">
-            <Link href="/workflows">View Workflows</Link>
+          <Button asChild size='lg' variant='outline'>
+            <Link href='/workflows'>View Workflows</Link>
           </Button>
         </div>
 
-        <Card className="bg-muted/50">
+        <Card className='bg-muted/50'>
           <CardHeader>
             <CardTitle>Install as App</CardTitle>
             <CardDescription>
-              Install AI Automated Systems as a Progressive Web App (PWA) for a native app experience
+              Install AI Automated Systems as a Progressive Web App (PWA) for a
+              native app experience
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              On mobile devices, you can install this app to your home screen for quick access 
-              and offline functionality. Look for the install prompt in your browser.
+            <p className='mb-4 text-sm text-muted-foreground'>
+              On mobile devices, you can install this app to your home screen
+              for quick access and offline functionality. Look for the install
+              prompt in your browser.
             </p>
-            <div className="space-y-2 text-xs text-muted-foreground">
-              <p><strong>iOS:</strong> Tap Share → Add to Home Screen</p>
-              <p><strong>Android:</strong> Tap Menu → Add to Home Screen</p>
-              <p><strong>Desktop:</strong> Click the install icon in your browser address bar</p>
+            <div className='space-y-2 text-xs text-muted-foreground'>
+              <p>
+                <strong>iOS:</strong> Tap Share → Add to Home Screen
+              </p>
+              <p>
+                <strong>Android:</strong> Tap Menu → Add to Home Screen
+              </p>
+              <p>
+                <strong>Desktop:</strong> Click the install icon in your browser
+                address bar
+              </p>
             </div>
           </CardContent>
         </Card>

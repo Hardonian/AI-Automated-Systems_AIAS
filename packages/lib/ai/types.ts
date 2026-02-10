@@ -15,16 +15,30 @@ export const ChatRequestSchema = z.object({
 
 export const AuditRequestSchema = z.object({
   website: z.string().url(),
-  type: z.enum(['seo', 'performance', 'accessibility', 'security', 'comprehensive']),
-  options: z.object({
-    includeScreenshots: z.boolean().default(false),
-    includeRecommendations: z.boolean().default(true),
-    includeMetrics: z.boolean().default(true),
-  }).optional(),
+  type: z.enum([
+    'seo',
+    'performance',
+    'accessibility',
+    'security',
+    'comprehensive',
+  ]),
+  options: z
+    .object({
+      includeScreenshots: z.boolean().default(false),
+      includeRecommendations: z.boolean().default(true),
+      includeMetrics: z.boolean().default(true),
+    })
+    .optional(),
 });
 
 export const EstimateRequestSchema = z.object({
-  projectType: z.enum(['website', 'ecommerce', 'saas', 'mobile', 'ai-integration']),
+  projectType: z.enum([
+    'website',
+    'ecommerce',
+    'saas',
+    'mobile',
+    'ai-integration',
+  ]),
   scope: z.object({
     pages: z.number().positive(),
     features: z.array(z.string()),
@@ -41,9 +55,21 @@ export const EstimateRequestSchema = z.object({
 });
 
 export const ContentGenerationRequestSchema = z.object({
-  type: z.enum(['blog-post', 'social-media', 'email', 'ad-copy', 'product-description']),
+  type: z.enum([
+    'blog-post',
+    'social-media',
+    'email',
+    'ad-copy',
+    'product-description',
+  ]),
   topic: z.string(),
-  tone: z.enum(['professional', 'casual', 'technical', 'creative', 'persuasive']),
+  tone: z.enum([
+    'professional',
+    'casual',
+    'technical',
+    'creative',
+    'persuasive',
+  ]),
   length: z.enum(['short', 'medium', 'long']),
   targetAudience: z.string().optional(),
   keywords: z.array(z.string()).optional(),
@@ -62,8 +88,12 @@ export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 export type ChatRequest = z.infer<typeof ChatRequestSchema>;
 export type AuditRequest = z.infer<typeof AuditRequestSchema>;
 export type EstimateRequest = z.infer<typeof EstimateRequestSchema>;
-export type ContentGenerationRequest = z.infer<typeof ContentGenerationRequestSchema>;
-export type WorkflowGenerationRequest = z.infer<typeof WorkflowGenerationRequestSchema>;
+export type ContentGenerationRequest = z.infer<
+  typeof ContentGenerationRequestSchema
+>;
+export type WorkflowGenerationRequest = z.infer<
+  typeof WorkflowGenerationRequestSchema
+>;
 
 export interface AuditResult {
   type: string;

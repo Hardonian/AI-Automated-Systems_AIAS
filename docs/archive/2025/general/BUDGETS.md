@@ -4,21 +4,21 @@
 
 ## Core Web Vitals
 
-| Metric | Budget | Target |
-|--------|--------|--------|
-| LCP (Largest Contentful Paint) | < 2.5s | < 2.0s |
-| CLS (Cumulative Layout Shift) | < 0.1 | < 0.05 |
-| TBT (Total Blocking Time) | < 300ms | < 200ms |
-| FCP (First Contentful Paint) | < 1.8s | < 1.5s |
-| SI (Speed Index) | < 3.4s | < 3.0s |
+| Metric                         | Budget  | Target  |
+| ------------------------------ | ------- | ------- |
+| LCP (Largest Contentful Paint) | < 2.5s  | < 2.0s  |
+| CLS (Cumulative Layout Shift)  | < 0.1   | < 0.05  |
+| TBT (Total Blocking Time)      | < 300ms | < 200ms |
+| FCP (First Contentful Paint)   | < 1.8s  | < 1.5s  |
+| SI (Speed Index)               | < 3.4s  | < 3.0s  |
 
 ## Bundle Size
 
-| Resource | Budget | Target |
-|----------|--------|--------|
+| Resource           | Budget  | Target  |
+| ------------------ | ------- | ------- |
 | JavaScript (total) | < 170KB | < 150KB |
-| CSS (total) | < 50KB | < 40KB |
-| Images (per page) | < 500KB | < 400KB |
+| CSS (total)        | < 50KB  | < 40KB  |
+| Images (per page)  | < 500KB | < 400KB |
 
 ## Performance Score
 
@@ -30,6 +30,7 @@
 ## Enforcement
 
 These budgets are enforced in CI via:
+
 - Lighthouse CI
 - Bundle analyzer
 - Performance monitoring

@@ -3,9 +3,11 @@
 This directory contains migrations that have been applied to the database or are redundant.
 
 ## Archive Date
+
 2025-01-30
 
 ## Archive Reason
+
 These migrations have been consolidated into the master schema or have already been applied to production databases. They are kept here for historical reference and rollback purposes.
 
 ## Unmigrated Migrations
@@ -13,7 +15,7 @@ These migrations have been consolidated into the master schema or have already b
 The following migrations remain in `/supabase/migrations/` and need to be applied:
 
 1. `20250130000000_agents_and_workflows.sql` - Agents and workflows tables
-2. `20250130000001_billing_and_usage.sql` - Billing and subscription tables  
+2. `20250130000001_billing_and_usage.sql` - Billing and subscription tables
 3. `20250130000002_observability.sql` - Observability and telemetry tables
 
 ## Restoring Archived Migrations

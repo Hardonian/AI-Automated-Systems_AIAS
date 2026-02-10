@@ -58,10 +58,7 @@ const event = interceptAPICall(
 // Intercept content processing
 import { interceptContentProcessing } from '@/guardian/middleware';
 
-const event = interceptContentProcessing(
-  content,
-  'AI analysis'
-);
+const event = interceptContentProcessing(content, 'AI analysis');
 ```
 
 ### Inspector Agent
@@ -121,10 +118,10 @@ const disable = await guardianGPT.explainDisableMonitoring();
 const eventExplanation = await guardianGPT.explainEvent(event);
 
 // Answer general question
-const answer = await guardianGPT.answerQuestion(
-  'What data was used?',
-  { events: [event], report }
-);
+const answer = await guardianGPT.answerQuestion('What data was used?', {
+  events: [event],
+  report,
+});
 ```
 
 ## React Components
@@ -134,7 +131,7 @@ const answer = await guardianGPT.answerQuestion(
 ```tsx
 import TrustDashboard from '@/pages/TrustDashboard';
 
-<Route path="/dashboard/trust" element={<TrustDashboard />} />
+<Route path='/dashboard/trust' element={<TrustDashboard />} />;
 ```
 
 ## Policy Configuration
@@ -165,7 +162,7 @@ risk_weights:
     medium: 0.5
     high: 0.8
     critical: 1.0
-  
+
   likelihood:
     direct: 1.0
     inferred: 0.6
@@ -174,16 +171,16 @@ risk_weights:
 response_actions:
   low:
     - allow
-  
+
   medium:
     - allow
     - mask
-  
+
   high:
     - mask
     - redact
     - alert
-  
+
   critical:
     - block
     - alert

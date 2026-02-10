@@ -13,28 +13,28 @@ export type UnknownRecord = Record<string, unknown>;
  * Type guard for unknown objects
  */
 export function isRecord(value: unknown): value is UnknownRecord {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 /**
  * Type guard for string
  */
 export function isString(value: unknown): value is string {
-  return typeof value === "string";
+  return typeof value === 'string';
 }
 
 /**
  * Type guard for number
  */
 export function isNumber(value: unknown): value is number {
-  return typeof value === "number" && !isNaN(value);
+  return typeof value === 'number' && !isNaN(value);
 }
 
 /**
  * Type guard for boolean
  */
 export function isBoolean(value: unknown): value is boolean {
-  return typeof value === "boolean";
+  return typeof value === 'boolean';
 }
 
 /**
@@ -47,7 +47,9 @@ export function isArray<T>(value: unknown): value is T[] {
 /**
  * Safe JSON parse with type guard
  */
-export function safeJsonParse<T>(json: string): { success: true; data: T } | { success: false; error: string } {
+export function safeJsonParse<T>(
+  json: string
+): { success: true; data: T } | { success: false; error: string } {
   try {
     const parsed = JSON.parse(json);
     return { success: true, data: parsed as T };
@@ -62,7 +64,10 @@ export function safeJsonParse<T>(json: string): { success: true; data: T } | { s
 /**
  * Type-safe object key access
  */
-export function getObjectValue<T>(obj: UnknownRecord, key: string): T | undefined {
+export function getObjectValue<T>(
+  obj: UnknownRecord,
+  key: string
+): T | undefined {
   const value = obj[key];
   return value as T | undefined;
 }
@@ -70,7 +75,11 @@ export function getObjectValue<T>(obj: UnknownRecord, key: string): T | undefine
 /**
  * Type-safe object key set
  */
-export function setObjectValue<T>(obj: UnknownRecord, key: string, value: T): void {
+export function setObjectValue<T>(
+  obj: UnknownRecord,
+  key: string,
+  value: T
+): void {
   obj[key] = value;
 }
 
@@ -94,7 +103,7 @@ export function getErrorMessage(error: unknown): string {
   if (isString(error)) {
     return error;
   }
-  return "Unknown error";
+  return 'Unknown error';
 }
 
 /**
@@ -125,7 +134,7 @@ export async function toResult<T>(
  * Type-safe environment variable getter
  */
 export function getEnvVar(key: string): string | undefined {
-  if (typeof process === "undefined") {
+  if (typeof process === 'undefined') {
     return undefined;
   }
   return process.env[key];
@@ -134,7 +143,10 @@ export function getEnvVar(key: string): string | undefined {
 /**
  * Type-safe environment variable getter with default
  */
-export function getEnvVarWithDefault(key: string, defaultValue: string): string {
+export function getEnvVarWithDefault(
+  key: string,
+  defaultValue: string
+): string {
   return getEnvVar(key) ?? defaultValue;
 }
 

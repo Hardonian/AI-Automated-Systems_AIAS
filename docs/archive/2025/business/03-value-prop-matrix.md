@@ -20,18 +20,21 @@
 #### Jobs to Be Done (JTBD)
 
 **Functional Jobs:**
+
 - Automate repetitive tasks (email, data entry, scheduling)
 - Connect tools (Shopify → accounting → email)
 - Reduce manual errors
 - Scale operations without hiring
 
 **Emotional Jobs:**
+
 - Feel more professional and organized
 - Reduce stress from manual work
 - Gain confidence in using AI/automation
 - Focus on growth, not admin tasks
 
 **Social Jobs:**
+
 - Appear tech-savvy to clients
 - Compete with larger businesses
 - Build a scalable business
@@ -39,12 +42,14 @@
 #### Pains
 
 **High Impact:**
+
 - 💰 **Cost:** CAD $150-500/month for enterprise tools (too expensive)
 - ⏱️ **Time:** 2+ hours to set up automations (too complex)
 - 🔌 **Integration:** Missing Canadian tools (Shopify, Wave, RBC)
 - 🤖 **Context:** Generic AI doesn't understand business workflows
 
 **Medium Impact:**
+
 - 📱 **Mobile:** No mobile app (web-only)
 - 🌐 **Language:** English-only (need French)
 - 🎓 **Learning:** Steep learning curve for advanced features
@@ -52,12 +57,14 @@
 #### Gains
 
 **High Value:**
+
 - ✅ **Time Savings:** 10+ hours/week automated
 - 💵 **Cost Savings:** CAD $49/month vs. $150+ competitors
 - 📈 **Revenue Growth:** Focus on high-value work
 - 🎯 **Accuracy:** 90% reduction in manual errors
 
 **Medium Value:**
+
 - 📊 **Insights:** Analytics on workflow performance
 - 🤝 **Support:** Canadian-friendly support hours
 - 🔒 **Privacy:** PIPEDA-compliant, data in Canada
@@ -75,40 +82,40 @@
 
 #### Pain Relievers
 
-| Pain | Reliever | Effectiveness |
-|------|----------|---------------|
-| High cost | CAD $49/month pricing | 9/10 |
-| Setup complexity | No-code drag-and-drop | 8/10 |
-| Missing integrations | Canadian-first integrations | 9/10 |
-| Generic AI | Industry-specific templates | 7/10 |
-| No mobile | Mobile app (Q2 2024) | 6/10 (planned) |
+| Pain                 | Reliever                    | Effectiveness  |
+| -------------------- | --------------------------- | -------------- |
+| High cost            | CAD $49/month pricing       | 9/10           |
+| Setup complexity     | No-code drag-and-drop       | 8/10           |
+| Missing integrations | Canadian-first integrations | 9/10           |
+| Generic AI           | Industry-specific templates | 7/10           |
+| No mobile            | Mobile app (Q2 2024)        | 6/10 (planned) |
 
 #### Gain Creators
 
-| Gain | Creator | Effectiveness |
-|------|---------|---------------|
-| Time savings | Pre-built templates + automation | 9/10 |
-| Cost savings | Affordable pricing + annual discount | 9/10 |
-| Revenue growth | Focus on high-value work | 8/10 |
-| Accuracy | AI-powered validation + error handling | 8/10 |
-| Insights | Analytics dashboard | 7/10 |
+| Gain           | Creator                                | Effectiveness |
+| -------------- | -------------------------------------- | ------------- |
+| Time savings   | Pre-built templates + automation       | 9/10          |
+| Cost savings   | Affordable pricing + annual discount   | 9/10          |
+| Revenue growth | Focus on high-value work               | 8/10          |
+| Accuracy       | AI-powered validation + error handling | 8/10          |
+| Insights       | Analytics dashboard                    | 7/10          |
 
 ---
 
 ## Competitive Value Matrix
 
-| Value Dimension | AIAS Platform | Zapier | Make (Integromat) | ChatGPT Enterprise |
-|----------------|---------------|--------|-------------------|-------------------|
-| **Price (CAD/month)** | $49 | $50 | $69 | $300+ |
-| **Setup Time** | 30 min | 2 hours | 3 hours | 1 hour |
-| **Canadian Integrations** | ✅ 20+ | ⚠️ 10+ | ⚠️ 8+ | ❌ 0 |
-| **No-Code Builder** | ✅ Yes | ✅ Yes | ✅ Yes | ❌ No |
-| **AI Agents** | ✅ Yes | ❌ No | ❌ No | ✅ Yes |
-| **Templates** | ✅ 50+ | ✅ 100+ | ✅ 200+ | ❌ No |
-| **Mobile App** | Q2 2024 | ✅ Yes | ✅ Yes | ✅ Yes |
-| **Support** | Email (24-48h) | Email + Chat | Email + Chat | Enterprise |
-| **Data Residency** | 🇨🇦 Canada | 🇺🇸 US | 🇪🇺 EU | 🇺🇸 US |
-| **PIPEDA Compliance** | ✅ Yes | ⚠️ Partial | ⚠️ Partial | ⚠️ Partial |
+| Value Dimension           | AIAS Platform  | Zapier       | Make (Integromat) | ChatGPT Enterprise |
+| ------------------------- | -------------- | ------------ | ----------------- | ------------------ |
+| **Price (CAD/month)**     | $49            | $50          | $69               | $300+              |
+| **Setup Time**            | 30 min         | 2 hours      | 3 hours           | 1 hour             |
+| **Canadian Integrations** | ✅ 20+         | ⚠️ 10+       | ⚠️ 8+             | ❌ 0               |
+| **No-Code Builder**       | ✅ Yes         | ✅ Yes       | ✅ Yes            | ❌ No              |
+| **AI Agents**             | ✅ Yes         | ❌ No        | ❌ No             | ✅ Yes             |
+| **Templates**             | ✅ 50+         | ✅ 100+      | ✅ 200+           | ❌ No              |
+| **Mobile App**            | Q2 2024        | ✅ Yes       | ✅ Yes            | ✅ Yes             |
+| **Support**               | Email (24-48h) | Email + Chat | Email + Chat      | Enterprise         |
+| **Data Residency**        | 🇨🇦 Canada      | 🇺🇸 US        | 🇪🇺 EU             | 🇺🇸 US              |
+| **PIPEDA Compliance**     | ✅ Yes         | ⚠️ Partial   | ⚠️ Partial        | ⚠️ Partial         |
 
 **Value Score:** AIAS Platform = 8.5/10 (competitive differentiation)
 
@@ -121,6 +128,7 @@
 **"AI automation that speaks Canadian business — CAD $49/month, no code required."**
 
 **Why it works:**
+
 - Addresses cost barrier (CAD $49 vs. $150+)
 - Emphasizes Canadian-first approach
 - Highlights ease of use (no code)
@@ -189,15 +197,18 @@
 ## Iteration Plan
 
 ### Q1 2024
+
 - ✅ Validate CAD pricing messaging
 - ✅ Test Canadian integrations messaging
 - 🔄 A/B test "time savings" vs. "cost savings"
 
 ### Q2 2024
+
 - Launch mobile app (expand value to on-the-go users)
 - Add French language support (expand to Quebec market)
 
 ### Q3 2024
+
 - Enterprise tier (expand value to mid-market)
 - Advanced analytics (expand value to data-driven users)
 

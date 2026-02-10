@@ -1,13 +1,13 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextRequest, NextResponse } from "next/server";
+import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
 
-import { handleApiError } from "@/lib/api/route-handler";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { handleApiError } from '@/lib/api/route-handler';
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/analytics/time-saved
@@ -16,19 +16,22 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   try {
     // Get user from auth
-    const authHeader = request.headers.get("authorization");
-    const token = authHeader?.startsWith("Bearer ")
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.startsWith('Bearer ')
       ? authHeader.substring(7)
-      : request.cookies.get("sb-access-token")?.value;
+      : request.cookies.get('sb-access-token')?.value;
 
     if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get current month executions
@@ -36,16 +39,20 @@ export async function GET(request: NextRequest) {
     const monthStart = new Date(`${month}-01T00:00:00Z`);
 
     const { data: executions, error } = await supabase
-      .from("workflow_executions")
-      .select("status, meta")
-      .eq("user_id", user.id)
-      .eq("status", "completed")
-      .gte("started_at", monthStart.toISOString());
+      .from('workflow_executions')
+      .select('status, meta')
+      .eq('user_id', user.id)
+      .eq('status', 'completed')
+      .gte('started_at', monthStart.toISOString());
 
     if (error) {
-      logger.error("Failed to get executions", error instanceof Error ? error : new Error(String(error)), {
-        userId: user.id,
-      });
+      logger.error(
+        'Failed to get executions',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          userId: user.id,
+        }
+      );
     }
 
     // Estimate time saved: assume each successful automation saves 5 minutes on average
@@ -65,7 +72,10 @@ export async function GET(request: NextRequest) {
       executions: completedExecutions,
     });
   } catch (error) {
-    logger.error("Error in GET /api/analytics/time-saved", error instanceof Error ? error : undefined);
-    return handleApiError(error, "Failed to calculate time saved");
+    logger.error(
+      'Error in GET /api/analytics/time-saved',
+      error instanceof Error ? error : undefined
+    );
+    return handleApiError(error, 'Failed to calculate time saved');
   }
 }

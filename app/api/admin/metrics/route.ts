@@ -1,12 +1,12 @@
 /**
  * Performance Metrics API
- * 
+ *
  * Returns performance metrics for the dashboard
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 
-import { logger } from "@/lib/logging/structured-logger";
+import { logger } from '@/lib/logging/structured-logger';
 // import { env } from '@/lib/env'; // Will be used for env vars
 // import { cacheService } from '@/lib/cache/cache-service';
 
@@ -15,10 +15,7 @@ export async function GET(request: NextRequest) {
     // Check admin access (simplified - implement proper auth)
     const authHeader = request.headers.get('authorization');
     if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // const searchParams = request.nextUrl.searchParams;
@@ -55,10 +52,14 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(metrics);
   } catch (error) {
-    logger.error('Metrics API error', error instanceof Error ? error : new Error(String(error)), {
-      component: "AdminMetricsAPI",
-      action: "GET",
-    });
+    logger.error(
+      'Metrics API error',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        component: 'AdminMetricsAPI',
+        action: 'GET',
+      }
+    );
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

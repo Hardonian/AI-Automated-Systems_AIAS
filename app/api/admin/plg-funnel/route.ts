@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { logger } from "@/lib/logging/structured-logger";
-import { createServerClient } from "@/lib/supabase/server";
+import { logger } from '@/lib/logging/structured-logger';
+import { createServerClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,23 +14,23 @@ export async function GET() {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
     const { data: signups } = await supabase
-      .from("profiles")
-      .select("id")
-      .gte("created_at", thirtyDaysAgo.toISOString());
+      .from('profiles')
+      .select('id')
+      .gte('created_at', thirtyDaysAgo.toISOString());
 
     // Get onboarding started (users who started onboarding)
     const { data: onboardingStarted } = await supabase
-      .from("user_activations")
-      .select("id")
-      .not("signup_date", "is", null)
-      .gte("signup_date", thirtyDaysAgo.toISOString());
+      .from('user_activations')
+      .select('id')
+      .not('signup_date', 'is', null)
+      .gte('signup_date', thirtyDaysAgo.toISOString());
 
     // Get onboarding completed (users who completed onboarding - approximation: created first workflow)
     const { data: onboardingCompleted } = await supabase
-      .from("user_activations")
-      .select("id")
-      .not("first_workflow_created_at", "is", null)
-      .gte("signup_date", thirtyDaysAgo.toISOString());
+      .from('user_activations')
+      .select('id')
+      .not('first_workflow_created_at', 'is', null)
+      .gte('signup_date', thirtyDaysAgo.toISOString());
 
     // Get activations (users who created first workflow)
     const activations = onboardingCompleted;
@@ -40,9 +40,9 @@ export async function GET() {
 
     // Get referrals (users who referred friends)
     const { data: referrals } = await supabase
-      .from("referrals")
-      .select("id")
-      .gte("created_at", thirtyDaysAgo.toISOString());
+      .from('referrals')
+      .select('id')
+      .gte('created_at', thirtyDaysAgo.toISOString());
 
     const signupCount = signups?.length || 0;
     const onboardingStartedCount = onboardingStarted?.length || 0;
@@ -52,7 +52,9 @@ export async function GET() {
     const referralCount = referrals?.length || 0;
 
     const calculateRate = (current: number, previous: number) => {
-      if (previous === 0) {return 0;}
+      if (previous === 0) {
+        return 0;
+      }
       return (current / previous) * 100;
     };
 
@@ -65,27 +67,44 @@ export async function GET() {
       referrals: referralCount,
       conversionRates: {
         signupToOnboarding: calculateRate(onboardingStartedCount, signupCount),
-        onboardingToCompletion: calculateRate(onboardingCompletedCount, onboardingStartedCount),
-        completionToActivation: calculateRate(activationCount, onboardingCompletedCount),
-        activationToUpgrade: upgradeCount > 0 ? calculateRate(upgradeCount, activationCount) : 0,
-        upgradeToReferral: upgradeCount > 0 ? calculateRate(referralCount, upgradeCount) : 0,
+        onboardingToCompletion: calculateRate(
+          onboardingCompletedCount,
+          onboardingStartedCount
+        ),
+        completionToActivation: calculateRate(
+          activationCount,
+          onboardingCompletedCount
+        ),
+        activationToUpgrade:
+          upgradeCount > 0 ? calculateRate(upgradeCount, activationCount) : 0,
+        upgradeToReferral:
+          upgradeCount > 0 ? calculateRate(referralCount, upgradeCount) : 0,
       },
       dropOffRates: {
-        signupToOnboarding: 100 - calculateRate(onboardingStartedCount, signupCount),
-        onboardingToCompletion: 100 - calculateRate(onboardingCompletedCount, onboardingStartedCount),
-        completionToActivation: 100 - calculateRate(activationCount, onboardingCompletedCount),
-        activationToUpgrade: 100 - (upgradeCount > 0 ? calculateRate(upgradeCount, activationCount) : 0),
+        signupToOnboarding:
+          100 - calculateRate(onboardingStartedCount, signupCount),
+        onboardingToCompletion:
+          100 - calculateRate(onboardingCompletedCount, onboardingStartedCount),
+        completionToActivation:
+          100 - calculateRate(activationCount, onboardingCompletedCount),
+        activationToUpgrade:
+          100 -
+          (upgradeCount > 0 ? calculateRate(upgradeCount, activationCount) : 0),
       },
     };
 
     return NextResponse.json(funnel);
   } catch (error) {
-    logger.error("Error fetching PLG funnel", error instanceof Error ? error : new Error(String(error)), {
-      component: "PLGFunnelAPI",
-      action: "GET",
-    });
+    logger.error(
+      'Error fetching PLG funnel',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        component: 'PLGFunnelAPI',
+        action: 'GET',
+      }
+    );
     return NextResponse.json(
-      { error: "Failed to fetch PLG funnel" },
+      { error: 'Failed to fetch PLG funnel' },
       { status: 500 }
     );
   }

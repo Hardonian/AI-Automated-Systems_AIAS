@@ -4,7 +4,11 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import { CircuitBreaker, circuitBreakerRegistry, withCircuitBreaker } from '@/lib/resilience/circuit-breaker';
+import {
+  CircuitBreaker,
+  circuitBreakerRegistry,
+  withCircuitBreaker,
+} from '@/lib/resilience/circuit-breaker';
 
 describe('CircuitBreaker', () => {
   let breaker: CircuitBreaker;
@@ -158,7 +162,7 @@ describe('CircuitBreaker', () => {
 
   it('should track metrics', async () => {
     await breaker.execute(async () => 'success');
-    
+
     try {
       await breaker.execute(async () => {
         throw new Error('Test error');
@@ -196,9 +200,9 @@ describe('circuitBreakerRegistry', () => {
   it('should reset all breakers', () => {
     const breaker1 = registry.get('service1');
     const breaker2 = registry.get('service2');
-    
+
     registry.resetAll();
-    
+
     expect(breaker1.getState()).toBe('closed');
     expect(breaker2.getState()).toBe('closed');
   });
@@ -206,7 +210,7 @@ describe('circuitBreakerRegistry', () => {
   it('should get all metrics', () => {
     registry.get('service1');
     registry.get('service2');
-    
+
     const metrics = registry.getAllMetrics();
     expect(Object.keys(metrics)).toContain('service1');
     expect(Object.keys(metrics)).toContain('service2');

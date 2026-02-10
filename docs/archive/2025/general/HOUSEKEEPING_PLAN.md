@@ -1,6 +1,7 @@
 > Archived on 2025-11-12. Superseded by: (see docs/final index)
 
 # Repository Housekeeping Plan
+
 **Date:** December 20, 2024  
 **Author:** Scott Hardie  
 **Branch:** housekeeping/auto/20241220-1430
@@ -12,14 +13,16 @@ This comprehensive housekeeping pass will modernize the AIAS Platform repository
 ## Phase 0: Self-Diagnosis Results
 
 ### Repository Topology
+
 - **Type:** Monorepo (pnpm workspace)
-- **Structure:** 
+- **Structure:**
   - Root: Vite + React + TypeScript application
   - `/apps/web`: Next.js application
   - `/packages/lib`: Shared TypeScript library
   - `/packages/config`: Shared configuration
 
 ### Detected Tech Stack
+
 - **Primary Languages:** TypeScript, JavaScript, SQL, YAML, Docker
 - **Frameworks:** React, Next.js, Vite
 - **Package Manager:** pnpm (8.15.0)
@@ -30,7 +33,9 @@ This comprehensive housekeeping pass will modernize the AIAS Platform repository
 - **CI/CD:** GitHub Actions (comprehensive pipeline)
 
 ### Current Tooling Assessment
+
 ✅ **Well Configured:**
+
 - ESLint with TypeScript support and accessibility rules
 - Prettier with Tailwind plugin
 - Comprehensive CI/CD pipeline
@@ -40,6 +45,7 @@ This comprehensive housekeeping pass will modernize the AIAS Platform repository
 - Performance monitoring (Lighthouse)
 
 ⚠️ **Gaps Identified:**
+
 - Missing .gitattributes
 - No pre-commit hooks
 - Inconsistent .gitignore (duplicates)
@@ -51,12 +57,14 @@ This comprehensive housekeeping pass will modernize the AIAS Platform repository
 ## Phase 1: Foundation Improvements (Safe)
 
 ### Quick Wins
+
 1. **Normalize .gitattributes** - Add language detection, LFS hints
 2. **Clean .gitignore** - Remove duplicates, add missing patterns
 3. **Add pre-commit hooks** - Trailing whitespace, EOF, large files
 4. **Create .env.example** - Document all environment variables
 
 ### Structure Enhancements
+
 - Maintain existing structure (well organized)
 - Add missing documentation files
 - Enhance existing CI/CD workflows
@@ -64,16 +72,19 @@ This comprehensive housekeeping pass will modernize the AIAS Platform repository
 ## Phase 2: Tooling Optimization (Per Stack)
 
 ### JavaScript/TypeScript Stack
+
 **Current:** ESLint + Prettier + TypeScript  
 **Action:** Keep existing setup, add missing rules
 
 **Enhancements:**
+
 - Add import sorting rules
 - Enhance accessibility rules
 - Add performance rules
 - Configure pre-commit hooks
 
 ### No Conflicts Detected
+
 - Single formatter (Prettier)
 - Single linter (ESLint)
 - Consistent TypeScript configuration
@@ -81,12 +92,14 @@ This comprehensive housekeeping pass will modernize the AIAS Platform repository
 ## Phase 3: Code Quality Fixes (Non-Breaking)
 
 ### Auto-Fixable Issues
+
 - Format all files with Prettier
 - Fix ESLint auto-fixable issues
 - Normalize file headers
 - Remove unused imports
 
 ### File Organization
+
 - Verify no dead code
 - Check for duplicate files
 - Ensure consistent naming
@@ -94,12 +107,14 @@ This comprehensive housekeeping pass will modernize the AIAS Platform repository
 ## Phase 4: Security & Dependencies
 
 ### Security Measures
+
 - Add Dependabot configuration
 - Enhance secret scanning
 - Update SECURITY.md
 - Audit dependencies for vulnerabilities
 
 ### Dependency Management
+
 - Update lockfiles
 - Resolve critical vulnerabilities
 - Document security policies
@@ -107,7 +122,9 @@ This comprehensive housekeeping pass will modernize the AIAS Platform repository
 ## Phase 5: CI/CD Enhancements
 
 ### Current CI Analysis
+
 **Strengths:**
+
 - Comprehensive pipeline with quality gates
 - Security scanning
 - Performance testing
@@ -115,6 +132,7 @@ This comprehensive housekeeping pass will modernize the AIAS Platform repository
 - Multi-environment deployment
 
 **Improvements:**
+
 - Add caching optimization
 - Enhance error reporting
 - Add branch protection checks
@@ -123,6 +141,7 @@ This comprehensive housekeeping pass will modernize the AIAS Platform repository
 ## Phase 6: Documentation Overhaul
 
 ### Documentation Strategy
+
 - Rewrite README.md in Scott's voice
 - Add comprehensive CONTRIBUTING.md
 - Create CODE_OF_CONDUCT.md
@@ -130,6 +149,7 @@ This comprehensive housekeeping pass will modernize the AIAS Platform repository
 - Add architecture documentation
 
 ### Community Files
+
 - Issue templates (already present)
 - PR template (already present)
 - CODEOWNERS file
@@ -138,12 +158,14 @@ This comprehensive housekeeping pass will modernize the AIAS Platform repository
 ## Phase 7: Branch & PR Management
 
 ### Branch Cleanup
+
 - Identify stale branches
 - Document merge strategy
 - Create branch pruning plan
 - Set up branch protection rules
 
 ### PR Management
+
 - Review existing PRs
 - Document review process
 - Enhance PR templates
@@ -151,12 +173,14 @@ This comprehensive housekeeping pass will modernize the AIAS Platform repository
 ## Phase 8: Final Integration
 
 ### PR Strategy
+
 - Single comprehensive PR
 - Detailed change log
 - Review checklist
 - Rollback plan
 
 ### Success Metrics
+
 - Zero linting errors
 - All tests passing
 - Security scan clean
@@ -166,17 +190,20 @@ This comprehensive housekeeping pass will modernize the AIAS Platform repository
 ## Risk Assessment
 
 ### Low Risk (Auto-Apply)
+
 - Formatting changes
 - Documentation updates
 - Configuration improvements
 - Non-breaking refactors
 
 ### Medium Risk (Review Required)
+
 - Dependency updates
 - CI/CD changes
 - Security policy updates
 
 ### High Risk (Manual Approval Required)
+
 - History rewrites (none planned)
 - Breaking changes (none planned)
 - Production configuration changes
@@ -216,4 +243,4 @@ None - all changes are safe and non-breaking.
 
 ---
 
-*This plan ensures a comprehensive, safe, and effective repository housekeeping pass while maintaining all existing functionality and improving developer experience.*
+_This plan ensures a comprehensive, safe, and effective repository housekeeping pass while maintaining all existing functionality and improving developer experience._

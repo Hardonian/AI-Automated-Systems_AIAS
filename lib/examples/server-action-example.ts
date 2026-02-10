@@ -1,6 +1,6 @@
 /**
  * EXAMPLE: Proper Server Action Pattern
- * 
+ *
  * This file demonstrates the strict production build safety rules:
  * 1. "use server" directive at the top
  * 2. Structured error responses (never throw raw errors)
@@ -8,7 +8,7 @@
  * 4. Proper error handling
  */
 
-"use server";
+'use server';
 
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import type { Database } from '@/types/supabase';
@@ -25,7 +25,7 @@ export type ServerActionResponse<T = unknown> = {
 
 /**
  * Example: Create User Server Action
- * 
+ *
  * ✅ Follows all strict rules:
  * - "use server" at top
  * - Returns structured response
@@ -68,8 +68,7 @@ export async function createUser(
     }
 
     // Supabase query with null safety
-    const { data, error } = await (supabase
-      .from('users') as any)
+    const { data, error } = await (supabase.from('users') as any)
       .insert({ email, name })
       .select()
       .single();
@@ -103,7 +102,7 @@ export async function createUser(
 
 /**
  * Example: Fetch Users Server Action
- * 
+ *
  * ✅ Demonstrates:
  * - Null safety for Supabase arrays
  * - Proper type usage

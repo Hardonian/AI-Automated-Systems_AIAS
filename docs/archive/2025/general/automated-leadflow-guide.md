@@ -53,6 +53,7 @@ Lead Source → Form Capture → CRM (Notion/Airtable) → Email Sequence → Fo
 ### Option A: Notion CRM
 
 **Setup:**
+
 1. Create Notion database: "CRM Leads"
 2. Properties:
    - Name (Title)
@@ -65,6 +66,7 @@ Lead Source → Form Capture → CRM (Notion/Airtable) → Email Sequence → Fo
    - Tags (Multi-select)
 
 **Zapier/Make Action:**
+
 ```json
 {
   "service": "Notion",
@@ -84,6 +86,7 @@ Lead Source → Form Capture → CRM (Notion/Airtable) → Email Sequence → Fo
 ### Option B: Airtable CRM
 
 **Setup:**
+
 1. Create Airtable base: "Lead Management"
 2. Table: "Leads"
 3. Fields:
@@ -94,6 +97,7 @@ Lead Source → Form Capture → CRM (Notion/Airtable) → Email Sequence → Fo
 ### Option C: Google Sheets (Simple)
 
 **Setup:**
+
 1. Create Google Sheet: "CRM Leads"
 2. Columns: Date, Name, Email, Company, Source, Status, Notes
 
@@ -106,26 +110,31 @@ Lead Source → Form Capture → CRM (Notion/Airtable) → Email Sequence → Fo
 **Trigger:** New lead added to CRM
 
 **Email 1: Welcome (Immediate)**
+
 - Template: "Thanks for reaching out!"
 - Content: Acknowledgment, next steps, resource links
 - Delay: 0 minutes
 
 **Email 2: Value Add (Day 2)**
+
 - Template: "Here's how we can help"
 - Content: Case studies, product overview, demo link
 - Delay: 2 days
 
 **Email 3: Social Proof (Day 5)**
+
 - Template: "See what customers are saying"
 - Content: Testimonials, reviews, success stories
 - Delay: 5 days
 
 **Email 4: Offer (Day 10)**
+
 - Template: "Special offer for you"
 - Content: Discount, free trial extension, consultation
 - Delay: 10 days
 
 **Email 5: Final Check-in (Day 14)**
+
 - Template: "Still interested?"
 - Content: Soft ask, unsubscribe option
 - Delay: 14 days
@@ -144,6 +153,7 @@ Lead Source → Form Capture → CRM (Notion/Airtable) → Email Sequence → Fo
 **Trigger:** New lead added to CRM
 
 **Action:** Send Slack DM to #leads channel
+
 ```
 New lead: {{name}} from {{source}}
 Email: {{email}}
@@ -154,6 +164,7 @@ View in CRM: [link]
 ### Calendar Reminders
 
 **For High-Value Leads:**
+
 - If Company field contains certain keywords
 - Create calendar event for follow-up call
 - Set reminder 24 hours after lead capture
@@ -163,6 +174,7 @@ View in CRM: [link]
 **Trigger:** Lead status = "Qualified"
 
 **Action:** Create task in project management tool:
+
 - Tool: Notion, Asana, Trello
 - Task: "Follow up with {{name}} from {{company}}"
 - Due date: +3 days
@@ -172,6 +184,7 @@ View in CRM: [link]
 ### Tagging Conversions
 
 **When lead converts:**
+
 1. Update CRM status → "Converted"
 2. Add conversion date
 3. Tag with product/service purchased
@@ -180,16 +193,19 @@ View in CRM: [link]
 ### Reporting
 
 **Daily:**
+
 - New leads count
 - Conversion rate
 - Top sources
 
 **Weekly:**
+
 - Lead quality score
 - Email open rates
 - Follow-up completion rate
 
 **Monthly:**
+
 - Full funnel analysis
 - Cost per lead
 - ROI by source

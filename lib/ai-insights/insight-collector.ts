@@ -3,19 +3,23 @@
  * Aggregates insights from various sources and generates improvement suggestions
  */
 
-import { analyzeErrors } from "./error-analyzer";
-import { getPredictiveHealthSignals } from "./health-predictor";
-import { analyzeUsagePatterns, detectIncompleteWorkflows, detectFrictionPoints } from "./usage-patterns";
+import { analyzeErrors } from './error-analyzer';
+import { getPredictiveHealthSignals } from './health-predictor';
+import {
+  analyzeUsagePatterns,
+  detectIncompleteWorkflows,
+  detectFrictionPoints,
+} from './usage-patterns';
 
-import { logger } from "@/lib/logging/structured-logger";
+import { logger } from '@/lib/logging/structured-logger';
 
 export interface Insight {
-  type: "usage" | "error" | "health" | "friction" | "optimization";
+  type: 'usage' | 'error' | 'health' | 'friction' | 'optimization';
   category: string;
   title: string;
   description: string;
-  impact: "high" | "medium" | "low";
-  effort: "low" | "medium" | "high";
+  impact: 'high' | 'medium' | 'low';
+  effort: 'low' | 'medium' | 'high';
   priority: number; // 0-100
   data: Record<string, unknown>;
   recommendedAction: string;
@@ -41,19 +45,20 @@ export async function collectInsights(): Promise<WeeklyInsights> {
 
     // 1. Usage pattern insights
     const usagePatterns = await analyzeUsagePatterns(30);
-    const lowAdoptionFeatures = usagePatterns.filter((p) => p.adoptionRate < 10);
+    const lowAdoptionFeatures = usagePatterns.filter(p => p.adoptionRate < 10);
 
     if (lowAdoptionFeatures.length > 0) {
       insights.push({
-        type: "usage",
-        category: "feature_adoption",
-        title: "Low Feature Adoption Detected",
+        type: 'usage',
+        category: 'feature_adoption',
+        title: 'Low Feature Adoption Detected',
         description: `${lowAdoptionFeatures.length} features have <10% adoption rate`,
-        impact: "medium",
-        effort: "low",
+        impact: 'medium',
+        effort: 'low',
         priority: 60,
-        data: { features: lowAdoptionFeatures.map((f) => f.feature) },
-        recommendedAction: "Consider improving feature discoverability or adding tooltips",
+        data: { features: lowAdoptionFeatures.map(f => f.feature) },
+        recommendedAction:
+          'Consider improving feature discoverability or adding tooltips',
       });
     }
 
@@ -61,15 +66,19 @@ export async function collectInsights(): Promise<WeeklyInsights> {
     const incompleteWorkflows = await detectIncompleteWorkflows();
     if (incompleteWorkflows.length > 0) {
       insights.push({
-        type: "friction",
-        category: "workflow_completion",
-        title: "Incomplete Workflows Detected",
+        type: 'friction',
+        category: 'workflow_completion',
+        title: 'Incomplete Workflows Detected',
         description: `${incompleteWorkflows.length} workflows created but never executed`,
-        impact: "high",
-        effort: "medium",
+        impact: 'high',
+        effort: 'medium',
         priority: 75,
-        data: { count: incompleteWorkflows.length, workflows: incompleteWorkflows },
-        recommendedAction: "Send workflow testing prompts or offer setup assistance",
+        data: {
+          count: incompleteWorkflows.length,
+          workflows: incompleteWorkflows,
+        },
+        recommendedAction:
+          'Send workflow testing prompts or offer setup assistance',
       });
     }
 
@@ -79,14 +88,17 @@ export async function collectInsights(): Promise<WeeklyInsights> {
       const topFriction = frictionPoints[0];
       if (topFriction) {
         insights.push({
-          type: "friction",
-          category: "onboarding",
-          title: "Onboarding Friction Detected",
+          type: 'friction',
+          category: 'onboarding',
+          title: 'Onboarding Friction Detected',
           description: `Step "${topFriction.step}" has ${topFriction.dropOffRate.toFixed(1)}% drop-off rate`,
-          impact: "high",
-          effort: "medium",
+          impact: 'high',
+          effort: 'medium',
           priority: 80,
-          data: { step: topFriction.step, dropOffRate: topFriction.dropOffRate },
+          data: {
+            step: topFriction.step,
+            dropOffRate: topFriction.dropOffRate,
+          },
           recommendedAction: `Improve step "${topFriction.step}" with better guidance or simplify the process`,
         });
       }
@@ -98,12 +110,12 @@ export async function collectInsights(): Promise<WeeklyInsights> {
       const topError = errorAnalysis.topErrors[0];
       if (topError && topError.count > 20) {
         insights.push({
-          type: "error",
-          category: "error_pattern",
-          title: "Frequent Error Pattern",
+          type: 'error',
+          category: 'error_pattern',
+          title: 'Frequent Error Pattern',
           description: `"${topError.message}" occurred ${topError.count} times affecting ${topError.affectedUsers} users`,
-          impact: topError.affectedUsers > 10 ? "high" : "medium",
-          effort: "medium",
+          impact: topError.affectedUsers > 10 ? 'high' : 'medium',
+          effort: 'medium',
           priority: 70,
           data: { error: topError },
           recommendedAction: topError.suggestedFix,
@@ -113,35 +125,40 @@ export async function collectInsights(): Promise<WeeklyInsights> {
 
     // 5. Health signal insights
     const healthSignals = await getPredictiveHealthSignals();
-    const criticalSignals = healthSignals.filter((s) => s.severity === "critical" || s.severity === "high");
+    const criticalSignals = healthSignals.filter(
+      s => s.severity === 'critical' || s.severity === 'high'
+    );
     if (criticalSignals.length > 0) {
       insights.push({
-        type: "health",
-        category: "system_health",
-        title: "System Health Issues Detected",
+        type: 'health',
+        category: 'system_health',
+        title: 'System Health Issues Detected',
         description: `${criticalSignals.length} critical/high severity health signals detected`,
-        impact: "high",
-        effort: "high",
+        impact: 'high',
+        effort: 'high',
         priority: 90,
         data: { signals: criticalSignals },
-        recommendedAction: "Review health signals and take immediate action",
+        recommendedAction: 'Review health signals and take immediate action',
       });
     }
 
     // 6. Optimization opportunities
     if (usagePatterns.length > 0) {
-      const trendingDown = usagePatterns.filter((p) => p.trend === "decreasing" && p.usageCount > 10);
+      const trendingDown = usagePatterns.filter(
+        p => p.trend === 'decreasing' && p.usageCount > 10
+      );
       if (trendingDown.length > 0) {
         insights.push({
-          type: "optimization",
-          category: "feature_optimization",
-          title: "Features with Declining Usage",
+          type: 'optimization',
+          category: 'feature_optimization',
+          title: 'Features with Declining Usage',
           description: `${trendingDown.length} features showing declining usage trends`,
-          impact: "medium",
-          effort: "low",
+          impact: 'medium',
+          effort: 'low',
           priority: 50,
-          data: { features: trendingDown.map((f) => f.feature) },
-          recommendedAction: "Investigate why usage is declining and consider improvements or deprecation",
+          data: { features: trendingDown.map(f => f.feature) },
+          recommendedAction:
+            'Investigate why usage is declining and consider improvements or deprecation',
         });
       }
     }
@@ -149,9 +166,9 @@ export async function collectInsights(): Promise<WeeklyInsights> {
     // Calculate summary with single pass instead of multiple filters
     const summary = insights.reduce(
       (acc, i) => {
-        if (i.impact === "high") acc.highImpact++;
-        if (i.effort === "low") acc.lowEffort++;
-        if (i.impact === "high" && i.effort === "low") acc.quickWins.push(i);
+        if (i.impact === 'high') acc.highImpact++;
+        if (i.effort === 'low') acc.lowEffort++;
+        if (i.impact === 'high' && i.effort === 'low') acc.quickWins.push(i);
         return acc;
       },
       { highImpact: 0, lowEffort: 0, quickWins: [] as typeof insights }
@@ -163,7 +180,7 @@ export async function collectInsights(): Promise<WeeklyInsights> {
     insights.sort((a, b) => b.priority - a.priority);
 
     return {
-      period: `Last 7 days (${new Date().toISOString().split("T")[0]})`,
+      period: `Last 7 days (${new Date().toISOString().split('T')[0]})`,
       insights,
       summary: {
         totalInsights: insights.length,
@@ -173,7 +190,10 @@ export async function collectInsights(): Promise<WeeklyInsights> {
       },
     };
   } catch (error) {
-    logger.error("Failed to collect insights", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Failed to collect insights',
+      error instanceof Error ? error : new Error(String(error))
+    );
     return {
       period: `Last 7 days`,
       insights: [],

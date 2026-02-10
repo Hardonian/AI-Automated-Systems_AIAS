@@ -1,6 +1,6 @@
 /**
  * User-Friendly Error Messages
- * 
+ *
  * Provides clear, actionable error messages for users.
  * Replaces technical error messages with user-friendly alternatives.
  */
@@ -30,7 +30,8 @@ export function getUserFriendlyError(
   ) {
     return {
       title: 'Connection Problem',
-      message: 'We couldn\'t connect to our servers. Please check your internet connection and try again.',
+      message:
+        "We couldn't connect to our servers. Please check your internet connection and try again.",
       action: 'Try Again',
     };
   }
@@ -57,7 +58,7 @@ export function getUserFriendlyError(
   ) {
     return {
       title: 'Access Denied',
-      message: 'You don\'t have permission to perform this action.',
+      message: "You don't have permission to perform this action.",
       action: context?.action || 'Go Back',
     };
   }
@@ -99,7 +100,8 @@ export function getUserFriendlyError(
   ) {
     return {
       title: 'Too Many Requests',
-      message: 'You\'ve made too many requests. Please wait a moment and try again.',
+      message:
+        "You've made too many requests. Please wait a moment and try again.",
       action: 'Wait and Retry',
     };
   }
@@ -112,7 +114,8 @@ export function getUserFriendlyError(
   ) {
     return {
       title: 'Server Error',
-      message: 'Something went wrong on our end. We\'ve been notified and are working on a fix.',
+      message:
+        "Something went wrong on our end. We've been notified and are working on a fix.",
       action: 'Try Again',
     };
   }
@@ -134,7 +137,8 @@ export function getUserFriendlyError(
   ) {
     return {
       title: 'Database Error',
-      message: 'We\'re experiencing technical difficulties. Please try again in a moment.',
+      message:
+        "We're experiencing technical difficulties. Please try again in a moment.",
       action: 'Retry',
     };
   }

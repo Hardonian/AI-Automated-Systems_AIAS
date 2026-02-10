@@ -26,7 +26,7 @@ export async function callStripeAPI<T>(
           const response = await fetch(`https://api.stripe.com/v1${endpoint}`, {
             ...options,
             headers: {
-              'Authorization': `Bearer ${apiKey}`,
+              Authorization: `Bearer ${apiKey}`,
               'Content-Type': 'application/x-www-form-urlencoded',
               ...options.headers,
             },
@@ -42,7 +42,7 @@ export async function callStripeAPI<T>(
           }
 
           const data = await response.json();
-          
+
           logger.info('Stripe API call successful', {
             endpoint,
             attempt: attempt + 1,
@@ -51,7 +51,7 @@ export async function callStripeAPI<T>(
           return data as T;
         } catch (error) {
           lastError = error instanceof Error ? error : new Error(String(error));
-          
+
           // Don't retry on non-retryable errors
           if (error instanceof NetworkError && !error.retryable) {
             throw error;
@@ -72,7 +72,9 @@ export async function callStripeAPI<T>(
       }
 
       // All retries failed
-      throw lastError || new NetworkError('Stripe API call failed after retries');
+      throw (
+        lastError || new NetworkError('Stripe API call failed after retries')
+      );
     },
     async () => {
       // Fallback - throw error as payment operations shouldn't silently fail

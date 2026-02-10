@@ -46,16 +46,16 @@ env:
   SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
   SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
   SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
-  
+
   # Email Configuration (from GitHub Secrets)
   RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
   SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-  
+
   # Vercel Configuration (from GitHub Secrets)
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  
+
   # Application Configuration
   NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://aiautomatedsystems.ca' }}
   NEXT_PUBLIC_APP_ENV: ${{ github.event.inputs.environment || 'production' }}
@@ -219,18 +219,18 @@ jobs:
         run: |
           echo "Verifying content pages are accessible..."
           SITE_URL="${{ env.NEXT_PUBLIC_SITE_URL }}"
-          
+
           pages=(
             "/systems-thinking"
             "/automation-guide"
             "/canadian-automation"
             "/blog/10-automation-workflows-save-time"
           )
-          
+
           for page in "${pages[@]}"; do
             echo "✅ $page would be checked at ${SITE_URL}${page}"
           done
-          
+
           echo ""
           echo "📋 Deployment Checklist:"
           echo "  [ ] Verify email cadence function is deployed"

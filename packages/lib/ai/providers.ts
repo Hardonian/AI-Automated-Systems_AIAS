@@ -5,18 +5,18 @@ import OpenAI from 'openai';
 
 import { logger } from '../observability';
 
-import { 
-  AIProvider, 
-  ChatRequest, 
-  AuditRequest, 
-  EstimateRequest, 
-  ContentGenerationRequest, 
-  WorkflowGenerationRequest, 
+import {
+  AIProvider,
+  ChatRequest,
+  AuditRequest,
+  EstimateRequest,
+  ContentGenerationRequest,
+  WorkflowGenerationRequest,
   AIResponse,
   AuditResult,
   EstimateResult,
   ContentResult,
-  WorkflowResult
+  WorkflowResult,
 } from './types';
 
 class OpenAIProvider implements AIProvider {
@@ -33,11 +33,12 @@ class OpenAIProvider implements AIProvider {
   }
 
   async chat(request: ChatRequest): Promise<AIResponse> {
-    const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = request.messages.map(msg => ({
-      role: msg.role as 'system' | 'user' | 'assistant',
-      content: msg.content,
-    }));
-    
+    const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] =
+      request.messages.map(msg => ({
+        role: msg.role as 'system' | 'user' | 'assistant',
+        content: msg.content,
+      }));
+
     const response = await this.client.chat.completions.create({
       model: request.model || 'gpt-4',
       messages,
@@ -47,22 +48,25 @@ class OpenAIProvider implements AIProvider {
 
     return {
       content: response.choices[0]?.message?.content || '',
-      usage: response.usage ? {
-        promptTokens: response.usage.prompt_tokens || 0,
-        completionTokens: response.usage.completion_tokens || 0,
-        totalTokens: response.usage.total_tokens || 0,
-      } : undefined,
+      usage: response.usage
+        ? {
+            promptTokens: response.usage.prompt_tokens || 0,
+            completionTokens: response.usage.completion_tokens || 0,
+            totalTokens: response.usage.total_tokens || 0,
+          }
+        : undefined,
       model: response.model,
       provider: this.name,
     };
   }
 
   async *streamChat(request: ChatRequest): AsyncIterable<string> {
-    const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = request.messages.map(msg => ({
-      role: msg.role as 'system' | 'user' | 'assistant',
-      content: msg.content,
-    }));
-    
+    const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] =
+      request.messages.map(msg => ({
+        role: msg.role as 'system' | 'user' | 'assistant',
+        content: msg.content,
+      }));
+
     const stream = await this.client.chat.completions.create({
       model: request.model || 'gpt-4',
       messages,
@@ -81,11 +85,15 @@ class OpenAIProvider implements AIProvider {
 
   async generateAudit(request: AuditRequest): Promise<AuditResult> {
     const prompt = `Generate a comprehensive ${request.type} audit for ${request.website}. Include detailed analysis, recommendations, and metrics.`;
-    
+
     const response = await this.chat({
       messages: [
-        { role: 'system', content: 'You are an expert web auditor specializing in SEO, performance, accessibility, and security.' },
-        { role: 'user', content: prompt }
+        {
+          role: 'system',
+          content:
+            'You are an expert web auditor specializing in SEO, performance, accessibility, and security.',
+        },
+        { role: 'user', content: prompt },
       ],
       model: 'gpt-4',
       stream: false,
@@ -103,11 +111,15 @@ class OpenAIProvider implements AIProvider {
 
   async generateEstimate(request: EstimateRequest): Promise<EstimateResult> {
     const prompt = `Generate a detailed project estimate for a ${request.projectType} project with ${request.scope.pages} pages, features: ${request.scope.features.join(', ')}, timeline: ${request.scope.timeline}.`;
-    
+
     const response = await this.chat({
       messages: [
-        { role: 'system', content: 'You are an expert project manager and technical consultant.' },
-        { role: 'user', content: prompt }
+        {
+          role: 'system',
+          content:
+            'You are an expert project manager and technical consultant.',
+        },
+        { role: 'user', content: prompt },
       ],
       model: 'gpt-4',
       stream: false,
@@ -123,13 +135,19 @@ class OpenAIProvider implements AIProvider {
     };
   }
 
-  async generateContent(request: ContentGenerationRequest): Promise<ContentResult> {
+  async generateContent(
+    request: ContentGenerationRequest
+  ): Promise<ContentResult> {
     const prompt = `Generate ${request.type} content about "${request.topic}" with a ${request.tone} tone, ${request.length} length. Target audience: ${request.targetAudience || 'general'}. Keywords: ${request.keywords?.join(', ') || 'none'}.`;
-    
+
     const response = await this.chat({
       messages: [
-        { role: 'system', content: 'You are a professional content writer and marketing expert.' },
-        { role: 'user', content: prompt }
+        {
+          role: 'system',
+          content:
+            'You are a professional content writer and marketing expert.',
+        },
+        { role: 'user', content: prompt },
       ],
       model: 'gpt-4',
       stream: false,
@@ -145,13 +163,18 @@ class OpenAIProvider implements AIProvider {
     };
   }
 
-  async generateWorkflow(request: WorkflowGenerationRequest): Promise<WorkflowResult> {
+  async generateWorkflow(
+    request: WorkflowGenerationRequest
+  ): Promise<WorkflowResult> {
     const prompt = `Generate an automated workflow for a ${request.businessType} business. Goals: ${request.goals.join(', ')}. Current processes: ${request.currentProcesses.join(', ')}. Pain points: ${request.painPoints.join(', ')}. Budget: ${request.budget}, Timeline: ${request.timeline}.`;
-    
+
     const response = await this.chat({
       messages: [
-        { role: 'system', content: 'You are an expert business process automation consultant.' },
-        { role: 'user', content: prompt }
+        {
+          role: 'system',
+          content: 'You are an expert business process automation consultant.',
+        },
+        { role: 'user', content: prompt },
       ],
       model: 'gpt-4',
       stream: false,
@@ -197,13 +220,18 @@ class AnthropicProvider implements AIProvider {
         }>;
       };
     };
-    
+
     const response = await clientWithMessages.messages.create({
       model: request.model || 'claude-3-sonnet-20240229',
       max_tokens: request.maxTokens || 1000,
       temperature: request.temperature || 0.7,
       messages: request.messages.map(msg => ({
-        role: msg.role === 'assistant' ? 'assistant' : msg.role === 'system' ? 'assistant' : 'user',
+        role:
+          msg.role === 'assistant'
+            ? 'assistant'
+            : msg.role === 'system'
+              ? 'assistant'
+              : 'user',
         content: msg.content,
       })),
     });
@@ -230,23 +258,35 @@ class AnthropicProvider implements AIProvider {
           temperature: number;
           messages: Array<{ role: string; content: string }>;
           stream: true;
-        }) => AsyncIterable<{ type: string; delta?: { type: string; text?: string } }>;
+        }) => AsyncIterable<{
+          type: string;
+          delta?: { type: string; text?: string };
+        }>;
       };
     };
-    
+
     const stream = await clientWithMessages.messages.create({
       model: request.model || 'claude-3-sonnet-20240229',
       max_tokens: request.maxTokens || 1000,
       temperature: request.temperature || 0.7,
       messages: request.messages.map(msg => ({
-        role: msg.role === 'assistant' ? 'assistant' : msg.role === 'system' ? 'assistant' : 'user',
+        role:
+          msg.role === 'assistant'
+            ? 'assistant'
+            : msg.role === 'system'
+              ? 'assistant'
+              : 'user',
         content: msg.content,
       })),
       stream: true,
     });
 
     for await (const chunk of stream) {
-      if (chunk.type === 'content_block_delta' && chunk.delta?.type === 'text_delta' && chunk.delta.text) {
+      if (
+        chunk.type === 'content_block_delta' &&
+        chunk.delta?.type === 'text_delta' &&
+        chunk.delta.text
+      ) {
         yield chunk.delta.text;
       }
     }
@@ -254,11 +294,15 @@ class AnthropicProvider implements AIProvider {
 
   async generateAudit(request: AuditRequest): Promise<AuditResult> {
     const prompt = `Generate a comprehensive ${request.type} audit for ${request.website}. Include detailed analysis, recommendations, and metrics.`;
-    
+
     const response = await this.chat({
       messages: [
-        { role: 'system', content: 'You are an expert web auditor specializing in SEO, performance, accessibility, and security.' },
-        { role: 'user', content: prompt }
+        {
+          role: 'system',
+          content:
+            'You are an expert web auditor specializing in SEO, performance, accessibility, and security.',
+        },
+        { role: 'user', content: prompt },
       ],
       model: 'claude-3-sonnet-20240229',
       stream: false,
@@ -276,11 +320,15 @@ class AnthropicProvider implements AIProvider {
 
   async generateEstimate(request: EstimateRequest): Promise<EstimateResult> {
     const prompt = `Generate a detailed project estimate for a ${request.projectType} project with ${request.scope.pages} pages, features: ${request.scope.features.join(', ')}, timeline: ${request.scope.timeline}.`;
-    
+
     const response = await this.chat({
       messages: [
-        { role: 'system', content: 'You are an expert project manager and technical consultant.' },
-        { role: 'user', content: prompt }
+        {
+          role: 'system',
+          content:
+            'You are an expert project manager and technical consultant.',
+        },
+        { role: 'user', content: prompt },
       ],
       model: 'claude-3-sonnet-20240229',
       stream: false,
@@ -296,13 +344,19 @@ class AnthropicProvider implements AIProvider {
     };
   }
 
-  async generateContent(request: ContentGenerationRequest): Promise<ContentResult> {
+  async generateContent(
+    request: ContentGenerationRequest
+  ): Promise<ContentResult> {
     const prompt = `Generate ${request.type} content about "${request.topic}" with a ${request.tone} tone, ${request.length} length. Target audience: ${request.targetAudience || 'general'}. Keywords: ${request.keywords?.join(', ') || 'none'}.`;
-    
+
     const response = await this.chat({
       messages: [
-        { role: 'system', content: 'You are a professional content writer and marketing expert.' },
-        { role: 'user', content: prompt }
+        {
+          role: 'system',
+          content:
+            'You are a professional content writer and marketing expert.',
+        },
+        { role: 'user', content: prompt },
       ],
       model: 'claude-3-sonnet-20240229',
       stream: false,
@@ -318,13 +372,18 @@ class AnthropicProvider implements AIProvider {
     };
   }
 
-  async generateWorkflow(request: WorkflowGenerationRequest): Promise<WorkflowResult> {
+  async generateWorkflow(
+    request: WorkflowGenerationRequest
+  ): Promise<WorkflowResult> {
     const prompt = `Generate an automated workflow for a ${request.businessType} business. Goals: ${request.goals.join(', ')}. Current processes: ${request.currentProcesses.join(', ')}. Pain points: ${request.painPoints.join(', ')}. Budget: ${request.budget}, Timeline: ${request.timeline}.`;
-    
+
     const response = await this.chat({
       messages: [
-        { role: 'system', content: 'You are an expert business process automation consultant.' },
-        { role: 'user', content: prompt }
+        {
+          role: 'system',
+          content: 'You are an expert business process automation consultant.',
+        },
+        { role: 'user', content: prompt },
       ],
       model: 'claude-3-sonnet-20240229',
       stream: false,
@@ -353,8 +412,10 @@ class GoogleProvider implements AIProvider {
   }
 
   async chat(request: ChatRequest): Promise<AIResponse> {
-    const model = this.client.getGenerativeModel({ model: request.model || 'gemini-pro' });
-    
+    const model = this.client.getGenerativeModel({
+      model: request.model || 'gemini-pro',
+    });
+
     const prompt = request.messages
       .map(msg => `${msg.role}: ${msg.content}`)
       .join('\n');
@@ -376,14 +437,16 @@ class GoogleProvider implements AIProvider {
   }
 
   async *streamChat(request: ChatRequest): AsyncIterable<string> {
-    const model = this.client.getGenerativeModel({ model: request.model || 'gemini-pro' });
-    
+    const model = this.client.getGenerativeModel({
+      model: request.model || 'gemini-pro',
+    });
+
     const prompt = request.messages
       .map(msg => `${msg.role}: ${msg.content}`)
       .join('\n');
 
     const result = await model.generateContentStream(prompt);
-    
+
     for await (const chunk of result.stream) {
       const chunkText = chunk.text();
       if (chunkText) {
@@ -394,11 +457,15 @@ class GoogleProvider implements AIProvider {
 
   async generateAudit(request: AuditRequest): Promise<AuditResult> {
     const prompt = `Generate a comprehensive ${request.type} audit for ${request.website}. Include detailed analysis, recommendations, and metrics.`;
-    
+
     const response = await this.chat({
       messages: [
-        { role: 'system', content: 'You are an expert web auditor specializing in SEO, performance, accessibility, and security.' },
-        { role: 'user', content: prompt }
+        {
+          role: 'system',
+          content:
+            'You are an expert web auditor specializing in SEO, performance, accessibility, and security.',
+        },
+        { role: 'user', content: prompt },
       ],
       model: 'gemini-pro',
       stream: false,
@@ -416,11 +483,15 @@ class GoogleProvider implements AIProvider {
 
   async generateEstimate(request: EstimateRequest): Promise<EstimateResult> {
     const prompt = `Generate a detailed project estimate for a ${request.projectType} project with ${request.scope.pages} pages, features: ${request.scope.features.join(', ')}, timeline: ${request.scope.timeline}.`;
-    
+
     const response = await this.chat({
       messages: [
-        { role: 'system', content: 'You are an expert project manager and technical consultant.' },
-        { role: 'user', content: prompt }
+        {
+          role: 'system',
+          content:
+            'You are an expert project manager and technical consultant.',
+        },
+        { role: 'user', content: prompt },
       ],
       model: 'gemini-pro',
       stream: false,
@@ -436,13 +507,19 @@ class GoogleProvider implements AIProvider {
     };
   }
 
-  async generateContent(request: ContentGenerationRequest): Promise<ContentResult> {
+  async generateContent(
+    request: ContentGenerationRequest
+  ): Promise<ContentResult> {
     const prompt = `Generate ${request.type} content about "${request.topic}" with a ${request.tone} tone, ${request.length} length. Target audience: ${request.targetAudience || 'general'}. Keywords: ${request.keywords?.join(', ') || 'none'}.`;
-    
+
     const response = await this.chat({
       messages: [
-        { role: 'system', content: 'You are a professional content writer and marketing expert.' },
-        { role: 'user', content: prompt }
+        {
+          role: 'system',
+          content:
+            'You are a professional content writer and marketing expert.',
+        },
+        { role: 'user', content: prompt },
       ],
       model: 'gemini-pro',
       stream: false,
@@ -458,13 +535,18 @@ class GoogleProvider implements AIProvider {
     };
   }
 
-  async generateWorkflow(request: WorkflowGenerationRequest): Promise<WorkflowResult> {
+  async generateWorkflow(
+    request: WorkflowGenerationRequest
+  ): Promise<WorkflowResult> {
     const prompt = `Generate an automated workflow for a ${request.businessType} business. Goals: ${request.goals.join(', ')}. Current processes: ${request.currentProcesses.join(', ')}. Pain points: ${request.painPoints.join(', ')}. Budget: ${request.budget}, Timeline: ${request.timeline}.`;
-    
+
     const response = await this.chat({
       messages: [
-        { role: 'system', content: 'You are an expert business process automation consultant.' },
-        { role: 'user', content: prompt }
+        {
+          role: 'system',
+          content: 'You are an expert business process automation consultant.',
+        },
+        { role: 'user', content: prompt },
       ],
       model: 'gemini-pro',
       stream: false,
@@ -483,7 +565,7 @@ class GoogleProvider implements AIProvider {
 
 export function createAIProvider(providerName?: string): AIProvider {
   const provider = providerName || config.ai.primaryProvider;
-  
+
   switch (provider) {
     case 'openai':
       return new OpenAIProvider();
@@ -498,15 +580,18 @@ export function createAIProvider(providerName?: string): AIProvider {
 
 export function createFallbackAIProvider(): AIProvider {
   const providers = ['openai', 'anthropic', 'gemini'];
-  
+
   for (const provider of providers) {
     try {
       return createAIProvider(provider);
     } catch (error) {
-      logger.warn({ err: error, provider }, `Failed to initialize ${provider} provider`);
+      logger.warn(
+        { err: error, provider },
+        `Failed to initialize ${provider} provider`
+      );
       continue;
     }
   }
-  
+
   throw new Error('No AI providers available');
 }

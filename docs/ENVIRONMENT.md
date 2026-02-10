@@ -14,26 +14,28 @@ Supabase Dashboard → Settings → API holds the canonical values for all Supab
 
 ### Required Variables in Supabase
 
-| Variable | Description | Where to Find |
-|----------|-------------|---------------|
-| `DATABASE_URL` | PostgreSQL connection string | Use Supabase Postgres password / pooler password (or use UpStash Postgres) |
-| `DIRECT_URL` | Direct PostgreSQL connection (for migrations) | Same as DATABASE_URL or UpStash Postgres direct URL |
-| `UPSTASH_POSTGRES_URL` | UpStash Postgres connection string (optional) | UpStash Console → Database → Connection String |
-| `UPSTASH_POSTGRES_DIRECT_URL` | UpStash Postgres direct connection (optional) | UpStash Console → Database → Direct Connection |
-| `SUPABASE_URL` | Your Supabase project URL | Settings → API → Project URL |
-| `SUPABASE_ANON_KEY` | Anonymous/public key | Settings → API → anon/public key |
-| `SUPABASE_SERVICE_ROLE_KEY` | Service role key (bypasses RLS) | Settings → API → service_role key |
-| `SUPABASE_JWT_SECRET` | JWT signing secret | Settings → API → JWT Secret |
-| `SUPABASE_PROJECT_REF` | Project reference ID | Found in project URL |
+| Variable                      | Description                                   | Where to Find                                                              |
+| ----------------------------- | --------------------------------------------- | -------------------------------------------------------------------------- |
+| `DATABASE_URL`                | PostgreSQL connection string                  | Use Supabase Postgres password / pooler password (or use UpStash Postgres) |
+| `DIRECT_URL`                  | Direct PostgreSQL connection (for migrations) | Same as DATABASE_URL or UpStash Postgres direct URL                        |
+| `UPSTASH_POSTGRES_URL`        | UpStash Postgres connection string (optional) | UpStash Console → Database → Connection String                             |
+| `UPSTASH_POSTGRES_DIRECT_URL` | UpStash Postgres direct connection (optional) | UpStash Console → Database → Direct Connection                             |
+| `SUPABASE_URL`                | Your Supabase project URL                     | Settings → API → Project URL                                               |
+| `SUPABASE_ANON_KEY`           | Anonymous/public key                          | Settings → API → anon/public key                                           |
+| `SUPABASE_SERVICE_ROLE_KEY`   | Service role key (bypasses RLS)               | Settings → API → service_role key                                          |
+| `SUPABASE_JWT_SECRET`         | JWT signing secret                            | Settings → API → JWT Secret                                                |
+| `SUPABASE_PROJECT_REF`        | Project reference ID                          | Found in project URL                                                       |
 
 ### Database URL Format
 
 #### Option 1: Supabase PostgreSQL
+
 ```
 postgresql://postgres:{SUPABASE_DB_PASSWORD}@db.{SUPABASE_PROJECT_REF}.supabase.co:5432/postgres?sslmode=require
 ```
 
 #### Option 2: UpStash Postgres (Recommended for Prisma)
+
 ```
 UPSTASH_POSTGRES_URL=postgresql://default:password@host.upstash.io:5432/defaultdb
 UPSTASH_POSTGRES_DIRECT_URL=postgresql://default:password@host.upstash.io:5432/defaultdb
@@ -56,6 +58,7 @@ GitHub Actions workflows require server-side secrets to run builds, tests, and d
 Add these in: **Repository → Settings → Secrets and variables → Actions → New repository secret**
 
 #### Core Supabase Secrets
+
 - `DATABASE_URL` - PostgreSQL connection string
 - `SUPABASE_URL` - Supabase project URL
 - `SUPABASE_ANON_KEY` - Anonymous/public key
@@ -65,14 +68,17 @@ Add these in: **Repository → Settings → Secrets and variables → Actions �
 - `SUPABASE_ACCESS_TOKEN` - For Supabase CLI operations
 
 #### Public Variables (for client-side builds)
+
 - `NEXT_PUBLIC_SUPABASE_URL` - Public Supabase URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Public anonymous key
 
 #### CI/CD Secrets
+
 - `VERCEL_TOKEN` - Vercel API token for deployments
 - `GITHUB_TOKEN` - GitHub token (usually auto-provided)
 
 #### Optional Secrets
+
 - `OPENAI_API_KEY` - For AI features
 - `STRIPE_SECRET_KEY` - For payment processing
 - `STRIPE_WEBHOOK_SECRET` - For Stripe webhooks
@@ -100,6 +106,7 @@ Vercel requires environment variables for all deployment environments (Productio
 Add these in: **Vercel Dashboard → Your Project → Settings → Environment Variables**
 
 #### Server-Side Variables (All Environments)
+
 - `DATABASE_URL`
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
@@ -110,12 +117,14 @@ Add these in: **Vercel Dashboard → Your Project → Settings → Environment V
 - `NEXTAUTH_SECRET` - Generate with: `openssl rand -base64 32`
 
 #### Public Variables (All Environments)
+
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `NEXT_PUBLIC_SITE_URL` - Your app URL
 - `NEXT_PUBLIC_APP_ENV` - `production`, `preview`, or `development`
 
 #### Optional Variables
+
 - `STRIPE_SECRET_KEY` - For payment features
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` - For payment features
 - `OPENAI_API_KEY` - For AI features
@@ -126,6 +135,7 @@ Add these in: **Vercel Dashboard → Your Project → Settings → Environment V
 ### Environment-Specific Configuration
 
 Vercel supports different values per environment:
+
 - **Production**: Use production Supabase project values
 - **Preview**: Can use staging Supabase project or same as production
 - **Development**: Use local development values
@@ -139,6 +149,7 @@ vercel env pull .env.local
 ```
 
 This requires:
+
 1. Vercel CLI installed: `npm i -g vercel`
 2. Logged in: `vercel login`
 3. Project linked: `vercel link`
@@ -150,6 +161,7 @@ This requires:
 ### Setup Steps
 
 1. **Copy the example file:**
+
    ```bash
    cp .env.example .env.local
    ```
@@ -160,6 +172,7 @@ This requires:
    - Construct `DATABASE_URL` using the format above
 
 3. **Or pull from Vercel:**
+
    ```bash
    vercel env pull .env.local
    ```
@@ -182,6 +195,7 @@ This requires:
 ### Environment Variable Loading Order
 
 Next.js loads environment variables in this order (later overrides earlier):
+
 1. `.env`
 2. `.env.local`
 3. `.env.development` / `.env.production` / `.env.test`
@@ -196,6 +210,7 @@ Next.js loads environment variables in this order (later overrides earlier):
 Use this checklist to ensure all environments are properly configured:
 
 ### Supabase Configuration
+
 - [ ] Create Supabase project (if not exists)
 - [ ] Copy `SUPABASE_URL` from Settings → API
 - [ ] Copy `SUPABASE_ANON_KEY` from Settings → API
@@ -205,6 +220,7 @@ Use this checklist to ensure all environments are properly configured:
 - [ ] Construct `DATABASE_URL` using service role key
 
 ### GitHub Actions Secrets
+
 - [ ] Add `DATABASE_URL` secret
 - [ ] Add `SUPABASE_URL` secret
 - [ ] Add `SUPABASE_ANON_KEY` secret
@@ -217,6 +233,7 @@ Use this checklist to ensure all environments are properly configured:
 - [ ] Run Env Smoke Test CI workflow to verify
 
 ### Vercel Environment Variables
+
 - [ ] Add all server-side variables to Production environment
 - [ ] Add all server-side variables to Preview environment
 - [ ] Add all server-side variables to Development environment
@@ -227,6 +244,7 @@ Use this checklist to ensure all environments are properly configured:
 - [ ] Deploy and verify `/api/health` endpoint returns `ok: true`
 
 ### Local Development
+
 - [ ] Create `.env.local` from `.env.example`
 - [ ] Fill in all Supabase values
 - [ ] Set `NODE_ENV=development`
@@ -236,6 +254,7 @@ Use this checklist to ensure all environments are properly configured:
 - [ ] Test `/api/health` endpoint locally
 
 ### Verification
+
 - [ ] Run Env Smoke Test CI workflow
 - [ ] Deploy to Vercel Preview
 - [ ] Call `/api/health` on Preview deployment
@@ -248,25 +267,26 @@ Use this checklist to ensure all environments are properly configured:
 
 ### Required Server-Side Variables
 
-| Variable | Required For | Description |
-|----------|--------------|-------------|
-| `DATABASE_URL` | Database connections | PostgreSQL connection string |
-| `SUPABASE_URL` | Supabase API | Supabase project URL |
-| `SUPABASE_ANON_KEY` | Supabase API | Anonymous/public key |
+| Variable                    | Required For         | Description                     |
+| --------------------------- | -------------------- | ------------------------------- |
+| `DATABASE_URL`              | Database connections | PostgreSQL connection string    |
+| `SUPABASE_URL`              | Supabase API         | Supabase project URL            |
+| `SUPABASE_ANON_KEY`         | Supabase API         | Anonymous/public key            |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-side Supabase | Service role key (bypasses RLS) |
-| `SUPABASE_JWT_SECRET` | JWT validation | JWT signing secret |
-| `SUPABASE_PROJECT_REF` | Supabase CLI | Project reference ID |
+| `SUPABASE_JWT_SECRET`       | JWT validation       | JWT signing secret              |
+| `SUPABASE_PROJECT_REF`      | Supabase CLI         | Project reference ID            |
 
 ### Required Public Variables
 
-| Variable | Required For | Description |
-|----------|--------------|-------------|
-| `NEXT_PUBLIC_SUPABASE_URL` | Client-side Supabase | Public Supabase URL |
+| Variable                        | Required For         | Description          |
+| ------------------------------- | -------------------- | -------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Client-side Supabase | Public Supabase URL  |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Client-side Supabase | Public anonymous key |
 
 ### Optional Variables
 
 See `.env.example` for a complete list of optional variables including:
+
 - Stripe configuration
 - OAuth providers
 - Monitoring services

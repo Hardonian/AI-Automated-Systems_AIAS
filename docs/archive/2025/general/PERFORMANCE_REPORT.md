@@ -7,16 +7,17 @@
 
 ## Executive Summary
 
-| Metric | Current | Target (SLO) | Status |
-|--------|---------|--------------|--------|
-| TTFB (ms) | — | ≤200 | ⚠️ No data |
-| API P95 (ms) | — | ≤400 | ⚠️ No data |
-| LCP (s) | — | ≤2.5 | ⚠️ No data |
-| Uptime (%) | — | ≥99.9 | ⚠️ No data |
+| Metric       | Current | Target (SLO) | Status     |
+| ------------ | ------- | ------------ | ---------- |
+| TTFB (ms)    | —       | ≤200         | ⚠️ No data |
+| API P95 (ms) | —       | ≤400         | ⚠️ No data |
+| LCP (s)      | —       | ≤2.5         | ⚠️ No data |
+| Uptime (%)   | —       | ≥99.9        | ⚠️ No data |
 
 ## Web Vitals
 
 ### Core Web Vitals
+
 - **LCP (Largest Contentful Paint):** {{ lcp_ms }}ms {{ lcp_status }}
 - **CLS (Cumulative Layout Shift):** {{ cls }} {{ cls_status }}
 - **INP (Interaction to Next Paint):** {{ inp_ms }}ms {{ inp_status }}
@@ -24,6 +25,7 @@
 - **FCP (First Contentful Paint):** {{ fcp_ms }}ms {{ fcp_status }}
 
 ### Performance Budgets
+
 - **JavaScript Bundle Size:** {{ js_bundle_kb }}KB
 - **CSS Bundle Size:** {{ css_bundle_kb }}KB
 - **Image Optimization:** {{ image_optimization_pct }}% optimized
@@ -31,11 +33,13 @@
 ## API Performance
 
 ### P95 Latency
+
 - **Overall API P95:** {{ api_p95_ms }}ms {{ api_p95_status }}
 - **Database Queries:** {{ db_p95_ms }}ms
 - **External API Calls:** {{ external_p95_ms }}ms
 
 ### Error Rates
+
 - **4xx Errors:** {{ error_4xx_pct }}%
 - **5xx Errors:** {{ error_5xx_pct }}%
 - **Timeout Rate:** {{ timeout_pct }}%
@@ -43,6 +47,7 @@
 ## Mobile Performance (Expo)
 
 ### TTI Trend
+
 **Time to Interactive (TTI)** metrics from Expo mobile apps:
 
 - **Current TTI:** {{ expo_tti_ms }}ms
@@ -53,6 +58,7 @@
 **Note:** TTI telemetry is gated by `EXPO_PUBLIC_TELEMETRY=true`. Metrics are collected via `/api/telemetry` endpoint with `platform: "ios"` or `platform: "android"`.
 
 ### Bundle Metrics
+
 - **Bundle Size:** {{ expo_bundle_mb }}MB
 - **Build Duration:** {{ expo_build_min }}min
 - **Build Success Rate:** {{ expo_success_pct }}%
@@ -60,11 +66,13 @@
 ## Infrastructure
 
 ### Uptime
+
 - **Current Uptime:** {{ uptime_pct }}% {{ uptime_status }}
 - **Incidents (30d):** {{ incidents_count }}
 - **MTTR (Mean Time to Recovery):** {{ mttr_min }}min
 
 ### Cost Tracking
+
 - **Vercel (Current Month):** ${{ vercel_cost }} / ${{ vercel_budget }} {{ vercel_status }}
 - **Supabase (Current Month):** ${{ supabase_cost }} / ${{ supabase_budget }} {{ supabase_status }}
 - **Expo (Current Month):** ${{ expo_cost }} / ${{ expo_budget }} {{ expo_status }}

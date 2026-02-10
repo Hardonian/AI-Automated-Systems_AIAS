@@ -60,12 +60,14 @@ See `ops/vercel-env-check.md` for complete environment variable matrix.
 
 ### Required Variables
 
-**Browser-Safe (NEXT_PUBLIC_*):**
+**Browser-Safe (NEXT*PUBLIC*\*):**
+
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `NEXT_PUBLIC_SITE_URL` (optional)
 
 **Server-Only (Never Exposed):**
+
 - `SUPABASE_SERVICE_ROLE_KEY` ⚠️ **CRITICAL SECRET**
 - `DATABASE_URL` ⚠️ **CRITICAL SECRET**
 - `ADMIN_BASIC_AUTH` (format: "username:password")
@@ -84,6 +86,7 @@ See `ops/vercel-env-check.md` for complete environment variable matrix.
 ### Middleware Configuration (`middleware.ts`)
 
 ✅ **Implemented:**
+
 - Strict-Transport-Security: `max-age=63072000; includeSubDomains; preload`
 - X-Frame-Options: `SAMEORIGIN`
 - X-Content-Type-Options: `nosniff`
@@ -97,6 +100,7 @@ See `ops/vercel-env-check.md` for complete environment variable matrix.
 **Mode:** strict
 
 **Directives:**
+
 ```
 default-src 'self'
 script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co https://*.supabase.in
@@ -115,6 +119,7 @@ upgrade-insecure-requests
 ### Preview Environment Protection
 
 ✅ **Implemented:**
+
 - Preview detection via hostname patterns (`-git-`, `.vercel.app`)
 - Admin paths protected: `/admin`, `/admin/*`
 - Basic Auth enforcement for preview deployments
@@ -124,10 +129,12 @@ upgrade-insecure-requests
 ### Admin Path Protection
 
 **Protected Paths:**
+
 - `/admin`
 - `/admin/*`
 
 **Authentication:**
+
 - Vercel deployments: Uses Vercel Access Controls (platform-level)
 - Other deployments: Basic Auth via `ADMIN_BASIC_AUTH` environment variable
 
@@ -138,31 +145,35 @@ upgrade-insecure-requests
 ### Next.js Configuration (`next.config.ts`)
 
 ✅ **Image Domains:**
+
 - `images.unsplash.com`
 - `cdn.shopify.com`
 - `**.supabase.co`
 - `**.supabase.in`
 
 ✅ **ISR Revalidation:**
+
 - Default: 60 seconds (configured via `revalidate` in route handlers)
 
 ### Vercel.json Caching Headers
 
 ✅ **Static Assets:**
+
 - `/_next/static/*`: `public, max-age=31536000, immutable`
 - `/assets/*`: `public, max-age=31536000, immutable`
 
 ✅ **API Routes:**
+
 - `/api/*`: `no-store, no-cache, must-revalidate`
 
 ### Cache Strategy
 
-| Path Pattern | Cache-Control | Notes |
-|-------------|---------------|-------|
+| Path Pattern      | Cache-Control                         | Notes                 |
+| ----------------- | ------------------------------------- | --------------------- |
 | `/_next/static/*` | `public, max-age=31536000, immutable` | Next.js static assets |
-| `/assets/*` | `public, max-age=31536000, immutable` | Application assets |
-| `/api/*` | `no-store, no-cache, must-revalidate` | API endpoints |
-| `/api/health` | `no-store` | Health check |
+| `/assets/*`       | `public, max-age=31536000, immutable` | Application assets    |
+| `/api/*`          | `no-store, no-cache, must-revalidate` | API endpoints         |
+| `/api/health`     | `no-store`                            | Health check          |
 
 ---
 
@@ -171,6 +182,7 @@ upgrade-insecure-requests
 ### `/api/health`
 
 ✅ **Status:** Implemented
+
 - **Runtime:** Edge
 - **Response:** `{ ok: true, ts: <timestamp>, timestamp: <ISO string> }`
 - **Cache:** `no-store, no-cache, must-revalidate`
@@ -178,6 +190,7 @@ upgrade-insecure-requests
 ### `/admin/metrics.json`
 
 ✅ **Status:** Implemented
+
 - **Runtime:** Edge
 - **Protection:** Admin authentication required
 - **Response:** Performance metrics placeholders (LCP, TTFB, etc.)
@@ -186,6 +199,7 @@ upgrade-insecure-requests
 ### `/api/telemetry`
 
 ✅ **Status:** Already exists
+
 - **Runtime:** Edge
 - **Purpose:** Performance beacon ingestion
 - **Rate Limit:** 100 requests/minute
@@ -199,12 +213,14 @@ upgrade-insecure-requests
 ✅ **Implemented**
 
 **Validations:**
+
 1. Health endpoint returns 200
 2. Security headers present (`strict-transport-security`, `x-frame-options`, `x-content-type-options`, `content-security-policy`)
 3. Preview environment protection (robots.txt, preview header)
 4. Admin basic auth (if configured)
 
 **Usage:**
+
 ```bash
 VALIDATE_BASE_URL=https://your-app.vercel.app node scripts/vercel-validate.mjs
 ```
@@ -214,10 +230,12 @@ VALIDATE_BASE_URL=https://your-app.vercel.app node scripts/vercel-validate.mjs
 ✅ **Implemented**
 
 **Triggers:**
+
 - Pull requests to `main`
 - Pushes to `main`
 
 **Steps:**
+
 1. Checkout code
 2. Install dependencies (pnpm)
 3. Build project
@@ -227,6 +245,7 @@ VALIDATE_BASE_URL=https://your-app.vercel.app node scripts/vercel-validate.mjs
 7. Comment PR (if preview URL available)
 
 **Secrets Required:**
+
 - `VALIDATE_BASE_URL` (optional): Preview deployment URL for full validation
 
 ---
@@ -245,6 +264,7 @@ vercel domains ls
 ### Access Control Recommendations
 
 **For `/admin` paths:**
+
 1. **Vercel Access Controls** (recommended for Vercel deployments)
    - Configure in Vercel Dashboard → Project → Settings → Access Control
    - Add team members or email addresses
@@ -266,17 +286,20 @@ vercel domains ls
 ✅ **Status:** Enabled (if `enableAnalytics: true`)
 
 **Setup:**
+
 1. Enable Vercel Analytics in Vercel Dashboard
 2. Add `@vercel/analytics` package (if not already present)
 3. Configure `VERCEL_ANALYTICS_ID` environment variable
 
 **Metrics Endpoint:**
+
 - `/admin/metrics.json` - Returns performance metrics placeholders
 - Populate with Vercel Analytics API data
 
 ### Telemetry Endpoint
 
 ✅ **Status:** Already implemented
+
 - **Endpoint:** `/api/telemetry`
 - **Method:** POST
 - **Purpose:** Client-side performance beacon ingestion
@@ -291,6 +314,7 @@ vercel domains ls
 ✅ **Expected:** `main`
 
 **Verification:**
+
 ```bash
 vercel project
 # Check "Production Branch" field
@@ -299,6 +323,7 @@ vercel project
 ### Build Configuration
 
 ✅ **Configured in `vercel.json`:**
+
 - **Build Command:** `pnpm run db:generate && pnpm run build`
 - **Install Command:** `pnpm install`
 - **Dev Command:** `pnpm run dev`
@@ -309,6 +334,7 @@ vercel project
 ⚠️ **Verify:** No erroneous "Ignore Build Step" configuration that blocks production deployments
 
 **Check in Vercel Dashboard:**
+
 - Project → Settings → Git → Ignore Build Step
 - Should be empty or only exclude specific paths
 
@@ -319,6 +345,7 @@ vercel project
 ### Local Validation
 
 Run validation script locally:
+
 ```bash
 VALIDATE_BASE_URL=http://localhost:3000 VERBOSE=true node scripts/vercel-validate.mjs
 ```
@@ -326,6 +353,7 @@ VALIDATE_BASE_URL=http://localhost:3000 VERBOSE=true node scripts/vercel-validat
 ### Production Validation
 
 After deployment, validate production:
+
 ```bash
 VALIDATE_BASE_URL=https://your-app.vercel.app node scripts/vercel-validate.mjs
 ```
@@ -358,6 +386,7 @@ VALIDATE_BASE_URL=https://your-app.vercel.app node scripts/vercel-validate.mjs
 ### Manual Actions Required ⚠️
 
 1. **Vercel CLI Verification:**
+
    ```bash
    vercel whoami
    vercel teams ls
@@ -390,6 +419,7 @@ VALIDATE_BASE_URL=https://your-app.vercel.app node scripts/vercel-validate.mjs
 ### Files Created/Modified
 
 **Created:**
+
 - `ops/vercel-env-check.md` - Environment variable matrix
 - `scripts/vercel-validate.mjs` - Validation script
 - `.github/workflows/vercel-guard.yml` - CI validation workflow
@@ -398,6 +428,7 @@ VALIDATE_BASE_URL=https://your-app.vercel.app node scripts/vercel-validate.mjs
 - `VERCEL_HARDENING_REPORT.md` - This report
 
 **Modified:**
+
 - `middleware.ts` - Enhanced with preview protection and CSP
 - `next.config.ts` - Added image domains
 - `vercel.json` - Added caching headers and security headers

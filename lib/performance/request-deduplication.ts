@@ -35,7 +35,7 @@ export function deduplicateRequest<T>(
   ttl: number = 5000 // Default 5 second deduplication window
 ): Promise<T> {
   const existing = pendingRequests.get(key);
-  
+
   if (existing) {
     // Check if request is still valid
     if (Date.now() - existing.timestamp < ttl) {
@@ -44,19 +44,19 @@ export function deduplicateRequest<T>(
     // Request expired, remove it
     pendingRequests.delete(key);
   }
-  
+
   const promise = requestFn().finally(() => {
     // Remove from pending after completion
     setTimeout(() => {
       pendingRequests.delete(key);
     }, 100);
   });
-  
+
   pendingRequests.set(key, {
     promise,
     timestamp: Date.now(),
   });
-  
+
   return promise;
 }
 

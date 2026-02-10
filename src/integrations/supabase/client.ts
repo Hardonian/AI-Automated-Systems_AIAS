@@ -4,10 +4,10 @@ import type { Database } from './types';
 
 /**
  * Supabase Client Configuration
- * 
+ *
  * All values are loaded dynamically from environment variables.
  * No hardcoded credentials are used.
- * 
+ *
  * Environment variables are sourced from:
  * - Vercel: Dashboard → Settings → Environment Variables
  * - Supabase: Dashboard → Settings → API
@@ -23,30 +23,43 @@ function getOptionalEnvVar(key: string, viteKey?: string): string | undefined {
   // Using eval to avoid TypeScript parsing issues with import.meta
   try {
     // eslint-disable-next-line no-eval
-    const hasImportMeta = typeof eval !== 'undefined' && typeof eval('typeof import') !== 'undefined';
+    const hasImportMeta =
+      typeof eval !== 'undefined' &&
+      typeof eval('typeof import') !== 'undefined';
     if (hasImportMeta) {
       // eslint-disable-next-line no-eval
       const importMeta = eval('import.meta');
       if (importMeta && importMeta.env) {
-        const viteValue = importMeta.env[viteKey || key] || importMeta.env[`VITE_${key}`];
-        if (viteValue) {return viteValue;}
+        const viteValue =
+          importMeta.env[viteKey || key] || importMeta.env[`VITE_${key}`];
+        if (viteValue) {
+          return viteValue;
+        }
       }
     }
   } catch {
     // import.meta may not be available
   }
-  
+
   // Try Next.js environment variables
   if (typeof process !== 'undefined' && process.env) {
     const nextValue = process.env[key] || process.env[`NEXT_PUBLIC_${key}`];
-    if (nextValue) {return nextValue;}
+    if (nextValue) {
+      return nextValue;
+    }
   }
-  
+
   return undefined;
 }
 
-const SUPABASE_URL = getOptionalEnvVar('NEXT_PUBLIC_SUPABASE_URL', 'VITE_SUPABASE_URL');
-const SUPABASE_PUBLISHABLE_KEY = getOptionalEnvVar('NEXT_PUBLIC_SUPABASE_ANON_KEY', 'VITE_SUPABASE_ANON_KEY');
+const SUPABASE_URL = getOptionalEnvVar(
+  'NEXT_PUBLIC_SUPABASE_URL',
+  'VITE_SUPABASE_URL'
+);
+const SUPABASE_PUBLISHABLE_KEY = getOptionalEnvVar(
+  'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+  'VITE_SUPABASE_ANON_KEY'
+);
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";

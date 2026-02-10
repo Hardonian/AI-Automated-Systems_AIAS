@@ -9,12 +9,14 @@
 ## EXECUTION SUMMARY
 
 ### Migration Applied
+
 - **File:** `PATCH.sql`
 - **Status:** ✅ Completed successfully
 - **Execution Time:** < 5 seconds
 - **Errors:** None
 
 ### Verification Results
+
 - **File:** `quick_verify.py`
 - **Status:** ✅ All checks passed
 
@@ -23,22 +25,26 @@
 ## WHAT WAS CREATED/UPDATED
 
 ### ✅ Foundational Tables
+
 - `tenants` - Already existed, verified structure
-- `tenant_members` - Already existed, verified structure  
+- `tenant_members` - Already existed, verified structure
 - `user_tenants` - **CREATED** (backward compatibility view)
 
 ### ✅ Core Tables Created
+
 - `agents` - **CREATED** (15 columns, with tenant_id)
 - `agent_executions` - **CREATED** (11 columns, with tenant_id)
 - `workflows` - **CREATED** (16 columns, with tenant_id)
 - `workflow_executions` - Already existed, **ADDED tenant_id column**
 
 ### ✅ Billing Tables Created
+
 - `subscriptions` - **CREATED** (13 columns)
 - `usage_metrics` - **CREATED** (6 columns)
 - `billing_events` - **CREATED** (5 columns)
 
 ### ✅ Observability Tables Created
+
 - `telemetry_events` - Already existed, **ADDED tenant_id column**
 - `workflow_execution_logs` - **CREATED** (12 columns)
 - `agent_execution_logs` - **CREATED** (10 columns)
@@ -46,14 +52,17 @@
 - `performance_metrics` - **CREATED** (5 columns)
 
 ### ✅ Webhook Tables Created
+
 - `webhook_endpoints` - **CREATED** (8 columns)
 - `artifacts` - **CREATED** (8 columns)
 
 ### ✅ Functions Created
+
 - `update_updated_at_column()` - **CREATED** (trigger function)
 - `generate_webhook_secret()` - **CREATED** (webhook secret generator)
 
 ### ✅ Indexes Created
+
 - **agents:** 3 indexes (tenant_id, enabled, category)
 - **agent_executions:** 5 indexes (agent_id, user_id, tenant_id, status, started_at)
 - **workflows:** 3 indexes (tenant_id, enabled, category)
@@ -61,6 +70,7 @@
 - Plus indexes on all other tables
 
 ### ✅ RLS Enabled
+
 - All tables have Row Level Security enabled
 - **agents:** ✅ RLS enabled
 - **workflows:** ✅ RLS enabled
@@ -71,6 +81,7 @@
 - All other tables: ✅ RLS enabled
 
 ### ✅ RLS Policies Created
+
 - **agents:** 4 policies (SELECT, INSERT, UPDATE, DELETE)
 - **workflows:** 4 policies (SELECT, INSERT, UPDATE, DELETE)
 - **agent_executions:** 2 policies (SELECT, INSERT)
@@ -87,6 +98,7 @@
 - **artifacts:** 2 policies
 
 ### ✅ Triggers Created
+
 - `update_agents_updated_at` - Auto-updates updated_at on agents
 - `update_workflows_updated_at` - Auto-updates updated_at on workflows
 - `update_subscriptions_updated_at` - Auto-updates updated_at on subscriptions
@@ -94,12 +106,14 @@
 - `update_tenant_members_updated_at` - Auto-updates updated_at on tenant_members
 
 ### ✅ Grants Configured
+
 - **public:** Revoked (least-privilege)
 - **authenticated:** Granted SELECT/INSERT/UPDATE/DELETE (RLS enforced)
 - **anon:** Granted SELECT on user_tenants view only
 - **service_role:** Full access (bypasses RLS)
 
 ### ✅ Realtime Configuration
+
 - Checked for `supabase_realtime` publication
 - Tables added to publication if publication exists (conditional)
 
@@ -152,6 +166,7 @@
 ## ROLLBACK
 
 If needed, `ROLLBACK.sql` is available but **limited**:
+
 - Removes policies, triggers, views (safe)
 - Does NOT drop tables/columns (would lose data)
 - Does NOT restore previous state

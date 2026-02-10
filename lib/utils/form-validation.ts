@@ -1,6 +1,6 @@
 /**
  * Form Validation Utilities
- * 
+ *
  * Provides consistent validation patterns and user-friendly error messages.
  */
 
@@ -103,7 +103,10 @@ export function validateURL(url: string): ValidationResult {
 /**
  * Required field validation
  */
-export function validateRequired(value: string, fieldName?: string): ValidationResult {
+export function validateRequired(
+  value: string,
+  fieldName?: string
+): ValidationResult {
   if (!value || value.trim().length === 0) {
     return {
       valid: false,

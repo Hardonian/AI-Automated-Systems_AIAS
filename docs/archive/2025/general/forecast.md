@@ -6,4 +6,4 @@
 
 ---
 
-*Generated: Initial scaffold*
+_Generated: Initial scaffold_

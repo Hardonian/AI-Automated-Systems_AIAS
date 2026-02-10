@@ -3,10 +3,10 @@
  * Validates data integrity and invariants
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 interface SanityCheckResult {
   name: string;
@@ -28,21 +28,21 @@ export async function runSanityChecks(): Promise<{
   // Check 1: No orphaned memberships
   try {
     const { data: orphanedMemberships, error } = await supabase
-      .from("memberships")
-      .select("id, user_id, org_id")
-      .then(async (result) => {
+      .from('memberships')
+      .select('id, user_id, org_id')
+      .then(async result => {
         if (result.error) throw result.error;
-        
-        // Check if users exist
-        const userIds = [...new Set(result.data.map((m) => m.user_id))];
-        const { data: users } = await supabase
-          .from("users")
-          .select("id")
-          .in("id", userIds);
 
-        const existingUserIds = new Set(users?.map((u) => u.id) || []);
+        // Check if users exist
+        const userIds = [...new Set(result.data.map(m => m.user_id))];
+        const { data: users } = await supabase
+          .from('users')
+          .select('id')
+          .in('id', userIds);
+
+        const existingUserIds = new Set(users?.map(u => u.id) || []);
         const orphaned = result.data.filter(
-          (m) => !existingUserIds.has(m.user_id)
+          m => !existingUserIds.has(m.user_id)
         );
 
         return { data: orphaned, error: null };
@@ -51,17 +51,17 @@ export async function runSanityChecks(): Promise<{
     if (error) throw error;
 
     results.push({
-      name: "Orphaned Memberships",
+      name: 'Orphaned Memberships',
       passed: orphanedMemberships.length === 0,
       message:
         orphanedMemberships.length === 0
-          ? "No orphaned memberships found"
+          ? 'No orphaned memberships found'
           : `Found ${orphanedMemberships.length} orphaned memberships`,
       details: { count: orphanedMemberships.length },
     });
   } catch (error) {
     results.push({
-      name: "Orphaned Memberships",
+      name: 'Orphaned Memberships',
       passed: false,
       message: `Check failed: ${error instanceof Error ? error.message : String(error)}`,
     });
@@ -70,14 +70,14 @@ export async function runSanityChecks(): Promise<{
   // Check 2: Unique customer mapping (one Stripe customer per user)
   try {
     const { data: subscriptions, error } = await supabase
-      .from("subscriptions")
-      .select("stripeCustomerId, org_id")
-      .not("stripeCustomerId", "is", null);
+      .from('subscriptions')
+      .select('stripeCustomerId, org_id')
+      .not('stripeCustomerId', 'is', null);
 
     if (error) throw error;
 
     const customerMap = new Map<string, string[]>();
-    subscriptions?.forEach((sub) => {
+    subscriptions?.forEach(sub => {
       if (sub.stripeCustomerId) {
         const existing = customerMap.get(sub.stripeCustomerId) || [];
         existing.push(sub.org_id);
@@ -90,17 +90,17 @@ export async function runSanityChecks(): Promise<{
     );
 
     results.push({
-      name: "Unique Customer Mapping",
+      name: 'Unique Customer Mapping',
       passed: duplicates.length === 0,
       message:
         duplicates.length === 0
-          ? "All Stripe customers map to unique organizations"
+          ? 'All Stripe customers map to unique organizations'
           : `Found ${duplicates.length} Stripe customers mapped to multiple organizations`,
       details: { duplicates: duplicates.length },
     });
   } catch (error) {
     results.push({
-      name: "Unique Customer Mapping",
+      name: 'Unique Customer Mapping',
       passed: false,
       message: `Check failed: ${error instanceof Error ? error.message : String(error)}`,
     });
@@ -109,31 +109,32 @@ export async function runSanityChecks(): Promise<{
   // Check 3: Subscription status consistency
   try {
     const { data: subscriptions, error } = await supabase
-      .from("subscriptions")
-      .select("id, status, stripeSubscriptionId, currentPeriodEnd");
+      .from('subscriptions')
+      .select('id, status, stripeSubscriptionId, currentPeriodEnd');
 
     if (error) throw error;
 
     const now = new Date();
-    const expiredActive = subscriptions?.filter(
-      (sub) =>
-        sub.status === "ACTIVE" &&
-        sub.currentPeriodEnd &&
-        new Date(sub.currentPeriodEnd) < now
-    ) || [];
+    const expiredActive =
+      subscriptions?.filter(
+        sub =>
+          sub.status === 'ACTIVE' &&
+          sub.currentPeriodEnd &&
+          new Date(sub.currentPeriodEnd) < now
+      ) || [];
 
     results.push({
-      name: "Subscription Status Consistency",
+      name: 'Subscription Status Consistency',
       passed: expiredActive.length === 0,
       message:
         expiredActive.length === 0
-          ? "All active subscriptions are within their period"
+          ? 'All active subscriptions are within their period'
           : `Found ${expiredActive.length} active subscriptions past their period end`,
       details: { count: expiredActive.length },
     });
   } catch (error) {
     results.push({
-      name: "Subscription Status Consistency",
+      name: 'Subscription Status Consistency',
       passed: false,
       message: `Check failed: ${error instanceof Error ? error.message : String(error)}`,
     });
@@ -142,21 +143,21 @@ export async function runSanityChecks(): Promise<{
   // Check 4: No orphaned projects
   try {
     const { data: projects, error } = await supabase
-      .from("projects")
-      .select("id, user_id, org_id")
-      .then(async (result) => {
+      .from('projects')
+      .select('id, user_id, org_id')
+      .then(async result => {
         if (result.error) throw result.error;
 
         // Check if users exist
-        const userIds = [...new Set(result.data.map((p) => p.user_id))];
+        const userIds = [...new Set(result.data.map(p => p.user_id))];
         const { data: users } = await supabase
-          .from("users")
-          .select("id")
-          .in("id", userIds);
+          .from('users')
+          .select('id')
+          .in('id', userIds);
 
-        const existingUserIds = new Set(users?.map((u) => u.id) || []);
+        const existingUserIds = new Set(users?.map(u => u.id) || []);
         const orphaned = result.data.filter(
-          (p) => !existingUserIds.has(p.user_id)
+          p => !existingUserIds.has(p.user_id)
         );
 
         return { data: orphaned, error: null };
@@ -165,17 +166,17 @@ export async function runSanityChecks(): Promise<{
     if (error) throw error;
 
     results.push({
-      name: "Orphaned Projects",
+      name: 'Orphaned Projects',
       passed: projects.length === 0,
       message:
         projects.length === 0
-          ? "No orphaned projects found"
+          ? 'No orphaned projects found'
           : `Found ${projects.length} orphaned projects`,
       details: { count: projects.length },
     });
   } catch (error) {
     results.push({
-      name: "Orphaned Projects",
+      name: 'Orphaned Projects',
       passed: false,
       message: `Check failed: ${error instanceof Error ? error.message : String(error)}`,
     });
@@ -184,30 +185,30 @@ export async function runSanityChecks(): Promise<{
   // Check 5: Required fields are not null
   try {
     const { data: nullEmails, error: emailError } = await supabase
-      .from("users")
-      .select("id")
-      .is("email", null);
+      .from('users')
+      .select('id')
+      .is('email', null);
 
     if (emailError) throw emailError;
 
     results.push({
-      name: "Required Fields Not Null",
+      name: 'Required Fields Not Null',
       passed: (nullEmails?.length || 0) === 0,
       message:
         (nullEmails?.length || 0) === 0
-          ? "All required fields are populated"
+          ? 'All required fields are populated'
           : `Found ${nullEmails?.length || 0} users with null email`,
       details: { nullEmails: nullEmails?.length || 0 },
     });
   } catch (error) {
     results.push({
-      name: "Required Fields Not Null",
+      name: 'Required Fields Not Null',
       passed: false,
       message: `Check failed: ${error instanceof Error ? error.message : String(error)}`,
     });
   }
 
-  const allPassed = results.every((r) => r.passed);
+  const allPassed = results.every(r => r.passed);
 
   return { allPassed, results };
 }
@@ -218,22 +219,27 @@ export async function runSanityChecks(): Promise<{
 if (require.main === module) {
   runSanityChecks()
     .then(({ allPassed, results }) => {
-      console.log("\n=== Database Sanity Check Results ===\n");
-      
-      results.forEach((result) => {
-        const icon = result.passed ? "✅" : "❌";
+      console.log('\n=== Database Sanity Check Results ===\n');
+
+      results.forEach(result => {
+        const icon = result.passed ? '✅' : '❌';
         console.log(`${icon} ${result.name}: ${result.message}`);
         if (result.details) {
           console.log(`   Details:`, result.details);
         }
       });
 
-      console.log(`\n${allPassed ? "✅ All checks passed" : "❌ Some checks failed"}\n`);
+      console.log(
+        `\n${allPassed ? '✅ All checks passed' : '❌ Some checks failed'}\n`
+      );
       process.exit(allPassed ? 0 : 1);
     })
-    .catch((error) => {
-      logger.error("Sanity check failed", error instanceof Error ? error : new Error(String(error)));
-      console.error("Fatal error:", error);
+    .catch(error => {
+      logger.error(
+        'Sanity check failed',
+        error instanceof Error ? error : new Error(String(error))
+      );
+      console.error('Fatal error:', error);
       process.exit(1);
     });
 }

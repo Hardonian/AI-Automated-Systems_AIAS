@@ -96,4 +96,4 @@ This scorecard tracks Guardian's effectiveness in protecting user privacy and ma
 
 ---
 
-*This scorecard is generated automatically by the Guardian system.*
+_This scorecard is generated automatically by the Guardian system._

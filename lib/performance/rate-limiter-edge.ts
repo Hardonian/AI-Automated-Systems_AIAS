@@ -1,7 +1,7 @@
 /**
  * Edge Runtime Compatible Rate Limiter
  * Simple in-memory rate limiting for Edge runtime (middleware)
- * 
+ *
  * Note: This is a per-instance rate limiter. For distributed rate limiting,
  * use Vercel KV or a Redis-compatible service that works in Edge runtime.
  */
@@ -35,12 +35,19 @@ export async function checkRateLimitEdge(
   const now = Date.now();
 
   // Try Vercel KV first (Edge-compatible)
-  if (typeof process !== 'undefined' && process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
+  if (
+    typeof process !== 'undefined' &&
+    process.env.KV_REST_API_URL &&
+    process.env.KV_REST_API_TOKEN
+  ) {
     try {
       return await checkRateLimitVercelKV(key, config, now);
     } catch (error) {
       // Fall through to in-memory
-      console.warn('Vercel KV rate limit check failed, using in-memory fallback:', error);
+      console.warn(
+        'Vercel KV rate limit check failed, using in-memory fallback:',
+        error
+      );
     }
   }
 
@@ -77,7 +84,7 @@ async function checkRateLimitVercelKV(
     if (getResponse.ok) {
       const data = await getResponse.json();
       const entry = data.result ? JSON.parse(data.result) : null;
-      
+
       if (entry && entry.resetTime > now) {
         count = entry.count + 1;
       }
@@ -124,7 +131,8 @@ function checkRateLimitInMemory(
   now: number
 ): RateLimitResult {
   // Cleanup expired entries periodically
-  if (Math.random() < 0.01) { // 1% chance to cleanup
+  if (Math.random() < 0.01) {
+    // 1% chance to cleanup
     for (const [k, entry] of inMemoryStore.entries()) {
       if (entry.resetTime < now) {
         inMemoryStore.delete(k);

@@ -79,9 +79,9 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-            
+
             let comment = '## 🔍 Code Hygiene Report\n\n';
-            
+
             // Read ts-prune report
             try {
               const tsPrunePath = path.join('reports', 'ts-prune.txt');
@@ -95,7 +95,7 @@ jobs:
             } catch (e) {
               comment += '- **ts-prune**: Report not available\n';
             }
-            
+
             // Read depcheck report
             try {
               const depcheckPath = path.join('reports', 'depcheck.json');
@@ -109,10 +109,10 @@ jobs:
             } catch (e) {
               comment += '- **depcheck**: Report not available\n';
             }
-            
+
             comment += '\n📊 Full reports available in workflow artifacts.\n';
             comment += '📋 See [dead-code-plan.md](/reports/dead-code-plan.md) for detailed analysis.';
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,

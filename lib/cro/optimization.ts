@@ -4,7 +4,13 @@
  */
 
 export interface ConversionEvent {
-  type: 'page_view' | 'cta_click' | 'form_submit' | 'signup' | 'trial_start' | 'purchase';
+  type:
+    | 'page_view'
+    | 'cta_click'
+    | 'form_submit'
+    | 'signup'
+    | 'trial_start'
+    | 'purchase';
   element?: string;
   value?: number;
   metadata?: Record<string, unknown>;
@@ -30,8 +36,10 @@ export interface ABTest {
  * Track conversion events
  */
 export function trackConversion(event: ConversionEvent): void {
-  if (typeof window === 'undefined') {return;}
-  
+  if (typeof window === 'undefined') {
+    return;
+  }
+
   // Send to analytics
   if (window.gtag) {
     window.gtag('event', event.type, {
@@ -41,7 +49,7 @@ export function trackConversion(event: ConversionEvent): void {
       ...event.metadata,
     });
   }
-  
+
   // Send to custom analytics
   fetch('/api/analytics/track', {
     method: 'POST',
@@ -60,20 +68,25 @@ export function trackConversion(event: ConversionEvent): void {
 /**
  * Get or assign AB test variant
  */
-export function getABTestVariant(testId: string, userId?: string): string | null {
-  if (typeof window === 'undefined') {return null;}
-  
+export function getABTestVariant(
+  testId: string,
+  userId?: string
+): string | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
   const storageKey = `ab_test_${testId}`;
   const stored = localStorage.getItem(storageKey);
-  
+
   if (stored) {
     return stored;
   }
-  
+
   // Assign variant based on user ID hash or random
   const seed = userId ? hashString(userId) : Math.random();
   const variant = seed % 2 === 0 ? 'A' : 'B';
-  
+
   localStorage.setItem(storageKey, variant);
   return variant;
 }
@@ -85,7 +98,7 @@ function hashString(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32-bit integer
   }
   return Math.abs(hash);
@@ -117,7 +130,9 @@ export function calculateConversionRate(
   conversions: number,
   visitors: number
 ): number {
-  if (visitors === 0) {return 0;}
+  if (visitors === 0) {
+    return 0;
+  }
   return (conversions / visitors) * 100;
 }
 
@@ -125,16 +140,18 @@ export function calculateConversionRate(
  * Detect exit intent (user about to leave)
  */
 export function detectExitIntent(callback: () => void): () => void {
-  if (typeof window === 'undefined') {return () => {};}
-  
+  if (typeof window === 'undefined') {
+    return () => {};
+  }
+
   const handleMouseLeave = (e: MouseEvent) => {
     if (e.clientY <= 0) {
       callback();
     }
   };
-  
+
   document.addEventListener('mouseleave', handleMouseLeave);
-  
+
   return () => {
     document.removeEventListener('mouseleave', handleMouseLeave);
   };
@@ -152,14 +169,14 @@ export function showUrgencyIndicator(
     low_stock: '⚠️ Only a few spots left',
     popular: '🔥 Popular choice',
   };
-  
+
   const badge = document.createElement('span');
   badge.className = 'urgency-badge';
   badge.textContent = indicators[type];
   badge.setAttribute('aria-label', indicators[type]);
-  
+
   element.appendChild(badge);
-  
+
   // Animate in
   requestAnimationFrame(() => {
     badge.style.opacity = '0';
@@ -177,10 +194,14 @@ export function showUrgencyIndicator(
  */
 export function optimizeForm(formId: string): void {
   const form = document.getElementById(formId);
-  if (!form) {return;}
-  
+  if (!form) {
+    return;
+  }
+
   // Add progress indicator
-  const fields = form.querySelectorAll<HTMLInputElement>('input, textarea, select');
+  const fields = form.querySelectorAll<HTMLInputElement>(
+    'input, textarea, select'
+  );
   const progressBar = document.createElement('div');
   progressBar.className = 'form-progress';
   progressBar.setAttribute('role', 'progressbar');
@@ -188,7 +209,7 @@ export function optimizeForm(formId: string): void {
   progressBar.setAttribute('aria-valuemin', '0');
   progressBar.setAttribute('aria-valuemax', '100');
   form.insertBefore(progressBar, form.firstChild);
-  
+
   // Update progress as user fills form
   fields.forEach(field => {
     field.addEventListener('input', () => {
@@ -198,12 +219,13 @@ export function optimizeForm(formId: string): void {
       progressBar.style.width = `${progress}%`;
     });
   });
-  
+
   // Track form abandonment
   const startTime = Date.now();
   window.addEventListener('beforeunload', () => {
     const timeSpent = Date.now() - startTime;
-    if (timeSpent > 5000) { // Only track if user spent > 5 seconds
+    if (timeSpent > 5000) {
+      // Only track if user spent > 5 seconds
       trackConversion({
         type: 'form_submit',
         element: formId,

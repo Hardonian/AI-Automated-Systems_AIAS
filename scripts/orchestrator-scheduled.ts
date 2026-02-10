@@ -9,7 +9,7 @@ const interval = process.argv[2] || 'daily';
 
 async function main() {
   const orchestrator = new Orchestrator();
-  
+
   if (interval === 'hourly') {
     await orchestrator.runScheduled('hourly');
   } else {

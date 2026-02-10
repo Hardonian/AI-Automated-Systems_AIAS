@@ -25,11 +25,13 @@ Content seeding is the practice of strategically placing and promoting content a
 ### UTM Parameter Setup
 
 **Format:**
+
 ```
 https://yourdomain.com/article?utm_source={{platform}}&utm_medium={{medium}}&utm_campaign={{campaign_name}}&utm_content={{content_type}}
 ```
 
 **Example:**
+
 ```
 https://yourdomain.com/blog-post?utm_source=linkedin&utm_medium=social&utm_campaign=content_seeding&utm_content=article
 ```
@@ -176,11 +178,13 @@ https://yourdomain.com/blog-post?utm_source=linkedin&utm_medium=social&utm_campa
 ### Social Media Scheduling
 
 **Tools:**
+
 - Buffer ($6/month) - Simple scheduling
 - Hootsuite ($99/month) - Comprehensive
 - Later ($25/month) - Visual calendar
 
 **Automation:**
+
 - Schedule posts across platforms
 - Auto-post from RSS feed (if blog)
 - Recurring posts for evergreen content
@@ -188,6 +192,7 @@ https://yourdomain.com/blog-post?utm_source=linkedin&utm_medium=social&utm_campa
 ### Cross-Posting Automation
 
 **Via Zapier/Make:**
+
 ```json
 {
   "trigger": "New blog post published",
@@ -241,6 +246,7 @@ https://yourdomain.com/blog-post?utm_source=linkedin&utm_medium=social&utm_campa
 **Original:** Blog post
 
 **Repurpose Into:**
+
 - [ ] LinkedIn article
 - [ ] Twitter thread
 - [ ] Instagram carousel
@@ -264,16 +270,19 @@ https://yourdomain.com/blog-post?utm_source=linkedin&utm_medium=social&utm_campa
 ## Weekly Content Seeding Routine
 
 ### Monday: Planning
+
 - [ ] Review content calendar
 - [ ] Prepare content for week
 - [ ] Set up scheduling
 
 ### Tuesday-Thursday: Publishing
+
 - [ ] Publish primary content
 - [ ] Distribute across platforms
 - [ ] Engage with audience
 
 ### Friday: Analysis
+
 - [ ] Review metrics
 - [ ] Identify top performers
 - [ ] Plan improvements
@@ -281,19 +290,23 @@ https://yourdomain.com/blog-post?utm_source=linkedin&utm_medium=social&utm_campa
 ## Tools & Resources
 
 **Scheduling:**
+
 - Buffer, Hootsuite, Later
 
 **Analytics:**
+
 - Google Analytics (website)
 - Platform native analytics
 - Sprout Social ($249/month)
 
 **Content Creation:**
+
 - Canva (images)
 - Loom (video)
 - Descript (audio/video)
 
 **Distribution:**
+
 - Zapier/Make (automation)
 - IFTTT (simple automation)
 

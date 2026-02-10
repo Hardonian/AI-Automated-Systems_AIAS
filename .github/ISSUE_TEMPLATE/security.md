@@ -27,16 +27,16 @@ assignees: ''
 
 <!-- List the components, files, or areas affected -->
 
-- 
-- 
+-
+-
 
 ## Steps to Reproduce
 
 <!-- Provide steps to reproduce the vulnerability (be careful not to expose sensitive information) -->
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ## Impact
 

@@ -1,14 +1,14 @@
 /**
  * Startup Validation
- * 
+ *
  * Validates environment variables, database connectivity, and system health at startup
  */
 
-import { validateEnvOnStartup } from "@/lib/env-validation";
-import { createClient } from "@supabase/supabase-js";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
-import { initializeOpenTelemetry } from "./opentelemetry";
+import { validateEnvOnStartup } from '@/lib/env-validation';
+import { createClient } from '@supabase/supabase-js';
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
+import { initializeOpenTelemetry } from './opentelemetry';
 
 interface StartupValidationResult {
   success: boolean;
@@ -33,7 +33,9 @@ function validateEnvironment(): { success: boolean; errors: string[] } {
     validateEnvOnStartup();
     return { success: true, errors: [] };
   } catch (error) {
-    errors.push(`Environment validation failed: ${error instanceof Error ? error.message : String(error)}`);
+    errors.push(
+      `Environment validation failed: ${error instanceof Error ? error.message : String(error)}`
+    );
     return { success: false, errors };
   }
 }
@@ -41,12 +43,21 @@ function validateEnvironment(): { success: boolean; errors: string[] } {
 /**
  * Validate database connectivity
  */
-async function validateDatabase(): Promise<{ success: boolean; errors: string[] }> {
+async function validateDatabase(): Promise<{
+  success: boolean;
+  errors: string[];
+}> {
   const errors: string[] = [];
 
   try {
-    const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
-    const { error } = await supabase.from("app_events").select("count").limit(1);
+    const supabase = createClient(
+      env.supabase.url,
+      env.supabase.serviceRoleKey
+    );
+    const { error } = await supabase
+      .from('app_events')
+      .select('count')
+      .limit(1);
 
     if (error) {
       errors.push(`Database connectivity check failed: ${error.message}`);
@@ -55,7 +66,9 @@ async function validateDatabase(): Promise<{ success: boolean; errors: string[] 
 
     return { success: true, errors: [] };
   } catch (error) {
-    errors.push(`Database validation error: ${error instanceof Error ? error.message : String(error)}`);
+    errors.push(
+      `Database validation error: ${error instanceof Error ? error.message : String(error)}`
+    );
     return { success: false, errors };
   }
 }
@@ -67,8 +80,14 @@ async function validateAuth(): Promise<{ success: boolean; errors: string[] }> {
   const errors: string[] = [];
 
   try {
-    const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
-    const { error } = await supabase.auth.admin.listUsers({ page: 1, perPage: 1 });
+    const supabase = createClient(
+      env.supabase.url,
+      env.supabase.serviceRoleKey
+    );
+    const { error } = await supabase.auth.admin.listUsers({
+      page: 1,
+      perPage: 1,
+    });
 
     if (error) {
       errors.push(`Auth service check failed: ${error.message}`);
@@ -77,7 +96,9 @@ async function validateAuth(): Promise<{ success: boolean; errors: string[] }> {
 
     return { success: true, errors: [] };
   } catch (error) {
-    errors.push(`Auth validation error: ${error instanceof Error ? error.message : String(error)}`);
+    errors.push(
+      `Auth validation error: ${error instanceof Error ? error.message : String(error)}`
+    );
     return { success: false, errors };
   }
 }
@@ -85,21 +106,32 @@ async function validateAuth(): Promise<{ success: boolean; errors: string[] }> {
 /**
  * Validate storage service
  */
-async function validateStorage(): Promise<{ success: boolean; errors: string[]; warnings: string[] }> {
+async function validateStorage(): Promise<{
+  success: boolean;
+  errors: string[];
+  warnings: string[];
+}> {
   const warnings: string[] = [];
 
   try {
-    const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+    const supabase = createClient(
+      env.supabase.url,
+      env.supabase.serviceRoleKey
+    );
     const { error } = await supabase.storage.listBuckets();
 
     if (error) {
-      warnings.push(`Storage service check failed (non-critical): ${error.message}`);
+      warnings.push(
+        `Storage service check failed (non-critical): ${error.message}`
+      );
       return { success: true, errors: [], warnings }; // Storage is optional
     }
 
     return { success: true, errors: [], warnings: [] };
   } catch (error) {
-    warnings.push(`Storage validation warning: ${error instanceof Error ? error.message : String(error)}`);
+    warnings.push(
+      `Storage validation warning: ${error instanceof Error ? error.message : String(error)}`
+    );
     return { success: true, errors: [], warnings }; // Storage is optional
   }
 }
@@ -107,20 +139,28 @@ async function validateStorage(): Promise<{ success: boolean; errors: string[]; 
 /**
  * Initialize observability
  */
-function validateObservability(): { success: boolean; errors: string[]; warnings: string[] } {
+function validateObservability(): {
+  success: boolean;
+  errors: string[];
+  warnings: string[];
+} {
   const warnings: string[] = [];
 
   try {
     const otel = initializeOpenTelemetry();
 
     if (!otel) {
-      warnings.push("OpenTelemetry not initialized (ENABLE_OTEL=false or OTEL_EXPORTER_OTLP_ENDPOINT not set)");
+      warnings.push(
+        'OpenTelemetry not initialized (ENABLE_OTEL=false or OTEL_EXPORTER_OTLP_ENDPOINT not set)'
+      );
       return { success: true, errors: [], warnings }; // Observability is optional
     }
 
     return { success: true, errors: [], warnings: [] };
   } catch (error) {
-    warnings.push(`Observability initialization warning: ${error instanceof Error ? error.message : String(error)}`);
+    warnings.push(
+      `Observability initialization warning: ${error instanceof Error ? error.message : String(error)}`
+    );
     return { success: true, errors: [], warnings }; // Observability is optional
   }
 }
@@ -142,7 +182,7 @@ export async function validateStartup(): Promise<StartupValidationResult> {
     warnings: [],
   };
 
-  logger.info("Starting startup validation...");
+  logger.info('Starting startup validation...');
 
   // 1. Validate environment
   const envCheck = validateEnvironment();
@@ -186,13 +226,13 @@ export async function validateStartup(): Promise<StartupValidationResult> {
 
   // Log results
   if (result.success) {
-    logger.info("Startup validation passed", {
+    logger.info('Startup validation passed', {
       checks: result.checks,
       warnings: result.warnings.length,
     });
   } else {
-    const errorObj = new Error("Startup validation failed");
-    logger.error("Startup validation failed", errorObj, {
+    const errorObj = new Error('Startup validation failed');
+    logger.error('Startup validation failed', errorObj, {
       checks: result.checks,
       errors: result.errors,
       warnings: result.warnings,
@@ -209,22 +249,22 @@ export async function validateStartupOrExit(): Promise<void> {
   const result = await validateStartup();
 
   if (!result.success) {
-    console.error("\n❌ Startup validation failed:");
-    result.errors.forEach((error) => console.error(`  - ${error}`));
+    console.error('\n❌ Startup validation failed:');
+    result.errors.forEach(error => console.error(`  - ${error}`));
 
     if (result.warnings.length > 0) {
-      console.warn("\n⚠️  Warnings:");
-      result.warnings.forEach((warning) => console.warn(`  - ${warning}`));
+      console.warn('\n⚠️  Warnings:');
+      result.warnings.forEach(warning => console.warn(`  - ${warning}`));
     }
 
-    console.error("\nPlease fix the errors above and restart the application.");
+    console.error('\nPlease fix the errors above and restart the application.');
     process.exit(1);
   }
 
   if (result.warnings.length > 0) {
-    console.warn("\n⚠️  Startup warnings:");
-    result.warnings.forEach((warning) => console.warn(`  - ${warning}`));
+    console.warn('\n⚠️  Startup warnings:');
+    result.warnings.forEach(warning => console.warn(`  - ${warning}`));
   }
 
-  console.log("\n✅ Startup validation passed");
+  console.log('\n✅ Startup validation passed');
 }

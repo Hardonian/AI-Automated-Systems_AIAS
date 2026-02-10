@@ -2,7 +2,13 @@ import type { IncomingMessage, ServerResponse } from 'http';
 
 import { config } from '@ai-consultancy/config';
 import pino from 'pino';
-import { register, collectDefaultMetrics, Counter, Histogram, Gauge } from 'prom-client';
+import {
+  register,
+  collectDefaultMetrics,
+  Counter,
+  Histogram,
+  Gauge,
+} from 'prom-client';
 
 import { prisma } from './database';
 
@@ -94,59 +100,98 @@ export const logger = pinoLogger({
       statusCode: res.statusCode,
       headers: res.getHeaders ? res.getHeaders() : {},
     }),
-    err: pinoLogger.stdSerializers?.err || ((err: Error) => ({ message: err.message, stack: err.stack })),
+    err:
+      pinoLogger.stdSerializers?.err ||
+      ((err: Error) => ({ message: err.message, stack: err.stack })),
   },
 });
 
 export class ObservabilityService {
-  static logRequest(method: string, route: string, statusCode: number, duration: number) {
-    metrics.httpRequestsTotal.inc({ method, route, status_code: statusCode.toString() });
-    metrics.httpRequestDuration.observe({ method, route, status_code: statusCode.toString() }, duration);
-    
-    logger.info({
+  static logRequest(
+    method: string,
+    route: string,
+    statusCode: number,
+    duration: number
+  ) {
+    metrics.httpRequestsTotal.inc({
       method,
       route,
-      statusCode,
-      duration,
-    }, 'HTTP request completed');
+      status_code: statusCode.toString(),
+    });
+    metrics.httpRequestDuration.observe(
+      { method, route, status_code: statusCode.toString() },
+      duration
+    );
+
+    logger.info(
+      {
+        method,
+        route,
+        statusCode,
+        duration,
+      },
+      'HTTP request completed'
+    );
   }
 
-  static logAIRequest(provider: string, model: string, type: string, duration: number, tokens?: { input: number; output: number }) {
+  static logAIRequest(
+    provider: string,
+    model: string,
+    type: string,
+    duration: number,
+    tokens?: { input: number; output: number }
+  ) {
     metrics.aiRequestsTotal.inc({ provider, model, type });
     metrics.aiRequestDuration.observe({ provider, model, type }, duration);
-    
+
     if (tokens) {
-      metrics.aiTokensUsed.inc({ provider, model, type }, tokens.input + tokens.output);
+      metrics.aiTokensUsed.inc(
+        { provider, model, type },
+        tokens.input + tokens.output
+      );
     }
-    
-    logger.info({
-      provider,
-      model,
-      type,
-      duration,
-      tokens,
-    }, 'AI request completed');
+
+    logger.info(
+      {
+        provider,
+        model,
+        type,
+        duration,
+        tokens,
+      },
+      'AI request completed'
+    );
   }
 
-  static logQueueJob(queue: string, status: 'started' | 'completed' | 'failed', duration?: number) {
+  static logQueueJob(
+    queue: string,
+    status: 'started' | 'completed' | 'failed',
+    duration?: number
+  ) {
     metrics.queueJobsTotal.inc({ queue, status });
-    
+
     if (duration !== undefined) {
       metrics.queueJobDuration.observe({ queue, status }, duration);
     }
-    
-    logger.info({
-      queue,
-      status,
-      duration,
-    }, 'Queue job processed');
+
+    logger.info(
+      {
+        queue,
+        status,
+        duration,
+      },
+      'Queue job processed'
+    );
   }
 
   static logError(error: Error, context?: Record<string, any>) {
-    logger.error({
-      err: error,
-      ...context,
-    }, 'Error occurred');
+    logger.error(
+      {
+        err: error,
+        ...context,
+      },
+      'Error occurred'
+    );
   }
 
   static logInfo(message: string, context?: Record<string, any>) {
@@ -196,7 +241,7 @@ export class ObservabilityService {
       };
     } catch (error) {
       logger.error({ err: error }, 'Health check failed');
-      
+
       return {
         status: 'unhealthy',
         timestamp: new Date().toISOString(),
@@ -214,14 +259,14 @@ export class ObservabilityService {
       await prisma.$queryRaw`SELECT 1`;
       // Check Redis
       // Check other services
-      
+
       return {
         status: 'ready',
         timestamp: new Date().toISOString(),
       };
     } catch (error) {
       logger.error({ err: error }, 'Readiness check failed');
-      
+
       return {
         status: 'not_ready',
         timestamp: new Date().toISOString(),
@@ -235,10 +280,14 @@ export class ObservabilityService {
 if (config.features.otel && config.observability.otelEndpoint) {
   try {
     const { NodeSDK } = require('@opentelemetry/sdk-node');
-    const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
+    const {
+      getNodeAutoInstrumentations,
+    } = require('@opentelemetry/auto-instrumentations-node');
     const { OTLPTraceExporter } = require('@opentelemetry/exporter-otlp');
     const { Resource } = require('@opentelemetry/resources');
-    const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
+    const {
+      SemanticResourceAttributes,
+    } = require('@opentelemetry/semantic-conventions');
 
     const traceExporter = new OTLPTraceExporter({
       url: config.observability.otelEndpoint,

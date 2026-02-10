@@ -27,32 +27,34 @@ export interface AuditReport {
 /**
  * Audit codebase for common issues
  */
-export async function auditCodebase(rootDir: string = process.cwd()): Promise<AuditReport> {
+export async function auditCodebase(
+  rootDir: string = process.cwd()
+): Promise<AuditReport> {
   const results: AuditResult[] = [];
-  
+
   // Check for console.log statements
   const consoleLogResults = await auditConsoleLogs(rootDir);
   results.push(...consoleLogResults);
-  
+
   // Check for TODO comments
   const todoResults = await auditTODOs(rootDir);
   results.push(...todoResults);
-  
+
   // Check for unused imports
   const importResults = await auditUnusedImports(rootDir);
   results.push(...importResults);
-  
+
   // Check for accessibility issues
   const a11yResults = await auditAccessibility(rootDir);
   results.push(...a11yResults);
-  
+
   // Check for performance issues
   const perfResults = await auditPerformance(rootDir);
   results.push(...perfResults);
-  
+
   // Generate recommendations
   const recommendations = generateRecommendations(results);
-  
+
   return {
     timestamp: new Date(),
     totalIssues: results.length,
@@ -97,17 +99,21 @@ async function auditPerformance(_rootDir: string): Promise<AuditResult[]> {
 
 function generateRecommendations(results: AuditResult[]): string[] {
   const recommendations: string[] = [];
-  
+
   const criticalCount = results.filter(r => r.severity === 'critical').length;
   if (criticalCount > 0) {
-    recommendations.push(`Address ${criticalCount} critical issue(s) immediately`);
+    recommendations.push(
+      `Address ${criticalCount} critical issue(s) immediately`
+    );
   }
-  
+
   const autoFixable = results.filter(r => r.autoFixable).length;
   if (autoFixable > 0) {
-    recommendations.push(`Run auto-fix for ${autoFixable} auto-fixable issue(s)`);
+    recommendations.push(
+      `Run auto-fix for ${autoFixable} auto-fixable issue(s)`
+    );
   }
-  
+
   return recommendations;
 }
 
@@ -123,7 +129,7 @@ export async function autoFixIssues(results: AuditResult[]): Promise<{
   let fixed = 0;
   let failed = 0;
   const errors: string[] = [];
-  
+
   for (const issue of autoFixable) {
     try {
       // Implement auto-fix logic based on issue type
@@ -131,9 +137,11 @@ export async function autoFixIssues(results: AuditResult[]): Promise<{
       fixed++;
     } catch (error) {
       failed++;
-      errors.push(`Failed to fix ${issue.issue}: ${error instanceof Error ? error.message : String(error)}`);
+      errors.push(
+        `Failed to fix ${issue.issue}: ${error instanceof Error ? error.message : String(error)}`
+      );
     }
   }
-  
+
   return { fixed, failed, errors };
 }

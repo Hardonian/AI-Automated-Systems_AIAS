@@ -5,11 +5,11 @@
  * Idempotent, safe to re-run
  */
 
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 
-import { withDb } from "../lib/db";
-import { log, err } from "../lib/logger";
+import { withDb } from '../lib/db';
+import { log, err } from '../lib/logger';
 
 async function checkTableExists(c: any, tableName: string): Promise<boolean> {
   const result = await c.query(
@@ -35,7 +35,11 @@ async function checkIndexExists(c: any, indexName: string): Promise<boolean> {
   return result.rows[0]?.exists || false;
 }
 
-async function checkPolicyExists(c: any, tableName: string, policyName: string): Promise<boolean> {
+async function checkPolicyExists(
+  c: any,
+  tableName: string,
+  policyName: string
+): Promise<boolean> {
   const result = await c.query(
     `SELECT EXISTS (
       SELECT 1 FROM pg_policies 
@@ -59,7 +63,10 @@ async function checkExtensionExists(c: any, extName: string): Promise<boolean> {
   return result.rows[0]?.exists || false;
 }
 
-async function checkFunctionExists(c: any, functionName: string): Promise<boolean> {
+async function checkFunctionExists(
+  c: any,
+  functionName: string
+): Promise<boolean> {
   const result = await c.query(
     `SELECT EXISTS (
       SELECT 1 FROM pg_proc p
@@ -73,33 +80,33 @@ async function checkFunctionExists(c: any, functionName: string): Promise<boolea
 }
 
 async function generateDeltaMigration(): Promise<string | null> {
-  log("Starting delta migration generation");
+  log('Starting delta migration generation');
 
-  const requiredTables = ["events", "spend", "metrics_daily"];
+  const requiredTables = ['events', 'spend', 'metrics_daily'];
   const requiredIndexes = [
-    { name: "idx_events_name_time", table: "events" },
-    { name: "idx_spend_platform_dt", table: "spend" },
-    { name: "idx_metrics_day", table: "metrics_daily" },
+    { name: 'idx_events_name_time', table: 'events' },
+    { name: 'idx_spend_platform_dt', table: 'spend' },
+    { name: 'idx_metrics_day', table: 'metrics_daily' },
   ];
-  const requiredExtensions = ["pgcrypto", "pg_trgm"];
+  const requiredExtensions = ['pgcrypto', 'pg_trgm'];
   const requiredFunctions = [
-    "upsert_events",
-    "upsert_spend",
-    "recompute_metrics_daily",
-    "system_healthcheck",
+    'upsert_events',
+    'upsert_spend',
+    'recompute_metrics_daily',
+    'system_healthcheck',
   ];
   const requiredPolicies = [
-    { table: "events", policy: "events_select_all_srv" },
-    { table: "spend", policy: "spend_select_all_srv" },
-    { table: "metrics_daily", policy: "metrics_select_all_srv" },
+    { table: 'events', policy: 'events_select_all_srv' },
+    { table: 'spend', policy: 'spend_select_all_srv' },
+    { table: 'metrics_daily', policy: 'metrics_select_all_srv' },
   ];
 
   const migrations: string[] = [];
-  migrations.push("-- Delta Migration - Generated Objects Only");
+  migrations.push('-- Delta Migration - Generated Objects Only');
   migrations.push(`-- Generated: ${new Date().toISOString()}`);
-  migrations.push("");
+  migrations.push('');
 
-  return await withDb(async (c) => {
+  return await withDb(async c => {
     // Check extensions
     for (const ext of requiredExtensions) {
       const exists = await checkExtensionExists(c, ext);
@@ -121,13 +128,16 @@ async function generateDeltaMigration(): Promise<string | null> {
     for (const idx of requiredIndexes) {
       const exists = await checkIndexExists(c, idx.name);
       if (!exists) {
-        let indexSql = "";
-        if (idx.name === "idx_events_name_time") {
-          indexSql = "CREATE INDEX IF NOT EXISTS idx_events_name_time ON public.events(event_name, occurred_at);";
-        } else if (idx.name === "idx_spend_platform_dt") {
-          indexSql = "CREATE INDEX IF NOT EXISTS idx_spend_platform_dt ON public.spend(platform, date);";
-        } else if (idx.name === "idx_metrics_day") {
-          indexSql = "CREATE INDEX IF NOT EXISTS idx_metrics_day ON public.metrics_daily(day);";
+        let indexSql = '';
+        if (idx.name === 'idx_events_name_time') {
+          indexSql =
+            'CREATE INDEX IF NOT EXISTS idx_events_name_time ON public.events(event_name, occurred_at);';
+        } else if (idx.name === 'idx_spend_platform_dt') {
+          indexSql =
+            'CREATE INDEX IF NOT EXISTS idx_spend_platform_dt ON public.spend(platform, date);';
+        } else if (idx.name === 'idx_metrics_day') {
+          indexSql =
+            'CREATE INDEX IF NOT EXISTS idx_metrics_day ON public.metrics_daily(day);';
         }
         if (indexSql) {
           migrations.push(indexSql);
@@ -148,20 +158,30 @@ async function generateDeltaMigration(): Promise<string | null> {
     for (const pol of requiredPolicies) {
       const exists = await checkPolicyExists(c, pol.table, pol.policy);
       if (!exists) {
-        migrations.push(`CREATE POLICY IF NOT EXISTS ${pol.policy} ON public.${pol.table} FOR SELECT USING (true);`);
+        migrations.push(
+          `CREATE POLICY IF NOT EXISTS ${pol.policy} ON public.${pol.table} FOR SELECT USING (true);`
+        );
         log(`Missing policy: ${pol.table}.${pol.policy}`);
       }
     }
 
     if (migrations.length <= 3) {
-      log("No missing objects found - database is up to date");
+      log('No missing objects found - database is up to date');
       return null;
     }
 
-    const timestamp = new Date().toISOString().replace(/[-:]/g, "").split(".")[0];
-    const migrationContent = migrations.join("\n");
+    const timestamp = new Date()
+      .toISOString()
+      .replace(/[-:]/g, '')
+      .split('.')[0];
+    const migrationContent = migrations.join('\n');
     const migrationFileName = `${timestamp}_delta.sql`;
-    const migrationPath = path.join(process.cwd(), "supabase", "migrations", migrationFileName);
+    const migrationPath = path.join(
+      process.cwd(),
+      'supabase',
+      'migrations',
+      migrationFileName
+    );
 
     fs.mkdirSync(path.dirname(migrationPath), { recursive: true });
     fs.writeFileSync(migrationPath, migrationContent);
@@ -178,11 +198,11 @@ async function generateDeltaMigration(): Promise<string | null> {
       console.log(`✅ Delta migration created: ${migrationPath}`);
       process.exit(0);
     } else {
-      console.log("✅ Database is up to date - no delta migration needed");
+      console.log('✅ Database is up to date - no delta migration needed');
       process.exit(0);
     }
   } catch (e: any) {
-    err("Failed to generate delta migration", e);
+    err('Failed to generate delta migration', e);
     process.exit(1);
   }
 })();

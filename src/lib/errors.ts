@@ -36,10 +36,13 @@ export class AppError extends Error {
 export class ValidationError extends AppError {
   constructor(
     message: string,
-    public readonly validationErrors?: Array<{ path: string[]; message: string }>,
+    public readonly validationErrors?: Array<{
+      path: string[];
+      message: string;
+    }>,
     details?: Record<string, unknown>
   ) {
-    super(message, "VALIDATION_ERROR", 400, details);
+    super(message, 'VALIDATION_ERROR', 400, details);
   }
 }
 
@@ -48,8 +51,11 @@ export class ValidationError extends AppError {
  * Invalid credentials, expired tokens
  */
 export class AuthenticationError extends AppError {
-  constructor(message: string = "Authentication required", details?: Record<string, unknown>) {
-    super(message, "AUTHENTICATION_ERROR", 401, details);
+  constructor(
+    message: string = 'Authentication required',
+    details?: Record<string, unknown>
+  ) {
+    super(message, 'AUTHENTICATION_ERROR', 401, details);
   }
 }
 
@@ -58,8 +64,11 @@ export class AuthenticationError extends AppError {
  * Insufficient permissions, resource access denied
  */
 export class AuthorizationError extends AppError {
-  constructor(message: string = "Insufficient permissions", details?: Record<string, unknown>) {
-    super(message, "AUTHORIZATION_ERROR", 403, details);
+  constructor(
+    message: string = 'Insufficient permissions',
+    details?: Record<string, unknown>
+  ) {
+    super(message, 'AUTHORIZATION_ERROR', 403, details);
   }
 }
 
@@ -67,9 +76,15 @@ export class AuthorizationError extends AppError {
  * Resource Not Found Errors (404)
  */
 export class NotFoundError extends AppError {
-  constructor(resource: string, id?: string, details?: Record<string, unknown>) {
-    const message = id ? `${resource} with id ${id} not found` : `${resource} not found`;
-    super(message, "NOT_FOUND", 404, { resource, id, ...details });
+  constructor(
+    resource: string,
+    id?: string,
+    details?: Record<string, unknown>
+  ) {
+    const message = id
+      ? `${resource} with id ${id} not found`
+      : `${resource} not found`;
+    super(message, 'NOT_FOUND', 404, { resource, id, ...details });
   }
 }
 
@@ -79,7 +94,7 @@ export class NotFoundError extends AppError {
  */
 export class ConflictError extends AppError {
   constructor(message: string, details?: Record<string, unknown>) {
-    super(message, "CONFLICT", 409, details);
+    super(message, 'CONFLICT', 409, details);
   }
 }
 
@@ -93,7 +108,7 @@ export class SystemError extends AppError {
     public readonly originalError?: Error,
     details?: Record<string, unknown>
   ) {
-    super(message, "SYSTEM_ERROR", 500, {
+    super(message, 'SYSTEM_ERROR', 500, {
       ...details,
       originalError: originalError?.message,
     });
@@ -110,7 +125,7 @@ export class NetworkError extends AppError {
     public readonly retryable: boolean = true,
     details?: Record<string, unknown>
   ) {
-    super(message, "NETWORK_ERROR", 503, { retryable, ...details });
+    super(message, 'NETWORK_ERROR', 503, { retryable, ...details });
   }
 }
 
@@ -119,11 +134,11 @@ export class NetworkError extends AppError {
  */
 export class RateLimitError extends AppError {
   constructor(
-    message: string = "Rate limit exceeded",
+    message: string = 'Rate limit exceeded',
     public readonly retryAfter?: number,
     details?: Record<string, unknown>
   ) {
-    super(message, "RATE_LIMIT", 429, { retryAfter, ...details });
+    super(message, 'RATE_LIMIT', 429, { retryAfter, ...details });
   }
 }
 
@@ -132,44 +147,44 @@ export class RateLimitError extends AppError {
  */
 export const ERROR_TAXONOMY = {
   VALIDATION_ERROR: {
-    code: "VALIDATION_ERROR",
+    code: 'VALIDATION_ERROR',
     statusCode: 400,
-    description: "Input validation failures, schema validation errors",
+    description: 'Input validation failures, schema validation errors',
   },
   AUTHENTICATION_ERROR: {
-    code: "AUTHENTICATION_ERROR",
+    code: 'AUTHENTICATION_ERROR',
     statusCode: 401,
-    description: "Invalid credentials, expired tokens",
+    description: 'Invalid credentials, expired tokens',
   },
   AUTHORIZATION_ERROR: {
-    code: "AUTHORIZATION_ERROR",
+    code: 'AUTHORIZATION_ERROR',
     statusCode: 403,
-    description: "Insufficient permissions, resource access denied",
+    description: 'Insufficient permissions, resource access denied',
   },
   NOT_FOUND: {
-    code: "NOT_FOUND",
+    code: 'NOT_FOUND',
     statusCode: 404,
-    description: "Resource not found",
+    description: 'Resource not found',
   },
   CONFLICT: {
-    code: "CONFLICT",
+    code: 'CONFLICT',
     statusCode: 409,
-    description: "Duplicate resources, constraint violations",
+    description: 'Duplicate resources, constraint violations',
   },
   RATE_LIMIT: {
-    code: "RATE_LIMIT",
+    code: 'RATE_LIMIT',
     statusCode: 429,
-    description: "Rate limit exceeded",
+    description: 'Rate limit exceeded',
   },
   SYSTEM_ERROR: {
-    code: "SYSTEM_ERROR",
+    code: 'SYSTEM_ERROR',
     statusCode: 500,
-    description: "Database failures, external service failures",
+    description: 'Database failures, external service failures',
   },
   NETWORK_ERROR: {
-    code: "NETWORK_ERROR",
+    code: 'NETWORK_ERROR',
     statusCode: 503,
-    description: "Timeouts, connection failures",
+    description: 'Timeouts, connection failures',
   },
 } as const;
 
@@ -200,15 +215,15 @@ export function formatError(error: unknown): {
 
   if (error instanceof Error) {
     return {
-      code: "UNKNOWN_ERROR",
+      code: 'UNKNOWN_ERROR',
       message: error.message,
       statusCode: 500,
     };
   }
 
   return {
-    code: "UNKNOWN_ERROR",
-    message: "An unknown error occurred",
+    code: 'UNKNOWN_ERROR',
+    message: 'An unknown error occurred',
     statusCode: 500,
   };
 }

@@ -12,18 +12,21 @@ This is a template summary. Run `npm run orchestrate` to generate an actual summ
 ## Created Files
 
 ### Core Infrastructure
+
 - `supabase/migrations/000000000800_upsert_functions.sql` - Self-healing SQL pack
 - `scripts/lib/db.ts` - Database connection pool helper
 - `scripts/lib/retry.ts` - Exponential backoff retry utility
 - `scripts/lib/logger.ts` - Timestamped logging utility
 
 ### ETL Scripts
+
 - `scripts/etl/pull_events.ts` - Generic event ingestion
 - `scripts/etl/pull_ads_source_a.ts` - Source A ads ingestion
 - `scripts/etl/pull_ads_source_b.ts` - Source B ads ingestion
 - `scripts/etl/compute_metrics.ts` - Metrics computation
 
 ### Agents
+
 - `scripts/agents/preflight.ts` - Preflight checks
 - `scripts/agents/verify_db.ts` - Database verification
 - `scripts/agents/generate_delta_migration.ts` - Delta migration generator
@@ -33,9 +36,11 @@ This is a template summary. Run `npm run orchestrate` to generate an actual summ
 - `scripts/agents/system_health.ts` - System health audit
 
 ### Orchestration
+
 - `scripts/orchestrate_master.ts` - Master orchestration script
 
 ### CI/CD
+
 - `infra/gh-actions/preflight.yml` - Preflight CI job
 - `infra/gh-actions/data_quality.yml` - Data quality CI job
 - `infra/gh-actions/nightly-etl.yml` - Nightly ETL CI job
@@ -43,16 +48,19 @@ This is a template summary. Run `npm run orchestrate` to generate an actual summ
 - `infra/gh-actions/system_health.yml` - System health CI job
 
 ### Configuration
+
 - `infra/env/.env.example` - Environment variables template
 - `infra/cron/etl.cron` - Cron configuration
 
 ### Tests & Fixtures
+
 - `tests/data_quality.sql` - Data quality SQL checks
 - `tests/fixtures/events_sample.json` - Sample events
 - `tests/fixtures/source_a_ads_sample.json` - Sample Source A ads
 - `tests/fixtures/source_b_ads_sample.json` - Sample Source B ads
 
 ### Models & Reports
+
 - `models/finance_model.csv` - Finance model
 - `models/assumptions.json` - Financial assumptions
 - `reports/exec/finance_automation_growth_memo.md` - Finance memo
@@ -60,12 +68,14 @@ This is a template summary. Run `npm run orchestrate` to generate an actual summ
 - `solutions/system/*.md` - System solutions
 
 ### Growth & Features
+
 - `growth/portfolio.md` - Growth experiments portfolio
 - `growth/experiments/api_billing/plan.md` - API billing experiment
 - `featureflags/flags.json` - Feature flags
 - `middleware/flags.ts` - Feature flag middleware
 
 ### Dashboards
+
 - `dashboards/metrics_spec.md` - Metrics dashboard specification
 
 ## Next Best Actions
@@ -100,7 +110,7 @@ This is a template summary. Run `npm run orchestrate` to generate an actual summ
 ✅ ETL scripts support `--dry-run`  
 ✅ Retries with exponential backoff  
 ✅ Timezone defaults to America/Toronto  
-✅ Logging produces Markdown reports  
+✅ Logging produces Markdown reports
 
 ## Acceptance Criteria
 

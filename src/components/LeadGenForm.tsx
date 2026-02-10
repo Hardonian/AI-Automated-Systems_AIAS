@@ -18,8 +18,8 @@ export const LeadGenForm = () => {
     // Simulate API call
     setTimeout(() => {
       toast({
-        title: "Success! 🎉",
-        description: "Check your email for the Master System Prompts Guide PDF",
+        title: 'Success! 🎉',
+        description: 'Check your email for the Master System Prompts Guide PDF',
       });
       setEmail('');
       setName('');
@@ -28,76 +28,93 @@ export const LeadGenForm = () => {
   };
 
   return (
-    <section className="py-24 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
-      
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto">
-          <div className="p-12 rounded-2xl bg-gradient-card backdrop-blur-sm border border-primary/20 shadow-glow">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-primary/10 mb-6">
-                <Gift className="w-6 h-6 text-primary" />
-                <span className="text-lg font-semibold">Free Resource</span>
+    <section className='relative overflow-hidden py-24'>
+      <div className='absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent' />
+
+      <div className='container relative z-10 mx-auto px-4'>
+        <div className='mx-auto max-w-4xl'>
+          <div className='bg-gradient-card shadow-glow rounded-2xl border border-primary/20 p-12 backdrop-blur-sm'>
+            <div className='mb-8 text-center'>
+              <div className='mb-6 inline-flex items-center gap-3 rounded-full bg-primary/10 px-6 py-3'>
+                <Gift className='h-6 w-6 text-primary' />
+                <span className='text-lg font-semibold'>Free Resource</span>
               </div>
-              
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4">
+
+              <h2 className='mb-4 px-4 text-3xl font-bold sm:text-4xl md:text-5xl'>
                 Get Your Free
-                <span className="block mt-2 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+                <span className='to-primary-glow mt-2 block bg-gradient-to-r from-primary bg-clip-text text-transparent'>
                   AI Agent System Prompts Guide
                 </span>
               </h2>
-              
-              <p className="text-lg sm:text-xl text-muted-foreground mb-6 sm:mb-8 px-4">
-                10-page master guide on crafting perfect system prompts and fine-tuning your AI agents for maximum performance
+
+              <p className='mb-6 px-4 text-lg text-muted-foreground sm:mb-8 sm:text-xl'>
+                10-page master guide on crafting perfect system prompts and
+                fine-tuning your AI agents for maximum performance
               </p>
 
-              <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8 px-4">
-                <div className="p-3 sm:p-4 rounded-lg bg-card/50">
-                  <Download className="w-6 h-6 sm:w-8 sm:h-8 text-primary mx-auto mb-2" />
-                  <div className="text-sm sm:text-base font-semibold mb-1">10-Page PDF</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Comprehensive guide</div>
+              <div className='mb-6 grid gap-4 px-4 sm:mb-8 sm:grid-cols-3 sm:gap-6'>
+                <div className='rounded-lg bg-card/50 p-3 sm:p-4'>
+                  <Download className='mx-auto mb-2 h-6 w-6 text-primary sm:h-8 sm:w-8' />
+                  <div className='mb-1 text-sm font-semibold sm:text-base'>
+                    10-Page PDF
+                  </div>
+                  <div className='text-xs text-muted-foreground sm:text-sm'>
+                    Comprehensive guide
+                  </div>
                 </div>
-                <div className="p-3 sm:p-4 rounded-lg bg-card/50">
-                  <Mail className="w-6 h-6 sm:w-8 sm:h-8 text-primary mx-auto mb-2" />
-                  <div className="text-sm sm:text-base font-semibold mb-1">Instant Delivery</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Sent to your inbox</div>
+                <div className='rounded-lg bg-card/50 p-3 sm:p-4'>
+                  <Mail className='mx-auto mb-2 h-6 w-6 text-primary sm:h-8 sm:w-8' />
+                  <div className='mb-1 text-sm font-semibold sm:text-base'>
+                    Instant Delivery
+                  </div>
+                  <div className='text-xs text-muted-foreground sm:text-sm'>
+                    Sent to your inbox
+                  </div>
                 </div>
-                <div className="p-3 sm:p-4 rounded-lg bg-card/50">
-                  <Gift className="w-6 h-6 sm:w-8 sm:h-8 text-primary mx-auto mb-2" />
-                  <div className="text-sm sm:text-base font-semibold mb-1">Completely Free</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">No credit card</div>
+                <div className='rounded-lg bg-card/50 p-3 sm:p-4'>
+                  <Gift className='mx-auto mb-2 h-6 w-6 text-primary sm:h-8 sm:w-8' />
+                  <div className='mb-1 text-sm font-semibold sm:text-base'>
+                    Completely Free
+                  </div>
+                  <div className='text-xs text-muted-foreground sm:text-sm'>
+                    No credit card
+                  </div>
                 </div>
               </div>
             </div>
 
-            <form className="space-y-4 max-w-md mx-auto" onSubmit={handleSubmit}>
+            <form
+              className='mx-auto max-w-md space-y-4'
+              onSubmit={handleSubmit}
+            >
               <Input
                 required
-                className="bg-background/50 border-primary/20"
-                placeholder="Your Name"
-                type="text"
+                className='border-primary/20 bg-background/50'
+                placeholder='Your Name'
+                type='text'
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={e => setName(e.target.value)}
               />
               <Input
                 required
-                className="bg-background/50 border-primary/20"
-                placeholder="Your Email Address"
-                type="email"
+                className='border-primary/20 bg-background/50'
+                placeholder='Your Email Address'
+                type='email'
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
               />
               <Button
-                className="w-full bg-gradient-primary shadow-glow text-lg"
+                className='bg-gradient-primary shadow-glow w-full text-lg'
                 disabled={isLoading}
-                size="lg"
-                type="submit"
+                size='lg'
+                type='submit'
               >
                 {isLoading ? 'Sending...' : 'Download Free Guide'}
-                <Download className="ml-2 w-5 h-5" />
+                <Download className='ml-2 h-5 w-5' />
               </Button>
-              <p className="text-xs text-muted-foreground text-center">
-                By subscribing, you&apos;ll also receive our weekly AI automation insights newsletter. Unsubscribe anytime.
+              <p className='text-center text-xs text-muted-foreground'>
+                By subscribing, you&apos;ll also receive our weekly AI
+                automation insights newsletter. Unsubscribe anytime.
               </p>
             </form>
           </div>

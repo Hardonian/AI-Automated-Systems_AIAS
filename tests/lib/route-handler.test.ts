@@ -17,7 +17,7 @@ describe('Route Handler Utility', () => {
 
   describe('createGETHandler', () => {
     it('should handle GET requests', async () => {
-      const handler = createGETHandler(async (_context) => {
+      const handler = createGETHandler(async _context => {
         return NextResponse.json({ data: 'test' });
       });
 
@@ -32,7 +32,7 @@ describe('Route Handler Utility', () => {
     it('should cache responses when enabled', async () => {
       let callCount = 0;
       const handler = createGETHandler(
-        async (_context) => {
+        async _context => {
           callCount++;
           return NextResponse.json({ count: callCount });
         },
@@ -42,11 +42,11 @@ describe('Route Handler Utility', () => {
       );
 
       const req = new NextRequest('http://localhost/api/test');
-      
+
       // First call
       const res1 = await handler(req);
       await res1.json();
-      
+
       // Second call should use cache (if cache service is available)
       // Note: Cache behavior depends on cache service implementation
       expect(res1.status).toBe(200);
@@ -61,7 +61,7 @@ describe('Route Handler Utility', () => {
       });
 
       const handler = createPOSTHandler(
-        async (_context) => {
+        async _context => {
           return NextResponse.json({ success: true });
         },
         {
@@ -92,15 +92,13 @@ describe('Route Handler Utility', () => {
 
     it('should cache request body to avoid double consumption', async () => {
       let bodyReadCount = 0;
-      const handler = createPOSTHandler(
-        async (_context) => {
-          // Read body multiple times (should work due to caching)
-          const body1 = await _context.request.text();
-          const body2 = await _context.request.text();
-          bodyReadCount = 2;
-          return NextResponse.json({ body1, body2 });
-        }
-      );
+      const handler = createPOSTHandler(async _context => {
+        // Read body multiple times (should work due to caching)
+        const body1 = await _context.request.text();
+        const body2 = await _context.request.text();
+        bodyReadCount = 2;
+        return NextResponse.json({ body1, body2 });
+      });
 
       const req = new NextRequest('http://localhost/api/test', {
         method: 'POST',
@@ -116,7 +114,7 @@ describe('Route Handler Utility', () => {
 
   describe('Error Handling', () => {
     it('should format errors consistently', async () => {
-      const handler = createGETHandler(async (_context) => {
+      const handler = createGETHandler(async _context => {
         throw new Error('Test error');
       });
 
@@ -134,7 +132,7 @@ describe('Route Handler Utility', () => {
       });
 
       const handler = createPOSTHandler(
-        async (_context) => {
+        async _context => {
           return NextResponse.json({ success: true });
         },
         {

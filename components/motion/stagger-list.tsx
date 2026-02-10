@@ -1,16 +1,20 @@
-"use client";
-import { motion } from "framer-motion";
-import { PropsWithChildren } from "react";
+'use client';
+import { motion } from 'framer-motion';
+import { PropsWithChildren } from 'react';
 
 interface StaggerListProps extends PropsWithChildren {
   delay?: number;
   staggerDelay?: number;
 }
 
-export function StaggerList({ children, delay = 0, staggerDelay = 0.1 }: StaggerListProps) {
+export function StaggerList({
+  children,
+  delay = 0,
+  staggerDelay = 0.1,
+}: StaggerListProps) {
   return (
     <motion.div
-      initial="hidden"
+      initial='hidden'
       variants={{
         visible: {
           transition: {
@@ -19,8 +23,8 @@ export function StaggerList({ children, delay = 0, staggerDelay = 0.1 }: Stagger
           },
         },
       }}
-      viewport={{ once: true, margin: "-10% 0px" }}
-      whileInView="visible"
+      viewport={{ once: true, margin: '-10% 0px' }}
+      whileInView='visible'
     >
       {children}
     </motion.div>
@@ -36,7 +40,7 @@ export function StaggerItem({ children }: PropsWithChildren) {
           opacity: 1,
           y: 0,
           transition: {
-            type: "spring",
+            type: 'spring',
             stiffness: 120,
             damping: 18,
           },

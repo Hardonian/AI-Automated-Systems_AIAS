@@ -33,7 +33,12 @@ export interface DuplicateAnalysis {
 }
 
 export interface OptimizationRecommendation {
-  type: 'code-split' | 'tree-shake' | 'lazy-load' | 'duplicate-remove' | 'compress';
+  type:
+    | 'code-split'
+    | 'tree-shake'
+    | 'lazy-load'
+    | 'duplicate-remove'
+    | 'compress';
   priority: 'high' | 'medium' | 'low';
   description: string;
   estimatedSavings: number;

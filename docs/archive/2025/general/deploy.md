@@ -54,6 +54,7 @@ Go to your Vercel project dashboard → Settings → Environment Variables and a
 - `GOOGLE_CLIENT_SECRET`
 
 Set each variable for:
+
 - **Production**: Production deployments
 - **Preview**: Preview deployments (PRs)
 - **Development**: Local development (optional)

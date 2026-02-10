@@ -1,6 +1,6 @@
 /**
  * Secure File Upload Handler
- * 
+ *
  * Implements comprehensive file upload security:
  * - File type validation (MIME type + extension)
  * - File size limits
@@ -44,7 +44,17 @@ const DEFAULT_CONFIG: FileUploadConfig = {
     'text/csv',
     'application/json',
   ],
-  allowedExtensions: ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.pdf', '.txt', '.csv', '.json'],
+  allowedExtensions: [
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.gif',
+    '.webp',
+    '.pdf',
+    '.txt',
+    '.csv',
+    '.json',
+  ],
   requireAuth: true,
   storageBucket: env.storage.uploadBucket || 'public',
 };
@@ -67,19 +77,20 @@ const MIME_TO_EXT: Record<string, string[]> = {
 export function sanitizeFilename(filename: string): string {
   // Remove path components
   const basename = filename.split('/').pop() || filename;
-  
+
   // Remove null bytes
   const cleaned = basename.replace(/\0/g, '');
-  
+
   // Remove special characters except dots, dashes, underscores
   const sanitized = cleaned.replace(/[^a-zA-Z0-9._-]/g, '_');
-  
+
   // Limit length
   const maxLength = 255;
-  const truncated = sanitized.length > maxLength 
-    ? sanitized.substring(0, maxLength)
-    : sanitized;
-  
+  const truncated =
+    sanitized.length > maxLength
+      ? sanitized.substring(0, maxLength)
+      : sanitized;
+
   // Ensure it doesn't start/end with dot or dash
   return truncated.replace(/^[.-]+|[.-]+$/g, '') || 'file';
 }
@@ -99,7 +110,7 @@ export function validateFileType(
       error: `File type not allowed. Allowed types: ${config.allowedMimeTypes.join(', ')}`,
     };
   }
-  
+
   // Check extension
   const extension = filename.toLowerCase().substring(filename.lastIndexOf('.'));
   if (!config.allowedExtensions.includes(extension)) {
@@ -108,16 +119,19 @@ export function validateFileType(
       error: `File extension not allowed. Allowed extensions: ${config.allowedExtensions.join(', ')}`,
     };
   }
-  
+
   // Verify MIME type matches extension
   const expectedExtensions = MIME_TO_EXT[mimeType] || [];
-  if (expectedExtensions.length > 0 && !expectedExtensions.includes(extension)) {
+  if (
+    expectedExtensions.length > 0 &&
+    !expectedExtensions.includes(extension)
+  ) {
     return {
       valid: false,
       error: 'File MIME type does not match file extension',
     };
   }
-  
+
   return { valid: true };
 }
 
@@ -135,14 +149,14 @@ export function validateFileSize(
       error: `File size exceeds maximum allowed size of ${maxSizeMB}MB`,
     };
   }
-  
+
   if (sizeBytes === 0) {
     return {
       valid: false,
       error: 'File is empty',
     };
   }
-  
+
   return { valid: true };
 }
 
@@ -155,7 +169,7 @@ export async function scanFileForMalware(
 ): Promise<{ safe: boolean; error?: string }> {
   // TODO: Integrate with virus scanning service (ClamAV, VirusTotal API, etc.)
   // For now, perform basic checks
-  
+
   // Check for suspicious patterns
   const suspiciousPatterns = [
     /<script/i,
@@ -164,7 +178,7 @@ export async function scanFileForMalware(
     /onload=/i,
     /eval\(/i,
   ];
-  
+
   const content = buffer.toString('utf-8', 0, Math.min(buffer.length, 1024));
   for (const pattern of suspiciousPatterns) {
     if (pattern.test(content)) {
@@ -178,7 +192,7 @@ export async function scanFileForMalware(
       };
     }
   }
-  
+
   return { safe: true };
 }
 
@@ -192,14 +206,14 @@ export async function uploadFileSecure(
   config: Partial<FileUploadConfig> = {}
 ): Promise<FileUploadResult> {
   const finalConfig = { ...DEFAULT_CONFIG, ...config };
-  
+
   try {
     // Get file metadata
     const isFile = file instanceof File;
     const size = isFile ? file.size : file.length;
     const mimeType = isFile ? file.type : 'application/octet-stream';
     const originalFilename = isFile ? file.name : filename;
-    
+
     // Validate file size
     const sizeValidation = validateFileSize(size, finalConfig);
     if (!sizeValidation.valid) {
@@ -208,29 +222,35 @@ export async function uploadFileSecure(
         error: sizeValidation.error,
       };
     }
-    
+
     // Validate file type
-    const typeValidation = validateFileType(mimeType, originalFilename, finalConfig);
+    const typeValidation = validateFileType(
+      mimeType,
+      originalFilename,
+      finalConfig
+    );
     if (!typeValidation.valid) {
       return {
         success: false,
         error: typeValidation.error,
       };
     }
-    
+
     // Sanitize filename
     const sanitizedFilename = sanitizeFilename(originalFilename);
-    
+
     // Generate unique filename
     const timestamp = Date.now();
     const randomId = Math.random().toString(36).substring(2, 15);
-    const fileExtension = sanitizedFilename.substring(sanitizedFilename.lastIndexOf('.'));
+    const fileExtension = sanitizedFilename.substring(
+      sanitizedFilename.lastIndexOf('.')
+    );
     const uniqueFilename = `${timestamp}-${randomId}${fileExtension}`;
-    
+
     // Build storage path
     const pathPrefix = finalConfig.pathPrefix || 'uploads';
     const storagePath = `${pathPrefix}/${userId}/${uniqueFilename}`;
-    
+
     // Convert File to Buffer if needed
     let fileBuffer: Buffer;
     if (file instanceof File) {
@@ -239,7 +259,7 @@ export async function uploadFileSecure(
     } else {
       fileBuffer = file;
     }
-    
+
     // Scan for malware
     const scanResult = await scanFileForMalware(fileBuffer, sanitizedFilename);
     if (!scanResult.safe) {
@@ -248,13 +268,13 @@ export async function uploadFileSecure(
         error: scanResult.error || 'File failed security scan',
       };
     }
-    
+
     // Upload to Supabase Storage
     const supabase = createClient(
       env.supabase.url,
       env.supabase.serviceRoleKey
     );
-    
+
     const { data, error } = await supabase.storage
       .from(finalConfig.storageBucket)
       .upload(storagePath, fileBuffer, {
@@ -262,7 +282,7 @@ export async function uploadFileSecure(
         upsert: false,
         cacheControl: '3600',
       });
-    
+
     if (error) {
       logger.error('File upload failed', error, {
         filename: sanitizedFilename,
@@ -274,12 +294,12 @@ export async function uploadFileSecure(
         error: `Upload failed: ${error.message}`,
       };
     }
-    
+
     // Get public URL
     const { data: urlData } = supabase.storage
       .from(finalConfig.storageBucket)
       .getPublicUrl(storagePath);
-    
+
     logger.info('File uploaded successfully', {
       filename: sanitizedFilename,
       storagePath,
@@ -287,7 +307,7 @@ export async function uploadFileSecure(
       size,
       mimeType,
     });
-    
+
     return {
       success: true,
       fileUrl: urlData.publicUrl,
@@ -295,10 +315,14 @@ export async function uploadFileSecure(
       fileId: data.id || uniqueFilename,
     };
   } catch (error) {
-    logger.error('File upload error', error instanceof Error ? error : new Error(String(error)), {
-      filename,
-      userId,
-    });
+    logger.error(
+      'File upload error',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        filename,
+        userId,
+      }
+    );
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred',
@@ -318,11 +342,9 @@ export async function deleteFileSecure(
       env.supabase.url,
       env.supabase.serviceRoleKey
     );
-    
-    const { error } = await supabase.storage
-      .from(bucket)
-      .remove([filePath]);
-    
+
+    const { error } = await supabase.storage.from(bucket).remove([filePath]);
+
     if (error) {
       logger.error('File deletion failed', error, {
         filePath,
@@ -333,13 +355,17 @@ export async function deleteFileSecure(
         error: error.message,
       };
     }
-    
+
     return { success: true };
   } catch (error) {
-    logger.error('File deletion error', error instanceof Error ? error : new Error(String(error)), {
-      filePath,
-      bucket,
-    });
+    logger.error(
+      'File deletion error',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        filePath,
+        bucket,
+      }
+    );
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred',

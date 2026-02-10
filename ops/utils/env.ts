@@ -10,11 +10,17 @@ export function requireEnv(key: string): string {
   return value;
 }
 
-export function requireEnvWithDefault<T>(key: string, defaultValue: T): string | T {
+export function requireEnvWithDefault<T>(
+  key: string,
+  defaultValue: T
+): string | T {
   return process.env[key] || defaultValue;
 }
 
-export function validateEnv(required: string[]): { valid: boolean; missing: string[] } {
+export function validateEnv(required: string[]): {
+  valid: boolean;
+  missing: string[];
+} {
   const missing: string[] = [];
   for (const key of required) {
     if (!process.env[key]) {

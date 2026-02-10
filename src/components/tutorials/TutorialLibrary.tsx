@@ -1,4 +1,13 @@
-import { Search, Clock, Star, Play, Users, Shield, Zap, ShoppingCart } from 'lucide-react';
+import {
+  Search,
+  Clock,
+  Star,
+  Play,
+  Users,
+  Shield,
+  Zap,
+  ShoppingCart,
+} from 'lucide-react';
 import React, { useState, useMemo } from 'react';
 
 import { InteractiveTutorial, Tutorial } from './InteractiveTutorial';
@@ -7,9 +16,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
 
 const tutorialLibrary: Tutorial[] = [
   {
@@ -24,11 +38,11 @@ const tutorialLibrary: Tutorial[] = [
       {
         id: 'welcome',
         title: 'Welcome!',
-        description: 'Let\'s get you started with the platform',
+        description: "Let's get you started with the platform",
         type: 'demo',
         content: {
-          text: 'Welcome to the AIAS platform! This interactive tutorial will guide you through the key features and help you get started with AI automation.'
-        }
+          text: 'Welcome to the AIAS platform! This interactive tutorial will guide you through the key features and help you get started with AI automation.',
+        },
       },
       {
         id: 'dashboard-overview',
@@ -36,13 +50,13 @@ const tutorialLibrary: Tutorial[] = [
         description: 'Explore the main dashboard',
         type: 'interactive',
         content: {
-          text: 'The dashboard is your central hub for managing automations, viewing analytics, and accessing all platform features. Click around to explore!'
+          text: 'The dashboard is your central hub for managing automations, viewing analytics, and accessing all platform features. Click around to explore!',
         },
         hints: [
           'Look for the navigation menu on the left',
           'Check out the analytics widgets in the center',
-          'Notice the notification center in the top right'
-        ]
+          'Notice the notification center in the top right',
+        ],
       },
       {
         id: 'first-automation',
@@ -50,10 +64,10 @@ const tutorialLibrary: Tutorial[] = [
         description: 'Build a simple automation workflow',
         type: 'demo',
         content: {
-          text: 'Let\'s create a simple email automation that sends a welcome message to new leads.'
-        }
-      }
-    ]
+          text: "Let's create a simple email automation that sends a welcome message to new leads.",
+        },
+      },
+    ],
   },
   {
     id: 'automation-basics',
@@ -70,8 +84,8 @@ const tutorialLibrary: Tutorial[] = [
         description: 'Learn what workflows are and how they work',
         type: 'demo',
         content: {
-          text: 'Workflows are sequences of automated actions triggered by specific events. Think of them as digital assembly lines for your business processes.'
-        }
+          text: 'Workflows are sequences of automated actions triggered by specific events. Think of them as digital assembly lines for your business processes.',
+        },
       },
       {
         id: 'triggers-quiz',
@@ -80,18 +94,20 @@ const tutorialLibrary: Tutorial[] = [
         type: 'quiz',
         content: {
           quiz: {
-            question: 'Which of the following is NOT a common workflow trigger?',
+            question:
+              'Which of the following is NOT a common workflow trigger?',
             options: [
               'Email received',
               'Form submission',
               'Scheduled time',
               'User login',
-              'Database query'
+              'Database query',
             ],
             correct: 4,
-            explanation: 'Database queries are typically actions, not triggers. Triggers are events that start a workflow.'
-          }
-        }
+            explanation:
+              'Database queries are typically actions, not triggers. Triggers are events that start a workflow.',
+          },
+        },
       },
       {
         id: 'build-workflow',
@@ -99,15 +115,15 @@ const tutorialLibrary: Tutorial[] = [
         description: 'Create an automated lead scoring system',
         type: 'interactive',
         content: {
-          text: 'Now let\'s build a real workflow that scores leads based on their behavior and demographics.'
+          text: "Now let's build a real workflow that scores leads based on their behavior and demographics.",
         },
         hints: [
           'Start with a form submission trigger',
           'Add conditions to check lead quality',
-          'Set up different actions for different score ranges'
-        ]
-      }
-    ]
+          'Set up different actions for different score ranges',
+        ],
+      },
+    ],
   },
   {
     id: 'ai-agents-intro',
@@ -124,8 +140,8 @@ const tutorialLibrary: Tutorial[] = [
         description: 'Understanding AI agent capabilities',
         type: 'demo',
         content: {
-          text: 'AI agents are intelligent assistants that can understand context, make decisions, and take actions on your behalf.'
-        }
+          text: 'AI agents are intelligent assistants that can understand context, make decisions, and take actions on your behalf.',
+        },
       },
       {
         id: 'agent-code',
@@ -143,14 +159,14 @@ const customerServiceAgent = {
   },
   triggers: ["chat_message", "email_received"],
   actions: ["respond_to_customer", "create_support_ticket"]
-};`
+};`,
         },
         hints: [
           'The agent has a name and defined capabilities',
           'Personality settings control how the agent responds',
           'Triggers determine when the agent activates',
-          'Actions define what the agent can do'
-        ]
+          'Actions define what the agent can do',
+        ],
       },
       {
         id: 'deploy-agent',
@@ -158,10 +174,10 @@ const customerServiceAgent = {
         description: 'Deploy an AI agent to production',
         type: 'interactive',
         content: {
-          text: 'Now let\'s deploy your AI agent and test it in a real environment.'
-        }
-      }
-    ]
+          text: "Now let's deploy your AI agent and test it in a real environment.",
+        },
+      },
+    ],
   },
   {
     id: 'security-compliance',
@@ -178,8 +194,8 @@ const customerServiceAgent = {
         description: 'Overview of security measures',
         type: 'demo',
         content: {
-          text: 'Our platform includes enterprise-grade security features including encryption, audit logging, and threat detection.'
-        }
+          text: 'Our platform includes enterprise-grade security features including encryption, audit logging, and threat detection.',
+        },
       },
       {
         id: 'privacy-settings',
@@ -187,58 +203,78 @@ const customerServiceAgent = {
         description: 'Configure privacy and compliance settings',
         type: 'interactive',
         content: {
-          text: 'Learn how to configure privacy settings and ensure GDPR/CCPA compliance for your organization.'
-        }
-      }
-    ]
-  }
+          text: 'Learn how to configure privacy settings and ensure GDPR/CCPA compliance for your organization.',
+        },
+      },
+    ],
+  },
 ];
 
 export const TutorialLibrary: React.FC = () => {
-  const [selectedTutorial, setSelectedTutorial] = useState<Tutorial | null>(null);
+  const [selectedTutorial, setSelectedTutorial] = useState<Tutorial | null>(
+    null
+  );
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
 
   const filteredTutorials = useMemo(() => {
     return tutorialLibrary.filter(tutorial => {
-      const matchesSearch = tutorial.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           tutorial.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           tutorial.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-      
-      const matchesCategory = selectedCategory === 'all' || tutorial.category === selectedCategory;
-      const matchesDifficulty = selectedDifficulty === 'all' || tutorial.difficulty === selectedDifficulty;
-      
+      const matchesSearch =
+        tutorial.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        tutorial.description
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        tutorial.tags.some(tag =>
+          tag.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+      const matchesCategory =
+        selectedCategory === 'all' || tutorial.category === selectedCategory;
+      const matchesDifficulty =
+        selectedDifficulty === 'all' ||
+        tutorial.difficulty === selectedDifficulty;
+
       return matchesSearch && matchesCategory && matchesDifficulty;
     });
   }, [searchQuery, selectedCategory, selectedDifficulty]);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'getting-started': return <Play className="w-4 h-4" />;
-      case 'automation': return <Zap className="w-4 h-4" />;
-      case 'ai-agents': return <Users className="w-4 h-4" />;
-      case 'marketplace': return <ShoppingCart className="w-4 h-4" />;
-      case 'security': return <Shield className="w-4 h-4" />;
-      default: return <Play className="w-4 h-4" />;
+      case 'getting-started':
+        return <Play className='h-4 w-4' />;
+      case 'automation':
+        return <Zap className='h-4 w-4' />;
+      case 'ai-agents':
+        return <Users className='h-4 w-4' />;
+      case 'marketplace':
+        return <ShoppingCart className='h-4 w-4' />;
+      case 'security':
+        return <Shield className='h-4 w-4' />;
+      default:
+        return <Play className='h-4 w-4' />;
     }
   };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'beginner': return 'bg-green-100 text-green-800';
-      case 'intermediate': return 'bg-yellow-100 text-yellow-800';
-      case 'advanced': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'beginner':
+        return 'bg-green-100 text-green-800';
+      case 'intermediate':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'advanced':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   if (selectedTutorial) {
     return (
-      <div className="space-y-4">
+      <div className='space-y-4'>
         <Button
-          className="mb-4"
-          variant="outline"
+          className='mb-4'
+          variant='outline'
           onClick={() => setSelectedTutorial(null)}
         >
           ← Back to Library
@@ -246,7 +282,9 @@ export const TutorialLibrary: React.FC = () => {
         <InteractiveTutorial
           tutorial={selectedTutorial}
           onComplete={(tutorialId, score) => {
-            console.log(`Tutorial ${tutorialId} completed with score: ${score}%`);
+            console.log(
+              `Tutorial ${tutorialId} completed with score: ${score}%`
+            );
             setSelectedTutorial(null);
           }}
         />
@@ -255,100 +293,110 @@ export const TutorialLibrary: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold">Interactive Tutorial Library</h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Learn the platform through hands-on tutorials, interactive demos, and guided experiences.
-          Master AI automation at your own pace.
+    <div className='space-y-6'>
+      <div className='space-y-2 text-center'>
+        <h1 className='text-3xl font-bold'>Interactive Tutorial Library</h1>
+        <p className='mx-auto max-w-2xl text-gray-600'>
+          Learn the platform through hands-on tutorials, interactive demos, and
+          guided experiences. Master AI automation at your own pace.
         </p>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="flex-1">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+      <div className='flex flex-col gap-4 sm:flex-row'>
+        <div className='flex-1'>
+          <div className='relative'>
+            <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400' />
             <Input
-              className="pl-10"
-              placeholder="Search tutorials..."
+              className='pl-10'
+              placeholder='Search tutorials...'
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
-        
+
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-full sm:w-48">
-            <SelectValue placeholder="Category" />
+          <SelectTrigger className='w-full sm:w-48'>
+            <SelectValue placeholder='Category' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="getting-started">Getting Started</SelectItem>
-            <SelectItem value="automation">Automation</SelectItem>
-            <SelectItem value="ai-agents">AI Agents</SelectItem>
-            <SelectItem value="marketplace">Marketplace</SelectItem>
-            <SelectItem value="security">Security</SelectItem>
+            <SelectItem value='all'>All Categories</SelectItem>
+            <SelectItem value='getting-started'>Getting Started</SelectItem>
+            <SelectItem value='automation'>Automation</SelectItem>
+            <SelectItem value='ai-agents'>AI Agents</SelectItem>
+            <SelectItem value='marketplace'>Marketplace</SelectItem>
+            <SelectItem value='security'>Security</SelectItem>
           </SelectContent>
         </Select>
 
-        <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
-          <SelectTrigger className="w-full sm:w-48">
-            <SelectValue placeholder="Difficulty" />
+        <Select
+          value={selectedDifficulty}
+          onValueChange={setSelectedDifficulty}
+        >
+          <SelectTrigger className='w-full sm:w-48'>
+            <SelectValue placeholder='Difficulty' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Levels</SelectItem>
-            <SelectItem value="beginner">Beginner</SelectItem>
-            <SelectItem value="intermediate">Intermediate</SelectItem>
-            <SelectItem value="advanced">Advanced</SelectItem>
+            <SelectItem value='all'>All Levels</SelectItem>
+            <SelectItem value='beginner'>Beginner</SelectItem>
+            <SelectItem value='intermediate'>Intermediate</SelectItem>
+            <SelectItem value='advanced'>Advanced</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      <Tabs className="w-full" defaultValue="all">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="all">All Tutorials</TabsTrigger>
-          <TabsTrigger value="featured">Featured</TabsTrigger>
+      <Tabs className='w-full' defaultValue='all'>
+        <TabsList className='grid w-full grid-cols-2'>
+          <TabsTrigger value='all'>All Tutorials</TabsTrigger>
+          <TabsTrigger value='featured'>Featured</TabsTrigger>
         </TabsList>
-        
-        <TabsContent className="space-y-4" value="all">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {filteredTutorials.map((tutorial) => (
-              <Card key={tutorial.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+
+        <TabsContent className='space-y-4' value='all'>
+          <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
+            {filteredTutorials.map(tutorial => (
+              <Card
+                key={tutorial.id}
+                className='cursor-pointer transition-shadow hover:shadow-lg'
+              >
                 <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-2">
+                  <div className='flex items-start justify-between'>
+                    <div className='flex items-center gap-2'>
                       {getCategoryIcon(tutorial.category)}
-                      <CardTitle className="text-lg">{tutorial.title}</CardTitle>
+                      <CardTitle className='text-lg'>
+                        {tutorial.title}
+                      </CardTitle>
                     </div>
                     <Badge className={getDifficultyColor(tutorial.difficulty)}>
                       {tutorial.difficulty}
                     </Badge>
                   </div>
-                  <p className="text-gray-600 text-sm">{tutorial.description}</p>
+                  <p className='text-sm text-gray-600'>
+                    {tutorial.description}
+                  </p>
                 </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
+
+                <CardContent className='space-y-4'>
+                  <div className='flex items-center gap-4 text-sm text-gray-500'>
+                    <div className='flex items-center gap-1'>
+                      <Clock className='h-4 w-4' />
                       {tutorial.estimatedTime} min
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4" />
+                    <div className='flex items-center gap-1'>
+                      <Star className='h-4 w-4' />
                       {tutorial.steps.length} steps
                     </div>
                   </div>
-                  
-                  <div className="flex flex-wrap gap-1">
-                    {tutorial.tags.slice(0, 3).map((tag) => (
-                      <Badge key={tag} className="text-xs" variant="outline">
+
+                  <div className='flex flex-wrap gap-1'>
+                    {tutorial.tags.slice(0, 3).map(tag => (
+                      <Badge key={tag} className='text-xs' variant='outline'>
                         {tag}
                       </Badge>
                     ))}
                   </div>
-                  
+
                   <Button
-                    className="w-full"
+                    className='w-full'
                     onClick={() => setSelectedTutorial(tutorial)}
                   >
                     Start Tutorial
@@ -358,38 +406,47 @@ export const TutorialLibrary: React.FC = () => {
             ))}
           </div>
         </TabsContent>
-        
-        <TabsContent className="space-y-4" value="featured">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+
+        <TabsContent className='space-y-4' value='featured'>
+          <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
             {filteredTutorials
               .filter(tutorial => tutorial.tags.includes('featured'))
-              .map((tutorial) => (
-                <Card key={tutorial.id} className="hover:shadow-lg transition-shadow cursor-pointer border-blue-200">
+              .map(tutorial => (
+                <Card
+                  key={tutorial.id}
+                  className='cursor-pointer border-blue-200 transition-shadow hover:shadow-lg'
+                >
                   <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-2">
+                    <div className='flex items-start justify-between'>
+                      <div className='flex items-center gap-2'>
                         {getCategoryIcon(tutorial.category)}
-                        <CardTitle className="text-lg">{tutorial.title}</CardTitle>
+                        <CardTitle className='text-lg'>
+                          {tutorial.title}
+                        </CardTitle>
                       </div>
-                      <Badge className="bg-blue-100 text-blue-800">Featured</Badge>
+                      <Badge className='bg-blue-100 text-blue-800'>
+                        Featured
+                      </Badge>
                     </div>
-                    <p className="text-gray-600 text-sm">{tutorial.description}</p>
+                    <p className='text-sm text-gray-600'>
+                      {tutorial.description}
+                    </p>
                   </CardHeader>
-                  
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
+
+                  <CardContent className='space-y-4'>
+                    <div className='flex items-center gap-4 text-sm text-gray-500'>
+                      <div className='flex items-center gap-1'>
+                        <Clock className='h-4 w-4' />
                         {tutorial.estimatedTime} min
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4" />
+                      <div className='flex items-center gap-1'>
+                        <Star className='h-4 w-4' />
                         {tutorial.steps.length} steps
                       </div>
                     </div>
-                    
+
                     <Button
-                      className="w-full"
+                      className='w-full'
                       onClick={() => setSelectedTutorial(tutorial)}
                     >
                       Start Tutorial

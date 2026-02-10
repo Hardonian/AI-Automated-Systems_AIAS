@@ -1,16 +1,23 @@
 import { z } from 'zod';
 
 import { aiClient } from './client';
-import { AuditRequest, EstimateRequest, ContentGenerationRequest, WorkflowGenerationRequest } from './types';
+import {
+  AuditRequest,
+  EstimateRequest,
+  ContentGenerationRequest,
+  WorkflowGenerationRequest,
+} from './types';
 
 export const AuditSummarySchema = z.object({
   overallScore: z.number().min(0).max(100),
-  categories: z.array(z.object({
-    name: z.string(),
-    score: z.number().min(0).max(100),
-    issues: z.array(z.string()),
-    recommendations: z.array(z.string()),
-  })),
+  categories: z.array(
+    z.object({
+      name: z.string(),
+      score: z.number().min(0).max(100),
+      issues: z.array(z.string()),
+      recommendations: z.array(z.string()),
+    })
+  ),
   criticalIssues: z.array(z.string()),
   quickWins: z.array(z.string()),
   estimatedImpact: z.string(),
@@ -27,15 +34,17 @@ export const ProjectEstimateSchema = z.object({
     min: z.number(), // weeks
     max: z.number(), // weeks
   }),
-  phases: z.array(z.object({
-    name: z.string(),
-    duration: z.number(), // weeks
-    cost: z.object({
-      min: z.number(),
-      max: z.number(),
-    }),
-    deliverables: z.array(z.string()),
-  })),
+  phases: z.array(
+    z.object({
+      name: z.string(),
+      duration: z.number(), // weeks
+      cost: z.object({
+        min: z.number(),
+        max: z.number(),
+      }),
+      deliverables: z.array(z.string()),
+    })
+  ),
   assumptions: z.array(z.string()),
   risks: z.array(z.string()),
   recommendations: z.array(z.string()),
@@ -43,51 +52,69 @@ export const ProjectEstimateSchema = z.object({
 
 export const ContentPlanSchema = z.object({
   title: z.string(),
-  outline: z.array(z.object({
-    heading: z.string(),
-    subheadings: z.array(z.string()),
-    keyPoints: z.array(z.string()),
-  })),
+  outline: z.array(
+    z.object({
+      heading: z.string(),
+      subheadings: z.array(z.string()),
+      keyPoints: z.array(z.string()),
+    })
+  ),
   targetKeywords: z.array(z.string()),
   estimatedReadTime: z.number(),
   callToAction: z.string(),
-  socialMediaVariants: z.array(z.object({
-    platform: z.string(),
-    content: z.string(),
-    hashtags: z.array(z.string()),
-  })),
+  socialMediaVariants: z.array(
+    z.object({
+      platform: z.string(),
+      content: z.string(),
+      hashtags: z.array(z.string()),
+    })
+  ),
 });
 
 export const WorkflowBlueprintSchema = z.object({
   name: z.string(),
   description: z.string(),
-  steps: z.array(z.object({
-    id: z.string(),
-    name: z.string(),
-    description: z.string(),
-    type: z.enum(['manual', 'automated', 'ai-assisted']),
-    estimatedTime: z.number(), // minutes
-    dependencies: z.array(z.string()),
-    tools: z.array(z.string()),
-  })),
-  integrations: z.array(z.object({
-    name: z.string(),
-    type: z.string(),
-    purpose: z.string(),
-    setupComplexity: z.enum(['low', 'medium', 'high']),
-  })),
-  metrics: z.array(z.object({
-    name: z.string(),
-    description: z.string(),
-    target: z.string(),
-    measurement: z.string(),
-  })),
+  steps: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      description: z.string(),
+      type: z.enum(['manual', 'automated', 'ai-assisted']),
+      estimatedTime: z.number(), // minutes
+      dependencies: z.array(z.string()),
+      tools: z.array(z.string()),
+    })
+  ),
+  integrations: z.array(
+    z.object({
+      name: z.string(),
+      type: z.string(),
+      purpose: z.string(),
+      setupComplexity: z.enum(['low', 'medium', 'high']),
+    })
+  ),
+  metrics: z.array(
+    z.object({
+      name: z.string(),
+      description: z.string(),
+      target: z.string(),
+      measurement: z.string(),
+    })
+  ),
   estimatedROI: z.string(),
   implementationTimeline: z.string(),
 });
 
 export class AIGenerators {
-  static async generateAuditSummary(website: string, type: 'seo' | 'performance' | 'accessibility' | 'security' | 'comprehensive' = 'comprehensive') {
+  static async generateAuditSummary(
+    website: string,
+    type:
+      | 'seo'
+      | 'performance'
+      | 'accessibility'
+      | 'security'
+      | 'comprehensive' = 'comprehensive'
+  ) {
     const request: AuditRequest = {
       website,
       type,
@@ -99,11 +126,17 @@ export class AIGenerators {
     };
 
     const result: unknown = await aiClient.generateAudit(request);
-    
+
     // Parse the AI response and structure it according to our schema
-    const resultRecord: Record<string, unknown> = typeof result === 'object' && result !== null ? result as Record<string, unknown> : {};
-    const {analysis} = resultRecord;
-    const analysisRecord: Record<string, unknown> = typeof analysis === 'object' && analysis !== null ? analysis as Record<string, unknown> : {};
+    const resultRecord: Record<string, unknown> =
+      typeof result === 'object' && result !== null
+        ? (result as Record<string, unknown>)
+        : {};
+    const { analysis } = resultRecord;
+    const analysisRecord: Record<string, unknown> =
+      typeof analysis === 'object' && analysis !== null
+        ? (analysis as Record<string, unknown>)
+        : {};
     const summary: {
       overallScore: number;
       categories: unknown[];
@@ -146,7 +179,7 @@ export class AIGenerators {
     };
 
     const result = await aiClient.generateEstimate(request);
-    
+
     // Parse the AI response and structure it according to our schema
     const resultAny = result as any;
     const estimate = {
@@ -163,8 +196,18 @@ export class AIGenerators {
 
   static async generateContentPlan(
     topic: string,
-    type: 'blog-post' | 'social-media' | 'email' | 'ad-copy' | 'product-description',
-    tone: 'professional' | 'casual' | 'technical' | 'creative' | 'persuasive' = 'professional',
+    type:
+      | 'blog-post'
+      | 'social-media'
+      | 'email'
+      | 'ad-copy'
+      | 'product-description',
+    tone:
+      | 'professional'
+      | 'casual'
+      | 'technical'
+      | 'creative'
+      | 'persuasive' = 'professional',
     targetAudience?: string,
     keywords?: string[]
   ) {
@@ -178,7 +221,7 @@ export class AIGenerators {
     };
 
     const result = await aiClient.generateContent(request);
-    
+
     // Parse the AI response and structure it according to our schema
     const resultAny = result as any;
     const plan = {
@@ -211,7 +254,7 @@ export class AIGenerators {
     };
 
     const result = await aiClient.generateWorkflow(request);
-    
+
     // Parse the AI response and structure it according to our schema
     const resultAny = result as any;
     const blueprint = {
@@ -221,7 +264,9 @@ export class AIGenerators {
       integrations: this.extractIntegrations(resultAny.workflow),
       metrics: this.extractMetrics(resultAny.workflow),
       estimatedROI: this.extractROI(resultAny.workflow),
-      implementationTimeline: this.extractImplementationTimeline(resultAny.workflow),
+      implementationTimeline: this.extractImplementationTimeline(
+        resultAny.workflow
+      ),
     };
 
     return WorkflowBlueprintSchema.parse(blueprint);
@@ -229,12 +274,22 @@ export class AIGenerators {
 
   // Helper methods to parse AI responses
   private static extractScore(_analysis: Record<string, unknown>): number {
-    const analysisString: string = typeof _analysis === 'string' ? _analysis : JSON.stringify(_analysis);
-    const scoreMatch: RegExpMatchArray | null = analysisString.match(/(?:score|rating|grade)[:\s]*(\d+)/i);
-    return scoreMatch !== null && scoreMatch[1] !== undefined ? parseInt(scoreMatch[1], 10) : 75;
+    const analysisString: string =
+      typeof _analysis === 'string' ? _analysis : JSON.stringify(_analysis);
+    const scoreMatch: RegExpMatchArray | null = analysisString.match(
+      /(?:score|rating|grade)[:\s]*(\d+)/i
+    );
+    return scoreMatch !== null && scoreMatch[1] !== undefined
+      ? parseInt(scoreMatch[1], 10)
+      : 75;
   }
 
-  private static extractCategories(_analysis: Record<string, unknown>): Array<{ name: string; score: number; issues: string[]; recommendations: string[] }> {
+  private static extractCategories(_analysis: Record<string, unknown>): Array<{
+    name: string;
+    score: number;
+    issues: string[];
+    recommendations: string[];
+  }> {
     // This would parse the analysis to extract categories
     // For now, return a default structure
     return [
@@ -253,11 +308,15 @@ export class AIGenerators {
     ];
   }
 
-  private static extractCriticalIssues(_analysis: Record<string, unknown>): string[] {
+  private static extractCriticalIssues(
+    _analysis: Record<string, unknown>
+  ): string[] {
     return ['Critical issue 1', 'Critical issue 2'];
   }
 
-  private static extractQuickWins(_analysis: Record<string, unknown>): string[] {
+  private static extractQuickWins(
+    _analysis: Record<string, unknown>
+  ): string[] {
     return ['Quick win 1', 'Quick win 2'];
   }
 
@@ -265,7 +324,9 @@ export class AIGenerators {
     return 'High impact improvements identified';
   }
 
-  private static extractNextSteps(_analysis: Record<string, unknown>): string[] {
+  private static extractNextSteps(
+    _analysis: Record<string, unknown>
+  ): string[] {
     return ['Step 1', 'Step 2', 'Step 3'];
   }
 

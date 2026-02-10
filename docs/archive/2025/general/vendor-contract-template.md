@@ -27,6 +27,7 @@
 Vendor agrees to provide the following services ("Services"):
 
 [DESCRIBE SERVICES IN DETAIL]
+
 - Service 1: [Description]
 - Service 2: [Description]
 - Service 3: [Description]
@@ -38,11 +39,13 @@ This Agreement shall commence on [START DATE] and continue until [END DATE], unl
 **3. COMPENSATION**
 
 **Payment Terms:**
+
 - Total Fee: $[AMOUNT] CAD (plus applicable taxes)
 - Payment Schedule: [e.g., Monthly installments, Upon completion, etc.]
 - Payment Method: [e.g., Bank transfer, Cheque, etc.]
 
 **Invoicing:**
+
 - Vendor shall invoice Client [frequency]
 - Payment due within [X] days of invoice date
 - Late fees: [X]% per month on overdue amounts
@@ -58,6 +61,7 @@ Vendor shall deliver the following deliverables:
 **5. PERFORMANCE STANDARDS**
 
 Vendor agrees to:
+
 - Perform Services in a professional and workmanlike manner
 - Comply with all applicable laws and regulations
 - Maintain appropriate insurance coverage
@@ -66,16 +70,19 @@ Vendor agrees to:
 **6. INTELLECTUAL PROPERTY**
 
 **Client Ownership:**
+
 - All work product and deliverables created under this Agreement shall be owned by Client
 - Vendor assigns all rights, title, and interest to Client
 
 **Vendor Retained Rights:**
+
 - Vendor retains rights to pre-existing materials and general knowledge
 - Vendor may use general methodologies and skills for other clients
 
 **7. CONFIDENTIALITY**
 
 Vendor agrees to maintain confidentiality of:
+
 - Client's proprietary information
 - Business strategies and plans
 - Customer data
@@ -86,6 +93,7 @@ Confidentiality obligations survive termination of this Agreement.
 **8. INDEPENDENT CONTRACTOR**
 
 Vendor is an independent contractor, not an employee. Vendor is responsible for:
+
 - Their own taxes
 - Their own insurance
 - Compliance with applicable laws
@@ -93,10 +101,12 @@ Vendor is an independent contractor, not an employee. Vendor is responsible for:
 **9. TERMINATION**
 
 **Termination for Cause:**
+
 - Either party may terminate for material breach
 - Written notice required with [X] days to cure
 
 **Termination for Convenience:**
+
 - Client may terminate with [X] days written notice
 - Vendor shall be paid for services rendered up to termination date
 
@@ -107,6 +117,7 @@ Vendor's total liability shall not exceed the total fees paid under this Agreeme
 **11. INDEMNIFICATION**
 
 Vendor agrees to indemnify Client against claims arising from:
+
 - Vendor's negligence or misconduct
 - Vendor's breach of this Agreement
 - Infringement of third-party rights
@@ -114,6 +125,7 @@ Vendor agrees to indemnify Client against claims arising from:
 **12. DISPUTE RESOLUTION**
 
 Any disputes shall be resolved through:
+
 - Good faith negotiation
 - Mediation (if negotiation fails)
 - Arbitration in [LOCATION] under [RULES]
@@ -129,13 +141,17 @@ Any disputes shall be resolved through:
 **14. SIGNATURES**
 
 **Client:**
-_________________________
+
+---
+
 [Name]
 [Title]
 [Date]
 
 **Vendor:**
-_________________________
+
+---
+
 [Name]
 [Title]
 [Date]
@@ -153,16 +169,19 @@ _________________________
 ## VARIATIONS
 
 **For Software/Development Services:**
+
 - Add specifications document
 - Include acceptance testing criteria
 - Define maintenance and support terms
 
 **For Marketing Services:**
+
 - Include performance metrics/KPIs
 - Define reporting requirements
 - Specify content ownership
 
 **For Consulting Services:**
+
 - Define scope of work document
 - Include hourly rates if applicable
 - Specify deliverables and milestones

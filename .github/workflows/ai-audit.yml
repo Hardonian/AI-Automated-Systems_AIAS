@@ -20,7 +20,7 @@ jobs:
   ai-audit:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'production' }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

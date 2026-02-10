@@ -4,7 +4,7 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import { SemanticLayer  } from '@/lib/data/semantic-layer';
+import { SemanticLayer } from '@/lib/data/semantic-layer';
 
 describe('SemanticLayer', () => {
   let semanticLayer: SemanticLayer;
@@ -72,7 +72,10 @@ describe('SemanticLayer', () => {
       const invalidData = { id: 'order-1' }; // missing total
 
       const validResult = semanticLayer.validateEntity('entity-2', validData);
-      const invalidResult = semanticLayer.validateEntity('entity-2', invalidData);
+      const invalidResult = semanticLayer.validateEntity(
+        'entity-2',
+        invalidData
+      );
 
       expect(validResult.valid).toBe(true);
       expect(invalidResult.valid).toBe(false);

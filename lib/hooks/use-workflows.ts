@@ -1,13 +1,13 @@
 /**
  * Workflow Hooks
- * 
+ *
  * React Query hooks for workflow data.
  */
 
-"use client";
+'use client';
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { queryKeys } from "@/lib/data/queryKeys";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/data/queryKeys';
 import {
   getWorkflows,
   getWorkflow,
@@ -17,12 +17,12 @@ import {
   deleteWorkflow,
   type Workflow,
   // type WorkflowTemplate,
-} from "@/lib/data/api/workflows";
+} from '@/lib/data/api/workflows';
 
 /**
  * Hook to get all workflows
  */
-export function useWorkflows(filters?: { status?: Workflow["status"] }) {
+export function useWorkflows(filters?: { status?: Workflow['status'] }) {
   return useQuery({
     queryKey: queryKeys.workflows.list(filters),
     queryFn: () => getWorkflows(filters),
@@ -35,9 +35,9 @@ export function useWorkflows(filters?: { status?: Workflow["status"] }) {
  */
 export function useWorkflow(workflowId: string | null) {
   return useQuery({
-    queryKey: queryKeys.workflows.detail(workflowId ?? ""),
+    queryKey: queryKeys.workflows.detail(workflowId ?? ''),
     queryFn: () => {
-      if (!workflowId) throw new Error("Workflow ID is required");
+      if (!workflowId) throw new Error('Workflow ID is required');
       return getWorkflow(workflowId);
     },
     enabled: !!workflowId,
@@ -80,7 +80,7 @@ export function useUpdateWorkflow() {
   return useMutation({
     mutationFn: ({ id, updates }: { id: string; updates: Partial<Workflow> }) =>
       updateWorkflow(id, updates),
-    onSuccess: (data) => {
+    onSuccess: data => {
       // Update cache optimistically
       queryClient.setQueryData(queryKeys.workflows.detail(data.id), data);
       // Invalidate list to ensure consistency
@@ -99,7 +99,9 @@ export function useDeleteWorkflow() {
     mutationFn: deleteWorkflow,
     onSuccess: (_, workflowId) => {
       // Remove from cache
-      queryClient.removeQueries({ queryKey: queryKeys.workflows.detail(workflowId) });
+      queryClient.removeQueries({
+        queryKey: queryKeys.workflows.detail(workflowId),
+      });
       // Invalidate list
       queryClient.invalidateQueries({ queryKey: queryKeys.workflows.lists() });
     },

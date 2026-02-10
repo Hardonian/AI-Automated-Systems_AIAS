@@ -1,6 +1,6 @@
 name: Post-Deploy Verify (Supabase & DQ)
 on:
-  push: { branches: [ main ] }
+  push: { branches: [main] }
   workflow_dispatch:
 jobs:
   verify:

@@ -1,6 +1,7 @@
 > Archived on 2025-11-12. Superseded by: (see docs/final index)
 
 # GenAI Content Engine Integration
+
 ## How It Fits Into AIAS Platform
 
 **Purpose:** Documentation on how GenAI Content Engine integrates with core platform  
@@ -72,18 +73,21 @@
 ## 📊 VALUE PROPOSITION
 
 ### For Content Creators
+
 - Convert blogs to websites automatically
 - Optimize content with systems thinking
 - Generate SEO-optimized pages
 - Save 80% time on website creation
 
 ### For Businesses
+
 - Launch websites faster
 - Optimize existing websites
 - Continuous improvement
 - Systems thinking optimization
 
 ### For Agencies
+
 - Scale website creation
 - Higher quality deliverables
 - Faster turnaround

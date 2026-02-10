@@ -3,6 +3,7 @@
 # Incident Runbook: Database Hotspot / Performance Degradation
 
 ## Overview
+
 This runbook guides response to database performance issues, hotspots, and query degradation.
 
 **SLO Target:** Database query P95 ≤ 200ms  
@@ -18,6 +19,7 @@ This runbook guides response to database performance issues, hotspots, and query
 ## Detection
 
 ### Symptoms
+
 - Slow API responses (database-bound)
 - High database CPU usage (>80%)
 - Connection pool exhaustion
@@ -32,9 +34,10 @@ This runbook guides response to database performance issues, hotspots, and query
    - Check connection pool metrics
 
 2. **Active Queries**
+
    ```sql
    -- Run in Supabase SQL Editor
-   SELECT 
+   SELECT
      pid,
      now() - pg_stat_activity.query_start AS duration,
      state,
@@ -48,8 +51,9 @@ This runbook guides response to database performance issues, hotspots, and query
    ```
 
 3. **Table Statistics**
+
    ```sql
-   SELECT 
+   SELECT
      schemaname,
      tablename,
      n_tup_ins AS inserts,
@@ -63,7 +67,7 @@ This runbook guides response to database performance issues, hotspots, and query
 
 4. **Index Usage**
    ```sql
-   SELECT 
+   SELECT
      schemaname,
      tablename,
      indexname,
@@ -97,22 +101,26 @@ This runbook guides response to database performance issues, hotspots, and query
 ### 2. Investigation (5-15 min)
 
 **If Long-Running Queries:**
+
 - [ ] Identify query type (SELECT, UPDATE, DELETE)
 - [ ] Check for missing indexes
 - [ ] Review query plan: `EXPLAIN ANALYZE <query>`
 - [ ] Check for table scans
 
 **If Lock Contention:**
+
 - [ ] Identify locked tables
 - [ ] Check for deadlocks
 - [ ] Review transaction isolation levels
 
 **If Connection Pool Exhausted:**
+
 - [ ] Check for connection leaks
 - [ ] Review connection pool size
 - [ ] Verify connection cleanup in code
 
 **If High CPU:**
+
 - [ ] Identify CPU-intensive queries
 - [ ] Check for full table scans
 - [ ] Review index usage statistics
@@ -120,11 +128,12 @@ This runbook guides response to database performance issues, hotspots, and query
 ### 3. Mitigation (15-30 min)
 
 **Kill Long-Running Queries (if safe):**
+
 ```sql
 -- Identify blocking query
 SELECT pid, query, now() - query_start AS duration
 FROM pg_stat_activity
-WHERE state = 'active' 
+WHERE state = 'active'
   AND now() - query_start > interval '30 seconds';
 
 -- Kill query (replace <pid> with actual PID)
@@ -132,9 +141,10 @@ SELECT pg_terminate_backend(<pid>);
 ```
 
 **Add Missing Indexes:**
+
 ```sql
 -- Example: Add index for common query pattern
-CREATE INDEX CONCURRENTLY idx_table_column 
+CREATE INDEX CONCURRENTLY idx_table_column
 ON table_name(column_name);
 
 -- Verify index usage
@@ -142,12 +152,14 @@ EXPLAIN ANALYZE SELECT * FROM table_name WHERE column_name = 'value';
 ```
 
 **Optimize Queries:**
+
 - [ ] Add WHERE clause filters
 - [ ] Use LIMIT for large result sets
 - [ ] Enable query result caching
 - [ ] Review N+1 query patterns
 
 **Scale Resources (if needed):**
+
 - [ ] Supabase Dashboard → Database → Scale
 - [ ] Increase compute resources temporarily
 - [ ] Monitor impact
@@ -173,6 +185,7 @@ EXPLAIN ANALYZE SELECT * FROM table_name WHERE column_name = 'value';
 ## Database Safety Rails
 
 ### Migration Canary
+
 - **Flag:** `MIGRATION_CANARY` environment variable
 - **Requirement:** Must be `true` for destructive SQL
 - **Destructive Operations:**
@@ -182,11 +195,13 @@ EXPLAIN ANALYZE SELECT * FROM table_name WHERE column_name = 'value';
   - `ALTER TABLE` with data loss
 
 ### Backup Evidence
+
 - **Check:** Backup metadata present in compliance report
 - **Location:** `SECURITY_COMPLIANCE_REPORT.md`
 - **Restore Procedure:** See `docs/runbooks/restore.md`
 
 ### Read-Only Analytics Role
+
 - **Recommendation:** Use read-only role for analytics queries
 - **Connection String:** Separate from application connection
 - **Permissions:** SELECT only, no write access
@@ -194,12 +209,14 @@ EXPLAIN ANALYZE SELECT * FROM table_name WHERE column_name = 'value';
 ## Escalation
 
 **Escalate if:**
+
 - Database unresponsive
 - Data corruption suspected
 - Multiple tables affected
 - Production data at risk
 
 **Escalation Contacts:**
+
 - Database admin (Supabase support)
 - On-call engineer
 - Infrastructure lead

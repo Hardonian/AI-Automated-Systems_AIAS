@@ -13,7 +13,12 @@ export async function rotateSecrets(options: {
 }) {
   console.log('🔐 Rotating secrets...\n');
 
-  const secretsPath = path.join(process.cwd(), 'ops', 'secrets', 'rotation.json');
+  const secretsPath = path.join(
+    process.cwd(),
+    'ops',
+    'secrets',
+    'rotation.json'
+  );
   let rotation: any = {
     lastUpdated: new Date().toISOString(),
     secrets: {},
@@ -36,9 +41,13 @@ export async function rotateSecrets(options: {
     // Check if rotation is needed (20 days)
     const existing = rotation.secrets[key];
     if (existing && !options.force) {
-      const daysSince = (Date.now() - new Date(existing.lastRotated).getTime()) / (1000 * 60 * 60 * 24);
+      const daysSince =
+        (Date.now() - new Date(existing.lastRotated).getTime()) /
+        (1000 * 60 * 60 * 24);
       if (daysSince < 20) {
-        console.log(`⏭️  ${key}: Rotated ${Math.floor(daysSince)} days ago, skipping`);
+        console.log(
+          `⏭️  ${key}: Rotated ${Math.floor(daysSince)} days ago, skipping`
+        );
         continue;
       }
     }
@@ -91,7 +100,9 @@ export async function rotateSecrets(options: {
 
     // Update Vercel (if applicable)
     if (process.env.VERCEL) {
-      console.log('  ⚠️  Manual update required for Vercel environment variables');
+      console.log(
+        '  ⚠️  Manual update required for Vercel environment variables'
+      );
     }
 
     console.log(`  ✅ ${key} rotated successfully`);

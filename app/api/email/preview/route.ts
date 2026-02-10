@@ -7,14 +7,17 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
 import { createPOSTHandler } from '@/lib/api/route-handler';
-import { getTemplateById, replaceTemplateVariables } from '@/lib/email-templates';
+import {
+  getTemplateById,
+  replaceTemplateVariables,
+} from '@/lib/email-templates';
 
 const previewSchema = z.object({
   templateId: z.string(),
   variables: z.record(z.string()).optional().default({}),
 });
 
-export const POST = createPOSTHandler(async (context) => {
+export const POST = createPOSTHandler(async context => {
   const body = previewSchema.parse(await context.request.json());
   const { templateId, variables } = body;
 
@@ -25,7 +28,9 @@ export const POST = createPOSTHandler(async (context) => {
 
   const subject = replaceTemplateVariables(template.subject, variables);
   const html = replaceTemplateVariables(template.body, variables);
-  const text = template.textBody ? replaceTemplateVariables(template.textBody, variables) : undefined;
+  const text = template.textBody
+    ? replaceTemplateVariables(template.textBody, variables)
+    : undefined;
 
   return NextResponse.json({
     template: {

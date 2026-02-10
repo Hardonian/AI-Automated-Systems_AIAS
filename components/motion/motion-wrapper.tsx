@@ -3,13 +3,13 @@
  * Fixes className prop type issues
  */
 
-import { motion, HTMLMotionProps } from "framer-motion";
-import { forwardRef } from "react";
+import { motion, HTMLMotionProps } from 'framer-motion';
+import { forwardRef } from 'react';
 
-type MotionDivProps = HTMLMotionProps<"div"> & { className?: string };
-type MotionSpanProps = HTMLMotionProps<"span"> & { className?: string };
-type MotionPProps = HTMLMotionProps<"p"> & { className?: string };
-type MotionSectionProps = HTMLMotionProps<"section"> & { className?: string };
+type MotionDivProps = HTMLMotionProps<'div'> & { className?: string };
+type MotionSpanProps = HTMLMotionProps<'span'> & { className?: string };
+type MotionPProps = HTMLMotionProps<'p'> & { className?: string };
+type MotionSectionProps = HTMLMotionProps<'section'> & { className?: string };
 
 export const MotionDiv = forwardRef<HTMLDivElement, MotionDivProps>(
   ({ className, ...props }, ref) => {
@@ -17,7 +17,7 @@ export const MotionDiv = forwardRef<HTMLDivElement, MotionDivProps>(
     return <motion.div ref={ref} className={className} {...props} />;
   }
 );
-MotionDiv.displayName = "MotionDiv";
+MotionDiv.displayName = 'MotionDiv';
 
 export const MotionSpan = forwardRef<HTMLSpanElement, MotionSpanProps>(
   ({ className, ...props }, ref) => {
@@ -25,7 +25,7 @@ export const MotionSpan = forwardRef<HTMLSpanElement, MotionSpanProps>(
     return <motion.span ref={ref} className={className} {...props} />;
   }
 );
-MotionSpan.displayName = "MotionSpan";
+MotionSpan.displayName = 'MotionSpan';
 
 export const MotionP = forwardRef<HTMLParagraphElement, MotionPProps>(
   ({ className, ...props }, ref) => {
@@ -33,7 +33,7 @@ export const MotionP = forwardRef<HTMLParagraphElement, MotionPProps>(
     return <motion.p ref={ref} className={className} {...props} />;
   }
 );
-MotionP.displayName = "MotionP";
+MotionP.displayName = 'MotionP';
 
 export const MotionSection = forwardRef<HTMLElement, MotionSectionProps>(
   ({ className, ...props }, ref) => {
@@ -41,7 +41,7 @@ export const MotionSection = forwardRef<HTMLElement, MotionSectionProps>(
     return <motion.section ref={ref} className={className} {...props} />;
   }
 );
-MotionSection.displayName = "MotionSection";
+MotionSection.displayName = 'MotionSection';
 
 // Re-export motion for cases where we need the original
 export { motion };

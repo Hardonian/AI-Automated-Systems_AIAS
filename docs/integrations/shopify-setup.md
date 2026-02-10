@@ -61,21 +61,25 @@ Connect your Shopify store to AIAS Platform and automate order processing, inven
 ## Available Shopify Automations
 
 ### Order Processing
+
 - **New Order Notification:** Get notified when orders are placed
 - **Order Status Updates:** Automatically update order status
 - **Shipping Notifications:** Send tracking information to customers
 
 ### Inventory Management
+
 - **Low Stock Alerts:** Get notified when inventory is low
 - **Inventory Sync:** Sync inventory between systems
 - **Product Updates:** Automatically update product information
 
 ### Customer Communications
+
 - **Order Confirmations:** Send automated order confirmations
 - **Shipping Updates:** Notify customers about shipping status
 - **Follow-up Emails:** Send post-purchase follow-ups
 
 ### Reporting
+
 - **Daily Sales Summary:** Get daily sales reports
 - **Weekly Revenue Reports:** Automatically generate weekly reports
 - **Monthly Analytics:** Track monthly performance
@@ -89,6 +93,7 @@ Connect your Shopify store to AIAS Platform and automate order processing, inven
 **Problem:** "Failed to connect Shopify"
 
 **Solutions:**
+
 1. Verify your Shopify store URL is correct
 2. Make sure you have admin access
 3. Check if your Shopify store is active
@@ -100,6 +105,7 @@ Connect your Shopify store to AIAS Platform and automate order processing, inven
 **Problem:** "Insufficient permissions"
 
 **Solutions:**
+
 1. Disconnect Shopify integration
 2. Reconnect and ensure all permissions are granted
 3. Check your Shopify app permissions in Shopify admin
@@ -109,6 +115,7 @@ Connect your Shopify store to AIAS Platform and automate order processing, inven
 **Problem:** Workflow doesn't run when orders are placed
 
 **Solutions:**
+
 1. Verify the workflow is activated
 2. Check workflow configuration (correct store selected)
 3. Review execution logs for errors
@@ -145,6 +152,7 @@ For real-time automation, webhooks are automatically configured when you connect
 ### Custom Workflows
 
 Create custom workflows using Shopify triggers:
+
 - Order created
 - Order updated
 - Order cancelled

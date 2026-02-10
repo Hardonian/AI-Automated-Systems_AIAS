@@ -1,4 +1,12 @@
-import { Play, Pause, RotateCcw, Settings, Code, Eye, Download } from 'lucide-react';
+import {
+  Play,
+  Pause,
+  RotateCcw,
+  Settings,
+  Code,
+  Eye,
+  Download,
+} from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
 import { Badge } from '@/components/ui/badge';
@@ -35,7 +43,8 @@ const demoScenarios: DemoScenario[] = [
   {
     id: 'lead-scoring-demo',
     title: 'AI-Powered Lead Scoring',
-    description: 'Watch how AI automatically scores and prioritizes leads in real-time',
+    description:
+      'Watch how AI automatically scores and prioritizes leads in real-time',
     category: 'automation',
     difficulty: 'intermediate',
     estimatedTime: 5,
@@ -67,7 +76,7 @@ const leadScoringWorkflow = {
       highScoreLeads: 12,
       mediumScoreLeads: 23,
       lowScoreLeads: 12,
-      avgScore: 72.5
+      avgScore: 72.5,
     },
     steps: [
       {
@@ -82,10 +91,11 @@ const leadScoringWorkflow = {
             name: 'Sarah Johnson',
             email: 'sarah.j@techcorp.com',
             company: 'TechCorp Inc',
-            source: 'Website Form'
-          }
+            source: 'Website Form',
+          },
         },
-        explanation: 'The system detects a new lead and begins the scoring process'
+        explanation:
+          'The system detects a new lead and begins the scoring process',
       },
       {
         id: 'data-enrichment',
@@ -96,10 +106,16 @@ const leadScoringWorkflow = {
         visual: {
           type: 'workflow',
           content: {
-            steps: ['Email validation', 'Company lookup', 'Social media analysis', 'Behavior tracking']
-          }
+            steps: [
+              'Email validation',
+              'Company lookup',
+              'Social media analysis',
+              'Behavior tracking',
+            ],
+          },
         },
-        explanation: 'Our AI enriches the lead data with information from multiple sources'
+        explanation:
+          'Our AI enriches the lead data with information from multiple sources',
       },
       {
         id: 'ai-scoring',
@@ -114,13 +130,14 @@ const leadScoringWorkflow = {
             factors: {
               'Company Size': 25,
               'Job Title': 20,
-              'Engagement': 18,
-              'Demographics': 15,
-              'Behavior': 9
-            }
-          }
+              Engagement: 18,
+              Demographics: 15,
+              Behavior: 9,
+            },
+          },
         },
-        explanation: 'The AI model analyzes multiple factors to generate a comprehensive lead score'
+        explanation:
+          'The AI model analyzes multiple factors to generate a comprehensive lead score',
       },
       {
         id: 'routing-decision',
@@ -133,17 +150,23 @@ const leadScoringWorkflow = {
           content: {
             decision: 'High Score Lead',
             action: 'Assign to Senior Sales Rep',
-            nextSteps: ['Schedule call', 'Send personalized email', 'Add to CRM']
-          }
+            nextSteps: [
+              'Schedule call',
+              'Send personalized email',
+              'Add to CRM',
+            ],
+          },
         },
-        explanation: 'High-scoring leads are automatically assigned to senior sales representatives'
-      }
-    ]
+        explanation:
+          'High-scoring leads are automatically assigned to senior sales representatives',
+      },
+    ],
   },
   {
     id: 'customer-service-bot',
     title: 'Intelligent Customer Service Bot',
-    description: 'Experience how AI handles customer inquiries with human-like understanding',
+    description:
+      'Experience how AI handles customer inquiries with human-like understanding',
     category: 'ai-agent',
     difficulty: 'beginner',
     estimatedTime: 4,
@@ -166,7 +189,7 @@ const customerServiceAgent = {
       activeChats: 23,
       resolvedToday: 156,
       avgResponseTime: '2.3s',
-      satisfactionScore: 4.7
+      satisfactionScore: 4.7,
     },
     steps: [
       {
@@ -179,16 +202,16 @@ const customerServiceAgent = {
           type: 'data',
           content: {
             message: "Hi, I'm having trouble with my billing. Can you help?",
-            customer: "John Smith",
-            priority: "Medium"
-          }
+            customer: 'John Smith',
+            priority: 'Medium',
+          },
         },
-        explanation: 'Customer initiates a support conversation'
+        explanation: 'Customer initiates a support conversation',
       },
       {
         id: 'intent-analysis',
         title: 'Intent Recognition',
-        description: 'AI analyzes the customer\'s intent and context',
+        description: "AI analyzes the customer's intent and context",
         action: 'process',
         duration: 3,
         visual: {
@@ -197,10 +220,10 @@ const customerServiceAgent = {
             intent: 'billing_issue',
             confidence: 0.94,
             entities: ['billing', 'help'],
-            sentiment: 'neutral'
-          }
+            sentiment: 'neutral',
+          },
         },
-        explanation: 'AI understands the customer needs help with billing'
+        explanation: 'AI understands the customer needs help with billing',
       },
       {
         id: 'knowledge-search',
@@ -214,12 +237,13 @@ const customerServiceAgent = {
             searchResults: [
               'Billing FAQ - Payment Issues',
               'Account Settings Guide',
-              'Payment Method Update'
+              'Payment Method Update',
             ],
-            bestMatch: 'Billing FAQ - Payment Issues'
-          }
+            bestMatch: 'Billing FAQ - Payment Issues',
+          },
         },
-        explanation: 'AI finds the most relevant information to help the customer'
+        explanation:
+          'AI finds the most relevant information to help the customer',
       },
       {
         id: 'response-generation',
@@ -230,19 +254,21 @@ const customerServiceAgent = {
         visual: {
           type: 'data',
           content: {
-            response: "Hi John! I'd be happy to help with your billing issue. Let me look up your account details and see what's going on. Can you tell me what specific billing problem you're experiencing?",
-            tone: "friendly",
-            includesSolution: true
-          }
+            response:
+              "Hi John! I'd be happy to help with your billing issue. Let me look up your account details and see what's going on. Can you tell me what specific billing problem you're experiencing?",
+            tone: 'friendly',
+            includesSolution: true,
+          },
         },
-        explanation: 'AI generates a helpful, personalized response'
-      }
-    ]
+        explanation: 'AI generates a helpful, personalized response',
+      },
+    ],
   },
   {
     id: 'security-monitoring',
     title: 'Real-time Security Monitoring',
-    description: 'See how our platform detects and responds to security threats',
+    description:
+      'See how our platform detects and responds to security threats',
     category: 'security',
     difficulty: 'advanced',
     estimatedTime: 6,
@@ -266,7 +292,7 @@ const securityMonitor = {
       threatsBlocked: 47,
       activeThreats: 3,
       securityScore: 98,
-      lastIncident: '2 hours ago'
+      lastIncident: '2 hours ago',
     },
     steps: [
       {
@@ -281,10 +307,11 @@ const securityMonitor = {
             alert: 'Suspicious login attempts detected',
             ipAddress: '192.168.1.100',
             attempts: 15,
-            timeWindow: '5 minutes'
-          }
+            timeWindow: '5 minutes',
+          },
         },
-        explanation: 'AI detects multiple failed login attempts from the same IP'
+        explanation:
+          'AI detects multiple failed login attempts from the same IP',
       },
       {
         id: 'threat-analysis',
@@ -298,10 +325,11 @@ const securityMonitor = {
             riskScore: 85,
             threatType: 'brute_force_attack',
             confidence: 0.92,
-            patterns: ['rapid_failed_logins', 'unusual_geolocation']
-          }
+            patterns: ['rapid_failed_logins', 'unusual_geolocation'],
+          },
         },
-        explanation: 'AI analyzes the threat patterns and determines it\'s a brute force attack'
+        explanation:
+          "AI analyzes the threat patterns and determines it's a brute force attack",
       },
       {
         id: 'automated-response',
@@ -316,12 +344,13 @@ const securityMonitor = {
               'Block IP address',
               'Require CAPTCHA',
               'Alert security team',
-              'Log incident'
+              'Log incident',
             ],
-            status: 'Threat neutralized'
-          }
+            status: 'Threat neutralized',
+          },
         },
-        explanation: 'System automatically blocks the IP and implements additional security measures'
+        explanation:
+          'System automatically blocks the IP and implements additional security measures',
       },
       {
         id: 'incident-reporting',
@@ -335,13 +364,14 @@ const securityMonitor = {
             incidentId: 'SEC-2024-001',
             severity: 'High',
             resolution: 'IP blocked, account secured',
-            recommendations: ['Review login patterns', 'Consider 2FA']
-          }
+            recommendations: ['Review login patterns', 'Consider 2FA'],
+          },
         },
-        explanation: 'Comprehensive incident report is generated for security team review'
-      }
-    ]
-  }
+        explanation:
+          'Comprehensive incident report is generated for security team review',
+      },
+    ],
+  },
 ];
 
 export const DemoEnvironment: React.FC = () => {
@@ -353,10 +383,13 @@ export const DemoEnvironment: React.FC = () => {
 
   useEffect(() => {
     if (isPlaying && selectedDemo) {
-      const totalDuration = selectedDemo.steps.reduce((sum, step) => sum + step.duration, 0);
+      const totalDuration = selectedDemo.steps.reduce(
+        (sum, step) => sum + step.duration,
+        0
+      );
       const interval = setInterval(() => {
         setProgress(prev => {
-          const newProgress = prev + (100 / (totalDuration * 10)); // Update every 100ms
+          const newProgress = prev + 100 / (totalDuration * 10); // Update every 100ms
           if (newProgress >= 100) {
             setIsPlaying(false);
             return 100;
@@ -373,14 +406,14 @@ export const DemoEnvironment: React.FC = () => {
     if (isPlaying && selectedDemo) {
       let stepIndex = 0;
       let stepProgress = 0;
-      
+
       const interval = setInterval(() => {
         stepProgress += 100; // 100ms increments
-        
+
         if (stepProgress >= selectedDemo.steps[stepIndex].duration * 1000) {
           stepIndex++;
           stepProgress = 0;
-          
+
           if (stepIndex < selectedDemo.steps.length) {
             setCurrentStep(stepIndex);
           } else {
@@ -412,49 +445,60 @@ export const DemoEnvironment: React.FC = () => {
     switch (step.visual.type) {
       case 'workflow':
         return (
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <h4 className="font-semibold text-blue-900 mb-2">Workflow Steps:</h4>
-            <ul className="space-y-1">
+          <div className='rounded-lg bg-blue-50 p-4'>
+            <h4 className='mb-2 font-semibold text-blue-900'>
+              Workflow Steps:
+            </h4>
+            <ul className='space-y-1'>
               {step.visual.content.steps?.map((s: string, index: number) => (
-                <li key={index} className="flex items-center gap-2 text-blue-800">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                <li
+                  key={index}
+                  className='flex items-center gap-2 text-blue-800'
+                >
+                  <div className='h-2 w-2 rounded-full bg-blue-500' />
                   {s}
                 </li>
               ))}
             </ul>
           </div>
         );
-      
+
       case 'dashboard':
         return (
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h4 className="font-semibold mb-2">Dashboard View:</h4>
-            <div className="grid grid-cols-2 gap-4">
+          <div className='rounded-lg bg-gray-50 p-4'>
+            <h4 className='mb-2 font-semibold'>Dashboard View:</h4>
+            <div className='grid grid-cols-2 gap-4'>
               {Object.entries(step.visual.content).map(([key, value]) => (
-                <div key={key} className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">{value}</div>
-                  <div className="text-sm text-gray-600 capitalize">{key.replace(/([A-Z])/g, ' $1')}</div>
+                <div key={key} className='text-center'>
+                  <div className='text-2xl font-bold text-blue-600'>
+                    {value}
+                  </div>
+                  <div className='text-sm capitalize text-gray-600'>
+                    {key.replace(/([A-Z])/g, ' $1')}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         );
-      
+
       case 'data':
         return (
-          <div className="bg-green-50 p-4 rounded-lg">
-            <h4 className="font-semibold text-green-900 mb-2">Data:</h4>
-            <div className="space-y-2">
+          <div className='rounded-lg bg-green-50 p-4'>
+            <h4 className='mb-2 font-semibold text-green-900'>Data:</h4>
+            <div className='space-y-2'>
               {Object.entries(step.visual.content).map(([key, value]) => (
-                <div key={key} className="flex justify-between">
-                  <span className="font-medium text-green-800 capitalize">{key.replace(/([A-Z])/g, ' $1')}:</span>
-                  <span className="text-green-700">{value}</span>
+                <div key={key} className='flex justify-between'>
+                  <span className='font-medium capitalize text-green-800'>
+                    {key.replace(/([A-Z])/g, ' $1')}:
+                  </span>
+                  <span className='text-green-700'>{value}</span>
                 </div>
               ))}
             </div>
           </div>
         );
-      
+
       default:
         return <div>Visual content</div>;
     }
@@ -465,107 +509,111 @@ export const DemoEnvironment: React.FC = () => {
     if (!currentStepData) {
       return <div>No step data available</div>;
     }
-    
+
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <Button
-            variant="outline"
-            onClick={() => setSelectedDemo(null)}
-          >
+      <div className='space-y-6'>
+        <div className='flex items-center justify-between'>
+          <Button variant='outline' onClick={() => setSelectedDemo(null)}>
             ← Back to Demos
           </Button>
-          <div className="flex items-center gap-2">
+          <div className='flex items-center gap-2'>
             <Button
-              variant={isPlaying ? "destructive" : "default"}
+              variant={isPlaying ? 'destructive' : 'default'}
               onClick={handlePlay}
             >
-              {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+              {isPlaying ? (
+                <Pause className='h-4 w-4' />
+              ) : (
+                <Play className='h-4 w-4' />
+              )}
               {isPlaying ? 'Pause' : 'Play'} Demo
             </Button>
-            <Button variant="outline" onClick={handleReset}>
-              <RotateCcw className="w-4 h-4" />
+            <Button variant='outline' onClick={handleReset}>
+              <RotateCcw className='h-4 w-4' />
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => setShowCode(!showCode)}
-            >
-              <Code className="w-4 h-4" />
+            <Button variant='outline' onClick={() => setShowCode(!showCode)}>
+              <Code className='h-4 w-4' />
             </Button>
           </div>
         </div>
 
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <CardTitle className="text-2xl">{selectedDemo.title}</CardTitle>
-                <p className="text-gray-600">{selectedDemo.description}</p>
+                <CardTitle className='text-2xl'>{selectedDemo.title}</CardTitle>
+                <p className='text-gray-600'>{selectedDemo.description}</p>
               </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary">{selectedDemo.difficulty}</Badge>
-                <Badge variant="outline">{selectedDemo.estimatedTime} min</Badge>
+              <div className='flex items-center gap-2'>
+                <Badge variant='secondary'>{selectedDemo.difficulty}</Badge>
+                <Badge variant='outline'>
+                  {selectedDemo.estimatedTime} min
+                </Badge>
               </div>
             </div>
-            
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
+
+            <div className='space-y-2'>
+              <div className='flex items-center justify-between text-sm'>
                 <span>Progress</span>
-                <span>{currentStep + 1} of {selectedDemo.steps.length}</span>
+                <span>
+                  {currentStep + 1} of {selectedDemo.steps.length}
+                </span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-100"
+              <div className='h-2 w-full rounded-full bg-gray-200'>
+                <div
+                  className='h-2 rounded-full bg-blue-600 transition-all duration-100'
                   style={{ width: `${progress}%` }}
-                 />
+                />
               </div>
             </div>
           </CardHeader>
 
           <CardContent>
-            <Tabs className="w-full" defaultValue="demo">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="demo">
-                  <Eye className="w-4 h-4 mr-2" />
+            <Tabs className='w-full' defaultValue='demo'>
+              <TabsList className='grid w-full grid-cols-2'>
+                <TabsTrigger value='demo'>
+                  <Eye className='mr-2 h-4 w-4' />
                   Live Demo
                 </TabsTrigger>
-                <TabsTrigger value="code">
-                  <Code className="w-4 h-4 mr-2" />
+                <TabsTrigger value='code'>
+                  <Code className='mr-2 h-4 w-4' />
                   Code Example
                 </TabsTrigger>
               </TabsList>
-              
-              <TabsContent className="space-y-6" value="demo">
-                <div className="text-center">
-                  <h3 className="text-xl font-semibold mb-2">
+
+              <TabsContent className='space-y-6' value='demo'>
+                <div className='text-center'>
+                  <h3 className='mb-2 text-xl font-semibold'>
                     Step {currentStep + 1}: {currentStepData.title}
                   </h3>
-                  <p className="text-gray-600 mb-4">{currentStepData.description}</p>
+                  <p className='mb-4 text-gray-600'>
+                    {currentStepData.description}
+                  </p>
                 </div>
 
-                <div className="min-h-[300px] flex items-center justify-center">
+                <div className='flex min-h-[300px] items-center justify-center'>
                   {renderStepVisual(currentStepData)}
                 </div>
 
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-semibold mb-2">What's happening:</h4>
-                  <p className="text-gray-700">{currentStepData.explanation}</p>
+                <div className='rounded-lg bg-gray-50 p-4'>
+                  <h4 className='mb-2 font-semibold'>What's happening:</h4>
+                  <p className='text-gray-700'>{currentStepData.explanation}</p>
                 </div>
               </TabsContent>
-              
-              <TabsContent className="space-y-4" value="code">
-                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                  <pre className="text-sm">
+
+              <TabsContent className='space-y-4' value='code'>
+                <div className='overflow-x-auto rounded-lg bg-gray-900 p-4 text-gray-100'>
+                  <pre className='text-sm'>
                     <code>{selectedDemo.codeExample}</code>
                   </pre>
                 </div>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline">
-                    <Download className="w-4 h-4 mr-2" />
+                <div className='flex gap-2'>
+                  <Button size='sm' variant='outline'>
+                    <Download className='mr-2 h-4 w-4' />
                     Download Code
                   </Button>
-                  <Button size="sm" variant="outline">
-                    <Settings className="w-4 h-4 mr-2" />
+                  <Button size='sm' variant='outline'>
+                    <Settings className='mr-2 h-4 w-4' />
                     Customize
                   </Button>
                 </div>
@@ -578,52 +626,57 @@ export const DemoEnvironment: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold">Interactive Demo Environment</h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Experience our platform capabilities through live, interactive demonstrations.
-          See AI automation in action with real scenarios and code examples.
+    <div className='space-y-6'>
+      <div className='space-y-2 text-center'>
+        <h1 className='text-3xl font-bold'>Interactive Demo Environment</h1>
+        <p className='mx-auto max-w-2xl text-gray-600'>
+          Experience our platform capabilities through live, interactive
+          demonstrations. See AI automation in action with real scenarios and
+          code examples.
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {demoScenarios.map((demo) => (
-          <Card key={demo.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+      <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+        {demoScenarios.map(demo => (
+          <Card
+            key={demo.id}
+            className='cursor-pointer transition-shadow hover:shadow-lg'
+          >
             <CardHeader>
-              <div className="flex items-start justify-between">
-                <CardTitle className="text-lg">{demo.title}</CardTitle>
-                <Badge variant="secondary">{demo.difficulty}</Badge>
+              <div className='flex items-start justify-between'>
+                <CardTitle className='text-lg'>{demo.title}</CardTitle>
+                <Badge variant='secondary'>{demo.difficulty}</Badge>
               </div>
-              <p className="text-gray-600 text-sm">{demo.description}</p>
+              <p className='text-sm text-gray-600'>{demo.description}</p>
             </CardHeader>
-            
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-4 text-sm text-gray-500">
+
+            <CardContent className='space-y-4'>
+              <div className='flex items-center gap-4 text-sm text-gray-500'>
                 <span>{demo.estimatedTime} min</span>
                 <span>{demo.steps.length} steps</span>
-                <Badge className="text-xs" variant="outline">
+                <Badge className='text-xs' variant='outline'>
                   {demo.category}
                 </Badge>
               </div>
-              
-              <div className="space-y-2">
-                <h4 className="font-medium text-sm">Live Data:</h4>
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  {Object.entries(demo.liveData || {}).slice(0, 4).map(([key, value]) => (
-                    <div key={key} className="flex justify-between">
-                      <span className="text-gray-600 capitalize">{key.replace(/([A-Z])/g, ' $1')}:</span>
-                      <span className="font-medium">{value}</span>
-                    </div>
-                  ))}
+
+              <div className='space-y-2'>
+                <h4 className='text-sm font-medium'>Live Data:</h4>
+                <div className='grid grid-cols-2 gap-2 text-sm'>
+                  {Object.entries(demo.liveData || {})
+                    .slice(0, 4)
+                    .map(([key, value]) => (
+                      <div key={key} className='flex justify-between'>
+                        <span className='capitalize text-gray-600'>
+                          {key.replace(/([A-Z])/g, ' $1')}:
+                        </span>
+                        <span className='font-medium'>{value}</span>
+                      </div>
+                    ))}
                 </div>
               </div>
-              
-              <Button
-                className="w-full"
-                onClick={() => setSelectedDemo(demo)}
-              >
-                <Play className="w-4 h-4 mr-2" />
+
+              <Button className='w-full' onClick={() => setSelectedDemo(demo)}>
+                <Play className='mr-2 h-4 w-4' />
                 Start Demo
               </Button>
             </CardContent>

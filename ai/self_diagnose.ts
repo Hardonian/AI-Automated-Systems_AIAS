@@ -45,12 +45,13 @@ class AISelfDiagnose {
   private projectRef: string;
 
   constructor() {
-    this.projectRef = process.env.SUPABASE_PROJECT_REF || 'ghqyxhbyyirveptgwoqm';
+    this.projectRef =
+      process.env.SUPABASE_PROJECT_REF || 'ghqyxhbyyirveptgwoqm';
     this.supabase = createClient(
       process.env.SUPABASE_URL || `https://${this.projectRef}.supabase.co`,
       process.env.SUPABASE_ANON_KEY || ''
     );
-    
+
     this.octokit = new Octokit({
       auth: process.env.GITHUB_TOKEN,
     });
@@ -61,14 +62,15 @@ class AISelfDiagnose {
    */
   async collectMetrics(): Promise<Partial<HealthMetrics>> {
     const startTime = performance.now();
-    
+
     try {
       // Collect metrics from different sources
-      const [errorMetrics, performanceMetrics, resourceMetrics] = await Promise.all([
-        this.collectErrorMetrics(),
-        this.collectPerformanceMetrics(),
-        this.collectResourceMetrics()
-      ]);
+      const [errorMetrics, performanceMetrics, resourceMetrics] =
+        await Promise.all([
+          this.collectErrorMetrics(),
+          this.collectPerformanceMetrics(),
+          this.collectResourceMetrics(),
+        ]);
 
       const latency_p95 = performanceMetrics.latency_p95;
       const error_rate = errorMetrics.error_rate;
@@ -82,7 +84,7 @@ class AISelfDiagnose {
         latency_p95,
         cold_starts,
         memory_usage,
-        cpu_usage
+        cpu_usage,
       });
 
       // Generate recommendations
@@ -91,11 +93,15 @@ class AISelfDiagnose {
         latency_p95,
         cold_starts,
         memory_usage,
-        cpu_usage
+        cpu_usage,
       });
 
       // Determine severity
-      const severity = this.calculateSeverity(patterns, error_rate, latency_p95);
+      const severity = this.calculateSeverity(
+        patterns,
+        error_rate,
+        latency_p95
+      );
 
       const metrics: Partial<HealthMetrics> = {
         timestamp: new Date().toISOString(),
@@ -108,11 +114,11 @@ class AISelfDiagnose {
           memory_usage,
           cpu_usage,
           response_time_avg: performanceMetrics.response_time_avg,
-          throughput: performanceMetrics.throughput
+          throughput: performanceMetrics.throughput,
         },
         patterns,
         recommendations,
-        severity
+        severity,
       };
 
       const endTime = performance.now();
@@ -135,7 +141,10 @@ class AISelfDiagnose {
         .from('logs')
         .select('*')
         .eq('level', 'error')
-        .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+        .gte(
+          'created_at',
+          new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+        )
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -144,7 +153,10 @@ class AISelfDiagnose {
       const { data: totalData, error: totalError } = await this.supabase
         .from('logs')
         .select('*')
-        .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
+        .gte(
+          'created_at',
+          new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+        );
 
       if (totalError) throw totalError;
 
@@ -173,7 +185,10 @@ class AISelfDiagnose {
       const { data: perfData, error } = await this.supabase
         .from('performance_logs')
         .select('*')
-        .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+        .gte(
+          'created_at',
+          new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+        )
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -183,11 +198,13 @@ class AISelfDiagnose {
           latency_p95: 0,
           cold_starts: 0,
           response_time_avg: 0,
-          throughput: 0
+          throughput: 0,
         };
       }
 
-      const responseTimes = perfData.map((log: any) => log.response_time).filter(Boolean);
+      const responseTimes = perfData
+        .map((log: any) => log.response_time)
+        .filter(Boolean);
       const coldStarts = perfData.filter((log: any) => log.cold_start).length;
 
       // Calculate P95 latency
@@ -196,7 +213,9 @@ class AISelfDiagnose {
       const latency_p95 = sortedTimes[p95Index] || 0;
 
       // Calculate average response time
-      const response_time_avg = responseTimes.reduce((sum: number, time: number) => sum + time, 0) / responseTimes.length;
+      const response_time_avg =
+        responseTimes.reduce((sum: number, time: number) => sum + time, 0) /
+        responseTimes.length;
 
       // Calculate throughput (requests per minute)
       const throughput = perfData.length / (24 * 60); // requests per minute
@@ -205,7 +224,7 @@ class AISelfDiagnose {
         latency_p95,
         cold_starts: coldStarts,
         response_time_avg,
-        throughput
+        throughput,
       };
     } catch (error) {
       console.warn('Could not collect performance metrics:', error);
@@ -213,7 +232,7 @@ class AISelfDiagnose {
         latency_p95: 0,
         cold_starts: 0,
         response_time_avg: 0,
-        throughput: 0
+        throughput: 0,
       };
     }
   }
@@ -236,13 +255,13 @@ class AISelfDiagnose {
 
       return {
         memory_usage,
-        cpu_usage
+        cpu_usage,
       };
     } catch (error) {
       console.warn('Could not collect resource metrics:', error);
       return {
         memory_usage: 0,
-        cpu_usage: 0
+        cpu_usage: 0,
       };
     }
   }
@@ -261,7 +280,7 @@ class AISelfDiagnose {
       error_spike: metrics.error_rate > 5, // More than 5% error rate
       performance_degradation: metrics.latency_p95 > 2000, // P95 > 2 seconds
       memory_leak_suspected: metrics.memory_usage > 80, // Memory usage > 80%
-      cold_start_spike: metrics.cold_starts > 10 // More than 10 cold starts
+      cold_start_spike: metrics.cold_starts > 10, // More than 10 cold starts
     };
   }
 
@@ -281,34 +300,52 @@ class AISelfDiagnose {
     const recommendations: string[] = [];
 
     if (patterns.error_spike) {
-      recommendations.push('Investigate error spike - check recent deployments and error logs');
-      recommendations.push('Consider implementing circuit breakers for external API calls');
+      recommendations.push(
+        'Investigate error spike - check recent deployments and error logs'
+      );
+      recommendations.push(
+        'Consider implementing circuit breakers for external API calls'
+      );
     }
 
     if (patterns.performance_degradation) {
       recommendations.push('Optimize database queries and add proper indexing');
-      recommendations.push('Consider implementing caching strategies (Redis, CDN)');
+      recommendations.push(
+        'Consider implementing caching strategies (Redis, CDN)'
+      );
       recommendations.push('Review and optimize API response payloads');
     }
 
     if (patterns.memory_leak_suspected) {
-      recommendations.push('Investigate potential memory leaks in application code');
-      recommendations.push('Consider implementing memory monitoring and alerting');
-      recommendations.push('Review object lifecycle and garbage collection patterns');
+      recommendations.push(
+        'Investigate potential memory leaks in application code'
+      );
+      recommendations.push(
+        'Consider implementing memory monitoring and alerting'
+      );
+      recommendations.push(
+        'Review object lifecycle and garbage collection patterns'
+      );
     }
 
     if (patterns.cold_start_spike) {
-      recommendations.push('Optimize cold start performance with connection pooling');
+      recommendations.push(
+        'Optimize cold start performance with connection pooling'
+      );
       recommendations.push('Consider implementing keep-warm strategies');
       recommendations.push('Review function initialization and dependencies');
     }
 
     if (metrics.cpu_usage > 70) {
-      recommendations.push('High CPU usage detected - consider horizontal scaling');
+      recommendations.push(
+        'High CPU usage detected - consider horizontal scaling'
+      );
     }
 
     if (recommendations.length === 0) {
-      recommendations.push('System health appears normal - continue monitoring');
+      recommendations.push(
+        'System health appears normal - continue monitoring'
+      );
     }
 
     return recommendations;
@@ -325,15 +362,19 @@ class AISelfDiagnose {
     if (error_rate > 20 || latency_p95 > 5000) {
       return 'critical';
     }
-    
-    if (error_rate > 10 || latency_p95 > 3000 || patterns.memory_leak_suspected) {
+
+    if (
+      error_rate > 10 ||
+      latency_p95 > 3000 ||
+      patterns.memory_leak_suspected
+    ) {
       return 'high';
     }
-    
+
     if (error_rate > 5 || latency_p95 > 2000 || patterns.cold_start_spike) {
       return 'medium';
     }
-    
+
     return 'low';
   }
 
@@ -347,7 +388,7 @@ class AISelfDiagnose {
         .insert([metrics]);
 
       if (error) throw error;
-      
+
       console.log('Health metrics stored successfully');
     } catch (error) {
       console.error('Error storing metrics:', error);
@@ -363,7 +404,8 @@ class AISelfDiagnose {
       metrics.severity === 'critical' ||
       metrics.severity === 'high' ||
       (metrics.patterns.error_spike && metrics.metrics.error_rate > 10) ||
-      (metrics.patterns.performance_degradation && metrics.metrics.latency_p95 > 3000)
+      (metrics.patterns.performance_degradation &&
+        metrics.metrics.latency_p95 > 3000)
     );
   }
 
@@ -379,7 +421,12 @@ class AISelfDiagnose {
       const issue: GitHubIssue = {
         title: `🚨 AI Health Alert: ${metrics.severity.toUpperCase()} - ${metrics.environment}`,
         body: this.generateIssueBody(metrics),
-        labels: ['ai-health', 'automated', metrics.severity, metrics.environment]
+        labels: [
+          'ai-health',
+          'automated',
+          metrics.severity,
+          metrics.environment,
+        ],
       };
 
       const { data, status } = await this.octokit.rest.issues.create({
@@ -387,7 +434,7 @@ class AISelfDiagnose {
         repo: process.env.GITHUB_REPO || 'aias-platform',
         title: issue.title,
         body: issue.body,
-        labels: issue.labels
+        labels: issue.labels,
       });
 
       if (status === 201) {
@@ -419,7 +466,10 @@ class AISelfDiagnose {
 
 ### Detected Patterns
 ${Object.entries(metrics.patterns)
-  .map(([pattern, detected]) => `- **${pattern.replace('_', ' ').toUpperCase()}:** ${detected ? '🚨 YES' : '✅ No'}`)
+  .map(
+    ([pattern, detected]) =>
+      `- **${pattern.replace('_', ' ').toUpperCase()}:** ${detected ? '🚨 YES' : '✅ No'}`
+  )
   .join('\n')}
 
 ### AI Recommendations
@@ -442,16 +492,16 @@ ${metrics.recommendations.map(rec => `- ${rec}`).join('\n')}
   async run(): Promise<void> {
     try {
       console.log('Starting AI self-diagnosis...');
-      
+
       const metrics = await this.collectMetrics();
       const fullMetrics = metrics as HealthMetrics;
-      
+
       await this.storeMetrics(fullMetrics);
-      
+
       if (this.shouldCreateIssue(fullMetrics)) {
         await this.createGitHubIssue(fullMetrics);
       }
-      
+
       console.log('AI self-diagnosis completed successfully');
     } catch (error) {
       console.error('AI self-diagnosis failed:', error);

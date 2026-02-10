@@ -2,10 +2,10 @@
 /**
  * Restore Drill Script
  * Tests backup integrity and restore capability
- * 
+ *
  * Usage:
  *   pnpm tsx scripts/restore-drill.ts
- * 
+ *
  * This script:
  * 1. Verifies latest backup exists
  * 2. Tests restore to temporary database
@@ -61,9 +61,12 @@ async function runRestoreDrill(): Promise<DrillResult> {
   // Step 2: Find latest backup
   const step2Start = Date.now();
   try {
-    const backups = execSync(`ls -t ${BACKUPS_DIR}/*.sql 2>/dev/null | head -1`, {
-      encoding: 'utf-8',
-    }).trim();
+    const backups = execSync(
+      `ls -t ${BACKUPS_DIR}/*.sql 2>/dev/null | head -1`,
+      {
+        encoding: 'utf-8',
+      }
+    ).trim();
 
     if (!backups) {
       result.steps.push({
@@ -112,7 +115,7 @@ async function runRestoreDrill(): Promise<DrillResult> {
       // Step 4: Test restore (if DATABASE_URL is set)
       const step4Start = Date.now();
       const databaseUrl = process.env.DATABASE_URL;
-      
+
       if (!databaseUrl) {
         result.steps.push({
           name: 'Test restore',
@@ -122,26 +125,33 @@ async function runRestoreDrill(): Promise<DrillResult> {
       } else {
         try {
           // Extract connection details for test database
-          const testDbUrl = databaseUrl.replace(/\/[^\/]+$/, `/${TEST_DB_NAME}`);
-          
+          const testDbUrl = databaseUrl.replace(
+            /\/[^\/]+$/,
+            `/${TEST_DB_NAME}`
+          );
+
           // Create test database
-          execSync(`createdb ${TEST_DB_NAME} 2>/dev/null || true`, { stdio: 'ignore' });
-          
+          execSync(`createdb ${TEST_DB_NAME} 2>/dev/null || true`, {
+            stdio: 'ignore',
+          });
+
           // Restore backup
           execSync(`psql ${testDbUrl} < ${backupPath}`, {
             stdio: 'pipe',
             timeout: 60000, // 60 second timeout
           });
-          
+
           // Verify restore
           const tableCount = execSync(
             `psql ${testDbUrl} -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public';"`,
             { encoding: 'utf-8' }
           ).trim();
-          
+
           // Cleanup
-          execSync(`dropdb ${TEST_DB_NAME} 2>/dev/null || true`, { stdio: 'ignore' });
-          
+          execSync(`dropdb ${TEST_DB_NAME} 2>/dev/null || true`, {
+            stdio: 'ignore',
+          });
+
           result.steps.push({
             name: 'Test restore',
             status: 'passed',
@@ -150,8 +160,10 @@ async function runRestoreDrill(): Promise<DrillResult> {
           });
         } catch (error) {
           // Cleanup on error
-          execSync(`dropdb ${TEST_DB_NAME} 2>/dev/null || true`, { stdio: 'ignore' });
-          
+          execSync(`dropdb ${TEST_DB_NAME} 2>/dev/null || true`, {
+            stdio: 'ignore',
+          });
+
           result.steps.push({
             name: 'Test restore',
             status: 'failed',
@@ -161,7 +173,6 @@ async function runRestoreDrill(): Promise<DrillResult> {
           result.errors.push('Restore test failed');
         }
       }
-
     } catch (error) {
       result.steps.push({
         name: 'Verify backup integrity',
@@ -188,9 +199,10 @@ async function main() {
   const result = await runRestoreDrill();
 
   console.log('\n📊 Restore Drill Results:\n');
-  
+
   for (const step of result.steps) {
-    const icon = step.status === 'passed' ? '✅' : step.status === 'failed' ? '❌' : '⏭️';
+    const icon =
+      step.status === 'passed' ? '✅' : step.status === 'failed' ? '❌' : '⏭️';
     const duration = step.duration ? ` (${step.duration}ms)` : '';
     console.log(`${icon} ${step.name}: ${step.message}${duration}`);
   }

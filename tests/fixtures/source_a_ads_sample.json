@@ -1,4 +1,20 @@
 [
-  {"campaign_id":"C1","adset_id":"A1","date":"2025-10-01","spend_cents":2500,"clicks":120,"impressions":15000,"conv":3},
-  {"campaign_id":"C1","adset_id":"A2","date":"2025-10-02","spend_cents":3100,"clicks":140,"impressions":17000,"conv":4}
+  {
+    "campaign_id": "C1",
+    "adset_id": "A1",
+    "date": "2025-10-01",
+    "spend_cents": 2500,
+    "clicks": 120,
+    "impressions": 15000,
+    "conv": 3
+  },
+  {
+    "campaign_id": "C1",
+    "adset_id": "A2",
+    "date": "2025-10-02",
+    "spend_cents": 3100,
+    "clicks": 140,
+    "impressions": 17000,
+    "conv": 4
+  }
 ]

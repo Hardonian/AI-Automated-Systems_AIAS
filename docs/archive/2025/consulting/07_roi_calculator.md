@@ -1,6 +1,7 @@
 > Archived on 2025-11-12. Superseded by: (see docs/final index)
 
 # ROI Calculator & Business Case Template
+
 ## Comprehensive Return on Investment Analysis for Automation Projects
 
 **Purpose:** Calculate and present ROI for automation initiatives  
@@ -11,24 +12,27 @@
 
 ## 📊 EXECUTIVE SUMMARY
 
-**Project:** _______________________  
-**Client:** _______________________  
-**Date:** _______________________  
-**Prepared By:** _______________________  
+**Project:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Client:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Date:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Prepared By:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***
 
 ### Quick ROI Summary
-- **Total Investment:** $________________
-- **Annual Savings:** $________________
-- **Payback Period:** ________________ months
-- **3-Year ROI:** ________________%
-- **Net Present Value (NPV):** $________________
+
+- **Total Investment:** $**\*\***\_\_\_\_**\*\***
+- **Annual Savings:** $**\*\***\_\_\_\_**\*\***
+- **Payback Period:** **\*\***\_\_\_\_**\*\*** months
+- **3-Year ROI:** **\*\***\_\_\_\_**\*\***%
+- **Net Present Value (NPV):** $**\*\***\_\_\_\_**\*\***
 
 ---
 
 ## 1. INVESTMENT CALCULATION
 
 ### Note: Holistic Approach Investment
+
 **This ROI includes investments across multiple dimensions:**
+
 - Process optimization (consulting, redesign)
 - Technology improvements (integration, tools)
 - People & culture (training, change management)
@@ -39,169 +43,188 @@
 **Total investment reflects multi-dimensional approach, not just automation.**
 
 ### 1.1 Software/Platform Costs
-| Item | Cost | Frequency | Annual Cost |
-|------|------|-----------|-------------|
-| AIAS Platform Subscription | $_____ | Monthly | $_____ |
-| Additional Tools/Integrations | $_____ | Monthly | $_____ |
-| Training & Onboarding | $_____ | One-time | $_____ |
-| **Subtotal** | | | **$_____** |
+
+| Item                          | Cost    | Frequency | Annual Cost     |
+| ----------------------------- | ------- | --------- | --------------- |
+| AIAS Platform Subscription    | $**\_** | Monthly   | $**\_**         |
+| Additional Tools/Integrations | $**\_** | Monthly   | $**\_**         |
+| Training & Onboarding         | $**\_** | One-time  | $**\_**         |
+| **Subtotal**                  |         |           | **$**\_\*\*\*\* |
 
 ### 1.2 Implementation Costs
-| Item | Hours | Rate | Cost |
-|------|-------|------|------|
-| Consultant Fees | _____ | $_____/hr | $_____ |
-| Internal Team Time | _____ | $_____/hr | $_____ |
-| Custom Development | _____ | $_____/hr | $_____ |
-| Testing & QA | _____ | $_____/hr | $_____ |
-| **Subtotal** | | | **$_____** |
+
+| Item               | Hours  | Rate       | Cost            |
+| ------------------ | ------ | ---------- | --------------- |
+| Consultant Fees    | **\_** | $**\_**/hr | $**\_**         |
+| Internal Team Time | **\_** | $**\_**/hr | $**\_**         |
+| Custom Development | **\_** | $**\_**/hr | $**\_**         |
+| Testing & QA       | **\_** | $**\_**/hr | $**\_**         |
+| **Subtotal**       |        |            | **$**\_\*\*\*\* |
 
 ### 1.3 Ongoing Costs
-| Item | Cost | Frequency | Annual Cost |
-|------|------|-----------|-------------|
-| Maintenance & Support | $_____ | Monthly | $_____ |
-| Updates & Upgrades | $_____ | Annually | $_____ |
-| Additional Training | $_____ | As needed | $_____ |
-| **Subtotal** | | | **$_____** |
 
-### **TOTAL INVESTMENT (Year 1):** $________________
-### **ANNUAL ONGOING COSTS (Year 2+):** $________________
+| Item                  | Cost    | Frequency | Annual Cost     |
+| --------------------- | ------- | --------- | --------------- |
+| Maintenance & Support | $**\_** | Monthly   | $**\_**         |
+| Updates & Upgrades    | $**\_** | Annually  | $**\_**         |
+| Additional Training   | $**\_** | As needed | $**\_**         |
+| **Subtotal**          |         |           | **$**\_\*\*\*\* |
+
+### **TOTAL INVESTMENT (Year 1):** $**\*\***\_\_\_\_**\*\***
+
+### **ANNUAL ONGOING COSTS (Year 2+):** $**\*\***\_\_\_\_**\*\***
 
 ---
 
 ## 2. TIME SAVINGS CALCULATION
 
 ### 2.1 Current Process Time
-| Process/Task | Current Time/Week | Frequency | Total Hours/Year |
-|--------------|-------------------|-----------|------------------|
-| Task 1: ________________ | _____ hours | Weekly | _____ hours |
-| Task 2: ________________ | _____ hours | Weekly | _____ hours |
-| Task 3: ________________ | _____ hours | Weekly | _____ hours |
-| Task 4: ________________ | _____ hours | Weekly | _____ hours |
-| Task 5: ________________ | _____ hours | Weekly | _____ hours |
-| **Total Hours/Year** | | | **_____ hours** |
+
+| Process/Task                     | Current Time/Week | Frequency | Total Hours/Year     |
+| -------------------------------- | ----------------- | --------- | -------------------- |
+| Task 1: **\*\***\_\_\_\_**\*\*** | **\_** hours      | Weekly    | **\_** hours         |
+| Task 2: **\*\***\_\_\_\_**\*\*** | **\_** hours      | Weekly    | **\_** hours         |
+| Task 3: **\*\***\_\_\_\_**\*\*** | **\_** hours      | Weekly    | **\_** hours         |
+| Task 4: **\*\***\_\_\_\_**\*\*** | **\_** hours      | Weekly    | **\_** hours         |
+| Task 5: **\*\***\_\_\_\_**\*\*** | **\_** hours      | Weekly    | **\_** hours         |
+| **Total Hours/Year**             |                   |           | \***\*\_** hours\*\* |
 
 ### 2.2 Post-Automation Time
-| Process/Task | Time After Automation | Frequency | Total Hours/Year |
-|--------------|----------------------|-----------|------------------|
-| Task 1: ________________ | _____ hours | Weekly | _____ hours |
-| Task 2: ________________ | _____ hours | Weekly | _____ hours |
-| Task 3: ________________ | _____ hours | Weekly | _____ hours |
-| Task 4: ________________ | _____ hours | Weekly | _____ hours |
-| Task 5: ________________ | _____ hours | Weekly | _____ hours |
-| **Total Hours/Year** | | | **_____ hours** |
+
+| Process/Task                     | Time After Automation | Frequency | Total Hours/Year     |
+| -------------------------------- | --------------------- | --------- | -------------------- |
+| Task 1: **\*\***\_\_\_\_**\*\*** | **\_** hours          | Weekly    | **\_** hours         |
+| Task 2: **\*\***\_\_\_\_**\*\*** | **\_** hours          | Weekly    | **\_** hours         |
+| Task 3: **\*\***\_\_\_\_**\*\*** | **\_** hours          | Weekly    | **\_** hours         |
+| Task 4: **\*\***\_\_\_\_**\*\*** | **\_** hours          | Weekly    | **\_** hours         |
+| Task 5: **\*\***\_\_\_\_**\*\*** | **\_** hours          | Weekly    | **\_** hours         |
+| **Total Hours/Year**             |                       |           | \***\*\_** hours\*\* |
 
 ### 2.3 Time Savings
-- **Hours Saved/Year:** _____ hours
-- **Hours Saved/Week:** _____ hours
-- **Time Reduction:** _____%
+
+- **Hours Saved/Year:** **\_** hours
+- **Hours Saved/Week:** **\_** hours
+- **Time Reduction:** **\_**%
 
 ### 2.4 Time Savings Value
-- **Average Hourly Rate:** $_____/hour
-- **Direct Time Savings:** $_____/year (hours saved × hourly rate)
-- **Opportunity Cost:** $_____/year (hours redirected to revenue-generating work)
-- **Total Time Savings Value:** $_____/year
+
+- **Average Hourly Rate:** $**\_**/hour
+- **Direct Time Savings:** $**\_**/year (hours saved × hourly rate)
+- **Opportunity Cost:** $**\_**/year (hours redirected to revenue-generating work)
+- **Total Time Savings Value:** $**\_**/year
 
 ---
 
 ## 3. COST SAVINGS CALCULATION
 
 ### 3.1 Error Reduction
-- **Current Error Rate:** _____%
-- **Estimated Error Cost/Year:** $_____
-- **Expected Error Reduction:** _____%
-- **Error Cost Savings:** $_____/year
+
+- **Current Error Rate:** **\_**%
+- **Estimated Error Cost/Year:** $**\_**
+- **Expected Error Reduction:** **\_**%
+- **Error Cost Savings:** $**\_**/year
 
 ### 3.2 Operational Cost Reduction
-| Category | Current Cost/Year | Reduction | Savings/Year |
-|----------|------------------|-----------|--------------|
-| Manual Data Entry | $_____ | _____% | $_____ |
-| Overtime Costs | $_____ | _____% | $_____ |
-| Rework/Corrections | $_____ | _____% | $_____ |
-| Software Licenses (replaced) | $_____ | _____% | $_____ |
-| Other: ________________ | $_____ | _____% | $_____ |
-| **Total Operational Savings** | | | **$_____** |
+
+| Category                        | Current Cost/Year | Reduction | Savings/Year    |
+| ------------------------------- | ----------------- | --------- | --------------- |
+| Manual Data Entry               | $**\_**           | **\_**%   | $**\_**         |
+| Overtime Costs                  | $**\_**           | **\_**%   | $**\_**         |
+| Rework/Corrections              | $**\_**           | **\_**%   | $**\_**         |
+| Software Licenses (replaced)    | $**\_**           | **\_**%   | $**\_**         |
+| Other: **\*\***\_\_\_\_**\*\*** | $**\_**           | **\_**%   | $**\_**         |
+| **Total Operational Savings**   |                   |           | **$**\_\*\*\*\* |
 
 ### 3.3 Scalability Savings
-- **Current Cost to Add Employee:** $_____
-- **Automation Handles:** _____ FTEs equivalent
-- **Avoided Hiring Costs:** $_____/year
 
-### **TOTAL COST SAVINGS:** $________________/year
+- **Current Cost to Add Employee:** $**\_**
+- **Automation Handles:** **\_** FTEs equivalent
+- **Avoided Hiring Costs:** $**\_**/year
+
+### **TOTAL COST SAVINGS:** $**\*\***\_\_\_\_**\*\***/year
 
 ---
 
 ## 4. REVENUE IMPACT CALCULATION
 
 ### 4.1 Revenue Growth Opportunities
-| Opportunity | Current Revenue | Expected Increase | Additional Revenue/Year |
-|------------|----------------|-------------------|------------------------|
-| Faster Response Time | $_____ | _____% | $_____ |
-| More Time for Sales | $_____ | _____% | $_____ |
-| Ability to Scale | $_____ | _____% | $_____ |
-| Better Customer Experience | $_____ | _____% | $_____ |
-| **Total Revenue Impact** | | | **$_____** |
 
-### **TOTAL REVENUE IMPACT:** $________________/year
+| Opportunity                | Current Revenue | Expected Increase | Additional Revenue/Year |
+| -------------------------- | --------------- | ----------------- | ----------------------- |
+| Faster Response Time       | $**\_**         | **\_**%           | $**\_**                 |
+| More Time for Sales        | $**\_**         | **\_**%           | $**\_**                 |
+| Ability to Scale           | $**\_**         | **\_**%           | $**\_**                 |
+| Better Customer Experience | $**\_**         | **\_**%           | $**\_**                 |
+| **Total Revenue Impact**   |                 |                   | **$**\_\*\*\*\*         |
+
+### **TOTAL REVENUE IMPACT:** $**\*\***\_\_\_\_**\*\***/year
 
 ---
 
 ## 5. TOTAL BENEFITS SUMMARY
 
-| Category | Annual Value |
-|----------|--------------|
-| Time Savings | $_____ |
-| Cost Savings | $_____ |
-| Revenue Impact | $_____ |
-| **TOTAL ANNUAL BENEFITS** | **$_____** |
+| Category                  | Annual Value    |
+| ------------------------- | --------------- |
+| Time Savings              | $**\_**         |
+| Cost Savings              | $**\_**         |
+| Revenue Impact            | $**\_**         |
+| **TOTAL ANNUAL BENEFITS** | **$**\_\*\*\*\* |
 
 ---
 
 ## 6. ROI CALCULATION
 
 ### 6.1 Year 1 ROI
-- **Total Investment (Year 1):** $_____
-- **Total Benefits (Year 1):** $_____
-- **Net Benefit (Year 1):** $_____
-- **ROI (Year 1):** _____%
-- **Payback Period:** _____ months
+
+- **Total Investment (Year 1):** $**\_**
+- **Total Benefits (Year 1):** $**\_**
+- **Net Benefit (Year 1):** $**\_**
+- **ROI (Year 1):** **\_**%
+- **Payback Period:** **\_** months
 
 ### 6.2 3-Year ROI Projection
-| Year | Investment | Benefits | Net Benefit | Cumulative |
-|------|------------|----------|-------------|------------|
-| Year 1 | $_____ | $_____ | $_____ | $_____ |
-| Year 2 | $_____ | $_____ | $_____ | $_____ |
-| Year 3 | $_____ | $_____ | $_____ | $_____ |
-| **Total** | **$_____** | **$_____** | **$_____** | **$_____** |
 
-- **3-Year ROI:** _____%
-- **3-Year Net Benefit:** $_____
-- **Average Annual ROI:** _____%
+| Year      | Investment      | Benefits        | Net Benefit     | Cumulative      |
+| --------- | --------------- | --------------- | --------------- | --------------- |
+| Year 1    | $**\_**         | $**\_**         | $**\_**         | $**\_**         |
+| Year 2    | $**\_**         | $**\_**         | $**\_**         | $**\_**         |
+| Year 3    | $**\_**         | $**\_**         | $**\_**         | $**\_**         |
+| **Total** | **$**\_\*\*\*\* | **$**\_\*\*\*\* | **$**\_\*\*\*\* | **$**\_\*\*\*\* |
+
+- **3-Year ROI:** **\_**%
+- **3-Year Net Benefit:** $**\_**
+- **Average Annual ROI:** **\_**%
 
 ### 6.3 Net Present Value (NPV)
-*Assuming discount rate of _____%:*
-- **NPV (3 years):** $_____
+
+_Assuming discount rate of **\_**%:_
+
+- **NPV (3 years):** $**\_**
 
 ---
 
 ## 7. RISK ADJUSTMENT
 
 ### 7.1 Risk Factors
-| Risk | Probability | Impact | Adjust Factor |
-|------|-------------|--------|---------------|
-| Implementation delays | _____% | $_____ | _____% |
-| Lower adoption rate | _____% | $_____ | _____% |
-| Unexpected costs | _____% | $_____ | _____% |
-| **Total Risk Adjustment** | | | **-$_____** |
+
+| Risk                      | Probability | Impact  | Adjust Factor    |
+| ------------------------- | ----------- | ------- | ---------------- |
+| Implementation delays     | **\_**%     | $**\_** | **\_**%          |
+| Lower adoption rate       | **\_**%     | $**\_** | **\_**%          |
+| Unexpected costs          | **\_**%     | $**\_** | **\_**%          |
+| **Total Risk Adjustment** |             |         | **-$**\_\*\*\*\* |
 
 ### 7.2 Risk-Adjusted ROI
-- **Risk-Adjusted Benefits:** $_____
-- **Risk-Adjusted ROI:** _____%
+
+- **Risk-Adjusted Benefits:** $**\_**
+- **Risk-Adjusted ROI:** **\_**%
 
 ---
 
 ## 8. QUALITATIVE BENEFITS
 
 ### 8.1 Strategic Benefits
+
 - [ ] Improved scalability
 - [ ] Better data accuracy
 - [ ] Enhanced customer experience
@@ -211,6 +234,7 @@
 - [ ] Better compliance/audit trail
 
 ### 8.2 Innovation Benefits
+
 - [ ] Foundation for future automation
 - [ ] Data-driven decision making
 - [ ] Faster time to market
@@ -221,59 +245,72 @@
 ## 9. COMPARISON TO ALTERNATIVES
 
 ### 9.1 Status Quo
-- **Cost:** $_____ (opportunity cost of not automating)
+
+- **Cost:** $**\_** (opportunity cost of not automating)
 - **ROI:** 0% (no improvement)
 
 ### 9.2 Alternative Solutions
-| Solution | Investment | Annual Benefits | ROI | Payback |
-|----------|------------|-----------------|-----|---------|
-| AIAS Platform | $_____ | $_____ | _____% | _____ mos |
-| Alternative 1: ________________ | $_____ | $_____ | _____% | _____ mos |
-| Alternative 2: ________________ | $_____ | $_____ | _____% | _____ mos |
+
+| Solution                                | Investment | Annual Benefits | ROI     | Payback    |
+| --------------------------------------- | ---------- | --------------- | ------- | ---------- |
+| AIAS Platform                           | $**\_**    | $**\_**         | **\_**% | **\_** mos |
+| Alternative 1: **\*\***\_\_\_\_**\*\*** | $**\_**    | $**\_**         | **\_**% | **\_** mos |
+| Alternative 2: **\*\***\_\_\_\_**\*\*** | $**\_**    | $**\_**         | **\_**% | **\_** mos |
 
 ---
 
 ## 10. RECOMMENDATION
 
 ### 10.1 Business Case
+
 **Recommendation:** [ ] Proceed [ ] Do Not Proceed [ ] Defer
 
 **Rationale:**
-_________________________________________________________________
-_________________________________________________________________
-_________________________________________________________________
+
+---
+
+---
+
+---
 
 ### 10.2 Success Criteria
+
 To achieve projected ROI, we need:
-1. _____________________________________________________________
-2. _____________________________________________________________
-3. _____________________________________________________________
+
+1. ***
+2. ***
+3. ***
 
 ### 10.3 Next Steps
-1. _____________________________________________________________
-2. _____________________________________________________________
-3. _____________________________________________________________
+
+1. ***
+2. ***
+3. ***
 
 ---
 
 ## 📊 APPENDIX: CALCULATION FORMULAS
 
 ### Time Savings Formula
+
 ```
 Time Savings = (Current Hours - Automated Hours) × Frequency × 52 weeks × Hourly Rate
 ```
 
 ### ROI Formula
+
 ```
 ROI = (Total Benefits - Total Investment) / Total Investment × 100%
 ```
 
 ### Payback Period
+
 ```
 Payback Period = Total Investment / Monthly Benefits
 ```
 
 ### NPV Formula
+
 ```
 NPV = Σ (Benefits - Costs) / (1 + Discount Rate)^Year
 ```
@@ -282,9 +319,9 @@ NPV = Σ (Benefits - Costs) / (1 + Discount Rate)^Year
 
 ## ✅ APPROVAL & SIGN-OFF
 
-**Prepared By:** _______________________ Date: ___________  
-**Reviewed By:** _______________________ Date: ___________  
-**Approved By:** _______________________ Date: ___________
+**Prepared By:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\*** Date: \***\*\_\_\_\*\***  
+**Reviewed By:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\*** Date: \***\*\_\_\_\*\***  
+**Approved By:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\*** Date: \***\*\_\_\_\*\***
 
 ---
 

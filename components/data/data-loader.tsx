@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
 /**
  * DataLoader Component
- * 
+ *
  * Standardized wrapper for data queries that handles:
  * - Loading states
  * - Error states
  * - Empty states
- * 
+ *
  * @example
  * ```tsx
  * const { data, isLoading, isError, error } = useUser();
- * 
+ *
  * return (
  *   <DataLoader
  *     isLoading={isLoading}
@@ -26,10 +26,10 @@
  * ```
  */
 
-import { LoadingState } from "@/components/ui/loading-state";
-import { ErrorState } from "@/components/ui/error-state";
-import { EmptyState } from "@/components/ui/empty-state";
-import { type ReactNode } from "react";
+import { LoadingState } from '@/components/ui/loading-state';
+import { ErrorState } from '@/components/ui/error-state';
+import { EmptyState } from '@/components/ui/empty-state';
+import { type ReactNode } from 'react';
 
 interface DataLoaderProps {
   isLoading: boolean;
@@ -58,7 +58,7 @@ export function DataLoader({
   emptyMessage,
   emptyIcon,
   emptyAction,
-  loadingMessage = "Loading...",
+  loadingMessage = 'Loading...',
   errorTitle,
   errorMessage,
   onRetry,
@@ -74,8 +74,8 @@ export function DataLoader({
   if (isError) {
     const errorMsg =
       errorMessage ||
-      (error instanceof Error ? error.message : "An error occurred");
-    
+      (error instanceof Error ? error.message : 'An error occurred');
+
     return (
       <ErrorState
         title={errorTitle}

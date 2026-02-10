@@ -1,30 +1,42 @@
 // Database Integration for PMF Metrics
 // Connects PMF tracker to Supabase database
 
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-import { PMFMetrics } from "./pmf-metrics";
+import { PMFMetrics } from './pmf-metrics';
 
 // Lazy initialization to avoid build-time errors
 function getSupabaseClient(): SupabaseClient | null {
   // Build-time safety: Don't create client during build
-  if (process.env.NEXT_PHASE === 'phase-production-build' || 
-      (process.env.SKIP_ENV_VALIDATION === 'true' && !process.env.VERCEL && !process.env.GITHUB_ACTIONS)) {
+  if (
+    process.env.NEXT_PHASE === 'phase-production-build' ||
+    (process.env.SKIP_ENV_VALIDATION === 'true' &&
+      !process.env.VERCEL &&
+      !process.env.GITHUB_ACTIONS)
+  ) {
     return null;
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    '';
 
   // Validate URLs are not placeholders or empty
-  if (!supabaseUrl || supabaseUrl.includes('placeholder') || !supabaseKey || supabaseKey.includes('placeholder')) {
+  if (
+    !supabaseUrl ||
+    supabaseUrl.includes('placeholder') ||
+    !supabaseKey ||
+    supabaseKey.includes('placeholder')
+  ) {
     return null;
   }
 
   try {
     return createClient(supabaseUrl, supabaseKey);
   } catch (error) {
-    console.error("Failed to create Supabase client:", error);
+    console.error('Failed to create Supabase client:', error);
     return null;
   }
 }
@@ -38,18 +50,18 @@ export class DatabasePMFTracker {
 
     try {
       // Call the update function first to ensure latest metrics
-      await supabase.rpc("update_pmf_metrics_snapshot");
+      await supabase.rpc('update_pmf_metrics_snapshot');
 
       // Get latest snapshot
       const { data, error } = await supabase
-        .from("pmf_metrics_snapshots")
-        .select("*")
-        .order("snapshot_date", { ascending: false })
+        .from('pmf_metrics_snapshots')
+        .select('*')
+        .order('snapshot_date', { ascending: false })
         .limit(1)
         .single();
 
       if (error) {
-        console.error("Error fetching PMF metrics:", error);
+        console.error('Error fetching PMF metrics:', error);
         return this.getDefaultMetrics();
       }
 
@@ -64,7 +76,7 @@ export class DatabasePMFTracker {
         weeklyActiveUsers: data.weekly_active_users || 0,
       };
     } catch (error) {
-      console.error("Database connection error:", error);
+      console.error('Database connection error:', error);
       return this.getDefaultMetrics();
     }
   }
@@ -81,7 +93,7 @@ export class DatabasePMFTracker {
     }
 
     try {
-      const { error } = await supabase.from("conversion_events").insert({
+      const { error } = await supabase.from('conversion_events').insert({
         event_type: eventType,
         user_id: userId || null,
         session_id: sessionId,
@@ -89,10 +101,10 @@ export class DatabasePMFTracker {
       });
 
       if (error) {
-        console.error("Error tracking conversion event:", error);
+        console.error('Error tracking conversion event:', error);
       }
     } catch (error) {
-      console.error("Database error:", error);
+      console.error('Database error:', error);
     }
   }
 
@@ -103,17 +115,17 @@ export class DatabasePMFTracker {
     }
 
     try {
-      const { error } = await supabase.from("user_activations").insert({
+      const { error } = await supabase.from('user_activations').insert({
         user_id: userId,
         signup_date: signupDate.toISOString(),
       });
 
-      if (error && error.code !== "23505") {
+      if (error && error.code !== '23505') {
         // Ignore duplicate key errors
-        console.error("Error tracking user activation:", error);
+        console.error('Error tracking user activation:', error);
       }
     } catch (error) {
-      console.error("Database error:", error);
+      console.error('Database error:', error);
     }
   }
 
@@ -126,32 +138,34 @@ export class DatabasePMFTracker {
     try {
       // Get signup date
       const { data: activation } = await supabase
-        .from("user_activations")
-        .select("signup_date")
-        .eq("user_id", userId)
+        .from('user_activations')
+        .select('signup_date')
+        .eq('user_id', userId)
         .single();
 
-      if (!activation) {return;}
+      if (!activation) {
+        return;
+      }
 
       const signupDate = new Date(activation.signup_date);
       const timeToActivationHours =
         (workflowCreatedAt.getTime() - signupDate.getTime()) / (1000 * 60 * 60);
 
       const { error } = await supabase
-        .from("user_activations")
+        .from('user_activations')
         .update({
           first_workflow_created_at: workflowCreatedAt.toISOString(),
           time_to_activation_hours: timeToActivationHours,
           workflows_created: 1,
           last_active_at: workflowCreatedAt.toISOString(),
         })
-        .eq("user_id", userId);
+        .eq('user_id', userId);
 
       if (error) {
-        console.error("Error tracking first workflow:", error);
+        console.error('Error tracking first workflow:', error);
       }
     } catch (error) {
-      console.error("Database error:", error);
+      console.error('Database error:', error);
     }
   }
 
@@ -168,7 +182,7 @@ export class DatabasePMFTracker {
     }
 
     try {
-      const { error } = await supabase.from("affiliate_clicks").insert({
+      const { error } = await supabase.from('affiliate_clicks').insert({
         affiliate_id: affiliateId,
         product,
         session_id: sessionId,
@@ -177,10 +191,10 @@ export class DatabasePMFTracker {
       });
 
       if (error) {
-        console.error("Error tracking affiliate click:", error);
+        console.error('Error tracking affiliate click:', error);
       }
     } catch (error) {
-      console.error("Database error:", error);
+      console.error('Database error:', error);
     }
   }
 
@@ -191,17 +205,17 @@ export class DatabasePMFTracker {
     }
 
     try {
-      const { error } = await supabase.from("nps_surveys").insert({
+      const { error } = await supabase.from('nps_surveys').insert({
         user_id: userId,
         score,
         feedback: feedback || null,
       });
 
       if (error) {
-        console.error("Error submitting NPS survey:", error);
+        console.error('Error submitting NPS survey:', error);
       }
     } catch (error) {
-      console.error("Database error:", error);
+      console.error('Database error:', error);
     }
   }
 

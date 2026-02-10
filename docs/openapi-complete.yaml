@@ -3,7 +3,7 @@ info:
   title: AIAS Platform API
   description: |
     Enterprise-grade AI consultancy platform API
-    
+
     This API provides endpoints for:
     - Authentication and user management
     - Workflow automation
@@ -110,7 +110,7 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: "ok"
+                    example: 'ok'
 
   /auth/login:
     post:

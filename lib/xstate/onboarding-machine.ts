@@ -1,34 +1,39 @@
 /**
  * Onboarding Wizard State Machine
- * 
+ *
  * Manages the multi-step onboarding flow with validation,
  * async operations, and error handling.
  */
 
-import { createMachine, assign } from "xstate";
-import { StepFlowContext, StepFlowEvents, GuardFn, MachineError } from "./conventions";
-import { createMachineError } from "./utils";
+import { createMachine, assign } from 'xstate';
+import {
+  StepFlowContext,
+  StepFlowEvents,
+  GuardFn,
+  MachineError,
+} from './conventions';
+import { createMachineError } from './utils';
 
 /**
  * Onboarding step IDs
  */
-export type OnboardingStepId = 
-  | "welcome"
-  | "choose-integration"
-  | "create-workflow"
-  | "test-workflow"
-  | "complete";
+export type OnboardingStepId =
+  | 'welcome'
+  | 'choose-integration'
+  | 'create-workflow'
+  | 'test-workflow'
+  | 'complete';
 
 /**
  * Integration provider
  */
-export type IntegrationProvider = 
-  | "shopify"
-  | "wave"
-  | "stripe"
-  | "gmail"
-  | "slack"
-  | "notion";
+export type IntegrationProvider =
+  | 'shopify'
+  | 'wave'
+  | 'stripe'
+  | 'gmail'
+  | 'slack'
+  | 'notion';
 
 /**
  * Onboarding context
@@ -45,26 +50,26 @@ export interface OnboardingContext extends StepFlowContext {
  * Onboarding events
  */
 export type OnboardingEvent =
-  | { type: "NEXT" }
-  | { type: "PREVIOUS" }
-  | { type: "GO_TO_STEP"; step: number }
-  | { type: "SELECT_INTEGRATION"; provider: IntegrationProvider }
-  | { type: "CREATE_WORKFLOW" }
-  | { type: "TEST_WORKFLOW" }
-  | { type: "CANCEL" }
-  | { type: "RETRY" }
-  | { type: "RESET" }
-  | { type: "COMPLETE" };
+  | { type: 'NEXT' }
+  | { type: 'PREVIOUS' }
+  | { type: 'GO_TO_STEP'; step: number }
+  | { type: 'SELECT_INTEGRATION'; provider: IntegrationProvider }
+  | { type: 'CREATE_WORKFLOW' }
+  | { type: 'TEST_WORKFLOW' }
+  | { type: 'CANCEL' }
+  | { type: 'RETRY' }
+  | { type: 'RESET' }
+  | { type: 'COMPLETE' };
 
 /**
  * Step definitions
  */
 const STEPS: OnboardingStepId[] = [
-  "welcome",
-  "choose-integration",
-  "create-workflow",
-  "test-workflow",
-  "complete",
+  'welcome',
+  'choose-integration',
+  'create-workflow',
+  'test-workflow',
+  'complete',
 ];
 
 /**
@@ -75,25 +80,39 @@ const canProceedFromWelcome = () => {
   return true;
 };
 
-const canProceedFromChooseIntegration = ({ context }: { context: OnboardingContext }) => {
+const canProceedFromChooseIntegration = ({
+  context,
+}: {
+  context: OnboardingContext;
+}) => {
   return !!context.selectedIntegration;
 };
 
-const canProceedFromCreateWorkflow = ({ context }: { context: OnboardingContext }) => {
+const canProceedFromCreateWorkflow = ({
+  context,
+}: {
+  context: OnboardingContext;
+}) => {
   return !!context.workflowCreated;
 };
 
-const canProceedFromTestWorkflow = ({ context }: { context: OnboardingContext }) => {
+const canProceedFromTestWorkflow = ({
+  context,
+}: {
+  context: OnboardingContext;
+}) => {
   return !!context.workflowTested;
 };
 
 /**
  * Service: Connect integration
  */
-async function connectIntegration(provider: IntegrationProvider): Promise<void> {
+async function connectIntegration(
+  provider: IntegrationProvider
+): Promise<void> {
   // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 1500));
-  
+  await new Promise(resolve => setTimeout(resolve, 1500));
+
   // Simulate occasional failures (20% chance)
   if (Math.random() < 0.2) {
     throw new Error(`Failed to connect ${provider}. Please try again.`);
@@ -104,10 +123,10 @@ async function connectIntegration(provider: IntegrationProvider): Promise<void> 
  * Service: Create workflow
  */
 async function createWorkflow(integration: IntegrationProvider): Promise<void> {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-  
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
   if (Math.random() < 0.15) {
-    throw new Error("Failed to create workflow. Please try again.");
+    throw new Error('Failed to create workflow. Please try again.');
   }
 }
 
@@ -115,16 +134,16 @@ async function createWorkflow(integration: IntegrationProvider): Promise<void> {
  * Service: Test workflow
  */
 async function testWorkflow(): Promise<void> {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
   if (Math.random() < 0.1) {
-    throw new Error("Workflow test failed. Please check your configuration.");
+    throw new Error('Workflow test failed. Please check your configuration.');
   }
 }
 
 /**
  * Onboarding State Machine
- * 
+ *
  * States:
  * - idle: Initial state
  * - welcome: Welcome step
@@ -139,12 +158,12 @@ async function testWorkflow(): Promise<void> {
  */
 export const onboardingMachine = createMachine(
   {
-    id: "onboarding",
+    id: 'onboarding',
     types: {} as {
       context: OnboardingContext;
       events: OnboardingEvent;
     },
-    initial: "welcome",
+    initial: 'welcome',
     context: {
       currentStep: 0,
       totalSteps: STEPS.length,
@@ -160,7 +179,7 @@ export const onboardingMachine = createMachine(
         }),
         on: {
           NEXT: {
-            target: "choosingIntegration",
+            target: 'choosingIntegration',
             guard: canProceedFromWelcome,
             actions: assign({
               currentStep: 1,
@@ -175,19 +194,19 @@ export const onboardingMachine = createMachine(
         }),
         on: {
           SELECT_INTEGRATION: {
-            target: "choosingIntegration",
+            target: 'choosingIntegration',
             actions: assign({
               selectedIntegration: ({ event }) => event.provider,
             }),
           },
           PREVIOUS: {
-            target: "welcome",
+            target: 'welcome',
             actions: assign({
               currentStep: 0,
             }),
           },
           NEXT: {
-            target: "connectingIntegration",
+            target: 'connectingIntegration',
             guard: canProceedFromChooseIntegration,
           },
         },
@@ -197,32 +216,36 @@ export const onboardingMachine = createMachine(
           error: undefined,
         }),
         invoke: {
-          id: "connectIntegration",
+          id: 'connectIntegration',
           // Cast for XState v5 invoke typing (this machine uses a v4-style inline promise service).
           src: (({ context }: { context: OnboardingContext }) => {
             if (!context.selectedIntegration) {
-              throw new Error("No integration selected");
+              throw new Error('No integration selected');
             }
             return Promise.race([
               connectIntegration(context.selectedIntegration),
               new Promise((_, reject) =>
-                setTimeout(() => reject(new Error("Connection timeout. Please try again.")), 10000)
+                setTimeout(
+                  () =>
+                    reject(new Error('Connection timeout. Please try again.')),
+                  10000
+                )
               ),
             ]);
           }) as any,
           onDone: {
-            target: "creatingWorkflow",
+            target: 'creatingWorkflow',
             actions: assign({
               currentStep: 2,
               completedSteps: ({ context }) => [
                 ...context.completedSteps,
-                "choose-integration",
+                'choose-integration',
               ],
               retryCount: 0,
             }),
           },
           onError: {
-            target: "error",
+            target: 'error',
             actions: assign({
               error: ({ event }) => createMachineError(event.error),
               retryCount: ({ context }) => (context.retryCount || 0) + 1,
@@ -231,15 +254,18 @@ export const onboardingMachine = createMachine(
         },
         after: {
           10000: {
-            target: "error",
+            target: 'error',
             actions: assign({
-              error: () => createMachineError(new Error("Connection timeout. Please try again.")),
+              error: () =>
+                createMachineError(
+                  new Error('Connection timeout. Please try again.')
+                ),
             }),
           },
         },
         on: {
           CANCEL: {
-            target: "choosingIntegration",
+            target: 'choosingIntegration',
           },
         },
       },
@@ -250,10 +276,10 @@ export const onboardingMachine = createMachine(
         }),
         on: {
           CREATE_WORKFLOW: {
-            target: "creatingWorkflowAsync",
+            target: 'creatingWorkflowAsync',
           },
           PREVIOUS: {
-            target: "choosingIntegration",
+            target: 'choosingIntegration',
             actions: assign({
               currentStep: 1,
             }),
@@ -265,33 +291,39 @@ export const onboardingMachine = createMachine(
           error: undefined,
         }),
         invoke: {
-          id: "createWorkflow",
+          id: 'createWorkflow',
           // Cast for XState v5 invoke typing (this machine uses a v4-style inline promise service).
           src: (({ context }: { context: OnboardingContext }) => {
             if (!context.selectedIntegration) {
-              throw new Error("No integration selected");
+              throw new Error('No integration selected');
             }
             return Promise.race([
               createWorkflow(context.selectedIntegration),
               new Promise((_, reject) =>
-                setTimeout(() => reject(new Error("Workflow creation timeout. Please try again.")), 15000)
+                setTimeout(
+                  () =>
+                    reject(
+                      new Error('Workflow creation timeout. Please try again.')
+                    ),
+                  15000
+                )
               ),
             ]);
           }) as any,
           onDone: {
-            target: "testingWorkflow",
+            target: 'testingWorkflow',
             actions: assign({
               workflowCreated: true,
               currentStep: 3,
               completedSteps: ({ context }) => [
                 ...context.completedSteps,
-                "create-workflow",
+                'create-workflow',
               ],
               retryCount: 0,
             }),
           },
           onError: {
-            target: "error",
+            target: 'error',
             actions: assign({
               error: ({ event }) => createMachineError(event.error),
               retryCount: ({ context }) => (context.retryCount || 0) + 1,
@@ -300,15 +332,18 @@ export const onboardingMachine = createMachine(
         },
         after: {
           15000: {
-            target: "error",
+            target: 'error',
             actions: assign({
-              error: () => createMachineError(new Error("Workflow creation timeout. Please try again.")),
+              error: () =>
+                createMachineError(
+                  new Error('Workflow creation timeout. Please try again.')
+                ),
             }),
           },
         },
         on: {
           CANCEL: {
-            target: "creatingWorkflow",
+            target: 'creatingWorkflow',
           },
         },
       },
@@ -319,10 +354,10 @@ export const onboardingMachine = createMachine(
         }),
         on: {
           TEST_WORKFLOW: {
-            target: "testingWorkflowAsync",
+            target: 'testingWorkflowAsync',
           },
           PREVIOUS: {
-            target: "creatingWorkflow",
+            target: 'creatingWorkflow',
             actions: assign({
               currentStep: 2,
             }),
@@ -334,29 +369,35 @@ export const onboardingMachine = createMachine(
           error: undefined,
         }),
         invoke: {
-          id: "testWorkflow",
+          id: 'testWorkflow',
           // Cast for XState v5 invoke typing (this machine uses a v4-style inline promise service).
           src: (() =>
             Promise.race([
               testWorkflow(),
               new Promise((_, reject) =>
-                setTimeout(() => reject(new Error("Workflow test timeout. Please try again.")), 8000)
+                setTimeout(
+                  () =>
+                    reject(
+                      new Error('Workflow test timeout. Please try again.')
+                    ),
+                  8000
+                )
               ),
             ])) as any,
           onDone: {
-            target: "complete",
+            target: 'complete',
             actions: assign({
               workflowTested: true,
               currentStep: 4,
               completedSteps: ({ context }) => [
                 ...context.completedSteps,
-                "test-workflow",
+                'test-workflow',
               ],
               retryCount: 0,
             }),
           },
           onError: {
-            target: "error",
+            target: 'error',
             actions: assign({
               error: ({ event }) => createMachineError(event.error),
               retryCount: ({ context }) => (context.retryCount || 0) + 1,
@@ -365,15 +406,18 @@ export const onboardingMachine = createMachine(
         },
         after: {
           8000: {
-            target: "error",
+            target: 'error',
             actions: assign({
-              error: () => createMachineError(new Error("Workflow test timeout. Please try again.")),
+              error: () =>
+                createMachineError(
+                  new Error('Workflow test timeout. Please try again.')
+                ),
             }),
           },
         },
         on: {
           CANCEL: {
-            target: "testingWorkflow",
+            target: 'testingWorkflow',
           },
         },
       },
@@ -382,12 +426,12 @@ export const onboardingMachine = createMachine(
           currentStep: 4,
           completedSteps: ({ context }) => [
             ...context.completedSteps,
-            "complete",
+            'complete',
           ],
         }),
         on: {
           RESET: {
-            target: "welcome",
+            target: 'welcome',
             actions: assign({
               currentStep: 0,
               completedSteps: [],
@@ -403,8 +447,8 @@ export const onboardingMachine = createMachine(
       error: {
         entry: ({ context }) => {
           // Log error for debugging
-          if (process.env.NODE_ENV === "development") {
-            console.error("[Onboarding Error]", context.error);
+          if (process.env.NODE_ENV === 'development') {
+            console.error('[Onboarding Error]', context.error);
           }
         },
         on: {
@@ -414,7 +458,7 @@ export const onboardingMachine = createMachine(
                 const retryCount = context.retryCount || 0;
                 return context.currentStep === 1 && retryCount < 3;
               },
-              target: "connectingIntegration",
+              target: 'connectingIntegration',
               actions: assign({
                 error: undefined,
               }),
@@ -424,7 +468,7 @@ export const onboardingMachine = createMachine(
                 const retryCount = context.retryCount || 0;
                 return context.currentStep === 2 && retryCount < 3;
               },
-              target: "creatingWorkflowAsync",
+              target: 'creatingWorkflowAsync',
               actions: assign({
                 error: undefined,
               }),
@@ -434,7 +478,7 @@ export const onboardingMachine = createMachine(
                 const retryCount = context.retryCount || 0;
                 return context.currentStep === 3 && retryCount < 3;
               },
-              target: "testingWorkflowAsync",
+              target: 'testingWorkflowAsync',
               actions: assign({
                 error: undefined,
               }),
@@ -443,19 +487,19 @@ export const onboardingMachine = createMachine(
           PREVIOUS: [
             {
               guard: ({ context }) => context.currentStep === 1,
-              target: "choosingIntegration",
+              target: 'choosingIntegration',
             },
             {
               guard: ({ context }) => context.currentStep === 2,
-              target: "creatingWorkflow",
+              target: 'creatingWorkflow',
             },
             {
               guard: ({ context }) => context.currentStep === 3,
-              target: "testingWorkflow",
+              target: 'testingWorkflow',
             },
           ],
           RESET: {
-            target: "welcome",
+            target: 'welcome',
             actions: assign({
               currentStep: 0,
               completedSteps: [],

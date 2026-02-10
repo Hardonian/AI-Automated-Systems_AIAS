@@ -19,13 +19,17 @@ export async function withTimeout<T>(
   errorMessage?: string
 ): Promise<T> {
   let timeoutId: NodeJS.Timeout | null = null;
-  
+
   const timeoutPromise = new Promise<never>((_, reject) => {
     timeoutId = setTimeout(() => {
-      reject(new TimeoutError(errorMessage || `Operation timed out after ${timeoutMs}ms`));
+      reject(
+        new TimeoutError(
+          errorMessage || `Operation timed out after ${timeoutMs}ms`
+        )
+      );
     }, timeoutMs);
   });
-  
+
   try {
     return await Promise.race([promise, timeoutPromise]);
   } finally {
@@ -40,7 +44,7 @@ export async function withTimeout<T>(
  */
 export function createTimeoutHandler(timeoutMs: number) {
   let timeoutId: NodeJS.Timeout | null = null;
-  
+
   return {
     start: (callback: () => void) => {
       if (timeoutId) {

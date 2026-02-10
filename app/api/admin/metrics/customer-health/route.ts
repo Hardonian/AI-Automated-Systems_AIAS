@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { createGETHandler, RouteContext } from "@/lib/api/route-handler";
-import { requireAdmin } from "@/lib/auth/admin-auth";
-import { seedRoundDB } from "@/lib/database/seed-round-db";
-import { logger } from "@/lib/logging/structured-logger";
+import { createGETHandler, RouteContext } from '@/lib/api/route-handler';
+import { requireAdmin } from '@/lib/auth/admin-auth';
+import { seedRoundDB } from '@/lib/database/seed-round-db';
+import { logger } from '@/lib/logging/structured-logger';
 
 /**
  * Customer Health Score API
@@ -14,11 +14,11 @@ import { logger } from "@/lib/logging/structured-logger";
 function getMockCustomerHealthData() {
   return [
     {
-      id: "cust_001",
-      company: "Acme Corp",
-      tier: "Pro",
+      id: 'cust_001',
+      company: 'Acme Corp',
+      tier: 'Pro',
       healthScore: 85,
-      status: "green",
+      status: 'green',
       usage: {
         activeUsers: 85,
         workflowsRunning: 5,
@@ -40,11 +40,11 @@ function getMockCustomerHealthData() {
       lastUpdated: new Date().toISOString(),
     },
     {
-      id: "cust_002",
-      company: "TechStart Inc",
-      tier: "Enterprise",
+      id: 'cust_002',
+      company: 'TechStart Inc',
+      tier: 'Enterprise',
       healthScore: 92,
-      status: "green",
+      status: 'green',
       usage: {
         activeUsers: 95,
         workflowsRunning: 12,
@@ -66,11 +66,11 @@ function getMockCustomerHealthData() {
       lastUpdated: new Date().toISOString(),
     },
     {
-      id: "cust_003",
-      company: "SMB Solutions",
-      tier: "Starter",
+      id: 'cust_003',
+      company: 'SMB Solutions',
+      tier: 'Starter',
       healthScore: 65,
-      status: "yellow",
+      status: 'yellow',
       usage: {
         activeUsers: 45,
         workflowsRunning: 2,
@@ -92,11 +92,11 @@ function getMockCustomerHealthData() {
       lastUpdated: new Date().toISOString(),
     },
     {
-      id: "cust_004",
-      company: "AtRisk Co",
-      tier: "Pro",
+      id: 'cust_004',
+      company: 'AtRisk Co',
+      tier: 'Pro',
       healthScore: 45,
-      status: "red",
+      status: 'red',
       usage: {
         activeUsers: 25,
         workflowsRunning: 1,
@@ -125,7 +125,10 @@ export async function GET(request: NextRequest) {
     // Verify admin authentication
     const { authorized, user, response } = await requireAdmin(context.request);
     if (!authorized || !user) {
-      return response || NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return (
+        response ||
+        NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      );
     }
 
     try {
@@ -133,37 +136,56 @@ export async function GET(request: NextRequest) {
       let customers;
       try {
         const dbCustomers = await seedRoundDB.getCustomerHealthScores();
-        customers = (dbCustomers || []).map((c: { id: string; company_name: string; tier: string; health_score: number; status: string; active_users_percentage: number; workflows_running: number; feature_adoption_percentage: number; support_tickets_per_month: number; qbr_attendance: number; response_time_hours: number; roi_achieved: number; goals_met: number; nps_score: number; csat_score: number; last_updated: string }) => ({
-          id: c.id,
-          company: c.company_name,
-          tier: c.tier,
-          healthScore: c.health_score,
-          status: c.status,
-          usage: {
-            activeUsers: c.active_users_percentage,
-            workflowsRunning: c.workflows_running,
-            featureAdoption: c.feature_adoption_percentage,
-          },
-          engagement: {
-            supportTickets: c.support_tickets_per_month,
-            qbrAttendance: c.qbr_attendance,
-            responseTime: c.response_time_hours,
-          },
-          value: {
-            roiAchieved: c.roi_achieved,
-            goalsMet: c.goals_met,
-          },
-          satisfaction: {
-            nps: c.nps_score,
-            csat: c.csat_score,
-          },
-          lastUpdated: c.last_updated,
-        }));
+        customers = (dbCustomers || []).map(
+          (c: {
+            id: string;
+            company_name: string;
+            tier: string;
+            health_score: number;
+            status: string;
+            active_users_percentage: number;
+            workflows_running: number;
+            feature_adoption_percentage: number;
+            support_tickets_per_month: number;
+            qbr_attendance: number;
+            response_time_hours: number;
+            roi_achieved: number;
+            goals_met: number;
+            nps_score: number;
+            csat_score: number;
+            last_updated: string;
+          }) => ({
+            id: c.id,
+            company: c.company_name,
+            tier: c.tier,
+            healthScore: c.health_score,
+            status: c.status,
+            usage: {
+              activeUsers: c.active_users_percentage,
+              workflowsRunning: c.workflows_running,
+              featureAdoption: c.feature_adoption_percentage,
+            },
+            engagement: {
+              supportTickets: c.support_tickets_per_month,
+              qbrAttendance: c.qbr_attendance,
+              responseTime: c.response_time_hours,
+            },
+            value: {
+              roiAchieved: c.roi_achieved,
+              goalsMet: c.goals_met,
+            },
+            satisfaction: {
+              nps: c.nps_score,
+              csat: c.csat_score,
+            },
+            lastUpdated: c.last_updated,
+          })
+        );
       } catch (dbError) {
         // Fallback to mock data if database table doesn't exist yet
-        logger.warn("Database query failed, using mock data", {
-          component: "CustomerHealthAPI",
-          action: "getCustomers",
+        logger.warn('Database query failed, using mock data', {
+          component: 'CustomerHealthAPI',
+          action: 'getCustomers',
           error: dbError instanceof Error ? dbError.message : String(dbError),
         });
         customers = getMockCustomerHealthData();
@@ -171,12 +193,21 @@ export async function GET(request: NextRequest) {
 
       // Calculate aggregate metrics
       const totalCustomers = customers.length;
-      const greenCustomers = customers.filter((c: { status: string }) => c.status === "green").length;
-      const yellowCustomers = customers.filter((c: { status: string }) => c.status === "yellow").length;
-      const redCustomers = customers.filter((c: { status: string }) => c.status === "red").length;
+      const greenCustomers = customers.filter(
+        (c: { status: string }) => c.status === 'green'
+      ).length;
+      const yellowCustomers = customers.filter(
+        (c: { status: string }) => c.status === 'yellow'
+      ).length;
+      const redCustomers = customers.filter(
+        (c: { status: string }) => c.status === 'red'
+      ).length;
 
       const avgHealthScore =
-        customers.reduce((sum: number, c: { healthScore: number }) => sum + c.healthScore, 0) / totalCustomers;
+        customers.reduce(
+          (sum: number, c: { healthScore: number }) => sum + c.healthScore,
+          0
+        ) / totalCustomers;
 
       const distribution = {
         green: {
@@ -222,12 +253,16 @@ export async function GET(request: NextRequest) {
         lastUpdated: new Date().toISOString(),
       });
     } catch (error) {
-      logger.error("Error fetching customer health", error instanceof Error ? error : new Error(String(error)), {
-        component: "CustomerHealthAPI",
-        action: "GET",
-      });
+      logger.error(
+        'Error fetching customer health',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          component: 'CustomerHealthAPI',
+          action: 'GET',
+        }
+      );
       return NextResponse.json(
-        { error: "Failed to fetch customer health data" },
+        { error: 'Failed to fetch customer health data' },
         { status: 500 }
       );
     }

@@ -10,14 +10,16 @@ import { join } from 'path';
 
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');
 // Check multiple environment variable sources (GitHub secrets, local env, etc.)
-const SUPABASE_PROJECT_REF = process.env.SUPABASE_PROJECT_REF || 
-                              process.env.VITE_SUPABASE_PROJECT_ID?.replace(/"/g, '') ||
-                              process.env.NEXT_PUBLIC_SUPABASE_PROJECT_REF;
-const SUPABASE_ACCESS_TOKEN = process.env.SUPABASE_ACCESS_TOKEN || 
-                              process.env.SUPABASE_TOKEN;
-const SUPABASE_DB_URL = process.env.SUPABASE_DB_URL || 
-                        process.env.DATABASE_URL ||
-                        process.env.POSTGRES_URL;
+const SUPABASE_PROJECT_REF =
+  process.env.SUPABASE_PROJECT_REF ||
+  process.env.VITE_SUPABASE_PROJECT_ID?.replace(/"/g, '') ||
+  process.env.NEXT_PUBLIC_SUPABASE_PROJECT_REF;
+const SUPABASE_ACCESS_TOKEN =
+  process.env.SUPABASE_ACCESS_TOKEN || process.env.SUPABASE_TOKEN;
+const SUPABASE_DB_URL =
+  process.env.SUPABASE_DB_URL ||
+  process.env.DATABASE_URL ||
+  process.env.POSTGRES_URL;
 
 interface MigrationFile {
   name: string;
@@ -47,21 +49,27 @@ function getMigrationFiles(): MigrationFile[] {
   return files;
 }
 
-function validateMigration(migrationPath: string): { valid: boolean; errors: string[] } {
+function validateMigration(migrationPath: string): {
+  valid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
   try {
     const content = readFileSync(migrationPath, 'utf-8');
-    
+
     // Basic SQL validation
     if (!content.trim()) {
       errors.push('Migration file is empty');
     }
-    
+
     // Check for common SQL issues
-    if (content.includes('CREATE TABLE IF NOT EXISTS') && content.includes('CREATE TABLE')) {
+    if (
+      content.includes('CREATE TABLE IF NOT EXISTS') &&
+      content.includes('CREATE TABLE')
+    ) {
       // This is fine, but we note it
     }
-    
+
     return { valid: errors.length === 0, errors };
   } catch (error: any) {
     errors.push(`Failed to read file: ${error.message}`);
@@ -74,11 +82,15 @@ async function applyViaSupabaseCLI(): Promise<boolean> {
 
   if (!SUPABASE_PROJECT_REF) {
     console.log('⚠️  SUPABASE_PROJECT_REF not found in environment variables.');
-    console.log('   Checked: SUPABASE_PROJECT_REF, VITE_SUPABASE_PROJECT_ID, NEXT_PUBLIC_SUPABASE_PROJECT_REF');
+    console.log(
+      '   Checked: SUPABASE_PROJECT_REF, VITE_SUPABASE_PROJECT_ID, NEXT_PUBLIC_SUPABASE_PROJECT_REF'
+    );
     return false;
   }
 
-  console.log(`✅ Found SUPABASE_PROJECT_REF: ${SUPABASE_PROJECT_REF.substring(0, 8)}...`);
+  console.log(
+    `✅ Found SUPABASE_PROJECT_REF: ${SUPABASE_PROJECT_REF.substring(0, 8)}...`
+  );
 
   try {
     // Link project if needed
@@ -160,7 +172,7 @@ async function main() {
   for (const migration of migrationFiles) {
     const validation = validateMigration(migration.path);
     const isNew = newMigrations.includes(migration.name);
-    
+
     if (!validation.valid) {
       console.log(`❌ ${migration.name}: ${validation.errors.join(', ')}`);
       allValid = false;
@@ -172,7 +184,9 @@ async function main() {
   }
 
   if (!allValid) {
-    console.error('\n❌ Some migrations failed validation. Please fix them before applying.\n');
+    console.error(
+      '\n❌ Some migrations failed validation. Please fix them before applying.\n'
+    );
     process.exit(1);
   }
 
@@ -192,16 +206,20 @@ async function main() {
   }
 
   if (!applied) {
-    console.log(`\n${  '='.repeat(60)}`);
+    console.log(`\n${'='.repeat(60)}`);
     console.log('⚠️  Could not apply migrations automatically.');
     console.log('\nTo apply migrations manually, use one of these methods:\n');
     console.log('Method 1: Supabase CLI');
     console.log('  export SUPABASE_PROJECT_REF="your-project-ref"');
     console.log('  export SUPABASE_ACCESS_TOKEN="your-access-token"');
-    console.log('  pnpm exec supabase link --project-ref $SUPABASE_PROJECT_REF');
+    console.log(
+      '  pnpm exec supabase link --project-ref $SUPABASE_PROJECT_REF'
+    );
     console.log('  pnpm exec supabase db push\n');
     console.log('Method 2: Direct Database Connection');
-    console.log('  export SUPABASE_DB_URL="postgresql://user:pass@host:5432/dbname"');
+    console.log(
+      '  export SUPABASE_DB_URL="postgresql://user:pass@host:5432/dbname"'
+    );
     console.log('  pnpm run migrate:apply\n');
     console.log('Method 3: Manual Application');
     console.log('  Apply each migration file in order from:');
@@ -210,7 +228,7 @@ async function main() {
     newMigrations.forEach(m => console.log(`  - ${m}`));
     console.log('');
   } else {
-    console.log(`\n${  '='.repeat(60)}`);
+    console.log(`\n${'='.repeat(60)}`);
     console.log('✅ Migration process completed!\n');
   }
 }

@@ -3,14 +3,20 @@
  * Tenant-admin only page showing system health, last webhook, last run, entitlements
  */
 
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { RefreshCw } from 'lucide-react';
 
 interface DiagnosticsData {
   lastWebhook: {
@@ -53,23 +59,28 @@ export default function DiagnosticsPage() {
       setError(null);
 
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
-        setError("Not authenticated");
+        setError('Not authenticated');
         return;
       }
 
       // Get user's tenant
       const { data: membership } = await supabase
-        .from("tenant_members" as any)
-        .select("tenant_id, role")
-        .eq("user_id", user.id)
-        .eq("status", "active")
+        .from('tenant_members' as any)
+        .select('tenant_id, role')
+        .eq('user_id', user.id)
+        .eq('status', 'active')
         .single();
 
-      const membershipData = membership as { tenant_id: string; role: string } | null;
-      if (!membershipData || membershipData.role !== "admin") {
-        setError("Admin access required");
+      const membershipData = membership as {
+        tenant_id: string;
+        role: string;
+      } | null;
+      if (!membershipData || membershipData.role !== 'admin') {
+        setError('Admin access required');
         return;
       }
 
@@ -77,80 +88,81 @@ export default function DiagnosticsPage() {
 
       // Fetch last webhook
       const { data: lastWebhook } = await supabase
-        .from("workflow_executions" as any)
-        .select("id, started_at, tenant_id, status, metadata")
-        .eq("tenant_id", tenantId)
-        .eq("metadata->>trigger_type", "webhook")
-        .order("started_at", { ascending: false })
+        .from('workflow_executions' as any)
+        .select('id, started_at, tenant_id, status, metadata')
+        .eq('tenant_id', tenantId)
+        .eq('metadata->>trigger_type', 'webhook')
+        .order('started_at', { ascending: false })
         .limit(1)
         .single();
 
       // Fetch last run
       const { data: lastRun } = await supabase
-        .from("workflow_executions" as any)
-        .select("id, workflow_id, status, started_at, completed_at")
-        .eq("tenant_id", tenantId)
-        .order("started_at", { ascending: false })
+        .from('workflow_executions' as any)
+        .select('id, workflow_id, status, started_at, completed_at')
+        .eq('tenant_id', tenantId)
+        .order('started_at', { ascending: false })
         .limit(1)
         .single();
 
       // Fetch entitlements (simplified - would use server-side gates in production)
       const { data: subscription } = await supabase
-        .from("subscriptions" as any)
-        .select("tier")
-        .eq("tenant_id", tenantId)
-        .eq("status", "active")
+        .from('subscriptions' as any)
+        .select('tier')
+        .eq('tenant_id', tenantId)
+        .eq('status', 'active')
         .single();
 
       const subscriptionData = subscription as { tier?: string } | null;
-      const plan = subscriptionData?.tier || "free";
+      const plan = subscriptionData?.tier || 'free';
       const planLimits = {
         free: { maxSystems: 3, maxWebhooks: 5, maxRunsPerMonth: 100 },
         starter: { maxSystems: 20, maxWebhooks: 50, maxRunsPerMonth: 10000 },
         pro: { maxSystems: 100, maxWebhooks: 500, maxRunsPerMonth: 50000 },
         enterprise: { maxSystems: -1, maxWebhooks: -1, maxRunsPerMonth: -1 },
       } as const;
-      const limits = planLimits[plan as keyof typeof planLimits] || planLimits.free;
+      const limits =
+        planLimits[plan as keyof typeof planLimits] || planLimits.free;
 
       // Count usage
       const { count: systemsCount } = await supabase
-        .from("workflows" as any)
-        .select("*", { count: "exact", head: true })
-        .eq("tenant_id", tenantId)
-        .eq("enabled", true);
+        .from('workflows' as any)
+        .select('*', { count: 'exact', head: true })
+        .eq('tenant_id', tenantId)
+        .eq('enabled', true);
 
       const { count: webhooksCount } = await supabase
-        .from("webhook_endpoints" as any)
-        .select("*", { count: "exact", head: true })
-        .eq("tenant_id", tenantId)
-        .eq("enabled", true);
+        .from('webhook_endpoints' as any)
+        .select('*', { count: 'exact', head: true })
+        .eq('tenant_id', tenantId)
+        .eq('enabled', true);
 
       const now = new Date();
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
       const { count: runsCount } = await supabase
-        .from("workflow_executions" as any)
-        .select("*", { count: "exact", head: true })
-        .eq("tenant_id", tenantId)
-        .gte("started_at", monthStart.toISOString());
+        .from('workflow_executions' as any)
+        .select('*', { count: 'exact', head: true })
+        .eq('tenant_id', tenantId)
+        .gte('started_at', monthStart.toISOString());
 
       // Queue health
       const { count: pendingCount } = await supabase
-        .from("workflow_executions" as any)
-        .select("*", { count: "exact", head: true })
-        .eq("tenant_id", tenantId)
-        .eq("status", "pending");
+        .from('workflow_executions' as any)
+        .select('*', { count: 'exact', head: true })
+        .eq('tenant_id', tenantId)
+        .eq('status', 'pending');
 
       const { count: runningCount } = await supabase
-        .from("workflow_executions" as any)
-        .select("*", { count: "exact", head: true })
-        .eq("tenant_id", tenantId)
-        .eq("status", "running");
+        .from('workflow_executions' as any)
+        .select('*', { count: 'exact', head: true })
+        .eq('tenant_id', tenantId)
+        .eq('status', 'running');
 
       const { count: failedCount } = await supabase
-        .from("workflow_executions" as any)
-        .select("*", { count: "exact", head: true })
-        .eq("tenant_id", tenantId)
-        .eq("status", "failed");
+        .from('workflow_executions' as any)
+        .select('*', { count: 'exact', head: true })
+        .eq('tenant_id', tenantId)
+        .eq('status', 'failed');
 
       const lastWebhookData = lastWebhook as {
         id: string;
@@ -168,19 +180,23 @@ export default function DiagnosticsPage() {
       } | null;
 
       setData({
-        lastWebhook: lastWebhookData ? {
-          id: lastWebhookData.id,
-          received_at: lastWebhookData.started_at,
-          tenant_id: lastWebhookData.tenant_id,
-          status: lastWebhookData.status,
-        } : null,
-        lastRun: lastRunData ? {
-          id: lastRunData.id,
-          workflow_id: lastRunData.workflow_id,
-          status: lastRunData.status,
-          started_at: lastRunData.started_at,
-          completed_at: lastRunData.completed_at,
-        } : null,
+        lastWebhook: lastWebhookData
+          ? {
+              id: lastWebhookData.id,
+              received_at: lastWebhookData.started_at,
+              tenant_id: lastWebhookData.tenant_id,
+              status: lastWebhookData.status,
+            }
+          : null,
+        lastRun: lastRunData
+          ? {
+              id: lastRunData.id,
+              workflow_id: lastRunData.workflow_id,
+              status: lastRunData.status,
+              started_at: lastRunData.started_at,
+              completed_at: lastRunData.completed_at,
+            }
+          : null,
         entitlements: {
           plan,
           maxSystems: limits.maxSystems,
@@ -197,7 +213,9 @@ export default function DiagnosticsPage() {
         },
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load diagnostics");
+      setError(
+        err instanceof Error ? err.message : 'Failed to load diagnostics'
+      );
     } finally {
       setLoading(false);
     }
@@ -209,15 +227,15 @@ export default function DiagnosticsPage() {
 
   if (loading) {
     return (
-      <div className="container py-8">
-        <div className="text-center">Loading diagnostics...</div>
+      <div className='container py-8'>
+        <div className='text-center'>Loading diagnostics...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="container py-8">
+      <div className='container py-8'>
         <Card>
           <CardHeader>
             <CardTitle>Error</CardTitle>
@@ -233,16 +251,16 @@ export default function DiagnosticsPage() {
   }
 
   return (
-    <div className="container py-8">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">System Diagnostics</h1>
-        <Button onClick={fetchDiagnostics} variant="outline" size="sm">
-          <RefreshCw className="mr-2 h-4 w-4" />
+    <div className='container py-8'>
+      <div className='mb-6 flex items-center justify-between'>
+        <h1 className='text-3xl font-bold'>System Diagnostics</h1>
+        <Button onClick={fetchDiagnostics} variant='outline' size='sm'>
+          <RefreshCw className='mr-2 h-4 w-4' />
           Refresh
         </Button>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className='grid gap-6 md:grid-cols-2'>
         <Card>
           <CardHeader>
             <CardTitle>Last Webhook</CardTitle>
@@ -250,22 +268,31 @@ export default function DiagnosticsPage() {
           </CardHeader>
           <CardContent>
             {data.lastWebhook ? (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Status</span>
-                  <Badge variant={data.lastWebhook.status === "completed" ? "default" : "secondary"}>
+              <div className='space-y-2'>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm font-medium'>Status</span>
+                  <Badge
+                    variant={
+                      data.lastWebhook.status === 'completed'
+                        ? 'default'
+                        : 'secondary'
+                    }
+                  >
                     {data.lastWebhook.status}
                   </Badge>
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  Received: {new Date(data.lastWebhook.received_at).toLocaleString()}
+                <div className='text-sm text-muted-foreground'>
+                  Received:{' '}
+                  {new Date(data.lastWebhook.received_at).toLocaleString()}
                 </div>
-                <div className="text-xs text-muted-foreground font-mono">
+                <div className='font-mono text-xs text-muted-foreground'>
                   {data.lastWebhook.id}
                 </div>
               </div>
             ) : (
-              <div className="text-sm text-muted-foreground">No webhooks received yet</div>
+              <div className='text-sm text-muted-foreground'>
+                No webhooks received yet
+              </div>
             )}
           </CardContent>
         </Card>
@@ -277,27 +304,34 @@ export default function DiagnosticsPage() {
           </CardHeader>
           <CardContent>
             {data.lastRun ? (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Status</span>
-                  <Badge variant={data.lastRun.status === "completed" ? "default" : "secondary"}>
+              <div className='space-y-2'>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm font-medium'>Status</span>
+                  <Badge
+                    variant={
+                      data.lastRun.status === 'completed'
+                        ? 'default'
+                        : 'secondary'
+                    }
+                  >
                     {data.lastRun.status}
                   </Badge>
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className='text-sm text-muted-foreground'>
                   Started: {new Date(data.lastRun.started_at).toLocaleString()}
                 </div>
                 {data.lastRun.completed_at && (
-                  <div className="text-sm text-muted-foreground">
-                    Completed: {new Date(data.lastRun.completed_at).toLocaleString()}
+                  <div className='text-sm text-muted-foreground'>
+                    Completed:{' '}
+                    {new Date(data.lastRun.completed_at).toLocaleString()}
                   </div>
                 )}
-                <div className="text-xs text-muted-foreground font-mono">
+                <div className='font-mono text-xs text-muted-foreground'>
                   {data.lastRun.id}
                 </div>
               </div>
             ) : (
-              <div className="text-sm text-muted-foreground">No runs yet</div>
+              <div className='text-sm text-muted-foreground'>No runs yet</div>
             )}
           </CardContent>
         </Card>
@@ -308,28 +342,37 @@ export default function DiagnosticsPage() {
             <CardDescription>Current plan and usage</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Plan</span>
+            <div className='space-y-4'>
+              <div className='flex items-center justify-between'>
+                <span className='text-sm font-medium'>Plan</span>
                 <Badge>{data.entitlements.plan}</Badge>
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
+              <div className='space-y-2'>
+                <div className='flex items-center justify-between text-sm'>
                   <span>Systems</span>
                   <span>
-                    {data.entitlements.systemsUsed} / {data.entitlements.maxSystems === -1 ? "∞" : data.entitlements.maxSystems}
+                    {data.entitlements.systemsUsed} /{' '}
+                    {data.entitlements.maxSystems === -1
+                      ? '∞'
+                      : data.entitlements.maxSystems}
                   </span>
                 </div>
-                <div className="flex items-center justify-between text-sm">
+                <div className='flex items-center justify-between text-sm'>
                   <span>Webhooks</span>
                   <span>
-                    {data.entitlements.webhooksUsed} / {data.entitlements.maxWebhooks === -1 ? "∞" : data.entitlements.maxWebhooks}
+                    {data.entitlements.webhooksUsed} /{' '}
+                    {data.entitlements.maxWebhooks === -1
+                      ? '∞'
+                      : data.entitlements.maxWebhooks}
                   </span>
                 </div>
-                <div className="flex items-center justify-between text-sm">
+                <div className='flex items-center justify-between text-sm'>
                   <span>Runs (this month)</span>
                   <span>
-                    {data.entitlements.runsUsedThisMonth} / {data.entitlements.maxRunsPerMonth === -1 ? "∞" : data.entitlements.maxRunsPerMonth}
+                    {data.entitlements.runsUsedThisMonth} /{' '}
+                    {data.entitlements.maxRunsPerMonth === -1
+                      ? '∞'
+                      : data.entitlements.maxRunsPerMonth}
                   </span>
                 </div>
               </div>
@@ -343,18 +386,18 @@ export default function DiagnosticsPage() {
             <CardDescription>Current execution queue status</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
+            <div className='space-y-2'>
+              <div className='flex items-center justify-between text-sm'>
                 <span>Pending</span>
-                <Badge variant="secondary">{data.queueHealth.pending}</Badge>
+                <Badge variant='secondary'>{data.queueHealth.pending}</Badge>
               </div>
-              <div className="flex items-center justify-between text-sm">
+              <div className='flex items-center justify-between text-sm'>
                 <span>Running</span>
-                <Badge variant="default">{data.queueHealth.running}</Badge>
+                <Badge variant='default'>{data.queueHealth.running}</Badge>
               </div>
-              <div className="flex items-center justify-between text-sm">
+              <div className='flex items-center justify-between text-sm'>
                 <span>Failed</span>
-                <Badge variant="destructive">{data.queueHealth.failed}</Badge>
+                <Badge variant='destructive'>{data.queueHealth.failed}</Badge>
               </div>
             </div>
           </CardContent>

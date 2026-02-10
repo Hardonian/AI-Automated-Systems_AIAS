@@ -12,7 +12,6 @@ import { env } from '@/lib/env';
 import { logger } from '@/lib/logging/structured-logger';
 import { cacheService } from '@/lib/performance/cache';
 
-
 export interface LeadData {
   email: string;
   firstName?: string;
@@ -45,12 +44,18 @@ const leadSchema = z.object({
 });
 
 class LeadCaptureService {
-  private supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+  private supabase = createClient(
+    env.supabase.url,
+    env.supabase.serviceRoleKey
+  );
 
   /**
    * Capture lead with validation and enrichment
    */
-  async captureLead(data: LeadData, tenantId?: string): Promise<LeadCaptureResult> {
+  async captureLead(
+    data: LeadData,
+    tenantId?: string
+  ): Promise<LeadCaptureResult> {
     try {
       // Validate input
       const validated = leadSchema.parse(data);
@@ -58,7 +63,10 @@ class LeadCaptureService {
       // Check for duplicate leads
       const duplicate = await this.checkDuplicate(validated.email, tenantId);
       if (duplicate) {
-        logger.warn('Duplicate lead detected', { email: validated.email, tenantId });
+        logger.warn('Duplicate lead detected', {
+          email: validated.email,
+          tenantId,
+        });
         return {
           success: false,
           leadId: duplicate.id,
@@ -127,10 +135,14 @@ class LeadCaptureService {
         nextAction: score >= 70 ? 'assign_to_sales' : 'nurture',
       };
     } catch (error) {
-      logger.error('Lead capture failed', error instanceof Error ? error : new Error(String(error)), {
-        email: data.email,
-        tenantId,
-      });
+      logger.error(
+        'Lead capture failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          email: data.email,
+          tenantId,
+        }
+      );
 
       return {
         success: false,
@@ -143,10 +155,15 @@ class LeadCaptureService {
   /**
    * Check for duplicate leads
    */
-  private async checkDuplicate(email: string, tenantId?: string): Promise<{ id: string } | null> {
+  private async checkDuplicate(
+    email: string,
+    tenantId?: string
+  ): Promise<{ id: string } | null> {
     const cacheKey = `lead:duplicate:${email}:${tenantId || 'global'}`;
     const cached = await cacheService.get<{ id: string }>(cacheKey);
-    if (cached) {return cached;}
+    if (cached) {
+      return cached;
+    }
 
     let query = this.supabase
       .from('leads')
@@ -175,7 +192,9 @@ class LeadCaptureService {
     // Check cache first
     const cacheKey = `lead:enrichment:${data.email}`;
     const cached = await cacheService.get<LeadData>(cacheKey);
-    if (cached) {return { ...data, ...cached };}
+    if (cached) {
+      return { ...data, ...cached };
+    }
 
     const enriched: LeadData = { ...data };
 
@@ -205,21 +224,34 @@ class LeadCaptureService {
       score += 20;
       // Corporate email bonus
       const domain = data.email.split('@')[1];
-      const corporateDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
+      const corporateDomains = [
+        'gmail.com',
+        'yahoo.com',
+        'hotmail.com',
+        'outlook.com',
+      ];
       if (domain && !corporateDomains.includes(domain.toLowerCase())) {
         score += 10;
       }
     }
 
     // Name completeness (15 points)
-    if (data.firstName) {score += 7;}
-    if (data.lastName) {score += 8;}
+    if (data.firstName) {
+      score += 7;
+    }
+    if (data.lastName) {
+      score += 8;
+    }
 
     // Company information (20 points)
-    if (data.company) {score += 20;}
+    if (data.company) {
+      score += 20;
+    }
 
     // Phone number (15 points)
-    if (data.phone) {score += 15;}
+    if (data.phone) {
+      score += 15;
+    }
 
     // Source quality (20 points)
     if (data.source) {
@@ -232,7 +264,9 @@ class LeadCaptureService {
     }
 
     // Campaign tracking (10 points)
-    if (data.campaign) {score += 10;}
+    if (data.campaign) {
+      score += 10;
+    }
 
     return Math.min(score, 100);
   }
@@ -338,7 +372,10 @@ class LeadCaptureService {
   /**
    * Track event
    */
-  private async trackEvent(event: string, properties: Record<string, unknown>): Promise<void> {
+  private async trackEvent(
+    event: string,
+    properties: Record<string, unknown>
+  ): Promise<void> {
     try {
       await fetch('/api/telemetry/ingest', {
         method: 'POST',

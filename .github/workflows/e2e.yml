@@ -30,7 +30,7 @@ jobs:
     name: E2E Tests (Critical Flows)
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -58,7 +58,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || '' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || '' }}
-          SKIP_ENV_VALIDATION: "true"
+          SKIP_ENV_VALIDATION: 'true'
 
       - name: Start server for E2E tests
         run: |
@@ -72,7 +72,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || '' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || '' }}
-          SKIP_ENV_VALIDATION: "true"
+          SKIP_ENV_VALIDATION: 'true'
 
       - name: Run E2E tests (critical flows)
         run: pnpm run test:e2e -- tests/e2e/critical-flows.spec.ts
@@ -109,7 +109,7 @@ jobs:
       (github.event_name == 'pull_request' && 
        (contains(github.event.pull_request.labels.*.name, 'visual-regression') ||
         contains(github.event.pull_request.labels.*.name, 'visual')))
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -137,7 +137,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || '' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || '' }}
-          SKIP_ENV_VALIDATION: "true"
+          SKIP_ENV_VALIDATION: 'true'
 
       - name: Start server for visual tests
         run: |
@@ -150,7 +150,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || '' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || '' }}
-          SKIP_ENV_VALIDATION: "true"
+          SKIP_ENV_VALIDATION: 'true'
 
       - name: Run visual regression tests
         run: pnpm run test:e2e --project=visual-regression
@@ -184,16 +184,16 @@ jobs:
         with:
           script: |
             const comment = `## 🎨 Visual Regression Test Results
-            
+
             Visual regression tests detected differences. Please review the uploaded artifacts.
-            
+
             **Next Steps:**
             1. Review the diff images in the artifacts
             2. If changes are intentional, update baselines: \`pnpm test:e2e --project=visual-regression --update-snapshots\`
             3. If changes are unintentional, investigate and fix the visual regression
-            
+
             *Note: Visual regression tests are optional for most PRs. Add the \`visual-regression\` label to require them.*`;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -211,7 +211,7 @@ jobs:
     strategy:
       matrix:
         browser: [chromium, firefox, webkit]
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -239,7 +239,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || '' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || '' }}
-          SKIP_ENV_VALIDATION: "true"
+          SKIP_ENV_VALIDATION: 'true'
 
       - name: Start server
         run: |
@@ -252,7 +252,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || '' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || '' }}
-          SKIP_ENV_VALIDATION: "true"
+          SKIP_ENV_VALIDATION: 'true'
 
       - name: Run E2E tests (${{ matrix.browser }})
         run: pnpm run test:e2e --project=${{ matrix.browser }} tests/e2e/critical-flows.spec.ts

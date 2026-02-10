@@ -1,19 +1,31 @@
-"use client";
+'use client';
 
-import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Info } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  TrendingUp,
+  TrendingDown,
+  AlertTriangle,
+  CheckCircle,
+  Info,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { logger } from "@/lib/logging/structured-logger";
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { logger } from '@/lib/logging/structured-logger';
 
 interface UsagePattern {
   feature: string;
   usageCount: number;
   uniqueUsers: number;
-  trend: "increasing" | "decreasing" | "stable";
+  trend: 'increasing' | 'decreasing' | 'stable';
   adoptionRate: number;
   averageFrequency: number;
 }
@@ -23,14 +35,14 @@ interface ErrorPattern {
   message: string;
   count: number;
   affectedUsers: number;
-  trend: "increasing" | "decreasing" | "stable";
+  trend: 'increasing' | 'decreasing' | 'stable';
   likelyCause: string;
   suggestedFix: string;
 }
 
 interface HealthSignal {
   type: string;
-  severity: "low" | "medium" | "high" | "critical";
+  severity: 'low' | 'medium' | 'high' | 'critical';
   message: string;
   confidence: number;
   predictedImpact: string;
@@ -52,9 +64,9 @@ export default function InsightsPage() {
     try {
       // In production, these would use proper auth
       const [usageRes, errorsRes, healthRes] = await Promise.all([
-        fetch("/api/insights/usage-patterns?days=30"),
-        fetch("/api/insights/errors?days=7"),
-        fetch("/api/insights/health"),
+        fetch('/api/insights/usage-patterns?days=30'),
+        fetch('/api/insights/errors?days=7'),
+        fetch('/api/insights/health'),
       ]);
 
       if (usageRes.ok) {
@@ -72,10 +84,14 @@ export default function InsightsPage() {
         setHealthSignals(healthData.signals || []);
       }
     } catch (error) {
-      logger.error("Failed to load insights", error instanceof Error ? error : new Error(String(error)), {
-        component: "InsightsPage",
-        action: "loadInsights",
-      });
+      logger.error(
+        'Failed to load insights',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          component: 'InsightsPage',
+          action: 'loadInsights',
+        }
+      );
     } finally {
       setLoading(false);
     }
@@ -83,30 +99,30 @@ export default function InsightsPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-6">AI Insights Dashboard</h1>
+      <div className='container mx-auto p-6'>
+        <h1 className='mb-6 text-3xl font-bold'>AI Insights Dashboard</h1>
         <p>Loading insights...</p>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">AI Insights Dashboard</h1>
-        <p className="text-muted-foreground">
+    <div className='container mx-auto p-6'>
+      <div className='mb-6'>
+        <h1 className='mb-2 text-3xl font-bold'>AI Insights Dashboard</h1>
+        <p className='text-muted-foreground'>
           AI-driven insights for usage patterns, errors, and system health
         </p>
       </div>
 
-      <Tabs className="space-y-4" defaultValue="usage">
+      <Tabs className='space-y-4' defaultValue='usage'>
         <TabsList>
-          <TabsTrigger value="usage">Usage Patterns</TabsTrigger>
-          <TabsTrigger value="errors">Error Analysis</TabsTrigger>
-          <TabsTrigger value="health">Health Signals</TabsTrigger>
+          <TabsTrigger value='usage'>Usage Patterns</TabsTrigger>
+          <TabsTrigger value='errors'>Error Analysis</TabsTrigger>
+          <TabsTrigger value='health'>Health Signals</TabsTrigger>
         </TabsList>
 
-        <TabsContent className="space-y-4" value="usage">
+        <TabsContent className='space-y-4' value='usage'>
           <Card>
             <CardHeader>
               <CardTitle>Feature Usage Patterns</CardTitle>
@@ -115,46 +131,52 @@ export default function InsightsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {usagePatterns.slice(0, 10).map((pattern) => (
-                  <div key={pattern.feature} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div className="flex-1">
-                      <div className="font-medium">{pattern.feature}</div>
-                      <div className="text-sm text-muted-foreground">
+              <div className='space-y-4'>
+                {usagePatterns.slice(0, 10).map(pattern => (
+                  <div
+                    key={pattern.feature}
+                    className='flex items-center justify-between rounded-lg border p-3'
+                  >
+                    <div className='flex-1'>
+                      <div className='font-medium'>{pattern.feature}</div>
+                      <div className='text-sm text-muted-foreground'>
                         {pattern.usageCount} uses by {pattern.uniqueUsers} users
                       </div>
-                      <div className="text-sm text-muted-foreground mt-1">
-                        Adoption: {pattern.adoptionRate}% | Avg frequency: {pattern.averageFrequency.toFixed(1)}
+                      <div className='mt-1 text-sm text-muted-foreground'>
+                        Adoption: {pattern.adoptionRate}% | Avg frequency:{' '}
+                        {pattern.averageFrequency.toFixed(1)}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      {pattern.trend === "increasing" && (
-                        <Badge className="gap-1" variant="default">
-                          <TrendingUp className="h-3 w-3" />
+                    <div className='flex items-center gap-2'>
+                      {pattern.trend === 'increasing' && (
+                        <Badge className='gap-1' variant='default'>
+                          <TrendingUp className='h-3 w-3' />
                           Increasing
                         </Badge>
                       )}
-                      {pattern.trend === "decreasing" && (
-                        <Badge className="gap-1" variant="destructive">
-                          <TrendingDown className="h-3 w-3" />
+                      {pattern.trend === 'decreasing' && (
+                        <Badge className='gap-1' variant='destructive'>
+                          <TrendingDown className='h-3 w-3' />
                           Decreasing
                         </Badge>
                       )}
-                      {pattern.trend === "stable" && (
-                        <Badge variant="secondary">Stable</Badge>
+                      {pattern.trend === 'stable' && (
+                        <Badge variant='secondary'>Stable</Badge>
                       )}
                     </div>
                   </div>
                 ))}
                 {usagePatterns.length === 0 && (
-                  <p className="text-muted-foreground text-center py-8">No usage patterns found</p>
+                  <p className='py-8 text-center text-muted-foreground'>
+                    No usage patterns found
+                  </p>
                 )}
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent className="space-y-4" value="errors">
+        <TabsContent className='space-y-4' value='errors'>
           <Card>
             <CardHeader>
               <CardTitle>Error Analysis</CardTitle>
@@ -163,39 +185,55 @@ export default function InsightsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {errorPatterns.map((error) => (
-                  <Alert key={error.message} className="border-l-4">
-                    <AlertTriangle className="h-4 w-4" />
-                    <AlertTitle className="font-medium">{error.message}</AlertTitle>
-                    <AlertDescription className="mt-2">
-                      <div className="space-y-2">
-                        <div className="flex gap-2">
-                          <Badge variant="outline">{error.category}</Badge>
-                          <Badge variant="outline">{error.count} occurrences</Badge>
-                          <Badge variant="outline">{error.affectedUsers} users affected</Badge>
+              <div className='space-y-4'>
+                {errorPatterns.map(error => (
+                  <Alert key={error.message} className='border-l-4'>
+                    <AlertTriangle className='h-4 w-4' />
+                    <AlertTitle className='font-medium'>
+                      {error.message}
+                    </AlertTitle>
+                    <AlertDescription className='mt-2'>
+                      <div className='space-y-2'>
+                        <div className='flex gap-2'>
+                          <Badge variant='outline'>{error.category}</Badge>
+                          <Badge variant='outline'>
+                            {error.count} occurrences
+                          </Badge>
+                          <Badge variant='outline'>
+                            {error.affectedUsers} users affected
+                          </Badge>
                         </div>
-                        <div className="mt-2">
-                          <div className="font-medium text-sm">Likely Cause:</div>
-                          <div className="text-sm text-muted-foreground">{error.likelyCause}</div>
+                        <div className='mt-2'>
+                          <div className='text-sm font-medium'>
+                            Likely Cause:
+                          </div>
+                          <div className='text-sm text-muted-foreground'>
+                            {error.likelyCause}
+                          </div>
                         </div>
-                        <div className="mt-2">
-                          <div className="font-medium text-sm">Suggested Fix:</div>
-                          <div className="text-sm text-muted-foreground">{error.suggestedFix}</div>
+                        <div className='mt-2'>
+                          <div className='text-sm font-medium'>
+                            Suggested Fix:
+                          </div>
+                          <div className='text-sm text-muted-foreground'>
+                            {error.suggestedFix}
+                          </div>
                         </div>
                       </div>
                     </AlertDescription>
                   </Alert>
                 ))}
                 {errorPatterns.length === 0 && (
-                  <p className="text-muted-foreground text-center py-8">No errors found</p>
+                  <p className='py-8 text-center text-muted-foreground'>
+                    No errors found
+                  </p>
                 )}
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent className="space-y-4" value="health">
+        <TabsContent className='space-y-4' value='health'>
           <Card>
             <CardHeader>
               <CardTitle>Predictive Health Signals</CardTitle>
@@ -204,49 +242,55 @@ export default function InsightsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className='space-y-4'>
                 {healthSignals.map((signal, idx) => (
                   <Alert
                     key={idx}
                     className={`border-l-4 ${
-                      signal.severity === "critical"
-                        ? "border-red-500"
-                        : signal.severity === "high"
-                        ? "border-orange-500"
-                        : signal.severity === "medium"
-                        ? "border-yellow-500"
-                        : "border-blue-500"
+                      signal.severity === 'critical'
+                        ? 'border-red-500'
+                        : signal.severity === 'high'
+                          ? 'border-orange-500'
+                          : signal.severity === 'medium'
+                            ? 'border-yellow-500'
+                            : 'border-blue-500'
                     }`}
                   >
-                    {signal.severity === "critical" || signal.severity === "high" ? (
-                      <AlertTriangle className="h-4 w-4" />
+                    {signal.severity === 'critical' ||
+                    signal.severity === 'high' ? (
+                      <AlertTriangle className='h-4 w-4' />
                     ) : (
-                      <Info className="h-4 w-4" />
+                      <Info className='h-4 w-4' />
                     )}
-                    <AlertTitle className="font-medium flex items-center gap-2">
+                    <AlertTitle className='flex items-center gap-2 font-medium'>
                       {signal.message}
                       <Badge
                         variant={
-                          signal.severity === "critical"
-                            ? "destructive"
-                            : signal.severity === "high"
-                            ? "destructive"
-                            : "secondary"
+                          signal.severity === 'critical'
+                            ? 'destructive'
+                            : signal.severity === 'high'
+                              ? 'destructive'
+                              : 'secondary'
                         }
                       >
                         {signal.severity}
                       </Badge>
                     </AlertTitle>
-                    <AlertDescription className="mt-2">
-                      <div className="space-y-2">
-                        <div className="text-sm">
-                          <span className="font-medium">Confidence:</span> {signal.confidence}%
+                    <AlertDescription className='mt-2'>
+                      <div className='space-y-2'>
+                        <div className='text-sm'>
+                          <span className='font-medium'>Confidence:</span>{' '}
+                          {signal.confidence}%
                         </div>
-                        <div className="text-sm">
-                          <span className="font-medium">Predicted Impact:</span> {signal.predictedImpact}
+                        <div className='text-sm'>
+                          <span className='font-medium'>Predicted Impact:</span>{' '}
+                          {signal.predictedImpact}
                         </div>
-                        <div className="text-sm">
-                          <span className="font-medium">Recommended Action:</span> {signal.recommendedAction}
+                        <div className='text-sm'>
+                          <span className='font-medium'>
+                            Recommended Action:
+                          </span>{' '}
+                          {signal.recommendedAction}
                         </div>
                       </div>
                     </AlertDescription>
@@ -254,7 +298,7 @@ export default function InsightsPage() {
                 ))}
                 {healthSignals.length === 0 && (
                   <Alert>
-                    <CheckCircle className="h-4 w-4" />
+                    <CheckCircle className='h-4 w-4' />
                     <AlertTitle>All Systems Healthy</AlertTitle>
                     <AlertDescription>
                       No health issues detected. System is operating normally.

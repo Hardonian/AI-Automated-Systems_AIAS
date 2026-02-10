@@ -31,10 +31,11 @@ class DatabaseIntegrityWatcher {
 
   constructor() {
     this.supabase = createClient(
-      process.env.SUPABASE_URL || `https://${process.env.SUPABASE_PROJECT_REF || 'ghqyxhbyyirveptgwoqm'}.supabase.co`,
+      process.env.SUPABASE_URL ||
+        `https://${process.env.SUPABASE_PROJECT_REF || 'ghqyxhbyyirveptgwoqm'}.supabase.co`,
       process.env.SUPABASE_ANON_KEY || ''
     );
-    
+
     this.octokit = new Octokit({
       auth: process.env.GITHUB_TOKEN,
     });
@@ -49,22 +50,22 @@ class DatabaseIntegrityWatcher {
     const checks: IntegrityCheck[] = [];
 
     // Check for orphaned records
-    checks.push(...await this.checkOrphanedRecords());
+    checks.push(...(await this.checkOrphanedRecords()));
 
     // Check for duplicate records
-    checks.push(...await this.checkDuplicateRecords());
+    checks.push(...(await this.checkDuplicateRecords()));
 
     // Check for null constraint violations
-    checks.push(...await this.checkNullConstraints());
+    checks.push(...(await this.checkNullConstraints()));
 
     // Check for data type violations
-    checks.push(...await this.checkDataTypeViolations());
+    checks.push(...(await this.checkDataTypeViolations()));
 
     // Check for referential integrity
-    checks.push(...await this.checkReferentialIntegrity());
+    checks.push(...(await this.checkReferentialIntegrity()));
 
     // Check for data consistency
-    checks.push(...await this.checkDataConsistency());
+    checks.push(...(await this.checkDataConsistency()));
 
     const report = this.generateReport(checks);
     await this.storeReport(report);
@@ -83,9 +84,15 @@ class DatabaseIntegrityWatcher {
       const { data: orphanedMetrics, error } = await this.supabase
         .from('ai_health_metrics')
         .select('id, deployment_id')
-        .not('deployment_id', 'in', '(SELECT DISTINCT deployment_id FROM deployments)');
+        .not(
+          'deployment_id',
+          'in',
+          '(SELECT DISTINCT deployment_id FROM deployments)'
+        );
 
-      if (error) {throw error;}
+      if (error) {
+        throw error;
+      }
 
       if (orphanedMetrics && orphanedMetrics.length > 0) {
         checks.push({
@@ -94,7 +101,7 @@ class DatabaseIntegrityWatcher {
           status: 'fail',
           message: `Found ${orphanedMetrics.length} orphaned health metrics`,
           affected_rows: orphanedMetrics.length,
-          severity: 'medium'
+          severity: 'medium',
         });
       }
     } catch (error: unknown) {
@@ -103,7 +110,7 @@ class DatabaseIntegrityWatcher {
         constraint: 'deployment_id_fk',
         status: 'fail',
         message: `Error checking orphaned records: ${error instanceof Error ? error.message : String(error)}`,
-        severity: 'high'
+        severity: 'high',
       });
     }
 
@@ -124,7 +131,9 @@ class DatabaseIntegrityWatcher {
         .group('namespace, content')
         .having('count(*) > 1');
 
-      if (error) {throw error;}
+      if (error) {
+        throw error;
+      }
 
       if (duplicates && duplicates.length > 0) {
         checks.push({
@@ -132,8 +141,11 @@ class DatabaseIntegrityWatcher {
           constraint: 'unique_namespace_content',
           status: 'warning',
           message: `Found ${duplicates.length} duplicate embedding groups`,
-          affected_rows: duplicates.reduce((sum: number, dup: { count: number }) => sum + dup.count, 0),
-          severity: 'low'
+          affected_rows: duplicates.reduce(
+            (sum: number, dup: { count: number }) => sum + dup.count,
+            0
+          ),
+          severity: 'low',
         });
       }
     } catch (error: unknown) {
@@ -142,7 +154,7 @@ class DatabaseIntegrityWatcher {
         constraint: 'unique_namespace_content',
         status: 'fail',
         message: `Error checking duplicates: ${error instanceof Error ? error.message : String(error)}`,
-        severity: 'high'
+        severity: 'high',
       });
     }
 
@@ -157,8 +169,11 @@ class DatabaseIntegrityWatcher {
 
     const tables = [
       { name: 'ai_embeddings', required_fields: ['namespace', 'content'] },
-      { name: 'ai_health_metrics', required_fields: ['deployment_id', 'timestamp', 'metrics'] },
-      { name: 'ai_insights', required_fields: ['deployment_id', 'insights'] }
+      {
+        name: 'ai_health_metrics',
+        required_fields: ['deployment_id', 'timestamp', 'metrics'],
+      },
+      { name: 'ai_insights', required_fields: ['deployment_id', 'insights'] },
     ];
 
     for (const table of tables) {
@@ -169,7 +184,9 @@ class DatabaseIntegrityWatcher {
             .select('id')
             .is(field, null);
 
-          if (error) {throw error;}
+          if (error) {
+            throw error;
+          }
 
           if (nullRecords && nullRecords.length > 0) {
             checks.push({
@@ -178,7 +195,7 @@ class DatabaseIntegrityWatcher {
               status: 'fail',
               message: `Found ${nullRecords.length} records with null ${field}`,
               affected_rows: nullRecords.length,
-              severity: 'high'
+              severity: 'high',
             });
           }
         } catch (error: unknown) {
@@ -187,7 +204,7 @@ class DatabaseIntegrityWatcher {
             constraint: `${field}_not_null`,
             status: 'fail',
             message: `Error checking null constraints: ${error instanceof Error ? error.message : String(error)}`,
-            severity: 'high'
+            severity: 'high',
           });
         }
       }
@@ -209,17 +226,21 @@ class DatabaseIntegrityWatcher {
         .select('id, metadata')
         .not('metadata', 'is', null);
 
-      if (error) {throw error;}
+      if (error) {
+        throw error;
+      }
 
       if (invalidJson) {
-        const invalidCount = invalidJson.filter((record: { metadata: string }) => {
-          try {
-            JSON.parse(record.metadata);
-            return false;
-          } catch {
-            return true;
+        const invalidCount = invalidJson.filter(
+          (record: { metadata: string }) => {
+            try {
+              JSON.parse(record.metadata);
+              return false;
+            } catch {
+              return true;
+            }
           }
-        }).length;
+        ).length;
 
         if (invalidCount > 0) {
           checks.push({
@@ -228,7 +249,7 @@ class DatabaseIntegrityWatcher {
             status: 'fail',
             message: `Found ${invalidCount} records with invalid JSON metadata`,
             affected_rows: invalidCount,
-            severity: 'medium'
+            severity: 'medium',
           });
         }
       }
@@ -238,7 +259,7 @@ class DatabaseIntegrityWatcher {
         constraint: 'metadata_json_valid',
         status: 'fail',
         message: `Error checking JSON validity: ${error instanceof Error ? error.message : String(error)}`,
-        severity: 'high'
+        severity: 'high',
       });
     }
 
@@ -269,7 +290,9 @@ class DatabaseIntegrityWatcher {
         .select('id, timestamp, created_at')
         .where('timestamp > created_at');
 
-      if (error) {throw error;}
+      if (error) {
+        throw error;
+      }
 
       if (inconsistentTimestamps && inconsistentTimestamps.length > 0) {
         checks.push({
@@ -278,7 +301,7 @@ class DatabaseIntegrityWatcher {
           status: 'warning',
           message: `Found ${inconsistentTimestamps.length} records with future timestamps`,
           affected_rows: inconsistentTimestamps.length,
-          severity: 'low'
+          severity: 'low',
         });
       }
     } catch (error: unknown) {
@@ -287,7 +310,7 @@ class DatabaseIntegrityWatcher {
         constraint: 'timestamp_consistency',
         status: 'fail',
         message: `Error checking timestamp consistency: ${error instanceof Error ? error.message : String(error)}`,
-        severity: 'high'
+        severity: 'high',
       });
     }
 
@@ -304,9 +327,11 @@ class DatabaseIntegrityWatcher {
     const warnings = checks.filter(c => c.status === 'warning').length;
 
     let overallStatus: 'healthy' | 'degraded' | 'critical' = 'healthy';
-    
+
     if (failed > 0) {
-      const criticalFailures = checks.filter(c => c.status === 'fail' && c.severity === 'critical').length;
+      const criticalFailures = checks.filter(
+        c => c.status === 'fail' && c.severity === 'critical'
+      ).length;
       overallStatus = criticalFailures > 0 ? 'critical' : 'degraded';
     } else if (warnings > 0) {
       overallStatus = 'degraded';
@@ -319,7 +344,7 @@ class DatabaseIntegrityWatcher {
       failed,
       warnings,
       checks,
-      overall_status: overallStatus
+      overall_status: overallStatus,
     };
   }
 
@@ -332,8 +357,10 @@ class DatabaseIntegrityWatcher {
         .from('integrity_reports')
         .insert([report]);
 
-      if (error) {throw error;}
-      
+      if (error) {
+        throw error;
+      }
+
       console.log('Integrity report stored successfully');
     } catch (error: unknown) {
       console.error('Error storing integrity report:', error);
@@ -345,14 +372,16 @@ class DatabaseIntegrityWatcher {
    */
   async createCriticalIssue(report: IntegrityReport): Promise<void> {
     const criticalChecks = report.checks.filter(c => c.severity === 'critical');
-    
-    if (criticalChecks.length === 0) {return;}
+
+    if (criticalChecks.length === 0) {
+      return;
+    }
 
     try {
       const issue = {
         title: `🚨 Database Integrity: ${criticalChecks.length} Critical Issues Found`,
         body: this.generateIssueBody(report, criticalChecks),
-        labels: ['database', 'integrity', 'critical', 'automated']
+        labels: ['database', 'integrity', 'critical', 'automated'],
       };
 
       const { data, status } = await this.octokit.rest.issues.create({
@@ -360,7 +389,7 @@ class DatabaseIntegrityWatcher {
         repo: process.env.GITHUB_REPO || 'aias-platform',
         title: issue.title,
         body: issue.body,
-        labels: issue.labels
+        labels: issue.labels,
       });
 
       if (status === 201) {
@@ -374,7 +403,10 @@ class DatabaseIntegrityWatcher {
   /**
    * Generate GitHub issue body
    */
-  private generateIssueBody(report: IntegrityReport, criticalChecks: IntegrityCheck[]): string {
+  private generateIssueBody(
+    report: IntegrityReport,
+    criticalChecks: IntegrityCheck[]
+  ): string {
     return `
 ## 🚨 Database Integrity Critical Issues
 
@@ -389,12 +421,16 @@ class DatabaseIntegrityWatcher {
 - **Warnings:** ${report.warnings} ⚠️
 
 ### 🔥 Critical Issues
-${criticalChecks.map(check => `
+${criticalChecks
+  .map(
+    check => `
 **Table:** \`${check.table}\`  
 **Constraint:** \`${check.constraint}\`  
 **Message:** ${check.message}  
 **Affected Rows:** ${check.affected_rows || 'N/A'}
-`).join('\n')}
+`
+  )
+  .join('\n')}
 
 ### 🔧 Recommended Actions
 1. Review the critical issues above
@@ -413,16 +449,18 @@ ${criticalChecks.map(check => `
   async run(): Promise<void> {
     try {
       console.log('Starting database integrity watcher...');
-      
+
       const report = await this.runIntegrityChecks();
-      
+
       console.log(`Integrity check completed: ${report.overall_status}`);
-      console.log(`Passed: ${report.passed}, Failed: ${report.failed}, Warnings: ${report.warnings}`);
-      
+      console.log(
+        `Passed: ${report.passed}, Failed: ${report.failed}, Warnings: ${report.warnings}`
+      );
+
       if (report.overall_status === 'critical') {
         await this.createCriticalIssue(report);
       }
-      
+
       console.log('Database integrity watcher completed');
     } catch (error: unknown) {
       console.error('Database integrity watcher failed:', error);

@@ -1,14 +1,14 @@
 /**
  * Vercel Edge Config Utility
- * 
+ *
  * Provides a unified interface for accessing Edge Config,
  * useful for feature flags, A/B testing, and dynamic configuration.
- * 
+ *
  * Setup:
  * 1. Create an Edge Config in your Vercel dashboard
  * 2. Add EDGE_CONFIG to environment variables
  * 3. Use this utility to read configuration values
- * 
+ *
  * Edge Config is globally distributed and read-optimized,
  * making it perfect for feature flags and configuration that
  * needs to be updated without redeploying.
@@ -22,7 +22,9 @@ import { logger } from '@/lib/logging/structured-logger';
  * Get a value from Edge Config
  * Returns null if the key doesn't exist or Edge Config is not configured
  */
-export async function getEdgeConfigValue<T = unknown>(key: string): Promise<T | null> {
+export async function getEdgeConfigValue<T = unknown>(
+  key: string
+): Promise<T | null> {
   try {
     if (!process.env.EDGE_CONFIG) {
       logger.warn('Edge Config not configured', { key });
@@ -32,9 +34,13 @@ export async function getEdgeConfigValue<T = unknown>(key: string): Promise<T | 
     const value = await get<T>(key);
     return value ?? null;
   } catch (error) {
-    logger.error('Failed to get Edge Config value', error instanceof Error ? error : new Error(String(error)), {
-      key,
-    });
+    logger.error(
+      'Failed to get Edge Config value',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        key,
+      }
+    );
     return null;
   }
 }
@@ -60,9 +66,13 @@ export async function getEdgeConfigValues<T extends Record<string, unknown>>(
     }
     return values;
   } catch (error) {
-    logger.error('Failed to get Edge Config values', error instanceof Error ? error : new Error(String(error)), {
-      keys,
-    });
+    logger.error(
+      'Failed to get Edge Config values',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        keys,
+      }
+    );
     return {};
   }
 }
@@ -79,7 +89,10 @@ export async function isFeatureEnabled(flagName: string): Promise<boolean> {
 /**
  * Get feature flag value with default
  */
-export async function getFeatureFlag<T>(flagName: string, defaultValue: T): Promise<T> {
+export async function getFeatureFlag<T>(
+  flagName: string,
+  defaultValue: T
+): Promise<T> {
   const value = await getEdgeConfigValue<T>(`feature:${flagName}`);
   return value ?? defaultValue;
 }
@@ -88,17 +101,22 @@ export async function getFeatureFlag<T>(flagName: string, defaultValue: T): Prom
  * Get A/B test variant for a user
  * Returns the variant name or null if not configured
  */
-export async function getABTestVariant(testName: string, userId?: string): Promise<string | null> {
+export async function getABTestVariant(
+  testName: string,
+  userId?: string
+): Promise<string | null> {
   if (!userId) {
     return null;
   }
 
   // Use a hash of userId to consistently assign variants
   const hash = userId.split('').reduce((acc, char) => {
-    return ((acc << 5) - acc) + char.charCodeAt(0);
+    return (acc << 5) - acc + char.charCodeAt(0);
   }, 0);
 
-  const variants = await getEdgeConfigValue<string[]>(`ab:${testName}:variants`);
+  const variants = await getEdgeConfigValue<string[]>(
+    `ab:${testName}:variants`
+  );
   if (!variants || variants.length === 0) {
     return null;
   }

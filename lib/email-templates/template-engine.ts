@@ -32,7 +32,9 @@ export function replaceTemplateVariables(
     }
     // Check if it's a nested path that wasn't caught
     const nestedValue = getNestedValue(variables, key);
-    return nestedValue !== undefined && nestedValue !== null ? String(nestedValue) : match;
+    return nestedValue !== undefined && nestedValue !== null
+      ? String(nestedValue)
+      : match;
   });
 
   return result;
@@ -43,7 +45,12 @@ export function replaceTemplateVariables(
  */
 function getNestedValue(obj: unknown, path: string): unknown {
   return path.split('.').reduce((current, key) => {
-    if (current && typeof current === 'object' && current !== null && key in current) {
+    if (
+      current &&
+      typeof current === 'object' &&
+      current !== null &&
+      key in current
+    ) {
       return (current as Record<string, unknown>)[key];
     }
     return undefined;
@@ -54,15 +61,22 @@ function getNestedValue(obj: unknown, path: string): unknown {
  * Render conditional blocks
  * Supports: {{#if condition}}...{{/if}}, {{#if condition}}...{{else}}...{{/if}}
  */
-export function renderConditionals(template: string, variables: TemplateVariables): string {
+export function renderConditionals(
+  template: string,
+  variables: TemplateVariables
+): string {
   let result = template;
 
   // Handle {{#if}}...{{else}}...{{/if}} blocks
-  const ifElseRegex = /\{\{#if\s+([^}]+)\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
-  result = result.replace(ifElseRegex, (_match, condition, trueBlock, falseBlock) => {
-    const conditionValue = evaluateCondition(condition, variables);
-    return conditionValue ? trueBlock : falseBlock;
-  });
+  const ifElseRegex =
+    /\{\{#if\s+([^}]+)\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g;
+  result = result.replace(
+    ifElseRegex,
+    (_match, condition, trueBlock, falseBlock) => {
+      const conditionValue = evaluateCondition(condition, variables);
+      return conditionValue ? trueBlock : falseBlock;
+    }
+  );
 
   // Handle {{#if}}...{{/if}} blocks (without else)
   const ifRegex = /\{\{#if\s+([^}]+)\}\}([\s\S]*?)\{\{\/if\}\}/g;
@@ -78,7 +92,10 @@ export function renderConditionals(template: string, variables: TemplateVariable
  * Evaluate condition expression
  * Supports: variable names, comparisons (==, !=, >, <, >=, <=), logical operators (&&, ||)
  */
-function evaluateCondition(condition: string, variables: TemplateVariables): boolean {
+function evaluateCondition(
+  condition: string,
+  variables: TemplateVariables
+): boolean {
   const trimmed = condition.trim();
 
   // Simple variable check
@@ -95,9 +112,13 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
   // Comparison operators
   if (trimmed.includes('==')) {
     const parts = trimmed.split('==').map(s => s.trim());
-    if (parts.length !== 2) {return false;}
+    if (parts.length !== 2) {
+      return false;
+    }
     const [left, right] = parts;
-    if (!left || !right) {return false;}
+    if (!left || !right) {
+      return false;
+    }
     const leftValue = getNestedValue(variables, left) ?? left;
     const rightValue = getNestedValue(variables, right) ?? right;
     return leftValue == rightValue;
@@ -105,9 +126,13 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
 
   if (trimmed.includes('!=')) {
     const parts = trimmed.split('!=').map(s => s.trim());
-    if (parts.length !== 2) {return false;}
+    if (parts.length !== 2) {
+      return false;
+    }
     const [left, right] = parts;
-    if (!left || !right) {return false;}
+    if (!left || !right) {
+      return false;
+    }
     const leftValue = getNestedValue(variables, left) ?? left;
     const rightValue = getNestedValue(variables, right) ?? right;
     return leftValue != rightValue;
@@ -115,9 +140,13 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
 
   if (trimmed.includes('>=')) {
     const parts = trimmed.split('>=').map(s => s.trim());
-    if (parts.length !== 2) {return false;}
+    if (parts.length !== 2) {
+      return false;
+    }
     const [left, right] = parts;
-    if (!left || !right) {return false;}
+    if (!left || !right) {
+      return false;
+    }
     const leftValue = Number(getNestedValue(variables, left) ?? left);
     const rightValue = Number(getNestedValue(variables, right) ?? right);
     return leftValue >= rightValue;
@@ -125,9 +154,13 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
 
   if (trimmed.includes('<=')) {
     const parts = trimmed.split('<=').map(s => s.trim());
-    if (parts.length !== 2) {return false;}
+    if (parts.length !== 2) {
+      return false;
+    }
     const [left, right] = parts;
-    if (!left || !right) {return false;}
+    if (!left || !right) {
+      return false;
+    }
     const leftValue = Number(getNestedValue(variables, left) ?? left);
     const rightValue = Number(getNestedValue(variables, right) ?? right);
     return leftValue <= rightValue;
@@ -135,9 +168,13 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
 
   if (trimmed.includes('>')) {
     const parts = trimmed.split('>').map(s => s.trim());
-    if (parts.length !== 2) {return false;}
+    if (parts.length !== 2) {
+      return false;
+    }
     const [left, right] = parts;
-    if (!left || !right) {return false;}
+    if (!left || !right) {
+      return false;
+    }
     const leftValue = Number(getNestedValue(variables, left) ?? left);
     const rightValue = Number(getNestedValue(variables, right) ?? right);
     return leftValue > rightValue;
@@ -145,9 +182,13 @@ function evaluateCondition(condition: string, variables: TemplateVariables): boo
 
   if (trimmed.includes('<')) {
     const parts = trimmed.split('<').map(s => s.trim());
-    if (parts.length !== 2) {return false;}
+    if (parts.length !== 2) {
+      return false;
+    }
     const [left, right] = parts;
-    if (!left || !right) {return false;}
+    if (!left || !right) {
+      return false;
+    }
     const leftValue = Number(getNestedValue(variables, left) ?? left);
     const rightValue = Number(getNestedValue(variables, right) ?? right);
     return leftValue < rightValue;
@@ -169,32 +210,43 @@ export function renderComponents(
   let result = template;
   const componentRegex = /\{\{>\s*([a-zA-Z0-9_]+)(?:\s+([^}]+))?\}\}/g;
 
-  result = result.replace(componentRegex, (match, componentName, componentVars) => {
-    if (components[componentName]) {
-      let componentTemplate = components[componentName];
-      
-      // If component has variables, merge them with main variables
-      if (componentVars) {
-        // Simple variable passing (e.g., {{> button button_url="/pricing" button_text="Upgrade"}})
-        const varRegex = /(\w+)=["']([^"']+)["']/g;
-        const componentVariables = { ...variables };
-        let varMatch;
-        while ((varMatch = varRegex.exec(componentVars)) !== null) {
-          const varName = varMatch[1];
-          const varValue = varMatch[2];
-          if (varName) {
-            componentVariables[varName] = varValue || '';
+  result = result.replace(
+    componentRegex,
+    (match, componentName, componentVars) => {
+      if (components[componentName]) {
+        let componentTemplate = components[componentName];
+
+        // If component has variables, merge them with main variables
+        if (componentVars) {
+          // Simple variable passing (e.g., {{> button button_url="/pricing" button_text="Upgrade"}})
+          const varRegex = /(\w+)=["']([^"']+)["']/g;
+          const componentVariables = { ...variables };
+          let varMatch;
+          while ((varMatch = varRegex.exec(componentVars)) !== null) {
+            const varName = varMatch[1];
+            const varValue = varMatch[2];
+            if (varName) {
+              componentVariables[varName] = varValue || '';
+            }
           }
+          componentTemplate = renderTemplate(
+            componentTemplate,
+            componentVariables,
+            components
+          );
+        } else {
+          componentTemplate = renderTemplate(
+            componentTemplate,
+            variables,
+            components
+          );
         }
-        componentTemplate = renderTemplate(componentTemplate, componentVariables, components);
-      } else {
-        componentTemplate = renderTemplate(componentTemplate, variables, components);
+
+        return componentTemplate;
       }
-      
-      return componentTemplate;
+      return match;
     }
-    return match;
-  });
+  );
 
   return result;
 }
@@ -202,9 +254,12 @@ export function renderComponents(
 /**
  * Format dates according to locale
  */
-export function formatDate(date: string | Date, format: 'short' | 'long' | 'relative' = 'short'): string {
+export function formatDate(
+  date: string | Date,
+  format: 'short' | 'long' | 'relative' = 'short'
+): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
+
   if (isNaN(dateObj.getTime())) {
     return String(date);
   }
@@ -220,12 +275,22 @@ export function formatDate(date: string | Date, format: 'short' | 'long' | 'rela
       const now = new Date();
       const diffMs = now.getTime() - dateObj.getTime();
       const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-      
-      if (diffDays === 0) {return 'today';}
-      if (diffDays === 1) {return 'yesterday';}
-      if (diffDays < 7) {return `${diffDays} days ago`;}
-      if (diffDays < 30) {return `${Math.floor(diffDays / 7)} weeks ago`;}
-      if (diffDays < 365) {return `${Math.floor(diffDays / 30)} months ago`;}
+
+      if (diffDays === 0) {
+        return 'today';
+      }
+      if (diffDays === 1) {
+        return 'yesterday';
+      }
+      if (diffDays < 7) {
+        return `${diffDays} days ago`;
+      }
+      if (diffDays < 30) {
+        return `${Math.floor(diffDays / 7)} weeks ago`;
+      }
+      if (diffDays < 365) {
+        return `${Math.floor(diffDays / 30)} months ago`;
+      }
       return `${Math.floor(diffDays / 365)} years ago`;
     case 'short':
     default:
@@ -240,7 +305,9 @@ export function formatDate(date: string | Date, format: 'short' | 'long' | 'rela
 /**
  * Get default values for fields based on dynamic_fields.json
  */
-export function getDefaultVariables(userData: Record<string, unknown> = {}): TemplateVariables {
+export function getDefaultVariables(
+  userData: Record<string, unknown> = {}
+): TemplateVariables {
   const defaults: TemplateVariables = {
     user: {
       first_name: userData.firstName || userData.first_name || 'there',
@@ -249,13 +316,17 @@ export function getDefaultVariables(userData: Record<string, unknown> = {}): Tem
       plan_name: userData.planName || userData.plan_name || 'Trial',
       trial_days_left: userData.trialDaysLeft || userData.trial_days_left || 0,
       workflow_count: userData.workflowCount || userData.workflow_count || 0,
-      integration_count: userData.integrationCount || userData.integration_count || 0,
-      automation_count: userData.automationCount || userData.automation_count || 0,
-      time_saved_hours: userData.timeSavedHours || userData.time_saved_hours || 0,
+      integration_count:
+        userData.integrationCount || userData.integration_count || 0,
+      automation_count:
+        userData.automationCount || userData.automation_count || 0,
+      time_saved_hours:
+        userData.timeSavedHours || userData.time_saved_hours || 0,
     },
     product: {
       product_name: 'AIAS Platform',
-      site_url: process.env.NEXT_PUBLIC_SITE_URL || 'https://aiautomatedsystems.ca',
+      site_url:
+        process.env.NEXT_PUBLIC_SITE_URL || 'https://aiautomatedsystems.ca',
       dashboard_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://aiautomatedsystems.ca'}/dashboard`,
       pricing_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://aiautomatedsystems.ca'}/pricing`,
       help_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://aiautomatedsystems.ca'}/help`,
@@ -324,8 +395,12 @@ export function renderTemplate(
  * Load email template from file system
  * In production, this would read from the emails/ directory
  */
-export async function loadEmailTemplate(_templatePath: string): Promise<string> {
+export async function loadEmailTemplate(
+  _templatePath: string
+): Promise<string> {
   // This is a placeholder - in production, use fs or fetch to load templates
   // For now, templates are imported directly
-  throw new Error('loadEmailTemplate not implemented - use template strings directly');
+  throw new Error(
+    'loadEmailTemplate not implemented - use template strings directly'
+  );
 }

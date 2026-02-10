@@ -12,7 +12,12 @@ export interface RetryOptions {
   onRetry?: (attempt: number, error: Error) => void;
 }
 
-const DEFAULT_OPTIONS: Required<Omit<RetryOptions, 'retryableErrors' | 'onRetry'>> & { retryableErrors: Array<new (...args: any[]) => Error>; onRetry?: (attempt: number, error: Error) => void } = {
+const DEFAULT_OPTIONS: Required<
+  Omit<RetryOptions, 'retryableErrors' | 'onRetry'>
+> & {
+  retryableErrors: Array<new (...args: any[]) => Error>;
+  onRetry?: (attempt: number, error: Error) => void;
+} = {
   maxAttempts: 3,
   initialDelayMs: 1000,
   maxDelayMs: 10000,
@@ -23,9 +28,16 @@ const DEFAULT_OPTIONS: Required<Omit<RetryOptions, 'retryableErrors' | 'onRetry'
 /**
  * Check if error is retryable
  */
-function isRetryableError(error: Error, retryableErrors: Array<new (...args: any[]) => Error>): boolean {
+function isRetryableError(
+  error: Error,
+  retryableErrors: Array<new (...args: any[]) => Error>
+): boolean {
   // Network errors are always retryable
-  if (error.message.includes('network') || error.message.includes('timeout') || error.message.includes('ECONNREFUSED')) {
+  if (
+    error.message.includes('network') ||
+    error.message.includes('timeout') ||
+    error.message.includes('ECONNREFUSED')
+  ) {
     return true;
   }
 
@@ -36,8 +48,14 @@ function isRetryableError(error: Error, retryableErrors: Array<new (...args: any
 /**
  * Calculate delay for retry attempt
  */
-function calculateDelay(attempt: number, options: Required<Omit<RetryOptions, 'retryableErrors' | 'onRetry'>> & { retryableErrors: Array<new (...args: any[]) => Error> }): number {
-  const delay = options.initialDelayMs * Math.pow(options.backoffMultiplier, attempt - 1);
+function calculateDelay(
+  attempt: number,
+  options: Required<Omit<RetryOptions, 'retryableErrors' | 'onRetry'>> & {
+    retryableErrors: Array<new (...args: any[]) => Error>;
+  }
+): number {
+  const delay =
+    options.initialDelayMs * Math.pow(options.backoffMultiplier, attempt - 1);
   return Math.min(delay, options.maxDelayMs);
 }
 
@@ -109,7 +127,10 @@ export class CircuitBreaker {
   async execute<T>(fn: () => Promise<T>): Promise<T> {
     // Check if circuit should be opened
     if (this.state === 'open') {
-      if (this.lastFailureTime && Date.now() - this.lastFailureTime > this.resetTimeout) {
+      if (
+        this.lastFailureTime &&
+        Date.now() - this.lastFailureTime > this.resetTimeout
+      ) {
         this.state = 'half-open';
       } else {
         throw new Error('Circuit breaker is open');
@@ -118,7 +139,7 @@ export class CircuitBreaker {
 
     try {
       const result = await fn();
-      
+
       // Reset on success
       if (this.state === 'half-open') {
         this.state = 'closed';

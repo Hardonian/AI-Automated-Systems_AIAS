@@ -1,15 +1,18 @@
 /**
  * Cost Thresholds API
- * 
+ *
  * Manage cost thresholds and alerts.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { costMonitor, type CostThreshold } from "@/lib/cost-tracking/cost-monitor";
-import { logger } from "@/lib/logging/structured-logger";
-import { addSecurityHeaders } from "@/lib/middleware/security";
-export const dynamic = "force-dynamic";
+import {
+  costMonitor,
+  type CostThreshold,
+} from '@/lib/cost-tracking/cost-monitor';
+import { logger } from '@/lib/logging/structured-logger';
+import { addSecurityHeaders } from '@/lib/middleware/security';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/cost/thresholds
@@ -22,9 +25,13 @@ export async function GET() {
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    logger.error("Error fetching thresholds:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
+    logger.error(
+      'Error fetching thresholds:',
+      error instanceof Error ? error : new Error(String(error)),
+      { component: 'route', action: 'unknown' }
+    );
     return NextResponse.json(
-      { error: "Failed to fetch thresholds" },
+      { error: 'Failed to fetch thresholds' },
       { status: 500 }
     );
   }
@@ -48,7 +55,7 @@ export async function POST(request: NextRequest) {
     // Validate
     if (!threshold.daily && !threshold.monthly) {
       return NextResponse.json(
-        { error: "Must specify daily or monthly threshold" },
+        { error: 'Must specify daily or monthly threshold' },
         { status: 400 }
       );
     }
@@ -59,9 +66,13 @@ export async function POST(request: NextRequest) {
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    logger.error("Error adding threshold:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
+    logger.error(
+      'Error adding threshold:',
+      error instanceof Error ? error : new Error(String(error)),
+      { component: 'route', action: 'unknown' }
+    );
     return NextResponse.json(
-      { error: "Failed to add threshold" },
+      { error: 'Failed to add threshold' },
       { status: 500 }
     );
   }
@@ -74,7 +85,7 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const service = searchParams.get("service");
+    const service = searchParams.get('service');
 
     costMonitor.removeThreshold(service || undefined);
 
@@ -82,9 +93,13 @@ export async function DELETE(request: NextRequest) {
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    logger.error("Error removing threshold:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
+    logger.error(
+      'Error removing threshold:',
+      error instanceof Error ? error : new Error(String(error)),
+      { component: 'route', action: 'unknown' }
+    );
     return NextResponse.json(
-      { error: "Failed to remove threshold" },
+      { error: 'Failed to remove threshold' },
       { status: 500 }
     );
   }

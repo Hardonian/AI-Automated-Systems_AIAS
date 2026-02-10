@@ -70,9 +70,9 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-            
+
             let performanceComment = '## 📊 Performance Analysis\n\n';
-            
+
             // Get PR number from context
             const prNumber = context.payload.pull_request?.number || context.issue.number;
             const benchFile = `bench/results/pr-${prNumber}.json`;
@@ -95,19 +95,19 @@ jobs:
             } else {
               performanceComment += 'No benchmark results available.\n';
             }
-            
+
             performanceComment += '\n### Bundle Size\n\n';
             performanceComment += 'Bundle analysis available in build artifacts.\n';
-            
+
             // Check for performance regressions
             const hasRegressions = false; // TODO: Implement regression detection
-            
+
             if (hasRegressions) {
               performanceComment += '\n⚠️ **Performance regressions detected!** Please review.\n';
             } else {
               performanceComment += '\n✅ No performance regressions detected.\n';
             }
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,

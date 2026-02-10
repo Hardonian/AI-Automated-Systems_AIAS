@@ -30,25 +30,27 @@ npm run format          # Prettier formatting
 ## 🎨 Design Tokens
 
 ### Colors (CSS Variables)
+
 ```css
---primary: 221 83% 53%      /* Blue */
---secondary: 210 40% 96%    /* Light gray */
---accent: 269 83% 60%      /* Purple */
---destructive: 0 84% 60%   /* Red */
+--primary: 221 83% 53% /* Blue */ --secondary: 210 40% 96% /* Light gray */
+  --accent: 269 83% 60% /* Purple */ --destructive: 0 84% 60% /* Red */;
 ```
 
 ### Spacing
+
 - Base unit: 4px (0.25rem)
 - Container: max-width 1280px, centered
 - Section padding: py-20 (mobile), py-32 (desktop)
 
 ### Border Radius
+
 - Base: 14px (`--radius`)
 - Components: `rounded-xl` (12px)
 
 ## 🧩 Component Usage
 
 ### Button
+
 ```tsx
 import { Button } from "@/components/ui/button";
 
@@ -57,18 +59,20 @@ import { Button } from "@/components/ui/button";
 ```
 
 ### Card
+
 ```tsx
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 <Card>
   <CardHeader>
     <CardTitle>Title</CardTitle>
   </CardHeader>
   <CardContent>Content</CardContent>
-</Card>
+</Card>;
 ```
 
 ### Motion
+
 ```tsx
 import FadeIn from "@/components/motion/fade-in";
 import { StaggerList, StaggerItem } from "@/components/motion/stagger-list";
@@ -108,7 +112,7 @@ xl: 1280px
 ## 🌙 Theme System
 
 ```tsx
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from '@/components/theme-provider';
 
 const { theme, setTheme, resolvedTheme } = useTheme();
 // theme: "light" | "dark" | "system"

@@ -59,7 +59,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       'Up to 3 team members',
       'Email support',
       'Basic analytics',
-      'Standard templates'
+      'Standard templates',
     ],
     limits: {
       workflows: 5,
@@ -67,12 +67,12 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       storage: 1,
       users: 3,
       apiCalls: 1000,
-      support: 'email'
+      support: 'email',
     },
     stripePriceId: {
       monthly: process.env.VITE_STRIPE_PRICE_STARTER_MONTHLY || '',
-      yearly: process.env.VITE_STRIPE_PRICE_STARTER_YEARLY || ''
-    }
+      yearly: process.env.VITE_STRIPE_PRICE_STARTER_YEARLY || '',
+    },
   },
   {
     id: 'professional',
@@ -89,7 +89,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       'Premium templates',
       'API access',
       'Custom integrations',
-      'White-label options'
+      'White-label options',
     ],
     limits: {
       workflows: 25,
@@ -97,13 +97,13 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       storage: 10,
       users: 10,
       apiCalls: 10000,
-      support: 'priority'
+      support: 'priority',
     },
     stripePriceId: {
       monthly: process.env.VITE_STRIPE_PRICE_PRO_MONTHLY || '',
-      yearly: process.env.VITE_STRIPE_PRICE_PRO_YEARLY || ''
+      yearly: process.env.VITE_STRIPE_PRICE_PRO_YEARLY || '',
     },
-    popular: true
+    popular: true,
   },
   {
     id: 'enterprise',
@@ -123,7 +123,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       'White-label solutions',
       'On-premise deployment',
       'SLA guarantee',
-      'Custom training'
+      'Custom training',
     ],
     limits: {
       workflows: -1, // unlimited
@@ -131,14 +131,14 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       storage: 100,
       users: -1, // unlimited
       apiCalls: 100000,
-      support: 'dedicated'
+      support: 'dedicated',
     },
     stripePriceId: {
       monthly: process.env.VITE_STRIPE_PRICE_ENTERPRISE_MONTHLY || '',
-      yearly: process.env.VITE_STRIPE_PRICE_ENTERPRISE_YEARLY || ''
+      yearly: process.env.VITE_STRIPE_PRICE_ENTERPRISE_YEARLY || '',
     },
-    enterprise: true
-  }
+    enterprise: true,
+  },
 ];
 
 export const ONE_TIME_APPS = [
@@ -149,7 +149,7 @@ export const ONE_TIME_APPS = [
     price: 49,
     category: 'Sales',
     features: ['AI-powered scoring', 'CRM integration', 'Custom scoring rules'],
-    stripePriceId: process.env.VITE_STRIPE_PRICE_LEAD_SCORING || ''
+    stripePriceId: process.env.VITE_STRIPE_PRICE_LEAD_SCORING || '',
   },
   {
     id: 'email-sequences',
@@ -158,7 +158,7 @@ export const ONE_TIME_APPS = [
     price: 79,
     category: 'Marketing',
     features: ['Drag-and-drop builder', 'A/B testing', 'Analytics dashboard'],
-    stripePriceId: process.env.VITE_STRIPE_PRICE_EMAIL_SEQUENCES || ''
+    stripePriceId: process.env.VITE_STRIPE_PRICE_EMAIL_SEQUENCES || '',
   },
   {
     id: 'meeting-scheduler',
@@ -167,7 +167,7 @@ export const ONE_TIME_APPS = [
     price: 99,
     category: 'Productivity',
     features: ['Calendar sync', 'Smart suggestions', 'Time zone handling'],
-    stripePriceId: process.env.VITE_STRIPE_PRICE_MEETING_SCHEDULER || ''
+    stripePriceId: process.env.VITE_STRIPE_PRICE_MEETING_SCHEDULER || '',
   },
   {
     id: 'data-migration',
@@ -176,7 +176,7 @@ export const ONE_TIME_APPS = [
     price: 149,
     category: 'Data',
     features: ['AI validation', 'Error detection', 'Progress tracking'],
-    stripePriceId: process.env.VITE_STRIPE_PRICE_DATA_MIGRATION || ''
+    stripePriceId: process.env.VITE_STRIPE_PRICE_DATA_MIGRATION || '',
   },
   {
     id: 'report-generator',
@@ -185,8 +185,8 @@ export const ONE_TIME_APPS = [
     price: 199,
     category: 'Analytics',
     features: ['Custom templates', 'AI insights', 'Scheduled reports'],
-    stripePriceId: process.env.VITE_STRIPE_PRICE_REPORT_GENERATOR || ''
-  }
+    stripePriceId: process.env.VITE_STRIPE_PRICE_REPORT_GENERATOR || '',
+  },
 ];
 
 export const API_SERVICES = [
@@ -197,11 +197,26 @@ export const API_SERVICES = [
     pricing: {
       free: { requests: 1000, period: 'month' },
       paid: [
-        { name: 'Basic', price: 0.01, requests: 10000, features: ['Standard models', 'Basic support'] },
-        { name: 'Pro', price: 0.005, requests: 100000, features: ['Advanced models', 'Priority support'] },
-        { name: 'Enterprise', price: 0.002, requests: 1000000, features: ['Custom models', 'Dedicated support'] }
-      ]
-    }
+        {
+          name: 'Basic',
+          price: 0.01,
+          requests: 10000,
+          features: ['Standard models', 'Basic support'],
+        },
+        {
+          name: 'Pro',
+          price: 0.005,
+          requests: 100000,
+          features: ['Advanced models', 'Priority support'],
+        },
+        {
+          name: 'Enterprise',
+          price: 0.002,
+          requests: 1000000,
+          features: ['Custom models', 'Dedicated support'],
+        },
+      ],
+    },
   },
   {
     id: 'workflow-engine',
@@ -210,12 +225,27 @@ export const API_SERVICES = [
     pricing: {
       free: { requests: 500, period: 'month' },
       paid: [
-        { name: 'Basic', price: 0.05, requests: 5000, features: ['Standard workflows', 'Basic monitoring'] },
-        { name: 'Pro', price: 0.03, requests: 50000, features: ['Advanced workflows', 'Real-time monitoring'] },
-        { name: 'Enterprise', price: 0.01, requests: 500000, features: ['Custom workflows', 'Dedicated infrastructure'] }
-      ]
-    }
-  }
+        {
+          name: 'Basic',
+          price: 0.05,
+          requests: 5000,
+          features: ['Standard workflows', 'Basic monitoring'],
+        },
+        {
+          name: 'Pro',
+          price: 0.03,
+          requests: 50000,
+          features: ['Advanced workflows', 'Real-time monitoring'],
+        },
+        {
+          name: 'Enterprise',
+          price: 0.01,
+          requests: 500000,
+          features: ['Custom workflows', 'Dedicated infrastructure'],
+        },
+      ],
+    },
+  },
 ];
 
 export class BillingService {
@@ -233,17 +263,17 @@ export class BillingService {
       email,
       name,
       metadata: {
-        source: 'aias'
-      }
+        source: 'aias',
+      },
     };
-    
+
     if (idempotencyKey) {
       // Stripe supports idempotency via Idempotency-Key header
       return await this.stripe.customers.create(params, {
         idempotencyKey,
       });
     }
-    
+
     return await this.stripe.customers.create(params);
   }
 
@@ -260,33 +290,39 @@ export class BillingService {
       trial_period_days: trialDays,
       payment_behavior: 'default_incomplete',
       payment_settings: { save_default_payment_method: 'on_subscription' },
-      expand: ['latest_invoice.payment_intent']
+      expand: ['latest_invoice.payment_intent'],
     };
-    
+
     if (idempotencyKey) {
       return await this.stripe.subscriptions.create(params, {
         idempotencyKey,
       });
     }
-    
+
     return await this.stripe.subscriptions.create(params);
   }
 
   async updateSubscription(subscriptionId: string, newPriceId: string) {
-    const subscription = await this.stripe.subscriptions.retrieve(subscriptionId);
-    
+    const subscription =
+      await this.stripe.subscriptions.retrieve(subscriptionId);
+
     return await this.stripe.subscriptions.update(subscriptionId, {
-      items: [{
-        id: subscription.items.data[0].id,
-        price: newPriceId,
-      }],
-      proration_behavior: 'create_prorations'
+      items: [
+        {
+          id: subscription.items.data[0].id,
+          price: newPriceId,
+        },
+      ],
+      proration_behavior: 'create_prorations',
     });
   }
 
-  async cancelSubscription(subscriptionId: string, atPeriodEnd: boolean = true) {
+  async cancelSubscription(
+    subscriptionId: string,
+    atPeriodEnd: boolean = true
+  ) {
     return await this.stripe.subscriptions.update(subscriptionId, {
-      cancel_at_period_end: atPeriodEnd
+      cancel_at_period_end: atPeriodEnd,
     });
   }
 
@@ -299,35 +335,33 @@ export class BillingService {
     // CFO Mode: Use idempotency key to prevent duplicate payment intents
     // CFO Principle: Amount stored as integer (cents) - no floating point
     const amountCents = Math.round(amount * 100); // Ensure integer
-    
+
     const params: Stripe.PaymentIntentCreateParams = {
       amount: amountCents,
       currency,
       metadata: {
         ...metadata,
-        source: 'aias'
-      }
+        source: 'aias',
+      },
     };
-    
+
     if (idempotencyKey) {
       return await this.stripe.paymentIntents.create(params, {
         idempotencyKey,
       });
     }
-    
+
     return await this.stripe.paymentIntents.create(params);
   }
 
   async trackUsage(tenantId: string, metric: string, amount: number = 1) {
     // Track usage for billing purposes
-    const { error } = await this.supabase
-      .from('usage_metrics')
-      .insert({
-        tenant_id: tenantId,
-        metric_type: metric,
-        amount,
-        timestamp: new Date().toISOString()
-      });
+    const { error } = await this.supabase.from('usage_metrics').insert({
+      tenant_id: tenantId,
+      metric_type: metric,
+      amount,
+      timestamp: new Date().toISOString(),
+    });
 
     if (error) {
       console.error('Failed to track usage:', error);
@@ -355,7 +389,7 @@ export class BillingService {
         executions: 0,
         storage: 0,
         apiCalls: 0,
-        users: 0
+        users: 0,
       };
     }
 
@@ -365,7 +399,7 @@ export class BillingService {
       executions: 0,
       storage: 0,
       apiCalls: 0,
-      users: 0
+      users: 0,
     };
 
     data?.forEach((record: { metric_type: string; amount: number }) => {
@@ -378,14 +412,23 @@ export class BillingService {
     return metrics;
   }
 
-  async checkUsageLimits(tenantId: string, plan: SubscriptionPlan): Promise<{ withinLimits: boolean; exceeded: string[] }> {
+  async checkUsageLimits(
+    tenantId: string,
+    plan: SubscriptionPlan
+  ): Promise<{ withinLimits: boolean; exceeded: string[] }> {
     const usage = await this.getUsageMetrics(tenantId);
     const exceeded: string[] = [];
 
-    if (plan.limits.workflows !== -1 && usage.workflows > plan.limits.workflows) {
+    if (
+      plan.limits.workflows !== -1 &&
+      usage.workflows > plan.limits.workflows
+    ) {
       exceeded.push('workflows');
     }
-    if (plan.limits.executions !== -1 && usage.executions > plan.limits.executions) {
+    if (
+      plan.limits.executions !== -1 &&
+      usage.executions > plan.limits.executions
+    ) {
       exceeded.push('executions');
     }
     if (plan.limits.storage !== -1 && usage.storage > plan.limits.storage) {
@@ -400,21 +443,29 @@ export class BillingService {
 
     return {
       withinLimits: exceeded.length === 0,
-      exceeded
+      exceeded,
     };
   }
 }
 
-export const calculateSavings = (monthlyPrice: number, yearlyPrice: number): number => {
+export const calculateSavings = (
+  monthlyPrice: number,
+  yearlyPrice: number
+): number => {
   const monthlyYearlyTotal = monthlyPrice * 12;
-  return Math.round(((monthlyYearlyTotal - yearlyPrice) / monthlyYearlyTotal) * 100);
+  return Math.round(
+    ((monthlyYearlyTotal - yearlyPrice) / monthlyYearlyTotal) * 100
+  );
 };
 
-export const formatPrice = (price: number, currency: string = 'USD'): string => {
+export const formatPrice = (
+  price: number,
+  currency: string = 'USD'
+): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0
+    maximumFractionDigits: 0,
   }).format(price);
 };

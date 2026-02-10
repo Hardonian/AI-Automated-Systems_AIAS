@@ -3,8 +3,8 @@
  * Handles all Wave API interactions with proper error handling and retries
  */
 
-import { logger } from "@/lib/logging/structured-logger";
-import { retryWithBackoff } from "@/lib/utils/retry-enhanced";
+import { logger } from '@/lib/logging/structured-logger';
+import { retryWithBackoff } from '@/lib/utils/retry-enhanced';
 
 export interface WaveConfig {
   businessId: string;
@@ -43,7 +43,7 @@ export interface WaveRevenueData {
 export class WaveClient {
   private businessId: string;
   private accessToken: string;
-  private baseUrl: string = "https://api.waveapps.com";
+  private baseUrl: string = 'https://api.waveapps.com';
 
   constructor(config: WaveConfig) {
     this.businessId = config.businessId;
@@ -60,7 +60,7 @@ export class WaveClient {
     const url = `${this.baseUrl}${endpoint}`;
     const headers = {
       Authorization: `Bearer ${this.accessToken}`,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...options.headers,
     };
 
@@ -82,7 +82,7 @@ export class WaveClient {
           if (!response.ok) {
             const errorText = await response.text();
             let errorMessage = `Wave API error: ${response.status} ${response.statusText}`;
-            
+
             try {
               const errorData = JSON.parse(errorText);
               if (errorData.message) {
@@ -99,7 +99,7 @@ export class WaveClient {
         } catch (error) {
           clearTimeout(timeoutId);
           if (error instanceof Error) {
-            logger.error("Wave API request failed", error, {
+            logger.error('Wave API request failed', error, {
               endpoint,
               businessId: this.businessId,
             });
@@ -112,7 +112,11 @@ export class WaveClient {
         maxAttempts: 3,
         initialDelayMs: 1000,
         onRetry: (attempt, error) => {
-          logger.warn("Retrying Wave API request", { attempt, endpoint, error: error.message });
+          logger.warn('Retrying Wave API request', {
+            attempt,
+            endpoint,
+            error: error.message,
+          });
         },
       }
     );
@@ -121,14 +125,16 @@ export class WaveClient {
   /**
    * Get invoices using GraphQL
    */
-  async getInvoices(options: {
-    status?: string;
-    limit?: number;
-  } = {}): Promise<WaveInvoice[]> {
+  async getInvoices(
+    options: {
+      status?: string;
+      limit?: number;
+    } = {}
+  ): Promise<WaveInvoice[]> {
     const query = `
       query GetInvoices($businessId: ID!, $first: Int) {
         business(id: $businessId) {
-          invoices(first: $first, status: ${options.status ? `"${options.status}"` : "ALL"}) {
+          invoices(first: $first, status: ${options.status ? `"${options.status}"` : 'ALL'}) {
             edges {
               node {
                 id
@@ -148,8 +154,8 @@ export class WaveClient {
     `;
 
     try {
-      const response = await this.request<WaveInvoiceResponse>("/graphql", {
-        method: "POST",
+      const response = await this.request<WaveInvoiceResponse>('/graphql', {
+        method: 'POST',
         body: JSON.stringify({
           query,
           variables: {
@@ -159,11 +165,15 @@ export class WaveClient {
         }),
       });
 
-      return response.data.business.invoices.edges.map((edge) => edge.node);
+      return response.data.business.invoices.edges.map(edge => edge.node);
     } catch (error) {
-      logger.error("Failed to get invoices", error instanceof Error ? error : new Error(String(error)), {
-        businessId: this.businessId,
-      });
+      logger.error(
+        'Failed to get invoices',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          businessId: this.businessId,
+        }
+      );
       throw error;
     }
   }
@@ -172,14 +182,14 @@ export class WaveClient {
    * Get overdue invoices
    */
   async getOverdueInvoices(daysOverdue: number = 7): Promise<WaveInvoice[]> {
-    const allInvoices = await this.getInvoices({ status: "SENT" });
+    const allInvoices = await this.getInvoices({ status: 'SENT' });
     const now = new Date();
     const cutoffDate = new Date(now);
     cutoffDate.setDate(cutoffDate.getDate() - daysOverdue);
 
-    return allInvoices.filter((invoice) => {
+    return allInvoices.filter(invoice => {
       const dueDate = new Date(invoice.dueDate);
-      return dueDate < cutoffDate && invoice.status !== "PAID";
+      return dueDate < cutoffDate && invoice.status !== 'PAID';
     });
   }
 
@@ -217,7 +227,9 @@ export class WaveClient {
     `;
 
     try {
-      const dueDate = invoiceData.dueDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+      const dueDate =
+        invoiceData.dueDate ||
+        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
       const response = await this.request<{
         data: {
@@ -227,8 +239,8 @@ export class WaveClient {
             invoice: WaveInvoice;
           };
         };
-      }>("/graphql", {
-        method: "POST",
+      }>('/graphql', {
+        method: 'POST',
         body: JSON.stringify({
           query: mutation,
           variables: {
@@ -252,10 +264,14 @@ export class WaveClient {
 
       return response.data.invoiceCreate.invoice;
     } catch (error) {
-      logger.error("Failed to create invoice", error instanceof Error ? error : new Error(String(error)), {
-        businessId: this.businessId,
-        invoiceData,
-      });
+      logger.error(
+        'Failed to create invoice',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          businessId: this.businessId,
+          invoiceData,
+        }
+      );
       throw error;
     }
   }
@@ -275,9 +291,13 @@ export class WaveClient {
       const endDate = new Date(options.endDate);
 
       const revenue = invoices
-        .filter((invoice) => {
+        .filter(invoice => {
           const invoiceDate = new Date(invoice.dueDate);
-          return invoiceDate >= startDate && invoiceDate <= endDate && invoice.status === "PAID";
+          return (
+            invoiceDate >= startDate &&
+            invoiceDate <= endDate &&
+            invoice.status === 'PAID'
+          );
         })
         .reduce((sum, invoice) => sum + invoice.total, 0);
 
@@ -286,10 +306,14 @@ export class WaveClient {
         period: `${options.startDate} to ${options.endDate}`,
       };
     } catch (error) {
-      logger.error("Failed to get revenue", error instanceof Error ? error : new Error(String(error)), {
-        businessId: this.businessId,
-        options,
-      });
+      logger.error(
+        'Failed to get revenue',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          businessId: this.businessId,
+          options,
+        }
+      );
       throw error;
     }
   }

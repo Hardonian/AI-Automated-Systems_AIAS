@@ -23,6 +23,7 @@ Canary deployments allow gradual rollout of changes to a subset of users, with a
 **Default:** `false` (0%)
 
 **Configuration:**
+
 ```typescript
 // lib/flags.ts or feature flag service
 export const flags = {
@@ -46,9 +47,10 @@ export const flags = {
 import { flags } from '@/lib/flags';
 
 export async function POST(req: NextRequest) {
-  const isCanary = flags.canary_checkout.enabled && 
-    (hashUserId(req.userId) % 100 < flags.canary_checkout.percentage);
-  
+  const isCanary =
+    flags.canary_checkout.enabled &&
+    hashUserId(req.userId) % 100 < flags.canary_checkout.percentage;
+
   if (isCanary) {
     // Use new checkout implementation
     return await newCheckoutHandler(req);
@@ -94,7 +96,7 @@ export async function POST(req: NextRequest) {
 ```typescript
 export async function POST(req: NextRequest) {
   const isShadow = req.headers.get('x-shadow-enabled') === 'true';
-  
+
   if (isShadow) {
     // Run shadow implementation but return stable response
     const shadowResult = await newCheckoutHandler(req);
@@ -102,7 +104,7 @@ export async function POST(req: NextRequest) {
     await logShadowMetrics(shadowResult);
     return await stableCheckoutHandler(req);
   }
-  
+
   // Normal flow
   return await stableCheckoutHandler(req);
 }
@@ -119,6 +121,7 @@ export async function POST(req: NextRequest) {
 **Action:** Automatic rollback if exceeded
 
 **Implementation:**
+
 ```typescript
 // lib/canary/monitor.ts
 export class CanaryMonitor {
@@ -126,17 +129,17 @@ export class CanaryMonitor {
   private requestCount = 0;
   private windowStart = Date.now();
   private readonly WINDOW_MS = 5 * 60 * 1000; // 5 minutes
-  
+
   recordRequest(success: boolean) {
     this.requestCount++;
     if (!success) this.errorCount++;
-    
+
     // Check threshold
     const errorRate = this.errorCount / this.requestCount;
     if (errorRate > 0.05) {
       this.triggerRollback('error_rate_exceeded');
     }
-    
+
     // Reset window
     if (Date.now() - this.windowStart > this.WINDOW_MS) {
       this.errorCount = 0;
@@ -154,24 +157,25 @@ export class CanaryMonitor {
 **Action:** Automatic rollback if exceeded
 
 **Implementation:**
+
 ```typescript
 // lib/canary/monitor.ts
 export class CanaryMonitor {
   private latencies: number[] = [];
   private readonly WINDOW_MS = 5 * 60 * 1000;
-  
+
   recordLatency(latency: number) {
     this.latencies.push(latency);
-    
+
     // Calculate p95
     const sorted = [...this.latencies].sort((a, b) => a - b);
     const p95Index = Math.floor(sorted.length * 0.95);
     const p95 = sorted[p95Index];
-    
+
     if (p95 > 1000) {
       this.triggerRollback('latency_exceeded');
     }
-    
+
     // Clean old latencies
     this.latencies = this.latencies.filter(
       (_, i) => Date.now() - this.windowStart < this.WINDOW_MS
@@ -183,19 +187,20 @@ export class CanaryMonitor {
 ### Rollback Trigger
 
 **Implementation:**
+
 ```typescript
 // lib/canary/monitor.ts
 async triggerRollback(reason: string) {
   // Disable canary flag
   await updateFlag('canary_checkout', { enabled: false, percentage: 0 });
-  
+
   // Alert team
   await notifyTeam({
     type: 'canary_rollback',
     reason,
     timestamp: new Date().toISOString(),
   });
-  
+
   // Log rollback event
   await logEvent('canary_rollback', { reason });
 }
@@ -224,6 +229,7 @@ async triggerRollback(reason: string) {
 **Action:** Add preview protection in Vercel dashboard
 
 **Configuration:**
+
 1. Go to Vercel Dashboard → Project Settings → Deployment Protection
 2. Enable "Preview Deployment Protection"
 3. Require password or team member access
@@ -261,7 +267,7 @@ async triggerRollback(reason: string) {
 export function shouldUseCanary(userId: string): boolean {
   const channel = Updates.channel || 'production';
   if (channel !== 'canary-checkout') return false;
-  
+
   // Percentage rollout
   const hash = hashUserId(userId);
   return hash % 100 < 10; // 10% canary
@@ -302,7 +308,7 @@ export function shouldUseCanary(userId: string): boolean {
 // components/admin/canary-metrics.tsx
 export function CanaryMetrics() {
   const { data } = useQuery('canary-metrics', fetchCanaryMetrics);
-  
+
   return (
     <div>
       <h2>Canary Deployment Metrics</h2>
@@ -323,11 +329,13 @@ export function CanaryMetrics() {
 ### Automatic Rollback
 
 **Triggers:**
+
 1. Error rate > 5% (5-minute window)
 2. p95 latency > 1000ms (5-minute window)
 3. Manual trigger via API/dashboard
 
 **Process:**
+
 1. Disable canary flag (`canary_checkout.enabled = false`)
 2. Set percentage to 0 (`canary_checkout.percentage = 0`)
 3. Alert team via Slack/email
@@ -336,6 +344,7 @@ export function CanaryMetrics() {
 ### Manual Rollback
 
 **Command:**
+
 ```bash
 # Via API
 curl -X POST https://api.vercel.com/v1/projects/$PROJECT_ID/env \
@@ -347,6 +356,7 @@ vercel env rm CANARY_CHECKOUT_ENABLED production
 ```
 
 **One-Command Rollback:**
+
 ```bash
 # scripts/rollback-canary.sh
 #!/bin/bash
@@ -382,6 +392,7 @@ echo "Canary deployment rolled back"
 **Status:** 🟡 Stub — Framework defined, implementation pending
 
 **Next Steps:**
+
 1. Implement feature flag system (if not exists)
 2. Add canary monitoring to checkout endpoint
 3. Set up stop-loss thresholds

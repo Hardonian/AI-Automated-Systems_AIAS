@@ -141,7 +141,7 @@ export interface IntegrationAdapter {
   id: string;
   name: string;
   config: AdapterConfig;
-  
+
   request<T = unknown>(options: APIRequestOptions): Promise<APIResponse<T>>;
   authenticate(): Promise<void>;
   testConnection(): Promise<boolean>;
@@ -166,9 +166,14 @@ export abstract class BaseAdapter implements IntegrationAdapter {
   /**
    * Make API request
    */
-  async request<T = unknown>(options: APIRequestOptions): Promise<APIResponse<T>> {
+  async request<T = unknown>(
+    options: APIRequestOptions
+  ): Promise<APIResponse<T>> {
     // Ensure authenticated
-    if (!this.authToken || (this.tokenExpiry && this.tokenExpiry < new Date())) {
+    if (
+      !this.authToken ||
+      (this.tokenExpiry && this.tokenExpiry < new Date())
+    ) {
       await this.authenticate();
     }
 
@@ -177,21 +182,24 @@ export abstract class BaseAdapter implements IntegrationAdapter {
     const body = options.body ? JSON.stringify(options.body) : undefined;
 
     let attempt = 0;
-    const retryConfig: RetryConfig = options.retry !== false ? (this.config.retry || {
-      enabled: true,
-      maxAttempts: 3,
-      backoff: 'exponential',
-      initialDelay: 1000,
-      maxDelay: 60000,
-      retryableStatusCodes: [500, 502, 503, 504],
-    }) : {
-      enabled: false,
-      maxAttempts: 1,
-      backoff: 'fixed',
-      initialDelay: 1000,
-      maxDelay: 60000,
-      retryableStatusCodes: [],
-    };
+    const retryConfig: RetryConfig =
+      options.retry !== false
+        ? this.config.retry || {
+            enabled: true,
+            maxAttempts: 3,
+            backoff: 'exponential',
+            initialDelay: 1000,
+            maxDelay: 60000,
+            retryableStatusCodes: [500, 502, 503, 504],
+          }
+        : {
+            enabled: false,
+            maxAttempts: 1,
+            backoff: 'fixed',
+            initialDelay: 1000,
+            maxDelay: 60000,
+            retryableStatusCodes: [],
+          };
 
     while (attempt < retryConfig.maxAttempts) {
       try {
@@ -203,7 +211,10 @@ export abstract class BaseAdapter implements IntegrationAdapter {
         });
 
         if (!response.ok) {
-          if (retryConfig.enabled && retryConfig.retryableStatusCodes.includes(response.status)) {
+          if (
+            retryConfig.enabled &&
+            retryConfig.retryableStatusCodes.includes(response.status)
+          ) {
             attempt++;
             if (attempt < retryConfig.maxAttempts) {
               const delay = this.calculateBackoff(attempt, retryConfig);
@@ -217,7 +228,9 @@ export abstract class BaseAdapter implements IntegrationAdapter {
         }
 
         const data = await response.json();
-        const pagination = options.paginate ? this.parsePagination(response, data) : undefined;
+        const pagination = options.paginate
+          ? this.parsePagination(response, data)
+          : undefined;
 
         return {
           data: data as T,
@@ -263,7 +276,9 @@ export abstract class BaseAdapter implements IntegrationAdapter {
    * Authenticate with OAuth
    */
   private async authenticateOAuth(): Promise<void> {
-    if (this.config.auth.type !== 'oauth') {return;}
+    if (this.config.auth.type !== 'oauth') {
+      return;
+    }
 
     const response = await fetch(this.config.auth.tokenUrl, {
       method: 'POST',
@@ -274,7 +289,9 @@ export abstract class BaseAdapter implements IntegrationAdapter {
         grant_type: 'client_credentials',
         client_id: this.config.auth.clientId,
         client_secret: this.config.auth.clientSecret,
-        ...(this.config.auth.scopes && { scope: this.config.auth.scopes.join(' ') }),
+        ...(this.config.auth.scopes && {
+          scope: this.config.auth.scopes.join(' '),
+        }),
       }),
     });
 
@@ -310,7 +327,9 @@ export abstract class BaseAdapter implements IntegrationAdapter {
   /**
    * Build request headers
    */
-  private buildHeaders(customHeaders?: Record<string, string>): Record<string, string> {
+  private buildHeaders(
+    customHeaders?: Record<string, string>
+  ): Record<string, string> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...this.config.defaultHeaders,
@@ -330,7 +349,9 @@ export abstract class BaseAdapter implements IntegrationAdapter {
         }
         break;
       case 'basic':
-        const credentials = btoa(`${this.config.auth.username}:${this.config.auth.password}`);
+        const credentials = btoa(
+          `${this.config.auth.username}:${this.config.auth.password}`
+        );
         headers['Authorization'] = `Basic ${credentials}`;
         break;
       case 'hmac':
@@ -355,9 +376,13 @@ export abstract class BaseAdapter implements IntegrationAdapter {
     try {
       const data = await response.json();
       const dataObj = data as Record<string, unknown>;
-      const message = String(dataObj[errorShape.messageField] || dataObj[errorShape.errorField] || response.statusText);
+      const message = String(
+        dataObj[errorShape.messageField] ||
+          dataObj[errorShape.errorField] ||
+          response.statusText
+      );
       const code = String(dataObj[errorShape.codeField] || response.status);
-      
+
       return new Error(`API Error [${code}]: ${message}`);
     } catch {
       return new Error(`API Error: ${response.statusText}`);
@@ -367,9 +392,14 @@ export abstract class BaseAdapter implements IntegrationAdapter {
   /**
    * Parse pagination from response
    */
-  private parsePagination(_response: Response, _data: unknown): APIResponse['pagination'] {
-    const {pagination} = this.config;
-    if (!pagination) {return undefined;}
+  private parsePagination(
+    _response: Response,
+    _data: unknown
+  ): APIResponse['pagination'] {
+    const { pagination } = this.config;
+    if (!pagination) {
+      return undefined;
+    }
 
     // Simplified - would parse based on pagination type
     return {
@@ -383,7 +413,10 @@ export abstract class BaseAdapter implements IntegrationAdapter {
   private calculateBackoff(attempt: number, config: RetryConfig): number {
     switch (config.backoff) {
       case 'exponential':
-        return Math.min(config.initialDelay * Math.pow(2, attempt - 1), config.maxDelay);
+        return Math.min(
+          config.initialDelay * Math.pow(2, attempt - 1),
+          config.maxDelay
+        );
       case 'linear':
         return config.initialDelay;
       case 'fixed':

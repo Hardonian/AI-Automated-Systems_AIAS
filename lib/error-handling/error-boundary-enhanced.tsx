@@ -2,11 +2,11 @@
  * Enhanced Error Boundary with Telemetry and Recovery
  */
 
-"use client";
+'use client';
 
-import React, { Component, ErrorInfo, ReactNode } from "react";
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 
-import { telemetry } from "../monitoring/enhanced-telemetry";
+import { telemetry } from '../monitoring/enhanced-telemetry';
 
 interface Props {
   children: ReactNode;
@@ -61,8 +61,8 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
     }
 
     // Log to console in development
-    if (process.env.NODE_ENV === "development") {
-      console.error("ErrorBoundary caught an error:", error, errorInfo);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('ErrorBoundary caught an error:', error, errorInfo);
     }
   }
 
@@ -71,12 +71,19 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
     const { hasError } = this.state;
 
     if (hasError && prevProps.resetKeys !== resetKeys) {
-      if (resetKeys && resetKeys.some((key, index) => key !== prevProps.resetKeys?.[index])) {
+      if (
+        resetKeys &&
+        resetKeys.some((key, index) => key !== prevProps.resetKeys?.[index])
+      ) {
         this.resetErrorBoundary();
       }
     }
 
-    if (hasError && resetOnPropsChange && prevProps.children !== this.props.children) {
+    if (
+      hasError &&
+      resetOnPropsChange &&
+      prevProps.children !== this.props.children
+    ) {
       this.resetErrorBoundary();
     }
   }
@@ -107,39 +114,40 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">
+        <div className='flex min-h-screen items-center justify-center p-4'>
+          <div className='w-full max-w-md rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+            <h2 className='mb-4 text-2xl font-bold text-red-600 dark:text-red-400'>
               Something went wrong
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              We apologize for the inconvenience. An error has occurred and has been reported.
+            <p className='mb-4 text-gray-600 dark:text-gray-300'>
+              We apologize for the inconvenience. An error has occurred and has
+              been reported.
             </p>
             {this.state.errorId && (
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              <p className='mb-4 text-sm text-gray-500 dark:text-gray-400'>
                 Error ID: {this.state.errorId}
               </p>
             )}
-            {process.env.NODE_ENV === "development" && this.state.error && (
-              <details className="mb-4">
-                <summary className="cursor-pointer text-sm text-gray-500 dark:text-gray-400">
+            {process.env.NODE_ENV === 'development' && this.state.error && (
+              <details className='mb-4'>
+                <summary className='cursor-pointer text-sm text-gray-500 dark:text-gray-400'>
                   Error details
                 </summary>
-                <pre className="mt-2 text-xs bg-gray-100 dark:bg-gray-900 p-2 rounded overflow-auto">
+                <pre className='mt-2 overflow-auto rounded bg-gray-100 p-2 text-xs dark:bg-gray-900'>
                   {this.state.error.toString()}
                   {this.state.errorInfo?.componentStack}
                 </pre>
               </details>
             )}
-            <div className="flex gap-2">
+            <div className='flex gap-2'>
               <button
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                className='rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700'
                 onClick={this.resetErrorBoundary}
               >
                 Try again
               </button>
               <button
-                className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+                className='rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-700'
                 onClick={() => window.location.reload()}
               >
                 Reload page
@@ -159,7 +167,7 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
  */
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
-  errorBoundaryProps?: Omit<Props, "children">
+  errorBoundaryProps?: Omit<Props, 'children'>
 ) {
   const WrappedComponent = (props: P) => (
     <EnhancedErrorBoundary {...errorBoundaryProps}>

@@ -21,35 +21,38 @@ export const ChatbotWidget = () => {
   return (
     <>
       {/* Floating Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className='fixed bottom-6 right-6 z-50'>
         {!isOpen && (
-          <div className="relative">
+          <div className='relative'>
             {/* Skills Popup */}
             {showSkills && (
-              <div className="absolute bottom-full right-0 mb-4 w-72 p-4 rounded-xl bg-card border border-primary/20 shadow-glow animate-slide-in">
-                <div className="flex items-center gap-2 mb-3">
-                  <Sparkles className="w-5 h-5 text-primary" />
-                  <h4 className="font-semibold">I can help you with:</h4>
+              <div className='shadow-glow animate-slide-in absolute bottom-full right-0 mb-4 w-72 rounded-xl border border-primary/20 bg-card p-4'>
+                <div className='mb-3 flex items-center gap-2'>
+                  <Sparkles className='h-5 w-5 text-primary' />
+                  <h4 className='font-semibold'>I can help you with:</h4>
                 </div>
-                <ul className="space-y-2">
+                <ul className='space-y-2'>
                   {agentSkills.map((skill, index) => (
-                    <li key={`skill-${index}`} className="flex items-start gap-2 text-sm">
-                      <span className="text-primary">•</span>
+                    <li
+                      key={`skill-${index}`}
+                      className='flex items-start gap-2 text-sm'
+                    >
+                      <span className='text-primary'>•</span>
                       <span>{skill}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
-            
+
             <Button
-              className="h-16 w-16 rounded-full bg-gradient-primary shadow-glow hover:shadow-xl transition-all animate-float"
-              size="lg"
+              className='bg-gradient-primary shadow-glow animate-float h-16 w-16 rounded-full transition-all hover:shadow-xl'
+              size='lg'
               onClick={() => setIsOpen(true)}
               onMouseEnter={() => setShowSkills(true)}
               onMouseLeave={() => setShowSkills(false)}
             >
-              <MessageCircle className="w-6 h-6" />
+              <MessageCircle className='h-6 w-6' />
             </Button>
           </div>
         )}
@@ -57,30 +60,34 @@ export const ChatbotWidget = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-full max-w-md h-[600px] rounded-xl bg-card border border-primary/20 shadow-glow overflow-hidden flex flex-col animate-slide-in">
+        <div className='shadow-glow animate-slide-in fixed bottom-6 right-6 z-50 flex h-[600px] w-full max-w-md flex-col overflow-hidden rounded-xl border border-primary/20 bg-card'>
           {/* Header */}
-          <div className="p-4 bg-gradient-primary border-b border-primary/20 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-card flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-primary" />
+          <div className='bg-gradient-primary flex items-center justify-between border-b border-primary/20 p-4'>
+            <div className='flex items-center gap-3'>
+              <div className='flex h-10 w-10 items-center justify-center rounded-full bg-card'>
+                <Sparkles className='h-5 w-5 text-primary' />
               </div>
               <div>
-                <h3 className="font-semibold text-primary-foreground">AIAS Assistant</h3>
-                <p className="text-xs text-primary-foreground/80">AI Automation Expert</p>
+                <h3 className='font-semibold text-primary-foreground'>
+                  AIAS Assistant
+                </h3>
+                <p className='text-xs text-primary-foreground/80'>
+                  AI Automation Expert
+                </p>
               </div>
             </div>
             <Button
-              className="h-8 w-8 p-0 text-primary-foreground hover:bg-primary-foreground/10"
-              size="sm"
-              variant="ghost"
+              className='h-8 w-8 p-0 text-primary-foreground hover:bg-primary-foreground/10'
+              size='sm'
+              variant='ghost'
               onClick={() => setIsOpen(false)}
             >
-              <X className="w-5 h-5" />
+              <X className='h-5 w-5' />
             </Button>
           </div>
 
           {/* Chat Content */}
-          <div className="flex-1 overflow-hidden">
+          <div className='flex-1 overflow-hidden'>
             <AIChat />
           </div>
         </div>

@@ -1,13 +1,13 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextRequest, NextResponse } from "next/server";
+import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
 
-import { handleApiError } from "@/lib/api/route-handler";
-import { checkFeatureAccess } from "@/lib/entitlements/check";
-import { env } from "@/lib/env";
+import { handleApiError } from '@/lib/api/route-handler';
+import { checkFeatureAccess } from '@/lib/entitlements/check';
+import { env } from '@/lib/env';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/entitlements/check
@@ -16,32 +16,41 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   try {
     // Get user from auth
-    const authHeader = request.headers.get("authorization");
-    const token = authHeader?.startsWith("Bearer ")
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.startsWith('Bearer ')
       ? authHeader.substring(7)
-      : request.cookies.get("sb-access-token")?.value;
+      : request.cookies.get('sb-access-token')?.value;
 
     if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get feature from query params
-    const feature = request.nextUrl.searchParams.get("feature");
+    const feature = request.nextUrl.searchParams.get('feature');
     if (!feature) {
-      return NextResponse.json({ error: "Feature parameter required" }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Feature parameter required' },
+        { status: 400 }
+      );
     }
 
     // Check access
-    const access = await checkFeatureAccess(user.id, feature as keyof typeof import("@/lib/entitlements/check").FEATURES);
+    const access = await checkFeatureAccess(
+      user.id,
+      feature as keyof typeof import('@/lib/entitlements/check').FEATURES
+    );
 
     return NextResponse.json(access);
   } catch (error) {
-    return handleApiError(error, "Failed to check feature access");
+    return handleApiError(error, 'Failed to check feature access');
   }
 }

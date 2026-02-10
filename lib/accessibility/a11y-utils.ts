@@ -9,8 +9,8 @@
 export function generateA11yId(text: string): string {
   return text
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 /**
@@ -27,8 +27,8 @@ export function getIconButtonLabel(action: string, context?: string): string {
  * Format number for screen readers
  */
 export function formatForScreenReader(value: number | string): string {
-  if (typeof value === "number") {
-    return value.toLocaleString("en-US");
+  if (typeof value === 'number') {
+    return value.toLocaleString('en-US');
   }
   return value;
 }
@@ -36,15 +36,15 @@ export function formatForScreenReader(value: number | string): string {
 /**
  * Get live region announcement
  */
-export function createLiveRegion(level: "polite" | "assertive" = "polite"): {
+export function createLiveRegion(level: 'polite' | 'assertive' = 'polite'): {
   announce: (message: string) => void;
   cleanup: () => void;
 } {
-  const region = document.createElement("div");
-  region.setAttribute("role", "status");
-  region.setAttribute("aria-live", level);
-  region.setAttribute("aria-atomic", "true");
-  region.className = "sr-only";
+  const region = document.createElement('div');
+  region.setAttribute('role', 'status');
+  region.setAttribute('aria-live', level);
+  region.setAttribute('aria-atomic', 'true');
+  region.className = 'sr-only';
   document.body.appendChild(region);
 
   return {
@@ -52,7 +52,7 @@ export function createLiveRegion(level: "polite" | "assertive" = "polite"): {
       region.textContent = message;
       // Clear after announcement
       setTimeout(() => {
-        region.textContent = "";
+        region.textContent = '';
       }, 1000);
     },
     cleanup: () => {
@@ -67,10 +67,10 @@ export function createLiveRegion(level: "polite" | "assertive" = "polite"): {
 export function isVisibleToScreenReader(element: HTMLElement): boolean {
   const style = window.getComputedStyle(element);
   return (
-    style.display !== "none" &&
-    style.visibility !== "hidden" &&
-    style.opacity !== "0" &&
-    element.getAttribute("aria-hidden") !== "true"
+    style.display !== 'none' &&
+    style.visibility !== 'hidden' &&
+    style.opacity !== '0' &&
+    element.getAttribute('aria-hidden') !== 'true'
   );
 }
 
@@ -114,11 +114,11 @@ function getLuminance(rgb: { r: number; g: number; b: number }): number {
   const r = rgb.r / 255;
   const g = rgb.g / 255;
   const b = rgb.b / 255;
-  
+
   const rLum = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
   const gLum = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
   const bLum = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
-  
+
   return 0.2126 * rLum + 0.7152 * gLum + 0.0722 * bLum;
 }
 
@@ -126,16 +126,16 @@ function getLuminance(rgb: { r: number; g: number; b: number }): number {
  * Keyboard navigation helpers
  */
 export const KeyboardKeys = {
-  Enter: "Enter",
-  Space: " ",
-  Escape: "Escape",
-  Tab: "Tab",
-  ArrowUp: "ArrowUp",
-  ArrowDown: "ArrowDown",
-  ArrowLeft: "ArrowLeft",
-  ArrowRight: "ArrowRight",
-  Home: "Home",
-  End: "End",
+  Enter: 'Enter',
+  Space: ' ',
+  Escape: 'Escape',
+  Tab: 'Tab',
+  ArrowUp: 'ArrowUp',
+  ArrowDown: 'ArrowDown',
+  ArrowLeft: 'ArrowLeft',
+  ArrowRight: 'ArrowRight',
+  Home: 'Home',
+  End: 'End',
 } as const;
 
 /**

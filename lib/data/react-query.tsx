@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
 /**
  * React Query Provider Setup
- * 
+ *
  * Configures TanStack Query (React Query) for the application with:
  * - Default query/mutation options
  * - DevTools (development only)
@@ -10,15 +10,18 @@
  * - Cache configuration
  */
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState, type ReactNode } from "react";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState, type ReactNode } from 'react';
 
 // DevTools is optional - only import if available
 // Use dynamic import to avoid build-time resolution issues
-let ReactQueryDevtools: React.ComponentType<{ initialIsOpen?: boolean }> | null = null;
-if (process.env.NODE_ENV === "development" && typeof window !== "undefined") {
+let ReactQueryDevtools: React.ComponentType<{
+  initialIsOpen?: boolean;
+}> | null = null;
+if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
   try {
-    ReactQueryDevtools = require("@tanstack/react-query-devtools").ReactQueryDevtools;
+    ReactQueryDevtools =
+      require('@tanstack/react-query-devtools').ReactQueryDevtools;
   } catch {
     // DevTools not installed - that's okay
   }
@@ -26,7 +29,7 @@ if (process.env.NODE_ENV === "development" && typeof window !== "undefined") {
 
 /**
  * Default query options
- * 
+ *
  * These apply to all queries unless overridden:
  * - staleTime: 30 seconds - Data is considered fresh for 30s
  * - gcTime: 5 minutes - Unused cache entries are garbage collected after 5min
@@ -49,7 +52,7 @@ const defaultQueryOptions = {
 
 /**
  * Create QueryClient instance
- * 
+ *
  * Note: We create it inside the provider component to ensure
  * a new instance is created for each render in development
  * (React Strict Mode). In production, this only runs once.
@@ -63,7 +66,7 @@ function makeQueryClient() {
 let browserQueryClient: QueryClient | undefined = undefined;
 
 function getQueryClient() {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     // Server: always make a new query client
     return makeQueryClient();
   } else {
@@ -87,7 +90,7 @@ export function ReactQueryProvider({ children }: ReactQueryProviderProps) {
     <QueryClientProvider client={queryClient}>
       {children}
       {/* DevTools only in development and if installed */}
-      {process.env.NODE_ENV === "development" && ReactQueryDevtools && (
+      {process.env.NODE_ENV === 'development' && ReactQueryDevtools && (
         <ReactQueryDevtools initialIsOpen={false} />
       )}
     </QueryClientProvider>

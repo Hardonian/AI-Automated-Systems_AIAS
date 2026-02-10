@@ -1,19 +1,24 @@
-"use client";
+'use client';
 
-import { ReactNode, useEffect, useState } from "react";
-import { logger } from "@/lib/logging/structured-logger";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Lock } from "lucide-react";
+import { ReactNode, useEffect, useState } from 'react';
+import { logger } from '@/lib/logging/structured-logger';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Lock } from 'lucide-react';
 
 interface FeatureGateProps {
   feature: string;
-  requiredPlan: "starter" | "pro";
+  requiredPlan: 'starter' | 'pro';
   children: ReactNode;
   fallback?: ReactNode;
 }
 
-export function FeatureGate({ feature, requiredPlan, children, fallback }: FeatureGateProps) {
+export function FeatureGate({
+  feature,
+  requiredPlan,
+  children,
+  fallback,
+}: FeatureGateProps) {
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -23,7 +28,9 @@ export function FeatureGate({ feature, requiredPlan, children, fallback }: Featu
 
   async function checkAccess() {
     try {
-      const response = await fetch(`/api/entitlements/check?feature=${feature}`);
+      const response = await fetch(
+        `/api/entitlements/check?feature=${feature}`
+      );
       if (response.ok) {
         const data = await response.json();
         setHasAccess(data.allowed);
@@ -31,11 +38,15 @@ export function FeatureGate({ feature, requiredPlan, children, fallback }: Featu
         setHasAccess(false);
       }
     } catch (error) {
-      logger.error("Failed to check feature access", error instanceof Error ? error : new Error(String(error)), {
-        component: "FeatureGate",
-        action: "checkAccess",
-        feature,
-      });
+      logger.error(
+        'Failed to check feature access',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          component: 'FeatureGate',
+          action: 'checkAccess',
+          feature,
+        }
+      );
       setHasAccess(false);
     } finally {
       setLoading(false);
@@ -43,7 +54,7 @@ export function FeatureGate({ feature, requiredPlan, children, fallback }: Featu
   }
 
   if (loading) {
-    return <div className="opacity-50">{children}</div>;
+    return <div className='opacity-50'>{children}</div>;
   }
 
   if (!hasAccess) {
@@ -52,18 +63,21 @@ export function FeatureGate({ feature, requiredPlan, children, fallback }: Featu
     }
 
     return (
-      <div className="relative">
-        <div className="opacity-50 pointer-events-none">{children}</div>
-        <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-lg">
-          <div className="text-center p-6 space-y-4">
-            <Lock className="h-12 w-12 text-muted-foreground mx-auto" />
+      <div className='relative'>
+        <div className='pointer-events-none opacity-50'>{children}</div>
+        <div className='absolute inset-0 flex items-center justify-center rounded-lg bg-background/80 backdrop-blur-sm'>
+          <div className='space-y-4 p-6 text-center'>
+            <Lock className='mx-auto h-12 w-12 text-muted-foreground' />
             <div>
-              <h3 className="font-semibold mb-2">This feature requires {requiredPlan === "starter" ? "Starter" : "Pro"}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
+              <h3 className='mb-2 font-semibold'>
+                This feature requires{' '}
+                {requiredPlan === 'starter' ? 'Starter' : 'Pro'}
+              </h3>
+              <p className='mb-4 text-sm text-muted-foreground'>
                 Upgrade to unlock this feature and more.
               </p>
               <Button asChild>
-                <Link href="/pricing">Upgrade Plan</Link>
+                <Link href='/pricing'>Upgrade Plan</Link>
               </Button>
             </div>
           </div>

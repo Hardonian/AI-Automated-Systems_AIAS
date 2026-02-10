@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import Lenis from "lenis";
-import { useEffect , ReactNode } from "react";
+import Lenis from 'lenis';
+import { useEffect, ReactNode } from 'react';
 
 interface SmoothScrollProps {
   children: ReactNode;
   options?: {
     duration?: number;
     easing?: (t: number) => number;
-    orientation?: "vertical" | "horizontal";
-    gestureOrientation?: "vertical" | "horizontal" | "both";
+    orientation?: 'vertical' | 'horizontal';
+    gestureOrientation?: 'vertical' | 'horizontal' | 'both';
     smoothWheel?: boolean;
     smoothTouch?: boolean;
     touchMultiplier?: number;
@@ -22,9 +22,9 @@ export function SmoothScroll({ children, options }: SmoothScrollProps) {
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: "vertical",
-      gestureOrientation: "vertical",
+      easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
       smoothWheel: true,
       smoothTouch: false, // Disable on touch devices for better performance
       touchMultiplier: 2,

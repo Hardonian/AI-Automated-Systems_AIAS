@@ -32,14 +32,17 @@ The middleware is automatically enabled. Start using secure route handlers:
 // app/api/my-endpoint/route.ts
 import { createGETHandler } from '@/lib/api/route-handler';
 
-export const GET = createGETHandler(async (context) => {
-  // Your handler logic
-  return NextResponse.json({ data: [] });
-}, {
-  requireAuth: true,
-  requireTenant: true,
-  cache: { enabled: true, ttl: 300 },
-});
+export const GET = createGETHandler(
+  async context => {
+    // Your handler logic
+    return NextResponse.json({ data: [] });
+  },
+  {
+    requireAuth: true,
+    requireTenant: true,
+    cache: { enabled: true, ttl: 300 },
+  }
+);
 ```
 
 ## 📋 Common Patterns
@@ -51,27 +54,30 @@ import { createGETHandler } from '@/lib/api/route-handler';
 import { tenantIsolation } from '@/lib/security/tenant-isolation';
 import { queryOptimizer } from '@/lib/performance/query-optimizer';
 
-export const GET = createGETHandler(async (context) => {
-  const { tenantId, userId } = context;
-  
-  // Validate access
-  const access = await tenantIsolation.validateAccess(tenantId, userId);
-  if (!access.allowed) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+export const GET = createGETHandler(
+  async context => {
+    const { tenantId, userId } = context;
+
+    // Validate access
+    const access = await tenantIsolation.validateAccess(tenantId, userId);
+    if (!access.allowed) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Use optimized query
+    const data = await queryOptimizer.select('table_name', {
+      cache: true,
+      tenantId,
+    });
+
+    return NextResponse.json({ data });
+  },
+  {
+    requireAuth: true,
+    requireTenant: true,
+    cache: { enabled: true, ttl: 300 },
   }
-  
-  // Use optimized query
-  const data = await queryOptimizer.select('table_name', {
-    cache: true,
-    tenantId,
-  });
-  
-  return NextResponse.json({ data });
-}, {
-  requireAuth: true,
-  requireTenant: true,
-  cache: { enabled: true, ttl: 300 },
-});
+);
 ```
 
 ### Secure POST Endpoint
@@ -85,31 +91,34 @@ const schema = z.object({
   email: z.string().email(),
 });
 
-export const POST = createPOSTHandler(async (context) => {
-  const { tenantId, userId, request } = context;
-  const body = await request.json();
-  
-  // Check limits
-  const limits = await tenantIsolation.checkLimits(tenantId, 'resource', 1);
-  if (!limits.allowed) {
-    return NextResponse.json(
-      { error: 'Limit exceeded', remaining: limits.remaining },
-      { status: 429 }
-    );
+export const POST = createPOSTHandler(
+  async context => {
+    const { tenantId, userId, request } = context;
+    const body = await request.json();
+
+    // Check limits
+    const limits = await tenantIsolation.checkLimits(tenantId, 'resource', 1);
+    if (!limits.allowed) {
+      return NextResponse.json(
+        { error: 'Limit exceeded', remaining: limits.remaining },
+        { status: 429 }
+      );
+    }
+
+    // Create resource
+    // ... your logic ...
+
+    // Record usage
+    await tenantIsolation.recordUsage(tenantId, 'resource', 1);
+
+    return NextResponse.json({ success: true });
+  },
+  {
+    requireAuth: true,
+    requireTenant: true,
+    validateBody: schema,
   }
-  
-  // Create resource
-  // ... your logic ...
-  
-  // Record usage
-  await tenantIsolation.recordUsage(tenantId, 'resource', 1);
-  
-  return NextResponse.json({ success: true });
-}, {
-  requireAuth: true,
-  requireTenant: true,
-  validateBody: schema,
-});
+);
 ```
 
 ### Tenant Isolation
@@ -125,11 +134,7 @@ const access = await tenantIsolation.validateAccess(
 );
 
 // Check resource limits
-const limits = await tenantIsolation.checkLimits(
-  tenantId,
-  'workflows',
-  1
-);
+const limits = await tenantIsolation.checkLimits(tenantId, 'workflows', 1);
 
 // Record usage
 await tenantIsolation.recordUsage(tenantId, 'workflows', 1);

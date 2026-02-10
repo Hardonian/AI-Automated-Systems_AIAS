@@ -1,13 +1,19 @@
-"use client";
+'use client';
 
-import { Copy, Share2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Copy, Share2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { logger } from "@/lib/logging/structured-logger";
-import { track } from "@/lib/telemetry/track";
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { logger } from '@/lib/logging/structured-logger';
+import { track } from '@/lib/telemetry/track';
 
 interface ShareInviteProps {
   userId?: string;
@@ -16,7 +22,7 @@ interface ShareInviteProps {
 
 export function ShareInvite({ userId, referralCode }: ShareInviteProps) {
   const [copied, setCopied] = useState(false);
-  const [inviteLink, setInviteLink] = useState("");
+  const [inviteLink, setInviteLink] = useState('');
 
   useEffect(() => {
     if (referralCode) {
@@ -34,20 +40,24 @@ export function ShareInvite({ userId, referralCode }: ShareInviteProps) {
       // Track invite link copy
       if (userId) {
         track(userId, {
-          type: "invite_link_copied",
+          type: 'invite_link_copied',
           path: window.location.pathname,
           meta: {
             referral_code: referralCode,
             timestamp: new Date().toISOString(),
           },
-          app: "web",
+          app: 'web',
         });
       }
     } catch (err) {
-      logger.error("Failed to copy", err instanceof Error ? err : new Error(String(err)), {
-        component: "ShareInvite",
-        action: "handleCopy",
-      });
+      logger.error(
+        'Failed to copy',
+        err instanceof Error ? err : new Error(String(err)),
+        {
+          component: 'ShareInvite',
+          action: 'handleCopy',
+        }
+      );
     }
   };
 
@@ -55,29 +65,33 @@ export function ShareInvite({ userId, referralCode }: ShareInviteProps) {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Join AIAS Platform",
-          text: "Automate your business workflows with AIAS Platform",
+          title: 'Join AIAS Platform',
+          text: 'Automate your business workflows with AIAS Platform',
           url: inviteLink,
         });
 
         // Track share
         if (userId) {
           track(userId, {
-            type: "invite_shared",
+            type: 'invite_shared',
             path: window.location.pathname,
             meta: {
               referral_code: referralCode,
-              method: "native_share",
+              method: 'native_share',
               timestamp: new Date().toISOString(),
             },
-            app: "web",
+            app: 'web',
           });
         }
       } catch (err) {
-        logger.error("Failed to share", err instanceof Error ? err : new Error(String(err)), {
-          component: "ShareInvite",
-          action: "handleShare",
-        });
+        logger.error(
+          'Failed to share',
+          err instanceof Error ? err : new Error(String(err)),
+          {
+            component: 'ShareInvite',
+            action: 'handleShare',
+          }
+        );
       }
     }
   };
@@ -90,29 +104,30 @@ export function ShareInvite({ userId, referralCode }: ShareInviteProps) {
           Share AIAS Platform with friends and unlock Pro features
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex gap-2">
+      <CardContent className='space-y-4'>
+        <div className='flex gap-2'>
           <Input
             readOnly
-            className="flex-1"
-            placeholder="Generating invite link..."
+            className='flex-1'
+            placeholder='Generating invite link...'
             value={inviteLink}
           />
-          <Button size="icon" variant="outline" onClick={handleCopy}>
-            <Copy className="h-4 w-4" />
+          <Button size='icon' variant='outline' onClick={handleCopy}>
+            <Copy className='h-4 w-4' />
           </Button>
-          {typeof navigator !== "undefined" && "share" in navigator && (
-            <Button size="icon" variant="outline" onClick={handleShare}>
-              <Share2 className="h-4 w-4" />
+          {typeof navigator !== 'undefined' && 'share' in navigator && (
+            <Button size='icon' variant='outline' onClick={handleShare}>
+              <Share2 className='h-4 w-4' />
             </Button>
           )}
         </div>
         {copied && (
-          <p className="text-sm text-green-600">Link copied to clipboard!</p>
+          <p className='text-sm text-green-600'>Link copied to clipboard!</p>
         )}
-        <div className="bg-muted/50 p-4 rounded-lg">
-          <p className="text-sm text-muted-foreground">
-            <strong>Invite 3 friends</strong> to unlock Pro features for free. Each friend who signs up gets you one step closer!
+        <div className='rounded-lg bg-muted/50 p-4'>
+          <p className='text-sm text-muted-foreground'>
+            <strong>Invite 3 friends</strong> to unlock Pro features for free.
+            Each friend who signs up gets you one step closer!
           </p>
         </div>
       </CardContent>

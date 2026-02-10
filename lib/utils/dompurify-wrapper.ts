@@ -1,12 +1,12 @@
 /**
  * DOMPurify Wrapper
- * 
+ *
  * Provides HTML sanitization using DOMPurify when available.
  * Falls back to basic sanitization if DOMPurify is not installed.
- * 
+ *
  * To install DOMPurify:
  * npm install dompurify isomorphic-dompurify
- * 
+ *
  * For server-side rendering, use isomorphic-dompurify:
  * npm install isomorphic-dompurify
  */
@@ -56,14 +56,50 @@ export function sanitizeHTML(html: string): string {
   if (!isServer && DOMPurify) {
     return DOMPurify.sanitize(html, {
       ALLOWED_TAGS: [
-        'p', 'br', 'strong', 'em', 'u', 'b', 'i', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-        'ul', 'ol', 'li', 'a', 'blockquote', 'code', 'pre', 'img',
-        'div', 'span', 'table', 'thead', 'tbody', 'tr', 'td', 'th', 'hr',
+        'p',
+        'br',
+        'strong',
+        'em',
+        'u',
+        'b',
+        'i',
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'ul',
+        'ol',
+        'li',
+        'a',
+        'blockquote',
+        'code',
+        'pre',
+        'img',
+        'div',
+        'span',
+        'table',
+        'thead',
+        'tbody',
+        'tr',
+        'td',
+        'th',
+        'hr',
       ],
       ALLOWED_ATTR: [
-        'href', 'title', 'target', 'rel', 'src', 'alt', 'width', 'height', 'class',
+        'href',
+        'title',
+        'target',
+        'rel',
+        'src',
+        'alt',
+        'width',
+        'height',
+        'class',
       ],
-      ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+      ALLOWED_URI_REGEXP:
+        /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
     });
   }
 
@@ -77,18 +113,54 @@ export function sanitizeHTML(html: string): string {
  */
 export async function sanitizeHTMLAsync(html: string): Promise<string> {
   await initializeDOMPurify();
-  
+
   if (DOMPurify) {
     return DOMPurify.sanitize(html, {
       ALLOWED_TAGS: [
-        'p', 'br', 'strong', 'em', 'u', 'b', 'i', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-        'ul', 'ol', 'li', 'a', 'blockquote', 'code', 'pre', 'img',
-        'div', 'span', 'table', 'thead', 'tbody', 'tr', 'td', 'th', 'hr',
+        'p',
+        'br',
+        'strong',
+        'em',
+        'u',
+        'b',
+        'i',
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'ul',
+        'ol',
+        'li',
+        'a',
+        'blockquote',
+        'code',
+        'pre',
+        'img',
+        'div',
+        'span',
+        'table',
+        'thead',
+        'tbody',
+        'tr',
+        'td',
+        'th',
+        'hr',
       ],
       ALLOWED_ATTR: [
-        'href', 'title', 'target', 'rel', 'src', 'alt', 'width', 'height', 'class',
+        'href',
+        'title',
+        'target',
+        'rel',
+        'src',
+        'alt',
+        'width',
+        'height',
+        'class',
       ],
-      ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+      ALLOWED_URI_REGEXP:
+        /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
     });
   }
 
@@ -102,16 +174,25 @@ function sanitizeHTMLFallback(html: string): string {
   let sanitized = html;
 
   // Remove script tags and their content
-  sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+  sanitized = sanitized.replace(
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    ''
+  );
 
   // Remove event handlers (onclick, onerror, etc.)
   sanitized = sanitized.replace(/\s*on\w+\s*=\s*["'][^"']*["']/gi, '');
 
   // Remove javascript: and data: URLs from href and src
-  sanitized = sanitized.replace(/(href|src)\s*=\s*["'](javascript|data):[^"']*["']/gi, '');
+  sanitized = sanitized.replace(
+    /(href|src)\s*=\s*["'](javascript|data):[^"']*["']/gi,
+    ''
+  );
 
   // Remove style tags
-  sanitized = sanitized.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
+  sanitized = sanitized.replace(
+    /<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi,
+    ''
+  );
 
   return sanitized;
 }

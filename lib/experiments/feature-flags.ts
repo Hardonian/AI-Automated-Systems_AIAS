@@ -37,72 +37,104 @@ class FeatureFlagStore {
   initialize() {
     // Experiment: Price Point Test (Starter Plan)
     this.setExperiment({
-      id: "exp_price_starter",
-      name: "Price Point Test (Starter Plan)",
+      id: 'exp_price_starter',
+      name: 'Price Point Test (Starter Plan)',
       enabled: false, // Start disabled, enable when ready
       variants: [
-        { name: "Lower Price", key: "variant_a_lower", rollout: 33 },
-        { name: "Current Price (Control)", key: "variant_b_control", rollout: 34 },
-        { name: "Higher Price", key: "variant_c_higher", rollout: 33 },
+        { name: 'Lower Price', key: 'variant_a_lower', rollout: 33 },
+        {
+          name: 'Current Price (Control)',
+          key: 'variant_b_control',
+          rollout: 34,
+        },
+        { name: 'Higher Price', key: 'variant_c_higher', rollout: 33 },
       ],
     });
 
     // Experiment: Free Tier vs Trial
     this.setExperiment({
-      id: "exp_free_tier",
-      name: "Free Tier vs Limited-Time Trial",
+      id: 'exp_free_tier',
+      name: 'Free Tier vs Limited-Time Trial',
       enabled: false,
       variants: [
-        { name: "Free Tier (Current)", key: "variant_a_free_tier", rollout: 33 },
-        { name: "14-Day Trial", key: "variant_b_trial", rollout: 33 },
-        { name: "Hybrid (Free + Trial)", key: "variant_c_hybrid", rollout: 34 },
+        {
+          name: 'Free Tier (Current)',
+          key: 'variant_a_free_tier',
+          rollout: 33,
+        },
+        { name: '14-Day Trial', key: 'variant_b_trial', rollout: 33 },
+        { name: 'Hybrid (Free + Trial)', key: 'variant_c_hybrid', rollout: 34 },
       ],
     });
 
     // Experiment: Value Metric Presentation
     this.setExperiment({
-      id: "exp_value_metric",
-      name: "Value Metric Presentation",
+      id: 'exp_value_metric',
+      name: 'Value Metric Presentation',
       enabled: false,
       variants: [
-        { name: "Agent-Focused (Current)", key: "variant_a_agent_focused", rollout: 33 },
-        { name: "Automation-Focused", key: "variant_b_automation_focused", rollout: 33 },
-        { name: "Outcome-Focused", key: "variant_c_outcome_focused", rollout: 34 },
+        {
+          name: 'Agent-Focused (Current)',
+          key: 'variant_a_agent_focused',
+          rollout: 33,
+        },
+        {
+          name: 'Automation-Focused',
+          key: 'variant_b_automation_focused',
+          rollout: 33,
+        },
+        {
+          name: 'Outcome-Focused',
+          key: 'variant_c_outcome_focused',
+          rollout: 34,
+        },
       ],
     });
 
     // Experiment: Annual Discount
     this.setExperiment({
-      id: "exp_annual_discount",
-      name: "Annual Discount Test",
+      id: 'exp_annual_discount',
+      name: 'Annual Discount Test',
       enabled: true, // Currently enabled (20% discount)
       variants: [
-        { name: "10% Discount", key: "variant_a_10_percent", rollout: 0 },
-        { name: "20% Discount (Current)", key: "variant_b_20_percent", rollout: 100 },
-        { name: "No Discount", key: "variant_c_none", rollout: 0 },
+        { name: '10% Discount', key: 'variant_a_10_percent', rollout: 0 },
+        {
+          name: '20% Discount (Current)',
+          key: 'variant_b_20_percent',
+          rollout: 100,
+        },
+        { name: 'No Discount', key: 'variant_c_none', rollout: 0 },
       ],
     });
 
     // Experiment: Onboarding
     this.setExperiment({
-      id: "exp_onboarding",
-      name: "Done-for-You Onboarding vs Self-Serve",
+      id: 'exp_onboarding',
+      name: 'Done-for-You Onboarding vs Self-Serve',
       enabled: false,
       variants: [
-        { name: "Self-Serve (Current)", key: "variant_a_self_serve", rollout: 50 },
-        { name: "Done-for-You", key: "variant_b_done_for_you", rollout: 25 },
-        { name: "Hybrid", key: "variant_c_hybrid", rollout: 25 },
+        {
+          name: 'Self-Serve (Current)',
+          key: 'variant_a_self_serve',
+          rollout: 50,
+        },
+        { name: 'Done-for-You', key: 'variant_b_done_for_you', rollout: 25 },
+        { name: 'Hybrid', key: 'variant_c_hybrid', rollout: 25 },
       ],
     });
 
     // Experiment: Feature Gating
     this.setExperiment({
-      id: "exp_feature_gating",
-      name: "Feature Gating Test (Starter vs Pro)",
+      id: 'exp_feature_gating',
+      name: 'Feature Gating Test (Starter vs Pro)',
       enabled: false,
       variants: [
-        { name: "Restrictive Starter (Current)", key: "variant_a_restrictive", rollout: 50 },
-        { name: "Generous Starter", key: "variant_b_generous", rollout: 50 },
+        {
+          name: 'Restrictive Starter (Current)',
+          key: 'variant_a_restrictive',
+          rollout: 50,
+        },
+        { name: 'Generous Starter', key: 'variant_b_generous', rollout: 50 },
       ],
     });
   }
@@ -112,9 +144,9 @@ class FeatureFlagStore {
    */
   setExperiment(config: ExperimentConfig) {
     this.experiments.set(config.id, config);
-    
+
     // Create feature flags for each variant
-    config.variants.forEach((variant) => {
+    config.variants.forEach(variant => {
       this.flags.set(`${config.id}_${variant.key}`, {
         key: `${config.id}_${variant.key}`,
         enabled: config.enabled && variant.rollout > 0,
@@ -214,7 +246,7 @@ class FeatureFlagStore {
     if (experiment) {
       experiment.enabled = enabled;
       // Update feature flags
-      experiment.variants.forEach((variant) => {
+      experiment.variants.forEach(variant => {
         const flag = this.flags.get(`${experimentId}_${variant.key}`);
         if (flag) {
           flag.enabled = enabled && variant.rollout > 0;
@@ -245,15 +277,15 @@ export function getExperimentVariant(
  * Client-side helper (for use in React components)
  */
 export function useFeatureFlag(flagKey: string, userId?: string): boolean {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     return false;
   }
 
   // Get session ID from storage
-  let sessionId = sessionStorage.getItem("session_id");
+  let sessionId = sessionStorage.getItem('session_id');
   if (!sessionId) {
     sessionId = `session_${Math.random().toString(36).substr(2, 9)}`;
-    sessionStorage.setItem("session_id", sessionId);
+    sessionStorage.setItem('session_id', sessionId);
   }
 
   return featureFlags.isEnabled(flagKey, userId, sessionId);

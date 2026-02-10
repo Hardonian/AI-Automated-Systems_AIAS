@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Full-Stack Guardian Audit Script
- * 
+ *
  * Comprehensive audit across all five domains:
  * 1. Environment & Secret Drift Elimination
  * 2. Supabase Schema & Migration Sentinel
@@ -34,7 +34,13 @@ const ENV_EXAMPLE = join(process.cwd(), '.env.example');
 const VERCEL_JSON = join(process.cwd(), 'vercel.json');
 const NEXT_CONFIG = join(process.cwd(), 'next.config.ts');
 const SUPABASE_MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');
-const PRISMA_SCHEMA = join(process.cwd(), 'apps', 'web', 'prisma', 'schema.prisma');
+const PRISMA_SCHEMA = join(
+  process.cwd(),
+  'apps',
+  'web',
+  'prisma',
+  'schema.prisma'
+);
 
 // Ensure reports directory exists
 try {
@@ -63,7 +69,7 @@ async function auditEnvironment(): Promise<AuditResult> {
   // Extract env vars from .env.example
   const envVars = new Set<string>();
   const envLines = envExample.split('\n');
-  envLines.forEach((line) => {
+  envLines.forEach(line => {
     const match = line.match(/^([A-Z_][A-Z0-9_]*)=/);
     if (match && match[1]) {
       envVars.add(match[1]);
@@ -80,8 +86,11 @@ async function auditEnvironment(): Promise<AuditResult> {
     'DATABASE_URL',
   ];
 
-  requiredSupabaseVars.forEach((varName) => {
-    if (!envVars.has(varName) && !envVars.has(varName.replace('NEXT_PUBLIC_', ''))) {
+  requiredSupabaseVars.forEach(varName => {
+    if (
+      !envVars.has(varName) &&
+      !envVars.has(varName.replace('NEXT_PUBLIC_', ''))
+    ) {
       issues.push({
         severity: 'critical',
         message: `Missing required env var in .env.example: ${varName}`,
@@ -92,7 +101,7 @@ async function auditEnvironment(): Promise<AuditResult> {
 
   // Check for Vercel-specific vars
   const vercelVars = ['VERCEL_TOKEN', 'VERCEL_PROJECT_ID'];
-  vercelVars.forEach((varName) => {
+  vercelVars.forEach(varName => {
     if (!envVars.has(varName)) {
       issues.push({
         severity: 'warning',
@@ -112,7 +121,7 @@ async function auditEnvironment(): Promise<AuditResult> {
     'ZAPIER_SECRET',
   ];
 
-  const missingIntegrationVars = integrationVars.filter((v) => !envVars.has(v));
+  const missingIntegrationVars = integrationVars.filter(v => !envVars.has(v));
   if (missingIntegrationVars.length > 0) {
     issues.push({
       severity: 'info',
@@ -130,8 +139,11 @@ async function auditEnvironment(): Promise<AuditResult> {
 
   return {
     domain: 'Environment & Secret Drift',
-    status: issues.some((i) => i.severity === 'critical') ? 'critical' : 
-            issues.some((i) => i.severity === 'warning') ? 'warning' : 'healthy',
+    status: issues.some(i => i.severity === 'critical')
+      ? 'critical'
+      : issues.some(i => i.severity === 'warning')
+        ? 'warning'
+        : 'healthy',
     issues,
     recommendations,
   };
@@ -161,7 +173,7 @@ async function auditSchema(): Promise<AuditResult> {
 
   // List migration files
   const migrationFiles = readdirSync(SUPABASE_MIGRATIONS_DIR)
-    .filter((f) => f.endsWith('.sql'))
+    .filter(f => f.endsWith('.sql'))
     .sort();
 
   if (migrationFiles.length === 0) {
@@ -182,7 +194,7 @@ async function auditSchema(): Promise<AuditResult> {
   } else {
     // Read Prisma schema and check for common issues
     const prismaSchema = readFileSync(PRISMA_SCHEMA, 'utf-8');
-    
+
     // Check for DATABASE_URL usage
     if (!prismaSchema.includes('env("DATABASE_URL")')) {
       issues.push({
@@ -194,13 +206,17 @@ async function auditSchema(): Promise<AuditResult> {
 
     // Check for Direct URL
     if (!prismaSchema.includes('directUrl')) {
-      recommendations.push('Consider adding directUrl to Prisma datasource for connection pooling');
+      recommendations.push(
+        'Consider adding directUrl to Prisma datasource for connection pooling'
+      );
     }
   }
 
   // Check migration naming consistency
   const timestampPattern = /^\d{14}_/;
-  const nonTimestampMigrations = migrationFiles.filter((f) => !timestampPattern.test(f));
+  const nonTimestampMigrations = migrationFiles.filter(
+    f => !timestampPattern.test(f)
+  );
   if (nonTimestampMigrations.length > 0) {
     issues.push({
       severity: 'warning',
@@ -211,8 +227,11 @@ async function auditSchema(): Promise<AuditResult> {
 
   return {
     domain: 'Supabase Schema',
-    status: issues.some((i) => i.severity === 'critical') ? 'critical' : 
-            issues.some((i) => i.severity === 'warning') ? 'warning' : 'healthy',
+    status: issues.some(i => i.severity === 'critical')
+      ? 'critical'
+      : issues.some(i => i.severity === 'warning')
+        ? 'warning'
+        : 'healthy',
     issues,
     recommendations,
   };
@@ -270,20 +289,30 @@ async function auditVercel(): Promise<AuditResult> {
     const nextConfig = readFileSync(NEXT_CONFIG, 'utf-8');
 
     // Check for image domains
-    if (!nextConfig.includes('remotePatterns') && !nextConfig.includes('domains')) {
-      recommendations.push('Configure image remotePatterns in next.config.ts for Supabase');
+    if (
+      !nextConfig.includes('remotePatterns') &&
+      !nextConfig.includes('domains')
+    ) {
+      recommendations.push(
+        'Configure image remotePatterns in next.config.ts for Supabase'
+      );
     }
 
     // Check for security headers
     if (!nextConfig.includes('headers()')) {
-      recommendations.push('Consider adding security headers in next.config.ts');
+      recommendations.push(
+        'Consider adding security headers in next.config.ts'
+      );
     }
   }
 
   return {
     domain: 'Vercel Deployment',
-    status: issues.some((i) => i.severity === 'critical') ? 'critical' : 
-            issues.some((i) => i.severity === 'warning') ? 'warning' : 'healthy',
+    status: issues.some(i => i.severity === 'critical')
+      ? 'critical'
+      : issues.some(i => i.severity === 'warning')
+        ? 'warning'
+        : 'healthy',
     issues,
     recommendations,
   };
@@ -324,7 +353,7 @@ async function auditRepoIntegrity(): Promise<AuditResult> {
 
     // Check for common scripts
     const commonScripts = ['dev', 'build', 'start', 'lint', 'test'];
-    commonScripts.forEach((script) => {
+    commonScripts.forEach(script => {
       if (!scripts[script]) {
         issues.push({
           severity: 'warning',
@@ -337,8 +366,11 @@ async function auditRepoIntegrity(): Promise<AuditResult> {
 
   return {
     domain: 'Repo Integrity',
-    status: issues.some((i) => i.severity === 'critical') ? 'critical' : 
-            issues.some((i) => i.severity === 'warning') ? 'warning' : 'healthy',
+    status: issues.some(i => i.severity === 'critical')
+      ? 'critical'
+      : issues.some(i => i.severity === 'warning')
+        ? 'warning'
+        : 'healthy',
     issues,
     recommendations,
   };
@@ -371,18 +403,28 @@ async function auditAgentMesh(): Promise<AuditResult> {
       });
     }
   } else {
-    recommendations.push('Consider creating automations/zapier_spec.json for Zapier integration');
+    recommendations.push(
+      'Consider creating automations/zapier_spec.json for Zapier integration'
+    );
   }
 
   // Check for API routes that might be used by agents
   const apiRoutesDir = join(process.cwd(), 'app', 'api');
   if (existsSync(apiRoutesDir)) {
-    const _apiRoutes = readdirSync(apiRoutesDir, { recursive: true })
-      .filter((f): f is string => typeof f === 'string' && (f.endsWith('route.ts') || f.endsWith('route.js')));
+    const _apiRoutes = readdirSync(apiRoutesDir, { recursive: true }).filter(
+      (f): f is string =>
+        typeof f === 'string' &&
+        (f.endsWith('route.ts') || f.endsWith('route.js'))
+    );
 
     // Check for ETL routes (mentioned in zapier_spec.json)
-    const etlRoutes = ['etl/meta-ads', 'etl/tiktok-ads', 'etl/shopify-orders', 'etl/compute-metrics'];
-    etlRoutes.forEach((route) => {
+    const etlRoutes = [
+      'etl/meta-ads',
+      'etl/tiktok-ads',
+      'etl/shopify-orders',
+      'etl/compute-metrics',
+    ];
+    etlRoutes.forEach(route => {
       const routePath = join(apiRoutesDir, route, 'route.ts');
       if (!existsSync(routePath)) {
         issues.push({
@@ -396,7 +438,7 @@ async function auditAgentMesh(): Promise<AuditResult> {
 
   // Check for webhook handlers
   const webhookRoutes = ['stripe/webhook'];
-  webhookRoutes.forEach((route) => {
+  webhookRoutes.forEach(route => {
     const routePath = join(process.cwd(), 'app', 'api', route, 'route.ts');
     if (!existsSync(routePath)) {
       issues.push({
@@ -409,8 +451,11 @@ async function auditAgentMesh(): Promise<AuditResult> {
 
   return {
     domain: 'AI-Agent Mesh',
-    status: issues.some((i) => i.severity === 'critical') ? 'critical' : 
-            issues.some((i) => i.severity === 'warning') ? 'warning' : 'healthy',
+    status: issues.some(i => i.severity === 'critical')
+      ? 'critical'
+      : issues.some(i => i.severity === 'warning')
+        ? 'warning'
+        : 'healthy',
     issues,
     recommendations,
   };
@@ -421,9 +466,9 @@ async function auditAgentMesh(): Promise<AuditResult> {
  */
 async function generateReport(results: AuditResult[]): Promise<string> {
   const timestamp = new Date().toISOString();
-  const criticalCount = results.filter((r) => r.status === 'critical').length;
-  const warningCount = results.filter((r) => r.status === 'warning').length;
-  const healthyCount = results.filter((r) => r.status === 'healthy').length;
+  const criticalCount = results.filter(r => r.status === 'critical').length;
+  const warningCount = results.filter(r => r.status === 'warning').length;
+  const healthyCount = results.filter(r => r.status === 'healthy').length;
 
   let report = `# Full-Stack Guardian Audit Report\n\n`;
   report += `**Generated:** ${timestamp}\n\n`;
@@ -434,18 +479,22 @@ async function generateReport(results: AuditResult[]): Promise<string> {
 
   report += `## Domain Audits\n\n`;
 
-  results.forEach((result) => {
-    const {status} = result;
-    const statusIcon = status === 'healthy' ? '✅' : 
-                      status === 'warning' ? '⚠️' : '🔴';
+  results.forEach(result => {
+    const { status } = result;
+    const statusIcon =
+      status === 'healthy' ? '✅' : status === 'warning' ? '⚠️' : '🔴';
     report += `### ${statusIcon} ${result.domain}\n\n`;
     report += `**Status:** ${status.toUpperCase()}\n\n`;
 
     if (result.issues.length > 0) {
       report += `#### Issues (${result.issues.length})\n\n`;
-      result.issues.forEach((issue) => {
-        const severityIcon = issue.severity === 'critical' ? '🔴' : 
-                            issue.severity === 'warning' ? '⚠️' : 'ℹ️';
+      result.issues.forEach(issue => {
+        const severityIcon =
+          issue.severity === 'critical'
+            ? '🔴'
+            : issue.severity === 'warning'
+              ? '⚠️'
+              : 'ℹ️';
         report += `- ${severityIcon} **${issue.severity.toUpperCase()}:** ${issue.message}\n`;
         if (issue.file) {
           report += `  - File: \`${issue.file}\`\n`;
@@ -459,7 +508,7 @@ async function generateReport(results: AuditResult[]): Promise<string> {
 
     if (result.recommendations.length > 0) {
       report += `#### Recommendations\n\n`;
-      result.recommendations.forEach((rec) => {
+      result.recommendations.forEach(rec => {
         report += `- 💡 ${rec}\n`;
       });
       report += `\n`;
@@ -513,7 +562,7 @@ async function main() {
   console.log(report);
 
   // Exit with error code if critical issues found
-  const hasCritical = results.some((r) => r.status === 'critical');
+  const hasCritical = results.some(r => r.status === 'critical');
   process.exit(hasCritical ? 1 : 0);
 }
 
@@ -521,4 +570,10 @@ if (require.main === module) {
   main().catch(console.error);
 }
 
-export { auditEnvironment, auditSchema, auditVercel, auditRepoIntegrity, auditAgentMesh };
+export {
+  auditEnvironment,
+  auditSchema,
+  auditVercel,
+  auditRepoIntegrity,
+  auditAgentMesh,
+};

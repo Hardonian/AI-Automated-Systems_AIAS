@@ -13,13 +13,18 @@ import { costOptimizationService } from '@/lib/lead-generation/cost-optimization
 import { roiTrackingService } from '@/lib/lead-generation/roi-tracking';
 
 export const GET = createGETHandler(
-  async (context) => {
-    const {searchParams} = context.request.nextUrl;
-    const startDate = new Date(searchParams.get('startDate') || Date.now() - 30 * 24 * 60 * 60 * 1000);
+  async context => {
+    const { searchParams } = context.request.nextUrl;
+    const startDate = new Date(
+      searchParams.get('startDate') || Date.now() - 30 * 24 * 60 * 60 * 1000
+    );
     const endDate = new Date(searchParams.get('endDate') || Date.now());
     const tenantId = context.tenantId || undefined;
 
-    const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+    const supabase = createClient(
+      env.supabase.url,
+      env.supabase.serviceRoleKey
+    );
 
     // Get leads data
     let leadsQuery = supabase
@@ -64,10 +69,15 @@ export const GET = createGETHandler(
 
     // Calculate lead metrics
     const totalLeads = leads?.length || 0;
-    const qualifiedLeads = leads?.filter((l: { qualified?: boolean }) => l.qualified).length || 0;
-    const averageScore = leads && leads.length > 0
-      ? leads.reduce((sum: number, l: { score?: number }) => sum + (l.score || 0), 0) / leads.length
-      : 0;
+    const qualifiedLeads =
+      leads?.filter((l: { qualified?: boolean }) => l.qualified).length || 0;
+    const averageScore =
+      leads && leads.length > 0
+        ? leads.reduce(
+            (sum: number, l: { score?: number }) => sum + (l.score || 0),
+            0
+          ) / leads.length
+        : 0;
 
     // Lead sources breakdown
     const leadsBySource: Record<string, number> = {};
@@ -85,7 +95,10 @@ export const GET = createGETHandler(
 
     // Growth rate (compared to previous period)
     const previousStartDate = new Date(startDate);
-    previousStartDate.setDate(previousStartDate.getDate() - (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    previousStartDate.setDate(
+      previousStartDate.getDate() -
+        (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
 
     let previousLeadsQuery = supabase
       .from('leads')
@@ -98,9 +111,10 @@ export const GET = createGETHandler(
     }
 
     const { count: previousLeads } = await previousLeadsQuery;
-    const growthRate = previousLeads && previousLeads > 0
-      ? ((totalLeads - previousLeads) / previousLeads) * 100
-      : 0;
+    const growthRate =
+      previousLeads && previousLeads > 0
+        ? ((totalLeads - previousLeads) / previousLeads) * 100
+        : 0;
 
     return NextResponse.json({
       period: {
@@ -110,7 +124,8 @@ export const GET = createGETHandler(
       leads: {
         total: totalLeads,
         qualified: qualifiedLeads,
-        qualificationRate: totalLeads > 0 ? (qualifiedLeads / totalLeads) * 100 : 0,
+        qualificationRate:
+          totalLeads > 0 ? (qualifiedLeads / totalLeads) * 100 : 0,
         averageScore,
         bySource: leadsBySource,
         byStatus: leadsByStatus,

@@ -86,7 +86,14 @@ describe('Email Templates', () => {
     });
 
     it('should have valid stage values', () => {
-      const validStages = ['awareness', 'consideration', 'decision', 'onboarding', 'retention', 'reengagement'];
+      const validStages = [
+        'awareness',
+        'consideration',
+        'decision',
+        'onboarding',
+        'retention',
+        'reengagement',
+      ];
       emailTemplates.forEach(template => {
         expect(validStages).toContain(template.stage);
       });

@@ -127,10 +127,10 @@ import { recordError } from '@/lib/utils/error-detection';
 try {
   await riskyOperation();
 } catch (error) {
-  recordError(error, { 
+  recordError(error, {
     endpoint: '/api/example',
     userId: user.id,
-    context: 'operation_context'
+    context: 'operation_context',
   });
   throw error;
 }
@@ -148,6 +148,7 @@ try {
 ## Monitoring Integration
 
 Error detection integrates with:
+
 - Sentry (if `SENTRY_DSN` configured)
 - Datadog (if `DATADOG_API_KEY` configured)
 - Custom webhook (if `ERROR_WEBHOOK_URL` configured)
@@ -156,6 +157,7 @@ Error detection integrates with:
 ## Configuration
 
 Set environment variables for monitoring:
+
 - `SENTRY_DSN` - Sentry integration
 - `DATADOG_API_KEY` - Datadog integration
 - `ERROR_WEBHOOK_URL` - Custom webhook URL

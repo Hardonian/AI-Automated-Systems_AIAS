@@ -29,11 +29,15 @@ async function triggerMigrationWorkflow() {
     } catch {
       console.log('⚠️  GitHub CLI (gh) not found.');
       console.log('\n📋 To apply migrations manually:\n');
-      console.log('1. Go to: https://github.com/YOUR_ORG/YOUR_REPO/actions/workflows/apply-migrations.yml');
+      console.log(
+        '1. Go to: https://github.com/YOUR_ORG/YOUR_REPO/actions/workflows/apply-migrations.yml'
+      );
       console.log('2. Click "Run workflow"');
       console.log('3. Type "apply" in confirmation field');
       console.log('4. Click "Run workflow"');
-      console.log('\n5. After migrations complete, run: pnpm run migrate:archive\n');
+      console.log(
+        '\n5. After migrations complete, run: pnpm run migrate:archive\n'
+      );
       return false;
     }
 
@@ -47,11 +51,11 @@ async function triggerMigrationWorkflow() {
     console.log('\n✅ Workflow triggered successfully!');
     console.log('\n⏳ Waiting for workflow to complete...');
     console.log('   (This may take a few minutes)\n');
-    
+
     // Wait a bit and check status
     console.log('📊 Monitor progress at:');
     console.log('   https://github.com/YOUR_ORG/YOUR_REPO/actions\n');
-    
+
     return true;
   } catch (error: any) {
     console.error('\n❌ Failed to trigger workflow:', error.message);
@@ -75,7 +79,9 @@ function archiveAppliedMigrations() {
     .filter(f => f.endsWith('.sql'))
     .sort();
 
-  console.log(`📋 Found ${currentMigrations.length} migrations in migrations directory\n`);
+  console.log(
+    `📋 Found ${currentMigrations.length} migrations in migrations directory\n`
+  );
 
   // Archive the unmigrated migrations (assuming they've been applied)
   let archivedCount = 0;
@@ -99,13 +105,17 @@ function archiveAppliedMigrations() {
     }
   }
 
-  console.log(`\n${  '='.repeat(60)}`);
+  console.log(`\n${'='.repeat(60)}`);
   console.log(`✅ Successfully archived ${archivedCount} migrations`);
   if (errorCount > 0) {
     console.log(`❌ Failed to archive ${errorCount} migrations`);
   }
-  console.log(`\n📁 Remaining migrations: ${readdirSync(MIGRATIONS_DIR).filter(f => f.endsWith('.sql')).length}`);
-  console.log(`📦 Total archived: ${readdirSync(ARCHIVE_DIR).filter(f => f.endsWith('.sql')).length}\n`);
+  console.log(
+    `\n📁 Remaining migrations: ${readdirSync(MIGRATIONS_DIR).filter(f => f.endsWith('.sql')).length}`
+  );
+  console.log(
+    `📦 Total archived: ${readdirSync(ARCHIVE_DIR).filter(f => f.endsWith('.sql')).length}\n`
+  );
 }
 
 async function main() {
@@ -119,20 +129,24 @@ async function main() {
   const triggered = await triggerMigrationWorkflow();
 
   if (triggered) {
-    console.log('\n⏳ Please wait for migrations to complete in GitHub Actions.');
+    console.log(
+      '\n⏳ Please wait for migrations to complete in GitHub Actions.'
+    );
     console.log('   Then run: pnpm run migrate:archive\n');
     console.log('Or if migrations are already applied, archive them now:\n');
-    
+
     const readline = require('readline').createInterface({
       input: process.stdin,
-      output: process.stdout
+      output: process.stdout,
     });
 
     readline.question('Archive migrations now? (y/n): ', (answer: string) => {
       if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes') {
         archiveAppliedMigrations();
       } else {
-        console.log('\n💡 Run "pnpm run migrate:archive" later to archive migrations.\n');
+        console.log(
+          '\n💡 Run "pnpm run migrate:archive" later to archive migrations.\n'
+        );
       }
       readline.close();
     });

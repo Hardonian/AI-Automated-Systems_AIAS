@@ -3,18 +3,18 @@
  * Complete setup process for new tenants with company info, plan selection, and configuration
  */
 
-import { 
-  Building2, 
-  Users, 
-  CreditCard, 
-  Settings, 
-  CheckCircle, 
-  ArrowRight, 
+import {
+  Building2,
+  Users,
+  CreditCard,
+  Settings,
+  CheckCircle,
+  ArrowRight,
   ArrowLeft,
   Globe,
   Zap,
   BarChart3,
-  Palette
+  Palette,
 } from 'lucide-react';
 import React, { useState, useCallback } from 'react';
 
@@ -25,7 +25,13 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { SubscriptionPlan } from '@/types/platform';
@@ -101,7 +107,7 @@ const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       '1GB Storage',
       'Up to 5 Users',
       'Basic Analytics',
-      'Email Support'
+      'Email Support',
     ],
     limits: {
       workflows: 5,
@@ -111,10 +117,10 @@ const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       apiCalls: 10000,
       aiProcessing: 100,
       customAgents: 1,
-      integrations: 5
+      integrations: 5,
     },
     active: true,
-    tier: 'starter'
+    tier: 'starter',
   },
   {
     id: 'professional',
@@ -130,7 +136,7 @@ const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       'Advanced Analytics',
       'Priority Support',
       'Custom Integrations',
-      'AI Agents'
+      'AI Agents',
     ],
     limits: {
       workflows: 25,
@@ -140,10 +146,10 @@ const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       apiCalls: 50000,
       aiProcessing: 1000,
       customAgents: 5,
-      integrations: 20
+      integrations: 20,
     },
     active: true,
-    tier: 'professional'
+    tier: 'professional',
   },
   {
     id: 'enterprise',
@@ -161,7 +167,7 @@ const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       'Custom Integrations',
       'Unlimited AI Agents',
       'White-label Options',
-      'Dedicated Account Manager'
+      'Dedicated Account Manager',
     ],
     limits: {
       workflows: -1,
@@ -171,31 +177,49 @@ const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       apiCalls: -1,
       aiProcessing: -1,
       customAgents: -1,
-      integrations: -1
+      integrations: -1,
     },
     active: true,
-    tier: 'enterprise'
-  }
+    tier: 'enterprise',
+  },
 ];
 
 const INDUSTRIES = [
-  'Technology', 'Healthcare', 'Finance', 'E-commerce', 'Education',
-  'Manufacturing', 'Retail', 'Real Estate', 'Consulting', 'Non-profit',
-  'Media & Entertainment', 'Travel & Hospitality', 'Other'
+  'Technology',
+  'Healthcare',
+  'Finance',
+  'E-commerce',
+  'Education',
+  'Manufacturing',
+  'Retail',
+  'Real Estate',
+  'Consulting',
+  'Non-profit',
+  'Media & Entertainment',
+  'Travel & Hospitality',
+  'Other',
 ];
 
 const COMPANY_SIZES = [
   '1-10 employees',
-  '11-50 employees', 
+  '11-50 employees',
   '51-200 employees',
   '201-1000 employees',
-  '1000+ employees'
+  '1000+ employees',
 ];
 
 const TIMEZONES = [
-  'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles',
-  'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Asia/Tokyo',
-  'Asia/Shanghai', 'Australia/Sydney', 'UTC'
+  'America/New_York',
+  'America/Chicago',
+  'America/Denver',
+  'America/Los_Angeles',
+  'Europe/London',
+  'Europe/Paris',
+  'Europe/Berlin',
+  'Asia/Tokyo',
+  'Asia/Shanghai',
+  'Australia/Sydney',
+  'UTC',
 ];
 
 const LANGUAGES = [
@@ -204,21 +228,40 @@ const LANGUAGES = [
   { code: 'fr', name: 'French' },
   { code: 'de', name: 'German' },
   { code: 'ja', name: 'Japanese' },
-  { code: 'zh', name: 'Chinese' }
+  { code: 'zh', name: 'Chinese' },
 ];
 
 const AVAILABLE_INTEGRATIONS = [
-  { id: 'slack', name: 'Slack', description: 'Team communication and notifications' },
-  { id: 'teams', name: 'Microsoft Teams', description: 'Enterprise collaboration' },
-  { id: 'discord', name: 'Discord', description: 'Community and gaming communication' },
-  { id: 'webhook', name: 'Webhooks', description: 'Custom webhook integrations' },
+  {
+    id: 'slack',
+    name: 'Slack',
+    description: 'Team communication and notifications',
+  },
+  {
+    id: 'teams',
+    name: 'Microsoft Teams',
+    description: 'Enterprise collaboration',
+  },
+  {
+    id: 'discord',
+    name: 'Discord',
+    description: 'Community and gaming communication',
+  },
+  {
+    id: 'webhook',
+    name: 'Webhooks',
+    description: 'Custom webhook integrations',
+  },
   { id: 'zapier', name: 'Zapier', description: 'Connect with 5000+ apps' },
   { id: 'salesforce', name: 'Salesforce', description: 'CRM integration' },
   { id: 'hubspot', name: 'HubSpot', description: 'Marketing automation' },
-  { id: 'mailchimp', name: 'Mailchimp', description: 'Email marketing' }
+  { id: 'mailchimp', name: 'Mailchimp', description: 'Email marketing' },
 ];
 
-export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, onCancel }) => {
+export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({
+  onComplete,
+  onCancel,
+}) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<TenantOnboardingData>({
     companyInfo: {
@@ -228,16 +271,16 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
       size: '',
       description: '',
       website: '',
-      logo: ''
+      logo: '',
     },
     planSelection: {
       planId: 'professional',
       billingCycle: 'monthly',
-      addOns: []
+      addOns: [],
     },
     teamSetup: {
       teamMembers: [],
-      defaultRole: 'editor'
+      defaultRole: 'editor',
     },
     preferences: {
       timezone: 'America/New_York',
@@ -248,62 +291,79 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
         push: true,
         sms: false,
         webhook: false,
-        channels: ['general']
-      }
+        channels: ['general'],
+      },
     },
     branding: {
       primaryColor: '#3B82F6',
       secondaryColor: '#1E40AF',
       logo: '',
       favicon: '',
-      customDomain: ''
+      customDomain: '',
     },
     integrations: {
       selectedIntegrations: [],
-      webhookUrl: ''
-    }
+      webhookUrl: '',
+    },
   });
 
   const totalSteps = 7;
   const progress = (currentStep / totalSteps) * 100;
 
-  const updateFormData = useCallback((section: keyof TenantOnboardingData, data: Partial<any>) => {
-    setFormData(prev => ({
-      ...prev,
-      [section]: { ...prev[section], ...data }
-    }));
-  }, []);
+  const updateFormData = useCallback(
+    (section: keyof TenantOnboardingData, data: Partial<any>) => {
+      setFormData(prev => ({
+        ...prev,
+        [section]: { ...prev[section], ...data },
+      }));
+    },
+    []
+  );
 
   const addTeamMember = useCallback(() => {
     updateFormData('teamSetup', {
-      teamMembers: [...formData.teamSetup.teamMembers, {
-        email: '',
-        role: 'editor' as const,
-        firstName: '',
-        lastName: ''
-      }]
+      teamMembers: [
+        ...formData.teamSetup.teamMembers,
+        {
+          email: '',
+          role: 'editor' as const,
+          firstName: '',
+          lastName: '',
+        },
+      ],
     });
   }, [formData.teamSetup.teamMembers, updateFormData]);
 
-  const removeTeamMember = useCallback((index: number) => {
-    updateFormData('teamSetup', {
-      teamMembers: formData.teamSetup.teamMembers.filter((_, i) => i !== index)
-    });
-  }, [formData.teamSetup.teamMembers, updateFormData]);
+  const removeTeamMember = useCallback(
+    (index: number) => {
+      updateFormData('teamSetup', {
+        teamMembers: formData.teamSetup.teamMembers.filter(
+          (_, i) => i !== index
+        ),
+      });
+    },
+    [formData.teamSetup.teamMembers, updateFormData]
+  );
 
-  const updateTeamMember = useCallback((index: number, field: keyof TeamMember, value: string) => {
-    const updatedMembers = [...formData.teamSetup.teamMembers];
-    updatedMembers[index] = { ...updatedMembers[index], [field]: value };
-    updateFormData('teamSetup', { teamMembers: updatedMembers });
-  }, [formData.teamSetup.teamMembers, updateFormData]);
+  const updateTeamMember = useCallback(
+    (index: number, field: keyof TeamMember, value: string) => {
+      const updatedMembers = [...formData.teamSetup.teamMembers];
+      updatedMembers[index] = { ...updatedMembers[index], [field]: value };
+      updateFormData('teamSetup', { teamMembers: updatedMembers });
+    },
+    [formData.teamSetup.teamMembers, updateFormData]
+  );
 
-  const toggleIntegration = useCallback((integrationId: string) => {
-    const current = formData.integrations.selectedIntegrations;
-    const updated = current.includes(integrationId)
-      ? current.filter(id => id !== integrationId)
-      : [...current, integrationId];
-    updateFormData('integrations', { selectedIntegrations: updated });
-  }, [formData.integrations.selectedIntegrations, updateFormData]);
+  const toggleIntegration = useCallback(
+    (integrationId: string) => {
+      const current = formData.integrations.selectedIntegrations;
+      const updated = current.includes(integrationId)
+        ? current.filter(id => id !== integrationId)
+        : [...current, integrationId];
+      updateFormData('integrations', { selectedIntegrations: updated });
+    },
+    [formData.integrations.selectedIntegrations, updateFormData]
+  );
 
   const nextStep = useCallback(() => {
     if (currentStep < totalSteps) {
@@ -321,163 +381,214 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
     onComplete(formData);
   }, [formData, onComplete]);
 
-  const isStepValid = useCallback((step: number) => {
-    switch (step) {
-      case 1:
-        return formData.companyInfo.name && formData.companyInfo.subdomain && formData.companyInfo.industry;
-      case 2:
-        return formData.planSelection.planId;
-      case 3:
-        return true; // Team setup is optional
-      case 4:
-        return formData.preferences.timezone && formData.preferences.language;
-      case 5:
-        return true; // Branding is optional
-      case 6:
-        return true; // Integrations are optional
-      case 7:
-        return true; // Review step
-      default:
-        return false;
-    }
-  }, [formData]);
+  const isStepValid = useCallback(
+    (step: number) => {
+      switch (step) {
+        case 1:
+          return (
+            formData.companyInfo.name &&
+            formData.companyInfo.subdomain &&
+            formData.companyInfo.industry
+          );
+        case 2:
+          return formData.planSelection.planId;
+        case 3:
+          return true; // Team setup is optional
+        case 4:
+          return formData.preferences.timezone && formData.preferences.language;
+        case 5:
+          return true; // Branding is optional
+        case 6:
+          return true; // Integrations are optional
+        case 7:
+          return true; // Review step
+        default:
+          return false;
+      }
+    },
+    [formData]
+  );
 
-  const selectedPlan = SUBSCRIPTION_PLANS.find(p => p.id === formData.planSelection.planId);
+  const selectedPlan = SUBSCRIPTION_PLANS.find(
+    p => p.id === formData.planSelection.planId
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
+    <div className='min-h-screen bg-gray-50 py-8'>
+      <div className='mx-auto max-w-4xl px-4'>
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to AIAS Platform</h1>
-          <p className="text-gray-600">Let's set up your workspace in just a few steps</p>
+        <div className='mb-8 text-center'>
+          <h1 className='mb-2 text-3xl font-bold text-gray-900'>
+            Welcome to AIAS Platform
+          </h1>
+          <p className='text-gray-600'>
+            Let's set up your workspace in just a few steps
+          </p>
         </div>
 
         {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
-            <span>Step {currentStep} of {totalSteps}</span>
+        <div className='mb-8'>
+          <div className='mb-2 flex items-center justify-between text-sm text-gray-600'>
+            <span>
+              Step {currentStep} of {totalSteps}
+            </span>
             <span>{Math.round(progress)}% Complete</span>
           </div>
-          <Progress className="h-2" value={progress} />
+          <Progress className='h-2' value={progress} />
         </div>
 
         {/* Step Content */}
         <Card>
-          <CardContent className="p-8">
+          <CardContent className='p-8'>
             {/* Step 1: Company Information */}
             {currentStep === 1 && (
-              <div className="space-y-6">
-                <div className="text-center mb-6">
-                  <Building2 className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                  <h2 className="text-2xl font-bold text-gray-900">Company Information</h2>
-                  <p className="text-gray-600">Tell us about your organization</p>
+              <div className='space-y-6'>
+                <div className='mb-6 text-center'>
+                  <Building2 className='mx-auto mb-4 h-12 w-12 text-blue-600' />
+                  <h2 className='text-2xl font-bold text-gray-900'>
+                    Company Information
+                  </h2>
+                  <p className='text-gray-600'>
+                    Tell us about your organization
+                  </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="companyName">Company Name *</Label>
+                <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                  <div className='space-y-2'>
+                    <Label htmlFor='companyName'>Company Name *</Label>
                     <Input
-                      id="companyName"
-                      placeholder="Acme Corporation"
+                      id='companyName'
+                      placeholder='Acme Corporation'
                       value={formData.companyInfo.name}
-                      onChange={(e) => updateFormData('companyInfo', { name: e.target.value })}
+                      onChange={e =>
+                        updateFormData('companyInfo', { name: e.target.value })
+                      }
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="subdomain">Subdomain *</Label>
-                    <div className="flex">
+                  <div className='space-y-2'>
+                    <Label htmlFor='subdomain'>Subdomain *</Label>
+                    <div className='flex'>
                       <Input
-                        className="rounded-r-none"
-                        id="subdomain"
-                        placeholder="acme"
+                        className='rounded-r-none'
+                        id='subdomain'
+                        placeholder='acme'
                         value={formData.companyInfo.subdomain}
-                        onChange={(e) => updateFormData('companyInfo', { subdomain: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') })}
+                        onChange={e =>
+                          updateFormData('companyInfo', {
+                            subdomain: e.target.value
+                              .toLowerCase()
+                              .replace(/[^a-z0-9-]/g, ''),
+                          })
+                        }
                       />
-                      <div className="flex items-center px-3 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md text-gray-600">
+                      <div className='flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-100 px-3 text-gray-600'>
                         .aias.com
                       </div>
                     </div>
-                    <p className="text-xs text-gray-500">This will be your workspace URL</p>
+                    <p className='text-xs text-gray-500'>
+                      This will be your workspace URL
+                    </p>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="industry">Industry *</Label>
+                  <div className='space-y-2'>
+                    <Label htmlFor='industry'>Industry *</Label>
                     <Select
                       value={formData.companyInfo.industry}
-                      onValueChange={(value) => updateFormData('companyInfo', { industry: value })}
+                      onValueChange={value =>
+                        updateFormData('companyInfo', { industry: value })
+                      }
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select industry" />
+                        <SelectValue placeholder='Select industry' />
                       </SelectTrigger>
                       <SelectContent>
                         {INDUSTRIES.map(industry => (
-                          <SelectItem key={industry} value={industry}>{industry}</SelectItem>
+                          <SelectItem key={industry} value={industry}>
+                            {industry}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="size">Company Size</Label>
+                  <div className='space-y-2'>
+                    <Label htmlFor='size'>Company Size</Label>
                     <Select
                       value={formData.companyInfo.size}
-                      onValueChange={(value) => updateFormData('companyInfo', { size: value })}
+                      onValueChange={value =>
+                        updateFormData('companyInfo', { size: value })
+                      }
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select size" />
+                        <SelectValue placeholder='Select size' />
                       </SelectTrigger>
                       <SelectContent>
                         {COMPANY_SIZES.map(size => (
-                          <SelectItem key={size} value={size}>{size}</SelectItem>
+                          <SelectItem key={size} value={size}>
+                            {size}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="description">Company Description</Label>
+                  <div className='space-y-2 md:col-span-2'>
+                    <Label htmlFor='description'>Company Description</Label>
                     <Textarea
-                      id="description"
-                      placeholder="Brief description of your company and what you do..."
+                      id='description'
+                      placeholder='Brief description of your company and what you do...'
                       rows={3}
                       value={formData.companyInfo.description}
-                      onChange={(e) => updateFormData('companyInfo', { description: e.target.value })}
+                      onChange={e =>
+                        updateFormData('companyInfo', {
+                          description: e.target.value,
+                        })
+                      }
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="website">Website</Label>
+                  <div className='space-y-2'>
+                    <Label htmlFor='website'>Website</Label>
                     <Input
-                      id="website"
-                      placeholder="https://www.yourcompany.com"
+                      id='website'
+                      placeholder='https://www.yourcompany.com'
                       value={formData.companyInfo.website}
-                      onChange={(e) => updateFormData('companyInfo', { website: e.target.value })}
+                      onChange={e =>
+                        updateFormData('companyInfo', {
+                          website: e.target.value,
+                        })
+                      }
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="logo">Company Logo</Label>
-                    <div className="flex items-center gap-4">
+                  <div className='space-y-2'>
+                    <Label htmlFor='logo'>Company Logo</Label>
+                    <div className='flex items-center gap-4'>
                       <Input
-                        accept="image/*"
-                        className="flex-1"
-                        id="logo"
-                        type="file"
-                        onChange={(e) => {
+                        accept='image/*'
+                        className='flex-1'
+                        id='logo'
+                        type='file'
+                        onChange={e => {
                           const file = e.target.files?.[0];
                           if (file) {
                             const reader = new FileReader();
-                            reader.onload = (e) => {
-                              updateFormData('companyInfo', { logo: e.target?.result as string });
+                            reader.onload = e => {
+                              updateFormData('companyInfo', {
+                                logo: e.target?.result as string,
+                              });
                             };
                             reader.readAsDataURL(file);
                           }
                         }}
                       />
                       {formData.companyInfo.logo && (
-                        <img alt="Logo preview" className="h-12 w-12 object-contain rounded" src={formData.companyInfo.logo} />
+                        <img
+                          alt='Logo preview'
+                          className='h-12 w-12 rounded object-contain'
+                          src={formData.companyInfo.logo}
+                        />
                       )}
                     </div>
                   </div>
@@ -487,61 +598,92 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
 
             {/* Step 2: Plan Selection */}
             {currentStep === 2 && (
-              <div className="space-y-6">
-                <div className="text-center mb-6">
-                  <CreditCard className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                  <h2 className="text-2xl font-bold text-gray-900">Choose Your Plan</h2>
-                  <p className="text-gray-600">Select the plan that best fits your needs</p>
+              <div className='space-y-6'>
+                <div className='mb-6 text-center'>
+                  <CreditCard className='mx-auto mb-4 h-12 w-12 text-blue-600' />
+                  <h2 className='text-2xl font-bold text-gray-900'>
+                    Choose Your Plan
+                  </h2>
+                  <p className='text-gray-600'>
+                    Select the plan that best fits your needs
+                  </p>
                 </div>
 
-                <div className="flex justify-center mb-6">
+                <div className='mb-6 flex justify-center'>
                   <Tabs
                     value={formData.planSelection.billingCycle}
-                    onValueChange={(value) => updateFormData('planSelection', { billingCycle: value as 'monthly' | 'yearly' })}
+                    onValueChange={value =>
+                      updateFormData('planSelection', {
+                        billingCycle: value as 'monthly' | 'yearly',
+                      })
+                    }
                   >
                     <TabsList>
-                      <TabsTrigger value="monthly">Monthly</TabsTrigger>
-                      <TabsTrigger value="yearly">Yearly (Save 20%)</TabsTrigger>
+                      <TabsTrigger value='monthly'>Monthly</TabsTrigger>
+                      <TabsTrigger value='yearly'>
+                        Yearly (Save 20%)
+                      </TabsTrigger>
                     </TabsList>
                   </Tabs>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
                   {SUBSCRIPTION_PLANS.map(plan => (
                     <Card
                       key={plan.id}
                       className={`cursor-pointer transition-all ${
                         formData.planSelection.planId === plan.id
-                          ? 'ring-2 ring-blue-500 border-blue-500'
+                          ? 'border-blue-500 ring-2 ring-blue-500'
                           : 'hover:border-gray-300'
                       }`}
-                      onClick={() => updateFormData('planSelection', { planId: plan.id })}
+                      onClick={() =>
+                        updateFormData('planSelection', { planId: plan.id })
+                      }
                     >
-                      <CardHeader className="text-center">
-                        <div className="flex items-center justify-center mb-2">
-                          {plan.tier === 'starter' && <Zap className="h-6 w-6 text-green-600" />}
-                          {plan.tier === 'professional' && <BarChart3 className="h-6 w-6 text-blue-600" />}
-                          {plan.tier === 'enterprise' && <Building2 className="h-6 w-6 text-purple-600" />}
+                      <CardHeader className='text-center'>
+                        <div className='mb-2 flex items-center justify-center'>
+                          {plan.tier === 'starter' && (
+                            <Zap className='h-6 w-6 text-green-600' />
+                          )}
+                          {plan.tier === 'professional' && (
+                            <BarChart3 className='h-6 w-6 text-blue-600' />
+                          )}
+                          {plan.tier === 'enterprise' && (
+                            <Building2 className='h-6 w-6 text-purple-600' />
+                          )}
                         </div>
-                        <CardTitle className="text-xl">{plan.name}</CardTitle>
-                        <p className="text-gray-600 text-sm">{plan.description}</p>
-                        <div className="mt-4">
-                          <span className="text-3xl font-bold">
-                            ${formData.planSelection.billingCycle === 'yearly' ? plan.priceYearly : plan.priceMonthly}
+                        <CardTitle className='text-xl'>{plan.name}</CardTitle>
+                        <p className='text-sm text-gray-600'>
+                          {plan.description}
+                        </p>
+                        <div className='mt-4'>
+                          <span className='text-3xl font-bold'>
+                            $
+                            {formData.planSelection.billingCycle === 'yearly'
+                              ? plan.priceYearly
+                              : plan.priceMonthly}
                           </span>
-                          <span className="text-gray-600">
-                            /{formData.planSelection.billingCycle === 'yearly' ? 'year' : 'month'}
+                          <span className='text-gray-600'>
+                            /
+                            {formData.planSelection.billingCycle === 'yearly'
+                              ? 'year'
+                              : 'month'}
                           </span>
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <ul className="space-y-2">
-                          {plan.features.map((feature: string, index: number) => (
-                            <li key={index} className="flex items-center gap-2 text-sm">
-                              <CheckCircle className="h-4 w-4 text-green-500" />
-                              {feature}
-                            </li>
-                          ))}
+                        <ul className='space-y-2'>
+                          {plan.features.map(
+                            (feature: string, index: number) => (
+                              <li
+                                key={index}
+                                className='flex items-center gap-2 text-sm'
+                              >
+                                <CheckCircle className='h-4 w-4 text-green-500' />
+                                {feature}
+                              </li>
+                            )
+                          )}
                         </ul>
                       </CardContent>
                     </Card>
@@ -552,63 +694,83 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
 
             {/* Step 3: Team Setup */}
             {currentStep === 3 && (
-              <div className="space-y-6">
-                <div className="text-center mb-6">
-                  <Users className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                  <h2 className="text-2xl font-bold text-gray-900">Invite Your Team</h2>
-                  <p className="text-gray-600">Add team members to your workspace (optional)</p>
+              <div className='space-y-6'>
+                <div className='mb-6 text-center'>
+                  <Users className='mx-auto mb-4 h-12 w-12 text-blue-600' />
+                  <h2 className='text-2xl font-bold text-gray-900'>
+                    Invite Your Team
+                  </h2>
+                  <p className='text-gray-600'>
+                    Add team members to your workspace (optional)
+                  </p>
                 </div>
 
-                <div className="space-y-4">
+                <div className='space-y-4'>
                   {formData.teamSetup.teamMembers.map((member, index) => (
-                    <Card key={index} className="p-4">
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="space-y-2">
+                    <Card key={index} className='p-4'>
+                      <div className='grid grid-cols-1 gap-4 md:grid-cols-4'>
+                        <div className='space-y-2'>
                           <Label>First Name</Label>
                           <Input
-                            placeholder="John"
+                            placeholder='John'
                             value={member.firstName}
-                            onChange={(e) => updateTeamMember(index, 'firstName', e.target.value)}
+                            onChange={e =>
+                              updateTeamMember(
+                                index,
+                                'firstName',
+                                e.target.value
+                              )
+                            }
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div className='space-y-2'>
                           <Label>Last Name</Label>
                           <Input
-                            placeholder="Doe"
+                            placeholder='Doe'
                             value={member.lastName}
-                            onChange={(e) => updateTeamMember(index, 'lastName', e.target.value)}
+                            onChange={e =>
+                              updateTeamMember(
+                                index,
+                                'lastName',
+                                e.target.value
+                              )
+                            }
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div className='space-y-2'>
                           <Label>Email</Label>
                           <Input
-                            placeholder="john@company.com"
-                            type="email"
+                            placeholder='john@company.com'
+                            type='email'
                             value={member.email}
-                            onChange={(e) => updateTeamMember(index, 'email', e.target.value)}
+                            onChange={e =>
+                              updateTeamMember(index, 'email', e.target.value)
+                            }
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div className='space-y-2'>
                           <Label>Role</Label>
                           <Select
                             value={member.role}
-                            onValueChange={(value) => updateTeamMember(index, 'role', value)}
+                            onValueChange={value =>
+                              updateTeamMember(index, 'role', value)
+                            }
                           >
                             <SelectTrigger>
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="admin">Admin</SelectItem>
-                              <SelectItem value="editor">Editor</SelectItem>
-                              <SelectItem value="viewer">Viewer</SelectItem>
+                              <SelectItem value='admin'>Admin</SelectItem>
+                              <SelectItem value='editor'>Editor</SelectItem>
+                              <SelectItem value='viewer'>Viewer</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
                       </div>
-                      <div className="flex justify-end mt-4">
+                      <div className='mt-4 flex justify-end'>
                         <Button
-                          size="sm"
-                          variant="outline"
+                          size='sm'
+                          variant='outline'
                           onClick={() => removeTeamMember(index)}
                         >
                           Remove
@@ -618,11 +780,11 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                   ))}
 
                   <Button
-                    className="w-full"
-                    variant="outline"
+                    className='w-full'
+                    variant='outline'
                     onClick={addTeamMember}
                   >
-                    <Users className="h-4 w-4 mr-2" />
+                    <Users className='mr-2 h-4 w-4' />
                     Add Team Member
                   </Button>
                 </div>
@@ -631,128 +793,146 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
 
             {/* Step 4: Preferences */}
             {currentStep === 4 && (
-              <div className="space-y-6">
-                <div className="text-center mb-6">
-                  <Settings className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                  <h2 className="text-2xl font-bold text-gray-900">Preferences</h2>
-                  <p className="text-gray-600">Configure your workspace settings</p>
+              <div className='space-y-6'>
+                <div className='mb-6 text-center'>
+                  <Settings className='mx-auto mb-4 h-12 w-12 text-blue-600' />
+                  <h2 className='text-2xl font-bold text-gray-900'>
+                    Preferences
+                  </h2>
+                  <p className='text-gray-600'>
+                    Configure your workspace settings
+                  </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="timezone">Timezone</Label>
+                <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                  <div className='space-y-2'>
+                    <Label htmlFor='timezone'>Timezone</Label>
                     <Select
                       value={formData.preferences.timezone}
-                      onValueChange={(value) => updateFormData('preferences', { timezone: value })}
+                      onValueChange={value =>
+                        updateFormData('preferences', { timezone: value })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         {TIMEZONES.map(tz => (
-                          <SelectItem key={tz} value={tz}>{tz}</SelectItem>
+                          <SelectItem key={tz} value={tz}>
+                            {tz}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="language">Language</Label>
+                  <div className='space-y-2'>
+                    <Label htmlFor='language'>Language</Label>
                     <Select
                       value={formData.preferences.language}
-                      onValueChange={(value) => updateFormData('preferences', { language: value })}
+                      onValueChange={value =>
+                        updateFormData('preferences', { language: value })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         {LANGUAGES.map(lang => (
-                          <SelectItem key={lang.code} value={lang.code}>{lang.name}</SelectItem>
+                          <SelectItem key={lang.code} value={lang.code}>
+                            {lang.name}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="theme">Theme</Label>
+                  <div className='space-y-2'>
+                    <Label htmlFor='theme'>Theme</Label>
                     <Select
                       value={formData.preferences.theme}
-                      onValueChange={(value) => updateFormData('preferences', { theme: value as 'light' | 'dark' | 'auto' })}
+                      onValueChange={value =>
+                        updateFormData('preferences', {
+                          theme: value as 'light' | 'dark' | 'auto',
+                        })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="light">Light</SelectItem>
-                        <SelectItem value="dark">Dark</SelectItem>
-                        <SelectItem value="auto">Auto</SelectItem>
+                        <SelectItem value='light'>Light</SelectItem>
+                        <SelectItem value='dark'>Dark</SelectItem>
+                        <SelectItem value='auto'>Auto</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Notification Preferences</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="flex items-center space-x-2">
+                <div className='space-y-4'>
+                  <h3 className='text-lg font-semibold'>
+                    Notification Preferences
+                  </h3>
+                  <div className='grid grid-cols-2 gap-4 md:grid-cols-4'>
+                    <div className='flex items-center space-x-2'>
                       <Checkbox
                         checked={formData.preferences.notifications.email}
-                        id="email-notifications"
-                        onCheckedChange={(checked) => 
+                        id='email-notifications'
+                        onCheckedChange={checked =>
                           updateFormData('preferences', {
                             notifications: {
                               ...formData.preferences.notifications,
-                              email: checked as boolean
-                            }
+                              email: checked as boolean,
+                            },
                           })
                         }
                       />
-                      <Label htmlFor="email-notifications">Email</Label>
+                      <Label htmlFor='email-notifications'>Email</Label>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className='flex items-center space-x-2'>
                       <Checkbox
                         checked={formData.preferences.notifications.push}
-                        id="push-notifications"
-                        onCheckedChange={(checked) => 
+                        id='push-notifications'
+                        onCheckedChange={checked =>
                           updateFormData('preferences', {
                             notifications: {
                               ...formData.preferences.notifications,
-                              push: checked as boolean
-                            }
+                              push: checked as boolean,
+                            },
                           })
                         }
                       />
-                      <Label htmlFor="push-notifications">Push</Label>
+                      <Label htmlFor='push-notifications'>Push</Label>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className='flex items-center space-x-2'>
                       <Checkbox
                         checked={formData.preferences.notifications.sms}
-                        id="sms-notifications"
-                        onCheckedChange={(checked) => 
+                        id='sms-notifications'
+                        onCheckedChange={checked =>
                           updateFormData('preferences', {
                             notifications: {
                               ...formData.preferences.notifications,
-                              sms: checked as boolean
-                            }
+                              sms: checked as boolean,
+                            },
                           })
                         }
                       />
-                      <Label htmlFor="sms-notifications">SMS</Label>
+                      <Label htmlFor='sms-notifications'>SMS</Label>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className='flex items-center space-x-2'>
                       <Checkbox
                         checked={formData.preferences.notifications.webhook}
-                        id="webhook-notifications"
-                        onCheckedChange={(checked) => 
+                        id='webhook-notifications'
+                        onCheckedChange={checked =>
                           updateFormData('preferences', {
                             notifications: {
                               ...formData.preferences.notifications,
-                              webhook: checked as boolean
-                            }
+                              webhook: checked as boolean,
+                            },
                           })
                         }
                       />
-                      <Label htmlFor="webhook-notifications">Webhook</Label>
+                      <Label htmlFor='webhook-notifications'>Webhook</Label>
                     </div>
                   </div>
                 </div>
@@ -761,88 +941,124 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
 
             {/* Step 5: Branding */}
             {currentStep === 5 && (
-              <div className="space-y-6">
-                <div className="text-center mb-6">
-                  <Palette className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                  <h2 className="text-2xl font-bold text-gray-900">Customize Branding</h2>
-                  <p className="text-gray-600">Make it yours with custom colors and branding (optional)</p>
+              <div className='space-y-6'>
+                <div className='mb-6 text-center'>
+                  <Palette className='mx-auto mb-4 h-12 w-12 text-blue-600' />
+                  <h2 className='text-2xl font-bold text-gray-900'>
+                    Customize Branding
+                  </h2>
+                  <p className='text-gray-600'>
+                    Make it yours with custom colors and branding (optional)
+                  </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="primaryColor">Primary Color</Label>
-                    <div className="flex items-center gap-2">
+                <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                  <div className='space-y-2'>
+                    <Label htmlFor='primaryColor'>Primary Color</Label>
+                    <div className='flex items-center gap-2'>
                       <Input
-                        className="w-16 h-10 p-1"
-                        id="primaryColor"
-                        type="color"
+                        className='h-10 w-16 p-1'
+                        id='primaryColor'
+                        type='color'
                         value={formData.branding.primaryColor}
-                        onChange={(e) => updateFormData('branding', { primaryColor: e.target.value })}
+                        onChange={e =>
+                          updateFormData('branding', {
+                            primaryColor: e.target.value,
+                          })
+                        }
                       />
                       <Input
-                        className="flex-1"
-                        placeholder="#3B82F6"
+                        className='flex-1'
+                        placeholder='#3B82F6'
                         value={formData.branding.primaryColor}
-                        onChange={(e) => updateFormData('branding', { primaryColor: e.target.value })}
+                        onChange={e =>
+                          updateFormData('branding', {
+                            primaryColor: e.target.value,
+                          })
+                        }
                       />
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="secondaryColor">Secondary Color</Label>
-                    <div className="flex items-center gap-2">
+                  <div className='space-y-2'>
+                    <Label htmlFor='secondaryColor'>Secondary Color</Label>
+                    <div className='flex items-center gap-2'>
                       <Input
-                        className="w-16 h-10 p-1"
-                        id="secondaryColor"
-                        type="color"
+                        className='h-10 w-16 p-1'
+                        id='secondaryColor'
+                        type='color'
                         value={formData.branding.secondaryColor}
-                        onChange={(e) => updateFormData('branding', { secondaryColor: e.target.value })}
+                        onChange={e =>
+                          updateFormData('branding', {
+                            secondaryColor: e.target.value,
+                          })
+                        }
                       />
                       <Input
-                        className="flex-1"
-                        placeholder="#1E40AF"
+                        className='flex-1'
+                        placeholder='#1E40AF'
                         value={formData.branding.secondaryColor}
-                        onChange={(e) => updateFormData('branding', { secondaryColor: e.target.value })}
+                        onChange={e =>
+                          updateFormData('branding', {
+                            secondaryColor: e.target.value,
+                          })
+                        }
                       />
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="customDomain">Custom Domain (Optional)</Label>
+                  <div className='space-y-2'>
+                    <Label htmlFor='customDomain'>
+                      Custom Domain (Optional)
+                    </Label>
                     <Input
-                      id="customDomain"
-                      placeholder="app.yourcompany.com"
+                      id='customDomain'
+                      placeholder='app.yourcompany.com'
                       value={formData.branding.customDomain}
-                      onChange={(e) => updateFormData('branding', { customDomain: e.target.value })}
+                      onChange={e =>
+                        updateFormData('branding', {
+                          customDomain: e.target.value,
+                        })
+                      }
                     />
-                    <p className="text-xs text-gray-500">You can configure DNS later</p>
+                    <p className='text-xs text-gray-500'>
+                      You can configure DNS later
+                    </p>
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Brand Preview</h3>
-                  <div className="border rounded-lg p-6 bg-white">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div 
-                        className="w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold"
-                        style={{ backgroundColor: formData.branding.primaryColor }}
+                <div className='space-y-4'>
+                  <h3 className='text-lg font-semibold'>Brand Preview</h3>
+                  <div className='rounded-lg border bg-white p-6'>
+                    <div className='mb-4 flex items-center gap-4'>
+                      <div
+                        className='flex h-12 w-12 items-center justify-center rounded-lg font-bold text-white'
+                        style={{
+                          backgroundColor: formData.branding.primaryColor,
+                        }}
                       >
                         {formData.companyInfo.name.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <h4 className="font-semibold">{formData.companyInfo.name}</h4>
-                        <p className="text-sm text-gray-600">Your workspace</p>
+                        <h4 className='font-semibold'>
+                          {formData.companyInfo.name}
+                        </h4>
+                        <p className='text-sm text-gray-600'>Your workspace</p>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <div 
-                        className="h-2 rounded"
-                        style={{ backgroundColor: formData.branding.primaryColor }}
-                       />
-                      <div 
-                        className="h-2 rounded"
-                        style={{ backgroundColor: formData.branding.secondaryColor }}
-                       />
+                    <div className='space-y-2'>
+                      <div
+                        className='h-2 rounded'
+                        style={{
+                          backgroundColor: formData.branding.primaryColor,
+                        }}
+                      />
+                      <div
+                        className='h-2 rounded'
+                        style={{
+                          backgroundColor: formData.branding.secondaryColor,
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -851,33 +1067,45 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
 
             {/* Step 6: Integrations */}
             {currentStep === 6 && (
-              <div className="space-y-6">
-                <div className="text-center mb-6">
-                  <Globe className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                  <h2 className="text-2xl font-bold text-gray-900">Connect Integrations</h2>
-                  <p className="text-gray-600">Set up your favorite tools (optional)</p>
+              <div className='space-y-6'>
+                <div className='mb-6 text-center'>
+                  <Globe className='mx-auto mb-4 h-12 w-12 text-blue-600' />
+                  <h2 className='text-2xl font-bold text-gray-900'>
+                    Connect Integrations
+                  </h2>
+                  <p className='text-gray-600'>
+                    Set up your favorite tools (optional)
+                  </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                   {AVAILABLE_INTEGRATIONS.map(integration => (
                     <Card
                       key={integration.id}
                       className={`cursor-pointer transition-all ${
-                        formData.integrations.selectedIntegrations.includes(integration.id)
-                          ? 'ring-2 ring-blue-500 border-blue-500'
+                        formData.integrations.selectedIntegrations.includes(
+                          integration.id
+                        )
+                          ? 'border-blue-500 ring-2 ring-blue-500'
                           : 'hover:border-gray-300'
                       }`}
                       onClick={() => toggleIntegration(integration.id)}
                     >
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
+                      <CardContent className='p-4'>
+                        <div className='flex items-center gap-3'>
                           <Checkbox
                             readOnly
-                            checked={formData.integrations.selectedIntegrations.includes(integration.id)}
+                            checked={formData.integrations.selectedIntegrations.includes(
+                              integration.id
+                            )}
                           />
-                          <div className="flex-1">
-                            <h3 className="font-semibold">{integration.name}</h3>
-                            <p className="text-sm text-gray-600">{integration.description}</p>
+                          <div className='flex-1'>
+                            <h3 className='font-semibold'>
+                              {integration.name}
+                            </h3>
+                            <p className='text-sm text-gray-600'>
+                              {integration.description}
+                            </p>
                           </div>
                         </div>
                       </CardContent>
@@ -885,14 +1113,20 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                   ))}
                 </div>
 
-                {formData.integrations.selectedIntegrations.includes('webhook') && (
-                  <div className="space-y-2">
-                    <Label htmlFor="webhookUrl">Webhook URL</Label>
+                {formData.integrations.selectedIntegrations.includes(
+                  'webhook'
+                ) && (
+                  <div className='space-y-2'>
+                    <Label htmlFor='webhookUrl'>Webhook URL</Label>
                     <Input
-                      id="webhookUrl"
-                      placeholder="https://yourcompany.com/webhook"
+                      id='webhookUrl'
+                      placeholder='https://yourcompany.com/webhook'
                       value={formData.integrations.webhookUrl}
-                      onChange={(e) => updateFormData('integrations', { webhookUrl: e.target.value })}
+                      onChange={e =>
+                        updateFormData('integrations', {
+                          webhookUrl: e.target.value,
+                        })
+                      }
                     />
                   </div>
                 )}
@@ -901,35 +1135,43 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
 
             {/* Step 7: Review & Complete */}
             {currentStep === 7 && (
-              <div className="space-y-6">
-                <div className="text-center mb-6">
-                  <CheckCircle className="h-12 w-12 text-green-600 mx-auto mb-4" />
-                  <h2 className="text-2xl font-bold text-gray-900">Review & Complete</h2>
-                  <p className="text-gray-600">Review your settings before creating your workspace</p>
+              <div className='space-y-6'>
+                <div className='mb-6 text-center'>
+                  <CheckCircle className='mx-auto mb-4 h-12 w-12 text-green-600' />
+                  <h2 className='text-2xl font-bold text-gray-900'>
+                    Review & Complete
+                  </h2>
+                  <p className='text-gray-600'>
+                    Review your settings before creating your workspace
+                  </p>
                 </div>
 
-                <div className="space-y-6">
+                <div className='space-y-6'>
                   {/* Company Info Summary */}
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Building2 className="h-5 w-5" />
+                      <CardTitle className='flex items-center gap-2'>
+                        <Building2 className='h-5 w-5' />
                         Company Information
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-2">
-                      <div className="grid grid-cols-2 gap-4 text-sm">
+                    <CardContent className='space-y-2'>
+                      <div className='grid grid-cols-2 gap-4 text-sm'>
                         <div>
-                          <span className="font-medium">Company:</span> {formData.companyInfo.name}
+                          <span className='font-medium'>Company:</span>{' '}
+                          {formData.companyInfo.name}
                         </div>
                         <div>
-                          <span className="font-medium">Subdomain:</span> {formData.companyInfo.subdomain}.aias.com
+                          <span className='font-medium'>Subdomain:</span>{' '}
+                          {formData.companyInfo.subdomain}.aias.com
                         </div>
                         <div>
-                          <span className="font-medium">Industry:</span> {formData.companyInfo.industry}
+                          <span className='font-medium'>Industry:</span>{' '}
+                          {formData.companyInfo.industry}
                         </div>
                         <div>
-                          <span className="font-medium">Size:</span> {formData.companyInfo.size}
+                          <span className='font-medium'>Size:</span>{' '}
+                          {formData.companyInfo.size}
                         </div>
                       </div>
                     </CardContent>
@@ -938,25 +1180,33 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                   {/* Plan Summary */}
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <CreditCard className="h-5 w-5" />
+                      <CardTitle className='flex items-center gap-2'>
+                        <CreditCard className='h-5 w-5' />
                         Selected Plan
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="flex items-center justify-between">
+                      <div className='flex items-center justify-between'>
                         <div>
-                          <h3 className="font-semibold">{selectedPlan?.name}</h3>
-                          <p className="text-sm text-gray-600">{selectedPlan?.description}</p>
+                          <h3 className='font-semibold'>
+                            {selectedPlan?.name}
+                          </h3>
+                          <p className='text-sm text-gray-600'>
+                            {selectedPlan?.description}
+                          </p>
                         </div>
-                        <div className="text-right">
-                          <div className="text-2xl font-bold">
-                            ${formData.planSelection.billingCycle === 'yearly' 
-                              ? selectedPlan?.priceYearly 
+                        <div className='text-right'>
+                          <div className='text-2xl font-bold'>
+                            $
+                            {formData.planSelection.billingCycle === 'yearly'
+                              ? selectedPlan?.priceYearly
                               : selectedPlan?.priceMonthly}
                           </div>
-                          <div className="text-sm text-gray-600">
-                            per {formData.planSelection.billingCycle === 'yearly' ? 'year' : 'month'}
+                          <div className='text-sm text-gray-600'>
+                            per{' '}
+                            {formData.planSelection.billingCycle === 'yearly'
+                              ? 'year'
+                              : 'month'}
                           </div>
                         </div>
                       </div>
@@ -967,19 +1217,27 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                   {formData.teamSetup.teamMembers.length > 0 && (
                     <Card>
                       <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <Users className="h-5 w-5" />
+                        <CardTitle className='flex items-center gap-2'>
+                          <Users className='h-5 w-5' />
                           Team Members ({formData.teamSetup.teamMembers.length})
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <div className="space-y-2">
-                          {formData.teamSetup.teamMembers.map((member, index) => (
-                            <div key={index} className="flex items-center justify-between text-sm">
-                              <span>{member.firstName} {member.lastName} ({member.email})</span>
-                              <Badge variant="outline">{member.role}</Badge>
-                            </div>
-                          ))}
+                        <div className='space-y-2'>
+                          {formData.teamSetup.teamMembers.map(
+                            (member, index) => (
+                              <div
+                                key={index}
+                                className='flex items-center justify-between text-sm'
+                              >
+                                <span>
+                                  {member.firstName} {member.lastName} (
+                                  {member.email})
+                                </span>
+                                <Badge variant='outline'>{member.role}</Badge>
+                              </div>
+                            )
+                          )}
                         </div>
                       </CardContent>
                     </Card>
@@ -989,21 +1247,26 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                   {formData.integrations.selectedIntegrations.length > 0 && (
                     <Card>
                       <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <Globe className="h-5 w-5" />
-                          Integrations ({formData.integrations.selectedIntegrations.length})
+                        <CardTitle className='flex items-center gap-2'>
+                          <Globe className='h-5 w-5' />
+                          Integrations (
+                          {formData.integrations.selectedIntegrations.length})
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <div className="flex flex-wrap gap-2">
-                          {formData.integrations.selectedIntegrations.map(integrationId => {
-                            const integration = AVAILABLE_INTEGRATIONS.find(i => i.id === integrationId);
-                            return (
-                              <Badge key={integrationId} variant="secondary">
-                                {integration?.name}
-                              </Badge>
-                            );
-                          })}
+                        <div className='flex flex-wrap gap-2'>
+                          {formData.integrations.selectedIntegrations.map(
+                            integrationId => {
+                              const integration = AVAILABLE_INTEGRATIONS.find(
+                                i => i.id === integrationId
+                              );
+                              return (
+                                <Badge key={integrationId} variant='secondary'>
+                                  {integration?.name}
+                                </Badge>
+                              );
+                            }
+                          )}
                         </div>
                       </CardContent>
                     </Card>
@@ -1013,18 +1276,18 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
             )}
 
             {/* Navigation */}
-            <div className="flex items-center justify-between pt-6 border-t">
+            <div className='flex items-center justify-between border-t pt-6'>
               <Button
                 disabled={currentStep === 1}
-                variant="outline"
+                variant='outline'
                 onClick={prevStep}
               >
-                <ArrowLeft className="h-4 w-4 mr-2" />
+                <ArrowLeft className='mr-2 h-4 w-4' />
                 Previous
               </Button>
 
-              <div className="flex items-center gap-2">
-                <Button variant="outline" onClick={onCancel}>
+              <div className='flex items-center gap-2'>
+                <Button variant='outline' onClick={onCancel}>
                   Cancel
                 </Button>
                 {currentStep < totalSteps ? (
@@ -1033,15 +1296,15 @@ export const TenantOnboarding: React.FC<TenantOnboardingProps> = ({ onComplete, 
                     onClick={nextStep}
                   >
                     Next
-                    <ArrowRight className="h-4 w-4 ml-2" />
+                    <ArrowRight className='ml-2 h-4 w-4' />
                   </Button>
                 ) : (
                   <Button
-                    className="bg-green-600 hover:bg-green-700"
+                    className='bg-green-600 hover:bg-green-700'
                     disabled={!isStepValid(currentStep)}
                     onClick={handleComplete}
                   >
-                    <CheckCircle className="h-4 w-4 mr-2" />
+                    <CheckCircle className='mr-2 h-4 w-4' />
                     Create Workspace
                   </Button>
                 )}

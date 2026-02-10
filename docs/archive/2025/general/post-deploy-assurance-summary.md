@@ -21,6 +21,7 @@ Comprehensive post-deploy assurance scan, systems governance audit, type/telemet
 **File:** `reports/assurance-scan.md`
 
 **Findings:**
+
 - **Contract Drift:** 6 critical mismatches (Supabase schema ↔ types)
 - **Performance Hotspots:** 4 slow endpoints identified
 - **Security/Infra Drift:** Preview protection missing
@@ -34,6 +35,7 @@ Comprehensive post-deploy assurance scan, systems governance audit, type/telemet
 ### ✅ B) Systems Governance Audit
 
 **Files:**
+
 - `systems/vsm.md` — Value stream map (already exists, reviewed)
 - `systems/decision-log.md` — ADR-lite (already exists, reviewed)
 - `systems/raci.md` — RACI matrix (already exists, reviewed)
@@ -42,6 +44,7 @@ Comprehensive post-deploy assurance scan, systems governance audit, type/telemet
 **Status:** ✅ Complete — All systems governance files exist and are comprehensive
 
 **Key Findings:**
+
 - Review queue is primary bottleneck (24h lead time)
 - CI pipeline can be parallelized (15min → <8min)
 - Error-to-fix latency needs improvement
@@ -54,19 +57,23 @@ Comprehensive post-deploy assurance scan, systems governance audit, type/telemet
 **File:** `reports/type-telemetry-wave1.md`
 
 **Findings:**
+
 - **Implicit `any` Types:** 30 files with >5 implicit `any` (~410 total)
 - **Unused Exports:** ~274 exports (need audit)
 - **Missing Telemetry:** 5 API endpoints, 1+ pages
 
 **Action Plan:**
+
 - Wave 1: Type strengthening (top 10 files, ≤30 fixes)
 - Wave 2: Telemetry instrumentation (4 endpoints)
 
 **PRs to Create:**
+
 1. `type: strengthen typing (telemetry wave)` — Label: `auto/docs`
 2. `obs: instrument missing telemetry` — Label: `auto/ops`
 
 **Scripts Added:**
+
 - `type:coverage` — Type coverage check
 - `obs:check` — Telemetry audit
 
@@ -75,10 +82,12 @@ Comprehensive post-deploy assurance scan, systems governance audit, type/telemet
 ### ✅ D) UX Tone Harmonisation Sprint
 
 **Files:**
+
 - `copy/tone-profile.json` — Tone profile (already exists)
 - `reports/ux-tone-audit.md` — UX tone audit
 
 **Findings:**
+
 - ✅ All audited user-facing strings are compliant
 - ✅ No ban phrases found in user-facing content
 - ✅ All CTAs compliant with tone profile
@@ -92,10 +101,12 @@ Comprehensive post-deploy assurance scan, systems governance audit, type/telemet
 ### ✅ E) Canary & Shadow Deploy Harness
 
 **Files:**
+
 - `ops/canary-harness.md` — Canary deployment documentation
 - `.github/workflows/canary-deploy.yml` — Canary deployment workflow
 
 **Features:**
+
 - Feature flag configuration (`canary_checkout`)
 - Shadow route implementation
 - Stop-loss thresholds (error rate: 5%, latency: 1000ms)
@@ -113,6 +124,7 @@ Comprehensive post-deploy assurance scan, systems governance audit, type/telemet
 **File:** `reports/code-review.md`
 
 **Findings:**
+
 - **Architecture:** 3 issues (layering, duplication, boundaries)
 - **Correctness:** 6 issues (unhandled errors, side effects, race conditions)
 - **Performance:** 5 issues (N+1 queries, heavy deps, memoization gaps)
@@ -154,6 +166,7 @@ Comprehensive post-deploy assurance scan, systems governance audit, type/telemet
 **File:** `.github/workflows/quality-gates.yml` (created)
 
 **Gates:**
+
 - Bundle size delta: ≤0 KB (`budgets.bundle_kb_max_delta`)
 - Type coverage: ≥95% (`budgets.type_coverage_min`)
 - Tests: All passing
@@ -263,6 +276,7 @@ Comprehensive post-deploy assurance scan, systems governance audit, type/telemet
 ## Rollback Plans
 
 Each PR includes:
+
 - One-command rollback: `git revert <commit-hash>`
 - Before/after metrics
 - Test results

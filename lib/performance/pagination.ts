@@ -3,7 +3,7 @@
  * Cursor-based and offset-based pagination helpers
  */
 
-import { z } from "zod";
+import { z } from 'zod';
 
 export interface PaginationParams {
   limit: number;
@@ -33,11 +33,13 @@ export const paginationSchema = z.object({
 /**
  * Extract pagination params from request
  */
-export function extractPaginationParams(searchParams: URLSearchParams): PaginationParams {
+export function extractPaginationParams(
+  searchParams: URLSearchParams
+): PaginationParams {
   const parsed = paginationSchema.parse({
-    limit: searchParams.get("limit"),
-    offset: searchParams.get("offset"),
-    cursor: searchParams.get("cursor"),
+    limit: searchParams.get('limit'),
+    offset: searchParams.get('offset'),
+    cursor: searchParams.get('cursor'),
   });
 
   return {
@@ -61,7 +63,10 @@ export function createPaginationResult<T>(
     pagination: {
       limit: params.limit,
       hasMore,
-      nextCursor: hasMore && data.length > 0 ? createCursor(data[data.length - 1]) : undefined,
+      nextCursor:
+        hasMore && data.length > 0
+          ? createCursor(data[data.length - 1])
+          : undefined,
       total,
     },
   };
@@ -71,16 +76,16 @@ export function createPaginationResult<T>(
  * Create cursor from item (simplified - use ID or timestamp)
  */
 function createCursor(item: unknown): string {
-  if (typeof item === "object" && item !== null) {
+  if (typeof item === 'object' && item !== null) {
     const obj = item as Record<string, unknown>;
     if (obj.id) {
-      return Buffer.from(String(obj.id)).toString("base64");
+      return Buffer.from(String(obj.id)).toString('base64');
     }
     if (obj.created_at) {
-      return Buffer.from(String(obj.created_at)).toString("base64");
+      return Buffer.from(String(obj.created_at)).toString('base64');
     }
   }
-  return Buffer.from(JSON.stringify(item)).toString("base64");
+  return Buffer.from(JSON.stringify(item)).toString('base64');
 }
 
 /**
@@ -88,8 +93,8 @@ function createCursor(item: unknown): string {
  */
 export function decodeCursor(cursor: string): unknown {
   try {
-    return JSON.parse(Buffer.from(cursor, "base64").toString());
+    return JSON.parse(Buffer.from(cursor, 'base64').toString());
   } catch {
-    return Buffer.from(cursor, "base64").toString();
+    return Buffer.from(cursor, 'base64').toString();
   }
 }

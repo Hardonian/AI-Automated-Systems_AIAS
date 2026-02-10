@@ -13,20 +13,31 @@ export const GET = createGETHandler(
   async () => {
     // Get circuit breaker metrics
     const circuitBreakers = circuitBreakerRegistry.getAllMetrics();
-    
+
     // Get cache stats
     const cacheStats = cacheService.getStats();
-    
+
     // Calculate system health
-    const circuitBreakerStates = Object.values(circuitBreakers).map(cb => cb.state);
-    const openCircuits = circuitBreakerStates.filter(state => state === 'open').length;
-    const halfOpenCircuits = circuitBreakerStates.filter(state => state === 'half-open').length;
-    
+    const circuitBreakerStates = Object.values(circuitBreakers).map(
+      cb => cb.state
+    );
+    const openCircuits = circuitBreakerStates.filter(
+      state => state === 'open'
+    ).length;
+    const halfOpenCircuits = circuitBreakerStates.filter(
+      state => state === 'half-open'
+    ).length;
+
     const systemHealth = {
-      status: openCircuits > 0 ? 'degraded' : halfOpenCircuits > 0 ? 'warning' : 'healthy',
+      status:
+        openCircuits > 0
+          ? 'degraded'
+          : halfOpenCircuits > 0
+            ? 'warning'
+            : 'healthy',
       score: openCircuits > 0 ? 50 : halfOpenCircuits > 0 ? 75 : 100,
     };
-    
+
     return NextResponse.json({
       timestamp: new Date().toISOString(),
       system: {

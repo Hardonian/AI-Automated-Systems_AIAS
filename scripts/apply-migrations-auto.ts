@@ -12,14 +12,16 @@ import { join } from 'path';
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');
 
 // Check multiple environment variable sources
-const SUPABASE_PROJECT_REF = process.env.SUPABASE_PROJECT_REF || 
-                              process.env.VITE_SUPABASE_PROJECT_ID?.replace(/"/g, '') ||
-                              process.env.NEXT_PUBLIC_SUPABASE_PROJECT_REF ||
-                              process.env.GITHUB_SUPABASE_PROJECT_REF;
+const SUPABASE_PROJECT_REF =
+  process.env.SUPABASE_PROJECT_REF ||
+  process.env.VITE_SUPABASE_PROJECT_ID?.replace(/"/g, '') ||
+  process.env.NEXT_PUBLIC_SUPABASE_PROJECT_REF ||
+  process.env.GITHUB_SUPABASE_PROJECT_REF;
 
-const SUPABASE_ACCESS_TOKEN = process.env.SUPABASE_ACCESS_TOKEN || 
-                              process.env.SUPABASE_TOKEN ||
-                              process.env.GITHUB_SUPABASE_TOKEN;
+const SUPABASE_ACCESS_TOKEN =
+  process.env.SUPABASE_ACCESS_TOKEN ||
+  process.env.SUPABASE_TOKEN ||
+  process.env.GITHUB_SUPABASE_TOKEN;
 
 async function applyMigrations() {
   console.log('\n🚀 Auto-Applying Migrations\n');
@@ -41,7 +43,9 @@ async function applyMigrations() {
 
   // Check credentials
   if (!SUPABASE_PROJECT_REF) {
-    console.error('❌ SUPABASE_PROJECT_REF not found in environment variables.');
+    console.error(
+      '❌ SUPABASE_PROJECT_REF not found in environment variables.'
+    );
     console.log('\nChecked variables:');
     console.log('  - SUPABASE_PROJECT_REF');
     console.log('  - VITE_SUPABASE_PROJECT_ID');
@@ -52,7 +56,9 @@ async function applyMigrations() {
   }
 
   if (!SUPABASE_ACCESS_TOKEN) {
-    console.error('❌ SUPABASE_ACCESS_TOKEN not found in environment variables.');
+    console.error(
+      '❌ SUPABASE_ACCESS_TOKEN not found in environment variables.'
+    );
     console.log('\nChecked variables:');
     console.log('  - SUPABASE_ACCESS_TOKEN');
     console.log('  - SUPABASE_TOKEN');
@@ -61,8 +67,12 @@ async function applyMigrations() {
     process.exit(1);
   }
 
-  console.log(`✅ Found SUPABASE_PROJECT_REF: ${SUPABASE_PROJECT_REF.substring(0, 8)}...`);
-  console.log(`✅ Found SUPABASE_ACCESS_TOKEN: ${SUPABASE_ACCESS_TOKEN.substring(0, 8)}...`);
+  console.log(
+    `✅ Found SUPABASE_PROJECT_REF: ${SUPABASE_PROJECT_REF.substring(0, 8)}...`
+  );
+  console.log(
+    `✅ Found SUPABASE_ACCESS_TOKEN: ${SUPABASE_ACCESS_TOKEN.substring(0, 8)}...`
+  );
   console.log('');
 
   try {
@@ -71,7 +81,7 @@ async function applyMigrations() {
     try {
       execSync(
         `pnpm exec supabase link --project-ref ${SUPABASE_PROJECT_REF} --token ${SUPABASE_ACCESS_TOKEN}`,
-        { 
+        {
           stdio: 'inherit',
           env: {
             ...process.env,
@@ -91,19 +101,16 @@ async function applyMigrations() {
 
     // Apply migrations
     console.log('📦 Applying migrations...\n');
-    execSync(
-      'pnpm exec supabase db push',
-      {
-        stdio: 'inherit',
-        env: {
-          ...process.env,
-          SUPABASE_PROJECT_REF,
-          SUPABASE_ACCESS_TOKEN,
-        },
-      }
-    );
+    execSync('pnpm exec supabase db push', {
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        SUPABASE_PROJECT_REF,
+        SUPABASE_ACCESS_TOKEN,
+      },
+    });
 
-    console.log(`\n${  '='.repeat(60)}`);
+    console.log(`\n${'='.repeat(60)}`);
     console.log('✅ Migrations applied successfully!\n');
     return true;
   } catch (error: any) {

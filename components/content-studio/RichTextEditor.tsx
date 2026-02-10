@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Bold, Italic, List, Link as LinkIcon } from "lucide-react";
-import { useRef } from "react";
+import { Bold, Italic, List, Link as LinkIcon } from 'lucide-react';
+import { useRef } from 'react';
 
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 interface RichTextEditorProps {
   value: string;
@@ -26,7 +26,9 @@ export function RichTextEditor({
 
   const applyFormat = (command: string, value?: string) => {
     const textarea = textareaRef.current;
-    if (!textarea) {return;}
+    if (!textarea) {
+      return;
+    }
 
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
@@ -34,22 +36,22 @@ export function RichTextEditor({
     const before = textarea.value.substring(0, start);
     const after = textarea.value.substring(end);
 
-    let formatted = "";
+    let formatted = '';
     switch (command) {
-      case "bold":
+      case 'bold':
         formatted = `**${selectedText}**`;
         break;
-      case "italic":
+      case 'italic':
         formatted = `*${selectedText}*`;
         break;
-      case "list":
+      case 'list':
         formatted = selectedText
-          .split("\n")
-          .map((line) => `- ${line}`)
-          .join("\n");
+          .split('\n')
+          .map(line => `- ${line}`)
+          .join('\n');
         break;
-      case "link":
-        formatted = `[${selectedText}](${value || "https://example.com"})`;
+      case 'link':
+        formatted = `[${selectedText}](${value || 'https://example.com'})`;
         break;
       default:
         formatted = selectedText;
@@ -61,68 +63,67 @@ export function RichTextEditor({
     // Restore focus and selection
     setTimeout(() => {
       textarea.focus();
-      textarea.setSelectionRange(
-        start,
-        start + formatted.length
-      );
+      textarea.setSelectionRange(start, start + formatted.length);
     }, 0);
   };
 
   return (
-    <div className="space-y-2">
+    <div className='space-y-2'>
       {label && <Label>{label}</Label>}
-      <div className="border rounded-lg">
-        <div className="flex items-center gap-1 p-2 border-b bg-muted/50">
+      <div className='rounded-lg border'>
+        <div className='flex items-center gap-1 border-b bg-muted/50 p-2'>
           <Button
-            size="sm"
-            title="Bold"
-            type="button"
-            variant="ghost"
-            onClick={() => applyFormat("bold")}
+            size='sm'
+            title='Bold'
+            type='button'
+            variant='ghost'
+            onClick={() => applyFormat('bold')}
           >
-            <Bold className="h-4 w-4" />
+            <Bold className='h-4 w-4' />
           </Button>
           <Button
-            size="sm"
-            title="Italic"
-            type="button"
-            variant="ghost"
-            onClick={() => applyFormat("italic")}
+            size='sm'
+            title='Italic'
+            type='button'
+            variant='ghost'
+            onClick={() => applyFormat('italic')}
           >
-            <Italic className="h-4 w-4" />
+            <Italic className='h-4 w-4' />
           </Button>
           <Button
-            size="sm"
-            title="Bullet List"
-            type="button"
-            variant="ghost"
-            onClick={() => applyFormat("list")}
+            size='sm'
+            title='Bullet List'
+            type='button'
+            variant='ghost'
+            onClick={() => applyFormat('list')}
           >
-            <List className="h-4 w-4" />
+            <List className='h-4 w-4' />
           </Button>
           <Button
-            size="sm"
-            title="Add Link"
-            type="button"
-            variant="ghost"
+            size='sm'
+            title='Add Link'
+            type='button'
+            variant='ghost'
             onClick={() => {
-              const url = prompt("Enter URL:");
-              if (url) {applyFormat("link", url);}
+              const url = prompt('Enter URL:');
+              if (url) {
+                applyFormat('link', url);
+              }
             }}
           >
-            <LinkIcon className="h-4 w-4" />
+            <LinkIcon className='h-4 w-4' />
           </Button>
         </div>
         <Textarea
           ref={textareaRef}
-          className="border-0 focus-visible:ring-0 resize-none"
+          className='resize-none border-0 focus-visible:ring-0'
           placeholder={placeholder}
           rows={rows}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
         />
       </div>
-      <p className="text-xs text-muted-foreground">
+      <p className='text-xs text-muted-foreground'>
         Supports Markdown: **bold**, *italic*, - lists, [links](url)
       </p>
     </div>

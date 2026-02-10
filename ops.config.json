@@ -20,12 +20,7 @@
   "branches": {
     "default": "main"
   },
-  "labels": [
-    "auto/security",
-    "auto/perf",
-    "auto/docs",
-    "auto/maint"
-  ],
+  "labels": ["auto/security", "auto/perf", "auto/docs", "auto/maint"],
   "schedule": {
     "cron_light": "5 */12 * * *",
     "cron_heavy": "15 3 * * 1"

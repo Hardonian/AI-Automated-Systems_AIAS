@@ -1,16 +1,20 @@
-"use client";
+'use client';
 
-import { Button, ButtonProps } from "@/components/ui/button";
-import { motion, HTMLMotionProps } from "framer-motion";
-import { motionSprings, motionScale, prefersReducedMotion } from "@/lib/style/motion";
-import { forwardRef } from "react";
+import { Button, ButtonProps } from '@/components/ui/button';
+import { motion, HTMLMotionProps } from 'framer-motion';
+import {
+  motionSprings,
+  motionScale,
+  prefersReducedMotion,
+} from '@/lib/style/motion';
+import { forwardRef } from 'react';
 
 export interface AnimatedButtonProps extends ButtonProps {
   /**
    * Animation variant for button interactions
    * @default "standard"
    */
-  animationVariant?: "standard" | "subtle" | "bouncy";
+  animationVariant?: 'standard' | 'subtle' | 'bouncy';
   /**
    * Disable hover animations
    * @default false
@@ -20,17 +24,34 @@ export interface AnimatedButtonProps extends ButtonProps {
 
 /**
  * AnimatedButton - Button with motion feedback
- * 
+ *
  * Provides consistent hover, active, and focus animations
  * Respects prefers-reduced-motion
  */
-export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>(
-  ({ animationVariant = "standard", disableHover = false, className, ...props }, ref) => {
+export const AnimatedButton = forwardRef<
+  HTMLButtonElement,
+  AnimatedButtonProps
+>(
+  (
+    {
+      animationVariant = 'standard',
+      disableHover = false,
+      className,
+      ...props
+    },
+    ref
+  ) => {
     const reducedMotion = prefersReducedMotion();
-    
-    const springConfig = reducedMotion 
+
+    const springConfig = reducedMotion
       ? { duration: 0.01 }
-      : motionSprings[animationVariant === "bouncy" ? "bouncy" : animationVariant === "subtle" ? "gentle" : "standard"];
+      : motionSprings[
+          animationVariant === 'bouncy'
+            ? 'bouncy'
+            : animationVariant === 'subtle'
+              ? 'gentle'
+              : 'standard'
+        ];
 
     const hoverScale = reducedMotion || disableHover ? 1 : motionScale.hover;
     const activeScale = reducedMotion || disableHover ? 1 : motionScale.active;
@@ -50,4 +71,4 @@ export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>
   }
 );
 
-AnimatedButton.displayName = "AnimatedButton";
+AnimatedButton.displayName = 'AnimatedButton';

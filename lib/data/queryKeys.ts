@@ -1,11 +1,11 @@
 /**
  * Centralized Query Keys
- * 
+ *
  * All React Query keys are defined here to ensure consistency and enable
  * easy invalidation of related queries.
- * 
+ *
  * Pattern: [domain, ...identifiers]
- * 
+ *
  * Examples:
  * - ['user', userId] - Single user
  * - ['users'] - List of users
@@ -26,7 +26,7 @@ export const queryKeys = {
   projects: {
     all: ['projects'] as const,
     lists: () => ['projects', 'list'] as const,
-    list: (filters?: Record<string, unknown>) => 
+    list: (filters?: Record<string, unknown>) =>
       ['projects', 'list', filters] as const,
     detail: (id: string) => ['projects', id] as const,
     byOwner: (ownerId: string) => ['projects', 'owner', ownerId] as const,
@@ -36,11 +36,11 @@ export const queryKeys = {
   workflows: {
     all: ['workflows'] as const,
     lists: () => ['workflows', 'list'] as const,
-    list: (filters?: Record<string, unknown>) => 
+    list: (filters?: Record<string, unknown>) =>
       ['workflows', 'list', filters] as const,
     detail: (id: string) => ['workflows', id] as const,
     templates: () => ['workflows', 'templates'] as const,
-    executions: (workflowId?: string) => 
+    executions: (workflowId?: string) =>
       ['workflows', 'executions', workflowId] as const,
   },
 
@@ -54,7 +54,7 @@ export const queryKeys = {
   // Notifications
   notifications: {
     all: ['notifications'] as const,
-    list: (filters?: Record<string, unknown>) => 
+    list: (filters?: Record<string, unknown>) =>
       ['notifications', 'list', filters] as const,
     unread: () => ['notifications', 'unread'] as const,
     byId: (id: string) => ['notifications', id] as const,
@@ -65,17 +65,18 @@ export const queryKeys = {
     all: ['analytics'] as const,
     metrics: (type?: string) => ['analytics', 'metrics', type] as const,
     kpis: () => ['analytics', 'kpis'] as const,
-    events: (filters?: Record<string, unknown>) => 
+    events: (filters?: Record<string, unknown>) =>
       ['analytics', 'events', filters] as const,
   },
 
   // Blog
   blog: {
     all: ['blog'] as const,
-    posts: (filters?: Record<string, unknown>) => 
+    posts: (filters?: Record<string, unknown>) =>
       ['blog', 'posts', filters] as const,
     post: (slug: string) => ['blog', 'posts', slug] as const,
-    comments: (postId: string) => ['blog', 'posts', postId, 'comments'] as const,
+    comments: (postId: string) =>
+      ['blog', 'posts', postId, 'comments'] as const,
   },
 
   // Integrations
@@ -97,7 +98,7 @@ export const queryKeys = {
   admin: {
     all: ['admin'] as const,
     metrics: (type?: string) => ['admin', 'metrics', type] as const,
-    users: (filters?: Record<string, unknown>) => 
+    users: (filters?: Record<string, unknown>) =>
       ['admin', 'users', filters] as const,
     compliance: () => ['admin', 'compliance'] as const,
   },

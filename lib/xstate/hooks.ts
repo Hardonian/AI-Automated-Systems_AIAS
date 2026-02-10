@@ -1,31 +1,32 @@
 /**
  * XState React Hooks
- * 
+ *
  * Ergonomic hooks for consuming state machines in React components
  */
 
-import { useMachine, useSelector } from "@xstate/react";
-import { AnyActorRef, StateFrom } from "xstate";
-import { useMemo } from "react";
+import { useMachine, useSelector } from '@xstate/react';
+import { AnyActorRef, StateFrom } from 'xstate';
+import { useMemo } from 'react';
 
 /**
  * Hook for using a state machine with typed state
  */
-export function useTypedMachine<TMachine extends Parameters<typeof useMachine>[0]>(
-  machine: TMachine
-) {
+export function useTypedMachine<
+  TMachine extends Parameters<typeof useMachine>[0],
+>(machine: TMachine) {
   return useMachine(machine);
 }
 
 /**
  * Hook for selecting a specific value from machine state
  */
-export function useMachineSelector<
-  TActor extends AnyActorRef,
-  TValue
->(
+export function useMachineSelector<TActor extends AnyActorRef, TValue>(
   actor: TActor,
-  selector: (snapshot: TActor extends { getSnapshot(): infer TSnapshot } ? TSnapshot : any) => TValue
+  selector: (
+    snapshot: TActor extends { getSnapshot(): infer TSnapshot }
+      ? TSnapshot
+      : any
+  ) => TValue
 ): TValue {
   return useSelector(actor, selector as any);
 }
@@ -39,7 +40,7 @@ export function useIsInState<TActor extends AnyActorRef>(
 ): boolean {
   return useSelector(actor, (state: any) => {
     if (Array.isArray(stateValue)) {
-      return stateValue.some((sv) => state.matches(sv));
+      return stateValue.some(sv => state.matches(sv));
     }
     return state.matches(stateValue);
   });
@@ -57,9 +58,7 @@ export function useCurrentState<TActor extends AnyActorRef>(
 /**
  * Hook for getting context value
  */
-export function useMachineContext<TActor extends AnyActorRef>(
-  actor: TActor
-) {
+export function useMachineContext<TActor extends AnyActorRef>(actor: TActor) {
   return useSelector(actor, (state: any) => state.context);
 }
 
@@ -69,7 +68,7 @@ export function useMachineContext<TActor extends AnyActorRef>(
 export function useIsPending<TActor extends AnyActorRef>(
   actor: TActor
 ): boolean {
-  return useIsInState(actor, "pending");
+  return useIsInState(actor, 'pending');
 }
 
 /**
@@ -78,7 +77,7 @@ export function useIsPending<TActor extends AnyActorRef>(
 export function useHasError<TActor extends AnyActorRef>(
   actor: TActor
 ): boolean {
-  return useIsInState(actor, "error");
+  return useIsInState(actor, 'error');
 }
 
 /**

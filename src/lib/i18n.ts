@@ -24,7 +24,7 @@ const resources = {
         dashboard: 'Dashboard',
         logout: 'Logout',
       },
-      
+
       // Common
       common: {
         loading: 'Loading...',
@@ -186,19 +186,24 @@ const resources = {
         pageNotFound: 'Page Not Found',
         pageNotFoundDescription: 'The page you are looking for does not exist.',
         serverError: 'Server Error',
-        serverErrorDescription: 'Something went wrong on our end. Please try again later.',
+        serverErrorDescription:
+          'Something went wrong on our end. Please try again later.',
         networkError: 'Network Error',
-        networkErrorDescription: 'Please check your internet connection and try again.',
+        networkErrorDescription:
+          'Please check your internet connection and try again.',
         unauthorized: 'Unauthorized',
-        unauthorizedDescription: 'You do not have permission to access this resource.',
+        unauthorizedDescription:
+          'You do not have permission to access this resource.',
         forbidden: 'Forbidden',
         forbiddenDescription: 'Access to this resource is forbidden.',
         tooManyRequests: 'Too Many Requests',
-        tooManyRequestsDescription: 'You have made too many requests. Please try again later.',
+        tooManyRequestsDescription:
+          'You have made too many requests. Please try again later.',
         validationError: 'Validation Error',
         validationErrorDescription: 'Please check your input and try again.',
         genericError: 'An unexpected error occurred',
-        genericErrorDescription: 'Please try again or contact support if the problem persists.',
+        genericErrorDescription:
+          'Please try again or contact support if the problem persists.',
       },
 
       // Success Messages
@@ -304,7 +309,7 @@ const resources = {
       },
     },
   },
-  
+
   es: {
     translation: {
       // Navigation
@@ -320,7 +325,7 @@ const resources = {
         dashboard: 'Panel',
         logout: 'Cerrar Sesión',
       },
-      
+
       // Common
       common: {
         loading: 'Cargando...',
@@ -482,19 +487,25 @@ const resources = {
         pageNotFound: 'Página No Encontrada',
         pageNotFoundDescription: 'La página que buscas no existe.',
         serverError: 'Error del Servidor',
-        serverErrorDescription: 'Algo salió mal de nuestro lado. Por favor intenta de nuevo más tarde.',
+        serverErrorDescription:
+          'Algo salió mal de nuestro lado. Por favor intenta de nuevo más tarde.',
         networkError: 'Error de Red',
-        networkErrorDescription: 'Por favor verifica tu conexión a internet e intenta de nuevo.',
+        networkErrorDescription:
+          'Por favor verifica tu conexión a internet e intenta de nuevo.',
         unauthorized: 'No Autorizado',
-        unauthorizedDescription: 'No tienes permiso para acceder a este recurso.',
+        unauthorizedDescription:
+          'No tienes permiso para acceder a este recurso.',
         forbidden: 'Prohibido',
         forbiddenDescription: 'El acceso a este recurso está prohibido.',
         tooManyRequests: 'Demasiadas Solicitudes',
-        tooManyRequestsDescription: 'Has hecho demasiadas solicitudes. Por favor intenta de nuevo más tarde.',
+        tooManyRequestsDescription:
+          'Has hecho demasiadas solicitudes. Por favor intenta de nuevo más tarde.',
         validationError: 'Error de Validación',
-        validationErrorDescription: 'Por favor verifica tu entrada e intenta de nuevo.',
+        validationErrorDescription:
+          'Por favor verifica tu entrada e intenta de nuevo.',
         genericError: 'Ocurrió un error inesperado',
-        genericErrorDescription: 'Por favor intenta de nuevo o contacta soporte si el problema persiste.',
+        genericErrorDescription:
+          'Por favor intenta de nuevo o contacta soporte si el problema persiste.',
       },
 
       // Success Messages
@@ -552,7 +563,8 @@ const resources = {
       // File Upload
       upload: {
         title: 'Subir Archivos',
-        dragDrop: 'Arrastra y suelta archivos aquí, o haz clic para seleccionar',
+        dragDrop:
+          'Arrastra y suelta archivos aquí, o haz clic para seleccionar',
         selectFiles: 'Seleccionar Archivos',
         uploading: 'Subiendo...',
         uploadComplete: 'Subida completa',
@@ -610,16 +622,16 @@ i18n
     resources,
     fallbackLng: 'en',
     debug: process.env.NODE_ENV === 'development',
-    
+
     interpolation: {
       escapeValue: false, // React already does escaping
     },
-    
+
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],
       caches: ['localStorage'],
     },
-    
+
     react: {
       useSuspense: false,
     },

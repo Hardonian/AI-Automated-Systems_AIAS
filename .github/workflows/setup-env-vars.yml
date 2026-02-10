@@ -61,10 +61,10 @@ jobs:
             "RESEND_API_KEY"
             "VERCEL_TOKEN"
           )
-          
+
           echo "Checking if secrets are configured..."
           missing=0
-          
+
           for secret in "${required_secrets[@]}"; do
             # Check both direct and NEXT_PUBLIC_ variants
             if [ -z "${!secret}" ] && [ -z "${NEXT_PUBLIC_${secret}}" ]; then
@@ -74,7 +74,7 @@ jobs:
               echo "✅ Found: $secret"
             fi
           done
-          
+
           if [ $missing -gt 0 ]; then
             echo "❌ $missing required secrets are missing"
             echo "Please add them in Repository → Settings → Secrets and variables → Actions"
@@ -101,27 +101,27 @@ jobs:
           cat > .env.generated << EOF
           # Generated environment file for ${{ github.event.inputs.environment }}
           # Copy values from GitHub Secrets to your deployment platform
-          
+
           # Supabase
           NEXT_PUBLIC_SUPABASE_URL=\${SUPABASE_URL}
           NEXT_PUBLIC_SUPABASE_ANON_KEY=\${SUPABASE_ANON_KEY}
           SUPABASE_SERVICE_ROLE_KEY=\${SUPABASE_SERVICE_ROLE_KEY}
           SUPABASE_ACCESS_TOKEN=\${SUPABASE_ACCESS_TOKEN}
           SUPABASE_PROJECT_REF=\${SUPABASE_PROJECT_REF}
-          
+
           # Email
           RESEND_API_KEY=\${RESEND_API_KEY}
-          
+
           # Deployment
           VERCEL_TOKEN=\${VERCEL_TOKEN}
           VERCEL_ORG_ID=\${VERCEL_ORG_ID}
           VERCEL_PROJECT_ID=\${VERCEL_PROJECT_ID}
-          
+
           # Application
           NEXT_PUBLIC_SITE_URL=\${NEXT_PUBLIC_SITE_URL:-https://aiautomatedsystems.ca}
           NEXT_PUBLIC_APP_ENV=${{ github.event.inputs.environment }}
           EOF
-          
+
           echo "Generated .env template for ${{ github.event.inputs.environment }}"
           echo ""
           echo "📋 Template saved to .env.generated"

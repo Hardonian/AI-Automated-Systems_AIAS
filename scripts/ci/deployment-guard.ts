@@ -50,14 +50,15 @@ if (vercelConfig && typeof vercelConfig !== 'object') {
   errors.push('vercel.json must contain a JSON object at the root.');
 }
 
-(['docker-compose.yml', 'docker-compose.prod.yml'] as const).forEach((file) => {
+(['docker-compose.yml', 'docker-compose.prod.yml'] as const).forEach(file => {
   const composeConfig = readYaml(file);
   if (!composeConfig || typeof composeConfig !== 'object') {
     errors.push(`${file} must contain a YAML object at the root.`);
     return;
   }
 
-  const services = (composeConfig as { services?: Record<string, unknown> }).services;
+  const services = (composeConfig as { services?: Record<string, unknown> })
+    .services;
   if (!services || Object.keys(services).length === 0) {
     errors.push(`${file} must define at least one service.`);
   }
@@ -65,7 +66,7 @@ if (vercelConfig && typeof vercelConfig !== 'object') {
 
 if (errors.length > 0) {
   console.error('Deployment guard failed with the following issues:');
-  errors.forEach((message) => console.error(`- ${message}`));
+  errors.forEach(message => console.error(`- ${message}`));
   process.exit(1);
 }
 

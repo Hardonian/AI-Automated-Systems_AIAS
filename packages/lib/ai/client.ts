@@ -1,8 +1,14 @@
 import { logger } from '../observability';
 
 import { createAIProvider, createFallbackAIProvider } from './providers';
-import { ChatRequest, AuditRequest, EstimateRequest, ContentGenerationRequest, WorkflowGenerationRequest , AIProvider } from './types';
-
+import {
+  ChatRequest,
+  AuditRequest,
+  EstimateRequest,
+  ContentGenerationRequest,
+  WorkflowGenerationRequest,
+  AIProvider,
+} from './types';
 
 export class AIClient {
   private primaryProvider: AIProvider | null;
@@ -32,7 +38,10 @@ export class AIClient {
       try {
         return await operation(this.primaryProvider);
       } catch (error) {
-        logger.warn({ err: error, operation: operationName }, `Primary provider failed for ${operationName}`);
+        logger.warn(
+          { err: error, operation: operationName },
+          `Primary provider failed for ${operationName}`
+        );
       }
     }
 
@@ -40,7 +49,10 @@ export class AIClient {
       try {
         return await operation(this.fallbackProvider);
       } catch (error) {
-        logger.warn({ err: error, operation: operationName }, `Fallback provider failed for ${operationName}`);
+        logger.warn(
+          { err: error, operation: operationName },
+          `Fallback provider failed for ${operationName}`
+        );
       }
     }
 
@@ -48,10 +60,7 @@ export class AIClient {
   }
 
   async chat(request: ChatRequest) {
-    return this.executeWithFallback(
-      (provider) => provider.chat(request),
-      'chat'
-    );
+    return this.executeWithFallback(provider => provider.chat(request), 'chat');
   }
 
   async *streamChat(request: ChatRequest) {
@@ -78,28 +87,28 @@ export class AIClient {
 
   async generateAudit(request: AuditRequest) {
     return this.executeWithFallback(
-      (provider) => provider.generateAudit(request),
+      provider => provider.generateAudit(request),
       'generateAudit'
     );
   }
 
   async generateEstimate(request: EstimateRequest) {
     return this.executeWithFallback(
-      (provider) => provider.generateEstimate(request),
+      provider => provider.generateEstimate(request),
       'generateEstimate'
     );
   }
 
   async generateContent(request: ContentGenerationRequest) {
     return this.executeWithFallback(
-      (provider) => provider.generateContent(request),
+      provider => provider.generateContent(request),
       'generateContent'
     );
   }
 
   async generateWorkflow(request: WorkflowGenerationRequest) {
     return this.executeWithFallback(
-      (provider) => provider.generateWorkflow(request),
+      provider => provider.generateWorkflow(request),
       'generateWorkflow'
     );
   }

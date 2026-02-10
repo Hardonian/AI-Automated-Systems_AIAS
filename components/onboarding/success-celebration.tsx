@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import confetti from "canvas-confetti";
-import { CheckCircle, Sparkles, Zap, ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import confetti from 'canvas-confetti';
+import { CheckCircle, Sparkles, Zap, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface SuccessCelebrationProps {
   onDismiss?: () => void;
@@ -58,36 +58,39 @@ export function SuccessCelebration({ onDismiss }: SuccessCelebrationProps) {
   };
 
   return (
-    <Card className="mb-6 border-green-500 bg-green-50 dark:bg-green-950/20">
-      <CardContent className="p-6">
-        <div className="text-center space-y-4">
-          <div className="flex justify-center">
-            <div className="relative">
-              <CheckCircle className="h-16 w-16 text-green-600" />
-              <Sparkles className="h-8 w-8 text-yellow-500 absolute -top-2 -right-2 animate-pulse" />
+    <Card className='mb-6 border-green-500 bg-green-50 dark:bg-green-950/20'>
+      <CardContent className='p-6'>
+        <div className='space-y-4 text-center'>
+          <div className='flex justify-center'>
+            <div className='relative'>
+              <CheckCircle className='h-16 w-16 text-green-600' />
+              <Sparkles className='absolute -right-2 -top-2 h-8 w-8 animate-pulse text-yellow-500' />
             </div>
           </div>
           <div>
-            <h2 className="text-2xl font-bold mb-2">🎉 First Workflow Created!</h2>
-            <p className="text-muted-foreground">
+            <h2 className='mb-2 text-2xl font-bold'>
+              🎉 First Workflow Created!
+            </h2>
+            <p className='text-muted-foreground'>
               You're on your way to saving 10+ hours per week with automation!
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div className='flex flex-col justify-center gap-3 sm:flex-row'>
             <Button asChild>
-              <Link href="/workflows">
+              <Link href='/workflows'>
                 Create Another Workflow
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className='ml-2 h-4 w-4' />
               </Link>
             </Button>
-            <Button variant="outline" onClick={handleDismiss}>
+            <Button variant='outline' onClick={handleDismiss}>
               Continue
             </Button>
           </div>
-          <div className="pt-4 border-t">
-            <p className="text-sm text-muted-foreground">
-              <Zap className="h-4 w-4 inline mr-1" />
-              <strong>Next:</strong> Connect more integrations or explore advanced features
+          <div className='border-t pt-4'>
+            <p className='text-sm text-muted-foreground'>
+              <Zap className='mr-1 inline h-4 w-4' />
+              <strong>Next:</strong> Connect more integrations or explore
+              advanced features
             </p>
           </div>
         </div>

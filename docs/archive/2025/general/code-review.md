@@ -82,15 +82,20 @@
    - **Issue:** No try/catch block, errors will crash
    - **Impact:** High — Unhandled errors crash endpoint
    - **Fix:** Add error handling
+
    ```typescript
    export async function POST(req: NextRequest) {
      try {
        // ... existing code ...
      } catch (error) {
-       return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+       return NextResponse.json(
+         { error: 'Internal server error' },
+         { status: 500 }
+       );
      }
    }
    ```
+
    - **Line:** 11-22
 
 2. **Unhandled Promise Rejection in Route Handler**
@@ -235,6 +240,7 @@
    - **Issue:** Request body not validated (no Zod schema)
    - **Impact:** High — Potential injection attacks
    - **Fix:** Add Zod validation schema
+
    ```typescript
    const checkoutSchema = z.object({
      priceId: z.string().min(1),
@@ -242,6 +248,7 @@
      tier: z.enum(['starter', 'pro', 'enterprise']),
    });
    ```
+
    - **Line:** 23-27
 
 2. **Missing Input Validation in Webhook**
@@ -394,6 +401,7 @@
 **Benchmarks:** Measure health check latency improvement
 
 **Rollback Command:**
+
 ```bash
 git revert <commit-hash>
 ```
@@ -438,6 +446,7 @@ git revert <commit-hash>
 **Benchmarks:** Measure bundle size delta, p95 latency delta
 
 **Rollback Command:**
+
 ```bash
 git revert <commit-hash>
 ```
@@ -481,6 +490,7 @@ git revert <commit-hash>
 **Benchmarks:** Run `ts-prune` and `knip` to verify dead code removal
 
 **Rollback Command:**
+
 ```bash
 git revert <commit-hash>
 ```
@@ -500,11 +510,13 @@ git revert <commit-hash>
 **Estimated Time:** 24-40 hours
 
 **Priority Order:**
+
 1. Wave 1 (Safety) — Fix immediately
 2. Wave 2 (Performance) — Fix this week
 3. Wave 3 (Structure) — Fix this month
 
 **Evidence Required:**
+
 - Before/after metrics (bundle size, latency, error rates)
 - Test results (all tests passing)
 - Code coverage (maintain or improve)

@@ -3,23 +3,23 @@
  * Categorizes errors, detects patterns, and generates insights
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
 export type ErrorCategory =
-  | "network"
-  | "validation"
-  | "integration"
-  | "authentication"
-  | "authorization"
-  | "database"
-  | "timeout"
-  | "rate_limit"
-  | "unknown";
+  | 'network'
+  | 'validation'
+  | 'integration'
+  | 'authentication'
+  | 'authorization'
+  | 'database'
+  | 'timeout'
+  | 'rate_limit'
+  | 'unknown';
 
 export interface ErrorPattern {
   category: ErrorCategory;
@@ -28,7 +28,7 @@ export interface ErrorPattern {
   affectedUsers: number;
   firstSeen: Date;
   lastSeen: Date;
-  trend: "increasing" | "decreasing" | "stable";
+  trend: 'increasing' | 'decreasing' | 'stable';
   likelyCause: string;
   suggestedFix: string;
   relatedErrors: string[];
@@ -41,7 +41,7 @@ export interface ErrorSummary {
   topErrors: ErrorPattern[];
   trends: {
     errorRate: number;
-    trend: "increasing" | "decreasing" | "stable";
+    trend: 'increasing' | 'decreasing' | 'stable';
   };
 }
 
@@ -51,32 +51,59 @@ export interface ErrorSummary {
 function categorizeError(message: string): ErrorCategory {
   const lowerMessage = message.toLowerCase();
 
-  if (lowerMessage.includes("network") || lowerMessage.includes("fetch") || lowerMessage.includes("connection")) {
-    return "network";
+  if (
+    lowerMessage.includes('network') ||
+    lowerMessage.includes('fetch') ||
+    lowerMessage.includes('connection')
+  ) {
+    return 'network';
   }
-  if (lowerMessage.includes("validation") || lowerMessage.includes("invalid") || lowerMessage.includes("required")) {
-    return "validation";
+  if (
+    lowerMessage.includes('validation') ||
+    lowerMessage.includes('invalid') ||
+    lowerMessage.includes('required')
+  ) {
+    return 'validation';
   }
-  if (lowerMessage.includes("integration") || lowerMessage.includes("shopify") || lowerMessage.includes("wave")) {
-    return "integration";
+  if (
+    lowerMessage.includes('integration') ||
+    lowerMessage.includes('shopify') ||
+    lowerMessage.includes('wave')
+  ) {
+    return 'integration';
   }
-  if (lowerMessage.includes("unauthorized") || lowerMessage.includes("authentication") || lowerMessage.includes("token")) {
-    return "authentication";
+  if (
+    lowerMessage.includes('unauthorized') ||
+    lowerMessage.includes('authentication') ||
+    lowerMessage.includes('token')
+  ) {
+    return 'authentication';
   }
-  if (lowerMessage.includes("forbidden") || lowerMessage.includes("permission") || lowerMessage.includes("access")) {
-    return "authorization";
+  if (
+    lowerMessage.includes('forbidden') ||
+    lowerMessage.includes('permission') ||
+    lowerMessage.includes('access')
+  ) {
+    return 'authorization';
   }
-  if (lowerMessage.includes("database") || lowerMessage.includes("sql") || lowerMessage.includes("query")) {
-    return "database";
+  if (
+    lowerMessage.includes('database') ||
+    lowerMessage.includes('sql') ||
+    lowerMessage.includes('query')
+  ) {
+    return 'database';
   }
-  if (lowerMessage.includes("timeout") || lowerMessage.includes("timed out")) {
-    return "timeout";
+  if (lowerMessage.includes('timeout') || lowerMessage.includes('timed out')) {
+    return 'timeout';
   }
-  if (lowerMessage.includes("rate limit") || lowerMessage.includes("too many requests")) {
-    return "rate_limit";
+  if (
+    lowerMessage.includes('rate limit') ||
+    lowerMessage.includes('too many requests')
+  ) {
+    return 'rate_limit';
   }
 
-  return "unknown";
+  return 'unknown';
 }
 
 /**
@@ -89,14 +116,17 @@ export async function analyzeErrors(days: number = 7): Promise<ErrorSummary> {
 
     // Get all errors
     const { data: errors, error: fetchError } = await supabase
-      .from("app_events")
-      .select("event_type, user_id, created_at, meta")
-      .eq("event_type", "error")
-      .gte("created_at", cutoffDate.toISOString())
-      .order("created_at", { ascending: false });
+      .from('app_events')
+      .select('event_type, user_id, created_at, meta')
+      .eq('event_type', 'error')
+      .gte('created_at', cutoffDate.toISOString())
+      .order('created_at', { ascending: false });
 
     if (fetchError) {
-      logger.error("Failed to fetch errors", fetchError instanceof Error ? fetchError : new Error(String(fetchError)));
+      logger.error(
+        'Failed to fetch errors',
+        fetchError instanceof Error ? fetchError : new Error(String(fetchError))
+      );
       return {
         totalErrors: 0,
         uniqueErrors: 0,
@@ -104,44 +134,56 @@ export async function analyzeErrors(days: number = 7): Promise<ErrorSummary> {
         topErrors: [],
         trends: {
           errorRate: 0,
-          trend: "stable",
+          trend: 'stable',
         },
       };
     }
 
     // Group errors by message
-    const errorGroups: Record<string, {
-      count: number;
-      users: Set<string>;
-      timestamps: Date[];
-      category: ErrorCategory;
-      meta: Record<string, unknown>[];
-    }> = {};
+    const errorGroups: Record<
+      string,
+      {
+        count: number;
+        users: Set<string>;
+        timestamps: Date[];
+        category: ErrorCategory;
+        meta: Record<string, unknown>[];
+      }
+    > = {};
 
-    errors?.forEach((error: { meta: Record<string, unknown>; user_id?: string; created_at?: string }) => {
-      const errorMessage = (error.meta as Record<string, unknown>)?.error as string || 
-                           (error.meta as Record<string, unknown>)?.message as string || 
-                           "Unknown error";
-      
-      if (!errorGroups[errorMessage]) {
-        errorGroups[errorMessage] = {
-          count: 0,
-          users: new Set(),
-          timestamps: [],
-          category: categorizeError(errorMessage),
-          meta: [],
-        };
-      }
+    errors?.forEach(
+      (error: {
+        meta: Record<string, unknown>;
+        user_id?: string;
+        created_at?: string;
+      }) => {
+        const errorMessage =
+          ((error.meta as Record<string, unknown>)?.error as string) ||
+          ((error.meta as Record<string, unknown>)?.message as string) ||
+          'Unknown error';
 
-      errorGroups[errorMessage].count++;
-      if (error.user_id) {
-        errorGroups[errorMessage].users.add(error.user_id);
+        if (!errorGroups[errorMessage]) {
+          errorGroups[errorMessage] = {
+            count: 0,
+            users: new Set(),
+            timestamps: [],
+            category: categorizeError(errorMessage),
+            meta: [],
+          };
+        }
+
+        errorGroups[errorMessage].count++;
+        if (error.user_id) {
+          errorGroups[errorMessage].users.add(error.user_id);
+        }
+        if (error.created_at) {
+          errorGroups[errorMessage].timestamps.push(new Date(error.created_at));
+        }
+        errorGroups[errorMessage].meta.push(
+          error.meta as Record<string, unknown>
+        );
       }
-      if (error.created_at) {
-        errorGroups[errorMessage].timestamps.push(new Date(error.created_at));
-      }
-      errorGroups[errorMessage].meta.push(error.meta as Record<string, unknown>);
-    });
+    );
 
     // Convert to patterns
     const patterns: ErrorPattern[] = [];
@@ -152,15 +194,18 @@ export async function analyzeErrors(days: number = 7): Promise<ErrorSummary> {
       const firstHalf = data.timestamps.slice(0, midPoint).length;
       const secondHalf = data.timestamps.slice(midPoint).length;
 
-      let trend: "increasing" | "decreasing" | "stable" = "stable";
+      let trend: 'increasing' | 'decreasing' | 'stable' = 'stable';
       if (secondHalf > firstHalf * 1.2) {
-        trend = "increasing";
+        trend = 'increasing';
       } else if (firstHalf > secondHalf * 1.2) {
-        trend = "decreasing";
+        trend = 'decreasing';
       }
 
       // Determine likely cause and suggested fix
-      const { likelyCause, suggestedFix } = generateErrorInsights(message, data.category);
+      const { likelyCause, suggestedFix } = generateErrorInsights(
+        message,
+        data.category
+      );
 
       patterns.push({
         category: data.category,
@@ -189,8 +234,9 @@ export async function analyzeErrors(days: number = 7): Promise<ErrorSummary> {
       unknown: 0,
     };
 
-    patterns.forEach((pattern) => {
-      errorsByCategory[pattern.category] = (errorsByCategory[pattern.category] || 0) + pattern.count;
+    patterns.forEach(pattern => {
+      errorsByCategory[pattern.category] =
+        (errorsByCategory[pattern.category] || 0) + pattern.count;
     });
 
     // Calculate error rate trend
@@ -207,15 +253,21 @@ export async function analyzeErrors(days: number = 7): Promise<ErrorSummary> {
       topErrors,
       trends: {
         errorRate: Math.round(errorRate * 10) / 10,
-        trend: patterns.filter((p) => p.trend === "increasing").length > patterns.filter((p) => p.trend === "decreasing").length
-          ? "increasing"
-          : patterns.filter((p) => p.trend === "decreasing").length > patterns.filter((p) => p.trend === "increasing").length
-          ? "decreasing"
-          : "stable",
+        trend:
+          patterns.filter(p => p.trend === 'increasing').length >
+          patterns.filter(p => p.trend === 'decreasing').length
+            ? 'increasing'
+            : patterns.filter(p => p.trend === 'decreasing').length >
+                patterns.filter(p => p.trend === 'increasing').length
+              ? 'decreasing'
+              : 'stable',
       },
     };
   } catch (error) {
-    logger.error("Failed to analyze errors", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Failed to analyze errors',
+      error instanceof Error ? error : new Error(String(error))
+    );
     return {
       totalErrors: 0,
       uniqueErrors: 0,
@@ -223,7 +275,7 @@ export async function analyzeErrors(days: number = 7): Promise<ErrorSummary> {
       topErrors: [],
       trends: {
         errorRate: 0,
-        trend: "stable",
+        trend: 'stable',
       },
     };
   }
@@ -239,69 +291,82 @@ function generateErrorInsights(
   const lowerMessage = message.toLowerCase();
 
   // Network errors
-  if (category === "network") {
+  if (category === 'network') {
     return {
-      likelyCause: "Network connectivity issue or external service unavailable",
-      suggestedFix: "Check internet connection, verify external service status, implement retry logic",
+      likelyCause: 'Network connectivity issue or external service unavailable',
+      suggestedFix:
+        'Check internet connection, verify external service status, implement retry logic',
     };
   }
 
   // Validation errors
-  if (category === "validation") {
+  if (category === 'validation') {
     return {
-      likelyCause: "Invalid input data or missing required fields",
-      suggestedFix: "Validate input before processing, provide clear error messages to users",
+      likelyCause: 'Invalid input data or missing required fields',
+      suggestedFix:
+        'Validate input before processing, provide clear error messages to users',
     };
   }
 
   // Integration errors
-  if (category === "integration") {
-    if (lowerMessage.includes("not connected") || lowerMessage.includes("disconnected")) {
+  if (category === 'integration') {
+    if (
+      lowerMessage.includes('not connected') ||
+      lowerMessage.includes('disconnected')
+    ) {
       return {
-        likelyCause: "Integration connection lost or expired",
-        suggestedFix: "Reconnect the integration, check OAuth token expiration",
+        likelyCause: 'Integration connection lost or expired',
+        suggestedFix: 'Reconnect the integration, check OAuth token expiration',
       };
     }
-    if (lowerMessage.includes("api") || lowerMessage.includes("request failed")) {
+    if (
+      lowerMessage.includes('api') ||
+      lowerMessage.includes('request failed')
+    ) {
       return {
-        likelyCause: "External API error or rate limiting",
-        suggestedFix: "Check integration API status, verify credentials, implement rate limiting",
+        likelyCause: 'External API error or rate limiting',
+        suggestedFix:
+          'Check integration API status, verify credentials, implement rate limiting',
       };
     }
     return {
-      likelyCause: "Integration configuration issue",
-      suggestedFix: "Review integration settings, check API credentials, verify permissions",
+      likelyCause: 'Integration configuration issue',
+      suggestedFix:
+        'Review integration settings, check API credentials, verify permissions',
     };
   }
 
   // Authentication errors
-  if (category === "authentication") {
+  if (category === 'authentication') {
     return {
-      likelyCause: "Invalid or expired authentication token",
-      suggestedFix: "Refresh authentication token, re-authenticate user",
+      likelyCause: 'Invalid or expired authentication token',
+      suggestedFix: 'Refresh authentication token, re-authenticate user',
     };
   }
 
   // Timeout errors
-  if (category === "timeout") {
+  if (category === 'timeout') {
     return {
-      likelyCause: "Operation took too long to complete",
-      suggestedFix: "Increase timeout limits, optimize slow operations, implement async processing",
+      likelyCause: 'Operation took too long to complete',
+      suggestedFix:
+        'Increase timeout limits, optimize slow operations, implement async processing',
     };
   }
 
   // Rate limit errors
-  if (category === "rate_limit") {
+  if (category === 'rate_limit') {
     return {
-      likelyCause: "API rate limit exceeded",
-      suggestedFix: "Implement exponential backoff, upgrade plan for higher limits, cache responses",
+      likelyCause: 'API rate limit exceeded',
+      suggestedFix:
+        'Implement exponential backoff, upgrade plan for higher limits, cache responses',
     };
   }
 
   // Default
   return {
-    likelyCause: "Unknown error - requires investigation",
-    suggestedFix: "Review error logs, check system status, contact support if issue persists",
+    likelyCause: 'Unknown error - requires investigation',
+    suggestedFix:
+      'Review error logs, check system status, contact support if issue persists',
   };
 }
 
@@ -312,14 +377,19 @@ function findRelatedErrors(message: string, allMessages: string[]): string[] {
   const messageWords = message.toLowerCase().split(/\s+/);
   const related: string[] = [];
 
-  allMessages.forEach((otherMessage) => {
-    if (otherMessage === message) {return;}
+  allMessages.forEach(otherMessage => {
+    if (otherMessage === message) {
+      return;
+    }
 
     const otherWords = otherMessage.toLowerCase().split(/\s+/);
-    const commonWords = messageWords.filter((word) => otherWords.includes(word));
-    
+    const commonWords = messageWords.filter(word => otherWords.includes(word));
+
     // If >30% words in common, consider related
-    if (commonWords.length / Math.max(messageWords.length, otherWords.length) > 0.3) {
+    if (
+      commonWords.length / Math.max(messageWords.length, otherWords.length) >
+      0.3
+    ) {
       related.push(otherMessage);
     }
   });

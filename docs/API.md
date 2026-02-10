@@ -14,6 +14,7 @@ This document provides comprehensive API documentation for the AIAS Platform. Al
 Most API endpoints require authentication. Include the authentication token in one of the following ways:
 
 1. **Authorization Header:**
+
    ```
    Authorization: Bearer <token>
    ```
@@ -33,12 +34,14 @@ For multi-tenant endpoints, include the tenant ID:
 ## Rate Limiting
 
 API endpoints are rate-limited per user/IP:
+
 - **Auth endpoints:** 5 requests/minute
 - **Stripe endpoints:** 20 requests/minute
 - **Telemetry endpoints:** 100 requests/minute
 - **Default:** 100 requests/minute
 
 Rate limit headers are included in responses:
+
 - `X-RateLimit-Limit`: Maximum requests per window
 - `X-RateLimit-Remaining`: Remaining requests in current window
 - `X-RateLimit-Reset`: Unix timestamp when the limit resets
@@ -56,6 +59,7 @@ All errors follow a consistent format:
 ```
 
 Common HTTP status codes:
+
 - `200`: Success
 - `201`: Created
 - `400`: Bad Request (validation error)
@@ -71,9 +75,11 @@ Common HTTP status codes:
 ### Health & Status
 
 #### GET /api/healthz
+
 Comprehensive health check endpoint.
 
 **Response:**
+
 ```json
 {
   "ok": true,
@@ -104,9 +110,11 @@ Comprehensive health check endpoint.
 ```
 
 #### GET /api/status
+
 System status and health information.
 
 **Response:**
+
 ```json
 {
   "status": "operational",
@@ -131,13 +139,16 @@ System status and health information.
 ### User Settings
 
 #### GET /api/settings
+
 Get user settings.
 
 **Headers:**
+
 - `Authorization: Bearer <token>`
 - `X-Tenant-ID: <tenant-id>` (optional)
 
 **Response:**
+
 ```json
 {
   "settings": {
@@ -152,13 +163,16 @@ Get user settings.
 ```
 
 #### PUT /api/settings
+
 Update user settings.
 
 **Headers:**
+
 - `Authorization: Bearer <token>`
 - `X-Tenant-ID: <tenant-id>` (optional)
 
 **Body:**
+
 ```json
 {
   "email_notifications_enabled": true,
@@ -170,6 +184,7 @@ Update user settings.
 ```
 
 **Response:**
+
 ```json
 {
   "settings": {
@@ -186,16 +201,20 @@ Update user settings.
 ### Workflows (v1)
 
 #### GET /api/v1/workflows
+
 List workflows for the authenticated user.
 
 **Headers:**
+
 - `Authorization: Bearer <token>`
 - `X-Tenant-ID: <tenant-id>` (optional)
 
 **Query Parameters:**
+
 - `tenant_id` (optional): Filter by tenant ID
 
 **Response:**
+
 ```json
 {
   "workflows": [
@@ -212,13 +231,16 @@ List workflows for the authenticated user.
 ```
 
 #### POST /api/v1/workflows
+
 Create a new workflow.
 
 **Headers:**
+
 - `Authorization: Bearer <token>`
 - `X-Tenant-ID: <tenant-id>` (optional)
 
 **Body:**
+
 ```json
 {
   "name": "Daily Report Automation",
@@ -235,6 +257,7 @@ Create a new workflow.
 ```
 
 **Response:**
+
 ```json
 {
   "workflow": {
@@ -251,16 +274,20 @@ Create a new workflow.
 ### Agents (v1)
 
 #### GET /api/v1/agents
+
 List agents for the authenticated user.
 
 **Headers:**
+
 - `Authorization: Bearer <token>`
 - `X-Tenant-ID: <tenant-id>` (optional)
 
 **Query Parameters:**
+
 - `tenant_id` (optional): Filter by tenant ID
 
 **Response:**
+
 ```json
 {
   "agents": [
@@ -278,13 +305,16 @@ List agents for the authenticated user.
 ```
 
 #### POST /api/v1/agents
+
 Create a new agent.
 
 **Headers:**
+
 - `Authorization: Bearer <token>`
 - `X-Tenant-ID: <tenant-id>` (optional)
 
 **Body:**
+
 ```json
 {
   "name": "Customer Support Bot",
@@ -299,6 +329,7 @@ Create a new agent.
 ```
 
 **Response:**
+
 ```json
 {
   "agent": {
@@ -316,9 +347,11 @@ Create a new agent.
 ### Feature Flags
 
 #### GET /api/flags/trust
+
 Get trust-related feature flags.
 
 **Response:**
+
 ```json
 {
   "trust_audit_enabled": true,
@@ -333,12 +366,15 @@ Get trust-related feature flags.
 ### Telemetry
 
 #### POST /api/telemetry/ingest
+
 Ingest telemetry data.
 
 **Headers:**
+
 - `Content-Type: application/json`
 
 **Body:**
+
 ```json
 {
   "event": "page_view",
@@ -351,6 +387,7 @@ Ingest telemetry data.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -361,13 +398,16 @@ Ingest telemetry data.
 ### Analytics
 
 #### POST /api/analytics/track
+
 Track analytics event.
 
 **Headers:**
+
 - `Authorization: Bearer <token>` (optional)
 - `Content-Type: application/json`
 
 **Body:**
+
 ```json
 {
   "event": "conversion",
@@ -379,6 +419,7 @@ Track analytics event.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -389,12 +430,15 @@ Track analytics event.
 ### Admin
 
 #### GET /api/admin/compliance
+
 Get compliance status (admin only).
 
 **Headers:**
+
 - `Authorization: Bearer <token>`
 
 **Response:**
+
 ```json
 {
   "compliance": {
@@ -407,12 +451,15 @@ Get compliance status (admin only).
 ```
 
 #### GET /api/admin/reliability
+
 Get reliability dashboard data (admin only).
 
 **Headers:**
+
 - `Authorization: Bearer <token>`
 
 **Response:**
+
 ```json
 {
   "timestamp": "2025-01-30T12:00:00Z",
@@ -433,12 +480,15 @@ Get reliability dashboard data (admin only).
 ### Metrics
 
 #### GET /api/metrics
+
 Get system metrics (admin only).
 
 **Headers:**
+
 - `Authorization: Bearer <token>`
 
 **Response:**
+
 ```json
 {
   "metrics": {
@@ -454,9 +504,11 @@ Get system metrics (admin only).
 ### Stripe Webhook
 
 #### POST /api/stripe/webhook
+
 Stripe webhook endpoint for payment events.
 
 **Headers:**
+
 - `stripe-signature: <signature>`
 
 **Body:** Stripe webhook payload
@@ -471,7 +523,7 @@ const API_BASE = 'https://aias-platform.com/api';
 async function getSettings(token: string) {
   const response = await fetch(`${API_BASE}/settings`, {
     headers: {
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   });
   return response.json();
@@ -481,7 +533,7 @@ async function createWorkflow(token: string, workflow: any) {
   const response = await fetch(`${API_BASE}/v1/workflows`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(workflow),
@@ -510,6 +562,7 @@ curl -X POST https://aias-platform.com/api/v1/workflows \
 ## Changelog
 
 ### v1.0.0 (2025-01-30)
+
 - Initial API documentation
 - Added workflows and agents endpoints
 - Added feature flags endpoint

@@ -3,7 +3,7 @@
  * Centralized plan configuration and limits
  */
 
-export type PlanTier = "free" | "trial" | "starter" | "pro" | "enterprise";
+export type PlanTier = 'free' | 'trial' | 'starter' | 'pro' | 'enterprise';
 
 export interface PlanLimits {
   workflows: number; // -1 for unlimited
@@ -13,7 +13,7 @@ export interface PlanLimits {
   teamCollaboration: boolean;
   advancedAnalytics: boolean;
   whiteLabel: boolean;
-  supportLevel: "community" | "email" | "priority" | "dedicated";
+  supportLevel: 'community' | 'email' | 'priority' | 'dedicated';
 }
 
 export const PLAN_LIMITS: Record<PlanTier, PlanLimits> = {
@@ -25,7 +25,7 @@ export const PLAN_LIMITS: Record<PlanTier, PlanLimits> = {
     teamCollaboration: false,
     advancedAnalytics: false,
     whiteLabel: false,
-    supportLevel: "community",
+    supportLevel: 'community',
   },
   trial: {
     workflows: 3,
@@ -35,7 +35,7 @@ export const PLAN_LIMITS: Record<PlanTier, PlanLimits> = {
     teamCollaboration: false,
     advancedAnalytics: false,
     whiteLabel: false,
-    supportLevel: "email",
+    supportLevel: 'email',
   },
   starter: {
     workflows: 5,
@@ -45,7 +45,7 @@ export const PLAN_LIMITS: Record<PlanTier, PlanLimits> = {
     teamCollaboration: false,
     advancedAnalytics: false,
     whiteLabel: false,
-    supportLevel: "email",
+    supportLevel: 'email',
   },
   pro: {
     workflows: 20,
@@ -55,7 +55,7 @@ export const PLAN_LIMITS: Record<PlanTier, PlanLimits> = {
     teamCollaboration: false, // coming soon
     advancedAnalytics: true,
     whiteLabel: false,
-    supportLevel: "priority",
+    supportLevel: 'priority',
   },
   enterprise: {
     workflows: -1, // unlimited
@@ -65,7 +65,7 @@ export const PLAN_LIMITS: Record<PlanTier, PlanLimits> = {
     teamCollaboration: true,
     advancedAnalytics: true,
     whiteLabel: true,
-    supportLevel: "dedicated",
+    supportLevel: 'dedicated',
   },
 };
 
@@ -79,7 +79,13 @@ export function getPlanLimits(plan: PlanTier): PlanLimits {
 /**
  * Check if plan has feature
  */
-export function planHasFeature(plan: PlanTier, feature: keyof Omit<PlanLimits, "workflows" | "automationsMonthly" | "integrations" | "supportLevel">): boolean {
+export function planHasFeature(
+  plan: PlanTier,
+  feature: keyof Omit<
+    PlanLimits,
+    'workflows' | 'automationsMonthly' | 'integrations' | 'supportLevel'
+  >
+): boolean {
   const limits = getPlanLimits(plan);
   return limits[feature] === true;
 }
@@ -88,13 +94,16 @@ export function planHasFeature(plan: PlanTier, feature: keyof Omit<PlanLimits, "
  * Get minimum plan for feature
  */
 export function getMinimumPlanForFeature(
-  feature: keyof Omit<PlanLimits, "workflows" | "automationsMonthly" | "integrations" | "supportLevel">
+  feature: keyof Omit<
+    PlanLimits,
+    'workflows' | 'automationsMonthly' | 'integrations' | 'supportLevel'
+  >
 ): PlanTier {
-  const plans: PlanTier[] = ["free", "trial", "starter", "pro", "enterprise"];
+  const plans: PlanTier[] = ['free', 'trial', 'starter', 'pro', 'enterprise'];
   for (const plan of plans) {
     if (planHasFeature(plan, feature)) {
       return plan;
     }
   }
-  return "enterprise";
+  return 'enterprise';
 }

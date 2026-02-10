@@ -5,11 +5,11 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  
+
   // Webpack configuration for path resolution
   webpack: (config, { isServer }) => {
     const rootDir = path.resolve(__dirname, '../..');
-    
+
     // Add path aliases for webpack resolution
     config.resolve.alias = {
       ...config.resolve.alias,
@@ -19,7 +19,7 @@ const nextConfig = {
       '@/lib': path.resolve(rootDir, 'lib'),
       '@/app': path.resolve(rootDir, 'app'),
     };
-    
+
     // Exclude Node.js-only modules from client bundle
     config.externals = config.externals || [];
     if (isServer) {
@@ -27,12 +27,12 @@ const nextConfig = {
     } else {
       // Exclude server-only modules from client bundle
       config.externals.push({
-        'canvas': 'commonjs canvas',
-        'jsdom': 'commonjs jsdom',
+        canvas: 'commonjs canvas',
+        jsdom: 'commonjs jsdom',
         'isomorphic-dompurify': 'commonjs isomorphic-dompurify',
       });
     }
-    
+
     // Ignore server-only modules on client
     if (!isServer) {
       config.resolve.alias['@/lib/database/migrations'] = false;
@@ -53,16 +53,25 @@ const nextConfig = {
       config.plugins = config.plugins || [];
       config.plugins.push(
         new webpack.IgnorePlugin({
-          resourceRegExp: /^(canvas|jsdom|isomorphic-dompurify|agent-base|https-proxy-agent|http-proxy-agent)$/,
+          resourceRegExp:
+            /^(canvas|jsdom|isomorphic-dompurify|agent-base|https-proxy-agent|http-proxy-agent)$/,
         }),
         new webpack.IgnorePlugin({
           checkResource(resource, context) {
             // Ignore net, tls, and other Node.js built-in modules
-            if (['net', 'tls', 'dns', 'fs', 'path', 'os', 'crypto'].includes(resource)) {
+            if (
+              ['net', 'tls', 'dns', 'fs', 'path', 'os', 'crypto'].includes(
+                resource
+              )
+            ) {
               return true;
             }
             // Ignore jsdom and related packages
-            if (resource.includes('jsdom') || resource.includes('canvas') || resource.includes('isomorphic-dompurify')) {
+            if (
+              resource.includes('jsdom') ||
+              resource.includes('canvas') ||
+              resource.includes('isomorphic-dompurify')
+            ) {
               return true;
             }
             return false;
@@ -81,7 +90,7 @@ const nextConfig = {
         crypto: false,
       };
     }
-    
+
     // Optimize bundle splitting
     if (!isServer) {
       config.optimization = {
@@ -108,13 +117,13 @@ const nextConfig = {
         },
       };
     }
-    
+
     return config;
   },
-  
+
   // Transpile packages from workspace root
   transpilePackages: ['@ai-consultancy/config', '@ai-consultancy/lib'],
-  
+
   // Experimental features for faster builds
   experimental: {
     optimizePackageImports: [
@@ -131,10 +140,10 @@ const nextConfig = {
       '/api/**': ['./**'],
     },
   },
-  
+
   // Build optimizations
   // swcMinify is default in Next.js 15, no need to specify
-  
+
   // TypeScript and ESLint - strict enforcement for production builds
   typescript: {
     ignoreBuildErrors: false, // Enforce type checking during build

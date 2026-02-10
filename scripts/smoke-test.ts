@@ -2,7 +2,7 @@
 /**
  * Comprehensive Smoke Test Suite
  * Tests critical paths to ensure system health
- * 
+ *
  * Usage: tsx scripts/smoke-test.ts
  */
 
@@ -21,9 +21,10 @@ class SmokeTestRunner {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
-                   process.env.HEALTH_URL?.replace('/api/healthz', '') || 
-                   'http://localhost:3000';
+    this.baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.HEALTH_URL?.replace('/api/healthz', '') ||
+      'http://localhost:3000';
   }
 
   private async runTest(
@@ -38,14 +39,18 @@ class SmokeTestRunner {
       logger.info(`✅ ${name}`, { duration });
     } catch (error) {
       const duration = Date.now() - startTime;
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      this.results.push({ 
-        name, 
-        passed: false, 
-        duration, 
-        error: errorMessage 
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      this.results.push({
+        name,
+        passed: false,
+        duration,
+        error: errorMessage,
       });
-      logger.error(`❌ ${name}`, error instanceof Error ? error : new Error(errorMessage));
+      logger.error(
+        `❌ ${name}`,
+        error instanceof Error ? error : new Error(errorMessage)
+      );
     }
   }
 
@@ -55,12 +60,16 @@ class SmokeTestRunner {
   private async testHealthCheck(): Promise<void> {
     const response = await fetch(`${this.baseUrl}/api/healthz`);
     if (!response.ok) {
-      throw new Error(`Health check failed: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Health check failed: ${response.status} ${response.statusText}`
+      );
     }
 
     const data = await response.json();
     if (!data.ok) {
-      throw new Error(`Health check returned unhealthy: ${JSON.stringify(data)}`);
+      throw new Error(
+        `Health check returned unhealthy: ${JSON.stringify(data)}`
+      );
     }
 
     // Verify critical components
@@ -95,7 +104,7 @@ class SmokeTestRunner {
    */
   private async testSecurityHeaders(): Promise<void> {
     const response = await fetch(`${this.baseUrl}/api/healthz`);
-    
+
     const requiredHeaders = [
       'x-content-type-options',
       'x-frame-options',
@@ -114,12 +123,12 @@ class SmokeTestRunner {
    */
   private async testRateLimiting(): Promise<void> {
     // Make multiple rapid requests
-    const requests = Array.from({ length: 10 }, () => 
+    const requests = Array.from({ length: 10 }, () =>
       fetch(`${this.baseUrl}/api/healthz`)
     );
 
     const responses = await Promise.all(requests);
-    
+
     // Check rate limit headers
     const rateLimitHeaders = responses[0].headers.get('x-ratelimit-limit');
     if (!rateLimitHeaders) {
@@ -135,7 +144,7 @@ class SmokeTestRunner {
   private async testErrorHandling(): Promise<void> {
     // Test 404 endpoint
     const response = await fetch(`${this.baseUrl}/api/nonexistent-endpoint`);
-    
+
     if (response.status !== 404) {
       throw new Error(`Expected 404, got ${response.status}`);
     }
@@ -200,7 +209,9 @@ class SmokeTestRunner {
     }
 
     if (missing.length > 0) {
-      throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
+      throw new Error(
+        `Missing required environment variables: ${missing.join(', ')}`
+      );
     }
   }
 
@@ -217,7 +228,9 @@ class SmokeTestRunner {
     await this.runTest('Error Handling', () => this.testErrorHandling());
     await this.runTest('CORS Headers', () => this.testCorsHeaders());
     await this.runTest('Response Time', () => this.testResponseTime());
-    await this.runTest('Environment Variables', () => this.testEnvironmentVariables());
+    await this.runTest('Environment Variables', () =>
+      this.testEnvironmentVariables()
+    );
 
     this.printResults();
   }
@@ -230,14 +243,14 @@ class SmokeTestRunner {
     const failed = this.results.filter(r => !r.passed).length;
     const totalDuration = this.results.reduce((sum, r) => sum + r.duration, 0);
 
-    console.log(`\n${  '='.repeat(60)}`);
+    console.log(`\n${'='.repeat(60)}`);
     console.log('SMOKE TEST RESULTS');
     console.log('='.repeat(60));
     console.log(`Total Tests: ${this.results.length}`);
     console.log(`Passed: ${passed}`);
     console.log(`Failed: ${failed}`);
     console.log(`Total Duration: ${totalDuration}ms`);
-    console.log(`${'='.repeat(60)  }\n`);
+    console.log(`${'='.repeat(60)}\n`);
 
     for (const result of this.results) {
       const status = result.passed ? '✅ PASS' : '❌ FAIL';
@@ -247,7 +260,7 @@ class SmokeTestRunner {
       }
     }
 
-    console.log(`\n${  '='.repeat(60)}`);
+    console.log(`\n${'='.repeat(60)}`);
 
     if (failed > 0) {
       logger.error('Smoke tests failed', {
@@ -269,8 +282,11 @@ class SmokeTestRunner {
 // Run tests if executed directly
 if (require.main === module) {
   const runner = new SmokeTestRunner();
-  runner.run().catch((error) => {
-    logger.fatal('Smoke test runner failed', error instanceof Error ? error : new Error(String(error)));
+  runner.run().catch(error => {
+    logger.fatal(
+      'Smoke test runner failed',
+      error instanceof Error ? error : new Error(String(error))
+    );
     process.exit(1);
   });
 }

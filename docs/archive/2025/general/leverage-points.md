@@ -14,6 +14,7 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 ### 1. Review Queue (Longest Queue)
 
 **Current State:**
+
 - Lead Time: 24h
 - Queue Length: 8 PRs
 - Cycle Time: 2h (active review)
@@ -21,11 +22,13 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 **Impact:** 🔴 High — Blocks feature delivery
 
 **Root Causes:**
+
 - Limited reviewers
 - Async review process
 - Large PRs requiring extensive review
 
 **Leverage Actions:**
+
 1. **Exploit the Constraint:**
    - Add more reviewers to team
    - Use review assignments to distribute load
@@ -47,6 +50,7 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 ### 2. CI Pipeline Duration (Highest Variance)
 
 **Current State:**
+
 - Lead Time: 15min
 - Cycle Time: 12min
 - Variance: Medium (depends on test suite)
@@ -54,11 +58,13 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 **Impact:** 🟡 Medium — Affects developer feedback loop
 
 **Root Causes:**
+
 - Sequential job execution
 - Large test suite
 - No test parallelization
 
 **Leverage Actions:**
+
 1. **Parallelize Jobs:**
    - Run unit tests, linting, type checking in parallel
    - Use matrix builds for test suites
@@ -80,6 +86,7 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 ### 3. Error-to-Fix Latency (Top Feedback Latency)
 
 **Current State:**
+
 - Time from error to fix: Unknown (not tracked)
 - Error detection: Telemetry exists
 - Fix deployment: ~26h lead time
@@ -87,11 +94,13 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 **Impact:** 🟡 Medium — Affects user experience
 
 **Root Causes:**
+
 - No automated error detection
 - Manual error investigation
 - Long deployment cycle
 
 **Leverage Actions:**
+
 1. **Decrease Feedback Delay:**
    - Automated error alerts
    - Error taxonomy and categorization
@@ -114,6 +123,7 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 ### 4. Rework Rate (18%)
 
 **Current State:**
+
 - CI Failures: 5%
 - Review Feedback: 10%
 - Build Failures: 2%
@@ -122,11 +132,13 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 **Impact:** 🟡 Medium — Wastes developer time
 
 **Root Causes:**
+
 - Pre-merge checks missing
 - Incomplete PR descriptions
 - Environment mismatches
 
 **Leverage Actions:**
+
 1. **Add Pre-Merge Checks:**
    - Type checking
    - Linting
@@ -149,12 +161,12 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 
 ## Leverage Points Ranking
 
-| Rank | Leverage Point | Impact | Effort | ROI | Priority |
-|------|----------------|--------|--------|-----|----------|
-| 1 | Review Queue Optimization | High | Medium | High | 🔴 P0 |
-| 2 | CI Pipeline Parallelization | Medium | Low-Medium | High | 🟡 P1 |
-| 3 | Error-to-Fix Latency | Medium | Medium | Medium | 🟡 P1 |
-| 4 | Rework Reduction | Medium | Low-Medium | Medium | 🟡 P2 |
+| Rank | Leverage Point              | Impact | Effort     | ROI    | Priority |
+| ---- | --------------------------- | ------ | ---------- | ------ | -------- |
+| 1    | Review Queue Optimization   | High   | Medium     | High   | 🔴 P0    |
+| 2    | CI Pipeline Parallelization | Medium | Low-Medium | High   | 🟡 P1    |
+| 3    | Error-to-Fix Latency        | Medium | Medium     | Medium | 🟡 P1    |
+| 4    | Rework Reduction            | Medium | Low-Medium | Medium | 🟡 P2    |
 
 ## Top 5 Leverage Points (Detailed)
 
@@ -163,12 +175,14 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 **Hypothesis:** Reducing review queue lead time will increase feature throughput by 2x.
 
 **Actions:**
+
 - Add 2 more reviewers
 - Implement review assignments
 - Set 4h review SLA
 - Encourage smaller PRs
 
 **Metrics:**
+
 - Review lead time: 24h → <8h
 - Queue length: 8 PRs → <4 PRs
 - Feature throughput: +100%
@@ -182,11 +196,13 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 **Hypothesis:** Parallelizing CI jobs will reduce feedback time and increase developer productivity.
 
 **Actions:**
+
 - Run linting, type checking, tests in parallel
 - Use test sharding
 - Cache dependencies
 
 **Metrics:**
+
 - CI duration: 15min → <8min
 - Developer feedback time: -50%
 - Developer satisfaction: +20%
@@ -200,12 +216,14 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 **Hypothesis:** Automated error detection and faster fixes will improve user experience and reduce MTTR.
 
 **Actions:**
+
 - Add error alerts
 - Implement error taxonomy
 - Create error dashboard
 - Add hotfix process
 
 **Metrics:**
+
 - Error-to-fix time: Days → Hours
 - MTTR: Unknown → <4h
 - User-reported errors: -50%
@@ -219,12 +237,14 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 **Hypothesis:** Adding pre-merge checks will reduce rework and improve code quality.
 
 **Actions:**
+
 - Add type checking to pre-merge
 - Add linting to pre-merge
 - Add test execution to pre-merge
 - Add security scanning to pre-merge
 
 **Metrics:**
+
 - Rework rate: 18% → <10%
 - CI failure rate: 5% → <2%
 - Code quality: +20%
@@ -238,11 +258,13 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 **Hypothesis:** Auto-commenting performance diffs on PRs will prevent performance regressions.
 
 **Actions:**
+
 - Add performance benchmarks to CI
 - Comment performance diffs on PRs
 - Set performance budgets
 
 **Metrics:**
+
 - Performance regressions: -80%
 - p95 latency: Stable
 - Developer awareness: +100%
@@ -254,15 +276,18 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 ## Implementation Plan
 
 ### Phase 1: Quick Wins (Week 1-2)
+
 1. CI Pipeline Parallelization
 2. Pre-Merge Validation
 3. Performance Monitoring on PRs
 
 ### Phase 2: High Impact (Week 3-6)
+
 1. Review Queue Optimization
 2. Automated Error Detection
 
 ### Phase 3: Continuous Improvement (Ongoing)
+
 1. Monitor metrics
 2. Adjust based on data
 3. Iterate on improvements
@@ -270,12 +295,14 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 ## Expected Outcomes
 
 **After 6 Weeks:**
+
 - Lead time: 26h → <12h (54% reduction)
 - Cycle time: 42min → <30min (29% reduction)
 - Rework rate: 18% → <10% (44% reduction)
 - Feature throughput: +100%
 
 **After 12 Weeks:**
+
 - Lead time: <8h (69% reduction)
 - Cycle time: <20min (52% reduction)
 - Rework rate: <5% (72% reduction)
@@ -284,12 +311,14 @@ Analysis of system constraints, bottlenecks, and leverage points to identify hig
 ## Guardrails
 
 **Safety Measures:**
+
 - All changes behind feature flags
 - Gradual rollout
 - Monitor metrics closely
 - Rollback plan for each change
 
 **Success Criteria:**
+
 - No increase in error rate
 - No decrease in code quality
 - No decrease in developer satisfaction

@@ -27,13 +27,15 @@ export class ShopifyAdapter implements SourceAdapter {
   type = 'SHOPIFY_JSON';
 
   validateConfig(config: any): boolean {
-    return SourceConfigSchema.parse(config).url !== undefined && 
-           SourceConfigSchema.parse(config).apiKey !== undefined;
+    return (
+      SourceConfigSchema.parse(config).url !== undefined &&
+      SourceConfigSchema.parse(config).apiKey !== undefined
+    );
   }
 
   async fetchData(config: any): Promise<any> {
     const { url, apiKey } = SourceConfigSchema.parse(config);
-    
+
     const response = await fetch(url!, {
       headers: {
         'X-Shopify-Access-Token': apiKey!,
@@ -58,8 +60,12 @@ export class GoogleTrendsAdapter implements SourceAdapter {
   }
 
   async fetchData(config: any): Promise<any> {
-    const { keywords, region = 'US', timeframe = '12m' } = SourceConfigSchema.parse(config);
-    
+    const {
+      keywords,
+      region = 'US',
+      timeframe = '12m',
+    } = SourceConfigSchema.parse(config);
+
     // This would integrate with Google Trends API or CSV processing
     // For now, return mock data
     return {
@@ -87,7 +93,7 @@ export class TikTokBusinessAdapter implements SourceAdapter {
 
   async fetchData(config: any): Promise<any> {
     const { apiKey: _apiKey } = SourceConfigSchema.parse(config);
-    
+
     // This would integrate with TikTok Business API
     // For now, return mock data
     return {
@@ -119,7 +125,7 @@ export class AliExpressAdapter implements SourceAdapter {
 
   async fetchData(config: any): Promise<any> {
     const { file: _file } = SourceConfigSchema.parse(config);
-    
+
     // This would process CSV file
     // For now, return mock data
     return {
@@ -146,7 +152,7 @@ export class GenericCsvAdapter implements SourceAdapter {
 
   async fetchData(config: any): Promise<any> {
     const { file: _file, mapping: _mapping } = SourceConfigSchema.parse(config);
-    
+
     // This would process CSV file with custom mapping
     // For now, return mock data
     return {
@@ -171,7 +177,7 @@ export class GenericJsonAdapter implements SourceAdapter {
 
   async fetchData(config: any): Promise<any> {
     const { file: _file, mapping: _mapping } = SourceConfigSchema.parse(config);
-    
+
     // This would process JSON file with custom mapping
     // For now, return mock data
     return {
@@ -196,11 +202,14 @@ export class DataFeedService {
     ['GENERIC_JSON', new GenericJsonAdapter()],
   ]);
 
-  static async createSource(orgId: string, data: {
-    name: string;
-    type: string;
-    config: any;
-  }) {
+  static async createSource(
+    orgId: string,
+    data: {
+      name: string;
+      type: string;
+      config: any;
+    }
+  ) {
     const adapter = this.adapters.get(data.type);
     if (!adapter) {
       throw new Error(`Unsupported source type: ${data.type}`);
@@ -220,11 +229,14 @@ export class DataFeedService {
     });
   }
 
-  static async updateSource(id: string, data: {
-    name?: string;
-    config?: any;
-    isActive?: boolean;
-  }) {
+  static async updateSource(
+    id: string,
+    data: {
+      name?: string;
+      config?: any;
+      isActive?: boolean;
+    }
+  ) {
     const source = await prisma.source.findUnique({
       where: { id },
     });
@@ -309,7 +321,9 @@ export class DataFeedService {
     } catch (error) {
       logger.error({ err: error, sourceId: source.id }, 'Source run error');
       logger.error({ err: error, sourceId: source.id }, 'Source run error');
-      throw new Error(`Failed to run source: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to run source: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 
@@ -328,11 +342,18 @@ export class DataFeedService {
     const stats = {
       totalSources: sources.length,
       activeSources: sources.filter((s: any) => s.isActive).length,
-      lastRun: sources.reduce((latest: Date | null, source: any) => {
-        if (!source.lastRun) {return latest;}
-        if (!latest) {return source.lastRun;}
-        return source.lastRun > latest ? source.lastRun : latest;
-      }, null as Date | null),
+      lastRun: sources.reduce(
+        (latest: Date | null, source: any) => {
+          if (!source.lastRun) {
+            return latest;
+          }
+          if (!latest) {
+            return source.lastRun;
+          }
+          return source.lastRun > latest ? source.lastRun : latest;
+        },
+        null as Date | null
+      ),
     };
 
     return stats;

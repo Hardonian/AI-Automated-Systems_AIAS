@@ -1,12 +1,27 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import { useMachine } from "@xstate/react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Check, ArrowRight, ArrowLeft, Sparkles, Zap, Target, Loader2, AlertCircle } from "lucide-react";
-import { track } from "@/lib/telemetry/track";
+import React, { useEffect } from 'react';
+import { useMachine } from '@xstate/react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import {
+  Check,
+  ArrowRight,
+  ArrowLeft,
+  Sparkles,
+  Zap,
+  Target,
+  Loader2,
+  AlertCircle,
+} from 'lucide-react';
+import { track } from '@/lib/telemetry/track';
 import {
   trackFlowStarted,
   trackStepViewed,
@@ -15,15 +30,28 @@ import {
   trackSuccess,
   trackError,
   trackRetry,
-} from "@/lib/ux-events";
-import { ProgressIndicator, SuccessToast, ErrorMessage } from "@/components/feedback";
-import Link from "next/link";
-import { onboardingMachine, type OnboardingStepId, type IntegrationProvider } from "@/lib/xstate/onboarding-machine";
-import { StepTransition, AnimatedButton, AnimatedCard, Reveal } from "@/components/motion";
+} from '@/lib/ux-events';
+import {
+  ProgressIndicator,
+  SuccessToast,
+  ErrorMessage,
+} from '@/components/feedback';
+import Link from 'next/link';
+import {
+  onboardingMachine,
+  type OnboardingStepId,
+  type IntegrationProvider,
+} from '@/lib/xstate/onboarding-machine';
+import {
+  StepTransition,
+  AnimatedButton,
+  AnimatedCard,
+  Reveal,
+} from '@/components/motion';
 
 /**
  * Refactored Onboarding Wizard using XState
- * 
+ *
  * Demonstrates:
  * - State machine-driven flow
  * - Step transitions with motion
@@ -32,78 +60,92 @@ import { StepTransition, AnimatedButton, AnimatedCard, Reveal } from "@/componen
  */
 export function OnboardingWizardRefactored() {
   const [state, send] = useMachine(onboardingMachine);
-  const { currentStep, totalSteps, completedSteps, selectedIntegration, workflowCreated, workflowTested } = state.context;
-  const isPending = state.matches("connectingIntegration") || state.matches("creatingWorkflowAsync") || state.matches("testingWorkflowAsync");
-  const hasError = state.matches("error");
+  const {
+    currentStep,
+    totalSteps,
+    completedSteps,
+    selectedIntegration,
+    workflowCreated,
+    workflowTested,
+  } = state.context;
+  const isPending =
+    state.matches('connectingIntegration') ||
+    state.matches('creatingWorkflowAsync') ||
+    state.matches('testingWorkflowAsync');
+  const hasError = state.matches('error');
   const error = state.context.error;
 
   // Track onboarding start
   useEffect(() => {
-    const userId = localStorage.getItem("user_id") || "anonymous";
+    const userId = localStorage.getItem('user_id') || 'anonymous';
     track(userId, {
-      type: "onboarding_started",
-      path: "/onboarding",
+      type: 'onboarding_started',
+      path: '/onboarding',
       meta: {
         timestamp: new Date().toISOString(),
       },
-      app: "web",
+      app: 'web',
     });
-    trackFlowStarted("onboarding", { userId });
+    trackFlowStarted('onboarding', { userId });
   }, []);
 
   // Track step changes
   useEffect(() => {
-    const userId = localStorage.getItem("user_id") || "anonymous";
+    const userId = localStorage.getItem('user_id') || 'anonymous';
     const stepId = getStepId(currentStep);
     track(userId, {
-      type: "onboarding_step_viewed",
-      path: "/onboarding",
+      type: 'onboarding_step_viewed',
+      path: '/onboarding',
       meta: {
         step_id: stepId,
         step_number: currentStep + 1,
         timestamp: new Date().toISOString(),
       },
-      app: "web",
+      app: 'web',
     });
-    trackStepViewed("onboarding", currentStep, stepId, { userId });
+    trackStepViewed('onboarding', currentStep, stepId, { userId });
   }, [currentStep]);
 
   // Track step completion
   useEffect(() => {
     if (completedSteps.length > 0) {
-      const userId: string = localStorage.getItem("user_id") || "anonymous";
+      const userId: string = localStorage.getItem('user_id') || 'anonymous';
       const lastCompleted = completedSteps[completedSteps.length - 1];
       if (lastCompleted) {
-        const stepIndex = getStepIds().indexOf(lastCompleted as OnboardingStepId);
+        const stepIndex = getStepIds().indexOf(
+          lastCompleted as OnboardingStepId
+        );
         track(userId, {
-          type: "onboarding_step_completed",
-          path: "/onboarding",
+          type: 'onboarding_step_completed',
+          path: '/onboarding',
           meta: {
             step_id: lastCompleted,
             step_number: stepIndex + 1,
             timestamp: new Date().toISOString(),
           },
-          app: "web",
+          app: 'web',
         });
-        trackStepCompleted("onboarding", stepIndex, lastCompleted, undefined, { userId });
+        trackStepCompleted('onboarding', stepIndex, lastCompleted, undefined, {
+          userId,
+        });
       }
     }
   }, [completedSteps]);
 
   // Track completion
   useEffect(() => {
-    if (state.matches("complete")) {
-      const userId = localStorage.getItem("user_id") || "anonymous";
+    if (state.matches('complete')) {
+      const userId = localStorage.getItem('user_id') || 'anonymous';
       track(userId, {
-        type: "onboarding_completed",
-        path: "/onboarding",
+        type: 'onboarding_completed',
+        path: '/onboarding',
         meta: {
           timestamp: new Date().toISOString(),
         },
-        app: "web",
+        app: 'web',
       });
-      trackFlowCompleted("onboarding", 0, completedSteps.length, { userId });
-      trackSuccess("onboarding_completed", "onboarding", { userId });
+      trackFlowCompleted('onboarding', 0, completedSteps.length, { userId });
+      trackSuccess('onboarding_completed', 'onboarding', { userId });
     }
   }, [state, completedSteps]);
 
@@ -111,28 +153,28 @@ export function OnboardingWizardRefactored() {
   const stepId = getStepId(currentStep);
 
   const handleNext = () => {
-    if (state.matches("welcome")) {
-      send({ type: "NEXT" });
-    } else if (state.matches("choosingIntegration")) {
-      send({ type: "NEXT" });
-    } else if (state.matches("creatingWorkflow")) {
-      send({ type: "CREATE_WORKFLOW" });
-    } else if (state.matches("testingWorkflow")) {
-      send({ type: "TEST_WORKFLOW" });
+    if (state.matches('welcome')) {
+      send({ type: 'NEXT' });
+    } else if (state.matches('choosingIntegration')) {
+      send({ type: 'NEXT' });
+    } else if (state.matches('creatingWorkflow')) {
+      send({ type: 'CREATE_WORKFLOW' });
+    } else if (state.matches('testingWorkflow')) {
+      send({ type: 'TEST_WORKFLOW' });
     }
   };
 
   const handlePrevious = () => {
-    send({ type: "PREVIOUS" });
+    send({ type: 'PREVIOUS' });
   };
 
   const handleSelectIntegration = (provider: IntegrationProvider) => {
-    send({ type: "SELECT_INTEGRATION", provider });
+    send({ type: 'SELECT_INTEGRATION', provider });
   };
 
   const handleRetry = () => {
-    trackRetry((state.context.retryCount || 0) + 1, "onboarding", currentStep);
-    send({ type: "RETRY" });
+    trackRetry((state.context.retryCount || 0) + 1, 'onboarding', currentStep);
+    send({ type: 'RETRY' });
   };
 
   // Track errors
@@ -140,7 +182,7 @@ export function OnboardingWizardRefactored() {
     if (hasError && error) {
       trackError(
         error instanceof Error ? error.message : String(error),
-        "onboarding",
+        'onboarding',
         undefined,
         true,
         { step: currentStep, retryCount: state.context.retryCount }
@@ -149,18 +191,18 @@ export function OnboardingWizardRefactored() {
   }, [hasError, error, currentStep, state.context.retryCount]);
 
   return (
-    <div className="space-y-6" role="main" aria-label="Onboarding wizard">
+    <div className='space-y-6' role='main' aria-label='Onboarding wizard'>
       {/* Progress Indicator */}
       <ProgressIndicator
         current={currentStep}
         total={totalSteps}
         completedSteps={completedSteps}
-        stepLabels={getStepIds().map((id) => getStepTitle(id))}
+        stepLabels={getStepIds().map(id => getStepTitle(id))}
       />
 
       {/* Current Step Content */}
       <StepTransition step={currentStep}>
-        <AnimatedCard variant="fadeInUp">
+        <AnimatedCard variant='fadeInUp'>
           <Card>
             <CardHeader>
               <CardTitle>{getStepTitle(stepId)}</CardTitle>
@@ -185,48 +227,55 @@ export function OnboardingWizardRefactored() {
       {hasError && error && (
         <ErrorMessage
           message={error instanceof Error ? error.message : String(error)}
-          title="Error"
+          title='Error'
           showRetry={true}
           onRetry={handleRetry}
         />
       )}
 
       {/* Success Message */}
-      {state.matches("complete") && (
+      {state.matches('complete') && (
         <SuccessToast
           message="You've successfully completed onboarding! You're now ready to automate and save time."
-          title="Congratulations!"
+          title='Congratulations!'
           celebrate={true}
         />
       )}
 
       {/* Navigation */}
-      {!state.matches("complete") && !state.matches("error") && (
-        <Reveal variant="fadeInUp" delay={0.2}>
-          <div className="flex justify-between" role="navigation" aria-label="Onboarding navigation">
+      {!state.matches('complete') && !state.matches('error') && (
+        <Reveal variant='fadeInUp' delay={0.2}>
+          <div
+            className='flex justify-between'
+            role='navigation'
+            aria-label='Onboarding navigation'
+          >
             <AnimatedButton
-              variant="outline"
+              variant='outline'
               onClick={handlePrevious}
               disabled={currentStep === 0 || isPending}
-              aria-label="Go to previous step"
+              aria-label='Go to previous step'
             >
-              <ArrowLeft className="mr-2 h-4 w-4" aria-hidden="true" />
+              <ArrowLeft className='mr-2 h-4 w-4' aria-hidden='true' />
               Previous
             </AnimatedButton>
             <AnimatedButton
               onClick={handleNext}
               disabled={isPending || !canProceed(state)}
-              aria-label="Go to next step"
+              aria-label='Go to next step'
             >
               {isPending ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                  <Loader2
+                    className='mr-2 h-4 w-4 animate-spin'
+                    aria-hidden='true'
+                  />
                   Processing...
                 </>
               ) : (
                 <>
                   Next
-                  <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+                  <ArrowRight className='ml-2 h-4 w-4' aria-hidden='true' />
                 </>
               )}
             </AnimatedButton>
@@ -239,41 +288,50 @@ export function OnboardingWizardRefactored() {
 
 // Helper functions
 function getStepIds(): OnboardingStepId[] {
-  return ["welcome", "choose-integration", "create-workflow", "test-workflow", "complete"];
+  return [
+    'welcome',
+    'choose-integration',
+    'create-workflow',
+    'test-workflow',
+    'complete',
+  ];
 }
 
 function getStepId(index: number): OnboardingStepId {
   const steps = getStepIds();
-  return steps[index] || "welcome";
+  return steps[index] || 'welcome';
 }
 
 function getStepTitle(stepId: OnboardingStepId): string {
   const titles: Record<OnboardingStepId, string> = {
-    welcome: "Welcome to AIAS Platform",
-    "choose-integration": "Choose Your First Integration",
-    "create-workflow": "Create Your First Workflow",
-    "test-workflow": "Test Your Workflow",
+    welcome: 'Welcome to AIAS Platform',
+    'choose-integration': 'Choose Your First Integration',
+    'create-workflow': 'Create Your First Workflow',
+    'test-workflow': 'Test Your Workflow',
     complete: "You're All Set!",
   };
-  return titles[stepId] || "";
+  return titles[stepId] || '';
 }
 
 function getStepDescription(stepId: OnboardingStepId): string {
   const descriptions: Record<OnboardingStepId, string> = {
     welcome: "Let's get you set up in 30 minutes",
-    "choose-integration": "Connect a tool you use daily",
-    "create-workflow": "Build an automation in minutes",
-    "test-workflow": "Make sure everything works",
-    complete: "Start automating and saving time",
+    'choose-integration': 'Connect a tool you use daily',
+    'create-workflow': 'Build an automation in minutes',
+    'test-workflow': 'Make sure everything works',
+    complete: 'Start automating and saving time',
   };
-  return descriptions[stepId] || "";
+  return descriptions[stepId] || '';
 }
 
-function canProceed(state: ReturnType<typeof useMachine<typeof onboardingMachine>>[0]): boolean {
-  if (state.matches("welcome")) return true;
-  if (state.matches("choosingIntegration")) return !!state.context.selectedIntegration;
-  if (state.matches("creatingWorkflow")) return true;
-  if (state.matches("testingWorkflow")) return true;
+function canProceed(
+  state: ReturnType<typeof useMachine<typeof onboardingMachine>>[0]
+): boolean {
+  if (state.matches('welcome')) return true;
+  if (state.matches('choosingIntegration'))
+    return !!state.context.selectedIntegration;
+  if (state.matches('creatingWorkflow')) return true;
+  if (state.matches('testingWorkflow')) return true;
   return false;
 }
 
@@ -290,9 +348,9 @@ function renderStepContent(
   }
 ) {
   switch (stepId) {
-    case "welcome":
+    case 'welcome':
       return <WelcomeStep onNext={props.onNext} />;
-    case "choose-integration":
+    case 'choose-integration':
       return (
         <ChooseIntegrationStep
           onNext={props.onNext}
@@ -301,7 +359,7 @@ function renderStepContent(
           isPending={props.isPending}
         />
       );
-    case "create-workflow":
+    case 'create-workflow':
       return (
         <CreateWorkflowStep
           onNext={props.onNext}
@@ -310,7 +368,7 @@ function renderStepContent(
           isPending={props.isPending}
         />
       );
-    case "test-workflow":
+    case 'test-workflow':
       return (
         <TestWorkflowStep
           onNext={props.onNext}
@@ -318,7 +376,7 @@ function renderStepContent(
           isPending={props.isPending}
         />
       );
-    case "complete":
+    case 'complete':
       return <CompleteStep />;
     default:
       return null;
@@ -328,34 +386,47 @@ function renderStepContent(
 // Step Components
 function WelcomeStep({ onNext }: { onNext: () => void }) {
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <Sparkles className="h-16 w-16 text-primary mx-auto mb-4" aria-hidden="true" />
-        <h3 className="text-2xl font-bold mb-2">Welcome to AIAS Platform!</h3>
-        <p className="text-muted-foreground">
-          We'll help you create your first automation workflow in just 30 minutes.
+    <div className='space-y-6'>
+      <div className='text-center'>
+        <Sparkles
+          className='mx-auto mb-4 h-16 w-16 text-primary'
+          aria-hidden='true'
+        />
+        <h3 className='mb-2 text-2xl font-bold'>Welcome to AIAS Platform!</h3>
+        <p className='text-muted-foreground'>
+          We'll help you create your first automation workflow in just 30
+          minutes.
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="text-center p-4 bg-muted/50 rounded-lg">
-          <Zap className="h-8 w-8 text-primary mx-auto mb-2" aria-hidden="true" />
-          <div className="font-semibold mb-1">Quick Setup</div>
-          <div className="text-sm text-muted-foreground">30 minutes</div>
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
+        <div className='rounded-lg bg-muted/50 p-4 text-center'>
+          <Zap
+            className='mx-auto mb-2 h-8 w-8 text-primary'
+            aria-hidden='true'
+          />
+          <div className='mb-1 font-semibold'>Quick Setup</div>
+          <div className='text-sm text-muted-foreground'>30 minutes</div>
         </div>
-        <div className="text-center p-4 bg-muted/50 rounded-lg">
-          <Target className="h-8 w-8 text-primary mx-auto mb-2" aria-hidden="true" />
-          <div className="font-semibold mb-1">First Workflow</div>
-          <div className="text-sm text-muted-foreground">Automate tasks</div>
+        <div className='rounded-lg bg-muted/50 p-4 text-center'>
+          <Target
+            className='mx-auto mb-2 h-8 w-8 text-primary'
+            aria-hidden='true'
+          />
+          <div className='mb-1 font-semibold'>First Workflow</div>
+          <div className='text-sm text-muted-foreground'>Automate tasks</div>
         </div>
-        <div className="text-center p-4 bg-muted/50 rounded-lg">
-          <Check className="h-8 w-8 text-primary mx-auto mb-2" aria-hidden="true" />
-          <div className="font-semibold mb-1">Save Time</div>
-          <div className="text-sm text-muted-foreground">10+ hours/week</div>
+        <div className='rounded-lg bg-muted/50 p-4 text-center'>
+          <Check
+            className='mx-auto mb-2 h-8 w-8 text-primary'
+            aria-hidden='true'
+          />
+          <div className='mb-1 font-semibold'>Save Time</div>
+          <div className='text-sm text-muted-foreground'>10+ hours/week</div>
         </div>
       </div>
-      <AnimatedButton onClick={onNext} className="w-full" size="lg">
+      <AnimatedButton onClick={onNext} className='w-full' size='lg'>
         Get Started
-        <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+        <ArrowRight className='ml-2 h-4 w-4' aria-hidden='true' />
       </AnimatedButton>
     </div>
   );
@@ -372,42 +443,88 @@ function ChooseIntegrationStep({
   selectedIntegration?: IntegrationProvider;
   isPending: boolean;
 }) {
-  const integrations: Array<{ name: string; icon: string; description: string; provider: IntegrationProvider }> = [
-    { name: "Shopify", icon: "🛍️", description: "E-commerce automation", provider: "shopify" },
-    { name: "Wave Accounting", icon: "📊", description: "Financial automation", provider: "wave" },
-    { name: "Stripe", icon: "💳", description: "Payment processing", provider: "stripe" },
-    { name: "Gmail", icon: "📧", description: "Email automation", provider: "gmail" },
-    { name: "Slack", icon: "💬", description: "Team communication", provider: "slack" },
-    { name: "Notion", icon: "📝", description: "Productivity automation", provider: "notion" },
+  const integrations: Array<{
+    name: string;
+    icon: string;
+    description: string;
+    provider: IntegrationProvider;
+  }> = [
+    {
+      name: 'Shopify',
+      icon: '🛍️',
+      description: 'E-commerce automation',
+      provider: 'shopify',
+    },
+    {
+      name: 'Wave Accounting',
+      icon: '📊',
+      description: 'Financial automation',
+      provider: 'wave',
+    },
+    {
+      name: 'Stripe',
+      icon: '💳',
+      description: 'Payment processing',
+      provider: 'stripe',
+    },
+    {
+      name: 'Gmail',
+      icon: '📧',
+      description: 'Email automation',
+      provider: 'gmail',
+    },
+    {
+      name: 'Slack',
+      icon: '💬',
+      description: 'Team communication',
+      provider: 'slack',
+    },
+    {
+      name: 'Notion',
+      icon: '📝',
+      description: 'Productivity automation',
+      provider: 'notion',
+    },
   ];
 
   return (
-    <div className="space-y-6">
-      <p className="text-muted-foreground">
+    <div className='space-y-6'>
+      <p className='text-muted-foreground'>
         Choose a tool you use daily. We'll help you automate it.
       </p>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4" role="list" aria-label="Available integrations">
-        {integrations.map((integration) => (
+      <div
+        className='grid grid-cols-2 gap-4 md:grid-cols-3'
+        role='list'
+        aria-label='Available integrations'
+      >
+        {integrations.map(integration => (
           <button
             key={integration.name}
             onClick={() => onSelectIntegration(integration.provider)}
             disabled={isPending}
-            className={`p-4 border rounded-lg transition-colors text-left focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
+            className={`rounded-lg border p-4 text-left transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
               selectedIntegration === integration.provider
-                ? "border-primary bg-primary/10"
-                : "hover:border-primary hover:bg-primary/5"
-            } ${isPending ? "opacity-50 cursor-not-allowed" : ""}`}
+                ? 'border-primary bg-primary/10'
+                : 'hover:border-primary hover:bg-primary/5'
+            } ${isPending ? 'cursor-not-allowed opacity-50' : ''}`}
             aria-label={`Connect ${integration.name}`}
-            role="listitem"
+            role='listitem'
           >
-            <div className="text-2xl mb-2" aria-hidden="true">{integration.icon}</div>
-            <div className="font-semibold mb-1">{integration.name}</div>
-            <div className="text-sm text-muted-foreground">{integration.description}</div>
+            <div className='mb-2 text-2xl' aria-hidden='true'>
+              {integration.icon}
+            </div>
+            <div className='mb-1 font-semibold'>{integration.name}</div>
+            <div className='text-sm text-muted-foreground'>
+              {integration.description}
+            </div>
           </button>
         ))}
       </div>
-      <p className="text-sm text-muted-foreground text-center">
-        Don't see your tool? <Link href="/integrations" className="text-primary hover:underline">Browse all integrations</Link>
+      <p className='text-center text-sm text-muted-foreground'>
+        Don't see your tool?{' '}
+        <Link href='/integrations' className='text-primary hover:underline'>
+          Browse all integrations
+        </Link>
       </p>
     </div>
   );
@@ -425,43 +542,61 @@ function CreateWorkflowStep({
   isPending: boolean;
 }) {
   return (
-    <div className="space-y-6">
-      <p className="text-muted-foreground">
-        Let's create a simple workflow. Choose from our pre-built templates or create your own.
+    <div className='space-y-6'>
+      <p className='text-muted-foreground'>
+        Let's create a simple workflow. Choose from our pre-built templates or
+        create your own.
       </p>
       {workflowCreated ? (
-        <div className="p-4 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
-          <div className="flex items-center gap-2 mb-2">
-            <Check className="h-5 w-5 text-green-600" aria-hidden="true" />
-            <div className="font-semibold text-green-900 dark:text-green-100">Workflow Created Successfully</div>
+        <div className='rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950'>
+          <div className='mb-2 flex items-center gap-2'>
+            <Check className='h-5 w-5 text-green-600' aria-hidden='true' />
+            <div className='font-semibold text-green-900 dark:text-green-100'>
+              Workflow Created Successfully
+            </div>
           </div>
-          <div className="text-sm text-green-800 dark:text-green-200">
-            Your workflow is ready to use. It will automatically run when triggered.
+          <div className='text-sm text-green-800 dark:text-green-200'>
+            Your workflow is ready to use. It will automatically run when
+            triggered.
           </div>
         </div>
       ) : (
         <>
-          <div className="space-y-4">
-            <div className="p-4 bg-muted/50 rounded-lg">
-              <div className="font-semibold mb-2">Trigger</div>
-              <div className="text-sm text-muted-foreground">New order in {selectedIntegration || "your integration"}</div>
+          <div className='space-y-4'>
+            <div className='rounded-lg bg-muted/50 p-4'>
+              <div className='mb-2 font-semibold'>Trigger</div>
+              <div className='text-sm text-muted-foreground'>
+                New order in {selectedIntegration || 'your integration'}
+              </div>
             </div>
-            <div className="text-center text-2xl" aria-hidden="true">→</div>
-            <div className="p-4 bg-muted/50 rounded-lg">
-              <div className="font-semibold mb-2">Action</div>
-              <div className="text-sm text-muted-foreground">Send notification to Slack</div>
+            <div className='text-center text-2xl' aria-hidden='true'>
+              →
+            </div>
+            <div className='rounded-lg bg-muted/50 p-4'>
+              <div className='mb-2 font-semibold'>Action</div>
+              <div className='text-sm text-muted-foreground'>
+                Send notification to Slack
+              </div>
             </div>
           </div>
-          <AnimatedButton onClick={onNext} className="w-full" size="lg" disabled={isPending}>
+          <AnimatedButton
+            onClick={onNext}
+            className='w-full'
+            size='lg'
+            disabled={isPending}
+          >
             {isPending ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                <Loader2
+                  className='mr-2 h-4 w-4 animate-spin'
+                  aria-hidden='true'
+                />
                 Creating Workflow...
               </>
             ) : (
               <>
                 Create Workflow
-                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+                <ArrowRight className='ml-2 h-4 w-4' aria-hidden='true' />
               </>
             )}
           </AnimatedButton>
@@ -481,31 +616,43 @@ function TestWorkflowStep({
   isPending: boolean;
 }) {
   return (
-    <div className="space-y-6">
-      <p className="text-muted-foreground">
-        Great! Your workflow is created. Let's test it to make sure everything works.
+    <div className='space-y-6'>
+      <p className='text-muted-foreground'>
+        Great! Your workflow is created. Let's test it to make sure everything
+        works.
       </p>
       {workflowTested ? (
-        <div className="p-4 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
-          <div className="flex items-center gap-2 mb-2">
-            <Check className="h-5 w-5 text-green-600" aria-hidden="true" />
-            <div className="font-semibold text-green-900 dark:text-green-100">Workflow Tested Successfully</div>
+        <div className='rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950'>
+          <div className='mb-2 flex items-center gap-2'>
+            <Check className='h-5 w-5 text-green-600' aria-hidden='true' />
+            <div className='font-semibold text-green-900 dark:text-green-100'>
+              Workflow Tested Successfully
+            </div>
           </div>
-          <div className="text-sm text-green-800 dark:text-green-200">
-            Your workflow is working correctly. It will automatically run when triggered.
+          <div className='text-sm text-green-800 dark:text-green-200'>
+            Your workflow is working correctly. It will automatically run when
+            triggered.
           </div>
         </div>
       ) : (
-        <AnimatedButton onClick={onNext} className="w-full" size="lg" disabled={isPending}>
+        <AnimatedButton
+          onClick={onNext}
+          className='w-full'
+          size='lg'
+          disabled={isPending}
+        >
           {isPending ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+              <Loader2
+                className='mr-2 h-4 w-4 animate-spin'
+                aria-hidden='true'
+              />
               Testing Workflow...
             </>
           ) : (
             <>
               Test Workflow
-              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+              <ArrowRight className='ml-2 h-4 w-4' aria-hidden='true' />
             </>
           )}
         </AnimatedButton>
@@ -516,29 +663,41 @@ function TestWorkflowStep({
 
 function CompleteStep() {
   return (
-    <div className="space-y-6 text-center">
-      <div className="text-6xl mb-4" role="img" aria-label="Celebration">🎉</div>
-      <h3 className="text-2xl font-bold">Congratulations!</h3>
-      <p className="text-muted-foreground">
-        You've created your first workflow. You're now ready to automate and save time.
+    <div className='space-y-6 text-center'>
+      <div className='mb-4 text-6xl' role='img' aria-label='Celebration'>
+        🎉
+      </div>
+      <h3 className='text-2xl font-bold'>Congratulations!</h3>
+      <p className='text-muted-foreground'>
+        You've created your first workflow. You're now ready to automate and
+        save time.
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+      <div className='mt-8 grid grid-cols-1 gap-4 md:grid-cols-2'>
         <Card>
           <CardHeader>
             <CardTitle>Next Steps</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2 text-left">
-            <div className="flex items-start gap-2">
-              <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
-              <span className="text-sm">Create more workflows</span>
+          <CardContent className='space-y-2 text-left'>
+            <div className='flex items-start gap-2'>
+              <Check
+                className='mt-0.5 h-5 w-5 flex-shrink-0 text-primary'
+                aria-hidden='true'
+              />
+              <span className='text-sm'>Create more workflows</span>
             </div>
-            <div className="flex items-start gap-2">
-              <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
-              <span className="text-sm">Explore templates</span>
+            <div className='flex items-start gap-2'>
+              <Check
+                className='mt-0.5 h-5 w-5 flex-shrink-0 text-primary'
+                aria-hidden='true'
+              />
+              <span className='text-sm'>Explore templates</span>
             </div>
-            <div className="flex items-start gap-2">
-              <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
-              <span className="text-sm">Connect more integrations</span>
+            <div className='flex items-start gap-2'>
+              <Check
+                className='mt-0.5 h-5 w-5 flex-shrink-0 text-primary'
+                aria-hidden='true'
+              />
+              <span className='text-sm'>Connect more integrations</span>
             </div>
           </CardContent>
         </Card>
@@ -546,25 +705,34 @@ function CompleteStep() {
           <CardHeader>
             <CardTitle>Resources</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2 text-left">
-            <Link href="/help" className="block text-sm text-primary hover:underline">
+          <CardContent className='space-y-2 text-left'>
+            <Link
+              href='/help'
+              className='block text-sm text-primary hover:underline'
+            >
               Help Center
             </Link>
-            <Link href="/case-studies" className="block text-sm text-primary hover:underline">
+            <Link
+              href='/case-studies'
+              className='block text-sm text-primary hover:underline'
+            >
               Case Studies
             </Link>
-            <Link href="/blog" className="block text-sm text-primary hover:underline">
+            <Link
+              href='/blog'
+              className='block text-sm text-primary hover:underline'
+            >
               Blog & Tutorials
             </Link>
           </CardContent>
         </Card>
       </div>
-      <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-        <AnimatedButton size="lg" asChild>
-          <Link href="/dashboard">Go to Dashboard</Link>
+      <div className='mt-8 flex flex-col justify-center gap-4 sm:flex-row'>
+        <AnimatedButton size='lg' asChild>
+          <Link href='/dashboard'>Go to Dashboard</Link>
         </AnimatedButton>
-        <AnimatedButton size="lg" variant="outline" asChild>
-          <Link href="/templates">Browse Templates</Link>
+        <AnimatedButton size='lg' variant='outline' asChild>
+          <Link href='/templates'>Browse Templates</Link>
         </AnimatedButton>
       </div>
     </div>

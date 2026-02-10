@@ -3,8 +3,8 @@
  * Get user plan, trial status, and related data from Supabase
  */
 
-import type { PlanTier } from "@/config/plans";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import type { PlanTier } from '@/config/plans';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 export interface UserPlanData {
   plan: PlanTier;
@@ -25,8 +25,9 @@ export async function getUserPlanData(userId: string): Promise<UserPlanData> {
 
   // Get user profile with subscription info
   const { data: profile, error } = await supabase
-    .from("profiles")
-    .select(`
+    .from('profiles')
+    .select(
+      `
       id,
       subscription_tier,
       trial_started_at,
@@ -34,14 +35,15 @@ export async function getUserPlanData(userId: string): Promise<UserPlanData> {
       pretest_completed,
       email_connected,
       workflows_created
-    `)
-    .eq("id", userId)
+    `
+    )
+    .eq('id', userId)
     .single();
 
   if (error || !profile) {
     // Default to free plan if user not found
     return {
-      plan: "free",
+      plan: 'free',
       trialStartDate: null,
       trialEndDate: null,
       trialDaysRemaining: null,
@@ -64,38 +66,44 @@ export async function getUserPlanData(userId: string): Promise<UserPlanData> {
   };
 
   // Determine plan tier
-  let plan: PlanTier = "free";
+  let plan: PlanTier = 'free';
   if (profileData.subscription_tier) {
     const tier = profileData.subscription_tier.toLowerCase();
-    if (tier === "starter" || tier === "pro") {
+    if (tier === 'starter' || tier === 'pro') {
       plan = tier as PlanTier;
-    } else if (tier === "trial" || profileData.trial_started_at) {
-      plan = "trial";
+    } else if (tier === 'trial' || profileData.trial_started_at) {
+      plan = 'trial';
     }
   } else if (profileData.trial_started_at) {
-    plan = "trial";
+    plan = 'trial';
   }
 
   // Calculate trial dates
   const trialStartDate = profileData.trial_started_at
     ? new Date(profileData.trial_started_at)
     : profileData.created_at
-    ? new Date(profileData.created_at)
-    : null;
+      ? new Date(profileData.created_at)
+      : null;
 
   const trialEndDate = trialStartDate
     ? new Date(trialStartDate.getTime() + 30 * 24 * 60 * 60 * 1000) // 30 days
     : null;
 
   const trialDaysRemaining =
-    trialEndDate && plan === "trial"
-      ? Math.max(0, Math.ceil((trialEndDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    trialEndDate && plan === 'trial'
+      ? Math.max(
+          0,
+          Math.ceil(
+            (trialEndDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+          )
+        )
       : null;
 
   // Check if first visit (created in last 24 hours and no activity)
   const isFirstVisit =
     profileData.created_at &&
-    Date.now() - new Date(profileData.created_at).getTime() < 24 * 60 * 60 * 1000 &&
+    Date.now() - new Date(profileData.created_at).getTime() <
+      24 * 60 * 60 * 1000 &&
     !profileData.pretest_completed &&
     !profileData.email_connected &&
     !profileData.workflows_created;
@@ -123,25 +131,24 @@ export async function savePretestAnswers(
 
   try {
     // Save to pretest_answers table (create if doesn't exist)
-    const { error: upsertError } = await (supabase
-      .from("pretest_answers") as any)
-      .upsert({
-        user_id: userId,
-        answers,
-        completed_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      });
+    const { error: upsertError } = await (
+      supabase.from('pretest_answers') as any
+    ).upsert({
+      user_id: userId,
+      answers,
+      completed_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
 
     if (upsertError) {
       // If table doesn't exist, try updating profile
-      const { error: profileError } = await (supabase
-        .from("profiles") as any)
+      const { error: profileError } = await (supabase.from('profiles') as any)
         .update({
           pretest_completed: true,
           pretest_answers: answers,
           updated_at: new Date().toISOString(),
         } as any)
-        .eq("id", userId);
+        .eq('id', userId);
 
       if (profileError) {
         return { success: false, error: profileError.message };
@@ -163,13 +170,12 @@ export async function savePretestAnswers(
 export async function markEmailConnected(userId: string): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
-  await (supabase
-    .from("profiles") as any)
+  await (supabase.from('profiles') as any)
     .update({
       email_connected: true,
       updated_at: new Date().toISOString(),
     } as any)
-    .eq("id", userId);
+    .eq('id', userId);
 }
 
 /**
@@ -178,13 +184,12 @@ export async function markEmailConnected(userId: string): Promise<void> {
 export async function markWorkflowCreated(userId: string): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
-  await (supabase
-    .from("profiles") as any)
+  await (supabase.from('profiles') as any)
     .update({
       workflows_created: true,
       updated_at: new Date().toISOString(),
     } as any)
-    .eq("id", userId);
+    .eq('id', userId);
 }
 
 /**
@@ -193,12 +198,11 @@ export async function markWorkflowCreated(userId: string): Promise<void> {
 export async function startTrial(userId: string): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
-  await (supabase
-    .from("profiles") as any)
+  await (supabase.from('profiles') as any)
     .update({
-      subscription_tier: "trial",
+      subscription_tier: 'trial',
       trial_started_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     } as any)
-    .eq("id", userId);
+    .eq('id', userId);
 }

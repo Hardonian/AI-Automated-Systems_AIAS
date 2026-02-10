@@ -120,7 +120,7 @@ const formatter = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
   hour: '2-digit',
   minute: '2-digit',
-  timeZone: 'America/New_York'
+  timeZone: 'America/New_York',
 });
 
 formatter.format(new Date());
@@ -142,7 +142,7 @@ Use `Intl.NumberFormat` API for locale-aware formatting:
 const formatter = new Intl.NumberFormat('en-US', {
   style: 'decimal',
   minimumFractionDigits: 2,
-  maximumFractionDigits: 2
+  maximumFractionDigits: 2,
 });
 
 formatter.format(1234.56); // "1,234.56"
@@ -153,7 +153,7 @@ formatter.format(1234.56); // "1,234.56"
 ```typescript
 const formatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
-  currency: 'USD'
+  currency: 'USD',
 });
 
 formatter.format(1234.56); // "$1,234.56"
@@ -171,20 +171,23 @@ formatter.format(1234.56); // "$1,234.56"
 ### Implementation
 
 1. **HTML `dir` Attribute:**
+
    ```tsx
    <html lang={locale} dir={isRTL ? 'rtl' : 'ltr'}>
    ```
 
 2. **CSS Logical Properties:**
+
    ```css
    /* Instead of: */
    margin-left: 1rem;
-   
+
    /* Use: */
    margin-inline-start: 1rem;
    ```
 
 3. **CSS Flexbox/Grid:**
+
    ```css
    /* Automatically flips with dir */
    display: flex;
@@ -226,10 +229,10 @@ function t(key: string, locale: string): string {
 ```typescript
 async function loadTranslations(locale: string) {
   if (locale === 'en') return embeddedTranslations;
-  
+
   const cached = localStorage.getItem(`translations_${locale}`);
   if (cached) return JSON.parse(cached);
-  
+
   const translations = await fetch(`/locales/${locale}.json`);
   localStorage.setItem(`translations_${locale}`, JSON.stringify(translations));
   return translations;

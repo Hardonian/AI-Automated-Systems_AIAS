@@ -26,13 +26,18 @@ export async function canUploadModels(userId: string): Promise<boolean> {
 /**
  * Check if user can create optimization jobs
  */
-export async function canCreateOptimizationJobs(userId: string): Promise<boolean> {
+export async function canCreateOptimizationJobs(
+  userId: string
+): Promise<boolean> {
   if (!isFeatureEnabled('edge_ai_optimization', userId)) {
     return false;
   }
 
   const limits = await getUserLimits(userId);
-  return limits.maxOptimizations === -1 || limits.currentOptimizations < limits.maxOptimizations;
+  return (
+    limits.maxOptimizations === -1 ||
+    limits.currentOptimizations < limits.maxOptimizations
+  );
 }
 
 /**
@@ -44,7 +49,10 @@ export async function canRunBenchmarks(userId: string): Promise<boolean> {
   }
 
   const limits = await getUserLimits(userId);
-  return limits.maxBenchmarks === -1 || limits.currentBenchmarks < limits.maxBenchmarks;
+  return (
+    limits.maxBenchmarks === -1 ||
+    limits.currentBenchmarks < limits.maxBenchmarks
+  );
 }
 
 /**
@@ -75,12 +83,15 @@ export async function getUserLimits(userId: string): Promise<{
 
   // TODO: Get actual subscription plan from subscriptions table
   // For now, return default limits
-  const planLimits: Record<string, {
-    maxModels: number;
-    maxOptimizations: number;
-    maxBenchmarks: number;
-    maxModelSizeBytes: number;
-  }> = {
+  const planLimits: Record<
+    string,
+    {
+      maxModels: number;
+      maxOptimizations: number;
+      maxBenchmarks: number;
+      maxModelSizeBytes: number;
+    }
+  > = {
     free: {
       maxModels: 3,
       maxOptimizations: 5,
@@ -144,7 +155,12 @@ export async function getUserLimits(userId: string): Promise<{
 /**
  * Check if model size is within limits
  */
-export async function isModelSizeAllowed(userId: string, sizeBytes: number): Promise<boolean> {
+export async function isModelSizeAllowed(
+  userId: string,
+  sizeBytes: number
+): Promise<boolean> {
   const limits = await getUserLimits(userId);
-  return limits.maxModelSizeBytes === -1 || sizeBytes <= limits.maxModelSizeBytes;
+  return (
+    limits.maxModelSizeBytes === -1 || sizeBytes <= limits.maxModelSizeBytes
+  );
 }

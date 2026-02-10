@@ -4,7 +4,7 @@
  * Based on experiments.yaml requirements
  */
 
-import { AnalyticsService } from "@/src/lib/analytics";
+import { AnalyticsService } from '@/src/lib/analytics';
 
 export interface ExperimentEvent {
   event: string;
@@ -17,15 +17,15 @@ export interface ExperimentEvent {
  * Required events from experiments.yaml
  */
 export const EXPERIMENT_EVENTS = {
-  PRICING_PAGE_VIEWED: "PricingPageViewed",
-  PLAN_SELECTED: "PlanSelected",
-  CHECKOUT_STARTED: "CheckoutStarted",
-  CHECKOUT_COMPLETED: "CheckoutCompleted",
-  TRIAL_ACTIVATED: "TrialActivated",
-  TRIAL_CONVERTED: "TrialConverted",
-  WORKFLOW_DEPLOYED: "WorkflowDeployed",
-  UPGRADE_PROMPTED: "UpgradePrompted",
-  UPGRADE_COMPLETED: "UpgradeCompleted",
+  PRICING_PAGE_VIEWED: 'PricingPageViewed',
+  PLAN_SELECTED: 'PlanSelected',
+  CHECKOUT_STARTED: 'CheckoutStarted',
+  CHECKOUT_COMPLETED: 'CheckoutCompleted',
+  TRIAL_ACTIVATED: 'TrialActivated',
+  TRIAL_CONVERTED: 'TrialConverted',
+  WORKFLOW_DEPLOYED: 'WorkflowDeployed',
+  UPGRADE_PROMPTED: 'UpgradePrompted',
+  UPGRADE_COMPLETED: 'UpgradeCompleted',
 } as const;
 
 /**
@@ -41,11 +41,17 @@ export class ExperimentTracker {
   /**
    * Track pricing page view with variant assignment
    */
-  async trackPricingPageView(variant: string, userSegment?: string, referrer?: string) {
+  async trackPricingPageView(
+    variant: string,
+    userSegment?: string,
+    referrer?: string
+  ) {
     await this.analytics.trackEvent(EXPERIMENT_EVENTS.PRICING_PAGE_VIEWED, {
       variant,
       user_segment: userSegment,
-      referrer: referrer || (typeof window !== "undefined" ? document.referrer : undefined),
+      referrer:
+        referrer ||
+        (typeof window !== 'undefined' ? document.referrer : undefined),
       timestamp: new Date().toISOString(),
     });
   }
@@ -56,7 +62,7 @@ export class ExperimentTracker {
   async trackPlanSelected(
     planName: string,
     price: number,
-    billingPeriod: "month" | "year",
+    billingPeriod: 'month' | 'year',
     variant: string,
     userId?: string
   ) {
@@ -75,7 +81,12 @@ export class ExperimentTracker {
   /**
    * Track checkout started
    */
-  async trackCheckoutStarted(planName: string, price: number, variant: string, userId?: string) {
+  async trackCheckoutStarted(
+    planName: string,
+    price: number,
+    variant: string,
+    userId?: string
+  ) {
     await this.analytics.trackEvent(
       EXPERIMENT_EVENTS.CHECKOUT_STARTED,
       {
@@ -100,7 +111,7 @@ export class ExperimentTracker {
     await this.analytics.trackRevenue(
       EXPERIMENT_EVENTS.CHECKOUT_COMPLETED,
       price,
-      "USD", // TODO: Get from user's currency preference
+      'USD', // TODO: Get from user's currency preference
       {
         plan_name: planName,
         variant,
@@ -215,7 +226,7 @@ export function getExperimentVariant(
 ): string {
   // Use user ID if available, otherwise session ID
   const identifier = userId || sessionId || Math.random().toString();
-  
+
   // Simple hash function for consistent assignment
   let hash = 0;
   for (let i = 0; i < identifier.length; i++) {
@@ -223,15 +234,17 @@ export function getExperimentVariant(
     hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32-bit integer
   }
-  
+
   // Get experiment configuration (would come from feature flag system)
   const experimentConfig = getExperimentConfig(experimentId);
-  const variants = experimentConfig.variants || ["control"];
-  
+  const variants = experimentConfig.variants || ['control'];
+
   // Assign to variant based on hash
   const variantIndex = Math.abs(hash) % variants.length;
   const variant = variants[variantIndex];
-  if (!variant) {throw new Error('No variant available');}
+  if (!variant) {
+    throw new Error('No variant available');
+  }
   return variant;
 }
 
@@ -243,26 +256,38 @@ function getExperimentConfig(experimentId: string) {
   // Default configurations from experiments.yaml
   const configs: Record<string, { variants: string[] }> = {
     exp_price_starter: {
-      variants: ["variant_a_lower", "variant_b_control", "variant_c_higher"],
+      variants: ['variant_a_lower', 'variant_b_control', 'variant_c_higher'],
     },
     exp_free_tier: {
-      variants: ["variant_a_free_tier", "variant_b_trial", "variant_c_hybrid"],
+      variants: ['variant_a_free_tier', 'variant_b_trial', 'variant_c_hybrid'],
     },
     exp_value_metric: {
-      variants: ["variant_a_agent_focused", "variant_b_automation_focused", "variant_c_outcome_focused"],
+      variants: [
+        'variant_a_agent_focused',
+        'variant_b_automation_focused',
+        'variant_c_outcome_focused',
+      ],
     },
     exp_annual_discount: {
-      variants: ["variant_a_10_percent", "variant_b_20_percent", "variant_c_none"],
+      variants: [
+        'variant_a_10_percent',
+        'variant_b_20_percent',
+        'variant_c_none',
+      ],
     },
     exp_onboarding: {
-      variants: ["variant_a_self_serve", "variant_b_done_for_you", "variant_c_hybrid"],
+      variants: [
+        'variant_a_self_serve',
+        'variant_b_done_for_you',
+        'variant_c_hybrid',
+      ],
     },
     exp_feature_gating: {
-      variants: ["variant_a_restrictive", "variant_b_generous"],
+      variants: ['variant_a_restrictive', 'variant_b_generous'],
     },
   };
-  
-  return configs[experimentId] || { variants: ["control"] };
+
+  return configs[experimentId] || { variants: ['control'] };
 }
 
 /**
@@ -273,11 +298,11 @@ export function useExperimentTracking() {
   // For now, return a simple object with tracking functions
   return {
     trackPricingPageView: (variant: string) => {
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         // Track via telemetry API
-        fetch("/api/analytics/track", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        fetch('/api/analytics/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             event: EXPERIMENT_EVENTS.PRICING_PAGE_VIEWED,
             properties: { variant },

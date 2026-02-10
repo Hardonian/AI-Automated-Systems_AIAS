@@ -3,14 +3,14 @@
  * Comprehensive cookie management and privacy controls
  */
 
-import { 
-  Shield, 
-  Cookie, 
-  Eye, 
-  Settings, 
-  FileText, 
-  Download, 
-  Trash2, 
+import {
+  Shield,
+  Cookie,
+  Eye,
+  Settings,
+  FileText,
+  Download,
+  Trash2,
   CheckCircle,
   AlertTriangle,
   // Info
@@ -20,7 +20,13 @@ import React, { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
@@ -44,7 +50,7 @@ export const PrivacyCompliance: React.FC = () => {
     necessary: true, // Always true
     preferences: false,
     performance: false,
-    social: false
+    social: false,
   });
   const [showConsentBanner, setShowConsentBanner] = useState(false);
   const [jurisdiction, setJurisdiction] = useState('EU');
@@ -58,62 +64,71 @@ export const PrivacyCompliance: React.FC = () => {
       required: true,
       cookies: ['session_id', 'csrf_token', 'auth_token'],
       purpose: 'Authentication, security, and basic functionality',
-      retention: 'Session'
+      retention: 'Session',
     },
     {
       id: 'functional',
       name: 'Functional',
-      description: 'Cookies that enhance user experience and remember preferences',
+      description:
+        'Cookies that enhance user experience and remember preferences',
       required: false,
       cookies: ['language_preference', 'theme_setting', 'user_preferences'],
       purpose: 'User experience customization and preference storage',
-      retention: '1 year'
+      retention: '1 year',
     },
     {
       id: 'analytics',
       name: 'Analytics',
-      description: 'Cookies that help us understand how visitors interact with our website',
+      description:
+        'Cookies that help us understand how visitors interact with our website',
       required: false,
       cookies: ['_ga', '_gid', '_gat', 'analytics_id'],
       purpose: 'Website performance analysis and user behavior insights',
-      retention: '2 years'
+      retention: '2 years',
     },
     {
       id: 'marketing',
       name: 'Marketing',
-      description: 'Cookies used to deliver relevant advertisements and track campaign performance',
+      description:
+        'Cookies used to deliver relevant advertisements and track campaign performance',
       required: false,
       cookies: ['_fbp', 'ads_id', 'conversion_tracking', 'remarketing'],
       purpose: 'Targeted advertising and marketing campaign optimization',
-      retention: '3 years'
+      retention: '3 years',
     },
     {
       id: 'performance',
       name: 'Performance',
-      description: 'Cookies that help us optimize website performance and loading times',
+      description:
+        'Cookies that help us optimize website performance and loading times',
       required: false,
       cookies: ['performance_metrics', 'cache_preferences', 'cdn_settings'],
       purpose: 'Website optimization and performance monitoring',
-      retention: '1 year'
+      retention: '1 year',
     },
     {
       id: 'social',
       name: 'Social Media',
-      description: 'Cookies from social media platforms for sharing and integration',
+      description:
+        'Cookies from social media platforms for sharing and integration',
       required: false,
       cookies: ['social_sharing', 'social_login', 'social_widgets'],
       purpose: 'Social media integration and sharing functionality',
-      retention: '5 years'
+      retention: '5 years',
     },
     {
       id: 'preferences',
       name: 'Preferences',
       description: 'Cookies that store user preferences and settings',
       required: false,
-      cookies: ['user_settings', 'display_preferences', 'notification_settings'],
+      cookies: [
+        'user_settings',
+        'display_preferences',
+        'notification_settings',
+      ],
       purpose: 'Personalized user experience and settings storage',
-      retention: '1 year'
-    }
+      retention: '1 year',
+    },
   ];
 
   useEffect(() => {
@@ -128,12 +143,17 @@ export const PrivacyCompliance: React.FC = () => {
     }
   }, []);
 
-  const _handleConsentChange = (category: keyof PrivacySettings, enabled: boolean) => {
-    if (category === 'necessary') {return;} // Cannot disable necessary cookies
-    
+  const _handleConsentChange = (
+    category: keyof PrivacySettings,
+    enabled: boolean
+  ) => {
+    if (category === 'necessary') {
+      return;
+    } // Cannot disable necessary cookies
+
     setPrivacySettings((prev: PrivacySettings) => ({
       ...prev,
-      [category]: enabled
+      [category]: enabled,
     }));
   };
 
@@ -144,16 +164,19 @@ export const PrivacyCompliance: React.FC = () => {
       {
         ipAddress: '127.0.0.1', // In real app, get actual IP
         userAgent: navigator.userAgent,
-        jurisdiction
+        jurisdiction,
       }
     );
 
-    localStorage.setItem('privacy_consent', JSON.stringify({
-      settings: privacySettings,
-      jurisdiction,
-      consentId: consentData.id,
-      timestamp: consentData.timestamp
-    }));
+    localStorage.setItem(
+      'privacy_consent',
+      JSON.stringify({
+        settings: privacySettings,
+        jurisdiction,
+        consentId: consentData.id,
+        timestamp: consentData.timestamp,
+      })
+    );
 
     setShowConsentBanner(false);
   };
@@ -166,7 +189,7 @@ export const PrivacyCompliance: React.FC = () => {
       necessary: true,
       preferences: true,
       performance: true,
-      social: true
+      social: true,
     });
     saveConsent();
   };
@@ -179,25 +202,30 @@ export const PrivacyCompliance: React.FC = () => {
       necessary: true,
       preferences: false,
       performance: false,
-      social: false
+      social: false,
     });
     saveConsent();
   };
 
   const { toast } = useToast();
 
-  const handleDataSubjectRequest = async (requestType: 'access' | 'portability' | 'erasure') => {
+  const handleDataSubjectRequest = async (
+    requestType: 'access' | 'portability' | 'erasure'
+  ) => {
     try {
-      const _result = await privacyManager.handleDataSubjectRequest('current_user', requestType);
+      const _result = await privacyManager.handleDataSubjectRequest(
+        'current_user',
+        requestType
+      );
       toast({
-        title: "Data Subject Request Processed",
+        title: 'Data Subject Request Processed',
         description: `Your ${requestType} request has been processed successfully.`,
       });
     } catch (error) {
       toast({
-        title: "Error Processing Request",
+        title: 'Error Processing Request',
         description: `Failed to process your ${requestType} request. Please try again.`,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
@@ -211,40 +239,44 @@ export const PrivacyCompliance: React.FC = () => {
   const consentStatus = getConsentStatus();
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6 space-y-6">
+    <div className='mx-auto w-full max-w-6xl space-y-6 p-6'>
       {/* Consent Banner */}
       {showConsentBanner && (
-        <Card className="fixed bottom-4 left-4 right-4 z-50 bg-white shadow-2xl border-2 border-blue-200">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-4">
-              <Shield className="h-8 w-8 text-blue-600 flex-shrink-0 mt-1" />
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <Card className='fixed bottom-4 left-4 right-4 z-50 border-2 border-blue-200 bg-white shadow-2xl'>
+          <CardContent className='p-6'>
+            <div className='flex items-start gap-4'>
+              <Shield className='mt-1 h-8 w-8 flex-shrink-0 text-blue-600' />
+              <div className='flex-1'>
+                <h3 className='mb-2 text-lg font-semibold text-gray-900'>
                   Privacy & Cookie Consent
                 </h3>
-                <p className="text-gray-700 mb-4">
-                  We use cookies and similar technologies to enhance your experience, 
-                  analyze site traffic, and personalize content. Your privacy is important to us.
+                <p className='mb-4 text-gray-700'>
+                  We use cookies and similar technologies to enhance your
+                  experience, analyze site traffic, and personalize content.
+                  Your privacy is important to us.
                 </p>
-                <div className="flex flex-wrap gap-3">
-                  <Button className="bg-blue-600 hover:bg-blue-700" onClick={acceptAll}>
+                <div className='flex flex-wrap gap-3'>
+                  <Button
+                    className='bg-blue-600 hover:bg-blue-700'
+                    onClick={acceptAll}
+                  >
                     Accept All
                   </Button>
-                  <Button variant="outline" onClick={rejectAll}>
+                  <Button variant='outline' onClick={rejectAll}>
                     Reject All
                   </Button>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button variant="outline">
-                        <Settings className="h-4 w-4 mr-2" />
+                      <Button variant='outline'>
+                        <Settings className='mr-2 h-4 w-4' />
                         Customize
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                    <DialogContent className='max-h-[80vh] max-w-4xl overflow-y-auto'>
                       <DialogHeader>
                         <DialogTitle>Privacy & Cookie Settings</DialogTitle>
                       </DialogHeader>
-                      <PrivacySettingsPanel 
+                      <PrivacySettingsPanel
                         cookieCategories={cookieCategories}
                         settings={privacySettings}
                         onSave={saveConsent}
@@ -260,69 +292,84 @@ export const PrivacyCompliance: React.FC = () => {
       )}
 
       {/* Privacy Dashboard */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold text-gray-900">Privacy & Compliance</h2>
-          <Badge className="text-sm" variant="outline">
+      <div className='space-y-6'>
+        <div className='flex items-center justify-between'>
+          <h2 className='text-3xl font-bold text-gray-900'>
+            Privacy & Compliance
+          </h2>
+          <Badge className='text-sm' variant='outline'>
             {consentStatus.enabled}/{consentStatus.total} Categories Enabled
           </Badge>
         </div>
 
-        <Tabs className="w-full" defaultValue="overview">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="cookies">Cookie Settings</TabsTrigger>
-            <TabsTrigger value="rights">Your Rights</TabsTrigger>
-            <TabsTrigger value="policy">Privacy Policy</TabsTrigger>
+        <Tabs className='w-full' defaultValue='overview'>
+          <TabsList className='grid w-full grid-cols-4'>
+            <TabsTrigger value='overview'>Overview</TabsTrigger>
+            <TabsTrigger value='cookies'>Cookie Settings</TabsTrigger>
+            <TabsTrigger value='rights'>Your Rights</TabsTrigger>
+            <TabsTrigger value='policy'>Privacy Policy</TabsTrigger>
           </TabsList>
 
-          <TabsContent className="space-y-6" value="overview">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <TabsContent className='space-y-6' value='overview'>
+            <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
               <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Shield className="h-5 w-5 text-green-600" />
+                <CardHeader className='pb-3'>
+                  <CardTitle className='flex items-center gap-2 text-lg'>
+                    <Shield className='h-5 w-5 text-green-600' />
                     Data Protection
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Encryption</span>
-                      <Badge className="bg-green-100 text-green-800">AES-256</Badge>
+                  <div className='space-y-2'>
+                    <div className='flex justify-between'>
+                      <span className='text-sm text-gray-600'>Encryption</span>
+                      <Badge className='bg-green-100 text-green-800'>
+                        AES-256
+                      </Badge>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Data Residency</span>
-                      <Badge className="bg-blue-100 text-blue-800">EU</Badge>
+                    <div className='flex justify-between'>
+                      <span className='text-sm text-gray-600'>
+                        Data Residency
+                      </span>
+                      <Badge className='bg-blue-100 text-blue-800'>EU</Badge>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Retention</span>
-                      <Badge className="bg-purple-100 text-purple-800">2 Years</Badge>
+                    <div className='flex justify-between'>
+                      <span className='text-sm text-gray-600'>Retention</span>
+                      <Badge className='bg-purple-100 text-purple-800'>
+                        2 Years
+                      </Badge>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Cookie className="h-5 w-5 text-orange-600" />
+                <CardHeader className='pb-3'>
+                  <CardTitle className='flex items-center gap-2 text-lg'>
+                    <Cookie className='h-5 w-5 text-orange-600' />
                     Cookie Status
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
+                  <div className='space-y-2'>
                     {cookieCategories.map(category => (
-                      <div key={category.id} className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">{category.name}</span>
-                        <div className="flex items-center gap-2">
+                      <div
+                        key={category.id}
+                        className='flex items-center justify-between'
+                      >
+                        <span className='text-sm text-gray-600'>
+                          {category.name}
+                        </span>
+                        <div className='flex items-center gap-2'>
                           {privacySettings[category.id] ? (
-                            <CheckCircle className="h-4 w-4 text-green-500" />
+                            <CheckCircle className='h-4 w-4 text-green-500' />
                           ) : (
-                            <AlertTriangle className="h-4 w-4 text-gray-400" />
+                            <AlertTriangle className='h-4 w-4 text-gray-400' />
                           )}
                           {category.required && (
-                            <Badge className="text-xs" variant="outline">Required</Badge>
+                            <Badge className='text-xs' variant='outline'>
+                              Required
+                            </Badge>
                           )}
                         </div>
                       </div>
@@ -332,39 +379,39 @@ export const PrivacyCompliance: React.FC = () => {
               </Card>
 
               <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Eye className="h-5 w-5 text-blue-600" />
+                <CardHeader className='pb-3'>
+                  <CardTitle className='flex items-center gap-2 text-lg'>
+                    <Eye className='h-5 w-5 text-blue-600' />
                     Your Rights
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <Button 
-                      className="w-full justify-start" 
-                      size="sm" 
-                      variant="outline"
+                  <div className='space-y-3'>
+                    <Button
+                      className='w-full justify-start'
+                      size='sm'
+                      variant='outline'
                       onClick={() => handleDataSubjectRequest('access')}
                     >
-                      <FileText className="h-4 w-4 mr-2" />
+                      <FileText className='mr-2 h-4 w-4' />
                       Access My Data
                     </Button>
-                    <Button 
-                      className="w-full justify-start" 
-                      size="sm" 
-                      variant="outline"
+                    <Button
+                      className='w-full justify-start'
+                      size='sm'
+                      variant='outline'
                       onClick={() => handleDataSubjectRequest('portability')}
                     >
-                      <Download className="h-4 w-4 mr-2" />
+                      <Download className='mr-2 h-4 w-4' />
                       Download Data
                     </Button>
-                    <Button 
-                      className="w-full justify-start text-red-600 hover:text-red-700" 
-                      size="sm" 
-                      variant="outline"
+                    <Button
+                      className='w-full justify-start text-red-600 hover:text-red-700'
+                      size='sm'
+                      variant='outline'
                       onClick={() => handleDataSubjectRequest('erasure')}
                     >
-                      <Trash2 className="h-4 w-4 mr-2" />
+                      <Trash2 className='mr-2 h-4 w-4' />
                       Delete My Data
                     </Button>
                   </div>
@@ -373,8 +420,8 @@ export const PrivacyCompliance: React.FC = () => {
             </div>
           </TabsContent>
 
-          <TabsContent className="space-y-6" value="cookies">
-            <PrivacySettingsPanel 
+          <TabsContent className='space-y-6' value='cookies'>
+            <PrivacySettingsPanel
               cookieCategories={cookieCategories}
               settings={privacySettings}
               onSave={saveConsent}
@@ -382,35 +429,47 @@ export const PrivacyCompliance: React.FC = () => {
             />
           </TabsContent>
 
-          <TabsContent className="space-y-6" value="rights">
+          <TabsContent className='space-y-6' value='rights'>
             <Card>
               <CardHeader>
                 <CardTitle>Your Data Protection Rights</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-gray-900">Right to Access</h4>
-                    <p className="text-sm text-gray-600">
-                      You have the right to request copies of your personal data.
+              <CardContent className='space-y-4'>
+                <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+                  <div className='space-y-2'>
+                    <h4 className='font-semibold text-gray-900'>
+                      Right to Access
+                    </h4>
+                    <p className='text-sm text-gray-600'>
+                      You have the right to request copies of your personal
+                      data.
                     </p>
                   </div>
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-gray-900">Right to Rectification</h4>
-                    <p className="text-sm text-gray-600">
-                      You have the right to request correction of inaccurate personal data.
+                  <div className='space-y-2'>
+                    <h4 className='font-semibold text-gray-900'>
+                      Right to Rectification
+                    </h4>
+                    <p className='text-sm text-gray-600'>
+                      You have the right to request correction of inaccurate
+                      personal data.
                     </p>
                   </div>
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-gray-900">Right to Erasure</h4>
-                    <p className="text-sm text-gray-600">
-                      You have the right to request deletion of your personal data.
+                  <div className='space-y-2'>
+                    <h4 className='font-semibold text-gray-900'>
+                      Right to Erasure
+                    </h4>
+                    <p className='text-sm text-gray-600'>
+                      You have the right to request deletion of your personal
+                      data.
                     </p>
                   </div>
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-gray-900">Right to Portability</h4>
-                    <p className="text-sm text-gray-600">
-                      You have the right to request transfer of your data to another service.
+                  <div className='space-y-2'>
+                    <h4 className='font-semibold text-gray-900'>
+                      Right to Portability
+                    </h4>
+                    <p className='text-sm text-gray-600'>
+                      You have the right to request transfer of your data to
+                      another service.
                     </p>
                   </div>
                 </div>
@@ -418,14 +477,14 @@ export const PrivacyCompliance: React.FC = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent className="space-y-6" value="policy">
+          <TabsContent className='space-y-6' value='policy'>
             <Card>
               <CardHeader>
                 <CardTitle>Privacy Policy</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="prose max-w-none">
-                  <p className="text-gray-700">
+                <div className='prose max-w-none'>
+                  <p className='text-gray-700'>
                     {privacyManager.getPrivacyPolicy(jurisdiction)}
                   </p>
                 </div>
@@ -449,42 +508,64 @@ const PrivacySettingsPanel: React.FC<PrivacySettingsPanelProps> = ({
   settings,
   onSettingsChange,
   onSave,
-  cookieCategories
+  cookieCategories,
 }) => {
-  const handleConsentChange = (category: keyof PrivacySettings, enabled: boolean) => {
-    if (category === 'necessary') {return;}
+  const handleConsentChange = (
+    category: keyof PrivacySettings,
+    enabled: boolean
+  ) => {
+    if (category === 'necessary') {
+      return;
+    }
     onSettingsChange({
       ...settings,
-      [category]: enabled
+      [category]: enabled,
     });
   };
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-4">
+    <div className='space-y-6'>
+      <div className='space-y-4'>
         {cookieCategories.map(category => (
-          <Card key={category.id} className={category.required ? 'border-blue-200 bg-blue-50' : ''}>
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h4 className="font-semibold text-gray-900">{category.name}</h4>
+          <Card
+            key={category.id}
+            className={category.required ? 'border-blue-200 bg-blue-50' : ''}
+          >
+            <CardContent className='p-4'>
+              <div className='flex items-start justify-between'>
+                <div className='flex-1'>
+                  <div className='mb-2 flex items-center gap-2'>
+                    <h4 className='font-semibold text-gray-900'>
+                      {category.name}
+                    </h4>
                     {category.required && (
-                      <Badge className="text-xs" variant="outline">Required</Badge>
+                      <Badge className='text-xs' variant='outline'>
+                        Required
+                      </Badge>
                     )}
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">{category.description}</p>
-                  <div className="space-y-1 text-xs text-gray-500">
-                    <div><strong>Purpose:</strong> {category.purpose}</div>
-                    <div><strong>Retention:</strong> {category.retention}</div>
-                    <div><strong>Cookies:</strong> {category.cookies.join(', ')}</div>
+                  <p className='mb-3 text-sm text-gray-600'>
+                    {category.description}
+                  </p>
+                  <div className='space-y-1 text-xs text-gray-500'>
+                    <div>
+                      <strong>Purpose:</strong> {category.purpose}
+                    </div>
+                    <div>
+                      <strong>Retention:</strong> {category.retention}
+                    </div>
+                    <div>
+                      <strong>Cookies:</strong> {category.cookies.join(', ')}
+                    </div>
                   </div>
                 </div>
-                <div className="ml-4">
+                <div className='ml-4'>
                   <Switch
                     checked={settings[category.id]}
                     disabled={category.required}
-                    onCheckedChange={(enabled) => handleConsentChange(category.id, enabled)}
+                    onCheckedChange={enabled =>
+                      handleConsentChange(category.id, enabled)
+                    }
                   />
                 </div>
               </div>
@@ -492,12 +573,12 @@ const PrivacySettingsPanel: React.FC<PrivacySettingsPanelProps> = ({
           </Card>
         ))}
       </div>
-      
-      <div className="flex justify-end gap-3 pt-4 border-t">
-        <Button variant="outline" onClick={() => window.history.back()}>
+
+      <div className='flex justify-end gap-3 border-t pt-4'>
+        <Button variant='outline' onClick={() => window.history.back()}>
           Cancel
         </Button>
-        <Button className="bg-blue-600 hover:bg-blue-700" onClick={onSave}>
+        <Button className='bg-blue-600 hover:bg-blue-700' onClick={onSave}>
           Save Preferences
         </Button>
       </div>

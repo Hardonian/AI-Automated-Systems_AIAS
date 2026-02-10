@@ -52,7 +52,7 @@ export async function release(options: {
   }
 
   // 4. Determine version
-  let {version} = options;
+  let { version } = options;
   if (!version) {
     const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
     version = packageJson.version;
@@ -63,11 +63,15 @@ export async function release(options: {
   if (!options.dryRun) {
     // 5. Generate changelog
     console.log('📝 Generating changelog...');
-    execSync(`npm run ops changelog -- --version ${version}`, { stdio: 'inherit' });
+    execSync(`npm run ops changelog -- --version ${version}`, {
+      stdio: 'inherit',
+    });
 
     // 6. Create git tag
     console.log('🏷️  Creating git tag...');
-    execSync(`git tag -a v${version} -m "Release v${version}"`, { stdio: 'inherit' });
+    execSync(`git tag -a v${version} -m "Release v${version}"`, {
+      stdio: 'inherit',
+    });
 
     // 7. Push to remote
     console.log('📤 Pushing to remote...');

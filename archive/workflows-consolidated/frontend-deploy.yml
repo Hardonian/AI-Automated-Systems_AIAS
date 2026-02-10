@@ -112,20 +112,20 @@ jobs:
           set -euo pipefail
           echo "🔍 Validating required secrets..."
           MISSING_SECRETS=()
-          
+
           # Required Vercel secrets
           if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
             MISSING_SECRETS+=("VERCEL_TOKEN")
           fi
-          
+
           if [ -z "${{ secrets.VERCEL_ORG_ID }}" ]; then
             MISSING_SECRETS+=("VERCEL_ORG_ID")
           fi
-          
+
           if [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
             MISSING_SECRETS+=("VERCEL_PROJECT_ID")
           fi
-          
+
           if [ ${#MISSING_SECRETS[@]} -ne 0 ]; then
             echo "❌ Missing required secrets: ${MISSING_SECRETS[*]}"
             echo ""
@@ -142,15 +142,15 @@ jobs:
             echo "  - NEXT_PUBLIC_SUPABASE_ANON_KEY: Supabase anonymous key"
             exit 1
           fi
-          
+
           echo "✅ All required secrets are present"
-          
+
           # Check optional secrets and warn if missing
           OPTIONAL_MISSING=()
           if [ -z "${{ secrets.DATABASE_URL }}" ]; then
             OPTIONAL_MISSING+=("DATABASE_URL")
           fi
-          
+
           if [ ${#OPTIONAL_MISSING[@]} -gt 0 ]; then
             echo "⚠️  Optional secrets not set (build may have limited functionality):"
             printf '  - %s\n' "${OPTIONAL_MISSING[@]}"
@@ -201,26 +201,26 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          ENABLE_EXPERIMENTAL_COREPACK: "1"
+          ENABLE_EXPERIMENTAL_COREPACK: '1'
 
       - name: Build for Vercel
         run: |
           set -euo pipefail
           echo "🔨 Building for Vercel..."
-          
+
           # Run Vercel build
           if ! npx vercel@latest build --token="${{ secrets.VERCEL_TOKEN }}"; then
             echo "❌ Vercel build failed"
             exit 1
           fi
-          
+
           # Validate build output after Vercel build
           echo "🔍 Validating Vercel build output..."
           if ! pnpm run validate:build; then
             echo "❌ Build validation failed"
             exit 1
           fi
-          
+
           echo "✅ Vercel build and validation successful"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -234,24 +234,24 @@ jobs:
         run: |
           set -euo pipefail
           echo "🚀 Deploying to Vercel Preview..."
-          
+
           if ! DEPLOYMENT_OUTPUT=$(npx vercel@latest deploy --prebuilt --token="${{ secrets.VERCEL_TOKEN }}" --prod=false 2>&1); then
             echo "❌ Vercel deployment failed"
             echo "$DEPLOYMENT_OUTPUT"
             exit 1
           fi
-          
+
           echo "$DEPLOYMENT_OUTPUT"
-          
+
           DEPLOYMENT_URL=$(echo "$DEPLOYMENT_OUTPUT" | grep -oP 'https://[^\s]+\.vercel\.app' | head -1 || echo "")
-          
+
           if [ -z "$DEPLOYMENT_URL" ]; then
             echo "❌ Failed to extract deployment URL from Vercel output"
             echo "Deployment output:"
             echo "$DEPLOYMENT_OUTPUT"
             exit 1
           fi
-          
+
           echo "PREVIEW_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
           echo "DEPLOYMENT_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
           echo "✅ Preview deployment successful: $DEPLOYMENT_URL"
@@ -281,24 +281,24 @@ jobs:
         run: |
           set -euo pipefail
           echo "🚀 Deploying to Vercel Production..."
-          
+
           if ! DEPLOYMENT_OUTPUT=$(npx vercel@latest deploy --prebuilt --token="${{ secrets.VERCEL_TOKEN }}" --prod=true 2>&1); then
             echo "❌ Vercel production deployment failed"
             echo "$DEPLOYMENT_OUTPUT"
             exit 1
           fi
-          
+
           echo "$DEPLOYMENT_OUTPUT"
-          
+
           DEPLOYMENT_URL=$(echo "$DEPLOYMENT_OUTPUT" | grep -oP 'https://[^\s]+\.vercel\.app' | head -1 || echo "")
-          
+
           if [ -z "$DEPLOYMENT_URL" ]; then
             echo "❌ Failed to extract deployment URL from Vercel output"
             echo "Deployment output:"
             echo "$DEPLOYMENT_OUTPUT"
             exit 1
           fi
-          
+
           echo "PRODUCTION_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
           echo "DEPLOYMENT_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
           echo "✅ Production deployment successful: $DEPLOYMENT_URL"
@@ -342,14 +342,14 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
-            
+
             const botComment = comments.find(comment => 
               comment.user.type === 'Bot' && 
               comment.body.includes('Preview deployment')
             );
-            
+
             const body = `## 🚀 Preview Deployment\n\n**Preview URL:** ${process.env.PREVIEW_URL}\n\nThis preview will be updated automatically on each push to this PR.\n\n### Quality Checks\n- ✅ Lint passed\n- ✅ Type check passed\n- ✅ Tests passed\n- ✅ Build successful`;
-            
+
             if (botComment) {
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,

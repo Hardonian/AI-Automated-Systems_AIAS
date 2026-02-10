@@ -8,7 +8,15 @@ export interface SecurityHeadersConfig {
   hstsMaxAge?: number;
   frameOptions?: 'DENY' | 'SAMEORIGIN' | 'ALLOW-FROM';
   contentTypeOptions?: boolean;
-  referrerPolicy?: 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url';
+  referrerPolicy?:
+    | 'no-referrer'
+    | 'no-referrer-when-downgrade'
+    | 'origin'
+    | 'origin-when-cross-origin'
+    | 'same-origin'
+    | 'strict-origin'
+    | 'strict-origin-when-cross-origin'
+    | 'unsafe-url';
   permissionsPolicy?: Record<string, string[]>;
   dnsPrefetchControl?: boolean;
 }
@@ -22,8 +30,10 @@ export class SecurityHeaders {
       hstsMaxAge: config.hstsMaxAge || 31536000, // 1 year
       frameOptions: config.frameOptions || 'SAMEORIGIN',
       contentTypeOptions: config.contentTypeOptions ?? true,
-      referrerPolicy: config.referrerPolicy || 'strict-origin-when-cross-origin',
-      permissionsPolicy: config.permissionsPolicy || this.getDefaultPermissionsPolicy(),
+      referrerPolicy:
+        config.referrerPolicy || 'strict-origin-when-cross-origin',
+      permissionsPolicy:
+        config.permissionsPolicy || this.getDefaultPermissionsPolicy(),
       dnsPrefetchControl: config.dnsPrefetchControl ?? true,
     };
   }
@@ -44,7 +54,7 @@ export class SecurityHeaders {
       "base-uri 'self'",
       "form-action 'self'",
       "frame-ancestors 'none'",
-      "upgrade-insecure-requests",
+      'upgrade-insecure-requests',
     ];
 
     if (nonce) {
@@ -63,28 +73,28 @@ export class SecurityHeaders {
    */
   private getDefaultPermissionsPolicy(): Record<string, string[]> {
     return {
-      'camera': [],
-      'microphone': [],
-      'geolocation': [],
+      camera: [],
+      microphone: [],
+      geolocation: [],
       'interest-cohort': [], // FLoC
-      'payment': ['self'],
-      'usb': [],
-      'magnetometer': [],
-      'gyroscope': [],
-      'accelerometer': [],
+      payment: ['self'],
+      usb: [],
+      magnetometer: [],
+      gyroscope: [],
+      accelerometer: [],
       'ambient-light-sensor': [],
-      'autoplay': ['self'],
-      'battery': [],
-      'bluetooth': [],
+      autoplay: ['self'],
+      battery: [],
+      bluetooth: [],
       'clipboard-read': [],
       'clipboard-write': [],
       'display-capture': [],
       'document-domain': [],
       'encrypted-media': ['self'],
-      'fullscreen': ['self'],
-      'gamepad': [],
-      'midi': [],
-      'notifications': [],
+      fullscreen: ['self'],
+      gamepad: [],
+      midi: [],
+      notifications: [],
       'persistent-storage': [],
       'picture-in-picture': [],
       'publickey-credentials-get': [],
@@ -105,7 +115,8 @@ export class SecurityHeaders {
     headers['Content-Security-Policy'] = this.generateCSP(nonce);
 
     // HTTP Strict Transport Security
-    headers['Strict-Transport-Security'] = `max-age=${this.config.hstsMaxAge}; includeSubDomains; preload`;
+    headers['Strict-Transport-Security'] =
+      `max-age=${this.config.hstsMaxAge}; includeSubDomains; preload`;
 
     // X-Frame-Options
     headers['X-Frame-Options'] = this.config.frameOptions;
@@ -145,7 +156,9 @@ export class SecurityHeaders {
   generateNonce(): string {
     const array = new Uint8Array(16);
     crypto.getRandomValues(array);
-    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join(
+      ''
+    );
   }
 
   /**
@@ -176,7 +189,7 @@ export class SecurityHeaders {
     if (csp) {
       headers['Content-Security-Policy'] = csp
         .replace("'unsafe-inline'", "'unsafe-inline' 'unsafe-eval'")
-        .replace('frame-ancestors \'none\'', 'frame-ancestors \'self\'');
+        .replace("frame-ancestors 'none'", "frame-ancestors 'self'");
     }
 
     return headers;
@@ -194,7 +207,10 @@ export class SecurityHeaders {
 export const securityHeaders = new SecurityHeaders();
 
 // Utility functions
-export const applySecurityHeaders = (headers: Headers, nonce?: string): void => {
+export const applySecurityHeaders = (
+  headers: Headers,
+  nonce?: string
+): void => {
   const securityHeadersObj = securityHeaders.getProductionHeaders(nonce);
   Object.entries(securityHeadersObj).forEach(([key, value]) => {
     headers.set(key, value);

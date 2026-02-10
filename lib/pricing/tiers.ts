@@ -225,24 +225,34 @@ export const pricingTiers: PricingTier[] = [
 /**
  * Check if a feature is available in a tier
  */
-export function isFeatureAvailable(featureId: string, tier: SubscriptionTier): boolean {
+export function isFeatureAvailable(
+  featureId: string,
+  tier: SubscriptionTier
+): boolean {
   const feature = pricingTiers
     .flatMap(t => t.features)
     .find(f => f.id === featureId);
-  
-  if (!feature) {return false;}
+
+  if (!feature) {
+    return false;
+  }
   return feature.availableIn.includes(tier);
 }
 
 /**
  * Get feature limit for a tier
  */
-export function getFeatureLimit(featureId: string, tier: SubscriptionTier): number | null {
+export function getFeatureLimit(
+  featureId: string,
+  tier: SubscriptionTier
+): number | null {
   const feature = pricingTiers
     .flatMap(t => t.features)
     .find(f => f.id === featureId);
-  
-  if (!feature || !feature.availableIn.includes(tier)) {return null;}
+
+  if (!feature || !feature.availableIn.includes(tier)) {
+    return null;
+  }
   return feature.limit ?? null;
 }
 
@@ -251,7 +261,14 @@ export function getFeatureLimit(featureId: string, tier: SubscriptionTier): numb
  */
 export function getTierLimits(tier: SubscriptionTier) {
   const tierConfig = pricingTiers.find(t => t.id === tier);
-  const defaultLimits = { workflows: 0, agents: 0, apiCalls: 0, storage: 0, teamMembers: 0, integrations: 0 };
+  const defaultLimits = {
+    workflows: 0,
+    agents: 0,
+    apiCalls: 0,
+    storage: 0,
+    teamMembers: 0,
+    integrations: 0,
+  };
   return tierConfig?.limits ?? pricingTiers[0]?.limits ?? defaultLimits;
 }
 
@@ -260,16 +277,22 @@ export function getTierLimits(tier: SubscriptionTier) {
  */
 export function checkUsageLimit(
   tier: SubscriptionTier,
-  feature: 'workflows' | 'agents' | 'apiCalls' | 'storage' | 'teamMembers' | 'integrations',
+  feature:
+    | 'workflows'
+    | 'agents'
+    | 'apiCalls'
+    | 'storage'
+    | 'teamMembers'
+    | 'integrations',
   currentUsage: number
 ): { allowed: boolean; limit: number; remaining: number } {
   const limits = getTierLimits(tier);
   const limit = (limits as Record<string, number>)[feature] ?? 0;
-  
+
   if (limit === -1) {
     return { allowed: true, limit: -1, remaining: -1 };
   }
-  
+
   const remaining = Math.max(0, limit - currentUsage);
   return {
     allowed: remaining > 0,

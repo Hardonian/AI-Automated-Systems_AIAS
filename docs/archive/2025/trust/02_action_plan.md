@@ -9,6 +9,7 @@
 ## Execution Sequence
 
 ### Step 1: Audit & Inventory ✅
+
 - [x] Scan codebase for existing trust artifacts
 - [x] Create `00_inventory.md`
 - [x] Create `01_gap_matrix.md`
@@ -18,6 +19,7 @@
 **Owner:** AI Assistant
 
 ### Step 2: Feature Flags Foundation
+
 - [ ] Create `config/flags.trust.json`
 - [ ] Document flag usage in code
 
@@ -25,6 +27,7 @@
 **Owner:** AI Assistant
 
 ### Step 3: Documentation Artifacts
+
 - [ ] Create `docs/trust/TRUST.md`
 - [ ] Create `docs/trust/PRIVACY_POLICY_DRAFT.md`
 - [ ] Create `docs/trust/SECURITY.md`
@@ -37,6 +40,7 @@
 **Owner:** AI Assistant + Legal/Compliance Review
 
 ### Step 4: Database Migration
+
 - [ ] Create `supabase/migrations/2025-11-05_trust_audit.sql`
 - [ ] Verify RLS policies
 - [ ] Test migration locally
@@ -45,6 +49,7 @@
 **Owner:** AI Assistant + DB Review
 
 ### Step 5: UI Pages
+
 - [ ] Create `app/trust/page.tsx`
 - [ ] Create `app/privacy/page.tsx`
 - [ ] Create `app/status/page.tsx`
@@ -55,6 +60,7 @@
 **Owner:** AI Assistant
 
 ### Step 6: API Endpoints
+
 - [ ] Create `app/api/audit/me/route.ts`
 - [ ] Create `app/api/feedback/route.ts`
 - [ ] Add authentication middleware
@@ -63,6 +69,7 @@
 **Owner:** AI Assistant + Backend Review
 
 ### Step 7: Layout & Footer Enhancements
+
 - [ ] Patch `app/layout.tsx` with a11y improvements (markers)
 - [ ] Patch `components/layout/footer.tsx` with trust links (markers)
 - [ ] Ensure reduced motion support
@@ -71,6 +78,7 @@
 **Owner:** AI Assistant
 
 ### Step 8: CI/CD Integration
+
 - [ ] Update `.github/workflows/deploy-main.yml` with Trust Smoke check
 - [ ] Verify CI passes
 
@@ -78,6 +86,7 @@
 **Owner:** AI Assistant + DevOps Review
 
 ### Step 9: Testing & Validation
+
 - [ ] Test all new routes locally
 - [ ] Verify feature flags work
 - [ ] Test audit log API
@@ -88,6 +97,7 @@
 **Owner:** QA Team
 
 ### Step 10: Documentation Review
+
 - [ ] Legal review of privacy policy
 - [ ] Security review of security docs
 - [ ] Compliance review of trust docs
@@ -96,6 +106,7 @@
 **Owner:** Legal, Security, Compliance Teams
 
 ### Step 11: PR Preparation
+
 - [ ] Create CHANGELOG entry
 - [ ] Write rollback notes
 - [ ] Create PR with clear description
@@ -108,6 +119,7 @@
 ### If Issues Arise
 
 1. **Feature Flags:** Set all flags to `false` in `config/flags.trust.json`
+
    ```json
    {
      "privacy_center": false,
@@ -118,6 +130,7 @@
    ```
 
 2. **Database Migration:** Revert migration if needed
+
    ```sql
    -- Only if absolutely necessary
    DROP TABLE IF EXISTS public.audit_log CASCADE;
@@ -149,17 +162,18 @@
 
 ## Risks & Mitigations
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Migration fails in production | HIGH | Test locally first, use online-safe SQL |
-| Privacy policy needs legal review | MEDIUM | Mark as DRAFT, schedule review |
-| Performance impact from new pages | LOW | Pages are lightweight, behind flags |
-| CI check too strict | LOW | Make check non-blocking initially |
-| Missing authentication in APIs | MEDIUM | Add TODO comments, implement in follow-up |
+| Risk                              | Impact | Mitigation                                |
+| --------------------------------- | ------ | ----------------------------------------- |
+| Migration fails in production     | HIGH   | Test locally first, use online-safe SQL   |
+| Privacy policy needs legal review | MEDIUM | Mark as DRAFT, schedule review            |
+| Performance impact from new pages | LOW    | Pages are lightweight, behind flags       |
+| CI check too strict               | LOW    | Make check non-blocking initially         |
+| Missing authentication in APIs    | MEDIUM | Add TODO comments, implement in follow-up |
 
 ## Follow-up Tasks
 
 ### Post-Launch
+
 1. Implement real authentication in audit API
 2. Add content to help center
 3. Build status page backend integration
@@ -169,6 +183,7 @@
 7. Add model cards for AI features
 
 ### Long-term
+
 1. Public status page with uptime monitoring
 2. API portal for partners
 3. Enhanced admin dashboard

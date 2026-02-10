@@ -13,6 +13,7 @@
 **Subject:** Partnership Opportunity — AI Automation for Canadian Businesses
 
 **Body:**
+
 ```
 Hi [Influencer Name],
 
@@ -47,6 +48,7 @@ Founder & CEO, AIAS Platform
 **Subject:** Re: [Their Post/Topic] — AI Automation Solution
 
 **Body:**
+
 ```
 Hi [Influencer Name],
 
@@ -80,6 +82,7 @@ Founder & CEO, AIAS Platform
 **Subject:** Re: Partnership Opportunity — AIAS Platform
 
 **Body:**
+
 ```
 Hi [Influencer Name],
 
@@ -107,6 +110,7 @@ Founder & CEO, AIAS Platform
 **Subject:** Collaboration Opportunity — AI Automation Content
 
 **Body:**
+
 ```
 Hi [Influencer Name],
 
@@ -139,6 +143,7 @@ Founder & CEO, AIAS Platform
 **Subject:** Thank You — AIAS Platform Partnership
 
 **Body:**
+
 ```
 Hi [Influencer Name],
 
@@ -167,12 +172,14 @@ Founder & CEO, AIAS Platform
 ## Outreach Best Practices
 
 ### Do's
+
 - ✅ **Personalize:** Mention specific posts, content, or insights
 - ✅ **Be Concise:** Keep emails short and to the point
 - ✅ **Offer Value:** Free account, early access, co-marketing
 - ✅ **Follow Up:** Follow up once (if no response)
 
 ### Don'ts
+
 - ❌ **Spam:** Don't send generic, mass emails
 - ❌ **Pushy:** Don't be pushy or aggressive
 - ❌ **Long Emails:** Don't write long, rambling emails
@@ -183,15 +190,18 @@ Founder & CEO, AIAS Platform
 ## Target Influencers
 
 ### Canadian Business Influencers
+
 - Small business bloggers, podcasters, YouTubers
 - E-commerce influencers (Shopify, e-commerce)
 - Consultant influencers (business consultants, coaches)
 
 ### Tech Influencers
+
 - SaaS influencers, automation influencers
 - AI influencers, tech bloggers
 
 ### SMB Influencers
+
 - Solo operator influencers, entrepreneur influencers
 - Canadian SMB influencers, startup influencers
 

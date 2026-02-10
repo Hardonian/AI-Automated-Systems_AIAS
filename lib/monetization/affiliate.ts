@@ -26,88 +26,96 @@ export interface AffiliateStats {
 // All affiliates are systems thinking and AI automation tools that align with our mission
 export const affiliatePrograms: AffiliateLink[] = [
   {
-    id: "shopify",
-    product: "Shopify",
-    affiliateProgram: "Shopify Partners",
-    url: "https://shopify.pxf.io/", // Replace with actual affiliate link
-    commissionRate: 0.20,
+    id: 'shopify',
+    product: 'Shopify',
+    affiliateProgram: 'Shopify Partners',
+    url: 'https://shopify.pxf.io/', // Replace with actual affiliate link
+    commissionRate: 0.2,
     cookieDays: 30,
     enabled: true,
-    category: "E-Commerce",
-    keywords: ["shopify", "e-commerce", "online store", "store builder"],
-    systemsThinkingAlignment: "E-commerce automation requires systems thinking to connect processes, inventory, and customer experience",
+    category: 'E-Commerce',
+    keywords: ['shopify', 'e-commerce', 'online store', 'store builder'],
+    systemsThinkingAlignment:
+      'E-commerce automation requires systems thinking to connect processes, inventory, and customer experience',
   },
   {
-    id: "stripe",
-    product: "Stripe",
-    affiliateProgram: "Stripe Partners",
-    url: "https://stripe.com/", // Replace with actual affiliate link
-    commissionRate: 0.10,
+    id: 'stripe',
+    product: 'Stripe',
+    affiliateProgram: 'Stripe Partners',
+    url: 'https://stripe.com/', // Replace with actual affiliate link
+    commissionRate: 0.1,
     cookieDays: 90,
     enabled: true,
-    category: "Payments",
-    keywords: ["stripe", "payment", "payments", "payment processing"],
-    systemsThinkingAlignment: "Payment systems require understanding of process flows, data security, and user experience — all systems thinking dimensions",
+    category: 'Payments',
+    keywords: ['stripe', 'payment', 'payments', 'payment processing'],
+    systemsThinkingAlignment:
+      'Payment systems require understanding of process flows, data security, and user experience — all systems thinking dimensions',
   },
   {
-    id: "wave",
-    product: "Wave Accounting",
-    affiliateProgram: "Wave Affiliate",
-    url: "https://wave.com/", // Replace with actual affiliate link
+    id: 'wave',
+    product: 'Wave Accounting',
+    affiliateProgram: 'Wave Affiliate',
+    url: 'https://wave.com/', // Replace with actual affiliate link
     commissionRate: 0.15,
     cookieDays: 30,
     enabled: true,
-    category: "Accounting",
-    keywords: ["wave", "accounting", "bookkeeping", "invoicing"],
-    systemsThinkingAlignment: "Canadian accounting tool that fits our systems thinking approach to financial processes and data flows",
+    category: 'Accounting',
+    keywords: ['wave', 'accounting', 'bookkeeping', 'invoicing'],
+    systemsThinkingAlignment:
+      'Canadian accounting tool that fits our systems thinking approach to financial processes and data flows',
   },
   {
-    id: "notion",
-    product: "Notion",
-    affiliateProgram: "Notion Affiliate",
-    url: "https://notion.so/", // Replace with actual affiliate link
-    commissionRate: 0.20,
+    id: 'notion',
+    product: 'Notion',
+    affiliateProgram: 'Notion Affiliate',
+    url: 'https://notion.so/', // Replace with actual affiliate link
+    commissionRate: 0.2,
     cookieDays: 30,
     enabled: true,
-    category: "Productivity",
-    keywords: ["notion", "productivity", "workspace", "notes"],
-    systemsThinkingAlignment: "Notion embodies systems thinking by connecting knowledge, processes, and people in an interconnected workspace",
+    category: 'Productivity',
+    keywords: ['notion', 'productivity', 'workspace', 'notes'],
+    systemsThinkingAlignment:
+      'Notion embodies systems thinking by connecting knowledge, processes, and people in an interconnected workspace',
   },
   {
-    id: "zapier",
-    product: "Zapier",
-    affiliateProgram: "Zapier Affiliate",
-    url: "https://zapier.com/", // Replace with actual affiliate link
-    commissionRate: 0.20,
+    id: 'zapier',
+    product: 'Zapier',
+    affiliateProgram: 'Zapier Affiliate',
+    url: 'https://zapier.com/', // Replace with actual affiliate link
+    commissionRate: 0.2,
     cookieDays: 30,
     enabled: true,
-    category: "Automation",
-    keywords: ["zapier", "automation", "workflow", "integrations"],
-    systemsThinkingAlignment: "Automation tool that enables systems thinking by connecting processes across tools — but requires systems thinking to design effective workflows",
+    category: 'Automation',
+    keywords: ['zapier', 'automation', 'workflow', 'integrations'],
+    systemsThinkingAlignment:
+      'Automation tool that enables systems thinking by connecting processes across tools — but requires systems thinking to design effective workflows',
   },
   {
-    id: "make",
-    product: "Make (Integromat)",
-    affiliateProgram: "Make Affiliate",
-    url: "https://make.com/", // Replace with actual affiliate link
+    id: 'make',
+    product: 'Make (Integromat)',
+    affiliateProgram: 'Make Affiliate',
+    url: 'https://make.com/', // Replace with actual affiliate link
     commissionRate: 0.25,
     cookieDays: 30,
     enabled: true,
-    category: "Automation",
-    keywords: ["make", "integromat", "automation", "workflow"],
-    systemsThinkingAlignment: "Advanced automation platform that benefits from systems thinking to design complex, multi-step workflows",
+    category: 'Automation',
+    keywords: ['make', 'integromat', 'automation', 'workflow'],
+    systemsThinkingAlignment:
+      'Advanced automation platform that benefits from systems thinking to design complex, multi-step workflows',
   },
 ];
 
 // Get affiliate link for product/keyword
-export function getAffiliateLink(productOrKeyword: string): AffiliateLink | null {
+export function getAffiliateLink(
+  productOrKeyword: string
+): AffiliateLink | null {
   const normalized = productOrKeyword.toLowerCase();
-  
+
   const match = affiliatePrograms.find(
-    (program) =>
+    program =>
       program.enabled &&
       (program.product.toLowerCase().includes(normalized) ||
-       program.keywords?.some((k) => normalized.includes(k.toLowerCase())))
+        program.keywords?.some(k => normalized.includes(k.toLowerCase())))
   );
 
   return match || null;
@@ -120,13 +128,13 @@ export function generateAffiliateLink(
   className?: string
 ): string {
   const affiliate = getAffiliateLink(product);
-  
+
   if (!affiliate) {
-    return `<a href="#" class="${className || ""}">${text}</a>`;
+    return `<a href="#" class="${className || ''}">${text}</a>`;
   }
 
   return `<a href="${affiliate.url}" 
-              class="${className || ""} affiliate-link" 
+              class="${className || ''} affiliate-link" 
               data-affiliate-id="${affiliate.id}"
               data-product="${affiliate.product}"
               rel="sponsored nofollow"
@@ -135,21 +143,31 @@ export function generateAffiliateLink(
 }
 
 // Track affiliate click
-export async function trackAffiliateClick(affiliateId: string, product: string) {
+export async function trackAffiliateClick(
+  affiliateId: string,
+  product: string
+) {
   // Track in analytics
-  if (typeof window !== "undefined") {
-    const sessionId = sessionStorage.getItem("analytics_session_id") || `session_${Date.now()}`;
-    
+  if (typeof window !== 'undefined') {
+    const sessionId =
+      sessionStorage.getItem('analytics_session_id') || `session_${Date.now()}`;
+
     // Send to analytics endpoint
-    fetch("/api/monetization/affiliate/click", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ affiliateId, product, sessionId, referrerUrl: window.location.href }),
+    fetch('/api/monetization/affiliate/click', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        affiliateId,
+        product,
+        sessionId,
+        referrerUrl: window.location.href,
+      }),
     }).catch(console.error);
 
     // Also track in database
     try {
-      const { databasePMFTracker } = await import("../analytics/database-integration");
+      const { databasePMFTracker } =
+        await import('../analytics/database-integration');
       await databasePMFTracker.trackAffiliateClick(
         affiliateId,
         product,

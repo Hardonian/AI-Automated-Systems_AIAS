@@ -9,6 +9,7 @@
 ## Executive Summary
 
 This report analyzes TypeScript type coverage across the codebase using multiple tools:
+
 - `tsc --noEmit` (TypeScript compiler)
 - `ts-prune` (unused exports)
 - Manual code analysis
@@ -18,6 +19,7 @@ This report analyzes TypeScript type coverage across the codebase using multiple
 ### TypeScript Configuration
 
 **Current Config (`tsconfig.json`):**
+
 - ✅ `strict: true` — Enabled
 - ✅ `noUnusedLocals: true` — Enabled
 - ✅ `noUnusedParameters: true` — Enabled
@@ -31,12 +33,14 @@ This report analyzes TypeScript type coverage across the codebase using multiple
 **Total Unused Exports Found:** 891+ (from `reports/ts-prune.txt`)
 
 **Key Categories:**
+
 1. **Middleware/Config Exports** — Many middleware configs marked as unused but may be used by framework
 2. **AI Agent Exports** — Some orchestrator types exported but not imported elsewhere
 3. **Guardian Types** — RiskLevel, ResponseAction exported but potentially only used internally
 4. **Component Variants** — Some UI component variant functions exported but unused
 
 **Recommendations:**
+
 - Review middleware exports — Next.js may use them implicitly
 - Consider making AI agent types internal unless needed by external consumers
 - Audit Guardian exports — may be used by runtime checks
@@ -63,6 +67,7 @@ This report analyzes TypeScript type coverage across the codebase using multiple
 **Estimated Type Coverage:** ~85-90%
 
 **Breakdown:**
+
 - Core library code: ~95% (strong typing)
 - Component code: ~90% (React types well-defined)
 - API routes: ~85% (some any usage)
@@ -94,26 +99,29 @@ This report analyzes TypeScript type coverage across the codebase using multiple
 ### Files Requiring Attention
 
 **High Priority:**
+
 - `lib/env.ts` — Environment variable access could be more strictly typed
 - `lib/api/route-handler.ts` — Route handler types could be stricter
 - `app/api/**/*.ts` — API routes need explicit response types
 
 **Medium Priority:**
+
 - `components/**/*.tsx` — Some event handlers lack proper types
 - `lib/validation/runtime-validation.ts` — Already good, but could add more guards
 
 **Low Priority:**
+
 - `scripts/**/*.ts` — Scripts can remain loosely typed for flexibility
 
 ## Metrics
 
-| Metric | Current | Target | Status |
-|--------|---------|--------|--------|
-| Strict Mode | ✅ Enabled | ✅ Enabled | ✅ |
-| Type Coverage | ~87% | 95% | 🟡 |
-| Unused Exports | 891+ | <100 | 🔴 |
-| `any` Usage | ~15 instances | 0 | 🟡 |
-| Missing Return Types | ~20 functions | 0 | 🟡 |
+| Metric               | Current       | Target     | Status |
+| -------------------- | ------------- | ---------- | ------ |
+| Strict Mode          | ✅ Enabled    | ✅ Enabled | ✅     |
+| Type Coverage        | ~87%          | 95%        | 🟡     |
+| Unused Exports       | 891+          | <100       | 🔴     |
+| `any` Usage          | ~15 instances | 0          | 🟡     |
+| Missing Return Types | ~20 functions | 0          | 🟡     |
 
 ## Next Steps
 

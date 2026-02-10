@@ -14,6 +14,7 @@ Analysis of design tokens across Tailwind config and CSS to create a canonical t
 ### Current Token System
 
 **Sources:**
+
 1. **Tailwind Config** (`tailwind.config.ts`)
    - Colors: Primary, secondary, accent, destructive, border, ring
    - Border radius: lg, xl, 2xl (calculated from --radius)
@@ -30,28 +31,34 @@ Analysis of design tokens across Tailwind config and CSS to create a canonical t
 ### Token Consolidation Opportunities
 
 **1. Color Tokens**
+
 - ✅ Already consolidated — Using CSS variables
 - ✅ Dark mode support — Separate theme variables
 - ✅ Semantic naming — Primary, secondary, accent, destructive
 
 **2. Spacing Tokens**
+
 - ⚠️ Missing — No centralized spacing scale
 - **Recommendation:** Add spacing scale to Tailwind config
 
 **3. Typography Tokens**
+
 - ⚠️ Partial — Font feature settings defined
 - **Recommendation:** Add font family, size, weight tokens
 
 **4. Border Radius**
+
 - ✅ Consolidated — Using CSS variable with calculations
 - ✅ Consistent — All radii derived from --radius
 
 ### Alias Opportunities
 
 **Current Aliases:**
+
 - None explicitly defined
 
 **Recommended Aliases:**
+
 1. `primary` → `color.primary.DEFAULT`
 2. `secondary` → `color.secondary.DEFAULT`
 3. `accent` → `color.accent.DEFAULT`
@@ -62,11 +69,13 @@ Analysis of design tokens across Tailwind config and CSS to create a canonical t
 ### Visual Regression Risk
 
 **Low Risk Changes:**
+
 - Adding aliases (no visual change)
 - Documenting tokens (no visual change)
 - Adding missing tokens (additive only)
 
 **Medium Risk Changes:**
+
 - Consolidating hardcoded values (requires testing)
 - Changing token values (requires visual QA)
 
@@ -80,6 +89,7 @@ Analysis of design tokens across Tailwind config and CSS to create a canonical t
    - Theme definitions
 
 2. **Add Token Aliases to Tailwind Config**
+
    ```typescript
    // tailwind.config.ts
    theme: {
@@ -114,11 +124,13 @@ Analysis of design tokens across Tailwind config and CSS to create a canonical t
 ### Token Usage Analysis
 
 **Hardcoded Values Found:**
+
 - Some components use hardcoded spacing values
 - Some components use hardcoded colors
 - **Recommendation:** Gradually migrate to tokens
 
 **Token Coverage:**
+
 - Colors: ~95% using tokens ✅
 - Spacing: ~60% using tokens 🟡
 - Typography: ~70% using tokens 🟡
@@ -126,28 +138,31 @@ Analysis of design tokens across Tailwind config and CSS to create a canonical t
 
 ## Metrics
 
-| Metric | Current | Target | Status |
-|--------|---------|--------|--------|
-| Token Coverage (Colors) | 95% | 100% | 🟡 |
-| Token Coverage (Spacing) | 60% | 100% | 🔴 |
-| Token Coverage (Typography) | 70% | 100% | 🟡 |
-| Token Coverage (Shadows) | 80% | 100% | 🟡 |
-| CSS Variables | 14 | 14 | ✅ |
-| Dark Mode Support | ✅ | ✅ | ✅ |
+| Metric                      | Current | Target | Status |
+| --------------------------- | ------- | ------ | ------ |
+| Token Coverage (Colors)     | 95%     | 100%   | 🟡     |
+| Token Coverage (Spacing)    | 60%     | 100%   | 🔴     |
+| Token Coverage (Typography) | 70%     | 100%   | 🟡     |
+| Token Coverage (Shadows)    | 80%     | 100%   | 🟡     |
+| CSS Variables               | 14      | 14     | ✅     |
+| Dark Mode Support           | ✅      | ✅     | ✅     |
 
 ## Implementation Plan
 
 ### Phase 1: Documentation (Wave 1)
+
 1. ✅ Create `design/tokens.json`
 2. ✅ Document current tokens
 3. Add token usage guidelines
 
 ### Phase 2: Consolidation (Wave 2)
+
 1. Add spacing scale
 2. Add typography scale
 3. Expand shadow tokens
 
 ### Phase 3: Migration (Wave 3)
+
 1. Migrate hardcoded values to tokens
 2. Add linting rules for token usage
 3. Visual regression testing

@@ -1,18 +1,21 @@
 /**
  * Cost Metrics API
- * 
+ *
  * Provides cost metrics and analytics for executive dashboard.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { costMonitor } from "@/lib/cost-tracking/cost-monitor";
-import { CostOptimizer } from "@/lib/cost-tracking/cost-optimizer";
-import { CostAggregator, type ServiceCost } from "@/lib/cost-tracking/service-costs";
-import { logger } from "@/lib/logging/structured-logger";
-import { addCacheHeaders } from "@/lib/middleware/cache";
-import { addSecurityHeaders } from "@/lib/middleware/security";
-export const dynamic = "force-dynamic";
+import { costMonitor } from '@/lib/cost-tracking/cost-monitor';
+import { CostOptimizer } from '@/lib/cost-tracking/cost-optimizer';
+import {
+  CostAggregator,
+  type ServiceCost,
+} from '@/lib/cost-tracking/service-costs';
+import { logger } from '@/lib/logging/structured-logger';
+import { addCacheHeaders } from '@/lib/middleware/cache';
+import { addSecurityHeaders } from '@/lib/middleware/security';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/cost/metrics
@@ -55,7 +58,8 @@ export async function GET(_request: NextRequest) {
     const recommendations = CostOptimizer.analyzeAndRecommend(metrics);
 
     // Get potential savings
-    const potentialSavings = CostOptimizer.calculatePotentialSavings(recommendations);
+    const potentialSavings =
+      CostOptimizer.calculatePotentialSavings(recommendations);
     const quickWins = CostOptimizer.getQuickWins(recommendations);
 
     const response = NextResponse.json({
@@ -71,9 +75,13 @@ export async function GET(_request: NextRequest) {
     addCacheHeaders(response, { maxAge: 300, private: true }); // Cache for 5 minutes
     return response;
   } catch (error) {
-    logger.error("Error fetching cost metrics:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
+    logger.error(
+      'Error fetching cost metrics:',
+      error instanceof Error ? error : new Error(String(error)),
+      { component: 'route', action: 'unknown' }
+    );
     return NextResponse.json(
-      { error: "Failed to fetch cost metrics" },
+      { error: 'Failed to fetch cost metrics' },
       { status: 500 }
     );
   }
@@ -88,20 +96,17 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const cost: ServiceCost = {
       service: body.service,
-      category: body.category || "general",
+      category: body.category || 'general',
       amount: parseFloat(body.amount),
-      currency: body.currency || "USD",
-      period: body.period || "monthly",
+      currency: body.currency || 'USD',
+      period: body.period || 'monthly',
       timestamp: body.timestamp || Date.now(),
       metadata: body.metadata,
     };
 
     // Validate
     if (!cost.service || !cost.amount || cost.amount < 0) {
-      return NextResponse.json(
-        { error: "Invalid cost data" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid cost data' }, { status: 400 });
     }
 
     // Record cost
@@ -111,9 +116,13 @@ export async function POST(request: NextRequest) {
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    logger.error("Error recording cost:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
+    logger.error(
+      'Error recording cost:',
+      error instanceof Error ? error : new Error(String(error)),
+      { component: 'route', action: 'unknown' }
+    );
     return NextResponse.json(
-      { error: "Failed to record cost" },
+      { error: 'Failed to record cost' },
       { status: 500 }
     );
   }

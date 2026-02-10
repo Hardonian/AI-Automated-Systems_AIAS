@@ -12,5 +12,9 @@
     "monthly": { "cron": "5 8 1 * *", "tasks": ["backfill_opt"] },
     "on_failure": ["doctor", "verify_db", "post_deploy_verify"]
   },
-  "backfill": { "enabled": false, "start_days_ago": 90, "sources": ["source_a", "source_b", "events"] }
+  "backfill": {
+    "enabled": false,
+    "start_days_ago": 90,
+    "sources": ["source_a", "source_b", "events"]
+  }
 }

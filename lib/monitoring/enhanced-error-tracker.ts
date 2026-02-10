@@ -46,7 +46,7 @@ class EnhancedErrorTracker {
   ): string {
     const errorId = this.generateErrorId();
     const formatted = formatError(error);
-    
+
     const errorEvent: ErrorEvent = {
       id: errorId,
       timestamp: new Date().toISOString(),
@@ -69,11 +69,15 @@ class EnhancedErrorTracker {
     }
 
     // Log error
-    logger.error('Error tracked', error instanceof Error ? error : new Error(String(error)), {
-      errorId,
-      severity,
-      context,
-    });
+    logger.error(
+      'Error tracked',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        errorId,
+        severity,
+        context,
+      }
+    );
 
     // Send to external service in production
     if (process.env.NODE_ENV === 'production') {
@@ -131,10 +135,11 @@ class EnhancedErrorTracker {
   } {
     const bySeverity: Record<string, number> = {};
     const byCode: Record<string, number> = {};
-    
+
     for (const error of this.errors) {
       bySeverity[error.severity] = (bySeverity[error.severity] || 0) + 1;
-      byCode[error.error.code || 'UNKNOWN'] = (byCode[error.error.code || 'UNKNOWN'] || 0) + 1;
+      byCode[error.error.code || 'UNKNOWN'] =
+        (byCode[error.error.code || 'UNKNOWN'] || 0) + 1;
     }
 
     return {
@@ -150,12 +155,12 @@ class EnhancedErrorTracker {
    */
   getErrorsByFingerprint(): Record<string, ErrorEvent[]> {
     const grouped: Record<string, ErrorEvent[]> = {};
-    
+
     for (const error of this.errors) {
       if (!grouped[error.fingerprint]) {
         grouped[error.fingerprint] = [];
       }
-      const {fingerprint} = error;
+      const { fingerprint } = error;
       if (fingerprint) {
         if (!grouped[fingerprint]) {
           grouped[fingerprint] = [];

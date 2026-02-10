@@ -92,7 +92,13 @@ export interface ApiKey {
 // Workflow and Automation Types
 export interface WorkflowNode {
   id: string;
-  type: 'trigger' | 'action' | 'condition' | 'ai_processing' | 'data_transform' | 'notification';
+  type:
+    | 'trigger'
+    | 'action'
+    | 'condition'
+    | 'ai_processing'
+    | 'data_transform'
+    | 'notification';
   position: { x: number; y: number };
   config: Record<string, unknown>;
   connections: string[];
@@ -308,7 +314,13 @@ export interface Integration {
   id: string;
   name: string;
   description: string;
-  category: 'crm' | 'calendar' | 'communication' | 'storage' | 'analytics' | 'payment';
+  category:
+    | 'crm'
+    | 'calendar'
+    | 'communication'
+    | 'storage'
+    | 'analytics'
+    | 'payment';
   provider: string;
   status: 'active' | 'beta' | 'deprecated';
   configuration: IntegrationConfig;

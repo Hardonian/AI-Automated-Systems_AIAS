@@ -48,16 +48,26 @@ export const userProfileSchema = z.object({
   userId: z.string().uuid(),
   primaryPersona: personaTypeSchema,
   secondaryPersonas: z.array(personaTypeSchema).optional(),
-  preferences: z.object({
-    dashboardLayout: z.enum(['compact', 'standard', 'detailed']).default('standard'),
-    notificationFrequency: z.enum(['realtime', 'daily', 'weekly']).default('daily'),
-    reportDepth: z.enum(['summary', 'standard', 'detailed']).default('standard'),
-  }).optional(),
-  behavior: z.object({
-    loginFrequency: z.enum(['daily', 'weekly', 'monthly']).optional(),
-    featureUsage: z.record(z.number().int()).optional(),
-    commonWorkflows: z.array(z.string().uuid()).optional(),
-  }).optional(),
+  preferences: z
+    .object({
+      dashboardLayout: z
+        .enum(['compact', 'standard', 'detailed'])
+        .default('standard'),
+      notificationFrequency: z
+        .enum(['realtime', 'daily', 'weekly'])
+        .default('daily'),
+      reportDepth: z
+        .enum(['summary', 'standard', 'detailed'])
+        .default('standard'),
+    })
+    .optional(),
+  behavior: z
+    .object({
+      loginFrequency: z.enum(['daily', 'weekly', 'monthly']).optional(),
+      featureUsage: z.record(z.number().int()).optional(),
+      commonWorkflows: z.array(z.string().uuid()).optional(),
+    })
+    .optional(),
 });
 
 export type UserProfile = z.infer<typeof userProfileSchema>;
@@ -259,7 +269,8 @@ export class PersonaEngine {
 
     const { characteristics } = persona;
 
-    let explanationDepth: AdaptiveContentConfig['explanationDepth'] = 'moderate';
+    let explanationDepth: AdaptiveContentConfig['explanationDepth'] =
+      'moderate';
     if (characteristics.preferredDetailLevel === 'high-level') {
       explanationDepth = 'simple';
     } else if (characteristics.preferredDetailLevel === 'detailed') {
@@ -270,9 +281,14 @@ export class PersonaEngine {
       explanationDepth,
       includeTechnicalDetails: characteristics.technicalLevel !== 'beginner',
       includeBusinessContext: true,
-      visualizationPreference: characteristics.preferredFormat === 'visual' ? 'charts' :
-                                characteristics.preferredFormat === 'data' ? 'tables' :
-                                characteristics.preferredFormat === 'text' ? 'narrative' : 'mixed',
+      visualizationPreference:
+        characteristics.preferredFormat === 'visual'
+          ? 'charts'
+          : characteristics.preferredFormat === 'data'
+            ? 'tables'
+            : characteristics.preferredFormat === 'text'
+              ? 'narrative'
+              : 'mixed',
       automationSuggestions: characteristics.automationComfort !== 'low',
     };
   }
@@ -280,10 +296,13 @@ export class PersonaEngine {
   /**
    * Adapt dashboard content for persona
    */
-  adaptDashboard(personaType: PersonaType, content: {
-    metrics: Array<{ name: string; value: number; details?: unknown }>;
-    workflows: Array<{ id: string; name: string; status: string }>;
-  }): {
+  adaptDashboard(
+    personaType: PersonaType,
+    content: {
+      metrics: Array<{ name: string; value: number; details?: unknown }>;
+      workflows: Array<{ id: string; name: string; status: string }>;
+    }
+  ): {
     metrics: Array<{ name: string; value: number; details?: unknown }>;
     workflows: Array<{ id: string; name: string; status: string }>;
     layout: 'compact' | 'standard' | 'detailed';
@@ -302,7 +321,7 @@ export class PersonaEngine {
     const adaptedMetrics = content.metrics.filter(metric => {
       if (personaType === 'founder') {
         // Founders care about high-level metrics
-        return ['revenue', 'growth', 'roi'].some(keyword => 
+        return ['revenue', 'growth', 'roi'].some(keyword =>
           metric.name.toLowerCase().includes(keyword)
         );
       }
@@ -319,9 +338,13 @@ export class PersonaEngine {
   /**
    * Adapt report depth for persona
    */
-  adaptReportDepth(personaType: PersonaType): 'summary' | 'standard' | 'detailed' {
+  adaptReportDepth(
+    personaType: PersonaType
+  ): 'summary' | 'standard' | 'detailed' {
     const persona = this.personas.get(personaType);
-    if (!persona) {return 'standard';}
+    if (!persona) {
+      return 'standard';
+    }
 
     switch (persona.characteristics.preferredDetailLevel) {
       case 'high-level':
@@ -338,7 +361,9 @@ export class PersonaEngine {
    */
   getAutomationSuggestions(personaType: PersonaType): string[] {
     const persona = this.personas.get(personaType);
-    if (!persona) {return [];}
+    if (!persona) {
+      return [];
+    }
 
     const suggestions: string[] = [];
 

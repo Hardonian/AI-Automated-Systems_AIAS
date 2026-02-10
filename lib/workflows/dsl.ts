@@ -9,19 +9,19 @@ import { z } from 'zod';
  * Workflow Step Types
  */
 export const workflowStepTypeSchema = z.enum([
-  'transform',      // Data transformation
-  'match',          // Pattern matching
-  'reconcile',      // Reconciliation logic
-  'api',            // API call
-  'database',       // Database operation
-  'generate',       // Document/content generation
-  'agent',          // Agent invocation
-  'condition',      // Conditional branching
-  'loop',           // Loop/iteration
-  'delay',          // Wait/delay
-  'human',          // Human-in-the-loop checkpoint
-  'notification',   // Send notification
-  'webhook',        // Trigger webhook
+  'transform', // Data transformation
+  'match', // Pattern matching
+  'reconcile', // Reconciliation logic
+  'api', // API call
+  'database', // Database operation
+  'generate', // Document/content generation
+  'agent', // Agent invocation
+  'condition', // Conditional branching
+  'loop', // Loop/iteration
+  'delay', // Wait/delay
+  'human', // Human-in-the-loop checkpoint
+  'notification', // Send notification
+  'webhook', // Trigger webhook
 ]);
 
 export type WorkflowStepType = z.infer<typeof workflowStepTypeSchema>;
@@ -113,10 +113,12 @@ export const workflowStepConfigSchema = z.discriminatedUnion('type', [
     method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']),
     headers: z.record(z.string()).optional(),
     body: z.record(z.unknown()).optional(),
-    auth: z.object({
-      type: z.enum(['bearer', 'basic', 'apiKey', 'oauth']),
-      config: z.record(z.string()),
-    }).optional(),
+    auth: z
+      .object({
+        type: z.enum(['bearer', 'basic', 'apiKey', 'oauth']),
+        config: z.record(z.string()),
+      })
+      .optional(),
   }),
   // Database step
   z.object({
@@ -242,34 +244,36 @@ export const workflowDefinitionSchema = z.object({
   name: z.string().min(3).max(200),
   description: z.string().max(1000).optional(),
   version: z.string().regex(/^\d+\.\d+\.\d+$/),
-  
+
   // Execution Configuration
   trigger: workflowTriggerSchema,
   steps: z.array(workflowStepSchema).min(1).max(100),
   startStepId: z.string().uuid(), // First step to execute
-  
+
   // State Management
   stateSchema: z.record(z.unknown()).optional(), // Expected state structure
   initialState: z.record(z.unknown()).optional(),
-  
+
   // Error Handling
   globalRetry: workflowRetrySchema.optional(),
-  errorHandler: z.object({
-    strategy: z.enum(['fail', 'continue', 'rollback']).default('fail'),
-    notification: z.boolean().default(true),
-  }).optional(),
-  
+  errorHandler: z
+    .object({
+      strategy: z.enum(['fail', 'continue', 'rollback']).default('fail'),
+      notification: z.boolean().default(true),
+    })
+    .optional(),
+
   // Metadata
   tags: z.array(z.string().max(50)).max(20).optional(),
   category: z.enum(['automation', 'reconciliation', 'consulting', 'custom']),
   author: z.string().optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-  
+
   // Status
   enabled: z.boolean().default(true),
   deprecated: z.boolean().default(false),
-  
+
   // Introspection
   introspectable: z.boolean().default(true), // Can be debugged/audited
   auditLog: z.boolean().default(true), // Log all executions
@@ -290,7 +294,9 @@ export const workflowExecutionContextSchema = z.object({
   sync: z.boolean().default(false),
 });
 
-export type WorkflowExecutionContext = z.infer<typeof workflowExecutionContextSchema>;
+export type WorkflowExecutionContext = z.infer<
+  typeof workflowExecutionContextSchema
+>;
 
 /**
  * Workflow Execution Result
@@ -298,24 +304,37 @@ export type WorkflowExecutionContext = z.infer<typeof workflowExecutionContextSc
 export const workflowExecutionResultSchema = z.object({
   executionId: z.string().uuid(),
   workflowId: z.string().uuid(),
-  status: z.enum(['pending', 'running', 'completed', 'failed', 'cancelled', 'paused']),
+  status: z.enum([
+    'pending',
+    'running',
+    'completed',
+    'failed',
+    'cancelled',
+    'paused',
+  ]),
   output: z.record(z.unknown()).optional(),
-  error: z.object({
-    stepId: z.string().uuid().optional(),
-    message: z.string(),
-    code: z.string().optional(),
-    details: z.record(z.unknown()).optional(),
-  }).optional(),
-  metrics: z.object({
-    duration: z.number().int(),
-    stepsExecuted: z.number().int(),
-    stepsSucceeded: z.number().int(),
-    stepsFailed: z.number().int(),
-    retries: z.number().int(),
-  }).optional(),
+  error: z
+    .object({
+      stepId: z.string().uuid().optional(),
+      message: z.string(),
+      code: z.string().optional(),
+      details: z.record(z.unknown()).optional(),
+    })
+    .optional(),
+  metrics: z
+    .object({
+      duration: z.number().int(),
+      stepsExecuted: z.number().int(),
+      stepsSucceeded: z.number().int(),
+      stepsFailed: z.number().int(),
+      retries: z.number().int(),
+    })
+    .optional(),
   state: z.record(z.unknown()).optional(),
   startedAt: z.string().datetime(),
   completedAt: z.string().datetime().optional(),
 });
 
-export type WorkflowExecutionResult = z.infer<typeof workflowExecutionResultSchema>;
+export type WorkflowExecutionResult = z.infer<
+  typeof workflowExecutionResultSchema
+>;

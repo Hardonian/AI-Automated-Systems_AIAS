@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { GripVertical, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { GripVertical, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface DraggableListProps<T> {
   items: T[];
@@ -40,7 +40,7 @@ export function DraggableList<T>({
 
   const handleDrop = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
-    
+
     if (draggedIndex === null || draggedIndex === dropIndex) {
       setDraggedIndex(null);
       setDragOverIndex(null);
@@ -52,7 +52,7 @@ export function DraggableList<T>({
     if (removed) {
       newItems.splice(dropIndex, 0, removed);
     }
-    
+
     onReorder(newItems);
     setDraggedIndex(null);
     setDragOverIndex(null);
@@ -64,36 +64,36 @@ export function DraggableList<T>({
   };
 
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn('space-y-4', className)}>
       {items.map((item, index) => (
         <Card
           key={index}
           draggable
           className={cn(
-            "p-4 cursor-move transition-all",
-            draggedIndex === index && "opacity-50",
-            dragOverIndex === index && "border-primary border-2"
+            'cursor-move p-4 transition-all',
+            draggedIndex === index && 'opacity-50',
+            dragOverIndex === index && 'border-2 border-primary'
           )}
           onDragEnd={handleDragEnd}
           onDragLeave={handleDragLeave}
-          onDragOver={(e) => handleDragOver(e, index)}
+          onDragOver={e => handleDragOver(e, index)}
           onDragStart={() => handleDragStart(index)}
-          onDrop={(e) => handleDrop(e, index)}
+          onDrop={e => handleDrop(e, index)}
         >
-          <div className="flex items-start gap-4">
-            <div className="flex flex-col items-center gap-2 pt-1">
-              <GripVertical className="h-5 w-5 text-muted-foreground" />
+          <div className='flex items-start gap-4'>
+            <div className='flex flex-col items-center gap-2 pt-1'>
+              <GripVertical className='h-5 w-5 text-muted-foreground' />
               <Button
-                className="h-8 w-8 p-0"
-                size="sm"
-                type="button"
-                variant="ghost"
+                className='h-8 w-8 p-0'
+                size='sm'
+                type='button'
+                variant='ghost'
                 onClick={() => onRemove(index)}
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className='h-4 w-4' />
               </Button>
             </div>
-            <div className="flex-1">{renderItem(item, index)}</div>
+            <div className='flex-1'>{renderItem(item, index)}</div>
           </div>
         </Card>
       ))}

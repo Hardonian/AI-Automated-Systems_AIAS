@@ -1,13 +1,13 @@
 /**
  * Accessibility Testing Setup
- * 
+ *
  * Provides utilities for automated accessibility testing.
- * 
+ *
  * Usage with Playwright:
  * ```ts
  * import { test, expect } from '@playwright/test';
  * import { checkA11y } from './tests/accessibility/a11y-test-setup';
- * 
+ *
  * test('homepage is accessible', async ({ page }) => {
  *   await page.goto('/');
  *   await checkA11y(page);
@@ -43,7 +43,7 @@ export const a11yChecklist = {
     description: 'All images have alt text',
     check: (element: HTMLElement) => {
       const images = element.querySelectorAll('img');
-      return Array.from(images).every((img) => img.hasAttribute('alt'));
+      return Array.from(images).every(img => img.hasAttribute('alt'));
     },
   },
   headings: {
@@ -53,7 +53,9 @@ export const a11yChecklist = {
       let lastLevel = 0;
       for (const heading of Array.from(headings)) {
         const levelStr = heading.tagName[1];
-        if (!levelStr) {continue;}
+        if (!levelStr) {
+          continue;
+        }
         const level = parseInt(levelStr);
         if (level > lastLevel + 1) {
           return false; // Skipped a level
@@ -66,8 +68,10 @@ export const a11yChecklist = {
   keyboard: {
     description: 'All interactive elements are keyboard accessible',
     check: (element: HTMLElement) => {
-      const interactive = element.querySelectorAll('button, a, input, select, textarea');
-      return Array.from(interactive).every((el) => {
+      const interactive = element.querySelectorAll(
+        'button, a, input, select, textarea'
+      );
+      return Array.from(interactive).every(el => {
         const tabIndex = el.getAttribute('tabindex');
         return tabIndex !== '-1' && !el.hasAttribute('disabled');
       });
@@ -77,11 +81,17 @@ export const a11yChecklist = {
     description: 'All form inputs have labels',
     check: (element: HTMLElement) => {
       const inputs = element.querySelectorAll('input, select, textarea');
-      return Array.from(inputs).every((input) => {
+      return Array.from(inputs).every(input => {
         const id = input.getAttribute('id');
-        if (!id) {return false;}
+        if (!id) {
+          return false;
+        }
         const label = element.querySelector(`label[for="${id}"]`);
-        return label !== null || input.hasAttribute('aria-label') || input.hasAttribute('aria-labelledby');
+        return (
+          label !== null ||
+          input.hasAttribute('aria-label') ||
+          input.hasAttribute('aria-labelledby')
+        );
       });
     },
   },

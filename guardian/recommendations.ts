@@ -80,24 +80,32 @@ export class TrustFabricAI {
   /**
    * Learn from user behavior
    */
-  learnFromEvent(event: GuardianEvent, userDecision?: 'allowed' | 'blocked' | 'pending'): void {
+  learnFromEvent(
+    event: GuardianEvent,
+    userDecision?: 'allowed' | 'blocked' | 'pending'
+  ): void {
     // Update comfort zones
-    if (event.type === 'guardian' && event.description.includes('Private Mode')) {
+    if (
+      event.type === 'guardian' &&
+      event.description.includes('Private Mode')
+    ) {
       this.model.comfort_zones.privacy_mode_toggles++;
     }
 
     // Learn from user decisions
     if (userDecision) {
       const key = `${event.scope}:${event.data_class}`;
-      const _current = this.model.comfort_zones.average_trust_responses[key] || 'allow';
-      
+      const _current =
+        this.model.comfort_zones.average_trust_responses[key] || 'allow';
+
       // Update preference based on pattern
       if (userDecision === 'blocked') {
         if (!this.model.learned_preferences.always_blocks.includes(key)) {
           this.model.learned_preferences.always_blocks.push(key);
         }
         // Remove from allows if it was there
-        const allowIndex = this.model.learned_preferences.always_allows.indexOf(key);
+        const allowIndex =
+          this.model.learned_preferences.always_allows.indexOf(key);
         if (allowIndex > -1) {
           this.model.learned_preferences.always_allows.splice(allowIndex, 1);
         }
@@ -106,7 +114,8 @@ export class TrustFabricAI {
           this.model.learned_preferences.always_allows.push(key);
         }
         // Remove from blocks if it was there
-        const blockIndex = this.model.learned_preferences.always_blocks.indexOf(key);
+        const blockIndex =
+          this.model.learned_preferences.always_blocks.indexOf(key);
         if (blockIndex > -1) {
           this.model.learned_preferences.always_blocks.splice(blockIndex, 1);
         }
@@ -119,7 +128,7 @@ export class TrustFabricAI {
       const existingRule = this.model.learned_preferences.context_rules.find(
         r => r.context === context
       );
-      
+
       if (existingRule) {
         // Update confidence
         existingRule.confidence = Math.min(1.0, existingRule.confidence + 0.1);
@@ -141,10 +150,18 @@ export class TrustFabricAI {
    * Extract context from event
    */
   private extractContext(event: GuardianEvent): string | null {
-    if (event.metadata.camera_active) {return 'camera_active';}
-    if (event.metadata.microphone_active) {return 'microphone_active';}
-    if (event.metadata.location_tracking) {return 'location_tracking';}
-    if (event.data_class === 'biometrics') {return 'biometric_auth';}
+    if (event.metadata.camera_active) {
+      return 'camera_active';
+    }
+    if (event.metadata.microphone_active) {
+      return 'microphone_active';
+    }
+    if (event.metadata.location_tracking) {
+      return 'location_tracking';
+    }
+    if (event.data_class === 'biometrics') {
+      return 'biometric_auth';
+    }
     return null;
   }
 
@@ -201,7 +218,10 @@ export class TrustFabricAI {
 
     // Suggest loosening if user always allows
     if (this.model.learned_preferences.always_allows.length > 5) {
-      const alwaysAllowed = this.model.learned_preferences.always_allows.slice(0, 3);
+      const alwaysAllowed = this.model.learned_preferences.always_allows.slice(
+        0,
+        3
+      );
       recommendations.push({
         type: 'loosen',
         scope: alwaysAllowed.join(', '),
@@ -278,7 +298,11 @@ export class TrustFabricAI {
       if (!existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
-      fs.writeFileSync(this.modelPath, JSON.stringify(this.model, null, 2), 'utf-8');
+      fs.writeFileSync(
+        this.modelPath,
+        JSON.stringify(this.model, null, 2),
+        'utf-8'
+      );
     } catch (error) {
       console.error('[TRUST FABRIC] Failed to save model:', error);
     }

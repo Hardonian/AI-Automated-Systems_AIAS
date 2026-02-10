@@ -11,7 +11,7 @@ import { cacheService } from '@/lib/performance/cache';
 export const GET = createGETHandler(
   async () => {
     const stats = cacheService.getStats();
-    
+
     return NextResponse.json({
       timestamp: new Date().toISOString(),
       cache: {

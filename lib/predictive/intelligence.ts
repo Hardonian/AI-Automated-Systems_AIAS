@@ -51,7 +51,9 @@ export const automationRecommendationSchema = z.object({
   prerequisites: z.array(z.string()).optional(),
 });
 
-export type AutomationRecommendation = z.infer<typeof automationRecommendationSchema>;
+export type AutomationRecommendation = z.infer<
+  typeof automationRecommendationSchema
+>;
 
 /**
  * Anomaly Detection
@@ -135,7 +137,8 @@ export class PredictiveIntelligenceService {
     }
 
     // Detect slow execution
-    if (heatmap.avgDuration > 60000) { // > 1 minute
+    if (heatmap.avgDuration > 60000) {
+      // > 1 minute
       frictionPoints.push({
         id: this.generateId(),
         type: 'time_consuming',
@@ -184,7 +187,10 @@ export class PredictiveIntelligenceService {
     });
 
     userFrictionPoints.forEach(frictionPoint => {
-      if (frictionPoint.type === 'repetitive' && frictionPoint.confidence > 0.6) {
+      if (
+        frictionPoint.type === 'repetitive' &&
+        frictionPoint.confidence > 0.6
+      ) {
         recommendations.push({
           id: this.generateId(),
           title: `Automate ${frictionPoint.description}`,
@@ -209,7 +215,12 @@ export class PredictiveIntelligenceService {
           estimatedValue: {
             timeSaved: frictionPoint.estimatedImpact.timeSaved,
             costReduction: frictionPoint.estimatedImpact.costReduction,
-            efficiencyGain: frictionPoint.estimatedImpact.errorReduction ? Math.round((1 - (frictionPoint.estimatedImpact.errorReduction || 0)) * 100) : undefined,
+            efficiencyGain: frictionPoint.estimatedImpact.errorReduction
+              ? Math.round(
+                  (1 - (frictionPoint.estimatedImpact.errorReduction || 0)) *
+                    100
+                )
+              : undefined,
           },
           complexity: 'low',
           confidence: frictionPoint.confidence,
@@ -235,14 +246,14 @@ export class PredictiveIntelligenceService {
     // Simplified anomaly detection
     // Would use statistical methods (Z-score, moving average, etc.)
     if (baseline) {
-      const threshold = baseline.avg + (2 * baseline.stdDev); // 2-sigma rule
-      
+      const threshold = baseline.avg + 2 * baseline.stdDev; // 2-sigma rule
+
       // Would fetch actual metric values
       const actualValue = baseline.avg * 1.5; // Mock value
-      
+
       if (actualValue > threshold) {
         const deviation = ((actualValue - baseline.avg) / baseline.avg) * 100;
-        
+
         anomalies.push({
           id: this.generateId(),
           type: 'usage_anomaly',
@@ -264,7 +275,9 @@ export class PredictiveIntelligenceService {
   /**
    * Suggest remediation for anomaly
    */
-  async suggestRemediation(anomalyId: string): Promise<RemediationSuggestion[]> {
+  async suggestRemediation(
+    anomalyId: string
+  ): Promise<RemediationSuggestion[]> {
     const anomaly = this.anomalies.find(a => a.id === anomalyId);
     if (!anomaly) {
       return [];
@@ -360,7 +373,10 @@ export class PredictiveIntelligenceService {
 
     const recommendations: string[] = [];
     if (riskLevel === 'high') {
-      recommendations.push('Consider scaling resources', 'Optimize workflow performance');
+      recommendations.push(
+        'Consider scaling resources',
+        'Optimize workflow performance'
+      );
     }
 
     return {

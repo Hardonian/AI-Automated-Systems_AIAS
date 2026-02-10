@@ -5,25 +5,48 @@
  * Exits non-zero on failure
  */
 
-import { withDb } from "../lib/db";
-import { log, err } from "../lib/logger";
+import { withDb } from '../lib/db';
+import { log, err } from '../lib/logger';
 
-const REQUIRED_TABLES = ["events", "spend", "metrics_daily"];
+const REQUIRED_TABLES = ['events', 'spend', 'metrics_daily'];
 const REQUIRED_COLUMNS: Record<string, string[]> = {
-  events: ["id", "occurred_at", "user_id", "event_name", "props"],
-  spend: ["id", "platform", "campaign_id", "adset_id", "date", "spend_cents", "clicks", "impressions", "conv"],
-  metrics_daily: ["id", "day", "sessions", "add_to_carts", "orders", "revenue_cents", "refunds_cents", "aov_cents", "cac_cents", "conversion_rate", "gross_margin_cents", "traffic"],
+  events: ['id', 'occurred_at', 'user_id', 'event_name', 'props'],
+  spend: [
+    'id',
+    'platform',
+    'campaign_id',
+    'adset_id',
+    'date',
+    'spend_cents',
+    'clicks',
+    'impressions',
+    'conv',
+  ],
+  metrics_daily: [
+    'id',
+    'day',
+    'sessions',
+    'add_to_carts',
+    'orders',
+    'revenue_cents',
+    'refunds_cents',
+    'aov_cents',
+    'cac_cents',
+    'conversion_rate',
+    'gross_margin_cents',
+    'traffic',
+  ],
 };
 const REQUIRED_INDEXES = [
-  { name: "idx_events_name_time", table: "events" },
-  { name: "idx_spend_platform_dt", table: "spend" },
-  { name: "idx_metrics_day", table: "metrics_daily" },
+  { name: 'idx_events_name_time', table: 'events' },
+  { name: 'idx_spend_platform_dt', table: 'spend' },
+  { name: 'idx_metrics_day', table: 'metrics_daily' },
 ];
 const REQUIRED_FUNCTIONS = [
-  "upsert_events",
-  "upsert_spend",
-  "recompute_metrics_daily",
-  "system_healthcheck",
+  'upsert_events',
+  'upsert_spend',
+  'recompute_metrics_daily',
+  'system_healthcheck',
 ];
 
 async function verifyTable(c: any, tableName: string): Promise<void> {
@@ -42,7 +65,11 @@ async function verifyTable(c: any, tableName: string): Promise<void> {
   log(`✓ Table exists: ${tableName}`);
 }
 
-async function verifyColumn(c: any, tableName: string, columnName: string): Promise<void> {
+async function verifyColumn(
+  c: any,
+  tableName: string,
+  columnName: string
+): Promise<void> {
   const result = await c.query(
     `SELECT EXISTS (
       SELECT 1 FROM information_schema.columns 
@@ -58,7 +85,11 @@ async function verifyColumn(c: any, tableName: string, columnName: string): Prom
   }
 }
 
-async function verifyIndex(c: any, indexName: string, tableName: string): Promise<void> {
+async function verifyIndex(
+  c: any,
+  indexName: string,
+  tableName: string
+): Promise<void> {
   const result = await c.query(
     `SELECT EXISTS (
       SELECT 1 FROM pg_indexes 
@@ -99,7 +130,7 @@ async function verifyPolicies(c: any, tableName: string): Promise<void> {
     [tableName]
   );
 
-  const count = parseInt(result.rows[0]?.count || "0", 10);
+  const count = parseInt(result.rows[0]?.count || '0', 10);
   if (count < 1) {
     throw new Error(`No policies found on ${tableName} (need at least 1)`);
   }
@@ -124,9 +155,9 @@ async function verifyFunction(c: any, functionName: string): Promise<void> {
 }
 
 async function verifyDatabase(): Promise<void> {
-  log("Starting database verification");
+  log('Starting database verification');
 
-  await withDb(async (c) => {
+  await withDb(async c => {
     // Verify tables
     for (const table of REQUIRED_TABLES) {
       await verifyTable(c, table);
@@ -155,7 +186,7 @@ async function verifyDatabase(): Promise<void> {
     }
   });
 
-  log("✅ Database verification passed");
+  log('✅ Database verification passed');
 }
 
 (async () => {
@@ -163,7 +194,7 @@ async function verifyDatabase(): Promise<void> {
     await verifyDatabase();
     process.exit(0);
   } catch (e: any) {
-    err("Database verification failed", e);
+    err('Database verification failed', e);
     process.exit(1);
   }
 })();

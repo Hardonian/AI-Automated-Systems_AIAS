@@ -3,7 +3,11 @@
  * Handles sequential, parallel, and conditional agent execution
  */
 
-import { AgentDefinition, AgentExecutionContext, AgentExecutionResult } from './schema';
+import {
+  AgentDefinition,
+  AgentExecutionContext,
+  AgentExecutionResult,
+} from './schema';
 
 export interface ExecutionState {
   step: number;
@@ -58,10 +62,10 @@ export class AgentExecutor {
 
     try {
       const startTime = Date.now();
-      
+
       // Execute based on planning style
       const output = await this.executeByPlanningStyle(agent, state, options);
-      
+
       const duration = Date.now() - startTime;
 
       return {
@@ -170,17 +174,24 @@ export class AgentExecutor {
           step: state.step,
           error: error instanceof Error ? error : new Error(String(error)),
         });
-        
+
         if (agent.execution.retry.enabled) {
           // Retry logic
-          const retried = await this.retryTool(tool, state.data, agent.execution.retry);
+          const retried = await this.retryTool(
+            tool,
+            state.data,
+            agent.execution.retry
+          );
           if (retried) {
             state.data = { ...state.data, [tool.id]: retried };
             continue;
           }
         }
 
-        options.onError?.(error instanceof Error ? error : new Error(String(error)), state);
+        options.onError?.(
+          error instanceof Error ? error : new Error(String(error)),
+          state
+        );
         throw error;
       }
     }
@@ -213,10 +224,13 @@ export class AgentExecutor {
     });
 
     const results = await Promise.allSettled(toolPromises);
-    
-    results.forEach((result) => {
+
+    results.forEach(result => {
       if (result.status === 'fulfilled') {
-        state.data = { ...state.data, [result.value.toolId]: result.value.result };
+        state.data = {
+          ...state.data,
+          [result.value.toolId]: result.value.result,
+        };
       }
     });
 
@@ -280,17 +294,17 @@ export class AgentExecutor {
     retryConfig: AgentDefinition['execution']['retry']
   ): Promise<unknown | null> {
     let delay = retryConfig.initialDelay;
-    
+
     for (let attempt = 1; attempt <= retryConfig.maxAttempts; attempt++) {
       await this.sleep(delay);
-      
+
       try {
         return await this.executeTool(tool, input);
       } catch (error) {
         if (attempt === retryConfig.maxAttempts) {
           return null;
         }
-        
+
         // Calculate next delay
         if (retryConfig.backoff === 'exponential') {
           delay = Math.min(delay * 2, retryConfig.maxDelay || 60000);
@@ -299,7 +313,7 @@ export class AgentExecutor {
         }
       }
     }
-    
+
     return null;
   }
 

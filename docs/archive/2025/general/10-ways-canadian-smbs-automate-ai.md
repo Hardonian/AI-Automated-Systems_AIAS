@@ -15,6 +15,7 @@ Canadian small businesses are discovering that AI automation can save them 10+ h
 If you're running an online store with **Shopify**, you can automate order processing to save 5+ hours per week.
 
 **What to Automate:**
+
 - Order confirmation emails
 - Inventory updates
 - Shipping label generation
@@ -31,6 +32,7 @@ If you're running an online store with **Shopify**, you can automate order proce
 **Wave Accounting** is a Canadian-made tool perfect for small businesses. Automate your bookkeeping to save 5+ hours per week.
 
 **What to Automate:**
+
 - Invoice generation and sending
 - Expense categorization
 - Bank reconciliation
@@ -47,6 +49,7 @@ If you're running an online store with **Shopify**, you can automate order proce
 **Stripe** offers excellent Canadian support. Automate payment workflows to reduce manual errors.
 
 **What to Automate:**
+
 - Payment confirmations
 - Failed payment retries
 - Refund processing
@@ -63,6 +66,7 @@ If you're running an online store with **Shopify**, you can automate order proce
 Respond to customer inquiries automatically with AI-powered support agents.
 
 **What to Automate:**
+
 - FAQ responses
 - Order status inquiries
 - Return requests
@@ -77,6 +81,7 @@ Respond to customer inquiries automatically with AI-powered support agents.
 Schedule and automate your social media content to maintain consistent presence.
 
 **What to Automate:**
+
 - Post scheduling
 - Content repurposing
 - Engagement tracking
@@ -91,6 +96,7 @@ Schedule and automate your social media content to maintain consistent presence.
 Automate your email campaigns to nurture leads and retain customers.
 
 **What to Automate:**
+
 - Welcome sequences
 - Abandoned cart emails
 - Newsletter sending
@@ -105,6 +111,7 @@ Automate your email campaigns to nurture leads and retain customers.
 Keep track of inventory automatically across multiple channels.
 
 **What to Automate:**
+
 - Stock level monitoring
 - Low stock alerts
 - Multi-channel sync
@@ -119,6 +126,7 @@ Keep track of inventory automatically across multiple channels.
 Qualify leads automatically to focus on high-value prospects.
 
 **What to Automate:**
+
 - Lead scoring
 - Qualification questions
 - CRM updates
@@ -133,6 +141,7 @@ Qualify leads automatically to focus on high-value prospects.
 Generate reports automatically to track your business performance.
 
 **What to Automate:**
+
 - Daily/weekly reports
 - KPI dashboards
 - Performance summaries
@@ -147,6 +156,7 @@ Generate reports automatically to track your business performance.
 Eliminate manual data entry with automated workflows.
 
 **What to Automate:**
+
 - Form submissions
 - Spreadsheet updates
 - Database entries
@@ -193,4 +203,4 @@ Eliminate manual data entry with automated workflows.
 
 ---
 
-*This article contains affiliate links. We may earn a commission if you make a purchase through these links. This helps us continue providing valuable content.*
+_This article contains affiliate links. We may earn a commission if you make a purchase through these links. This helps us continue providing valuable content._

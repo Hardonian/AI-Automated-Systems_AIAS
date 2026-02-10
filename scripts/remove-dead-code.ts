@@ -40,7 +40,9 @@ function isSafeToRemove(file: string): boolean {
   // Legacy React Router files in src/ are safe if Next.js equivalents exist
   if (file.startsWith('src/')) {
     // Check if Next.js equivalent exists in app/
-    const nextJsPath = file.replace('src/pages/', 'app/').replace('src/components/', 'components/');
+    const nextJsPath = file
+      .replace('src/pages/', 'app/')
+      .replace('src/components/', 'components/');
     if (existsSync(nextJsPath)) {
       return true;
     }

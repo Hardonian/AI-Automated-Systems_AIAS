@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
 /**
  * Error Boundary Component
  * Catches React errors and displays a fallback UI
  */
 
-import { Component, type ReactNode } from "react";
+import { Component, type ReactNode } from 'react';
 
-import { logger } from "@/lib/utils/logger";
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   children: ReactNode;
@@ -32,7 +32,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: { componentStack: string }) {
     // Log error to monitoring service
-    logger.error("React Error Boundary caught an error", error, {
+    logger.error('React Error Boundary caught an error', error, {
       componentStack: errorInfo.componentStack,
     });
 
@@ -47,13 +47,13 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="flex min-h-[400px] flex-col items-center justify-center p-8">
-          <h2 className="mb-4 text-2xl font-bold">Something went wrong</h2>
-          <p className="mb-4 text-muted-foreground">
-            {this.state.error?.message || "An unexpected error occurred"}
+        <div className='flex min-h-[400px] flex-col items-center justify-center p-8'>
+          <h2 className='mb-4 text-2xl font-bold'>Something went wrong</h2>
+          <p className='mb-4 text-muted-foreground'>
+            {this.state.error?.message || 'An unexpected error occurred'}
           </p>
           <button
-            className="rounded-lg bg-primary px-4 py-2 text-primary-foreground"
+            className='rounded-lg bg-primary px-4 py-2 text-primary-foreground'
             onClick={() => {
               this.setState({ hasError: false, error: null });
               window.location.reload();

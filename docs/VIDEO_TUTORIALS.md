@@ -224,6 +224,7 @@ Title: Error Handling Best Practices
 ## Feedback Collection
 
 After each tutorial:
+
 - Collect viewer feedback
 - Monitor engagement metrics
 - Update based on questions

@@ -1,18 +1,18 @@
 /**
  * AIAS Financial Reports API
- * 
+ *
  * Protected API for accessing AIAS financial reports.
  * Requires Financial Admin access.
  * Data is read from internal/private/financial/aias/ (encrypted).
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { requireAdminRole, AdminRole } from "@/lib/auth/admin-auth";
-import { logger } from "@/lib/logging/structured-logger";
-import { addSecurityHeaders } from "@/lib/middleware/security";
+import { requireAdminRole, AdminRole } from '@/lib/auth/admin-auth';
+import { logger } from '@/lib/logging/structured-logger';
+import { addSecurityHeaders } from '@/lib/middleware/security';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/admin/financial/aias/reports
@@ -21,12 +21,18 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   try {
     // Check financial admin access
-    const adminCheck = await requireAdminRole(request, AdminRole.FINANCIAL_ADMIN);
+    const adminCheck = await requireAdminRole(
+      request,
+      AdminRole.FINANCIAL_ADMIN
+    );
 
     if (!adminCheck.authorized) {
-      return adminCheck.response || NextResponse.json(
-        { error: "Unauthorized: Financial Admin access required" },
-        { status: 403 }
+      return (
+        adminCheck.response ||
+        NextResponse.json(
+          { error: 'Unauthorized: Financial Admin access required' },
+          { status: 403 }
+        )
       );
     }
 
@@ -37,7 +43,7 @@ export async function GET(request: NextRequest) {
 
     // Construct file path (in production, this would read from database or secure storage)
     // const reportsDir = join(process.cwd(), "internal", "private", "financial", "aias"); // TODO: Use when implementing file reading
-    
+
     // In production, you would:
     // 1. Read from encrypted storage
     // 2. Decrypt using git-crypt or similar
@@ -45,22 +51,26 @@ export async function GET(request: NextRequest) {
 
     // For now, return structure (actual data would be encrypted)
     const response = NextResponse.json({
-      message: "Financial reports are stored in encrypted format",
-      location: "internal/private/financial/aias/",
+      message: 'Financial reports are stored in encrypted format',
+      location: 'internal/private/financial/aias/',
       encrypted: true,
-      accessLevel: "financial_admin",
-      note: "In production, this endpoint would decrypt and return actual financial data",
+      accessLevel: 'financial_admin',
+      note: 'In production, this endpoint would decrypt and return actual financial data',
     });
 
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    logger.error("Error accessing financial reports", error instanceof Error ? error : new Error(String(error)), {
-      component: "FinancialReportsAPI",
-      action: "GET",
-    });
+    logger.error(
+      'Error accessing financial reports',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        component: 'FinancialReportsAPI',
+        action: 'GET',
+      }
+    );
     return NextResponse.json(
-      { error: "Failed to access financial reports" },
+      { error: 'Failed to access financial reports' },
       { status: 500 }
     );
   }

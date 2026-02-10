@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import Link from "next/link";
+import Link from 'next/link';
 
-import { useRuntimeUiConfig } from "@/lib/runtime-ui/use-runtime-ui-config";
+import { useRuntimeUiConfig } from '@/lib/runtime-ui/use-runtime-ui-config';
 
 function toneClasses(tone: string | undefined) {
   switch (tone) {
-    case "success":
-      return "bg-emerald-600 text-white";
-    case "warning":
-      return "bg-amber-500 text-black";
-    case "danger":
-      return "bg-red-600 text-white";
-    case "info":
+    case 'success':
+      return 'bg-emerald-600 text-white';
+    case 'warning':
+      return 'bg-amber-500 text-black';
+    case 'danger':
+      return 'bg-red-600 text-white';
+    case 'info':
     default:
-      return "bg-primary text-primary-foreground";
+      return 'bg-primary text-primary-foreground';
   }
 }
 
@@ -33,11 +33,18 @@ export function RuntimeTopBanner() {
   const hasCta = !!cta?.label && !!cta?.href;
 
   return (
-    <div aria-label="Site notice" className={toneClasses(banner.tone)} role="status">
-      <div className="container mx-auto px-4 py-2 text-sm flex flex-col sm:flex-row items-center justify-center gap-2">
-        <span className="text-center">{banner.message}</span>
+    <div
+      aria-label='Site notice'
+      className={toneClasses(banner.tone)}
+      role='status'
+    >
+      <div className='container mx-auto flex flex-col items-center justify-center gap-2 px-4 py-2 text-sm sm:flex-row'>
+        <span className='text-center'>{banner.message}</span>
         {hasCta ? (
-          <Link className="underline underline-offset-2 font-medium" href={cta!.href!}>
+          <Link
+            className='font-medium underline underline-offset-2'
+            href={cta!.href!}
+          >
             {cta!.label}
           </Link>
         ) : null}
@@ -45,4 +52,3 @@ export function RuntimeTopBanner() {
     </div>
   );
 }
-

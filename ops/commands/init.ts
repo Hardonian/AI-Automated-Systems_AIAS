@@ -22,7 +22,7 @@ export async function init(options: { force?: boolean }) {
     'partners',
   ];
 
-  directories.forEach((dir) => {
+  directories.forEach(dir => {
     const fullPath = path.join(rootDir, dir);
     if (!fs.existsSync(fullPath)) {
       fs.mkdirSync(fullPath, { recursive: true });

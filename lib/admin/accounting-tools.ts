@@ -1,6 +1,6 @@
 /**
  * Admin Accounting Tools
- * 
+ *
  * Public module for accounting and planning tools.
  * This module is visible in the repo for developers.
  * Actual financial data is stored in internal/private/financial/ (encrypted).
@@ -10,7 +10,7 @@ export interface AccountingTool {
   id: string;
   name: string;
   description: string;
-  category: "planning" | "analysis" | "reporting" | "forecasting";
+  category: 'planning' | 'analysis' | 'reporting' | 'forecasting';
   requiresFinancialAccess: boolean;
 }
 
@@ -19,38 +19,38 @@ export interface AccountingTool {
  */
 export const accountingTools: AccountingTool[] = [
   {
-    id: "cost-tracker",
-    name: "Cost Tracker",
-    description: "Track infrastructure costs across all services",
-    category: "analysis",
+    id: 'cost-tracker',
+    name: 'Cost Tracker',
+    description: 'Track infrastructure costs across all services',
+    category: 'analysis',
     requiresFinancialAccess: false,
   },
   {
-    id: "budget-planner",
-    name: "Budget Planner",
-    description: "Plan and manage budgets for different departments",
-    category: "planning",
+    id: 'budget-planner',
+    name: 'Budget Planner',
+    description: 'Plan and manage budgets for different departments',
+    category: 'planning',
     requiresFinancialAccess: false,
   },
   {
-    id: "forecast-generator",
-    name: "Forecast Generator",
-    description: "Generate financial forecasts based on historical data",
-    category: "forecasting",
+    id: 'forecast-generator',
+    name: 'Forecast Generator',
+    description: 'Generate financial forecasts based on historical data',
+    category: 'forecasting',
     requiresFinancialAccess: false,
   },
   {
-    id: "financial-reports",
-    name: "Financial Reports",
-    description: "Generate comprehensive financial reports",
-    category: "reporting",
+    id: 'financial-reports',
+    name: 'Financial Reports',
+    description: 'Generate comprehensive financial reports',
+    category: 'reporting',
     requiresFinancialAccess: true, // Requires financial admin access
   },
   {
-    id: "aias-financials",
-    name: "AIAS Financials",
-    description: "AIAS-specific financial data and reports",
-    category: "reporting",
+    id: 'aias-financials',
+    name: 'AIAS Financials',
+    description: 'AIAS-specific financial data and reports',
+    category: 'reporting',
     requiresFinancialAccess: true, // Requires financial admin access
   },
 ];
@@ -59,22 +59,26 @@ export const accountingTools: AccountingTool[] = [
  * Get accounting tool by ID
  */
 export function getAccountingTool(id: string): AccountingTool | undefined {
-  return accountingTools.find((tool) => tool.id === id);
+  return accountingTools.find(tool => tool.id === id);
 }
 
 /**
  * Get tools by category
  */
-export function getToolsByCategory(category: AccountingTool["category"]): AccountingTool[] {
-  return accountingTools.filter((tool) => tool.category === category);
+export function getToolsByCategory(
+  category: AccountingTool['category']
+): AccountingTool[] {
+  return accountingTools.filter(tool => tool.category === category);
 }
 
 /**
  * Get tools accessible to user
  */
-export function getAccessibleTools(hasFinancialAccess: boolean): AccountingTool[] {
+export function getAccessibleTools(
+  hasFinancialAccess: boolean
+): AccountingTool[] {
   return accountingTools.filter(
-    (tool) => !tool.requiresFinancialAccess || hasFinancialAccess
+    tool => !tool.requiresFinancialAccess || hasFinancialAccess
   );
 }
 
@@ -89,9 +93,12 @@ export class BudgetPlanner {
     totalBudget: number,
     allocations: Record<string, number>
   ): Record<string, number> {
-    const totalAllocated = Object.values(allocations).reduce((sum, val) => sum + val, 0);
+    const totalAllocated = Object.values(allocations).reduce(
+      (sum, val) => sum + val,
+      0
+    );
     if (totalAllocated > totalBudget) {
-      throw new Error("Total allocations exceed budget");
+      throw new Error('Total allocations exceed budget');
     }
 
     return Object.fromEntries(
@@ -122,12 +129,9 @@ export class FinancialForecaster {
   /**
    * Simple linear forecast
    */
-  static linearForecast(
-    historicalData: number[],
-    periods: number
-  ): number[] {
+  static linearForecast(historicalData: number[], periods: number): number[] {
     if (historicalData.length < 2) {
-      throw new Error("Need at least 2 data points for forecast");
+      throw new Error('Need at least 2 data points for forecast');
     }
 
     const n = historicalData.length;

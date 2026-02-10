@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Plus } from "lucide-react";
+import { Plus } from 'lucide-react';
 
-import { AIAssistant } from "./AIAssistant";
-import { DraggableList } from "./DraggableList";
-import { RichTextEditor } from "./RichTextEditor";
+import { AIAssistant } from './AIAssistant';
+import { DraggableList } from './DraggableList';
+import { RichTextEditor } from './RichTextEditor';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import type { TestimonialSection } from "@/lib/content/schemas";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import type { TestimonialSection } from '@/lib/content/schemas';
 
 interface ContentStudioTestimonialsProps {
   content: TestimonialSection;
@@ -37,15 +37,15 @@ export function ContentStudioTestimonials({
     if (existingItem) {
       newItems[index] = { ...existingItem, [field]: value };
     }
-    updateField("items", newItems);
+    updateField('items', newItems);
   };
 
   const addItem = () => {
-    updateField("items", [
+    updateField('items', [
       ...content.items,
       {
-        quote: "Testimonial quote",
-        author: "Author Name",
+        quote: 'Testimonial quote',
+        author: 'Author Name',
         rating: 5,
         hasVideo: false,
       },
@@ -54,7 +54,7 @@ export function ContentStudioTestimonials({
 
   const removeItem = (index: number) => {
     updateField(
-      "items",
+      'items',
       content.items.filter((_, i) => i !== index)
     );
   };
@@ -64,37 +64,37 @@ export function ContentStudioTestimonials({
       <CardHeader>
         <CardTitle>Testimonials Section</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="testimonials-title">Section Title (optional)</Label>
+      <CardContent className='space-y-6'>
+        <div className='space-y-2'>
+          <Label htmlFor='testimonials-title'>Section Title (optional)</Label>
           <Input
-            id="testimonials-title"
-            value={content.sectionTitle || ""}
-            onChange={(e) =>
-              updateField("sectionTitle", e.target.value || undefined)
+            id='testimonials-title'
+            value={content.sectionTitle || ''}
+            onChange={e =>
+              updateField('sectionTitle', e.target.value || undefined)
             }
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="testimonials-subtitle">
+        <div className='space-y-2'>
+          <Label htmlFor='testimonials-subtitle'>
             Section Subtitle (optional)
           </Label>
           <Textarea
-            id="testimonials-subtitle"
+            id='testimonials-subtitle'
             rows={2}
-            value={content.sectionSubtitle || ""}
-            onChange={(e) =>
-              updateField("sectionSubtitle", e.target.value || undefined)
+            value={content.sectionSubtitle || ''}
+            onChange={e =>
+              updateField('sectionSubtitle', e.target.value || undefined)
             }
           />
         </div>
 
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
+        <div className='space-y-4'>
+          <div className='flex items-center justify-between'>
             <Label>Testimonials (drag to reorder)</Label>
-            <Button size="sm" type="button" onClick={addItem}>
-              <Plus className="mr-2 h-4 w-4" />
+            <Button size='sm' type='button' onClick={addItem}>
+              <Plus className='mr-2 h-4 w-4' />
               Add Testimonial
             </Button>
           </div>
@@ -102,65 +102,75 @@ export function ContentStudioTestimonials({
           <DraggableList
             items={content.items}
             renderItem={(item, index) => (
-              <div className="space-y-4">
-                <div className="space-y-2">
+              <div className='space-y-4'>
+                <div className='space-y-2'>
                   <Label>Quote</Label>
                   <RichTextEditor
                     rows={4}
                     value={item.quote}
-                    onChange={(value) => updateItem(index, "quote", value)}
+                    onChange={value => updateItem(index, 'quote', value)}
                   />
                   <AIAssistant
-                    context="Customer testimonial"
+                    context='Customer testimonial'
                     currentContent={item.quote}
                     token={token}
-                    type="testimonial"
-                    onGenerate={(generated) => updateItem(index, "quote", generated)}
+                    type='testimonial'
+                    onGenerate={generated =>
+                      updateItem(index, 'quote', generated)
+                    }
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div className='grid grid-cols-2 gap-4'>
+                  <div className='space-y-2'>
                     <Label>Author</Label>
                     <Input
                       value={item.author}
-                      onChange={(e) =>
-                        updateItem(index, "author", e.target.value)
+                      onChange={e =>
+                        updateItem(index, 'author', e.target.value)
                       }
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className='space-y-2'>
                     <Label>Role (optional)</Label>
                     <Input
-                      value={item.role || ""}
-                      onChange={(e) =>
-                        updateItem(index, "role", e.target.value || undefined)
+                      value={item.role || ''}
+                      onChange={e =>
+                        updateItem(index, 'role', e.target.value || undefined)
                       }
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div className='grid grid-cols-2 gap-4'>
+                  <div className='space-y-2'>
                     <Label>Company (optional)</Label>
                     <Input
-                      value={item.company || ""}
-                      onChange={(e) =>
-                        updateItem(index, "company", e.target.value || undefined)
+                      value={item.company || ''}
+                      onChange={e =>
+                        updateItem(
+                          index,
+                          'company',
+                          e.target.value || undefined
+                        )
                       }
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className='space-y-2'>
                     <Label>Rating (1-5)</Label>
                     <Input
-                      max="5"
-                      min="1"
-                      type="number"
+                      max='5'
+                      min='1'
+                      type='number'
                       value={item.rating}
-                      onChange={(e) =>
-                        updateItem(index, "rating", parseInt(e.target.value, 10) || 5)
+                      onChange={e =>
+                        updateItem(
+                          index,
+                          'rating',
+                          parseInt(e.target.value, 10) || 5
+                        )
                       }
                     />
                   </div>
@@ -168,7 +178,7 @@ export function ContentStudioTestimonials({
               </div>
             )}
             onRemove={removeItem}
-            onReorder={(items) => updateField("items", items)}
+            onReorder={items => updateField('items', items)}
           />
         </div>
       </CardContent>

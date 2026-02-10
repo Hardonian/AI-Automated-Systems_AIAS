@@ -13,12 +13,13 @@ class AIInsightsAgent {
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
-    
+
     this.supabase = createClient(
-      process.env.SUPABASE_URL || `https://${process.env.SUPABASE_PROJECT_REF || 'ghqyxhbyyirveptgwoqm'}.supabase.co`,
+      process.env.SUPABASE_URL ||
+        `https://${process.env.SUPABASE_PROJECT_REF || 'ghqyxhbyyirveptgwoqm'}.supabase.co`,
       process.env.SUPABASE_ANON_KEY || ''
     );
-    
+
     this.octokit = new Octokit({
       auth: process.env.GITHUB_TOKEN,
     });
@@ -30,27 +31,31 @@ class AIInsightsAgent {
   async analyzeDeployment(deploymentId, environment = 'production') {
     try {
       console.log(`Analyzing deployment ${deploymentId} in ${environment}...`);
-      
+
       // Collect logs from the last 24 hours
       const logs = await this.collectLogs(deploymentId, environment);
-      
+
       // Get performance metrics
       const metrics = await this.collectPerformanceMetrics(deploymentId);
-      
+
       // Get error patterns
       const errorPatterns = await this.analyzeErrorPatterns(logs);
-      
+
       // Generate AI insights using GPT-5
-      const insights = await this.generateInsights(logs, metrics, errorPatterns);
-      
+      const insights = await this.generateInsights(
+        logs,
+        metrics,
+        errorPatterns
+      );
+
       // Post insights as PR comment if this is a PR deployment
       if (process.env.VERCEL_GIT_PULL_REQUEST_NUMBER) {
         await this.postPRComment(insights, deploymentId);
       }
-      
+
       // Store insights in database
       await this.storeInsights(insights, deploymentId, environment);
-      
+
       return insights;
     } catch (error) {
       console.error('Error analyzing deployment:', error);
@@ -67,7 +72,10 @@ class AIInsightsAgent {
       .select('*')
       .eq('deployment_id', deploymentId)
       .eq('environment', environment)
-      .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+      .gte(
+        'created_at',
+        new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+      )
       .order('created_at', { ascending: false })
       .limit(1000);
 
@@ -108,7 +116,7 @@ class AIInsightsAgent {
       totalErrors: errorLogs.length,
       errorTypes: errorCounts,
       errorMessages: errorMessages.slice(0, 50), // Limit for AI processing
-      errorRate: (errorLogs.length / logs.length) * 100
+      errorRate: (errorLogs.length / logs.length) * 100,
     };
   }
 
@@ -118,9 +126,11 @@ class AIInsightsAgent {
   categorizeError(message) {
     if (message.includes('timeout')) return 'timeout';
     if (message.includes('connection')) return 'connection';
-    if (message.includes('authentication') || message.includes('unauthorized')) return 'auth';
+    if (message.includes('authentication') || message.includes('unauthorized'))
+      return 'auth';
     if (message.includes('validation')) return 'validation';
-    if (message.includes('database') || message.includes('SQL')) return 'database';
+    if (message.includes('database') || message.includes('SQL'))
+      return 'database';
     if (message.includes('memory') || message.includes('heap')) return 'memory';
     if (message.includes('rate limit')) return 'rate_limit';
     return 'other';
@@ -152,19 +162,29 @@ Deployment Analysis Request:
 - Error types: ${JSON.stringify(errorPatterns.errorTypes, null, 2)}
 
 ## Recent Metrics
-${metrics.map(m => `
+${metrics
+  .map(
+    m => `
 - Error rate: ${m.metrics.error_rate}%
 - P95 latency: ${m.metrics.latency_p95}ms
 - Cold starts: ${m.metrics.cold_starts}
 - Memory usage: ${m.metrics.memory_usage}%
 - Severity: ${m.severity}
-`).join('\n')}
+`
+  )
+  .join('\n')}
 
 ## Error Messages (Sample)
-${errorPatterns.errorMessages.slice(0, 20).map(msg => `- ${msg}`).join('\n')}
+${errorPatterns.errorMessages
+  .slice(0, 20)
+  .map(msg => `- ${msg}`)
+  .join('\n')}
 
 ## Log Sample
-${logs.slice(0, 10).map(log => `${log.level}: ${log.message}`).join('\n')}
+${logs
+  .slice(0, 10)
+  .map(log => `${log.level}: ${log.message}`)
+  .join('\n')}
 
 Please provide a comprehensive analysis with specific recommendations.
 `;
@@ -174,14 +194,14 @@ Please provide a comprehensive analysis with specific recommendations.
         model: 'gpt-4-turbo-preview', // Using GPT-4 as GPT-5 is not yet available
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
+          { role: 'user', content: userPrompt },
         ],
         temperature: 0.3,
-        max_tokens: 2000
+        max_tokens: 2000,
       });
 
       const analysis = completion.choices[0].message.content;
-      
+
       // Parse the analysis into structured format
       return this.parseAnalysis(analysis, errorPatterns, metrics);
     } catch (error) {
@@ -204,7 +224,7 @@ Please provide a comprehensive analysis with specific recommendations.
       security: [],
       scalability: [],
       priority: 'medium',
-      confidence: 0.8
+      confidence: 0.8,
     };
 
     // Extract summary
@@ -218,12 +238,14 @@ Please provide a comprehensive analysis with specific recommendations.
     if (recMatches) {
       insights.recommendations = recMatches.map(rec => ({
         text: rec.replace(/^- \[(High|Medium|Low)\] /, ''),
-        priority: rec.match(/\[(High|Medium|Low)\]/)[1].toLowerCase()
+        priority: rec.match(/\[(High|Medium|Low)\]/)[1].toLowerCase(),
       }));
     }
 
     // Determine overall priority
-    const highPriorityCount = insights.recommendations.filter(r => r.priority === 'high').length;
+    const highPriorityCount = insights.recommendations.filter(
+      r => r.priority === 'high'
+    ).length;
     if (highPriorityCount > 2) insights.priority = 'high';
     else if (highPriorityCount > 0) insights.priority = 'medium';
     else insights.priority = 'low';
@@ -236,25 +258,25 @@ Please provide a comprehensive analysis with specific recommendations.
    */
   generateFallbackInsights(errorPatterns, metrics) {
     const recommendations = [];
-    
+
     if (errorPatterns.errorRate > 5) {
       recommendations.push({
         text: 'High error rate detected - investigate error logs and implement proper error handling',
-        priority: 'high'
+        priority: 'high',
       });
     }
-    
+
     if (metrics.length > 0 && metrics[0].metrics.latency_p95 > 2000) {
       recommendations.push({
         text: 'High latency detected - optimize database queries and implement caching',
-        priority: 'high'
+        priority: 'high',
       });
     }
-    
+
     if (metrics.length > 0 && metrics[0].metrics.memory_usage > 80) {
       recommendations.push({
         text: 'High memory usage - investigate potential memory leaks',
-        priority: 'medium'
+        priority: 'medium',
       });
     }
 
@@ -263,12 +285,16 @@ Please provide a comprehensive analysis with specific recommendations.
       recommendations,
       performance: { errorRate: errorPatterns.errorRate },
       errors: errorPatterns.errorTypes,
-      caching: ['Consider implementing Redis caching for frequently accessed data'],
+      caching: [
+        'Consider implementing Redis caching for frequently accessed data',
+      ],
       database: ['Review database query performance and indexing'],
       security: ['Ensure all API endpoints have proper authentication'],
       scalability: ['Monitor resource usage and plan for horizontal scaling'],
-      priority: recommendations.some(r => r.priority === 'high') ? 'high' : 'medium',
-      confidence: 0.6
+      priority: recommendations.some(r => r.priority === 'high')
+        ? 'high'
+        : 'medium',
+      confidence: 0.6,
     };
   }
 
@@ -286,9 +312,9 @@ Please provide a comprehensive analysis with specific recommendations.
         owner: process.env.GITHUB_OWNER || 'your-org',
         repo: process.env.GITHUB_REPO || 'aias-platform',
         issue_number: prNumber,
-        body: comment
+        body: comment,
       });
-      
+
       console.log(`Posted AI analysis comment to PR #${prNumber}`);
     } catch (error) {
       console.error('Error posting PR comment:', error);
@@ -302,7 +328,7 @@ Please provide a comprehensive analysis with specific recommendations.
     const priorityEmoji = {
       high: '🔴',
       medium: '🟡',
-      low: '🟢'
+      low: '🟢',
     };
 
     return `
@@ -316,9 +342,9 @@ Please provide a comprehensive analysis with specific recommendations.
 ${insights.summary || 'Analysis completed with automated recommendations.'}
 
 ### 🎯 Recommendations
-${insights.recommendations.map(rec => 
-  `- **${rec.priority.toUpperCase()}:** ${rec.text}`
-).join('\n')}
+${insights.recommendations
+  .map(rec => `- **${rec.priority.toUpperCase()}:** ${rec.text}`)
+  .join('\n')}
 
 ### 📈 Performance Insights
 - **Error Rate:** ${insights.performance.errorRate?.toFixed(2) || 'N/A'}%
@@ -346,14 +372,14 @@ ${insights.scalability.map(rec => `- ${rec}`).join('\n') || '- No specific scala
    */
   async storeInsights(insights, deploymentId, environment) {
     try {
-      const { error } = await this.supabase
-        .from('ai_insights')
-        .insert([{
+      const { error } = await this.supabase.from('ai_insights').insert([
+        {
           deployment_id: deploymentId,
           environment,
           insights: insights,
-          created_at: new Date().toISOString()
-        }]);
+          created_at: new Date().toISOString(),
+        },
+      ]);
 
       if (error) throw error;
       console.log('Insights stored successfully');
@@ -371,8 +397,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const agent = new AIInsightsAgent();
   const deploymentId = process.argv[2] || process.env.VERCEL_DEPLOYMENT_ID;
   const environment = process.argv[3] || process.env.NODE_ENV || 'production';
-  
-  agent.analyzeDeployment(deploymentId, environment)
+
+  agent
+    .analyzeDeployment(deploymentId, environment)
     .then(insights => {
       console.log('Analysis completed:', JSON.stringify(insights, null, 2));
     })

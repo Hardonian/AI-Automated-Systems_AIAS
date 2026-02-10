@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 /**
  * Shared content schemas for both AIAS and Settler.dev
@@ -8,9 +8,11 @@ import { z } from "zod";
 export const ctaSchema = z.object({
   label: z.string().min(1),
   href: z.string().refine(
-    (val) => {
+    val => {
       // Allow absolute URLs, paths starting with /, or hash links starting with #
-      if (val.startsWith("/") || val.startsWith("#")) {return true;}
+      if (val.startsWith('/') || val.startsWith('#')) {
+        return true;
+      }
       try {
         new URL(val);
         return true;
@@ -18,9 +20,9 @@ export const ctaSchema = z.object({
         return false;
       }
     },
-    { message: "Invalid url" }
+    { message: 'Invalid url' }
   ),
-  variant: z.enum(["default", "outline", "secondary", "ghost"]).optional(),
+  variant: z.enum(['default', 'outline', 'secondary', 'ghost']).optional(),
   visible: z.boolean().default(true),
 });
 
@@ -35,7 +37,7 @@ export const heroSchema = z.object({
   primaryCta: ctaSchema.optional(),
   secondaryCta: ctaSchema.optional(),
   imageUrl: z.string().url().optional(),
-  backgroundVariant: z.enum(["light", "dark", "gradient"]).default("gradient"),
+  backgroundVariant: z.enum(['light', 'dark', 'gradient']).default('gradient'),
   socialProof: z
     .array(
       z.object({
@@ -73,7 +75,7 @@ export const featureSectionSchema = z.object({
   sectionTitle: z.string().optional(),
   sectionSubtitle: z.string().optional(),
   items: z.array(featureItemSchema).min(1),
-  layoutVariant: z.enum(["grid", "list", "bento"]).default("grid"),
+  layoutVariant: z.enum(['grid', 'list', 'bento']).default('grid'),
 });
 
 export type FeatureSection = z.infer<typeof featureSectionSchema>;
@@ -87,7 +89,7 @@ export const testimonialSchema = z.object({
   flag: z.string().optional(),
   rating: z.number().min(1).max(5).default(5),
   hasVideo: z.boolean().default(false),
-  type: z.enum(["consultancy", "platform"]).optional(),
+  type: z.enum(['consultancy', 'platform']).optional(),
   avatarUrl: z.string().url().optional(),
 });
 

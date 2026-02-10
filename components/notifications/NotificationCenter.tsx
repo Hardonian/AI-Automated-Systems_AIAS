@@ -1,11 +1,16 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { logger } from "@/lib/logging/structured-logger";
-import { Bell, Check, Archive, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { useState, useEffect } from 'react';
+import { logger } from '@/lib/logging/structured-logger';
+import { Bell, Check, Archive, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import {
   Sheet,
   SheetContent,
@@ -13,10 +18,10 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { toast } from "sonner";
-import { createClient } from "@/lib/supabase/client";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/sheet';
+import { toast } from 'sonner';
+import { createClient } from '@/lib/supabase/client';
+import { cn } from '@/lib/utils';
 
 interface Notification {
   id: string;
@@ -27,7 +32,7 @@ interface Notification {
   action_label?: string;
   read: boolean;
   archived: boolean;
-  priority: "low" | "normal" | "high" | "urgent";
+  priority: 'low' | 'normal' | 'high' | 'urgent';
   created_at: string;
 }
 
@@ -51,28 +56,37 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
   const loadNotifications = async () => {
     try {
       const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
       if (!session) return;
 
-      const response = await fetch("/api/notifications?limit=20&archived=false", {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
+      const response = await fetch(
+        '/api/notifications?limit=20&archived=false',
+        {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("Failed to load notifications");
+        throw new Error('Failed to load notifications');
       }
 
       const data = await response.json();
       setNotifications(data.notifications || []);
       setUnreadCount(data.unread_count || 0);
     } catch (error) {
-      logger.error("Error loading notifications", error instanceof Error ? error : new Error(String(error)), {
-        component: "NotificationCenter",
-        action: "loadNotifications",
-      });
+      logger.error(
+        'Error loading notifications',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          component: 'NotificationCenter',
+          action: 'loadNotifications',
+        }
+      );
     } finally {
       setLoading(false);
     }
@@ -81,251 +95,283 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
   const markAsRead = async (notificationId: string) => {
     try {
       const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
       if (!session) return;
 
       const response = await fetch(`/api/notifications/${notificationId}`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({ read: true }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to mark as read");
+        throw new Error('Failed to mark as read');
       }
 
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === notificationId ? { ...n, read: true } : n))
+      setNotifications(prev =>
+        prev.map(n => (n.id === notificationId ? { ...n, read: true } : n))
       );
-      setUnreadCount((prev) => Math.max(0, prev - 1));
+      setUnreadCount(prev => Math.max(0, prev - 1));
     } catch (error) {
-      logger.error("Error marking notification as read", error instanceof Error ? error : new Error(String(error)), {
-        component: "NotificationCenter",
-        action: "markAsRead",
-      });
-      toast.error("Failed to mark notification as read");
+      logger.error(
+        'Error marking notification as read',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          component: 'NotificationCenter',
+          action: 'markAsRead',
+        }
+      );
+      toast.error('Failed to mark notification as read');
     }
   };
 
   const markAllAsRead = async () => {
     try {
       const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
       if (!session) return;
 
-      const response = await fetch("/api/notifications/mark-read", {
-        method: "POST",
+      const response = await fetch('/api/notifications/mark-read', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({ all: true }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to mark all as read");
+        throw new Error('Failed to mark all as read');
       }
 
-      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
       setUnreadCount(0);
-      toast.success("All notifications marked as read");
+      toast.success('All notifications marked as read');
     } catch (error) {
-      logger.error("Error marking all as read", error instanceof Error ? error : new Error(String(error)), {
-        component: "NotificationCenter",
-        action: "markAllAsRead",
-      });
-      toast.error("Failed to mark all as read");
+      logger.error(
+        'Error marking all as read',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          component: 'NotificationCenter',
+          action: 'markAllAsRead',
+        }
+      );
+      toast.error('Failed to mark all as read');
     }
   };
 
   const archiveNotification = async (notificationId: string) => {
     try {
       const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
       if (!session) return;
 
       const response = await fetch(`/api/notifications/${notificationId}`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({ archived: true }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to archive notification");
+        throw new Error('Failed to archive notification');
       }
 
-      setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
-      toast.success("Notification archived");
+      setNotifications(prev => prev.filter(n => n.id !== notificationId));
+      toast.success('Notification archived');
     } catch (error) {
-      logger.error("Error archiving notification", error instanceof Error ? error : new Error(String(error)), {
-        component: "NotificationCenter",
-        action: "archiveNotification",
-      });
-      toast.error("Failed to archive notification");
+      logger.error(
+        'Error archiving notification',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          component: 'NotificationCenter',
+          action: 'archiveNotification',
+        }
+      );
+      toast.error('Failed to archive notification');
     }
   };
 
   const deleteNotification = async (notificationId: string) => {
     try {
       const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
       if (!session) return;
 
       const response = await fetch(`/api/notifications/${notificationId}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
           Authorization: `Bearer ${session.access_token}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete notification");
+        throw new Error('Failed to delete notification');
       }
 
-      setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
-      toast.success("Notification deleted");
+      setNotifications(prev => prev.filter(n => n.id !== notificationId));
+      toast.success('Notification deleted');
     } catch (error) {
-      logger.error("Error deleting notification", error instanceof Error ? error : new Error(String(error)), {
-        component: "NotificationCenter",
-        action: "deleteNotification",
-      });
-      toast.error("Failed to delete notification");
+      logger.error(
+        'Error deleting notification',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          component: 'NotificationCenter',
+          action: 'deleteNotification',
+        }
+      );
+      toast.error('Failed to delete notification');
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "urgent":
-        return "bg-red-500";
-      case "high":
-        return "bg-orange-500";
-      case "normal":
-        return "bg-blue-500";
-      case "low":
-        return "bg-gray-500";
+      case 'urgent':
+        return 'bg-red-500';
+      case 'high':
+        return 'bg-orange-500';
+      case 'normal':
+        return 'bg-blue-500';
+      case 'low':
+        return 'bg-gray-500';
       default:
-        return "bg-gray-500";
+        return 'bg-gray-500';
     }
   };
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className={cn("relative", className)}>
-          <Bell className="h-5 w-5" />
+        <Button
+          variant='ghost'
+          size='icon'
+          className={cn('relative', className)}
+        >
+          <Bell className='h-5 w-5' />
           {unreadCount > 0 && (
             <Badge
-              className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
-              variant="destructive"
+              className='absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center p-0 text-xs'
+              variant='destructive'
             >
-              {unreadCount > 9 ? "9+" : unreadCount}
+              {unreadCount > 9 ? '9+' : unreadCount}
             </Badge>
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-md">
+      <SheetContent className='w-full sm:max-w-md'>
         <SheetHeader>
           <SheetTitle>Notifications</SheetTitle>
           <SheetDescription>
             {unreadCount > 0
-              ? `You have ${unreadCount} unread notification${unreadCount > 1 ? "s" : ""}`
-              : "All caught up!"}
+              ? `You have ${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}`
+              : 'All caught up!'}
           </SheetDescription>
         </SheetHeader>
-        <div className="mt-4 space-y-4">
+        <div className='mt-4 space-y-4'>
           {loading ? (
-            <div className="text-center py-8 text-muted-foreground">Loading...</div>
+            <div className='py-8 text-center text-muted-foreground'>
+              Loading...
+            </div>
           ) : notifications.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className='py-8 text-center text-muted-foreground'>
               No notifications yet
             </div>
           ) : (
             <>
               {unreadCount > 0 && (
                 <Button
-                  variant="outline"
-                  size="sm"
+                  variant='outline'
+                  size='sm'
                   onClick={markAllAsRead}
-                  className="w-full"
+                  className='w-full'
                 >
-                  <Check className="h-4 w-4 mr-2" />
+                  <Check className='mr-2 h-4 w-4' />
                   Mark all as read
                 </Button>
               )}
-              <div className="space-y-2 max-h-[600px] overflow-y-auto">
-                {notifications.map((notification) => (
+              <div className='max-h-[600px] space-y-2 overflow-y-auto'>
+                {notifications.map(notification => (
                   <Card
                     key={notification.id}
                     className={cn(
-                      "transition-colors",
-                      !notification.read && "bg-muted/50"
+                      'transition-colors',
+                      !notification.read && 'bg-muted/50'
                     )}
                   >
-                    <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start gap-2 flex-1">
+                    <CardHeader className='pb-3'>
+                      <div className='flex items-start justify-between'>
+                        <div className='flex flex-1 items-start gap-2'>
                           <div
                             className={cn(
-                              "h-2 w-2 rounded-full mt-1.5",
+                              'mt-1.5 h-2 w-2 rounded-full',
                               getPriorityColor(notification.priority)
                             )}
                           />
-                          <div className="flex-1">
-                            <CardTitle className="text-sm">{notification.title}</CardTitle>
-                            <CardDescription className="text-xs mt-1">
+                          <div className='flex-1'>
+                            <CardTitle className='text-sm'>
+                              {notification.title}
+                            </CardTitle>
+                            <CardDescription className='mt-1 text-xs'>
                               {notification.message}
                             </CardDescription>
                           </div>
                         </div>
-                        <div className="flex gap-1">
+                        <div className='flex gap-1'>
                           {!notification.read && (
                             <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-6 w-6"
+                              variant='ghost'
+                              size='icon'
+                              className='h-6 w-6'
                               onClick={() => markAsRead(notification.id)}
                             >
-                              <Check className="h-3 w-3" />
+                              <Check className='h-3 w-3' />
                             </Button>
                           )}
                           <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
+                            variant='ghost'
+                            size='icon'
+                            className='h-6 w-6'
                             onClick={() => archiveNotification(notification.id)}
                           >
-                            <Archive className="h-3 w-3" />
+                            <Archive className='h-3 w-3' />
                           </Button>
                           <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
+                            variant='ghost'
+                            size='icon'
+                            className='h-6 w-6'
                             onClick={() => deleteNotification(notification.id)}
                           >
-                            <Trash2 className="h-3 w-3" />
+                            <Trash2 className='h-3 w-3' />
                           </Button>
                         </div>
                       </div>
                       {notification.action_url && (
                         <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-auto p-0 mt-2"
+                          variant='ghost'
+                          size='sm'
+                          className='mt-2 h-auto p-0'
                           onClick={() => {
                             window.location.href = notification.action_url!;
                           }}
                         >
-                          {notification.action_label || "View"}
+                          {notification.action_label || 'View'}
                         </Button>
                       )}
                     </CardHeader>

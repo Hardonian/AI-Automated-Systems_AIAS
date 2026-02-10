@@ -1,6 +1,7 @@
 > Archived on 2025-11-12. Superseded by: (see docs/final index)
 
 # Our Consulting Philosophy
+
 ## Systems Thinking + Multi-Dimensional Productivity = Optimal Outcomes
 
 **Core Principle:** Automation is one tool among many - not the solution itself
@@ -39,6 +40,7 @@
 ## ❌ WHAT WE DON'T DO
 
 ### We Don't:
+
 - ❌ Jump to automation as first solution
 - ❌ Treat symptoms without finding causes
 - ❌ Focus on single perspective only
@@ -52,6 +54,7 @@
 ## ✅ WHAT WE DO
 
 ### We Do:
+
 - ✅ Analyze from multiple perspectives
 - ✅ Find root causes first
 - ✅ Design holistic solutions
@@ -81,26 +84,31 @@ Every productivity challenge analyzed through:
 ## 🎯 OUR METHODOLOGY
 
 ### Step 1: Systems Thinking
+
 - Understand the system
 - Map interconnections
 - Identify feedback loops
 
 ### Step 2: Multi-Perspective Analysis
+
 - Analyze all 6 dimensions
 - Find issues in each
 - Understand root causes
 
 ### Step 3: Root Cause Analysis
+
 - Find underlying causes
 - Don't just treat symptoms
 - Identify leverage points
 
 ### Step 4: Holistic Solution Design
+
 - Address multiple dimensions
 - Create integrated solutions
 - Build synergies
 
 ### Step 5: Optimal Outcomes
+
 - Sustainable improvements
 - Measurable results
 - Lasting change
@@ -110,12 +118,14 @@ Every productivity challenge analyzed through:
 ## 💡 WHY THIS MATTERS
 
 ### Traditional Approach (Automation-First):
+
 - Often fails
 - Addresses symptoms
 - Limited perspective
 - Temporary fixes
 
 ### Our Approach (Systems Thinking):
+
 - Sustainable success
 - Addresses root causes
 - Multiple perspectives
@@ -141,12 +151,14 @@ Every productivity challenge analyzed through:
 ## 🌍 GLOBAL PERSPECTIVE
 
 **Built in Canada, serving the world:**
+
 - Systems thinking is universal
 - Multi-dimensional analysis works everywhere
 - Root causes are found in any market
 - Optimal outcomes are achievable globally
 
 **With education & stakeholder expertise:**
+
 - Understanding diverse perspectives
 - Managing complex systems
 - Supporting stakeholders worldwide
@@ -159,24 +171,28 @@ Every productivity challenge analyzed through:
 ### Why Systems Thinking is More Critical Than Ever
 
 **The AI Paradox:**
+
 - The more AI advances, the more systems thinking is needed
 - AI automates routine work → Systems thinking becomes essential
 - AI handles data → Systems thinking interprets and directs
 - AI scales execution → Systems thinking creates strategy
 
 **The Job Market Reality:**
+
 - Systems thinking = Competitive advantage
 - Systems thinking = Career differentiation
 - Systems thinking = Job security
 - Systems thinking = Higher compensation
 
 **The Business Reality:**
+
 - Systems thinking = Sustainable success
 - Systems thinking = Competitive advantage
 - Systems thinking = Optimal outcomes
 - Systems thinking = Market leadership
 
 **The Bottom Line:**
+
 - AI cannot replicate systems thinking
 - Systems thinking is uniquely human
 - Systems thinking is THE differentiator
@@ -187,6 +203,7 @@ Every productivity challenge analyzed through:
 ## ✅ SUCCESS MEASUREMENT
 
 **We measure success by:**
+
 - Root causes addressed (not just symptoms)
 - Multiple dimensions improved
 - Sustainable results achieved

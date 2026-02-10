@@ -8,8 +8,8 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "AIAS application is down"
-          description: "The AIAS application has been down for more than 1 minute."
+          summary: 'AIAS application is down'
+          description: 'The AIAS application has been down for more than 1 minute.'
 
       - alert: HighErrorRate
         expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.1
@@ -17,8 +17,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "High error rate detected"
-          description: "Error rate is {{ $value | humanizePercentage }} for the last 5 minutes."
+          summary: 'High error rate detected'
+          description: 'Error rate is {{ $value | humanizePercentage }} for the last 5 minutes.'
 
       - alert: HighResponseTime
         expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
@@ -26,8 +26,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "High response time"
-          description: "95th percentile response time is {{ $value }}s for the last 5 minutes."
+          summary: 'High response time'
+          description: '95th percentile response time is {{ $value }}s for the last 5 minutes.'
 
       # Database Health
       - alert: DatabaseDown
@@ -36,8 +36,8 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "PostgreSQL database is down"
-          description: "The PostgreSQL database has been down for more than 1 minute."
+          summary: 'PostgreSQL database is down'
+          description: 'The PostgreSQL database has been down for more than 1 minute.'
 
       - alert: HighDatabaseConnections
         expr: pg_stat_database_numbackends / pg_settings_max_connections > 0.8
@@ -45,8 +45,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "High database connection usage"
-          description: "Database connection usage is {{ $value | humanizePercentage }}."
+          summary: 'High database connection usage'
+          description: 'Database connection usage is {{ $value | humanizePercentage }}.'
 
       # Redis Health
       - alert: RedisDown
@@ -55,8 +55,8 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "Redis is down"
-          description: "Redis has been down for more than 1 minute."
+          summary: 'Redis is down'
+          description: 'Redis has been down for more than 1 minute.'
 
       - alert: HighRedisMemoryUsage
         expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
@@ -64,8 +64,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "High Redis memory usage"
-          description: "Redis memory usage is {{ $value | humanizePercentage }}."
+          summary: 'High Redis memory usage'
+          description: 'Redis memory usage is {{ $value | humanizePercentage }}.'
 
       # Business Metrics
       - alert: LowConversionRate
@@ -74,8 +74,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "Low conversion rate"
-          description: "Conversion rate is {{ $value | humanizePercentage }} for the last hour."
+          summary: 'Low conversion rate'
+          description: 'Conversion rate is {{ $value | humanizePercentage }} for the last hour.'
 
       - alert: HighChurnRate
         expr: rate(churned_customers_total[24h]) / rate(active_customers_total[24h]) > 0.05
@@ -83,8 +83,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "High churn rate detected"
-          description: "Customer churn rate is {{ $value | humanizePercentage }} for the last 24 hours."
+          summary: 'High churn rate detected'
+          description: 'Customer churn rate is {{ $value | humanizePercentage }} for the last 24 hours.'
 
       # System Resources
       - alert: HighCPUUsage
@@ -93,8 +93,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "High CPU usage"
-          description: "CPU usage is {{ $value }}% on {{ $labels.instance }}."
+          summary: 'High CPU usage'
+          description: 'CPU usage is {{ $value }}% on {{ $labels.instance }}.'
 
       - alert: HighMemoryUsage
         expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
@@ -102,8 +102,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "High memory usage"
-          description: "Memory usage is {{ $value }}% on {{ $labels.instance }}."
+          summary: 'High memory usage'
+          description: 'Memory usage is {{ $value }}% on {{ $labels.instance }}.'
 
       - alert: DiskSpaceLow
         expr: (1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100 > 90
@@ -111,8 +111,8 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "Disk space low"
-          description: "Disk usage is {{ $value }}% on {{ $labels.instance }}."
+          summary: 'Disk space low'
+          description: 'Disk usage is {{ $value }}% on {{ $labels.instance }}.'
 
       # Security
       - alert: HighFailedLoginAttempts
@@ -121,8 +121,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "High number of failed login attempts"
-          description: "{{ $value }} failed login attempts per second in the last 5 minutes."
+          summary: 'High number of failed login attempts'
+          description: '{{ $value }} failed login attempts per second in the last 5 minutes.'
 
       - alert: SuspiciousActivity
         expr: rate(suspicious_requests_total[5m]) > 5
@@ -130,5 +130,5 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "Suspicious activity detected"
-          description: "{{ $value }} suspicious requests per second in the last 5 minutes."
+          summary: 'Suspicious activity detected'
+          description: '{{ $value }} suspicious requests per second in the last 5 minutes.'

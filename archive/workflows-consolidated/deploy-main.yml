@@ -1,6 +1,6 @@
 # ⚠️ DEPRECATED: This workflow is deprecated in favor of frontend-deploy.yml + apply-supabase-migrations.yml
 # This workflow will be removed after confirming frontend-deploy.yml handles all cases.
-# 
+#
 # Issues with this workflow:
 # - Duplicates frontend-deploy.yml functionality
 # - Hardcoded vercel:pull to preview environment (should be production)
@@ -71,7 +71,6 @@ jobs:
           test -f config/flags.trust.json
           echo "Trust artifacts present ✓"
       # [STAKE+TRUST:END:checks]
-
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
 

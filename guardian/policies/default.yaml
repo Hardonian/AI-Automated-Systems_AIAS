@@ -21,7 +21,7 @@ risk_weights:
     medium: 0.5
     high: 0.8
     critical: 1.0
-  
+
   likelihood:
     direct: 1.0
     inferred: 0.6
@@ -31,16 +31,16 @@ risk_weights:
 response_actions:
   low:
     - allow
-  
+
   medium:
     - allow
     - mask
-  
+
   high:
     - mask
     - redact
     - alert
-  
+
   critical:
     - block
     - alert

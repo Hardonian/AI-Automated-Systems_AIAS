@@ -25,11 +25,16 @@ const sendEmailSchema = z.object({
     .optional(),
 });
 
-export const POST = createPOSTHandler(async (context) => {
+export const POST = createPOSTHandler(async context => {
   const body = sendEmailSchema.parse(await context.request.json());
   const { templateId, to, variables, options } = body;
 
-  const result = await emailService.sendTemplate(templateId, to, variables || {}, options);
+  const result = await emailService.sendTemplate(
+    templateId,
+    to,
+    variables || {},
+    options
+  );
 
   if (!result.success) {
     return NextResponse.json(

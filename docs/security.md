@@ -38,6 +38,7 @@ Tenant isolation is enforced at multiple layers:
 ### Tenant Identification
 
 Tenants are identified via:
+
 - Header: `x-tenant-id`
 - Subdomain: `{tenant}.example.com` (if configured)
 - Query parameter: `?tenantId={id}` (API routes only)
@@ -93,11 +94,11 @@ const schema = z.object({
 
 Rate limits are enforced per plan:
 
-| Plan | Rate Limit |
-|------|------------|
-| Free | 100 requests/hour |
-| Pro | 5,000 requests/hour |
-| Enterprise | Unlimited |
+| Plan       | Rate Limit          |
+| ---------- | ------------------- |
+| Free       | 100 requests/hour   |
+| Pro        | 5,000 requests/hour |
+| Enterprise | Unlimited           |
 
 Rate limit headers included in responses:
 
@@ -147,6 +148,7 @@ All security-relevant events are logged:
 Report security issues to: **scottrmhardie@gmail.com**
 
 We will:
+
 - Acknowledge receipt within 48 hours
 - Work with you to resolve the issue
 - Credit you for responsible disclosure (with your permission)
@@ -167,6 +169,7 @@ We will:
 ---
 
 For implementation details, see:
+
 - Security utilities: `lib/security/`
 - Middleware: `middleware.ts`
 - RLS policies: `supabase/migrations/`

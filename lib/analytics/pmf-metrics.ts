@@ -56,18 +56,18 @@ export class PMFTracker {
   async calculateMetrics(): Promise<PMFMetrics> {
     // Try to fetch from database first
     try {
-      const { databasePMFTracker } = await import("./database-integration");
+      const { databasePMFTracker } = await import('./database-integration');
       const dbMetrics = await databasePMFTracker.getMetricsFromDatabase();
-      
+
       // If database has data, use it
       if (dbMetrics.monthlyActiveUsers > 0) {
         this.metrics = dbMetrics;
         return dbMetrics;
       }
     } catch (error) {
-      console.log("Using default metrics (database not connected)");
+      console.log('Using default metrics (database not connected)');
     }
-    
+
     // Fallback to default/mock data
     return {
       activationRate: 45, // Example: 45% activation rate
@@ -83,40 +83,44 @@ export class PMFTracker {
 
   getPMFScore(): {
     score: number;
-    status: "poor" | "good" | "great";
+    status: 'poor' | 'good' | 'great';
     breakdown: {
       activation: { score: number; status: string };
       retention: { score: number; status: string };
       nps: { score: number; status: string };
     };
   } {
-    const {metrics} = this;
-    
-    const activationStatus = metrics.activationRate >= pmfThresholds.activationRate.great 
-      ? "great" 
-      : metrics.activationRate >= pmfThresholds.activationRate.good 
-      ? "good" 
-      : "poor";
-    
-    const retentionStatus = metrics.sevenDayRetention >= pmfThresholds.retention.great 
-      ? "great" 
-      : metrics.sevenDayRetention >= pmfThresholds.retention.good 
-      ? "good" 
-      : "poor";
-    
-    const npsStatus = metrics.nps >= pmfThresholds.nps.great 
-      ? "great" 
-      : metrics.nps >= pmfThresholds.nps.good 
-      ? "good" 
-      : "poor";
+    const { metrics } = this;
 
-    const overallScore = (
-      (metrics.activationRate / 100) * 0.4 +
-      (metrics.sevenDayRetention / 100) * 0.4 +
-      ((metrics.nps + 100) / 200) * 0.2
-    ) * 100;
+    const activationStatus =
+      metrics.activationRate >= pmfThresholds.activationRate.great
+        ? 'great'
+        : metrics.activationRate >= pmfThresholds.activationRate.good
+          ? 'good'
+          : 'poor';
 
-    const overallStatus = overallScore >= 70 ? "great" : overallScore >= 50 ? "good" : "poor";
+    const retentionStatus =
+      metrics.sevenDayRetention >= pmfThresholds.retention.great
+        ? 'great'
+        : metrics.sevenDayRetention >= pmfThresholds.retention.good
+          ? 'good'
+          : 'poor';
+
+    const npsStatus =
+      metrics.nps >= pmfThresholds.nps.great
+        ? 'great'
+        : metrics.nps >= pmfThresholds.nps.good
+          ? 'good'
+          : 'poor';
+
+    const overallScore =
+      ((metrics.activationRate / 100) * 0.4 +
+        (metrics.sevenDayRetention / 100) * 0.4 +
+        ((metrics.nps + 100) / 200) * 0.2) *
+      100;
+
+    const overallStatus =
+      overallScore >= 70 ? 'great' : overallScore >= 50 ? 'good' : 'poor';
 
     return {
       score: Math.round(overallScore),

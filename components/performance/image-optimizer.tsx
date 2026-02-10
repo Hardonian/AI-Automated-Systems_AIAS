@@ -1,6 +1,6 @@
-"use client";
-import Image from "next/image";
-import { useState } from "react";
+'use client';
+import Image from 'next/image';
+import { useState } from 'react';
 
 interface OptimizedImageProps {
   src: string;
@@ -16,7 +16,7 @@ interface OptimizedImageProps {
 
 /**
  * Optimized Image Component
- * 
+ *
  * Features:
  * - Automatic lazy loading (unless priority is set)
  * - Responsive image sizing
@@ -31,8 +31,8 @@ export function OptimizedImage({
   width,
   height,
   priority = false,
-  className = "",
-  sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+  className = '',
+  sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
   fill = false,
   quality = 85,
 }: OptimizedImageProps) {
@@ -43,11 +43,11 @@ export function OptimizedImage({
     return (
       <div
         className={`flex items-center justify-center bg-muted text-muted-foreground ${className}`}
-        role="img"
+        role='img'
         aria-label={alt}
         style={{ width, height }}
       >
-        <span className="text-sm">Image unavailable</span>
+        <span className='text-sm'>Image unavailable</span>
       </div>
     );
   }
@@ -63,11 +63,14 @@ export function OptimizedImage({
       };
 
   return (
-    <div className={`relative overflow-hidden ${className}`} style={fill ? undefined : { width, height }}>
+    <div
+      className={`relative overflow-hidden ${className}`}
+      style={fill ? undefined : { width, height }}
+    >
       {isLoading && (
         <div
-          className="absolute inset-0 bg-muted animate-pulse"
-          aria-hidden="true"
+          className='absolute inset-0 animate-pulse bg-muted'
+          aria-hidden='true'
         />
       )}
       <Image
@@ -77,14 +80,14 @@ export function OptimizedImage({
         priority={priority}
         quality={quality}
         className={`transition-opacity duration-300 ${
-          isLoading ? "opacity-0" : "opacity-100"
+          isLoading ? 'opacity-0' : 'opacity-100'
         }`}
         onLoad={() => setIsLoading(false)}
         onError={() => {
           setIsLoading(false);
           setHasError(true);
         }}
-        loading={priority ? undefined : "lazy"}
+        loading={priority ? undefined : 'lazy'}
       />
     </div>
   );

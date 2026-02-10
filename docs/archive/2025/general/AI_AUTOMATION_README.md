@@ -53,18 +53,21 @@ The AIAS Platform features a comprehensive AI automation system that provides se
 ### 1. AI Observability & Self-Diagnosis
 
 #### Health Metrics Monitoring
+
 - **Error Rate Tracking:** Real-time error rate monitoring
 - **Latency Analysis:** P95 latency tracking and analysis
 - **Cold Start Detection:** Function cold start monitoring
 - **Resource Usage:** Memory and CPU usage tracking
 
 #### Automated Issue Creation
+
 - **Pattern Detection:** Identifies recurring issues
 - **Severity Assessment:** Categorizes issues by severity
 - **GitHub Integration:** Automatically creates issues
 - **Escalation Rules:** Escalates critical issues
 
 #### Example Usage
+
 ```typescript
 import { AISelfDiagnose } from './ai/self_diagnose';
 
@@ -75,17 +78,20 @@ await diagnoser.run();
 ### 2. Future Runtime Readiness
 
 #### Compatibility Checking
+
 - **Edge Runtime:** Validates Edge Runtime compatibility
 - **WASM Support:** Checks WebAssembly compatibility
 - **Workers Ready:** Ensures Workers compatibility
 - **Hydrogen/Oxygen:** Validates Shopify platform readiness
 
 #### Automated Recommendations
+
 - **Dependency Analysis:** Identifies blocking dependencies
 - **Code Optimization:** Suggests compatibility improvements
 - **Migration Paths:** Provides migration recommendations
 
 #### Example Usage
+
 ```typescript
 import { FutureCheck } from './scripts/futurecheck';
 
@@ -96,43 +102,49 @@ const report = await checker.run();
 ### 3. Supabase AI Pipeline
 
 #### Vector Search
+
 - **Embeddings Generation:** Creates vector embeddings
 - **Semantic Search:** Hybrid semantic + keyword search
 - **Namespace Organization:** Organizes content by namespace
 - **Metadata Filtering:** Advanced filtering capabilities
 
 #### Content Processing
+
 - **Documentation:** Processes markdown files
 - **Code Analysis:** Extracts code blocks and functions
 - **API Documentation:** Processes API endpoints
 - **Database Schema:** Analyzes database structures
 
 #### Example Usage
+
 ```typescript
 import { EmbeddingsGenerator } from './scripts/generate-embeddings.mjs';
 
 const generator = new EmbeddingsGenerator();
 await generator.generateAll({
   clearExisting: true,
-  namespaces: ['docs', 'code', 'api']
+  namespaces: ['docs', 'code', 'api'],
 });
 ```
 
 ### 4. Auto-Scaling & Cost Awareness
 
 #### Usage Monitoring
+
 - **Request Patterns:** Tracks request frequency
 - **Resource Utilization:** Monitors CPU and memory
 - **Cost Projections:** Predicts future costs
 - **Budget Alerts:** Alerts on budget deviations
 
 #### Scaling Recommendations
+
 - **Performance-Based:** Scales based on performance metrics
 - **Cost-Optimized:** Balances performance and cost
 - **Predictive Scaling:** Anticipates scaling needs
 - **Automated Actions:** Implements scaling automatically
 
 #### Example Usage
+
 ```typescript
 import { AIAutoScale } from './ai/ai_autoscale';
 
@@ -143,18 +155,21 @@ await autoScale.run();
 ### 5. Privacy Guard & Compliance
 
 #### PII Detection
+
 - **Pattern Recognition:** Identifies PII patterns
 - **Automatic Redaction:** Redacts sensitive information
 - **Compliance Validation:** Ensures regulatory compliance
 - **Audit Logging:** Maintains compliance audit trails
 
 #### Data Protection
+
 - **Encryption:** Encrypts sensitive data
 - **Access Controls:** Implements role-based access
 - **Retention Policies:** Enforces data retention
 - **Breach Detection:** Monitors for data breaches
 
 #### Example Usage
+
 ```typescript
 import { PrivacyGuard } from './ai/privacy_guard';
 
@@ -165,18 +180,21 @@ const result = guard.redactPII(sensitiveText);
 ### 6. Regression Watchers
 
 #### Database Integrity
+
 - **Referential Integrity:** Validates foreign keys
 - **Data Consistency:** Checks data consistency
 - **Orphaned Records:** Identifies orphaned data
 - **Constraint Violations:** Detects constraint violations
 
 #### API Contract Monitoring
+
 - **Schema Validation:** Validates API schemas
 - **Breaking Changes:** Detects breaking changes
 - **Version Compatibility:** Ensures version compatibility
 - **Documentation Sync:** Keeps documentation in sync
 
 #### AI Performance Tracking
+
 - **Token Usage:** Tracks AI token consumption
 - **Latency Monitoring:** Monitors AI response times
 - **Accuracy Metrics:** Tracks AI accuracy
@@ -185,6 +203,7 @@ const result = guard.redactPII(sensitiveText);
 ## Configuration
 
 ### Agent Configuration
+
 ```json
 {
   "project_ref": "ghqyxhbyyirveptgwoqm",
@@ -203,6 +222,7 @@ const result = guard.redactPII(sensitiveText);
 ```
 
 ### Environment Variables
+
 ```bash
 # Supabase Configuration
 SUPABASE_URL=https://ghqyxhbyyirveptgwoqm.supabase.co
@@ -226,11 +246,12 @@ NODE_ENV=production
 ### GitHub Actions Workflows
 
 #### AI Audit Workflow
+
 ```yaml
 name: AI Audit
 on:
   schedule:
-    - cron: '0 2 * * 0'  # Weekly
+    - cron: '0 2 * * 0' # Weekly
   workflow_dispatch:
 
 jobs:
@@ -239,15 +260,16 @@ jobs:
     steps:
       - name: Run AI Self-Diagnosis
         run: npx tsx ai/self_diagnose.ts
-      
+
       - name: Run AI Insights Agent
         run: node ai/insights_agent.mjs
-      
+
       - name: Run Future Runtime Check
         run: npx tsx scripts/futurecheck.ts
 ```
 
 #### Future Check Workflow
+
 ```yaml
 name: Future Runtime Compatibility Check
 on:
@@ -265,11 +287,12 @@ jobs:
 ```
 
 #### Watcher Cron Workflow
+
 ```yaml
 name: Autonomous Regression Watchers
 on:
   schedule:
-    - cron: '0 3 * * *'  # Nightly
+    - cron: '0 3 * * *' # Nightly
   workflow_dispatch:
 
 jobs:
@@ -278,10 +301,10 @@ jobs:
     steps:
       - name: Run Database Integrity Watcher
         run: npx tsx watchers/db_integrity.watcher.ts
-      
+
       - name: Run API Contract Watcher
         run: npx tsx watchers/api_contract.watcher.ts
-      
+
       - name: Run AI Performance Watcher
         run: npx tsx watchers/ai_performance.watcher.ts
 ```
@@ -289,18 +312,21 @@ jobs:
 ## Monitoring and Alerting
 
 ### Health Metrics
+
 - **System Health:** Overall system health score
 - **Performance Metrics:** Response times and throughput
 - **Error Rates:** Error frequency and patterns
 - **Resource Usage:** CPU, memory, and storage usage
 
 ### Alerts
+
 - **Critical Issues:** Immediate notification for critical issues
 - **Performance Degradation:** Alerts for performance issues
 - **Cost Anomalies:** Budget deviation alerts
 - **Compliance Violations:** Privacy and compliance alerts
 
 ### Dashboards
+
 - **AI Health Dashboard:** Real-time AI system health
 - **Performance Dashboard:** Performance metrics and trends
 - **Cost Dashboard:** Cost tracking and projections
@@ -311,6 +337,7 @@ jobs:
 ### Common Issues
 
 #### AI Self-Diagnosis Failures
+
 ```bash
 # Check environment variables
 echo $SUPABASE_URL
@@ -321,6 +348,7 @@ DEBUG=* npx tsx ai/self_diagnose.ts
 ```
 
 #### Future Check Issues
+
 ```bash
 # Check Node.js version
 node --version
@@ -330,6 +358,7 @@ npx tsx scripts/futurecheck.ts --verbose
 ```
 
 #### Embeddings Generation Issues
+
 ```bash
 # Check OpenAI API key
 echo $OPENAI_API_KEY
@@ -339,6 +368,7 @@ node scripts/generate-embeddings.mjs --namespaces=docs
 ```
 
 ### Debug Mode
+
 ```bash
 # Enable debug logging
 export DEBUG=ai:*
@@ -350,18 +380,21 @@ npx tsx ai/self_diagnose.ts
 ## Contributing
 
 ### Adding New Watchers
+
 1. Create watcher file in `watchers/` directory
 2. Implement watcher interface
 3. Add to CI workflow
 4. Update documentation
 
 ### Adding New AI Agents
+
 1. Create agent file in `ai/` directory
 2. Implement agent interface
 3. Add configuration
 4. Update monitoring
 
 ### Adding New Compliance Rules
+
 1. Update privacy guard patterns
 2. Add compliance validation
 3. Update documentation
@@ -370,13 +403,14 @@ npx tsx ai/self_diagnose.ts
 ## Support
 
 For questions or issues with the AI automation system:
+
 - **Documentation:** [AI Automation Docs](./docs/ai-automation.md)
 - **Issues:** [GitHub Issues](https://github.com/your-org/aias-platform/issues)
 - **Discussions:** [GitHub Discussions](https://github.com/your-org/aias-platform/discussions)
 
 ---
 
-*This system is continuously evolving to provide better automation, monitoring, and optimization capabilities.*
+_This system is continuously evolving to provide better automation, monitoring, and optimization capabilities._
 
 Last Updated: December 20, 2024
 Version: 1.0

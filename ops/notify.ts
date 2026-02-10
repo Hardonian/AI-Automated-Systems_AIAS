@@ -7,8 +7,8 @@
 // import { env } from "@/lib/env";
 
 export interface AlertPayload {
-  type: "reliability" | "security" | "cost";
-  severity: "low" | "medium" | "high" | "critical";
+  type: 'reliability' | 'security' | 'cost';
+  severity: 'low' | 'medium' | 'high' | 'critical';
   title: string;
   message: string;
   metrics?: Record<string, any>;
@@ -20,12 +20,15 @@ export interface AlertPayload {
  * Get webhook URL from environment variable
  * Returns undefined if secret not configured
  */
-function getWebhookUrl(type: "reliability" | "security" | "cost"): string | undefined {
-  const secretName = type === "reliability" 
-    ? "RELIABILITY_ALERT_WEBHOOK"
-    : type === "security"
-    ? "SECURITY_ALERT_WEBHOOK"
-    : "COST_ALERT_WEBHOOK";
+function getWebhookUrl(
+  type: 'reliability' | 'security' | 'cost'
+): string | undefined {
+  const secretName =
+    type === 'reliability'
+      ? 'RELIABILITY_ALERT_WEBHOOK'
+      : type === 'security'
+        ? 'SECURITY_ALERT_WEBHOOK'
+        : 'COST_ALERT_WEBHOOK';
 
   // Access via env - never echo the actual value
   const webhookUrl = process.env[secretName];
@@ -38,7 +41,7 @@ function getWebhookUrl(type: "reliability" | "security" | "cost"): string | unde
  */
 export async function sendAlert(payload: AlertPayload): Promise<boolean> {
   const webhookUrl = getWebhookUrl(payload.type);
-  
+
   if (!webhookUrl) {
     console.warn(`[Alert] Webhook not configured for type: ${payload.type}`);
     return false;
@@ -46,27 +49,27 @@ export async function sendAlert(payload: AlertPayload): Promise<boolean> {
 
   try {
     const response = await fetch(webhookUrl, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         text: `🚨 ${payload.severity.toUpperCase()}: ${payload.title}`,
         blocks: [
           {
-            type: "section",
+            type: 'section',
             text: {
-              type: "mrkdwn",
+              type: 'mrkdwn',
               text: `*${payload.title}*\n${payload.message}`,
             },
           },
           ...(payload.metrics
             ? [
                 {
-                  type: "section",
+                  type: 'section',
                   text: {
-                    type: "mrkdwn",
-                    text: `\`\`\`\n${  JSON.stringify(payload.metrics, null, 2)  }\n\`\`\``,
+                    type: 'mrkdwn',
+                    text: `\`\`\`\n${JSON.stringify(payload.metrics, null, 2)}\n\`\`\``,
                   },
                 },
               ]
@@ -74,9 +77,9 @@ export async function sendAlert(payload: AlertPayload): Promise<boolean> {
           ...(payload.runbook
             ? [
                 {
-                  type: "section",
+                  type: 'section',
                   text: {
-                    type: "mrkdwn",
+                    type: 'mrkdwn',
                     text: `📖 Runbook: ${payload.runbook}`,
                   },
                 },
@@ -85,9 +88,9 @@ export async function sendAlert(payload: AlertPayload): Promise<boolean> {
           ...(payload.dashboard
             ? [
                 {
-                  type: "section",
+                  type: 'section',
                   text: {
-                    type: "mrkdwn",
+                    type: 'mrkdwn',
                     text: `📊 Dashboard: ${payload.dashboard}`,
                   },
                 },
@@ -98,14 +101,19 @@ export async function sendAlert(payload: AlertPayload): Promise<boolean> {
     });
 
     if (!response.ok) {
-      console.error(`[Alert] Webhook returned ${response.status}: ${response.statusText}`);
+      console.error(
+        `[Alert] Webhook returned ${response.status}: ${response.statusText}`
+      );
       return false;
     }
 
     console.log(`[Alert] Successfully sent ${payload.type} alert`);
     return true;
   } catch (error: any) {
-    console.error(`[Alert] Failed to send ${payload.type} alert:`, error.message);
+    console.error(
+      `[Alert] Failed to send ${payload.type} alert:`,
+      error.message
+    );
     return false;
   }
 }
@@ -114,7 +122,10 @@ export async function sendAlert(payload: AlertPayload): Promise<boolean> {
  * Check if regression has persisted for N cycles
  * Used by agent to determine when to send alerts
  */
-export function shouldAlert(regressionCount: number, threshold: number = 3): boolean {
+export function shouldAlert(
+  regressionCount: number,
+  threshold: number = 3
+): boolean {
   return regressionCount >= threshold;
 }
 
@@ -128,8 +139,8 @@ export function createReliabilityAlert(
   cycles: number
 ): AlertPayload {
   return {
-    type: "reliability",
-    severity: current > target * 1.5 ? "high" : "medium",
+    type: 'reliability',
+    severity: current > target * 1.5 ? 'high' : 'medium',
     title: `Performance Regression: ${metric}`,
     message: `${metric} has exceeded SLO for ${cycles} cycles.\nCurrent: ${current}, Target: ${target}`,
     metrics: {
@@ -138,8 +149,8 @@ export function createReliabilityAlert(
       target,
       cycles,
     },
-    runbook: "docs/runbooks/api-latency.md",
-    dashboard: "/admin/metrics",
+    runbook: 'docs/runbooks/api-latency.md',
+    dashboard: '/admin/metrics',
   };
 }
 
@@ -148,17 +159,17 @@ export function createReliabilityAlert(
  */
 export function createSecurityAlert(
   issue: string,
-  severity: "low" | "medium" | "high" | "critical",
+  severity: 'low' | 'medium' | 'high' | 'critical',
   details?: Record<string, any>
 ): AlertPayload {
   return {
-    type: "security",
+    type: 'security',
     severity,
     title: `Security Alert: ${issue}`,
     message: details ? JSON.stringify(details, null, 2) : issue,
     metrics: details,
-    runbook: "docs/runbooks/db-hotspot.md",
-    dashboard: "/admin/compliance",
+    runbook: 'docs/runbooks/db-hotspot.md',
+    dashboard: '/admin/compliance',
   };
 }
 
@@ -172,8 +183,8 @@ export function createCostAlert(
   percentage: number
 ): AlertPayload {
   return {
-    type: "cost",
-    severity: percentage > 150 ? "high" : percentage > 120 ? "medium" : "low",
+    type: 'cost',
+    severity: percentage > 150 ? 'high' : percentage > 120 ? 'medium' : 'low',
     title: `Budget Alert: ${service}`,
     message: `${service} spending is ${percentage.toFixed(0)}% of budget.\nCurrent: $${current}, Budget: $${budget}`,
     metrics: {
@@ -182,6 +193,6 @@ export function createCostAlert(
       budget,
       percentage,
     },
-    dashboard: "/admin/metrics",
+    dashboard: '/admin/metrics',
   };
 }

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Clock, Zap } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Clock, Zap } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-import { Badge } from "@/components/ui/badge";
+import { Badge } from '@/components/ui/badge';
 
 interface UrgencyIndicatorProps {
   spotsRemaining?: number;
@@ -11,8 +11,12 @@ interface UrgencyIndicatorProps {
   className?: string;
 }
 
-export function UrgencyIndicator({ spotsRemaining, deadline, className }: UrgencyIndicatorProps) {
-  const [timeRemaining, setTimeRemaining] = useState<string>("");
+export function UrgencyIndicator({
+  spotsRemaining,
+  deadline,
+  className,
+}: UrgencyIndicatorProps) {
+  const [timeRemaining, setTimeRemaining] = useState<string>('');
 
   useEffect(() => {
     if (!deadline) return;
@@ -22,7 +26,7 @@ export function UrgencyIndicator({ spotsRemaining, deadline, className }: Urgenc
       const diff = deadline.getTime() - now.getTime();
 
       if (diff <= 0) {
-        setTimeRemaining("");
+        setTimeRemaining('');
         return;
       }
 
@@ -44,16 +48,20 @@ export function UrgencyIndicator({ spotsRemaining, deadline, className }: Urgenc
   if (!spotsRemaining && !timeRemaining) return null;
 
   return (
-    <div className={`flex items-center gap-2 ${className}`} role="status" aria-live="polite">
+    <div
+      className={`flex items-center gap-2 ${className}`}
+      role='status'
+      aria-live='polite'
+    >
       {spotsRemaining && spotsRemaining < 10 && (
-        <Badge variant="destructive" className="animate-pulse">
-          <Zap className="h-3 w-3 mr-1" aria-hidden="true" />
+        <Badge variant='destructive' className='animate-pulse'>
+          <Zap className='mr-1 h-3 w-3' aria-hidden='true' />
           Only {spotsRemaining} spots left
         </Badge>
       )}
       {timeRemaining && (
-        <Badge variant="outline" className="border-primary text-primary">
-          <Clock className="h-3 w-3 mr-1" aria-hidden="true" />
+        <Badge variant='outline' className='border-primary text-primary'>
+          <Clock className='mr-1 h-3 w-3' aria-hidden='true' />
           {timeRemaining} remaining
         </Badge>
       )}

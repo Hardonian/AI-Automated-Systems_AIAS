@@ -16,7 +16,7 @@ export const AIChat = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: 'Hello! I\'m your AI assistant. How can I help you today?',
+      content: "Hello! I'm your AI assistant. How can I help you today?",
       role: 'assistant',
       timestamp: new Date(),
     },
@@ -32,7 +32,9 @@ export const AIChat = () => {
   }, [messages]);
 
   const handleSend = async () => {
-    if (!input.trim() || isLoading) {return;}
+    if (!input.trim() || isLoading) {
+      return;
+    }
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -41,7 +43,7 @@ export const AIChat = () => {
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
 
@@ -49,32 +51,33 @@ export const AIChat = () => {
     setTimeout(() => {
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: 'I understand your request. This is a demo response. In production, this would connect to your AI backend via Supabase Edge Functions.',
+        content:
+          'I understand your request. This is a demo response. In production, this would connect to your AI backend via Supabase Edge Functions.',
         role: 'assistant',
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, aiMessage]);
+      setMessages(prev => [...prev, aiMessage]);
       setIsLoading(false);
     }, 1500);
   };
 
   return (
-    <div className="flex flex-col h-[600px] rounded-xl bg-gradient-card backdrop-blur-sm border border-border shadow-card">
+    <div className='bg-gradient-card flex h-[600px] flex-col rounded-xl border border-border shadow-card backdrop-blur-sm'>
       {/* Header */}
-      <div className="flex items-center gap-3 p-4 border-b border-border">
-        <div className="p-2 rounded-lg bg-gradient-primary shadow-glow">
-          <Bot className="w-5 h-5 text-primary-foreground" />
+      <div className='flex items-center gap-3 border-b border-border p-4'>
+        <div className='bg-gradient-primary shadow-glow rounded-lg p-2'>
+          <Bot className='h-5 w-5 text-primary-foreground' />
         </div>
         <div>
-          <h3 className="font-semibold">AI Assistant</h3>
-          <p className="text-xs text-muted-foreground">Always here to help</p>
+          <h3 className='font-semibold'>AI Assistant</h3>
+          <p className='text-xs text-muted-foreground'>Always here to help</p>
         </div>
       </div>
 
       {/* Messages */}
-      <ScrollArea ref={scrollRef} className="flex-1 p-4">
-        <div className="space-y-4">
-          {messages.map((message) => (
+      <ScrollArea ref={scrollRef} className='flex-1 p-4'>
+        <div className='space-y-4'>
+          {messages.map(message => (
             <div
               key={message.id}
               className={`flex gap-3 ${
@@ -82,20 +85,20 @@ export const AIChat = () => {
               }`}
             >
               <div
-                className={`p-2 rounded-lg ${
+                className={`rounded-lg p-2 ${
                   message.role === 'user'
                     ? 'bg-primary text-primary-foreground'
                     : 'bg-secondary'
                 }`}
               >
                 {message.role === 'user' ? (
-                  <User className="w-5 h-5" />
+                  <User className='h-5 w-5' />
                 ) : (
-                  <Bot className="w-5 h-5" />
+                  <Bot className='h-5 w-5' />
                 )}
               </div>
               <div
-                className={`flex flex-col max-w-[80%] ${
+                className={`flex max-w-[80%] flex-col ${
                   message.role === 'user' ? 'items-end' : 'items-start'
                 }`}
               >
@@ -106,22 +109,24 @@ export const AIChat = () => {
                       : 'bg-secondary'
                   }`}
                 >
-                  <p className="text-sm">{message.content}</p>
+                  <p className='text-sm'>{message.content}</p>
                 </div>
-                <span className="text-xs text-muted-foreground mt-1">
+                <span className='mt-1 text-xs text-muted-foreground'>
                   {message.timestamp.toLocaleTimeString()}
                 </span>
               </div>
             </div>
           ))}
           {isLoading && (
-            <div className="flex gap-3">
-              <div className="p-2 rounded-lg bg-secondary">
-                <Bot className="w-5 h-5" />
+            <div className='flex gap-3'>
+              <div className='rounded-lg bg-secondary p-2'>
+                <Bot className='h-5 w-5' />
               </div>
-              <div className="flex items-center gap-2 rounded-lg bg-secondary p-3">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm text-muted-foreground">Thinking...</span>
+              <div className='flex items-center gap-2 rounded-lg bg-secondary p-3'>
+                <Loader2 className='h-4 w-4 animate-spin' />
+                <span className='text-sm text-muted-foreground'>
+                  Thinking...
+                </span>
               </div>
             </div>
           )}
@@ -129,22 +134,22 @@ export const AIChat = () => {
       </ScrollArea>
 
       {/* Input */}
-      <div className="p-4 border-t border-border">
-        <div className="flex gap-2">
+      <div className='border-t border-border p-4'>
+        <div className='flex gap-2'>
           <Input
-            className="flex-1 bg-secondary/50"
+            className='flex-1 bg-secondary/50'
             disabled={isLoading}
-            placeholder="Type your message..."
+            placeholder='Type your message...'
             value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleSend()}
           />
           <Button
-            className="bg-gradient-primary shadow-glow"
+            className='bg-gradient-primary shadow-glow'
             disabled={isLoading || !input.trim()}
             onClick={handleSend}
           >
-            <Send className="w-4 h-4" />
+            <Send className='h-4 w-4' />
           </Button>
         </div>
       </div>

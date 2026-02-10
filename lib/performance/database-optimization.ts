@@ -14,21 +14,25 @@ export async function batchQueries<T, R>(
   queryFn: (batch: T[]) => Promise<R[]>
 ): Promise<R[]> {
   const results: R[] = [];
-  
+
   for (let i = 0; i < items.length; i += batchSize) {
     const batch = items.slice(i, i + batchSize);
     try {
       const batchResults = await queryFn(batch);
       results.push(...batchResults);
     } catch (error) {
-      logger.error('Batch query failed', error instanceof Error ? error : new Error(String(error)), {
-        batchIndex: i,
-        batchSize: batch.length,
-      });
+      logger.error(
+        'Batch query failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          batchIndex: i,
+          batchSize: batch.length,
+        }
+      );
       throw error;
     }
   }
-  
+
   return results;
 }
 
@@ -49,17 +53,17 @@ export async function cachedQuery<T>(
 ): Promise<T> {
   const cached = queryCache.get(key);
   const now = Date.now();
-  
+
   if (cached && now < cached.expiresAt) {
     return cached.data as T;
   }
-  
+
   const data = await queryFn();
   queryCache.set(key, {
     data,
     expiresAt: now + ttl,
   });
-  
+
   return data;
 }
 
@@ -110,7 +114,10 @@ export interface PaginationOptions {
   limit: number;
 }
 
-export function getPaginationRange(options: PaginationOptions): { from: number; to: number } {
+export function getPaginationRange(options: PaginationOptions): {
+  from: number;
+  to: number;
+} {
   const { page, limit } = options;
   const from = (page - 1) * limit;
   const to = from + limit - 1;

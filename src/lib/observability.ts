@@ -55,17 +55,19 @@ export class ObservabilityService {
   }
 
   private initialize() {
-    if (this.isInitialized) {return;}
-    
+    if (this.isInitialized) {
+      return;
+    }
+
     // Initialize performance monitoring
     this.initializePerformanceMonitoring();
-    
+
     // Initialize error tracking
     this.initializeErrorTracking();
-    
+
     // Initialize health checks
     this.initializeHealthChecks();
-    
+
     this.isInitialized = true;
     this.log('info', 'Observability service initialized');
   }
@@ -74,26 +76,32 @@ export class ObservabilityService {
     // Monitor Core Web Vitals
     if (typeof window !== 'undefined') {
       // Largest Contentful Paint (LCP)
-      new PerformanceObserver((list) => {
+      new PerformanceObserver(list => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1];
         this.recordPerformanceMetric('lcp', lastEntry.startTime, 'ms');
       }).observe({ entryTypes: ['largest-contentful-paint'] });
 
       // First Input Delay (FID)
-      new PerformanceObserver((list) => {
+      new PerformanceObserver(list => {
         const entries = list.getEntries();
-        entries.forEach((entry) => {
-          const fidEntry = entry as PerformanceEventTiming & { processingStart?: number };
+        entries.forEach(entry => {
+          const fidEntry = entry as PerformanceEventTiming & {
+            processingStart?: number;
+          };
           if (fidEntry.processingStart) {
-            this.recordPerformanceMetric('fid', fidEntry.processingStart - entry.startTime, 'ms');
+            this.recordPerformanceMetric(
+              'fid',
+              fidEntry.processingStart - entry.startTime,
+              'ms'
+            );
           }
         });
       }).observe({ entryTypes: ['first-input'] });
 
       // Cumulative Layout Shift (CLS)
       let clsValue = 0;
-      new PerformanceObserver((list) => {
+      new PerformanceObserver(list => {
         const entries = list.getEntries();
         entries.forEach((entry: any) => {
           if (!entry.hadRecentInput) {
@@ -105,33 +113,41 @@ export class ObservabilityService {
 
       // Time to First Byte (TTFB)
       window.addEventListener('load', () => {
-        const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+        const navigation = performance.getEntriesByType(
+          'navigation'
+        )[0] as PerformanceNavigationTiming;
         if (navigation) {
-          this.recordPerformanceMetric('ttfb', navigation.responseStart - navigation.requestStart, 'ms');
+          this.recordPerformanceMetric(
+            'ttfb',
+            navigation.responseStart - navigation.requestStart,
+            'ms'
+          );
         }
       });
     }
   }
 
   private initializeErrorTracking() {
-    if (typeof window === 'undefined') {return;}
+    if (typeof window === 'undefined') {
+      return;
+    }
 
     // Global error handler
-    window.addEventListener('error', (event) => {
+    window.addEventListener('error', event => {
       this.log('error', 'Uncaught error', {
         message: event.message,
         filename: event.filename,
         lineno: event.lineno,
         colno: event.colno,
-        stack: event.error?.stack
+        stack: event.error?.stack,
       });
     });
 
     // Unhandled promise rejection handler
-    window.addEventListener('unhandledrejection', (event) => {
+    window.addEventListener('unhandledrejection', event => {
       this.log('error', 'Unhandled promise rejection', {
         reason: event.reason,
-        stack: event.reason?.stack
+        stack: event.reason?.stack,
       });
     });
   }
@@ -141,21 +157,21 @@ export class ObservabilityService {
     this.healthChecks.set('app', {
       service: 'application',
       status: 'healthy',
-      lastCheck: Date.now()
+      lastCheck: Date.now(),
     });
 
     // Check API health
     this.healthChecks.set('api', {
       service: 'api',
       status: 'healthy',
-      lastCheck: Date.now()
+      lastCheck: Date.now(),
     });
 
     // Check database health
     this.healthChecks.set('database', {
       service: 'database',
       status: 'healthy',
-      lastCheck: Date.now()
+      lastCheck: Date.now(),
     });
   }
 
@@ -167,15 +183,15 @@ export class ObservabilityService {
       name,
       value,
       labels,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     if (!this.metrics.has(name)) {
       this.metrics.set(name, []);
     }
-    
+
     this.metrics.get(name)!.push(metric);
-    
+
     // Keep only last 1000 metrics per name
     const metrics = this.metrics.get(name)!;
     if (metrics.length > 1000) {
@@ -186,16 +202,20 @@ export class ObservabilityService {
   /**
    * Record a performance metric
    */
-  recordPerformanceMetric(name: string, value: number, unit: 'ms' | 'bytes' | 'count' | 'percent') {
+  recordPerformanceMetric(
+    name: string,
+    value: number,
+    unit: 'ms' | 'bytes' | 'count' | 'percent'
+  ) {
     const metric: PerformanceMetric = {
       name,
       value,
       unit,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     this.performanceMetrics.push(metric);
-    
+
     // Keep only last 1000 performance metrics
     if (this.performanceMetrics.length > 1000) {
       this.performanceMetrics.splice(0, this.performanceMetrics.length - 1000);
@@ -205,18 +225,22 @@ export class ObservabilityService {
   /**
    * Log an entry
    */
-  log(level: LogEntry['level'], message: string, context?: Record<string, unknown>) {
+  log(
+    level: LogEntry['level'],
+    message: string,
+    context?: Record<string, unknown>
+  ) {
     const logEntry: LogEntry = {
       level,
       message,
       context,
       timestamp: Date.now(),
       sessionId: this.getSessionId(),
-      requestId: this.getRequestId()
+      requestId: this.getRequestId(),
     };
 
     this.logs.push(logEntry);
-    
+
     // Keep only last 1000 logs
     if (this.logs.length > 1000) {
       this.logs.splice(0, this.logs.length - 1000);
@@ -224,7 +248,8 @@ export class ObservabilityService {
 
     // Console output for development
     if (process.env.NODE_ENV === 'development') {
-      const logMethod = level === 'error' ? 'error' : level === 'warn' ? 'warn' : 'log';
+      const logMethod =
+        level === 'error' ? 'error' : level === 'warn' ? 'warn' : 'log';
       console[logMethod](`[${level.toUpperCase()}] ${message}`, context);
     }
   }
@@ -232,12 +257,16 @@ export class ObservabilityService {
   /**
    * Update health check status
    */
-  updateHealthCheck(service: string, status: HealthCheck['status'], details?: Record<string, unknown>) {
+  updateHealthCheck(
+    service: string,
+    status: HealthCheck['status'],
+    details?: Record<string, unknown>
+  ) {
     const healthCheck: HealthCheck = {
       service,
       status,
       lastCheck: Date.now(),
-      details
+      details,
     };
 
     this.healthChecks.set(service, healthCheck);
@@ -274,7 +303,10 @@ export class ObservabilityService {
   /**
    * Get system health status
    */
-  getSystemHealth(): { status: 'healthy' | 'degraded' | 'unhealthy'; services: HealthCheck[] } {
+  getSystemHealth(): {
+    status: 'healthy' | 'degraded' | 'unhealthy';
+    services: HealthCheck[];
+  } {
     const services = Array.from(this.healthChecks.values());
     const unhealthyServices = services.filter(s => s.status === 'unhealthy');
     const degradedServices = services.filter(s => s.status === 'degraded');
@@ -294,12 +326,15 @@ export class ObservabilityService {
    */
   exportPrometheusMetrics(): string {
     let output = '';
-    
+
     // Export custom metrics
     for (const [name, metrics] of this.metrics.entries()) {
       for (const metric of metrics) {
-        const labels = metric.labels ? 
-          Object.entries(metric.labels).map(([k, v]) => `${k}="${v}"`).join(',') : '';
+        const labels = metric.labels
+          ? Object.entries(metric.labels)
+              .map(([k, v]) => `${k}="${v}"`)
+              .join(',')
+          : '';
         const labelStr = labels ? `{${labels}}` : '';
         output += `${name}${labelStr} ${metric.value} ${metric.timestamp}\n`;
       }
@@ -324,22 +359,26 @@ export class ObservabilityService {
   }
 
   private getSessionId(): string {
-    if (typeof window === 'undefined') {return '';}
-    
+    if (typeof window === 'undefined') {
+      return '';
+    }
+
     let sessionId = sessionStorage.getItem('observability_session_id');
     if (!sessionId) {
-      sessionId = `session_${  Math.random().toString(36).substr(2, 9)}`;
+      sessionId = `session_${Math.random().toString(36).substr(2, 9)}`;
       sessionStorage.setItem('observability_session_id', sessionId);
     }
     return sessionId;
   }
 
   private getRequestId(): string {
-    if (typeof window === 'undefined') {return '';}
-    
+    if (typeof window === 'undefined') {
+      return '';
+    }
+
     let requestId = sessionStorage.getItem('observability_request_id');
     if (!requestId) {
-      requestId = `req_${  Math.random().toString(36).substr(2, 9)}`;
+      requestId = `req_${Math.random().toString(36).substr(2, 9)}`;
       sessionStorage.setItem('observability_request_id', requestId);
     }
     return requestId;
@@ -349,18 +388,34 @@ export class ObservabilityService {
 export const observabilityService = ObservabilityService.getInstance();
 
 // Convenience functions
-export const log = (level: LogEntry['level'], message: string, context?: Record<string, unknown>) => {
+export const log = (
+  level: LogEntry['level'],
+  message: string,
+  context?: Record<string, unknown>
+) => {
   observabilityService.log(level, message, context);
 };
 
-export const recordMetric = (name: string, value: number, labels?: Record<string, string>) => {
+export const recordMetric = (
+  name: string,
+  value: number,
+  labels?: Record<string, string>
+) => {
   observabilityService.recordMetric(name, value, labels);
 };
 
-export const recordPerformanceMetric = (name: string, value: number, unit: 'ms' | 'bytes' | 'count' | 'percent') => {
+export const recordPerformanceMetric = (
+  name: string,
+  value: number,
+  unit: 'ms' | 'bytes' | 'count' | 'percent'
+) => {
   observabilityService.recordPerformanceMetric(name, value, unit);
 };
 
-export const updateHealthCheck = (service: string, status: HealthCheck['status'], details?: Record<string, unknown>) => {
+export const updateHealthCheck = (
+  service: string,
+  status: HealthCheck['status'],
+  details?: Record<string, unknown>
+) => {
   observabilityService.updateHealthCheck(service, status, details);
 };

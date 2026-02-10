@@ -26,6 +26,7 @@ When you disable specific signals (location, microphone, etc.), Guardian learns:
 - Risk tolerance levels
 
 **Example**: If you consistently disable location tracking, Guardian will:
+
 - Increase risk weight for location-based events
 - Suggest blocking location access by default
 - Apply stricter rules to location data
@@ -63,6 +64,7 @@ Guardian calculates your risk tolerance:
 - **High**: You allow most operations
 
 **Calculation**: Based on:
+
 - Ratio of blocked/allowed events
 - Privacy mode toggle frequency
 - Response to high-risk events
@@ -72,6 +74,7 @@ Guardian calculates your risk tolerance:
 Guardian learns context-specific preferences:
 
 **Detected Contexts**:
+
 - Camera active
 - Microphone active
 - Location tracking enabled
@@ -79,6 +82,7 @@ Guardian learns context-specific preferences:
 - Sensitive data entry
 
 **Learning Process**:
+
 1. Detect context from event metadata
 2. Observe user decision for that context
 3. Update confidence score
@@ -91,12 +95,14 @@ Guardian generates recommendations based on learned patterns:
 ### Tighten Recommendations
 
 Triggered when:
+
 - Privacy mode toggled frequently
 - Multiple signals disabled
 - Consistent blocking of certain operations
 - Low risk tolerance detected
 
 **Example Recommendation**:
+
 ```json
 {
   "type": "tighten",
@@ -110,11 +116,13 @@ Triggered when:
 ### Loosen Recommendations
 
 Triggered when:
+
 - User consistently allows certain operations
 - No privacy mode toggles
 - High trust level maintained
 
 **Example Recommendation**:
+
 ```json
 {
   "type": "loosen",
@@ -128,11 +136,13 @@ Triggered when:
 ### Maintain Recommendations
 
 Triggered when:
+
 - Consistent low-risk pattern
 - Balanced user behavior
 - Stable preferences
 
 **Example Recommendation**:
+
 ```json
 {
   "type": "maintain",
@@ -151,17 +161,17 @@ Guardian adaptively adjusts risk weights:
 // Based on learned preferences
 adjustRiskWeights(): Record<string, number> {
   const weights: Record<string, number> = {};
-  
+
   // Increase weight for blocked operations
   always_blocks.forEach(blocked => {
     weights[blocked] = (weights[blocked] || 0.5) + 0.2;
   });
-  
+
   // Decrease weight for allowed operations
   always_allows.forEach(allowed => {
     weights[allowed] = Math.max(0.1, (weights[allowed] || 0.5) - 0.1);
   });
-  
+
   return weights;
 }
 ```
@@ -197,16 +207,19 @@ interface TrustFabricModel {
 Your Trust Fabric model is portable:
 
 **Export**:
+
 ```bash
 npm run ops guardian:export-fabric --output ./my-model.json
 ```
 
 **Import**:
+
 ```bash
 npm run ops guardian:import-fabric --file ./my-model.json
 ```
 
 This allows you to:
+
 - Backup your preferences
 - Transfer to new devices
 - Share with trusted parties
@@ -247,6 +260,7 @@ Guardian continuously improves:
 ## Future Enhancements
 
 Planned improvements:
+
 - Federated learning across devices
 - Collaborative filtering
 - Advanced context detection

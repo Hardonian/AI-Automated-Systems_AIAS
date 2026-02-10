@@ -5,6 +5,7 @@
 ## Core Web Vitals Targets
 
 ### Mobile Priority
+
 - **LCP (Largest Contentful Paint)**: ≤ 2.5s
 - **INP (Interaction to Next Paint)**: ≤ 200ms
 - **CLS (Cumulative Layout Shift)**: ≤ 0.05
@@ -12,14 +13,17 @@
 ## Optimization Strategies
 
 ### LCP Optimization
+
 1. **Preconnect to font domains**
+
    ```tsx
    <link rel="preconnect" href="https://fonts.googleapis.com">
    ```
 
 2. **Hero image priority**
+
    ```tsx
-   <Image priority src="/hero.jpg" alt="Hero" />
+   <Image priority src='/hero.jpg' alt='Hero' />
    ```
 
 3. **Avoid blocking CSS**
@@ -31,6 +35,7 @@
    - Implement proper caching headers
 
 ### INP Optimization
+
 1. **Avoid long tasks**
    - Split large JavaScript bundles
    - Use code splitting for routes
@@ -44,12 +49,15 @@
    - Reserve JS for complex interactions
 
 ### CLS Optimization
+
 1. **Reserve media sizes**
+
    ```tsx
-   <Image width={800} height={600} src="/image.jpg" />
+   <Image width={800} height={600} src='/image.jpg' />
    ```
 
 2. **Use aspect-ratio**
+
    ```tsx
    <div className="aspect-video">
    ```
@@ -61,11 +69,13 @@
 ## Performance Monitoring
 
 ### Development HUD
+
 - Component: `components/dev/performance-hud.tsx`
 - Shows real-time LCP, CLS, INP metrics
 - Only visible in development mode
 
 ### Production Monitoring
+
 - Use Vercel Analytics for production metrics
 - Set up Lighthouse CI in GitHub Actions
 - Monitor Core Web Vitals in production
@@ -92,11 +102,13 @@
 ## Testing
 
 ### Lighthouse CI
+
 ```bash
 npm run lighthouse
 ```
 
 ### Performance Budgets
+
 - Set budgets in `lighthouserc.json`
 - Fail builds on budget violations
 - Track metrics over time
@@ -104,11 +116,13 @@ npm run lighthouse
 ## Metrics Snapshot
 
 ### Baseline (Before Optimization)
+
 - LCP: ~3.5s
 - INP: ~250ms
 - CLS: ~0.08
 
 ### Target (After Optimization)
+
 - LCP: ≤2.5s ✅
 - INP: ≤200ms ✅
 - CLS: ≤0.05 ✅

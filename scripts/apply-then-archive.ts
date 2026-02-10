@@ -19,7 +19,12 @@ const UNMIGRATED_MIGRATIONS = [
 ];
 
 async function checkWorkflowExists() {
-  const workflowPath = join(process.cwd(), '.github', 'workflows', 'apply-migrations.yml');
+  const workflowPath = join(
+    process.cwd(),
+    '.github',
+    'workflows',
+    'apply-migrations.yml'
+  );
   return existsSync(workflowPath);
 }
 
@@ -28,7 +33,9 @@ async function triggerWorkflow() {
   console.log('='.repeat(60));
 
   if (!(await checkWorkflowExists())) {
-    console.log('⚠️  Workflow file not found. It needs to be committed first.\n');
+    console.log(
+      '⚠️  Workflow file not found. It needs to be committed first.\n'
+    );
     console.log('💡 Commit the workflow file, then run this script again.\n');
     return false;
   }
@@ -39,7 +46,9 @@ async function triggerWorkflow() {
       stdio: 'inherit',
     });
     console.log('\n✅ Workflow triggered!');
-    console.log('📊 Monitor at: https://github.com/YOUR_ORG/YOUR_REPO/actions\n');
+    console.log(
+      '📊 Monitor at: https://github.com/YOUR_ORG/YOUR_REPO/actions\n'
+    );
     return true;
   } catch (error: any) {
     if (error.message.includes('404')) {
@@ -60,8 +69,9 @@ function archiveMigrations() {
     mkdirSync(ARCHIVE_DIR, { recursive: true });
   }
 
-  const currentMigrations = readdirSync(MIGRATIONS_DIR)
-    .filter(f => f.endsWith('.sql'));
+  const currentMigrations = readdirSync(MIGRATIONS_DIR).filter(f =>
+    f.endsWith('.sql')
+  );
 
   console.log(`📋 Found ${currentMigrations.length} migrations to archive\n`);
 
@@ -82,8 +92,12 @@ function archiveMigrations() {
   }
 
   console.log(`\n✅ Archived ${archived} migrations`);
-  console.log(`📁 Remaining: ${readdirSync(MIGRATIONS_DIR).filter(f => f.endsWith('.sql')).length}`);
-  console.log(`📦 Total archived: ${readdirSync(ARCHIVE_DIR).filter(f => f.endsWith('.sql')).length}\n`);
+  console.log(
+    `📁 Remaining: ${readdirSync(MIGRATIONS_DIR).filter(f => f.endsWith('.sql')).length}`
+  );
+  console.log(
+    `📦 Total archived: ${readdirSync(ARCHIVE_DIR).filter(f => f.endsWith('.sql')).length}\n`
+  );
 }
 
 async function main() {
@@ -96,11 +110,15 @@ async function main() {
     .filter(f => UNMIGRATED_MIGRATIONS.includes(f));
 
   if (currentMigrations.length === 0) {
-    console.log('✅ No unmigrated migrations found. All migrations have been archived.\n');
+    console.log(
+      '✅ No unmigrated migrations found. All migrations have been archived.\n'
+    );
     return;
   }
 
-  console.log(`\n📋 Found ${currentMigrations.length} unmigrated migrations:\n`);
+  console.log(
+    `\n📋 Found ${currentMigrations.length} unmigrated migrations:\n`
+  );
   currentMigrations.forEach(m => console.log(`   - ${m}`));
   console.log('');
 
@@ -115,7 +133,7 @@ async function main() {
     console.log('   1. Commit and push the workflow file');
     console.log('   2. Go to GitHub Actions and run the workflow');
     console.log('   3. After completion, run: pnpm run migrate:archive\n');
-    
+
     // Ask if user wants to archive anyway (assuming they're already applied)
     console.log('⚠️  If migrations are already applied, archiving now...\n');
     archiveMigrations();

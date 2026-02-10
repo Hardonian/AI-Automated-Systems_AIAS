@@ -1,15 +1,15 @@
 /**
  * Settings Data Access Layer
- * 
+ *
  * Centralized functions for fetching user/application settings.
  */
 
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from '@/lib/supabase/client';
 
 export interface UserSettings {
   id: string;
   user_id: string;
-  theme?: "light" | "dark" | "system";
+  theme?: 'light' | 'dark' | 'system';
   notifications_enabled?: boolean;
   email_notifications?: boolean;
   language?: string;
@@ -23,24 +23,26 @@ export interface UserSettings {
  */
 export async function getCurrentUserSettings(): Promise<UserSettings | null> {
   const supabase = createClient();
-  
-  const { data: { user } } = await supabase.auth.getUser();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
     return null;
   }
 
   const { data, error } = await supabase
-    .from("user_settings")
-    .select("*")
-    .eq("user_id", user.id)
+    .from('user_settings')
+    .select('*')
+    .eq('user_id', user.id)
     .single();
 
   if (error) {
-    if (error.code === "PGRST116") {
+    if (error.code === 'PGRST116') {
       // Not found - return default settings
       return null;
     }
-    throw new Error(error.message || "Failed to fetch settings");
+    throw new Error(error.message || 'Failed to fetch settings');
   }
 
   return data as UserSettings;
@@ -50,40 +52,43 @@ export async function getCurrentUserSettings(): Promise<UserSettings | null> {
  * Update user settings
  */
 export async function updateUserSettings(
-  updates: Partial<Omit<UserSettings, "id" | "user_id" | "created_at" | "updated_at">>
+  updates: Partial<
+    Omit<UserSettings, 'id' | 'user_id' | 'created_at' | 'updated_at'>
+  >
 ): Promise<UserSettings> {
   const supabase = createClient();
-  
-  const { data: { user } } = await supabase.auth.getUser();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
-    throw new Error("User not authenticated");
+    throw new Error('User not authenticated');
   }
 
   // Try to update existing settings
   const { data: existing } = await supabase
-    .from("user_settings")
-    .select("*")
-    .eq("user_id", user.id)
+    .from('user_settings')
+    .select('*')
+    .eq('user_id', user.id)
     .single();
 
   if (existing) {
     // Update existing
-    const { data, error } = await (supabase
-      .from("user_settings") as any)
+    const { data, error } = await (supabase.from('user_settings') as any)
       .update(updates as any)
-      .eq("user_id", user.id)
+      .eq('user_id', user.id)
       .select()
       .single();
 
     if (error) {
-      throw new Error(error.message || "Failed to update settings");
+      throw new Error(error.message || 'Failed to update settings');
     }
 
     return data as UserSettings;
   } else {
     // Create new settings
     const { data, error } = await supabase
-      .from("user_settings")
+      .from('user_settings')
       .insert({
         user_id: user.id,
         ...updates,
@@ -92,7 +97,7 @@ export async function updateUserSettings(
       .single();
 
     if (error) {
-      throw new Error(error.message || "Failed to create settings");
+      throw new Error(error.message || 'Failed to create settings');
     }
 
     return data as UserSettings;

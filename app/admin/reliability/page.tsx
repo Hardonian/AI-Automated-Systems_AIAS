@@ -1,9 +1,15 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { logger } from "@/lib/logging/structured-logger";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { logger } from '@/lib/logging/structured-logger';
 
 interface ReliabilityDashboard {
   timestamp: string;
@@ -60,18 +66,24 @@ export default function ReliabilityDashboardPage() {
 
   async function fetchDashboard() {
     try {
-      const response = await fetch("/api/admin/reliability");
-      if (!response.ok) {throw new Error(`HTTP ${response.status}`);}
+      const response = await fetch('/api/admin/reliability');
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
       const data = await response.json();
       setDashboard(data);
       setError(null);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       setError(errorMessage);
-      logger.error("Failed to fetch reliability dashboard", err instanceof Error ? err : new Error(String(err)), {
-        component: "ReliabilityPage",
-        action: "fetchDashboard",
-      });
+      logger.error(
+        'Failed to fetch reliability dashboard',
+        err instanceof Error ? err : new Error(String(err)),
+        {
+          component: 'ReliabilityPage',
+          action: 'fetchDashboard',
+        }
+      );
     } finally {
       setLoading(false);
     }
@@ -79,19 +91,19 @@ export default function ReliabilityDashboardPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="text-center">Loading reliability dashboard...</div>
+      <div className='container mx-auto p-6'>
+        <div className='text-center'>Loading reliability dashboard...</div>
       </div>
     );
   }
 
   if (error || !dashboard) {
     return (
-      <div className="container mx-auto p-6">
-        <Card className="border-red-500">
+      <div className='container mx-auto p-6'>
+        <Card className='border-red-500'>
           <CardHeader>
             <CardTitle>Error Loading Dashboard</CardTitle>
-            <CardDescription>{error || "No data available"}</CardDescription>
+            <CardDescription>{error || 'No data available'}</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -99,25 +111,25 @@ export default function ReliabilityDashboardPage() {
   }
 
   const statusColor = {
-    healthy: "text-green-600",
-    degraded: "text-yellow-600",
-    critical: "text-red-600"
+    healthy: 'text-green-600',
+    degraded: 'text-yellow-600',
+    critical: 'text-red-600',
   }[dashboard.uptime.status];
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className='container mx-auto space-y-6 p-6'>
+      <div className='flex items-center justify-between'>
         <div>
-          <h1 className="text-3xl font-bold">Reliability Dashboard</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className='text-3xl font-bold'>Reliability Dashboard</h1>
+          <p className='mt-2 text-muted-foreground'>
             Autonomous monitoring and forecasting
           </p>
         </div>
-        <div className="text-right">
+        <div className='text-right'>
           <div className={`text-lg font-semibold ${statusColor}`}>
             Status: {dashboard.uptime.status.toUpperCase()}
           </div>
-          <div className="text-sm text-muted-foreground">
+          <div className='text-sm text-muted-foreground'>
             Updated: {new Date(dashboard.timestamp).toLocaleString()}
           </div>
         </div>
@@ -130,27 +142,24 @@ export default function ReliabilityDashboardPage() {
           <CardDescription>Service availability metrics</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-4'>
             <MetricCard
               good={dashboard.uptime.current >= dashboard.uptime.target}
-              label="Current Uptime"
-              unit="%"
+              label='Current Uptime'
+              unit='%'
               value={dashboard.uptime.current.toFixed(2)}
             />
             <MetricCard
-              label="Target"
-              unit="%"
+              label='Target'
+              unit='%'
               value={dashboard.uptime.target.toFixed(1)}
             />
             <MetricCard
               good={dashboard.uptime.status === 'healthy'}
-              label="Status"
+              label='Status'
               value={dashboard.uptime.status}
             />
-            <MetricCard
-              label="Trend"
-              value={dashboard.uptime.trend}
-            />
+            <MetricCard label='Trend' value={dashboard.uptime.trend} />
           </div>
         </CardContent>
       </Card>
@@ -162,22 +171,22 @@ export default function ReliabilityDashboardPage() {
           <CardDescription>Latency, error rate, and throughput</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
             <MetricCard
               good={dashboard.performance.latency_p95 < 2000}
-              label="P95 Latency"
-              unit="ms"
+              label='P95 Latency'
+              unit='ms'
               value={dashboard.performance.latency_p95.toFixed(0)}
             />
             <MetricCard
               good={dashboard.performance.error_rate < 1}
-              label="Error Rate"
-              unit="%"
+              label='Error Rate'
+              unit='%'
               value={dashboard.performance.error_rate.toFixed(2)}
             />
             <MetricCard
-              label="Throughput"
-              unit="req/min"
+              label='Throughput'
+              unit='req/min'
               value={dashboard.performance.throughput.toFixed(0)}
             />
           </div>
@@ -191,20 +200,20 @@ export default function ReliabilityDashboardPage() {
           <CardDescription>Package health and vulnerabilities</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
             <MetricCard
               good={dashboard.dependencies.outdated === 0}
-              label="Outdated Packages"
+              label='Outdated Packages'
               value={dashboard.dependencies.outdated}
             />
             <MetricCard
               good={dashboard.dependencies.vulnerabilities === 0}
-              label="Vulnerabilities"
+              label='Vulnerabilities'
               value={dashboard.dependencies.vulnerabilities}
             />
             <MetricCard
               good={dashboard.dependencies.critical_vulnerabilities === 0}
-              label="Critical Vulnerabilities"
+              label='Critical Vulnerabilities'
               value={dashboard.dependencies.critical_vulnerabilities}
             />
           </div>
@@ -218,23 +227,24 @@ export default function ReliabilityDashboardPage() {
           <CardDescription>Monthly infrastructure costs</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-4'>
             <MetricCard
-              label="Current Monthly"
+              label='Current Monthly'
               value={`$${dashboard.cost.current_monthly.toFixed(2)}`}
             />
             <MetricCard
-              label="Projected Monthly"
+              label='Projected Monthly'
               value={`$${dashboard.cost.projected_monthly.toFixed(2)}`}
             />
-            <MetricCard
-              label="Budget"
-              value={`$${dashboard.cost.budget}`}
-            />
+            <MetricCard label='Budget' value={`$${dashboard.cost.budget}`} />
             <MetricCard
               good={dashboard.cost.status === 'within_budget'}
-              label="Status"
-              value={dashboard.cost.status === 'over_budget' ? '⚠️ Over Budget' : '✅ Within Budget'}
+              label='Status'
+              value={
+                dashboard.cost.status === 'over_budget'
+                  ? '⚠️ Over Budget'
+                  : '✅ Within Budget'
+              }
             />
           </div>
         </CardContent>
@@ -244,29 +254,31 @@ export default function ReliabilityDashboardPage() {
       <Card>
         <CardHeader>
           <CardTitle>Security & Compliance</CardTitle>
-          <CardDescription>Security posture and compliance status</CardDescription>
+          <CardDescription>
+            Security posture and compliance status
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-4'>
             <MetricCard
               good={dashboard.security.secrets_exposed === 0}
-              label="Secrets Exposed"
+              label='Secrets Exposed'
               value={dashboard.security.secrets_exposed}
             />
             <MetricCard
               good={dashboard.security.rls_enabled}
-              label="RLS Enabled"
+              label='RLS Enabled'
               value={dashboard.security.rls_enabled ? '✅' : '❌'}
             />
             <MetricCard
               good={dashboard.security.tls_enforced}
-              label="TLS Enforced"
+              label='TLS Enforced'
               value={dashboard.security.tls_enforced ? '✅' : '❌'}
             />
             <MetricCard
               good={dashboard.security.compliance_score >= 80}
-              label="Compliance Score"
-              unit="/100"
+              label='Compliance Score'
+              unit='/100'
               value={dashboard.security.compliance_score}
             />
           </div>
@@ -281,10 +293,10 @@ export default function ReliabilityDashboardPage() {
             <CardDescription>Action items from orchestrator</CardDescription>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-2">
+            <ul className='space-y-2'>
               {dashboard.recommendations.map((rec, i) => (
-                <li key={i} className="flex items-start">
-                  <span className="mr-2">•</span>
+                <li key={i} className='flex items-start'>
+                  <span className='mr-2'>•</span>
                   <span>{rec}</span>
                 </li>
               ))}
@@ -309,17 +321,17 @@ function MetricCard({
 }) {
   const colorClass =
     good === undefined
-      ? "text-foreground"
+      ? 'text-foreground'
       : good
-      ? "text-green-600"
-      : "text-red-600";
+        ? 'text-green-600'
+        : 'text-red-600';
 
   return (
-    <div className="p-4 border rounded-lg">
-      <div className="text-sm text-muted-foreground">{label}</div>
-      <div className={`text-2xl font-bold mt-2 ${colorClass}`}>
+    <div className='rounded-lg border p-4'>
+      <div className='text-sm text-muted-foreground'>{label}</div>
+      <div className={`mt-2 text-2xl font-bold ${colorClass}`}>
         {value}
-        {unit && <span className="text-lg ml-1">{unit}</span>}
+        {unit && <span className='ml-1 text-lg'>{unit}</span>}
       </div>
     </div>
   );

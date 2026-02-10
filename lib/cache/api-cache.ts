@@ -1,6 +1,6 @@
 /**
  * API Response Caching Middleware
- * 
+ *
  * Provides easy-to-use caching for API routes
  */
 
@@ -26,12 +26,15 @@ const DEFAULT_CONFIG: ApiCacheConfig = {
 /**
  * Generate cache key from request
  */
-function generateCacheKey(request: NextRequest, config: ApiCacheConfig): string {
+function generateCacheKey(
+  request: NextRequest,
+  config: ApiCacheConfig
+): string {
   const url = new URL(request.url);
   const pathname = url.pathname;
-  
+
   const parts: string[] = [pathname];
-  
+
   // Include query params if configured
   if (config.varyByQuery) {
     const queryStr = url.searchParams.toString();
@@ -39,7 +42,7 @@ function generateCacheKey(request: NextRequest, config: ApiCacheConfig): string 
       parts.push(queryStr);
     }
   }
-  
+
   // Include headers if configured
   if (config.varyByHeaders && config.varyByHeaders.length > 0) {
     const headerValues = config.varyByHeaders
@@ -49,7 +52,7 @@ function generateCacheKey(request: NextRequest, config: ApiCacheConfig): string 
       parts.push(headerValues);
     }
   }
-  
+
   const key = parts.join(':');
   return cacheService.generateApiKey(pathname, { key });
 }
@@ -63,57 +66,63 @@ export async function cacheApiResponse<T>(
   config: Partial<ApiCacheConfig> = {}
 ): Promise<NextResponse<T>> {
   const finalConfig = { ...DEFAULT_CONFIG, ...config };
-  
+
   // Skip cache if configured
   if (finalConfig.skipCache && finalConfig.skipCache(request)) {
     return handler();
   }
-  
+
   // Only cache GET requests
   if (request.method !== 'GET') {
     return handler();
   }
-  
+
   const cacheKey = generateCacheKey(request, finalConfig);
-  
+
   // Try to get from cache
-  const cached = await cacheService.get<{ body: any; headers: Record<string, string>; status: number }>(
-    cacheKey,
-    finalConfig.keyPrefix
-  );
-  
+  const cached = await cacheService.get<{
+    body: any;
+    headers: Record<string, string>;
+    status: number;
+  }>(cacheKey, finalConfig.keyPrefix);
+
   if (cached.hit && cached.value) {
     logger.info('API cache hit', {
       pathname: new URL(request.url).pathname,
       cacheKey,
     });
-    
-    const response = NextResponse.json(cached.value.body, { status: cached.value.status });
-    
+
+    const response = NextResponse.json(cached.value.body, {
+      status: cached.value.status,
+    });
+
     // Restore headers
     Object.entries(cached.value.headers).forEach(([key, value]) => {
       response.headers.set(key, value);
     });
-    
+
     // Add cache headers
     response.headers.set('X-Cache', 'HIT');
     response.headers.set('X-Cache-Key', cacheKey);
-    
+
     return response;
   }
-  
+
   // Cache miss - execute handler
   logger.info('API cache miss', {
     pathname: new URL(request.url).pathname,
     cacheKey,
   });
-  
+
   const response = await handler();
-  
+
   // Only cache successful responses
   if (response.status >= 200 && response.status < 300) {
-    const body = await response.clone().json().catch(() => null);
-    
+    const body = await response
+      .clone()
+      .json()
+      .catch(() => null);
+
     if (body !== null) {
       // Store in cache
       await cacheService.set(
@@ -128,13 +137,13 @@ export async function cacheApiResponse<T>(
           keyPrefix: finalConfig.keyPrefix,
         }
       );
-      
+
       // Add cache headers
       response.headers.set('X-Cache', 'MISS');
       response.headers.set('X-Cache-Key', cacheKey);
     }
   }
-  
+
   return response;
 }
 
@@ -145,7 +154,7 @@ export async function invalidateCache(pattern: string): Promise<void> {
   // This is a simplified version - in production, you'd want to use Redis SCAN
   // or maintain a cache key registry
   logger.info('Cache invalidation requested', { pattern });
-  
+
   // For now, we'll need to track keys separately or use a pattern-based approach
   // This is a placeholder for future implementation
 }

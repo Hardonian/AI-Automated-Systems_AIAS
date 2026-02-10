@@ -1,15 +1,28 @@
-"use client";
+'use client';
 
 import { TrendingUp, TrendingDown } from 'lucide-react';
-import { useEffect, useState } from "react";
-import { ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line } from 'recharts';
+import { useEffect, useState } from 'react';
+import {
+  ResponsiveContainer,
+  LineChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Line,
+} from 'recharts';
 
 import { TrialCountdownBanner } from '@/components/monetization/trial-countdown-banner';
 import { UsageProgressBanner } from '@/components/monetization/usage-progress-banner';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-
 
 interface UsageData {
   plan: string;
@@ -35,11 +48,18 @@ interface TimeSaved {
 
 export default function AnalyticsPage() {
   const [usage, setUsage] = useState<UsageData | null>(null);
-  const [workflowStats, setWorkflowStats] = useState<WorkflowStats | null>(null);
+  const [workflowStats, setWorkflowStats] = useState<WorkflowStats | null>(
+    null
+  );
   const [timeSaved, setTimeSaved] = useState<TimeSaved | null>(null);
   const [loading, setLoading] = useState(true);
-  const [executionHistory, setExecutionHistory] = useState<Array<{ date: string; completed: number; failed: number }>>([]);
-  const [trialInfo, setTrialInfo] = useState<{ daysRemaining: number; trialEndDate: string } | null>(null);
+  const [executionHistory, setExecutionHistory] = useState<
+    Array<{ date: string; completed: number; failed: number }>
+  >([]);
+  const [trialInfo, setTrialInfo] = useState<{
+    daysRemaining: number;
+    trialEndDate: string;
+  } | null>(null);
 
   useEffect(() => {
     fetchAnalytics();
@@ -50,46 +70,48 @@ export default function AnalyticsPage() {
       setLoading(true);
 
       // Fetch usage data
-      const usageResponse = await fetch("/api/analytics/usage");
+      const usageResponse = await fetch('/api/analytics/usage');
       if (usageResponse.ok) {
         const usageData = await usageResponse.json();
         setUsage(usageData);
       }
 
       // Fetch workflow stats
-      const statsResponse = await fetch("/api/analytics/workflows");
+      const statsResponse = await fetch('/api/analytics/workflows');
       if (statsResponse.ok) {
         const statsData = await statsResponse.json();
         setWorkflowStats(statsData);
       }
 
       // Fetch time saved
-      const timeResponse = await fetch("/api/analytics/time-saved");
+      const timeResponse = await fetch('/api/analytics/time-saved');
       if (timeResponse.ok) {
         const timeData = await timeResponse.json();
         setTimeSaved(timeData);
       }
 
       // Fetch execution history
-      const historyResponse = await fetch("/api/analytics/execution-history");
+      const historyResponse = await fetch('/api/analytics/execution-history');
       if (historyResponse.ok) {
         const historyData = await historyResponse.json();
         setExecutionHistory(historyData);
       }
 
       // Fetch trial info (if on trial)
-      const trialResponse = await fetch("/api/trial/user-data");
+      const trialResponse = await fetch('/api/trial/user-data');
       if (trialResponse.ok) {
         const trialData = await trialResponse.json();
-        if (trialData.plan === "trial" && trialData.trialEndDate) {
+        if (trialData.plan === 'trial' && trialData.trialEndDate) {
           const endDate = new Date(trialData.trialEndDate);
           const now = new Date();
-          const daysRemaining = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+          const daysRemaining = Math.ceil(
+            (endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+          );
           setTrialInfo({ daysRemaining, trialEndDate: trialData.trialEndDate });
         }
       }
     } catch (error) {
-      console.error("Failed to fetch analytics", error);
+      console.error('Failed to fetch analytics', error);
     } finally {
       setLoading(false);
     }
@@ -97,8 +119,8 @@ export default function AnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="container py-16">
-        <div className="text-center">Loading analytics...</div>
+      <div className='container py-16'>
+        <div className='text-center'>Loading analytics...</div>
       </div>
     );
   }
@@ -106,10 +128,10 @@ export default function AnalyticsPage() {
   const usagePercentage = usage ? (usage.used / usage.limit) * 100 : 0;
 
   return (
-    <div className="container py-16">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Analytics Dashboard</h1>
-        <p className="text-muted-foreground">
+    <div className='container py-16'>
+      <div className='mb-8'>
+        <h1 className='mb-2 text-4xl font-bold'>Analytics Dashboard</h1>
+        <p className='text-muted-foreground'>
           Track your automation usage, workflow performance, and time savings
         </p>
       </div>
@@ -131,7 +153,7 @@ export default function AnalyticsPage() {
 
       {/* Usage Overview */}
       {usage && (
-        <Card className="mb-6">
+        <Card className='mb-6'>
           <CardHeader>
             <CardTitle>Automation Usage</CardTitle>
             <CardDescription>
@@ -139,26 +161,30 @@ export default function AnalyticsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className='space-y-4'>
               <div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm font-medium">
-                    {usage.used.toLocaleString()} / {usage.limit.toLocaleString()} automations
+                <div className='mb-2 flex justify-between'>
+                  <span className='text-sm font-medium'>
+                    {usage.used.toLocaleString()} /{' '}
+                    {usage.limit.toLocaleString()} automations
                   </span>
-                  <span className="text-sm text-muted-foreground">
+                  <span className='text-sm text-muted-foreground'>
                     {usage.remaining.toLocaleString()} remaining
                   </span>
                 </div>
-                <Progress className="h-2" value={usagePercentage} />
+                <Progress className='h-2' value={usagePercentage} />
               </div>
               {usagePercentage > 80 && (
-                <div className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-                  <p className="text-sm text-amber-900 dark:text-amber-100">
-                    <strong>Warning:</strong> You've used {usagePercentage.toFixed(0)}% of your monthly limit. 
-                    {usagePercentage >= 100 ? " Upgrade your plan to continue automating." : " Consider upgrading if you need more."}
+                <div className='rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-950/20'>
+                  <p className='text-sm text-amber-900 dark:text-amber-100'>
+                    <strong>Warning:</strong> You've used{' '}
+                    {usagePercentage.toFixed(0)}% of your monthly limit.
+                    {usagePercentage >= 100
+                      ? ' Upgrade your plan to continue automating.'
+                      : ' Consider upgrading if you need more.'}
                   </p>
-                  <Button asChild className="mt-2" size="sm" variant="outline">
-                    <a href="/pricing">Upgrade Plan</a>
+                  <Button asChild className='mt-2' size='sm' variant='outline'>
+                    <a href='/pricing'>Upgrade Plan</a>
                   </Button>
                 </div>
               )}
@@ -168,35 +194,38 @@ export default function AnalyticsPage() {
       )}
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+      <div className='mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
         {workflowStats && (
           <>
             <Card>
-              <CardHeader className="pb-2">
+              <CardHeader className='pb-2'>
                 <CardDescription>Total Workflows</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{workflowStats.total}</div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <div className='text-3xl font-bold'>{workflowStats.total}</div>
+                <p className='mt-1 text-xs text-muted-foreground'>
                   {workflowStats.active} active
                 </p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className="pb-2">
+              <CardHeader className='pb-2'>
                 <CardDescription>Success Rate</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{workflowStats.successRate.toFixed(1)}%</div>
-                <div className="flex items-center gap-1 mt-1">
+                <div className='text-3xl font-bold'>
+                  {workflowStats.successRate.toFixed(1)}%
+                </div>
+                <div className='mt-1 flex items-center gap-1'>
                   {workflowStats.successRate >= 90 ? (
-                    <TrendingUp className="h-4 w-4 text-green-500" />
+                    <TrendingUp className='h-4 w-4 text-green-500' />
                   ) : (
-                    <TrendingDown className="h-4 w-4 text-red-500" />
+                    <TrendingDown className='h-4 w-4 text-red-500' />
                   )}
-                  <p className="text-xs text-muted-foreground">
-                    {workflowStats.completed} completed, {workflowStats.failed} failed
+                  <p className='text-xs text-muted-foreground'>
+                    {workflowStats.completed} completed, {workflowStats.failed}{' '}
+                    failed
                   </p>
                 </div>
               </CardContent>
@@ -207,26 +236,30 @@ export default function AnalyticsPage() {
         {timeSaved && (
           <>
             <Card>
-              <CardHeader className="pb-2">
+              <CardHeader className='pb-2'>
                 <CardDescription>Time Saved This Month</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{timeSaved.hours.toFixed(1)}h</div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <div className='text-3xl font-bold'>
+                  {timeSaved.hours.toFixed(1)}h
+                </div>
+                <p className='mt-1 text-xs text-muted-foreground'>
                   ${timeSaved.value.toFixed(2)} value
                 </p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className="pb-2">
+              <CardHeader className='pb-2'>
                 <CardDescription>Estimated ROI</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">
-                  {timeSaved.value > 0 ? `${((timeSaved.value / 49) * 100).toFixed(0)}%` : "0%"}
+                <div className='text-3xl font-bold'>
+                  {timeSaved.value > 0
+                    ? `${((timeSaved.value / 49) * 100).toFixed(0)}%`
+                    : '0%'}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className='mt-1 text-xs text-muted-foreground'>
                   Based on ${timeSaved.hourlyRate}/hour rate
                 </p>
               </CardContent>
@@ -237,20 +270,30 @@ export default function AnalyticsPage() {
 
       {/* Execution History Chart */}
       {executionHistory.length > 0 && (
-        <Card className="mb-6">
+        <Card className='mb-6'>
           <CardHeader>
             <CardTitle>Execution History (Last 30 Days)</CardTitle>
             <CardDescription>Workflow executions over time</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer height={300} width="100%">
+            <ResponsiveContainer height={300} width='100%'>
               <LineChart data={executionHistory}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
+                <CartesianGrid strokeDasharray='3 3' />
+                <XAxis dataKey='date' />
                 <YAxis />
                 <Tooltip />
-                <Line dataKey="completed" name="Completed" stroke="#22c55e" type="monotone" />
-                <Line dataKey="failed" name="Failed" stroke="#ef4444" type="monotone" />
+                <Line
+                  dataKey='completed'
+                  name='Completed'
+                  stroke='#22c55e'
+                  type='monotone'
+                />
+                <Line
+                  dataKey='failed'
+                  name='Failed'
+                  stroke='#ef4444'
+                  type='monotone'
+                />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -263,20 +306,20 @@ export default function AnalyticsPage() {
           <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-wrap gap-4">
-            <Button asChild variant="outline">
-              <a href="/workflows">View All Workflows</a>
+          <div className='flex flex-wrap gap-4'>
+            <Button asChild variant='outline'>
+              <a href='/workflows'>View All Workflows</a>
             </Button>
-            <Button asChild variant="outline">
-              <a href="/workflows?create=true">Create New Workflow</a>
+            <Button asChild variant='outline'>
+              <a href='/workflows?create=true'>Create New Workflow</a>
             </Button>
             {usage && usagePercentage > 80 && (
               <Button asChild>
-                <a href="/pricing">Upgrade Plan</a>
+                <a href='/pricing'>Upgrade Plan</a>
               </Button>
             )}
-            <Button asChild variant="outline">
-              <a href="/help">View Documentation</a>
+            <Button asChild variant='outline'>
+              <a href='/help'>View Documentation</a>
             </Button>
           </div>
         </CardContent>

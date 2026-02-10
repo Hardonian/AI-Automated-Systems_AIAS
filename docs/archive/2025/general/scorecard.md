@@ -6,26 +6,29 @@
 
 ## Key Metrics
 
-| Metric | Current | Target | Status | Trend |
-|--------|---------|--------|--------|-------|
-| Lead Time | 26h | <12h | 🔴 | → |
-| Cycle Time | 42min | <30min | 🟡 | → |
-| CI Failure Rate | 5% | <2% | 🔴 | → |
-| Deploy Failure Rate | 1% | <1% | 🟢 | → |
-| Review Queue | 8 PRs | <4 PRs | 🔴 | → |
-| Rework Rate | 18% | <10% | 🔴 | → |
+| Metric              | Current | Target | Status | Trend |
+| ------------------- | ------- | ------ | ------ | ----- |
+| Lead Time           | 26h     | <12h   | 🔴     | →     |
+| Cycle Time          | 42min   | <30min | 🟡     | →     |
+| CI Failure Rate     | 5%      | <2%    | 🔴     | →     |
+| Deploy Failure Rate | 1%      | <1%    | 🟢     | →     |
+| Review Queue        | 8 PRs   | <4 PRs | 🔴     | →     |
+| Rework Rate         | 18%     | <10%   | 🔴     | →     |
 
 ## Status Legend
+
 - 🟢 Green: Meeting target
 - 🟡 Amber: Close to target
 - 🔴 Red: Not meeting target
 
 ## Trends
+
 - → Stable
 - ↑ Improving
 - ↓ Declining
 
 ## Next Actions
+
 1. Optimize review queue (P0)
 2. Reduce CI failure rate (P1)
 3. Reduce rework rate (P2)
@@ -33,6 +36,7 @@
 ## Detailed Metrics
 
 ### Lead Time
+
 - **Current:** 26h (commit to production)
 - **Target:** <12h
 - **Breakdown:**
@@ -42,6 +46,7 @@
   - Deploy: 35min
 
 ### Cycle Time
+
 - **Current:** 42min (active work time)
 - **Target:** <30min
 - **Breakdown:**
@@ -51,17 +56,20 @@
   - Deploy: 18min
 
 ### Failure Rates
+
 - **CI:** 5% (target: <2%)
 - **Build:** 2% (target: <1%)
 - **Deploy:** 1% (target: <1%)
 
 ### Queue Lengths
+
 - **Review:** 8 PRs (target: <4 PRs)
 - **CI:** 3 PRs (target: <2 PRs)
 - **Build:** 0 (target: 0)
 - **Deploy:** 0 (target: 0)
 
 ### Rework Rate
+
 - **Current:** 18%
 - **Target:** <10%
 - **Breakdown:**

@@ -2,25 +2,25 @@
  * Health Check API Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-import { GET } from "@/app/api/healthz/route";
+import { GET } from '@/app/api/healthz/route';
 
 // Mock dependencies - no unused imports
-vi.mock("@/lib/env", () => ({
+vi.mock('@/lib/env', () => ({
   env: {
     supabase: {
-      url: "https://test.supabase.co",
-      anonKey: "test-anon-key",
-      serviceRoleKey: "test-service-key",
+      url: 'https://test.supabase.co',
+      anonKey: 'test-anon-key',
+      serviceRoleKey: 'test-service-key',
     },
     database: {
-      url: "postgresql://test",
+      url: 'postgresql://test',
     },
   },
 }));
 
-vi.mock("@supabase/supabase-js", () => ({
+vi.mock('@supabase/supabase-js', () => ({
   createClient: vi.fn(() => ({
     from: vi.fn(() => ({
       select: vi.fn(() => ({
@@ -29,7 +29,9 @@ vi.mock("@supabase/supabase-js", () => ({
     })),
     auth: {
       admin: {
-        listUsers: vi.fn(() => Promise.resolve({ data: { users: [] }, error: null })),
+        listUsers: vi.fn(() =>
+          Promise.resolve({ data: { users: [] }, error: null })
+        ),
       },
     },
     storage: {
@@ -38,16 +40,16 @@ vi.mock("@supabase/supabase-js", () => ({
   })),
 }));
 
-vi.mock("@/lib/env-validation", () => ({
+vi.mock('@/lib/env-validation', () => ({
   validateEnvOnStartup: vi.fn(),
 }));
 
-describe("GET /api/healthz", () => {
+describe('GET /api/healthz', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("should return 200 when all checks pass", async () => {
+  it('should return 200 when all checks pass', async () => {
     const response = await GET();
     const data = await response.json();
 
@@ -59,10 +61,10 @@ describe("GET /api/healthz", () => {
     expect(data.auth).toBeDefined();
   });
 
-  it("should return 503 when environment validation fails", async () => {
-    const { validateEnvOnStartup } = await import("@/lib/env-validation");
+  it('should return 503 when environment validation fails', async () => {
+    const { validateEnvOnStartup } = await import('@/lib/env-validation');
     vi.mocked(validateEnvOnStartup).mockImplementation(() => {
-      throw new Error("Environment validation failed");
+      throw new Error('Environment validation failed');
     });
 
     const response = await GET();
@@ -70,15 +72,15 @@ describe("GET /api/healthz", () => {
 
     expect(response.status).toBe(503);
     expect(data.ok).toBe(false);
-    expect(data.error).toContain("Environment validation failed");
+    expect(data.error).toContain('Environment validation failed');
   });
 
-  it("should include latency measurements", async () => {
+  it('should include latency measurements', async () => {
     const response = await GET();
     const data = await response.json();
 
     expect(data.total_latency_ms).toBeDefined();
-    expect(typeof data.total_latency_ms).toBe("number");
+    expect(typeof data.total_latency_ms).toBe('number');
     if (data.db) {
       expect(data.db.latency_ms).toBeDefined();
     }

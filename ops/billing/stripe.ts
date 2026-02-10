@@ -5,7 +5,12 @@
 
 import Stripe from 'stripe';
 
-import { generateIdempotencyKey, checkIdempotencyKey, recordIdempotencyKey, recordLedgerEntry } from '@/lib/billing/idempotency';
+import {
+  generateIdempotencyKey,
+  checkIdempotencyKey,
+  recordIdempotencyKey,
+  recordLedgerEntry,
+} from '@/lib/billing/idempotency';
 import { env } from '@/lib/env';
 
 // CTO Mode: Use centralized env module - never destructure process.env
@@ -30,17 +35,23 @@ export async function handleStripeWebhook(
 
   try {
     // CTO Mode: Use centralized env module
-    const {webhookSecret} = env.stripe;
+    const { webhookSecret } = env.stripe;
     if (!webhookSecret) {
       throw new Error('STRIPE_WEBHOOK_SECRET not set');
     }
 
-    const event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
+    const event = stripe.webhooks.constructEvent(
+      payload,
+      signature,
+      webhookSecret
+    );
 
     switch (event.type) {
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
-        await handleSubscriptionUpdate(event.data.object as Stripe.Subscription);
+        await handleSubscriptionUpdate(
+          event.data.object as Stripe.Subscription
+        );
         break;
       default:
         console.log(`Unhandled event type: ${event.type}`);
@@ -54,37 +65,48 @@ export async function handleStripeWebhook(
 
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   const { upsert } = await import('@/lib/supabase/db-helpers');
-  
+
   // Get org_id from customer metadata if available
   const customerId = subscription.customer as string;
   const orgId = subscription.metadata?.org_id || '';
-  
+
   // CFO Mode: Generate idempotency key for webhook processing
   const idempotencyKey = generateIdempotencyKey(
     'subscription_webhook',
     subscription.id,
     { type: subscription.object, status: subscription.status }
   );
-  
+
   // Check if already processed
   const idempotencyCheck = await checkIdempotencyKey(idempotencyKey);
   if (idempotencyCheck.exists) {
     // Already processed, skip
     return;
   }
-  
-  await upsert('subscriptions', {
-    stripe_subscription_id: subscription.id,
-    status: mapStripeStatus(subscription.status),
-    current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-    current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-    stripe_customer_id: customerId,
-    plan: 'BASIC',
-    org_id: orgId,
-  }, 'stripe_subscription_id');
-  
+
+  await upsert(
+    'subscriptions',
+    {
+      stripe_subscription_id: subscription.id,
+      status: mapStripeStatus(subscription.status),
+      current_period_start: new Date(
+        subscription.current_period_start * 1000
+      ).toISOString(),
+      current_period_end: new Date(
+        subscription.current_period_end * 1000
+      ).toISOString(),
+      stripe_customer_id: customerId,
+      plan: 'BASIC',
+      org_id: orgId,
+    },
+    'stripe_subscription_id'
+  );
+
   // Record idempotency key
-  const requestHash = JSON.stringify({ subscription_id: subscription.id, status: subscription.status });
+  const requestHash = JSON.stringify({
+    subscription_id: subscription.id,
+    status: subscription.status,
+  });
   await recordIdempotencyKey(
     idempotencyKey,
     'subscription_webhook',
@@ -93,14 +115,18 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     { processed: true },
     'completed'
   );
-  
+
   // CFO Mode: Record ledger entry if subscription is active and has amount
   if (subscription.status === 'active' && subscription.items.data[0]?.price) {
     const amountCents = subscription.items.data[0].price.unit_amount || 0;
     if (amountCents > 0 && orgId) {
       await recordLedgerEntry({
         transactionId: `stripe_sub_${subscription.id}`,
-        idempotencyKey: generateIdempotencyKey('subscription_ledger', subscription.id, { amount: amountCents }),
+        idempotencyKey: generateIdempotencyKey(
+          'subscription_ledger',
+          subscription.id,
+          { amount: amountCents }
+        ),
         accountId: orgId,
         accountType: 'tenant',
         amountCents,

@@ -2,39 +2,40 @@
  * Leads API Tests
  */
 
-import { NextRequest } from "next/server";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { NextRequest } from 'next/server';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-import { POST } from "@/app/api/leads/capture/route";
+import { POST } from '@/app/api/leads/capture/route';
 
-vi.mock("@/lib/lead-generation/lead-capture", () => ({
+vi.mock('@/lib/lead-generation/lead-capture', () => ({
   leadCaptureService: {
     captureLead: vi.fn(),
   },
 }));
 
-describe("POST /api/leads/capture", () => {
+describe('POST /api/leads/capture', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("should capture lead successfully", async () => {
-    const { leadCaptureService } = await import("@/lib/lead-generation/lead-capture");
+  it('should capture lead successfully', async () => {
+    const { leadCaptureService } =
+      await import('@/lib/lead-generation/lead-capture');
     vi.mocked(leadCaptureService.captureLead).mockResolvedValue({
       success: true,
-      leadId: "lead-123",
+      leadId: 'lead-123',
       score: 85,
       qualified: true,
-      nextAction: "contact",
+      nextAction: 'contact',
     });
 
-    const request = new NextRequest("http://localhost/api/leads/capture", {
-      method: "POST",
+    const request = new NextRequest('http://localhost/api/leads/capture', {
+      method: 'POST',
       body: JSON.stringify({
-        email: "lead@example.com",
-        firstName: "John",
-        lastName: "Doe",
-        company: "Acme Corp",
+        email: 'lead@example.com',
+        firstName: 'John',
+        lastName: 'Doe',
+        company: 'Acme Corp',
       }),
     });
 
@@ -43,16 +44,16 @@ describe("POST /api/leads/capture", () => {
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
-    expect(data.leadId).toBe("lead-123");
+    expect(data.leadId).toBe('lead-123');
     expect(data.score).toBe(85);
     expect(data.qualified).toBe(true);
   });
 
-  it("should validate email format", async () => {
-    const request = new NextRequest("http://localhost/api/leads/capture", {
-      method: "POST",
+  it('should validate email format', async () => {
+    const request = new NextRequest('http://localhost/api/leads/capture', {
+      method: 'POST',
       body: JSON.stringify({
-        email: "invalid-email",
+        email: 'invalid-email',
       }),
     });
 
@@ -61,18 +62,19 @@ describe("POST /api/leads/capture", () => {
     expect(response.status).toBe(400);
   });
 
-  it("should handle capture failures", async () => {
-    const { leadCaptureService } = await import("@/lib/lead-generation/lead-capture");
+  it('should handle capture failures', async () => {
+    const { leadCaptureService } =
+      await import('@/lib/lead-generation/lead-capture');
     vi.mocked(leadCaptureService.captureLead).mockResolvedValue({
       success: false,
       leadId: null,
-      error: "Database error",
+      error: 'Database error',
     });
 
-    const request = new NextRequest("http://localhost/api/leads/capture", {
-      method: "POST",
+    const request = new NextRequest('http://localhost/api/leads/capture', {
+      method: 'POST',
       body: JSON.stringify({
-        email: "lead@example.com",
+        email: 'lead@example.com',
       }),
     });
 

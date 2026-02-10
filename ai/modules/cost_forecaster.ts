@@ -93,13 +93,13 @@ export class CostForecaster {
       return {
         status,
         message: `Current: $${forecast.current_monthly.toFixed(2)}/mo, Projected: $${forecast.projected_monthly.toFixed(2)}/mo (${forecast.deviation_percent.toFixed(1)}% deviation)`,
-        data: forecast
+        data: forecast,
       };
     } catch (error: any) {
       return {
         status: 'error',
         message: `Cost forecasting failed: ${error.message}`,
-        errors: [error.message]
+        errors: [error.message],
       };
     }
   }
@@ -109,7 +109,7 @@ export class CostForecaster {
       vercel: await this.getVercelMetrics(),
       supabase: await this.getSupabaseMetrics(),
       expo: await this.getExpoMetrics(),
-      github: await this.getGitHubMetrics()
+      github: await this.getGitHubMetrics(),
     };
 
     return metrics;
@@ -132,7 +132,7 @@ export class CostForecaster {
           bandwidth_gb: latest.bandwidth_gb || 0,
           function_invocations: latest.function_invocations || 0,
           edge_requests: latest.edge_requests || 0,
-          cost: this.calculateVercelCost(latest)
+          cost: this.calculateVercelCost(latest),
         };
       }
     } catch (error) {
@@ -143,7 +143,7 @@ export class CostForecaster {
       bandwidth_gb: 0,
       function_invocations: 0,
       edge_requests: 0,
-      cost: 0
+      cost: 0,
     };
   }
 
@@ -164,7 +164,7 @@ export class CostForecaster {
           api_requests: latest.api_requests || 0,
           storage_gb: latest.storage_gb || 0,
           bandwidth_gb: latest.bandwidth_gb || 0,
-          cost: this.calculateSupabaseCost(latest)
+          cost: this.calculateSupabaseCost(latest),
         };
       }
     } catch (error) {
@@ -176,7 +176,7 @@ export class CostForecaster {
       api_requests: 0,
       storage_gb: 0,
       bandwidth_gb: 0,
-      cost: 0
+      cost: 0,
     };
   }
 
@@ -185,28 +185,29 @@ export class CostForecaster {
     return {
       builds: 0,
       bandwidth_gb: 0,
-      cost: 0
+      cost: 0,
     };
   }
 
   private async getGitHubMetrics(): Promise<CostMetrics['github']> {
     try {
       // Get GitHub Actions usage
-      const { data: usage } = await this.octokit.rest.billing.getGithubActionsBillingOrg({
-        org: this.config.githubOwner
-      });
+      const { data: usage } =
+        await this.octokit.rest.billing.getGithubActionsBillingOrg({
+          org: this.config.githubOwner,
+        });
 
       return {
         actions_minutes: usage?.included_minutes || 0,
         storage_gb: (usage as any)?.included_storage_gb || 0,
-        cost: this.calculateGitHubCost(usage)
+        cost: this.calculateGitHubCost(usage),
       };
     } catch (error) {
       console.warn('Could not fetch GitHub metrics:', error);
       return {
         actions_minutes: 0,
         storage_gb: 0,
-        cost: 0
+        cost: 0,
       };
     }
   }
@@ -229,9 +230,15 @@ export class CostForecaster {
   private calculateGitHubCost(usage: any): number {
     // GitHub Actions: $0.008/minute for overages
     // Storage: $0.25/GB/month
-    const overageMinutes = Math.max(0, (usage?.minutes_used || 0) - (usage?.included_minutes || 0));
-    const overageStorage = Math.max(0, (usage?.storage_used_gb || 0) - (usage?.included_storage_gb || 0));
-    return (overageMinutes * 0.008) + (overageStorage * 0.25);
+    const overageMinutes = Math.max(
+      0,
+      (usage?.minutes_used || 0) - (usage?.included_minutes || 0)
+    );
+    const overageStorage = Math.max(
+      0,
+      (usage?.storage_used_gb || 0) - (usage?.included_storage_gb || 0)
+    );
+    return overageMinutes * 0.008 + overageStorage * 0.25;
   }
 
   private calculateCurrentCosts(metrics: CostMetrics): number {
@@ -243,7 +250,10 @@ export class CostForecaster {
     );
   }
 
-  private async predictCosts(currentCost: number, metrics: CostMetrics): Promise<CostForecast> {
+  private async predictCosts(
+    currentCost: number,
+    metrics: CostMetrics
+  ): Promise<CostForecast> {
     // Get historical data for trend analysis
     const historical = await this.getHistoricalCosts();
 
@@ -256,7 +266,10 @@ export class CostForecaster {
     if (deviation > 5) trend = 'increasing';
     else if (deviation < -5) trend = 'decreasing';
 
-    const recommendations = this.generateCostRecommendations(projection, metrics);
+    const recommendations = this.generateCostRecommendations(
+      projection,
+      metrics
+    );
 
     return {
       current_monthly: currentCost,
@@ -268,9 +281,9 @@ export class CostForecaster {
         vercel: metrics.vercel.cost,
         supabase: metrics.supabase.cost,
         expo: metrics.expo.cost,
-        github: metrics.github.cost
+        github: metrics.github.cost,
       },
-      recommendations
+      recommendations,
     };
   }
 
@@ -319,23 +332,34 @@ export class CostForecaster {
     return Math.max(0, slope * (n + 30) + intercept);
   }
 
-  private generateCostRecommendations(projected: number, metrics: CostMetrics): string[] {
+  private generateCostRecommendations(
+    projected: number,
+    metrics: CostMetrics
+  ): string[] {
     const recommendations: string[] = [];
     const budget = this.config.budget || 75;
 
     if (projected > budget) {
       const overage = projected - budget;
-      recommendations.push(`⚠️ Projected cost ($${projected.toFixed(2)}) exceeds budget ($${budget}) by $${overage.toFixed(2)}`);
-      
+      recommendations.push(
+        `⚠️ Projected cost ($${projected.toFixed(2)}) exceeds budget ($${budget}) by $${overage.toFixed(2)}`
+      );
+
       if (metrics.vercel.cost > budget * 0.4) {
-        recommendations.push('💡 Consider implementing CDN caching to reduce Vercel bandwidth costs');
+        recommendations.push(
+          '💡 Consider implementing CDN caching to reduce Vercel bandwidth costs'
+        );
       }
-      
+
       if (metrics.supabase.cost > budget * 0.4) {
-        recommendations.push('💡 Review database queries and implement connection pooling to optimize Supabase costs');
+        recommendations.push(
+          '💡 Review database queries and implement connection pooling to optimize Supabase costs'
+        );
       }
     } else {
-      recommendations.push(`✅ Projected cost ($${projected.toFixed(2)}) is within budget ($${budget})`);
+      recommendations.push(
+        `✅ Projected cost ($${projected.toFixed(2)}) is within budget ($${budget})`
+      );
     }
 
     return recommendations;
@@ -362,8 +386,8 @@ export class CostForecaster {
         trends: {
           uptime: uptime > 99.9 ? 'stable' : 'degrading',
           latency: latency < 2000 ? 'stable' : 'degrading',
-          errors: errorRate < 1 ? 'stable' : 'degrading'
-        }
+          errors: errorRate < 1 ? 'stable' : 'degrading',
+        },
       };
     } catch (error) {
       return {
@@ -374,8 +398,8 @@ export class CostForecaster {
         trends: {
           uptime: 'stable',
           latency: 'stable',
-          errors: 'stable'
-        }
+          errors: 'stable',
+        },
       };
     }
   }
@@ -389,34 +413,42 @@ export class CostForecaster {
     const latencies = data
       .map(d => d.metric?.latency || d.metric?.response_time)
       .filter(Boolean);
-    
+
     if (latencies.length === 0) return 0;
-    
+
     const sorted = latencies.sort((a, b) => a - b);
     const p95Index = Math.ceil(sorted.length * 0.95) - 1;
     return sorted[p95Index] || 0;
   }
 
   private calculateErrorRate(data: any[]): number {
-    const errors = data.filter(d => d.metric?.error || d.metric?.status === 'error').length;
+    const errors = data.filter(
+      d => d.metric?.error || d.metric?.status === 'error'
+    ).length;
     return (errors / data.length) * 100;
   }
 
-  private async storeForecast(forecast: CostForecast, trends: ReliabilityTrends): Promise<void> {
+  private async storeForecast(
+    forecast: CostForecast,
+    trends: ReliabilityTrends
+  ): Promise<void> {
     try {
-      await this.supabase
-        .from('cost_forecasts')
-        .insert([{
+      await this.supabase.from('cost_forecasts').insert([
+        {
           forecast,
           trends,
-          created_at: new Date().toISOString()
-        }]);
+          created_at: new Date().toISOString(),
+        },
+      ]);
     } catch (error) {
       console.warn('Could not store cost forecast:', error);
     }
   }
 
-  private async generateJSONFiles(forecast: CostForecast, trends: ReliabilityTrends): Promise<void> {
+  private async generateJSONFiles(
+    forecast: CostForecast,
+    trends: ReliabilityTrends
+  ): Promise<void> {
     const { writeFileSync } = require('fs');
     const { join } = require('path');
 

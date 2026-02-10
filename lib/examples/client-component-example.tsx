@@ -1,6 +1,6 @@
 /**
  * EXAMPLE: Proper Client Component Pattern
- * 
+ *
  * This file demonstrates the strict production build safety rules:
  * 1. "use client" directive at the top
  * 2. No server-only imports
@@ -8,16 +8,19 @@
  * 4. Type-safe props
  */
 
-"use client";
+'use client';
 
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { createUser, type ServerActionResponse } from '@/lib/examples/server-action-example';
+import {
+  createUser,
+  type ServerActionResponse,
+} from '@/lib/examples/server-action-example';
 
 /**
  * Example: User Form Client Component
- * 
+ *
  * ✅ Follows all strict rules:
  * - "use client" at top
  * - Uses Image instead of img
@@ -48,60 +51,60 @@ export function UserForm() {
   }
 
   return (
-    <form action={handleSubmit} className="space-y-4">
+    <form action={handleSubmit} className='space-y-4'>
       {/* ✅ Use Image component, not <img> */}
       <Image
-        src="/logo.png"
+        src='/logo.png'
         width={100}
         height={100}
-        alt="Company Logo"
-        className="mb-4"
+        alt='Company Logo'
+        className='mb-4'
       />
 
       <div>
-        <label htmlFor="name">Name</label>
+        <label htmlFor='name'>Name</label>
         <input
-          id="name"
-          name="name"
-          type="text"
+          id='name'
+          name='name'
+          type='text'
           required
-          className="border rounded p-2"
+          className='rounded border p-2'
         />
       </div>
 
       <div>
-        <label htmlFor="email">Email</label>
+        <label htmlFor='email'>Email</label>
         <input
-          id="email"
-          name="email"
-          type="email"
+          id='email'
+          name='email'
+          type='email'
           required
-          className="border rounded p-2"
+          className='rounded border p-2'
         />
       </div>
 
       {error && (
-        <div className="text-red-600" role="alert">
+        <div className='text-red-600' role='alert'>
           {error}
         </div>
       )}
 
       {success && (
-        <div className="text-green-600" role="alert">
+        <div className='text-green-600' role='alert'>
           User created successfully!
         </div>
       )}
 
       <button
-        type="submit"
+        type='submit'
         disabled={loading}
-        className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+        className='rounded bg-blue-500 px-4 py-2 text-white disabled:opacity-50'
       >
         {loading ? 'Creating...' : 'Create User'}
       </button>
 
       {/* ✅ Use Link component, not <a> */}
-      <Link href="/users" className="text-blue-500 underline">
+      <Link href='/users' className='text-blue-500 underline'>
         View all users
       </Link>
     </form>

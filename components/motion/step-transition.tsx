@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { motion, AnimatePresence } from "framer-motion";
-import { motionVariants, prefersReducedMotion } from "@/lib/style/motion";
-import { ReactNode } from "react";
+import { motion, AnimatePresence } from 'framer-motion';
+import { motionVariants, prefersReducedMotion } from '@/lib/style/motion';
+import { ReactNode } from 'react';
 
 export interface StepTransitionProps {
   /**
@@ -17,7 +17,7 @@ export interface StepTransitionProps {
    * Transition direction
    * @default "forward"
    */
-  direction?: "forward" | "backward";
+  direction?: 'forward' | 'backward';
   /**
    * Custom className
    */
@@ -26,18 +26,18 @@ export interface StepTransitionProps {
 
 /**
  * StepTransition - Wrapper for step-by-step transitions
- * 
+ *
  * Provides smooth transitions between steps in multi-step flows
  * Respects prefers-reduced-motion
  */
-export function StepTransition({ 
-  children, 
-  step, 
-  direction = "forward",
-  className 
+export function StepTransition({
+  children,
+  step,
+  direction = 'forward',
+  className,
 }: StepTransitionProps) {
   const reducedMotion = prefersReducedMotion();
-  
+
   const variants = reducedMotion
     ? {
         enter: { opacity: 1 },
@@ -46,13 +46,13 @@ export function StepTransition({
     : motionVariants.stepTransition;
 
   return (
-    <AnimatePresence mode="wait" custom={direction}>
+    <AnimatePresence mode='wait' custom={direction}>
       <motion.div
         key={step}
         custom={direction}
-        initial="exit"
-        animate="enter"
-        exit="exit"
+        initial='exit'
+        animate='enter'
+        exit='exit'
         variants={variants}
         className={className}
         {...({} as any)}

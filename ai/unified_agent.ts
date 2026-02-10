@@ -1,6 +1,6 @@
 /**
  * Unified Hardonia Background + Composer Agent
- * 
+ *
  * Operates as continuous DevOps, FinOps, SecOps, and KnowledgeOps layer
  * Default behavior: observe → verify → optimize → document → learn → repeat
  */
@@ -42,23 +42,42 @@ class UnifiedHardoniaAgent {
 
   constructor() {
     // Load master agent config
-    const configPath = join(process.cwd(), '.cursor', 'config', 'master-agent.json');
+    const configPath = join(
+      process.cwd(),
+      '.cursor',
+      'config',
+      'master-agent.json'
+    );
     const masterConfig = existsSync(configPath)
       ? JSON.parse(readFileSync(configPath, 'utf-8'))
       : {};
 
     this.config = {
       repoType: masterConfig.repoType || 'nextjs-webapp',
-      supabaseProjectRef: process.env.SUPABASE_PROJECT_REF || masterConfig.integrations?.supabase?.projectRef || 'ghqyxhbyyirveptgwoqm',
-      githubOwner: process.env.GITHUB_OWNER || masterConfig.integrations?.github?.owner || 'your-org',
-      githubRepo: process.env.GITHUB_REPO || masterConfig.integrations?.github?.repo || 'aias-platform',
-      vercelProjectId: process.env.VERCEL_PROJECT_ID || masterConfig.integrations?.vercel?.projectId,
+      supabaseProjectRef:
+        process.env.SUPABASE_PROJECT_REF ||
+        masterConfig.integrations?.supabase?.projectRef ||
+        'ghqyxhbyyirveptgwoqm',
+      githubOwner:
+        process.env.GITHUB_OWNER ||
+        masterConfig.integrations?.github?.owner ||
+        'your-org',
+      githubRepo:
+        process.env.GITHUB_REPO ||
+        masterConfig.integrations?.github?.repo ||
+        'aias-platform',
+      vercelProjectId:
+        process.env.VERCEL_PROJECT_ID ||
+        masterConfig.integrations?.vercel?.projectId,
     };
 
     // Supabase client initialization (not used directly, orchestrator handles it)
     createClient(
-      process.env.SUPABASE_URL || `https://${this.config.supabaseProjectRef}.supabase.co`,
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || ''
+      process.env.SUPABASE_URL ||
+        `https://${this.config.supabaseProjectRef}.supabase.co`,
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+        process.env.SUPABASE_ANON_KEY ||
+        ''
     );
 
     this.orchestrator = new Orchestrator({
@@ -94,16 +113,21 @@ class UnifiedHardoniaAgent {
     let lastCommitDate = new Date().toISOString();
     try {
       lastCommit = execSync('git rev-parse HEAD', { encoding: 'utf-8' }).trim();
-      lastCommitDate = execSync('git log -1 --format=%cI', { encoding: 'utf-8' }).trim();
+      lastCommitDate = execSync('git log -1 --format=%cI', {
+        encoding: 'utf-8',
+      }).trim();
     } catch (e) {
       // Git not available or not a git repo
     }
 
     // Detect package manager
-    const packageManager = existsSync(join(process.cwd(), 'pnpm-lock.yaml')) ? 'pnpm'
-      : existsSync(join(process.cwd(), 'package-lock.json')) ? 'npm'
-      : existsSync(join(process.cwd(), 'yarn.lock')) ? 'yarn'
-      : 'unknown';
+    const packageManager = existsSync(join(process.cwd(), 'pnpm-lock.yaml'))
+      ? 'pnpm'
+      : existsSync(join(process.cwd(), 'package-lock.json'))
+        ? 'npm'
+        : existsSync(join(process.cwd(), 'yarn.lock'))
+          ? 'yarn'
+          : 'unknown';
 
     // Detect Node version
     const nodeVersion = process.version;
@@ -119,7 +143,10 @@ class UnifiedHardoniaAgent {
     if (existsSync(join(process.cwd(), 'vercel.json'))) {
       detectedStack.deployment = 'Vercel';
     }
-    if (packageJson.dependencies?.expo || existsSync(join(process.cwd(), 'app.json'))) {
+    if (
+      packageJson.dependencies?.expo ||
+      existsSync(join(process.cwd(), 'app.json'))
+    ) {
       detectedStack.mobile = 'Expo';
     }
 
@@ -139,8 +166,12 @@ class UnifiedHardoniaAgent {
   async run(): Promise<void> {
     console.log('\n🤖 Unified Hardonia Agent Starting...');
     console.log(`📦 Repository Type: ${this.context.repoType}`);
-    console.log(`🔧 Stack: ${JSON.stringify(this.context.detectedStack, null, 2)}`);
-    console.log(`📅 Last Commit: ${this.context.lastCommit.substring(0, 8)} (${this.context.lastCommitDate})\n`);
+    console.log(
+      `🔧 Stack: ${JSON.stringify(this.context.detectedStack, null, 2)}`
+    );
+    console.log(
+      `📅 Last Commit: ${this.context.lastCommit.substring(0, 8)} (${this.context.lastCommitDate})\n`
+    );
 
     try {
       // 1. Run orchestrator for reliability, cost, security
@@ -184,7 +215,12 @@ class UnifiedHardoniaAgent {
       uptime: {
         current: report.summary?.uptime || 100,
         target: 99.9,
-        status: report.summary?.uptime >= 99.9 ? 'healthy' : report.summary?.uptime >= 99.0 ? 'degraded' : 'critical',
+        status:
+          report.summary?.uptime >= 99.9
+            ? 'healthy'
+            : report.summary?.uptime >= 99.0
+              ? 'degraded'
+              : 'critical',
         trend: 'stable', // Would calculate from historical data
       },
       performance: {
@@ -195,19 +231,27 @@ class UnifiedHardoniaAgent {
       dependencies: {
         outdated: report.modules?.dependencyHealth?.data?.outdated || 0,
         vulnerabilities: report.summary?.vulnerabilities || 0,
-        critical_vulnerabilities: report.modules?.dependencyHealth?.data?.critical || 0,
+        critical_vulnerabilities:
+          report.modules?.dependencyHealth?.data?.critical || 0,
       },
       cost: {
-        current_monthly: report.modules?.costForecast?.data?.current_monthly || 0,
-        projected_monthly: report.modules?.costForecast?.data?.projected_monthly || 0,
+        current_monthly:
+          report.modules?.costForecast?.data?.current_monthly || 0,
+        projected_monthly:
+          report.modules?.costForecast?.data?.projected_monthly || 0,
         budget: 75,
-        status: report.modules?.costForecast?.data?.deviation_percent > 10 ? 'over_budget' : 'within_budget',
+        status:
+          report.modules?.costForecast?.data?.deviation_percent > 10
+            ? 'over_budget'
+            : 'within_budget',
       },
       security: {
-        secrets_exposed: report.modules?.securityAudit?.data?.secrets_exposed || 0,
+        secrets_exposed:
+          report.modules?.securityAudit?.data?.secrets_exposed || 0,
         rls_enabled: report.modules?.securityAudit?.data?.rls_enabled || false,
         tls_enforced: true, // Assumed for Vercel
-        compliance_score: report.modules?.securityAudit?.data?.compliance_score || 0,
+        compliance_score:
+          report.modules?.securityAudit?.data?.compliance_score || 0,
       },
       trends: {
         last_7_days: {
@@ -258,9 +302,10 @@ class UnifiedHardoniaAgent {
 - **Compliance Score:** ${reliability.security.compliance_score}/100
 
 ## Recommendations
-${reliability.recommendations.length > 0
-  ? reliability.recommendations.map((r: string) => `- ${r}`).join('\n')
-  : '- No recommendations at this time'
+${
+  reliability.recommendations.length > 0
+    ? reliability.recommendations.map((r: string) => `- ${r}`).join('\n')
+    : '- No recommendations at this time'
 }
 `;
     writeFileSync(mdPath, md);
@@ -275,7 +320,8 @@ ${reliability.recommendations.length > 0
       secrets: report.modules?.securityAudit?.data?.secrets_status || 'ok',
       licenses: {
         gpl: report.modules?.securityAudit?.data?.licenses?.gpl || 0,
-        restricted: report.modules?.securityAudit?.data?.licenses?.restricted || 0,
+        restricted:
+          report.modules?.securityAudit?.data?.licenses?.restricted || 0,
       },
       tls: report.modules?.securityAudit?.data?.tls_status || 'enforced',
       rls: report.modules?.securityAudit?.data?.rls_status || 'enabled',
@@ -317,7 +363,10 @@ ${reliability.recommendations.length > 0
 
     // Try to get license info
     try {
-      const licenseChecker = execSync('npx license-checker --json', { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 });
+      const licenseChecker = execSync('npx license-checker --json', {
+        encoding: 'utf-8',
+        maxBuffer: 10 * 1024 * 1024,
+      });
       const licenses = JSON.parse(licenseChecker);
       for (const [name, info] of Object.entries(licenses)) {
         const pkgName = name.split('@')[0];
@@ -375,9 +424,12 @@ This file tracks the reasoning and intent behind each commit and change.
     }
 
     // Get recent commits
-    let recentCommits: Array<{ hash: string; date: string; message: string }> = [];
+    let recentCommits: Array<{ hash: string; date: string; message: string }> =
+      [];
     try {
-      const gitLog = execSync('git log --pretty=format:"%H|%cI|%s" -10', { encoding: 'utf-8' });
+      const gitLog = execSync('git log --pretty=format:"%H|%cI|%s" -10', {
+        encoding: 'utf-8',
+      });
       recentCommits = gitLog.split('\n').map(line => {
         const [hash, date, ...messageParts] = line.split('|');
         return {
@@ -427,10 +479,13 @@ ${recentCommits.map(c => `- \`${c.hash}\` (${c.date}): ${c.message}`).join('\n')
     // Extract TODOs and FIXMEs
     let todos: string[] = [];
     try {
-      const grepResult = execSync('grep -r "TODO\\|FIXME" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" . || true', {
-        encoding: 'utf-8',
-        maxBuffer: 10 * 1024 * 1024,
-      });
+      const grepResult = execSync(
+        'grep -r "TODO\\|FIXME" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" . || true',
+        {
+          encoding: 'utf-8',
+          maxBuffer: 10 * 1024 * 1024,
+        }
+      );
       todos = grepResult.split('\n').filter(line => line.trim().length > 0);
     } catch (e) {
       // Grep failed or no matches
@@ -448,9 +503,10 @@ ${recentCommits.map(c => `- \`${c.hash}\` (${c.date}): ${c.message}`).join('\n')
 - **Node Version:** ${this.context.nodeVersion}
 
 ## Active TODOs and FIXMEs
-${todos.length > 0
-  ? todos.map((todo, i) => `${i + 1}. ${todo}`).join('\n')
-  : '- No active TODOs or FIXMEs found'
+${
+  todos.length > 0
+    ? todos.map((todo, i) => `${i + 1}. ${todo}`).join('\n')
+    : '- No active TODOs or FIXMEs found'
 }
 
 ## Focus Areas
@@ -482,7 +538,8 @@ See \`/auto/next-steps.md\` for detailed recommendations.
 
     const recommendations = report.summary?.recommendations || [];
     const vulnerabilities = report.summary?.vulnerabilities || 0;
-    const costDeviation = report.modules?.costForecast?.data?.deviation_percent || 0;
+    const costDeviation =
+      report.modules?.costForecast?.data?.deviation_percent || 0;
     const securityIssues = report.summary?.securityIssues || 0;
 
     const nextSteps = `# Auto-Improvement Recommendations
@@ -504,10 +561,20 @@ ${securityIssues > 5 ? `- Address ${securityIssues} security issues` : ''}
 ${costDeviation > 10 ? `- Cost overrun: ${costDeviation.toFixed(1)}% over budget` : ''}
 
 ### 🟡 High Priority (This Week)
-${recommendations.filter((r: string) => r.includes('patch') || r.includes('minor')).map((r: string) => `- ${r}`).join('\n') || '- No high priority items'}
+${
+  recommendations
+    .filter((r: string) => r.includes('patch') || r.includes('minor'))
+    .map((r: string) => `- ${r}`)
+    .join('\n') || '- No high priority items'
+}
 
 ### 🟢 Medium Priority (This Sprint)
-${recommendations.filter((r: string) => !r.includes('patch') && !r.includes('minor')).map((r: string) => `- ${r}`).join('\n') || '- No medium priority items'}
+${
+  recommendations
+    .filter((r: string) => !r.includes('patch') && !r.includes('minor'))
+    .map((r: string) => `- ${r}`)
+    .join('\n') || '- No medium priority items'
+}
 
 ## Self-Evaluation
 

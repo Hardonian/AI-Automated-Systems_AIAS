@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * MASTER OMEGA PRIME — Schema Validation
- * 
+ *
  * Validates Prisma schema matches Supabase migrations
  */
 
@@ -24,12 +24,15 @@ async function validateSchema(): Promise<{
   };
 }> {
   const results: SchemaValidationResult[] = [];
-  
+
   try {
     // Read Prisma schema
-    const prismaSchemaPath = join(process.cwd(), 'apps/web/prisma/schema.prisma');
+    const prismaSchemaPath = join(
+      process.cwd(),
+      'apps/web/prisma/schema.prisma'
+    );
     const prismaSchema = readFileSync(prismaSchemaPath, 'utf-8');
-    
+
     // Extract table names from Prisma schema
     const prismaTables = new Set<string>();
     const tableMatches = prismaSchema.matchAll(/model\s+(\w+)/g);
@@ -37,31 +40,35 @@ async function validateSchema(): Promise<{
       const tableName = match[1].toLowerCase();
       prismaTables.add(tableName);
     }
-    
+
     // Read Supabase migrations to find table references
     const migrationsDir = join(process.cwd(), 'supabase/migrations');
     const { readdirSync } = await import('fs');
-    const migrations = readdirSync(migrationsDir).filter((f) => f.endsWith('.sql'));
-    
+    const migrations = readdirSync(migrationsDir).filter(f =>
+      f.endsWith('.sql')
+    );
+
     const supabaseTables = new Set<string>();
     for (const migration of migrations) {
       const migrationPath = join(migrationsDir, migration);
       const migrationContent = readFileSync(migrationPath, 'utf-8');
-      
+
       // Extract CREATE TABLE statements
-      const createTableMatches = migrationContent.matchAll(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(?:public\.)?(\w+)/gi);
+      const createTableMatches = migrationContent.matchAll(
+        /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(?:public\.)?(\w+)/gi
+      );
       for (const match of createTableMatches) {
         supabaseTables.add(match[1].toLowerCase());
       }
     }
-    
+
     // Compare
     const allTables = new Set([...prismaTables, ...supabaseTables]);
-    
+
     for (const table of allTables) {
       const inPrisma = prismaTables.has(table);
       const inSupabase = supabaseTables.has(table);
-      
+
       if (inPrisma && inSupabase) {
         results.push({
           table,
@@ -82,13 +89,13 @@ async function validateSchema(): Promise<{
         });
       }
     }
-    
+
     const summary = {
       total: results.length,
-      matches: results.filter((r) => r.status === 'match').length,
-      issues: results.filter((r) => r.status !== 'match').length,
+      matches: results.filter(r => r.status === 'match').length,
+      issues: results.filter(r => r.status !== 'match').length,
     };
-    
+
     return { results, summary };
   } catch (error) {
     console.error('Error validating schema:', error);
@@ -109,24 +116,26 @@ function printReport() {
 
       if (summary.issues > 0) {
         console.log('\n⚠️  SCHEMA DRIFT DETECTED:\n');
-        
+
         results
-          .filter((r) => r.status !== 'match')
-          .forEach((result) => {
+          .filter(r => r.status !== 'match')
+          .forEach(result => {
             const icon = result.status === 'missing_in_prisma' ? '📝' : '🗄️';
             console.log(`${icon} ${result.table}`);
-            result.issues.forEach((issue) => {
+            result.issues.forEach(issue => {
               console.log(`   - ${issue}`);
             });
             console.log();
           });
       } else {
-        console.log('\n✅ Schema validation passed! Prisma and Supabase are in sync.\n');
+        console.log(
+          '\n✅ Schema validation passed! Prisma and Supabase are in sync.\n'
+        );
       }
-      
+
       process.exit(summary.issues > 0 ? 1 : 0);
     })
-    .catch((error) => {
+    .catch(error => {
       console.error('Validation failed:', error);
       process.exit(1);
     });

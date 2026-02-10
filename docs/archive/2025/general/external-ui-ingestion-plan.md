@@ -9,6 +9,7 @@ This document outlines the codemod plan for converting external UI code (from Lo
 ## Import Pipeline
 
 ### Step 1: HTML → React Component
+
 - Convert `class` → `className`
 - Convert `for` → `htmlFor`
 - Remove self-closing tags like `</img>`
@@ -16,6 +17,7 @@ This document outlines the codemod plan for converting external UI code (from Lo
 - Wrap in React component with PascalCase name
 
 ### Step 2: CSS → Tailwind Tokens
+
 - Identify inline styles
 - Map to design tokens:
   - Colors → CSS variables (`--primary`, `--secondary`, etc.)
@@ -24,11 +26,13 @@ This document outlines the codemod plan for converting external UI code (from Lo
   - Shadows → `--shadow-card` or custom shadows
 
 ### Step 3: Asset Processing
+
 - **SVG**: Run through SVGO, then SVGR for React components
 - **Images**: Copy to `/public` with optimization
 - **Fonts**: Dedupe and move to `/public/fonts`
 
 ### Step 4: Component Normalization
+
 - Extract to `components/external/[ComponentName].tsx`
 - Add proper TypeScript types
 - Ensure accessibility (ARIA labels, semantic HTML)
@@ -66,16 +70,19 @@ This document outlines the codemod plan for converting external UI code (from Lo
 ## Asset Processing
 
 ### SVGO Optimization
+
 ```bash
 npx svgo -i input.svg -o output.svg
 ```
 
 ### SVGR Conversion
+
 ```bash
 npx @svgr/cli input.svg --out-dir components/external --ext tsx
 ```
 
 ### Font Deduplication
+
 - Check font-family names
 - Match to existing fonts
 - Avoid duplicate @font-face declarations
@@ -83,11 +90,13 @@ npx @svgr/cli input.svg --out-dir components/external --ext tsx
 ## Tree Shaking
 
 ### Unused CSS Removal
+
 - Use Lightning CSS or PostCSS
 - Remove unused Tailwind classes
 - Strip unused CSS Modules
 
 ### JavaScript Optimization
+
 - Next.js automatically tree-shakes
 - Use dynamic imports for heavy components
 - Remove unused dependencies
@@ -95,16 +104,19 @@ npx @svgr/cli input.svg --out-dir components/external --ext tsx
 ## Quality Checks
 
 ### Accessibility
+
 - Run Axe DevTools scan
 - Check keyboard navigation
 - Verify screen reader compatibility
 
 ### Performance
+
 - Check bundle size
 - Verify image optimization
 - Ensure no blocking resources
 
 ### Code Quality
+
 - ESLint checks
 - TypeScript type checking
 - Prettier formatting
@@ -112,6 +124,7 @@ npx @svgr/cli input.svg --out-dir components/external --ext tsx
 ## Example Transformation
 
 ### Before (HTML)
+
 ```html
 <div class="button" style="background-color: #2563eb; padding: 0.75rem 1.5rem;">
   Click me
@@ -119,13 +132,14 @@ npx @svgr/cli input.svg --out-dir components/external --ext tsx
 ```
 
 ### After (React + Tailwind)
+
 ```tsx
-"use client";
-import { Button } from "@/components/ui/button";
+'use client';
+import { Button } from '@/components/ui/button';
 
 export function ExternalButton() {
   return (
-    <Button variant="default" size="md">
+    <Button variant='default' size='md'>
       Click me
     </Button>
   );
@@ -135,6 +149,7 @@ export function ExternalButton() {
 ## Report Generation
 
 The ingestion script generates `_import-report.txt` with:
+
 - Component names and file paths
 - Assets processed
 - CSS tokens replaced
@@ -143,6 +158,7 @@ The ingestion script generates `_import-report.txt` with:
 ## CI Integration
 
 The GitHub Actions workflow:
+
 1. Checks for `external-dump` directory
 2. Runs ingestion script
 3. Builds project to verify changes
@@ -151,6 +167,7 @@ The GitHub Actions workflow:
 ## Manual Refinement
 
 After automated ingestion:
+
 1. Review component structure
 2. Replace remaining inline styles with tokens
 3. Add proper TypeScript types

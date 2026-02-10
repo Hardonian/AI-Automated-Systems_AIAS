@@ -17,9 +17,11 @@
 ## FILES GENERATED
 
 ### 1. `INTROSPECTION.sql`
+
 **Purpose:** Capture actual database state  
 **Usage:** Run against your Supabase database, save output to `REALITY.md`  
 **Output:** Comprehensive SQL queries that reveal:
+
 - Tables, columns, constraints, indexes
 - RLS policies and grants
 - Functions, triggers, views
@@ -27,22 +29,27 @@
 - Storage buckets (if used)
 
 ### 2. `GAPS_REPORT.md`
+
 **Purpose:** Evidence-based gap analysis  
 **Content:**
+
 - Expected vs actual comparison
 - Critical gaps (must fix)
 - High/medium priority gaps
 - Verification queries for each gap
 
 ### 3. `PATCH.sql` ⭐
+
 **Purpose:** Idempotent SQL patch to fix all gaps  
-**Safety:** 
+**Safety:**
+
 - ✅ Safe to run multiple times
 - ✅ No data loss (additive only)
 - ✅ No destructive operations
 - ✅ Handles missing foundational tables
 
 **What it fixes:**
+
 - Creates missing tables (`tenants`, `tenant_members`, core tables)
 - Adds missing columns (with `IF NOT EXISTS` checks)
 - Creates missing indexes
@@ -53,9 +60,11 @@
 - Optionally configures realtime
 
 ### 4. `VERIFY.sql`
+
 **Purpose:** Prove patch worked  
 **Usage:** Run after `PATCH.sql`  
 **Output:** Pass/fail status for each check:
+
 - Tables exist
 - Columns exist
 - Indexes exist
@@ -66,13 +75,16 @@
 - Grants correct
 
 ### 5. `ROLLBACK.sql`
+
 **Purpose:** Limited safety rollback  
-**Safety:** 
+**Safety:**
+
 - ✅ Safe: Drops policies, triggers, views
 - ⚠️ Limited: Does NOT drop tables/columns (would lose data)
 - ⚠️ Does NOT restore previous state
 
 **What it removes:**
+
 - RLS policies (non-destructive)
 - Triggers (non-destructive)
 - Views (non-destructive)
@@ -80,6 +92,7 @@
 - Realtime publication membership
 
 **What it does NOT remove:**
+
 - Tables (would lose data)
 - Columns (would lose data)
 - Indexes (would impact performance)
@@ -104,6 +117,7 @@ psql $DATABASE_URL
 ```
 
 **Or use Supabase CLI:**
+
 ```bash
 supabase db execute --file INTROSPECTION.sql > REALITY.md
 ```
@@ -127,6 +141,7 @@ supabase db execute --file PATCH.sql
 ```
 
 **Expected output:**
+
 - `BEGIN` → Transaction starts
 - Multiple `CREATE TABLE IF NOT EXISTS` → Tables created/verified
 - Multiple `CREATE INDEX IF NOT EXISTS` → Indexes created/verified
@@ -134,6 +149,7 @@ supabase db execute --file PATCH.sql
 - `COMMIT` → Transaction completes
 
 **If errors occur:**
+
 - Check error message
 - Most likely: Missing `auth.users` table (Supabase auth not initialized)
 - Or: Missing extensions (usually auto-enabled in Supabase)
@@ -147,6 +163,7 @@ psql $DATABASE_URL -f VERIFY.sql
 **Expected:** All checks show `PASS` status
 
 **If checks fail:**
+
 - Review error messages
 - Check if foundational tables exist (`tenants`, `tenant_members`)
 - Re-run `PATCH.sql` (idempotent, safe)
@@ -165,28 +182,34 @@ psql $DATABASE_URL -f ROLLBACK.sql
 ## KEY DESIGN DECISIONS
 
 ### 1. Idempotency
+
 All operations use `IF NOT EXISTS` or `CREATE OR REPLACE`:
+
 - Safe to run multiple times
 - No errors if objects already exist
 - Can be used in CI/CD pipelines
 
 ### 2. Tenant Isolation
+
 - All tables reference `tenant_id`
 - RLS policies enforce tenant boundaries via `tenant_members` table
 - Policies use `tenant_members` (not `user_tenants` view) for correctness
 
 ### 3. Least-Privilege Grants
+
 - `public` role: No access by default
 - `authenticated`: Access via RLS policies
 - `anon`: Minimal access (only `user_tenants` view)
 - `service_role`: Full access (bypasses RLS)
 
 ### 4. Realtime (Optional)
+
 - Only configured if `supabase_realtime` publication exists
 - Tables added: `agents`, `workflows`, `workflow_executions`, `agent_executions`
 - Replica identity NOT set by default (can be enabled if needed)
 
 ### 5. Foundational Tables
+
 - `tenants`: Core tenant table
 - `tenant_members`: User-tenant membership (used by RLS)
 - `user_tenants`: Backward compatibility view
@@ -196,26 +219,33 @@ All operations use `IF NOT EXISTS` or `CREATE OR REPLACE`:
 ## TROUBLESHOOTING
 
 ### Error: "relation auth.users does not exist"
+
 **Cause:** Supabase auth schema not initialized  
 **Fix:** Ensure Supabase auth is set up. This is usually automatic in Supabase projects.
 
 ### Error: "relation tenants does not exist"
+
 **Cause:** Foundational tables missing  
 **Fix:** `PATCH.sql` creates these, but if foreign keys reference them, run in order:
+
 1. Create `tenants` table
 2. Create `tenant_members` table
 3. Create other tables
 
 ### Error: "policy already exists"
+
 **Cause:** Policy name conflict  
 **Fix:** `PATCH.sql` drops policies before creating them. If error persists, manually drop conflicting policy.
 
 ### Error: "permission denied"
+
 **Cause:** Insufficient privileges  
 **Fix:** Run as `postgres` superuser or `service_role`. In Supabase, use service role key.
 
 ### RLS Policies Not Working
+
 **Check:**
+
 1. RLS enabled: `SELECT tablename, rowsecurity FROM pg_tables WHERE schemaname = 'public';`
 2. Policies exist: `SELECT * FROM pg_policies WHERE schemaname = 'public';`
 3. User authenticated: `SELECT auth.uid();` (should return UUID)
@@ -226,16 +256,19 @@ All operations use `IF NOT EXISTS` or `CREATE OR REPLACE`:
 ## MIGRATION STRATEGY
 
 ### For New Databases
+
 1. Run `PATCH.sql` → Creates everything from scratch
 2. Run `VERIFY.sql` → Confirms setup
 
 ### For Existing Databases
+
 1. Run `INTROSPECTION.sql` → Capture current state
 2. Compare with `GAPS_REPORT.md` → Identify gaps
 3. Run `PATCH.sql` → Fix gaps (idempotent)
 4. Run `VERIFY.sql` → Confirm fixes
 
 ### For Production
+
 1. **Test in staging first**
 2. Backup database before applying patch
 3. Run `PATCH.sql` during maintenance window
@@ -248,6 +281,7 @@ All operations use `IF NOT EXISTS` or `CREATE OR REPLACE`:
 ## INTENDED SCHEMA SUMMARY
 
 ### Core Tables (14 tables)
+
 - `tenants`, `tenant_members` (foundational)
 - `agents`, `agent_executions` (AI agents)
 - `workflows`, `workflow_executions` (workflows)
@@ -256,16 +290,19 @@ All operations use `IF NOT EXISTS` or `CREATE OR REPLACE`:
 - `webhook_endpoints`, `artifacts` (webhooks)
 
 ### Security
+
 - RLS enabled on all tables
 - Policies enforce tenant isolation
 - Least-privilege grants
 
 ### Performance
+
 - Indexes on foreign keys
 - Indexes on frequently queried columns
 - Indexes on tenant_id for multi-tenant queries
 
 ### Functions
+
 - `update_updated_at_column()` - Auto-update timestamps
 - `generate_webhook_secret()` - Generate secure secrets
 
@@ -274,12 +311,14 @@ All operations use `IF NOT EXISTS` or `CREATE OR REPLACE`:
 ## NEXT STEPS
 
 After validation:
+
 1. ✅ Schema matches intended state
 2. ✅ RLS policies enforce tenant isolation
 3. ✅ Indexes optimize queries
 4. ✅ Functions and triggers work correctly
 
 **Then:**
+
 - Test application with real users
 - Monitor RLS policy performance
 - Adjust indexes based on query patterns
@@ -291,6 +330,7 @@ After validation:
 ## SUPPORT
 
 If you encounter issues:
+
 1. Check `GAPS_REPORT.md` for expected vs actual
 2. Run `VERIFY.sql` to identify specific failures
 3. Review error messages from `PATCH.sql`

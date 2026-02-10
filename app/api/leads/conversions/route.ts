@@ -17,12 +17,12 @@ const conversionSchema = z.object({
 });
 
 export const POST = createPOSTHandler(
-  async (context) => {
+  async context => {
     const body = conversionSchema.parse(await context.request.json());
     const tenantId = context.tenantId || undefined;
-    
+
     await conversionTrackingService.trackConversion(body, tenantId);
-    
+
     return NextResponse.json({ success: true });
   },
   {

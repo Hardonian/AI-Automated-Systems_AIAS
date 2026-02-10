@@ -6,17 +6,17 @@
  * 3. Persist execution state to database
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 import {
   WorkflowDefinition,
   WorkflowExecutionContext,
   WorkflowExecutionResult,
   WorkflowStep,
-} from "./dsl";
-import { workflowExecutor } from "./executor";
+} from './dsl';
+import { workflowExecutor } from './executor';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -25,7 +25,7 @@ interface ExecutionLogEntry {
   workflow_id: string;
   step_id: string;
   step_type: string;
-  status: "pending" | "running" | "completed" | "failed" | "skipped";
+  status: 'pending' | 'running' | 'completed' | 'failed' | 'skipped';
   input?: unknown;
   output?: unknown;
   error?: unknown;
@@ -51,9 +51,9 @@ export class WorkflowExecutorWithArtifacts {
     try {
       // Get workflow definition from database if not in memory
       const { data: workflowData, error: workflowError } = await supabase
-        .from("workflows")
-        .select("*")
-        .eq("id", context.workflowId)
+        .from('workflows')
+        .select('*')
+        .eq('id', context.workflowId)
         .single();
 
       if (workflowError || !workflowData) {
@@ -69,7 +69,12 @@ export class WorkflowExecutorWithArtifacts {
         startStepId: workflowData.start_step_id,
         trigger: workflowData.trigger,
         initialState: workflowData.initial_state || {},
-        category: (workflowData.category as "automation" | "reconciliation" | "consulting" | "custom") || "custom",
+        category:
+          (workflowData.category as
+            | 'automation'
+            | 'reconciliation'
+            | 'consulting'
+            | 'custom') || 'custom',
         enabled: workflowData.enabled ?? true,
         createdAt: workflowData.created_at || new Date().toISOString(),
         updatedAt: workflowData.updated_at || new Date().toISOString(),
@@ -85,7 +90,7 @@ export class WorkflowExecutorWithArtifacts {
 
       // Create artifact from output
       let artifactId: string | undefined;
-      if (result.status === "completed" && result.output) {
+      if (result.status === 'completed' && result.output) {
         artifactId = await this.createArtifact(
           runId || result.executionId,
           context.workflowId,
@@ -104,8 +109,9 @@ export class WorkflowExecutorWithArtifacts {
         artifactId,
       };
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
-      logger.error("Enhanced workflow execution failed", errorObj, {
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
+      logger.error('Enhanced workflow execution failed', errorObj, {
         workflowId: context.workflowId,
         tenantId: context.tenantId,
       });
@@ -130,18 +136,18 @@ export class WorkflowExecutorWithArtifacts {
   ): Promise<string> {
     try {
       // Determine artifact type based on output
-      let artifactType = "json";
+      let artifactType = 'json';
       let content: unknown = null;
       let contentText: string | null = null;
 
-      if (typeof output === "string") {
-        artifactType = "text";
+      if (typeof output === 'string') {
+        artifactType = 'text';
         contentText = output;
-      } else if (output && typeof output === "object") {
-        artifactType = "json";
+      } else if (output && typeof output === 'object') {
+        artifactType = 'json';
         content = output;
       } else {
-        artifactType = "text";
+        artifactType = 'text';
         contentText = String(output);
       }
 
@@ -149,19 +155,19 @@ export class WorkflowExecutorWithArtifacts {
       let finalTenantId = tenantId;
       if (!finalTenantId) {
         const { data: run } = await supabase
-          .from("workflow_executions")
-          .select("tenant_id")
-          .eq("id", runId)
+          .from('workflow_executions')
+          .select('tenant_id')
+          .eq('id', runId)
           .single();
         finalTenantId = run?.tenant_id || null;
       }
 
       if (!finalTenantId) {
-        throw new Error("Cannot create artifact without tenant_id");
+        throw new Error('Cannot create artifact without tenant_id');
       }
 
       const { data: artifact, error } = await supabase
-        .from("artifacts")
+        .from('artifacts')
         .insert({
           run_id: runId,
           tenant_id: finalTenantId,
@@ -170,18 +176,20 @@ export class WorkflowExecutorWithArtifacts {
           content: content as Record<string, unknown> | null,
           content_text: contentText,
           metadata: {
-            created_by: "system",
+            created_by: 'system',
             execution_id: runId,
           },
         })
-        .select("id")
+        .select('id')
         .single();
 
       if (error || !artifact) {
-        throw new Error(`Failed to create artifact: ${error?.message || "Unknown error"}`);
+        throw new Error(
+          `Failed to create artifact: ${error?.message || 'Unknown error'}`
+        );
       }
 
-      logger.info("Artifact created", {
+      logger.info('Artifact created', {
         artifactId: artifact.id,
         runId,
         systemId,
@@ -191,11 +199,15 @@ export class WorkflowExecutorWithArtifacts {
 
       return artifact.id;
     } catch (error) {
-      logger.error("Failed to create artifact", error instanceof Error ? error : new Error(String(error)), {
-        runId,
-        systemId,
-        tenantId,
-      });
+      logger.error(
+        'Failed to create artifact',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          runId,
+          systemId,
+          tenantId,
+        }
+      );
       throw error;
     }
   }
@@ -214,9 +226,9 @@ export class WorkflowExecutorWithArtifacts {
       const logEntry: ExecutionLogEntry = {
         execution_id: runId,
         workflow_id: workflowId,
-        step_id: "workflow_complete",
-        step_type: "workflow",
-        status: result.status === "completed" ? "completed" : "failed",
+        step_id: 'workflow_complete',
+        step_type: 'workflow',
+        status: result.status === 'completed' ? 'completed' : 'failed',
         output: result.output || null,
         error: result.error || null,
         started_at: result.startedAt,
@@ -230,7 +242,7 @@ export class WorkflowExecutorWithArtifacts {
         },
       };
 
-      const { error } = await supabase.from("workflow_execution_logs").insert({
+      const { error } = await supabase.from('workflow_execution_logs').insert({
         execution_id: logEntry.execution_id,
         workflow_id: logEntry.workflow_id,
         step_id: logEntry.step_id,
@@ -246,12 +258,15 @@ export class WorkflowExecutorWithArtifacts {
       });
 
       if (error) {
-        logger.warn("Failed to populate run logs", { error: error.message, runId });
+        logger.warn('Failed to populate run logs', {
+          error: error.message,
+          runId,
+        });
       } else {
-        logger.info("Run logs populated", { runId, workflowId });
+        logger.info('Run logs populated', { runId, workflowId });
       }
     } catch (error) {
-      logger.warn("Failed to populate run logs", { error, runId });
+      logger.warn('Failed to populate run logs', { error, runId });
     }
   }
 
@@ -264,12 +279,12 @@ export class WorkflowExecutorWithArtifacts {
     error: Error
   ): Promise<void> {
     try {
-      await supabase.from("workflow_execution_logs").insert({
+      await supabase.from('workflow_execution_logs').insert({
         execution_id: runId,
         workflow_id: workflowId,
-        step_id: "workflow_error",
-        step_type: "error",
-        status: "failed",
+        step_id: 'workflow_error',
+        step_type: 'error',
+        status: 'failed',
         error: {
           message: error.message,
           stack: error.stack,
@@ -279,9 +294,10 @@ export class WorkflowExecutorWithArtifacts {
         completed_at: new Date().toISOString(),
       });
     } catch (logError) {
-      logger.warn("Failed to log error", { error: logError, runId });
+      logger.warn('Failed to log error', { error: logError, runId });
     }
   }
 }
 
-export const workflowExecutorWithArtifacts = new WorkflowExecutorWithArtifacts();
+export const workflowExecutorWithArtifacts =
+  new WorkflowExecutorWithArtifacts();

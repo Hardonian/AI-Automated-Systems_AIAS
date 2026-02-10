@@ -1,14 +1,14 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextResponse } from "next/server";
+import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
 
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
 interface HealthCheck {
   name: string;
-  status: "healthy" | "degraded" | "unhealthy";
+  status: 'healthy' | 'degraded' | 'unhealthy';
   latency?: number;
   error?: string;
   details?: Record<string, unknown>;
@@ -25,19 +25,22 @@ export async function GET() {
   // 1. Database connectivity
   try {
     const dbStart = Date.now();
-    const { error } = await supabase.from("app_events").select("count").limit(1);
+    const { error } = await supabase
+      .from('app_events')
+      .select('count')
+      .limit(1);
     const latency = Date.now() - dbStart;
 
     checks.push({
-      name: "database",
-      status: error ? "unhealthy" : "healthy",
+      name: 'database',
+      status: error ? 'unhealthy' : 'healthy',
       latency,
       error: error?.message,
     });
   } catch (error) {
     checks.push({
-      name: "database",
-      status: "unhealthy",
+      name: 'database',
+      status: 'unhealthy',
       error: error instanceof Error ? error.message : String(error),
     });
   }
@@ -45,19 +48,22 @@ export async function GET() {
   // 2. Auth service
   try {
     const authStart = Date.now();
-    const { error } = await supabase.auth.admin.listUsers({ page: 1, perPage: 1 });
+    const { error } = await supabase.auth.admin.listUsers({
+      page: 1,
+      perPage: 1,
+    });
     const latency = Date.now() - authStart;
 
     checks.push({
-      name: "auth",
-      status: error ? "unhealthy" : "healthy",
+      name: 'auth',
+      status: error ? 'unhealthy' : 'healthy',
       latency,
       error: error?.message,
     });
   } catch (error) {
     checks.push({
-      name: "auth",
-      status: "unhealthy",
+      name: 'auth',
+      status: 'unhealthy',
       error: error instanceof Error ? error.message : String(error),
     });
   }
@@ -67,20 +73,23 @@ export async function GET() {
   try {
     const shopifyStart = Date.now();
     // Test Shopify API connectivity (without actual credentials)
-    const testUrl = "https://admin.shopify.com/store";
-    const response = await fetch(testUrl, { method: "HEAD", signal: AbortSignal.timeout(5000) });
+    const testUrl = 'https://admin.shopify.com/store';
+    const response = await fetch(testUrl, {
+      method: 'HEAD',
+      signal: AbortSignal.timeout(5000),
+    });
     const latency = Date.now() - shopifyStart;
 
     checks.push({
-      name: "shopify_api",
-      status: response.ok ? "healthy" : "degraded",
+      name: 'shopify_api',
+      status: response.ok ? 'healthy' : 'degraded',
       latency,
       details: { statusCode: response.status },
     });
   } catch (error) {
     checks.push({
-      name: "shopify_api",
-      status: "degraded",
+      name: 'shopify_api',
+      status: 'degraded',
       error: error instanceof Error ? error.message : String(error),
     });
   }
@@ -88,20 +97,23 @@ export async function GET() {
   // Wave API connectivity test
   try {
     const waveStart = Date.now();
-    const testUrl = "https://api.waveapps.com";
-    const response = await fetch(testUrl, { method: "HEAD", signal: AbortSignal.timeout(5000) });
+    const testUrl = 'https://api.waveapps.com';
+    const response = await fetch(testUrl, {
+      method: 'HEAD',
+      signal: AbortSignal.timeout(5000),
+    });
     const latency = Date.now() - waveStart;
 
     checks.push({
-      name: "wave_api",
-      status: response.ok ? "healthy" : "degraded",
+      name: 'wave_api',
+      status: response.ok ? 'healthy' : 'degraded',
       latency,
       details: { statusCode: response.status },
     });
   } catch (error) {
     checks.push({
-      name: "wave_api",
-      status: "degraded",
+      name: 'wave_api',
+      status: 'degraded',
       error: error instanceof Error ? error.message : String(error),
     });
   }
@@ -109,57 +121,66 @@ export async function GET() {
   // 4. Database consistency check
   try {
     const { data: orphanedCount, error } = await supabase
-      .from("workflow_executions")
-      .select("id", { count: "exact", head: true })
-      .is("workflow_id", null);
+      .from('workflow_executions')
+      .select('id', { count: 'exact', head: true })
+      .is('workflow_id', null);
 
-    const orphanedCountNum = typeof orphanedCount === 'number' ? orphanedCount : 0;
+    const orphanedCountNum =
+      typeof orphanedCount === 'number' ? orphanedCount : 0;
     checks.push({
-      name: "database_consistency",
-      status: error ? "unhealthy" : orphanedCountNum > 100 ? "degraded" : "healthy",
+      name: 'database_consistency',
+      status: error
+        ? 'unhealthy'
+        : orphanedCountNum > 100
+          ? 'degraded'
+          : 'healthy',
       error: error?.message,
       details: { orphanedExecutions: orphanedCountNum },
     });
   } catch (error) {
     checks.push({
-      name: "database_consistency",
-      status: "unhealthy",
+      name: 'database_consistency',
+      status: 'unhealthy',
       error: error instanceof Error ? error.message : String(error),
     });
   }
 
   // 5. Rate limiter check
   try {
-    await import("@/lib/performance/rate-limiter");
+    await import('@/lib/performance/rate-limiter');
     // Just check if rate limiter is initialized
     checks.push({
-      name: "rate_limiter",
-      status: "healthy",
+      name: 'rate_limiter',
+      status: 'healthy',
       details: { initialized: true },
     });
   } catch (error) {
     checks.push({
-      name: "rate_limiter",
-      status: "degraded",
+      name: 'rate_limiter',
+      status: 'degraded',
       error: error instanceof Error ? error.message : String(error),
     });
   }
 
   // Calculate overall health
-  const unhealthyCount = checks.filter((c) => c.status === "unhealthy").length;
-  const degradedCount = checks.filter((c) => c.status === "degraded").length;
+  const unhealthyCount = checks.filter(c => c.status === 'unhealthy').length;
+  const degradedCount = checks.filter(c => c.status === 'degraded').length;
   const overallStatus =
-    unhealthyCount > 0 ? "unhealthy" : degradedCount > 2 ? "degraded" : "healthy";
+    unhealthyCount > 0
+      ? 'unhealthy'
+      : degradedCount > 2
+        ? 'degraded'
+        : 'healthy';
 
   const totalLatency = Date.now() - startTime;
 
   // Log health check
-  logger.info("Enhanced health check completed", {
+  logger.info('Enhanced health check completed', {
     overallStatus,
     unhealthyCount,
     degradedCount,
     totalLatency,
-    checks: checks.map((c) => ({ name: c.name, status: c.status })),
+    checks: checks.map(c => ({ name: c.name, status: c.status })),
   });
 
   return NextResponse.json(
@@ -170,13 +191,18 @@ export async function GET() {
       checks,
       summary: {
         total: checks.length,
-        healthy: checks.filter((c) => c.status === "healthy").length,
+        healthy: checks.filter(c => c.status === 'healthy').length,
         degraded: degradedCount,
         unhealthy: unhealthyCount,
       },
     },
     {
-      status: overallStatus === "unhealthy" ? 503 : overallStatus === "degraded" ? 200 : 200,
+      status:
+        overallStatus === 'unhealthy'
+          ? 503
+          : overallStatus === 'degraded'
+            ? 200
+            : 200,
     }
   );
 }

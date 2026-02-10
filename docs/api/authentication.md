@@ -56,7 +56,7 @@ curl -X GET https://aias-platform.com/api/v1/workflows \
 ```javascript
 const response = await fetch('https://aias-platform.com/api/v1/workflows', {
   headers: {
-    'Authorization': `Bearer ${accessToken}`,
+    Authorization: `Bearer ${accessToken}`,
     'Content-Type': 'application/json',
   },
 });

@@ -22,20 +22,26 @@ export async function changelog(options: { version?: string }) {
   // Get git commits since last tag
   let commits: string[] = [];
   try {
-    const lastTag = execSync('git describe --tags --abbrev=0 2>/dev/null || echo ""', {
-      encoding: 'utf-8',
-    }).trim();
+    const lastTag = execSync(
+      'git describe --tags --abbrev=0 2>/dev/null || echo ""',
+      {
+        encoding: 'utf-8',
+      }
+    ).trim();
 
     if (lastTag) {
-      const logOutput = execSync(`git log ${lastTag}..HEAD --pretty=format:"%s"`, {
-        encoding: 'utf-8',
-      });
-      commits = logOutput.split('\n').filter((c) => c.trim());
+      const logOutput = execSync(
+        `git log ${lastTag}..HEAD --pretty=format:"%s"`,
+        {
+          encoding: 'utf-8',
+        }
+      );
+      commits = logOutput.split('\n').filter(c => c.trim());
     } else {
       const logOutput = execSync('git log --pretty=format:"%s" -10', {
         encoding: 'utf-8',
       });
-      commits = logOutput.split('\n').filter((c) => c.trim());
+      commits = logOutput.split('\n').filter(c => c.trim());
     }
   } catch (error) {
     console.warn('⚠️  Could not fetch git commits');
@@ -46,7 +52,7 @@ export async function changelog(options: { version?: string }) {
   const fixes: string[] = [];
   const chores: string[] = [];
 
-  commits.forEach((commit) => {
+  commits.forEach(commit => {
     const lower = commit.toLowerCase();
     if (lower.startsWith('feat') || lower.includes('feature')) {
       features.push(commit);
@@ -62,7 +68,7 @@ export async function changelog(options: { version?: string }) {
 
   if (features.length > 0) {
     newEntry += '### Added\n\n';
-    features.forEach((feat) => {
+    features.forEach(feat => {
       newEntry += `- ${feat}\n`;
     });
     newEntry += '\n';
@@ -70,7 +76,7 @@ export async function changelog(options: { version?: string }) {
 
   if (fixes.length > 0) {
     newEntry += '### Fixed\n\n';
-    fixes.forEach((fix) => {
+    fixes.forEach(fix => {
       newEntry += `- ${fix}\n`;
     });
     newEntry += '\n';
@@ -78,7 +84,7 @@ export async function changelog(options: { version?: string }) {
 
   if (chores.length > 0 && chores.length < 10) {
     newEntry += '### Changed\n\n';
-    chores.slice(0, 5).forEach((chore) => {
+    chores.slice(0, 5).forEach(chore => {
       newEntry += `- ${chore}\n`;
     });
     newEntry += '\n';
@@ -87,10 +93,9 @@ export async function changelog(options: { version?: string }) {
   // Prepend to existing changelog
   const header = `# Changelog\n\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\n`;
 
-  const updatedChangelog =
-    existingChangelog.startsWith('# Changelog')
-      ? existingChangelog.replace(/^# Changelog[\s\S]*?\n\n/, header + newEntry)
-      : header + newEntry + (existingChangelog ? `\n${  existingChangelog}` : '');
+  const updatedChangelog = existingChangelog.startsWith('# Changelog')
+    ? existingChangelog.replace(/^# Changelog[\s\S]*?\n\n/, header + newEntry)
+    : header + newEntry + (existingChangelog ? `\n${existingChangelog}` : '');
 
   fs.writeFileSync(changelogPath, updatedChangelog);
   console.log(`✅ Changelog updated: ${changelogPath}`);

@@ -131,7 +131,14 @@
         "type": "string",
         "description": "Type/category of workflow",
         "example": "E-commerce",
-        "options": ["E-commerce", "Lead Generation", "Customer Support", "Content", "Data Processing", "Other"]
+        "options": [
+          "E-commerce",
+          "Lead Generation",
+          "Customer Support",
+          "Content",
+          "Data Processing",
+          "Other"
+        ]
       },
       "workflow_suggestion": {
         "type": "string",
@@ -200,7 +207,13 @@
         "type": "string",
         "description": "News topic/category",
         "example": "Automation Trends",
-        "options": ["Automation Trends", "Systems Thinking", "Industry News", "Case Studies", "Tutorials"]
+        "options": [
+          "Automation Trends",
+          "Systems Thinking",
+          "Industry News",
+          "Case Studies",
+          "Tutorials"
+        ]
       },
       "article_count": {
         "type": "number",
@@ -283,7 +296,15 @@
         "type": "string",
         "description": "User's industry",
         "example": "E-commerce",
-        "options": ["E-commerce", "SaaS", "Professional Services", "Healthcare", "Finance", "Education", "Other"]
+        "options": [
+          "E-commerce",
+          "SaaS",
+          "Professional Services",
+          "Healthcare",
+          "Finance",
+          "Education",
+          "Other"
+        ]
       },
       "user_goals": {
         "type": "array",

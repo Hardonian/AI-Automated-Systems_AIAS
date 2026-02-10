@@ -1,7 +1,7 @@
 /**
  * Circuit Breaker Pattern Implementation
  * Prevents cascading failures by stopping requests to failing services
- * 
+ *
  * Features:
  * - Configurable failure thresholds
  * - Automatic recovery attempts
@@ -19,25 +19,25 @@ export interface CircuitBreakerConfig {
    * @default 5
    */
   failureThreshold?: number;
-  
+
   /**
    * Time in milliseconds before attempting recovery
    * @default 60000 (1 minute)
    */
   timeout?: number;
-  
+
   /**
    * Number of successful calls in half-open state to close circuit
    * @default 2
    */
   successThreshold?: number;
-  
+
   /**
    * Time window in milliseconds for counting failures
    * @default 60000 (1 minute)
    */
   resetTimeout?: number;
-  
+
   /**
    * Service name for logging
    */
@@ -65,7 +65,7 @@ export class CircuitBreaker {
   private totalFailures: number = 0;
   private totalSuccesses: number = 0;
   private nextAttemptTime: number = 0;
-  
+
   private readonly config: Required<CircuitBreakerConfig>;
 
   constructor(config: CircuitBreakerConfig) {
@@ -94,14 +94,14 @@ export class CircuitBreaker {
           service: this.config.name,
           nextAttemptTime: new Date(this.nextAttemptTime).toISOString(),
         });
-        
+
         if (fallback) {
           return await fallback();
         }
-        
+
         throw new Error(`Circuit breaker is open for ${this.config.name}`);
       }
-      
+
       // Attempt recovery - move to half-open
       this.state = 'half-open';
       this.successes = 0;
@@ -116,7 +116,7 @@ export class CircuitBreaker {
       return result;
     } catch (error) {
       this.onFailure();
-      
+
       if (fallback) {
         logger.warn('Request failed, using fallback', {
           service: this.config.name,
@@ -124,7 +124,7 @@ export class CircuitBreaker {
         });
         return await fallback();
       }
-      
+
       throw error;
     }
   }
@@ -135,10 +135,10 @@ export class CircuitBreaker {
   private onSuccess(): void {
     this.totalSuccesses++;
     this.lastSuccessTime = Date.now();
-    
+
     if (this.state === 'half-open') {
       this.successes++;
-      
+
       if (this.successes >= this.config.successThreshold) {
         // Circuit recovered - close it
         this.state = 'closed';
@@ -161,9 +161,12 @@ export class CircuitBreaker {
     this.totalFailures++;
     this.lastFailureTime = Date.now();
     this.failures++;
-    
+
     // Check if we should open the circuit
-    if (this.state === 'closed' && this.failures >= this.config.failureThreshold) {
+    if (
+      this.state === 'closed' &&
+      this.failures >= this.config.failureThreshold
+    ) {
       this.state = 'open';
       this.nextAttemptTime = Date.now() + this.config.timeout;
       const errorObj = new Error('Circuit breaker opened - service failing');
@@ -242,12 +245,12 @@ class CircuitBreakerRegistry {
   /**
    * Get or create circuit breaker for service
    */
-  get(name: string, config?: Omit<CircuitBreakerConfig, 'name'>): CircuitBreaker {
+  get(
+    name: string,
+    config?: Omit<CircuitBreakerConfig, 'name'>
+  ): CircuitBreaker {
     if (!this.breakers.has(name)) {
-      this.breakers.set(
-        name,
-        new CircuitBreaker({ ...config, name })
-      );
+      this.breakers.set(name, new CircuitBreaker({ ...config, name }));
     }
     return this.breakers.get(name)!;
   }

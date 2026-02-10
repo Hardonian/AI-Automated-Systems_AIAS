@@ -3,10 +3,10 @@
  * Drag-and-drop interface for creating automation workflows
  */
 
-import { 
-  Play, 
-  Save, 
-  Settings, 
+import {
+  Play,
+  Save,
+  Settings,
   Eye,
   Trash2,
   Copy,
@@ -16,7 +16,7 @@ import {
   Database,
   Mail,
   Filter,
-  ArrowRight
+  ArrowRight,
 } from 'lucide-react';
 import React, { useState, useCallback, useRef } from 'react';
 
@@ -33,10 +33,10 @@ interface WorkflowBuilderProps {
   onExecute?: (workflow: WorkflowTemplate) => void;
 }
 
-export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({ 
-  workflowId, 
-  onSave, 
-  onExecute 
+export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
+  workflowId,
+  onSave,
+  onExecute,
 }) => {
   const [workflow, setWorkflow] = useState({
     id: workflowId || 'new',
@@ -44,7 +44,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
     description: '',
     nodes: [] as WorkflowNode[],
     connections: [] as Array<{ from: string; to: string }>,
-    status: 'draft' as 'draft' | 'active' | 'inactive'
+    status: 'draft' as 'draft' | 'active' | 'inactive',
   });
 
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
@@ -60,43 +60,43 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
       label: 'Trigger',
       icon: Zap,
       color: 'bg-blue-500',
-      description: 'Start your workflow with a trigger event'
+      description: 'Start your workflow with a trigger event',
     },
     {
       type: 'action',
       label: 'Action',
       icon: ArrowRight,
       color: 'bg-green-500',
-      description: 'Perform an action or operation'
+      description: 'Perform an action or operation',
     },
     {
       type: 'condition',
       label: 'Condition',
       icon: Filter,
       color: 'bg-yellow-500',
-      description: 'Add conditional logic to your workflow'
+      description: 'Add conditional logic to your workflow',
     },
     {
       type: 'ai_processing',
       label: 'AI Processing',
       icon: Bot,
       color: 'bg-purple-500',
-      description: 'Use AI to process data or make decisions'
+      description: 'Use AI to process data or make decisions',
     },
     {
       type: 'data_transform',
       label: 'Data Transform',
       icon: Database,
       color: 'bg-orange-500',
-      description: 'Transform or manipulate data'
+      description: 'Transform or manipulate data',
     },
     {
       type: 'notification',
       label: 'Notification',
       icon: Mail,
       color: 'bg-red-500',
-      description: 'Send notifications or alerts'
-    }
+      description: 'Send notifications or alerts',
+    },
   ];
 
   // Pre-built templates
@@ -119,8 +119,8 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
             label: 'Form Submit',
             description: 'Triggered when a form is submitted',
             category: 'trigger',
-            icon: 'form'
-          }
+            icon: 'form',
+          },
         },
         {
           id: 'action-1',
@@ -132,8 +132,8 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
             label: 'AI Qualification',
             description: 'Use AI to score and qualify the lead',
             category: 'ai',
-            icon: 'bot'
-          }
+            icon: 'bot',
+          },
         },
         {
           id: 'condition-1',
@@ -145,9 +145,9 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
             label: 'Score Check',
             description: 'Check if lead score is above threshold',
             category: 'logic',
-            icon: 'filter'
-          }
-        }
+            icon: 'filter',
+          },
+        },
       ],
       preview: '',
       downloads: 1250,
@@ -156,50 +156,60 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
       author: {
         id: 'aias-team',
         name: 'AIAS Team',
-        avatar: ''
+        avatar: '',
       },
       createdAt: new Date(),
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   ];
 
-  const addNode = useCallback((type: string, position: { x: number; y: number }) => {
-    const newNode: WorkflowNode = {
-      id: `node-${Date.now()}`,
-      type: type as any,
-      position: { x: position.x - canvasPosition.x, y: position.y - canvasPosition.y },
-      config: {},
-      connections: [],
-      metadata: {
-        label: nodeTypes.find(nt => nt.type === type)?.label || type,
-        description: nodeTypes.find(nt => nt.type === type)?.description || '',
-        category: type,
-        icon: type
-      }
-    };
+  const addNode = useCallback(
+    (type: string, position: { x: number; y: number }) => {
+      const newNode: WorkflowNode = {
+        id: `node-${Date.now()}`,
+        type: type as any,
+        position: {
+          x: position.x - canvasPosition.x,
+          y: position.y - canvasPosition.y,
+        },
+        config: {},
+        connections: [],
+        metadata: {
+          label: nodeTypes.find(nt => nt.type === type)?.label || type,
+          description:
+            nodeTypes.find(nt => nt.type === type)?.description || '',
+          category: type,
+          icon: type,
+        },
+      };
 
-    setWorkflow(prev => ({
-      ...prev,
-      nodes: [...prev.nodes, newNode]
-    }));
-  }, [canvasPosition, nodeTypes]);
+      setWorkflow(prev => ({
+        ...prev,
+        nodes: [...prev.nodes, newNode],
+      }));
+    },
+    [canvasPosition, nodeTypes]
+  );
 
-  const updateNode = useCallback((nodeId: string, updates: Partial<WorkflowNode>) => {
-    setWorkflow(prev => ({
-      ...prev,
-      nodes: prev.nodes.map(node => 
-        node.id === nodeId ? { ...node, ...updates } : node
-      )
-    }));
-  }, []);
+  const updateNode = useCallback(
+    (nodeId: string, updates: Partial<WorkflowNode>) => {
+      setWorkflow(prev => ({
+        ...prev,
+        nodes: prev.nodes.map(node =>
+          node.id === nodeId ? { ...node, ...updates } : node
+        ),
+      }));
+    },
+    []
+  );
 
   const deleteNode = useCallback((nodeId: string) => {
     setWorkflow(prev => ({
       ...prev,
       nodes: prev.nodes.filter(node => node.id !== nodeId),
-      connections: prev.connections.filter(conn => 
-        conn.from !== nodeId && conn.to !== nodeId
-      )
+      connections: prev.connections.filter(
+        conn => conn.from !== nodeId && conn.to !== nodeId
+      ),
     }));
     setSelectedNode(null);
   }, []);
@@ -207,7 +217,7 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
   const connectNodes = useCallback((fromId: string, toId: string) => {
     setWorkflow(prev => ({
       ...prev,
-      connections: [...prev.connections, { from: fromId, to: toId }]
+      connections: [...prev.connections, { from: fromId, to: toId }],
     }));
   }, []);
 
@@ -221,7 +231,10 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
     setSelectedNode(nodeId);
   };
 
-  const handleNodeDrag = (nodeId: string, position: { x: number; y: number }) => {
+  const handleNodeDrag = (
+    nodeId: string,
+    position: { x: number; y: number }
+  ) => {
     updateNode(nodeId, { position });
   };
 
@@ -231,8 +244,8 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'x-tenant-id': localStorage.getItem('tenantId') || ''
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'x-tenant-id': localStorage.getItem('tenantId') || '',
         },
         body: JSON.stringify({
           name: workflow.name,
@@ -242,13 +255,17 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
           price: 0,
           nodes: workflow.nodes,
           connections: workflow.connections,
-          tags: []
-        })
+          tags: [],
+        }),
       });
 
       if (response.ok) {
         const result = await response.json();
-        setWorkflow(prev => ({ ...prev, id: result.workflow.id, status: 'draft' }));
+        setWorkflow(prev => ({
+          ...prev,
+          id: result.workflow.id,
+          status: 'draft',
+        }));
         if (onSave) {
           onSave(workflow);
         }
@@ -264,14 +281,14 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'x-tenant-id': localStorage.getItem('tenantId') || ''
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'x-tenant-id': localStorage.getItem('tenantId') || '',
         },
         body: JSON.stringify({
           workflowId: workflow.id,
           triggerData: { test: true },
-          context: {}
-        })
+          context: {},
+        }),
       });
 
       if (response.ok) {
@@ -292,101 +309,109 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
       description: template.description,
       nodes: template.nodes.map((node: { [key: string]: unknown }) => ({
         ...node,
-        id: `node-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+        id: `node-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       })),
-      connections: []
+      connections: [],
     }));
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className='flex h-screen flex-col bg-gray-50'>
       {/* Toolbar */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h1 className="text-xl font-semibold">Workflow Builder</h1>
-            <div className="flex items-center gap-2">
+      <div className='border-b border-gray-200 bg-white px-6 py-4'>
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-4'>
+            <h1 className='text-xl font-semibold'>Workflow Builder</h1>
+            <div className='flex items-center gap-2'>
               <Input
-                className="w-64"
-                placeholder="Workflow name"
+                className='w-64'
+                placeholder='Workflow name'
                 value={workflow.name}
-                onChange={(e) => setWorkflow(prev => ({ ...prev, name: e.target.value }))}
+                onChange={e =>
+                  setWorkflow(prev => ({ ...prev, name: e.target.value }))
+                }
               />
-              <Badge variant={workflow.status === 'active' ? 'default' : 'secondary'}>
+              <Badge
+                variant={workflow.status === 'active' ? 'default' : 'secondary'}
+              >
                 {workflow.status}
               </Badge>
             </div>
           </div>
-          
-          <div className="flex items-center gap-2">
-            <Button size="sm" variant="outline">
-              <Eye className="h-4 w-4 mr-2" />
+
+          <div className='flex items-center gap-2'>
+            <Button size='sm' variant='outline'>
+              <Eye className='mr-2 h-4 w-4' />
               Preview
             </Button>
-            <Button size="sm" variant="outline">
-              <Save className="h-4 w-4 mr-2" />
+            <Button size='sm' variant='outline'>
+              <Save className='mr-2 h-4 w-4' />
               Save
             </Button>
-            <Button size="sm" onClick={handleExecute}>
-              <Play className="h-4 w-4 mr-2" />
+            <Button size='sm' onClick={handleExecute}>
+              <Play className='mr-2 h-4 w-4' />
               Execute
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 flex">
+      <div className='flex flex-1'>
         {/* Node Palette */}
-        <div className="w-64 bg-white border-r border-gray-200 p-4">
-          <h3 className="font-semibold mb-4">Node Types</h3>
-          <div className="space-y-2">
-            {nodeTypes.map((nodeType) => (
+        <div className='w-64 border-r border-gray-200 bg-white p-4'>
+          <h3 className='mb-4 font-semibold'>Node Types</h3>
+          <div className='space-y-2'>
+            {nodeTypes.map(nodeType => (
               <div
                 key={nodeType.type}
                 draggable
-                className="p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
-                role="button"
+                className='cursor-pointer rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50'
+                role='button'
                 tabIndex={0}
                 onDragEnd={() => setDraggedNode(null)}
                 onDragStart={() => setDraggedNode(nodeType.type)}
               >
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded ${nodeType.color} text-white`}>
-                    <nodeType.icon className="h-4 w-4" />
+                <div className='flex items-center gap-3'>
+                  <div className={`rounded p-2 ${nodeType.color} text-white`}>
+                    <nodeType.icon className='h-4 w-4' />
                   </div>
                   <div>
-                    <div className="font-medium text-sm">{nodeType.label}</div>
-                    <div className="text-xs text-gray-500">{nodeType.description}</div>
+                    <div className='text-sm font-medium'>{nodeType.label}</div>
+                    <div className='text-xs text-gray-500'>
+                      {nodeType.description}
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="mt-6">
-            <h3 className="font-semibold mb-4">Templates</h3>
-            <div className="space-y-2">
-              {templates.map((template) => (
+          <div className='mt-6'>
+            <h3 className='mb-4 font-semibold'>Templates</h3>
+            <div className='space-y-2'>
+              {templates.map(template => (
                 <div
                   key={template.id}
-                  className="p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
-                  role="button"
+                  className='cursor-pointer rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50'
+                  role='button'
                   tabIndex={0}
                   onClick={() => loadTemplate(template)}
-                  onKeyDown={(e) => {
+                  onKeyDown={e => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
                       loadTemplate(template);
                     }
                   }}
                 >
-                  <div className="font-medium text-sm">{template.name}</div>
-                  <div className="text-xs text-gray-500 mb-2">{template.description}</div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="text-xs" variant="outline">
+                  <div className='text-sm font-medium'>{template.name}</div>
+                  <div className='mb-2 text-xs text-gray-500'>
+                    {template.description}
+                  </div>
+                  <div className='flex items-center gap-2'>
+                    <Badge className='text-xs' variant='outline'>
                       {template.difficulty}
                     </Badge>
-                    <span className="text-xs text-gray-500">
+                    <span className='text-xs text-gray-500'>
                       {template.downloads} downloads
                     </span>
                   </div>
@@ -397,25 +422,25 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
         </div>
 
         {/* Canvas */}
-        <div className="flex-1 relative">
+        <div className='relative flex-1'>
           <div
             ref={canvasRef}
-            className="w-full h-full relative overflow-hidden bg-gray-100"
+            className='relative h-full w-full overflow-hidden bg-gray-100'
             onClick={handleCanvasClick}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => {
+            onDragOver={e => e.preventDefault()}
+            onDrop={e => {
               e.preventDefault();
               if (draggedNode) {
                 const rect = canvasRef.current?.getBoundingClientRect();
                 if (rect) {
                   addNode(draggedNode, {
                     x: e.clientX - rect.left,
-                    y: e.clientY - rect.top
+                    y: e.clientY - rect.top,
                   });
                 }
               }
             }}
-            onKeyDown={(e) => {
+            onKeyDown={e => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 handleCanvasClick(e as any);
@@ -423,50 +448,52 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
             }}
           >
             {/* Grid Background */}
-            <div 
-              className="absolute inset-0 opacity-20"
+            <div
+              className='absolute inset-0 opacity-20'
               style={{
                 backgroundImage: `
                   linear-gradient(to right, #e5e7eb 1px, transparent 1px),
                   linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)
                 `,
-                backgroundSize: '20px 20px'
+                backgroundSize: '20px 20px',
               }}
             />
 
             {/* Workflow Nodes */}
-            {workflow.nodes.map((node) => {
+            {workflow.nodes.map(node => {
               const nodeType = nodeTypes.find(nt => nt.type === node.type);
               const Icon = nodeType?.icon || Zap;
-              
+
               return (
                 <div
                   key={node.id}
                   draggable
-                  className={`absolute p-4 bg-white border-2 rounded-lg cursor-pointer shadow-sm hover:shadow-md transition-all ${
-                    selectedNode === node.id ? 'border-blue-500' : 'border-gray-200'
+                  className={`absolute cursor-pointer rounded-lg border-2 bg-white p-4 shadow-sm transition-all hover:shadow-md ${
+                    selectedNode === node.id
+                      ? 'border-blue-500'
+                      : 'border-gray-200'
                   }`}
-                  role="button"
+                  role='button'
                   style={{
                     left: node.position.x,
                     top: node.position.y,
-                    transform: `scale(${zoom})`
+                    transform: `scale(${zoom})`,
                   }}
                   tabIndex={0}
                   onClick={() => {
                     setSelectedNode(node.id);
                     handleNodeClick(node.id);
                   }}
-                  onDrag={(e) => {
+                  onDrag={e => {
                     const rect = canvasRef.current?.getBoundingClientRect();
                     if (rect) {
                       handleNodeDrag(node.id, {
                         x: e.clientX - rect.left,
-                        y: e.clientY - rect.top
+                        y: e.clientY - rect.top,
                       });
                     }
                   }}
-                  onKeyDown={(e) => {
+                  onKeyDown={e => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
                       setSelectedNode(node.id);
@@ -474,28 +501,38 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                     }
                   }}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded ${nodeType?.color || 'bg-gray-500'} text-white`}>
-                      <Icon className="h-4 w-4" />
+                  <div className='flex items-center gap-3'>
+                    <div
+                      className={`rounded p-2 ${nodeType?.color || 'bg-gray-500'} text-white`}
+                    >
+                      <Icon className='h-4 w-4' />
                     </div>
                     <div>
-                      <div className="font-medium text-sm">{node.metadata.label}</div>
-                      <div className="text-xs text-gray-500">{node.metadata.description}</div>
+                      <div className='text-sm font-medium'>
+                        {node.metadata.label}
+                      </div>
+                      <div className='text-xs text-gray-500'>
+                        {node.metadata.description}
+                      </div>
                     </div>
                   </div>
-                  
+
                   {selectedNode === node.id && (
-                    <div className="absolute -top-8 right-0 flex gap-1">
-                      <Button className="h-6 w-6 p-0" size="sm" variant="outline">
-                        <Settings className="h-3 w-3" />
+                    <div className='absolute -top-8 right-0 flex gap-1'>
+                      <Button
+                        className='h-6 w-6 p-0'
+                        size='sm'
+                        variant='outline'
+                      >
+                        <Settings className='h-3 w-3' />
                       </Button>
-                      <Button 
-                        className="h-6 w-6 p-0" 
-                        size="sm" 
-                        variant="outline"
+                      <Button
+                        className='h-6 w-6 p-0'
+                        size='sm'
+                        variant='outline'
                         onClick={() => deleteNode(node.id)}
                       >
-                        <Trash2 className="h-3 w-3" />
+                        <Trash2 className='h-3 w-3' />
                       </Button>
                     </div>
                   )}
@@ -504,12 +541,19 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
             })}
 
             {/* Connections */}
-            <svg className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }}>
-              {workflow.connections.map((connection) => {
-                const fromNode = workflow.nodes.find(n => n.id === connection.from);
+            <svg
+              className='pointer-events-none absolute inset-0'
+              style={{ zIndex: 1 }}
+            >
+              {workflow.connections.map(connection => {
+                const fromNode = workflow.nodes.find(
+                  n => n.id === connection.from
+                );
                 const toNode = workflow.nodes.find(n => n.id === connection.to);
-                
-                if (!fromNode || !toNode) {return null;}
+
+                if (!fromNode || !toNode) {
+                  return null;
+                }
 
                 const fromX = fromNode.position.x + 100; // Approximate node center
                 const fromY = fromNode.position.y + 50;
@@ -519,9 +563,9 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                 return (
                   <line
                     key={`connection-${connection.from}-${connection.to}`}
-                    markerEnd="url(#arrowhead)"
-                    stroke="#6b7280"
-                    strokeWidth="2"
+                    markerEnd='url(#arrowhead)'
+                    stroke='#6b7280'
+                    strokeWidth='2'
                     x1={fromX}
                     x2={toX}
                     y1={fromY}
@@ -529,20 +573,17 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
                   />
                 );
               })}
-              
+
               <defs>
                 <marker
-                  id="arrowhead"
-                  markerHeight="7"
-                  markerWidth="10"
-                  orient="auto"
-                  refX="9"
-                  refY="3.5"
+                  id='arrowhead'
+                  markerHeight='7'
+                  markerWidth='10'
+                  orient='auto'
+                  refX='9'
+                  refY='3.5'
                 >
-                  <polygon
-                    fill="#6b7280"
-                    points="0 0, 10 3.5, 0 7"
-                  />
+                  <polygon fill='#6b7280' points='0 0, 10 3.5, 0 7' />
                 </marker>
               </defs>
             </svg>
@@ -551,54 +592,63 @@ export const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
 
         {/* Properties Panel */}
         {selectedNode && (
-          <div className="w-80 bg-white border-l border-gray-200 p-4">
-            <h3 className="font-semibold mb-4">Node Properties</h3>
+          <div className='w-80 border-l border-gray-200 bg-white p-4'>
+            <h3 className='mb-4 font-semibold'>Node Properties</h3>
             {(() => {
               const node = workflow.nodes.find(n => n.id === selectedNode);
-              if (!node) {return null;}
+              if (!node) {
+                return null;
+              }
 
               return (
-                <div className="space-y-4">
+                <div className='space-y-4'>
                   <div>
-                    <Label htmlFor="node-label">Label</Label>
+                    <Label htmlFor='node-label'>Label</Label>
                     <Input
-                      id="node-label"
+                      id='node-label'
                       value={node.metadata.label}
-                      onChange={(e) => updateNode(node.id, {
-                        metadata: { ...node.metadata, label: e.target.value }
-                      })}
+                      onChange={e =>
+                        updateNode(node.id, {
+                          metadata: { ...node.metadata, label: e.target.value },
+                        })
+                      }
                     />
                   </div>
-                  
+
                   <div>
-                    <Label htmlFor="node-description">Description</Label>
+                    <Label htmlFor='node-description'>Description</Label>
                     <Textarea
-                      id="node-description"
+                      id='node-description'
                       rows={3}
                       value={node.metadata.description}
-                      onChange={(e) => updateNode(node.id, {
-                        metadata: { ...node.metadata, description: e.target.value }
-                      })}
+                      onChange={e =>
+                        updateNode(node.id, {
+                          metadata: {
+                            ...node.metadata,
+                            description: e.target.value,
+                          },
+                        })
+                      }
                     />
                   </div>
 
                   <div>
                     <Label>Configuration</Label>
-                    <div className="mt-2 p-3 bg-gray-50 rounded border">
-                      <pre className="text-xs text-gray-600">
+                    <div className='mt-2 rounded border bg-gray-50 p-3'>
+                      <pre className='text-xs text-gray-600'>
                         {JSON.stringify(node.config, null, 2)}
                       </pre>
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t">
-                    <div className="flex gap-2">
-                      <Button className="flex-1" size="sm" variant="outline">
-                        <Copy className="h-4 w-4 mr-2" />
+                  <div className='border-t pt-4'>
+                    <div className='flex gap-2'>
+                      <Button className='flex-1' size='sm' variant='outline'>
+                        <Copy className='mr-2 h-4 w-4' />
                         Duplicate
                       </Button>
-                      <Button className="flex-1" size="sm" variant="outline">
-                        <Share className="h-4 w-4 mr-2" />
+                      <Button className='flex-1' size='sm' variant='outline'>
+                        <Share className='mr-2 h-4 w-4' />
                         Share
                       </Button>
                     </div>

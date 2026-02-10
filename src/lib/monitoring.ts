@@ -22,10 +22,12 @@ class MonitoringService {
   private isInitialized = false;
 
   init() {
-    if (this.isInitialized) {return;}
-    
+    if (this.isInitialized) {
+      return;
+    }
+
     // Initialize monitoring service
-    console.log("Monitoring service initialized");
+    console.log('Monitoring service initialized');
     this.isInitialized = true;
   }
 
@@ -33,37 +35,41 @@ class MonitoringService {
     const event: MonitoringEvent = {
       name,
       properties,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
-    
+
     this.events.push(event);
-    
+
     // In production, send to monitoring service
     if (process.env.NODE_ENV === 'production') {
       // TODO: Implement actual monitoring service integration
-      console.log("Event tracked:", event);
+      console.log('Event tracked:', event);
     } else {
-      console.log("Event tracked (dev):", event);
+      console.log('Event tracked (dev):', event);
     }
   }
 
   trackPageView(path: string) {
-    this.trackEvent("page_view", { path });
+    this.trackEvent('page_view', { path });
   }
 
   trackError(error: Error, errorInfo?: ErrorInfo) {
-    this.trackEvent("error", {
+    this.trackEvent('error', {
       message: error.message,
       stack: error.stack,
-      ...errorInfo
+      ...errorInfo,
     });
   }
 
-  trackPerformance(metric: string, value: number, properties?: Record<string, unknown>) {
-    this.trackEvent("performance", {
+  trackPerformance(
+    metric: string,
+    value: number,
+    properties?: Record<string, unknown>
+  ) {
+    this.trackEvent('performance', {
       metric,
       value,
-      ...properties
+      ...properties,
     });
   }
 
@@ -80,24 +86,25 @@ export const monitoringService = new MonitoringService();
 
 export function initializeErrorHandling() {
   // Global error handler
-  window.addEventListener("error", (event) => {
+  window.addEventListener('error', event => {
     const error = event.error || new Error(event.message);
     monitoringService.trackError(error, {
       message: event.message,
       filename: event.filename,
       lineno: event.lineno,
-      colno: event.colno
+      colno: event.colno,
     });
   });
 
   // Unhandled promise rejection handler
-  window.addEventListener("unhandledrejection", (event) => {
-    const errorMessage = event.reason instanceof Error 
-      ? event.reason.message 
-      : String(event.reason);
+  window.addEventListener('unhandledrejection', event => {
+    const errorMessage =
+      event.reason instanceof Error
+        ? event.reason.message
+        : String(event.reason);
     monitoringService.trackError(new Error(errorMessage), {
-      message: "Unhandled Promise Rejection",
-      reason: event.reason
+      message: 'Unhandled Promise Rejection',
+      reason: event.reason,
     });
   });
 

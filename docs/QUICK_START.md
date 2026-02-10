@@ -11,6 +11,7 @@ Before you begin, make sure you have:
 - **Git** - [Download here](https://git-scm.com/)
 
 Optional but recommended:
+
 - **Docker** - For local development
 - **VS Code** - Our recommended editor
 
@@ -57,6 +58,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ### 1. Explore the Dashboard (2 minutes)
 
 Once the app is running, take a quick tour:
+
 - Navigate to different pages
 - Check out the UI components
 - See what's already built

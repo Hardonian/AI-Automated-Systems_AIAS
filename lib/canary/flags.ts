@@ -23,7 +23,8 @@ export async function getCanaryFlag(
   canaryId: string
 ): Promise<CanaryFlagConfig> {
   const envEnabled = process.env[`CANARY_${canaryId.toUpperCase()}_ENABLED`];
-  const envPercentage = process.env[`CANARY_${canaryId.toUpperCase()}_PERCENTAGE`];
+  const envPercentage =
+    process.env[`CANARY_${canaryId.toUpperCase()}_PERCENTAGE`];
 
   // Check cache (for runtime updates without redeploy)
   const cached = await cacheService.get<CanaryFlagConfig>(

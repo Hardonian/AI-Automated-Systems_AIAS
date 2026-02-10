@@ -1,9 +1,9 @@
 /**
  * Motion & Transition System
- * 
+ *
  * Standardized motion constants and utilities for consistent animations
  * across the AI Automated Systems platform.
- * 
+ *
  * All animations respect prefers-reduced-motion for accessibility.
  */
 
@@ -132,18 +132,18 @@ export const motionVariants = {
   // Fade in
   fadeIn: {
     hidden: { opacity: motionOpacity.hidden },
-    visible: { 
+    visible: {
       opacity: motionOpacity.visible,
       transition: motionTransitions.entrance,
     },
   },
   // Fade in up
   fadeInUp: {
-    hidden: { 
+    hidden: {
       opacity: motionOpacity.hidden,
       y: 20,
     },
-    visible: { 
+    visible: {
       opacity: motionOpacity.visible,
       y: 0,
       transition: motionTransitions.entrance,
@@ -151,11 +151,11 @@ export const motionVariants = {
   },
   // Fade in down
   fadeInDown: {
-    hidden: { 
+    hidden: {
       opacity: motionOpacity.hidden,
       y: -20,
     },
-    visible: { 
+    visible: {
       opacity: motionOpacity.visible,
       y: 0,
       transition: motionTransitions.entrance,
@@ -163,11 +163,11 @@ export const motionVariants = {
   },
   // Scale in
   scaleIn: {
-    hidden: { 
+    hidden: {
       opacity: motionOpacity.hidden,
       scale: 0.95,
     },
-    visible: { 
+    visible: {
       opacity: motionOpacity.visible,
       scale: 1,
       transition: motionTransitions.entrance,
@@ -175,11 +175,11 @@ export const motionVariants = {
   },
   // Slide in from left
   slideInLeft: {
-    hidden: { 
+    hidden: {
       opacity: motionOpacity.hidden,
       x: -20,
     },
-    visible: { 
+    visible: {
       opacity: motionOpacity.visible,
       x: 0,
       transition: motionTransitions.entrance,
@@ -187,11 +187,11 @@ export const motionVariants = {
   },
   // Slide in from right
   slideInRight: {
-    hidden: { 
+    hidden: {
       opacity: motionOpacity.hidden,
       x: 20,
     },
-    visible: { 
+    visible: {
       opacity: motionOpacity.visible,
       x: 0,
       transition: motionTransitions.entrance,
@@ -199,11 +199,11 @@ export const motionVariants = {
   },
   // Attention pulse (for notifications, errors, highlights)
   attention: {
-    hidden: { 
+    hidden: {
       opacity: motionOpacity.hidden,
       scale: 0.9,
     },
-    visible: { 
+    visible: {
       opacity: motionOpacity.visible,
       scale: 1,
       transition: {
@@ -223,12 +223,12 @@ export const motionVariants = {
   },
   // Success celebration (for completions, achievements)
   success: {
-    hidden: { 
+    hidden: {
       opacity: motionOpacity.hidden,
       scale: 0.8,
       y: 10,
     },
-    visible: { 
+    visible: {
       opacity: motionOpacity.visible,
       scale: 1,
       y: 0,
@@ -248,17 +248,24 @@ export const motionVariants = {
   },
   // Error shake (for validation errors, failures)
   error: {
-    hidden: { 
+    hidden: {
       opacity: motionOpacity.hidden,
       x: 0,
     },
-    visible: { 
+    visible: {
       opacity: motionOpacity.visible,
       x: 0,
       transition: motionTransitions.entrance,
     },
     shake: {
-      x: [0, -10, 10, -10, 10, 0] as [number, number, number, number, number, number],
+      x: [0, -10, 10, -10, 10, 0] as [
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+      ],
       transition: {
         duration: motionDurations.moderate / 1000,
         ease: motionEasing.sharp as any,
@@ -333,7 +340,9 @@ export const staggerConfigs = {
  * Use this to conditionally disable animations
  */
 export const prefersReducedMotion = (): boolean => {
-  if (typeof window === 'undefined') {return false;}
+  if (typeof window === 'undefined') {
+    return false;
+  }
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 
@@ -365,9 +374,7 @@ export const cssTransition = (
   easing: string = motionEasing.standard
 ): string => {
   const durationMs = `${duration}ms`;
-  return properties
-    .map((prop) => `${prop} ${durationMs} ${easing}`)
-    .join(', ');
+  return properties.map(prop => `${prop} ${durationMs} ${easing}`).join(', ');
 };
 
 /**
@@ -376,20 +383,24 @@ export const cssTransition = (
 export const transitionClasses = {
   // Standard transitions
   all: cssTransition(['all'], motionDurations.standard),
-  colors: cssTransition(['color', 'background-color', 'border-color'], motionDurations.standard),
+  colors: cssTransition(
+    ['color', 'background-color', 'border-color'],
+    motionDurations.standard
+  ),
   opacity: cssTransition(['opacity'], motionDurations.quick),
   transform: cssTransition(['transform'], motionDurations.standard),
   shadow: cssTransition(['box-shadow'], motionDurations.standard),
-  
+
   // Fast transitions
   fast: cssTransition(['all'], motionDurations.fast),
-  
+
   // Slow transitions
   slow: cssTransition(['all'], motionDurations.slow),
 } as const;
 
 // Export types
-export type MotionDuration = typeof motionDurations[keyof typeof motionDurations];
-export type MotionEasing = typeof motionEasing[keyof typeof motionEasing];
-export type MotionSpring = typeof motionSprings[keyof typeof motionSprings];
+export type MotionDuration =
+  (typeof motionDurations)[keyof typeof motionDurations];
+export type MotionEasing = (typeof motionEasing)[keyof typeof motionEasing];
+export type MotionSpring = (typeof motionSprings)[keyof typeof motionSprings];
 export type MotionVariant = keyof typeof motionVariants;

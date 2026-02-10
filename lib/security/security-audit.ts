@@ -35,16 +35,16 @@ export async function runSecurityAudit(): Promise<SecurityAuditResult> {
 
   // Check security headers
   issues.push(...checkSecurityHeaders());
-  
+
   // Check for XSS vulnerabilities
   issues.push(...checkXSSVulnerabilities());
-  
+
   // Check for injection vulnerabilities
   issues.push(...checkInjectionVulnerabilities());
-  
+
   // Check authentication/authorization
   issues.push(...checkAuthIssues());
-  
+
   // Check dependencies
   issues.push(...checkDependencyVulnerabilities());
 
@@ -53,8 +53,11 @@ export async function runSecurityAudit(): Promise<SecurityAuditResult> {
 
   const criticalCount = issues.filter(i => i.severity === 'critical').length;
   const highCount = issues.filter(i => i.severity === 'high').length;
-  
-  const score = Math.max(0, 100 - (criticalCount * 20) - (highCount * 10) - (issues.length * 2));
+
+  const score = Math.max(
+    0,
+    100 - criticalCount * 20 - highCount * 10 - issues.length * 2
+  );
 
   return {
     score,
@@ -66,12 +69,13 @@ export async function runSecurityAudit(): Promise<SecurityAuditResult> {
 
 function checkSecurityHeaders(): SecurityIssue[] {
   const issues: SecurityIssue[] = [];
-  
+
   // Check if CSP is properly configured
   issues.push({
     severity: 'medium',
     category: 'headers',
-    description: 'Verify Content-Security-Policy includes nonce for inline scripts',
+    description:
+      'Verify Content-Security-Policy includes nonce for inline scripts',
     fix: 'Add nonce generation and validation',
   });
 
@@ -80,7 +84,7 @@ function checkSecurityHeaders(): SecurityIssue[] {
 
 function checkXSSVulnerabilities(): SecurityIssue[] {
   const issues: SecurityIssue[] = [];
-  
+
   // Check for dangerouslySetInnerHTML usage
   issues.push({
     severity: 'high',
@@ -94,7 +98,7 @@ function checkXSSVulnerabilities(): SecurityIssue[] {
 
 function checkInjectionVulnerabilities(): SecurityIssue[] {
   const issues: SecurityIssue[] = [];
-  
+
   // Check for SQL injection risks
   issues.push({
     severity: 'critical',
@@ -108,7 +112,7 @@ function checkInjectionVulnerabilities(): SecurityIssue[] {
 
 function checkAuthIssues(): SecurityIssue[] {
   const issues: SecurityIssue[] = [];
-  
+
   // Check for proper session management
   issues.push({
     severity: 'high',
@@ -122,7 +126,7 @@ function checkAuthIssues(): SecurityIssue[] {
 
 function checkDependencyVulnerabilities(): SecurityIssue[] {
   const issues: SecurityIssue[] = [];
-  
+
   // This would integrate with npm audit or Snyk
   issues.push({
     severity: 'medium',
@@ -134,7 +138,9 @@ function checkDependencyVulnerabilities(): SecurityIssue[] {
   return issues;
 }
 
-function generateSecurityRecommendations(issues: SecurityIssue[]): SecurityRecommendation[] {
+function generateSecurityRecommendations(
+  issues: SecurityIssue[]
+): SecurityRecommendation[] {
   const recommendations: SecurityRecommendation[] = [];
 
   if (issues.some(i => i.category === 'headers')) {
@@ -142,7 +148,8 @@ function generateSecurityRecommendations(issues: SecurityIssue[]): SecurityRecom
       priority: 'high',
       category: 'headers',
       description: 'Implement comprehensive security headers middleware',
-      implementation: 'Add security headers to next.config.ts and middleware.ts',
+      implementation:
+        'Add security headers to next.config.ts and middleware.ts',
     });
   }
 

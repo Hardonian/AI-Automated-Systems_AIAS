@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Environment Variable Doctor
- * 
+ *
  * Scans codebase for environment variable usage and validates:
  * 1. All env vars used in code are documented in .env.example
  * 2. All env vars in .env.example are actually used
@@ -10,8 +10,8 @@
  * 5. Required vs optional variables are correctly marked
  */
 
-import { readFileSync, existsSync, readdirSync } from "fs";
-import { join, relative } from "path";
+import { readFileSync, existsSync, readdirSync } from 'fs';
+import { join, relative } from 'path';
 
 interface EnvVarUsage {
   key: string;
@@ -65,38 +65,42 @@ const HARDCODED_SECRET_PATTERNS = [
 
 // Files to exclude from scanning
 const EXCLUDE_PATTERNS = [
-  "node_modules",
-  ".next",
-  "dist",
-  "build",
-  ".git",
-  "coverage",
-  ".test.ts",
-  ".spec.ts",
-  ".env",
-  "pnpm-lock.yaml",
-  "package-lock.json",
-  "yarn.lock",
+  'node_modules',
+  '.next',
+  'dist',
+  'build',
+  '.git',
+  'coverage',
+  '.test.ts',
+  '.spec.ts',
+  '.env',
+  'pnpm-lock.yaml',
+  'package-lock.json',
+  'yarn.lock',
 ];
 
 /**
  * Recursively find files with given extensions
  */
-function findFiles(dir: string, extensions: string[], exclude: string[]): string[] {
+function findFiles(
+  dir: string,
+  extensions: string[],
+  exclude: string[]
+): string[] {
   const files: string[] = [];
-  
+
   try {
     const entries = readdirSync(dir, { withFileTypes: true });
-    
+
     for (const entry of entries) {
       const fullPath = join(dir, entry.name);
       const relativePath = relative(process.cwd(), fullPath);
-      
+
       // Skip excluded directories/files
       if (exclude.some(pattern => relativePath.includes(pattern))) {
         continue;
       }
-      
+
       if (entry.isDirectory()) {
         files.push(...findFiles(fullPath, extensions, exclude));
       } else if (entry.isFile()) {
@@ -109,7 +113,7 @@ function findFiles(dir: string, extensions: string[], exclude: string[]): string
   } catch (error) {
     // Skip directories we can't read
   }
-  
+
   return files;
 }
 
@@ -117,21 +121,21 @@ function findFiles(dir: string, extensions: string[], exclude: string[]): string
  * Parse .env.example to extract defined variables
  */
 function parseEnvExample(): Map<string, EnvVarDefinition> {
-  const envExamplePath = join(process.cwd(), ".env.example");
+  const envExamplePath = join(process.cwd(), '.env.example');
   if (!existsSync(envExamplePath)) {
-    console.warn("⚠️  .env.example not found");
+    console.warn('⚠️  .env.example not found');
     return new Map();
   }
 
-  const content = readFileSync(envExamplePath, "utf-8");
+  const content = readFileSync(envExamplePath, 'utf-8');
   const definitions = new Map<string, EnvVarDefinition>();
-  let currentCategory = "General";
+  let currentCategory = 'General';
 
-  for (const line of content.split("\n")) {
+  for (const line of content.split('\n')) {
     const trimmed = line.trim();
 
     // Category headers
-    if (trimmed.startsWith("# ====") && trimmed.includes("===")) {
+    if (trimmed.startsWith('# ====') && trimmed.includes('===')) {
       const match = trimmed.match(/#\s*====\s*(.+?)\s*====/);
       if (match && match[1]) {
         currentCategory = match[1].trim();
@@ -140,7 +144,7 @@ function parseEnvExample(): Map<string, EnvVarDefinition> {
     }
 
     // Skip comments and empty lines
-    if (!trimmed || trimmed.startsWith("#")) {
+    if (!trimmed || trimmed.startsWith('#')) {
       continue;
     }
 
@@ -148,9 +152,9 @@ function parseEnvExample(): Map<string, EnvVarDefinition> {
     const match = trimmed.match(/^([A-Z_][A-Z0-9_]*)\s*=\s*(.*)$/);
     if (match) {
       const key = match[1];
-      const value = match[2]?.trim() || "";
-      const isRequired = !value || value === "" || value.includes("required");
-      const hasDefault = value && !value.includes("required") && value !== "";
+      const value = match[2]?.trim() || '';
+      const isRequired = !value || value === '' || value.includes('required');
+      const hasDefault = value && !value.includes('required') && value !== '';
 
       if (key) {
         definitions.set(key, {
@@ -173,29 +177,40 @@ function scanCodebase(): Map<string, EnvVarUsage> {
   const usage = new Map<string, EnvVarUsage>();
 
   // Find all TypeScript/JavaScript files
-  const files = findFiles(process.cwd(), [".ts", ".tsx", ".js", ".jsx", ".mjs"], EXCLUDE_PATTERNS);
+  const files = findFiles(
+    process.cwd(),
+    ['.ts', '.tsx', '.js', '.jsx', '.mjs'],
+    EXCLUDE_PATTERNS
+  );
 
   for (const file of files) {
     const filePath = join(process.cwd(), file);
-    if (!existsSync(filePath)) {continue;}
+    if (!existsSync(filePath)) {
+      continue;
+    }
 
-    const content = readFileSync(filePath, "utf-8");
-    const _lines = content.split("\n");
+    const content = readFileSync(filePath, 'utf-8');
+    const _lines = content.split('\n');
 
     // Pattern 1: process.env.VAR_NAME
     const processEnvPattern = /process\.env\.([A-Z_][A-Z0-9_]*)/g;
     let match;
     while ((match = processEnvPattern.exec(content)) !== null) {
       const key = match[1];
-      if (!key) {continue;}
-      const lineNum = match.index !== undefined ? content.substring(0, match.index).split("\n").length : 1;
+      if (!key) {
+        continue;
+      }
+      const lineNum =
+        match.index !== undefined
+          ? content.substring(0, match.index).split('\n').length
+          : 1;
 
       if (!usage.has(key)) {
         usage.set(key, {
           key,
           files: [],
           required: true, // Assume required unless we can detect otherwise
-          public: key.startsWith("NEXT_PUBLIC_"),
+          public: key.startsWith('NEXT_PUBLIC_'),
         });
       }
 
@@ -213,7 +228,9 @@ function scanCodebase(): Map<string, EnvVarUsage> {
     const githubSecretsPattern = /\$\{\{\s*secrets\.([A-Z_][A-Z0-9_]*)\s*\}\}/g;
     while ((match = githubSecretsPattern.exec(content)) !== null) {
       const key = match[1];
-      if (!key) {continue;}
+      if (!key) {
+        continue;
+      }
       if (!usage.has(key)) {
         usage.set(key, {
           key,
@@ -232,16 +249,26 @@ function scanCodebase(): Map<string, EnvVarUsage> {
 /**
  * Check for hardcoded secrets
  */
-function checkHardcodedSecrets(): { file: string; line: number; content: string }[] {
+function checkHardcodedSecrets(): {
+  file: string;
+  line: number;
+  content: string;
+}[] {
   const hardcoded: { file: string; line: number; content: string }[] = [];
-  const files = findFiles(process.cwd(), [".ts", ".tsx", ".js", ".jsx", ".yml", ".yaml"], EXCLUDE_PATTERNS);
+  const files = findFiles(
+    process.cwd(),
+    ['.ts', '.tsx', '.js', '.jsx', '.yml', '.yaml'],
+    EXCLUDE_PATTERNS
+  );
 
   for (const file of files) {
     const filePath = join(process.cwd(), file);
-    if (!existsSync(filePath)) {continue;}
+    if (!existsSync(filePath)) {
+      continue;
+    }
 
-    const content = readFileSync(filePath, "utf-8");
-    const lines = content.split("\n");
+    const content = readFileSync(filePath, 'utf-8');
+    const lines = content.split('\n');
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
@@ -249,10 +276,10 @@ function checkHardcodedSecrets(): { file: string; line: number; content: string 
         if (line && pattern.test(line)) {
           // Skip if it's in a comment or string that says "example" or "placeholder"
           if (
-            line.includes("example") ||
-            line.includes("placeholder") ||
-            line.includes("your-") ||
-            line.includes("TODO")
+            line.includes('example') ||
+            line.includes('placeholder') ||
+            line.includes('your-') ||
+            line.includes('TODO')
           ) {
             continue;
           }
@@ -274,7 +301,7 @@ function checkHardcodedSecrets(): { file: string; line: number; content: string 
  * Main doctor function
  */
 export function runEnvDoctor(): DoctorResult {
-  console.log("🔍 Scanning environment variables...\n");
+  console.log('🔍 Scanning environment variables...\n');
 
   const definitions = parseEnvExample();
   const usage = scanCodebase();
@@ -312,7 +339,8 @@ export function runEnvDoctor(): DoctorResult {
       if (def.required && !usageInfo.required) {
         result.inconsistencies.push({
           key,
-          issue: "Marked as required in .env.example but may be optional in code",
+          issue:
+            'Marked as required in .env.example but may be optional in code',
         });
       }
     }
@@ -325,7 +353,7 @@ export function runEnvDoctor(): DoctorResult {
  * Print results
  */
 function printResults(result: DoctorResult): void {
-  console.log("📊 Environment Variable Analysis\n");
+  console.log('📊 Environment Variable Analysis\n');
   console.log(`Total defined in .env.example: ${result.summary.totalDefined}`);
   console.log(`Total used in codebase: ${result.summary.totalUsed}`);
   console.log(`Undocumented: ${result.summary.undocumentedCount}`);
@@ -333,10 +361,10 @@ function printResults(result: DoctorResult): void {
   console.log(`Hardcoded secrets found: ${result.hardcoded.length}\n`);
 
   if (result.undocumented.length > 0) {
-    console.log("⚠️  UNDOCUMENTED VARIABLES (used but not in .env.example):\n");
+    console.log('⚠️  UNDOCUMENTED VARIABLES (used but not in .env.example):\n');
     for (const usage of result.undocumented) {
       console.log(`  ${usage.key}`);
-      console.log(`    Files: ${usage.files.slice(0, 3).join(", ")}`);
+      console.log(`    Files: ${usage.files.slice(0, 3).join(', ')}`);
       if (usage.files.length > 3) {
         console.log(`    ... and ${usage.files.length - 3} more`);
       }
@@ -345,7 +373,7 @@ function printResults(result: DoctorResult): void {
   }
 
   if (result.unused.length > 0) {
-    console.log("ℹ️  UNUSED VARIABLES (in .env.example but not used):\n");
+    console.log('ℹ️  UNUSED VARIABLES (in .env.example but not used):\n');
     for (const key of result.unused) {
       console.log(`  ${key}`);
     }
@@ -353,7 +381,7 @@ function printResults(result: DoctorResult): void {
   }
 
   if (result.hardcoded.length > 0) {
-    console.log("🔴 HARDCODED SECRETS FOUND:\n");
+    console.log('🔴 HARDCODED SECRETS FOUND:\n');
     for (const item of result.hardcoded) {
       console.log(`  ${item.file}:${item.line}`);
       console.log(`    ${item.content.substring(0, 80)}...`);
@@ -362,7 +390,7 @@ function printResults(result: DoctorResult): void {
   }
 
   if (result.inconsistencies.length > 0) {
-    console.log("⚠️  INCONSISTENCIES:\n");
+    console.log('⚠️  INCONSISTENCIES:\n');
     for (const issue of result.inconsistencies) {
       console.log(`  ${issue.key}: ${issue.issue}`);
     }
@@ -374,7 +402,7 @@ function printResults(result: DoctorResult): void {
     result.hardcoded.length === 0 &&
     result.inconsistencies.length === 0
   ) {
-    console.log("✅ All environment variables are properly documented!\n");
+    console.log('✅ All environment variables are properly documented!\n');
   }
 }
 
@@ -384,7 +412,7 @@ if (require.main === module) {
     const result = runEnvDoctor();
     printResults(result);
   } catch (error) {
-    console.error("❌ Error running env doctor:", error);
+    console.error('❌ Error running env doctor:', error);
     process.exit(1);
   }
 }

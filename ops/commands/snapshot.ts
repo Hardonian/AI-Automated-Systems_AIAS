@@ -30,15 +30,17 @@ export async function snapshot(options: {
 
     let tablesParam = '';
     if (options.tables) {
-      const tableList = options.tables.split(',').map((t) => t.trim()).join(' ');
+      const tableList = options.tables
+        .split(',')
+        .map(t => t.trim())
+        .join(' ');
       tablesParam = `-t ${tableList}`;
     }
 
     // Create snapshot using pg_dump
-    execSync(
-      `pg_dump "${dbUrl}" ${tablesParam} > "${snapshotFile}"`,
-      { stdio: 'inherit' }
-    );
+    execSync(`pg_dump "${dbUrl}" ${tablesParam} > "${snapshotFile}"`, {
+      stdio: 'inherit',
+    });
 
     // Encrypt if requested
     if (options.encrypt) {
@@ -62,7 +64,9 @@ export async function snapshot(options: {
     const metadata = {
       timestamp: new Date().toISOString(),
       file: path.basename(snapshotFile),
-      tables: options.tables ? options.tables.split(',').map((t) => t.trim()) : 'all',
+      tables: options.tables
+        ? options.tables.split(',').map(t => t.trim())
+        : 'all',
       encrypted: options.encrypt || false,
       checksum: createHash('sha256')
         .update(fs.readFileSync(snapshotFile))

@@ -11,7 +11,7 @@ import { circuitBreakerRegistry } from '@/lib/resilience/circuit-breaker';
 export const GET = createGETHandler(
   async () => {
     const metrics = circuitBreakerRegistry.getAllMetrics();
-    
+
     return NextResponse.json({
       circuitBreakers: metrics,
       timestamp: new Date().toISOString(),

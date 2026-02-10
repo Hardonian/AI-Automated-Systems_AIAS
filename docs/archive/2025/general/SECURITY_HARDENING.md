@@ -11,6 +11,7 @@ This document outlines the comprehensive security hardening and performance opti
 ### 1. Next.js Middleware (`middleware.ts`)
 
 **Features:**
+
 - **Rate Limiting**: Per-endpoint rate limiting with configurable limits
 - **Multi-Tenant Isolation**: Automatic tenant validation and context injection
 - **Security Headers**: Comprehensive security headers on all responses
@@ -18,6 +19,7 @@ This document outlines the comprehensive security hardening and performance opti
 - **Performance Tracking**: Response time headers for monitoring
 
 **Configuration:**
+
 ```typescript
 const rateLimitConfig = {
   '/api/auth': { windowMs: 60 * 1000, maxRequests: 5 },
@@ -30,6 +32,7 @@ const rateLimitConfig = {
 ### 2. Tenant Isolation Service (`lib/security/tenant-isolation.ts`)
 
 **Features:**
+
 - **Tenant Context Management**: Secure tenant context retrieval and validation
 - **Access Control**: Role-based access control (RBAC) with permissions
 - **Resource Limits**: Per-tenant resource limit checking and enforcement
@@ -37,6 +40,7 @@ const rateLimitConfig = {
 - **RLS Enforcement**: Row-Level Security context setting
 
 **Usage:**
+
 ```typescript
 import { tenantIsolation } from '@/lib/security/tenant-isolation';
 
@@ -48,11 +52,7 @@ const access = await tenantIsolation.validateAccess(
 );
 
 // Check resource limits
-const limits = await tenantIsolation.checkLimits(
-  tenantId,
-  'workflows',
-  1
-);
+const limits = await tenantIsolation.checkLimits(tenantId, 'workflows', 1);
 
 // Record usage
 await tenantIsolation.recordUsage(tenantId, 'workflows', 1);
@@ -61,6 +61,7 @@ await tenantIsolation.recordUsage(tenantId, 'workflows', 1);
 ### 3. API Security Utilities (`lib/security/api-security.ts`)
 
 **Features:**
+
 - **Input Validation**: Zod-based schema validation
 - **Input Sanitization**: XSS and SQL injection prevention
 - **Output Sanitization**: HTML sanitization for user-generated content
@@ -68,8 +69,13 @@ await tenantIsolation.recordUsage(tenantId, 'workflows', 1);
 - **Sensitive Data Masking**: Log sanitization for security
 
 **Usage:**
+
 ```typescript
-import { validateInput, sanitizeInput, detectSQLInjection } from '@/lib/security/api-security';
+import {
+  validateInput,
+  sanitizeInput,
+  detectSQLInjection,
+} from '@/lib/security/api-security';
 
 // Validate input
 const schema = z.object({ email: z.string().email() });
@@ -87,6 +93,7 @@ if (detectSQLInjection(input)) {
 ### 4. Enhanced Security Headers
 
 **Headers Added:**
+
 - `X-Content-Type-Options: nosniff`
 - `X-Frame-Options: SAMEORIGIN`
 - `X-XSS-Protection: 1; mode=block`
@@ -100,6 +107,7 @@ if (detectSQLInjection(input)) {
 ### 1. Multi-Layer Caching (`lib/performance/cache.ts`)
 
 **Features:**
+
 - **Redis Caching**: Primary cache layer with Redis
 - **Memory Cache Fallback**: In-memory cache when Redis unavailable
 - **Cache Tagging**: Tag-based cache invalidation
@@ -107,6 +115,7 @@ if (detectSQLInjection(input)) {
 - **Automatic Cleanup**: Expired entry cleanup
 
 **Usage:**
+
 ```typescript
 import { cacheService } from '@/lib/performance/cache';
 
@@ -131,6 +140,7 @@ await cacheService.invalidateTags(['table:workflows']);
 ### 2. Query Optimizer (`lib/performance/query-optimizer.ts`)
 
 **Features:**
+
 - **Automatic Caching**: Query result caching
 - **Batch Queries**: Optimized batch data fetching
 - **Tenant Filtering**: Automatic tenant filtering
@@ -138,6 +148,7 @@ await cacheService.invalidateTags(['table:workflows']);
 - **Cache Invalidation**: Automatic cache invalidation on updates
 
 **Usage:**
+
 ```typescript
 import { queryOptimizer } from '@/lib/performance/query-optimizer';
 
@@ -158,6 +169,7 @@ const items = await queryOptimizer.batchSelect('workflows', ['id1', 'id2'], {
 ### 3. API Route Handler (`lib/api/route-handler.ts`)
 
 **Features:**
+
 - **Built-in Security**: Automatic security checks
 - **Request Validation**: Schema-based validation
 - **Response Caching**: Automatic response caching
@@ -165,6 +177,7 @@ const items = await queryOptimizer.batchSelect('workflows', ['id1', 'id2'], {
 - **Performance Tracking**: Response time tracking
 
 **Usage:**
+
 ```typescript
 import { createGETHandler, createPOSTHandler } from '@/lib/api/route-handler';
 import { z } from 'zod';
@@ -174,25 +187,31 @@ const bodySchema = z.object({
   email: z.string().email(),
 });
 
-export const GET = createGETHandler(async (context) => {
-  // Handler logic
-  return NextResponse.json({ data: [] });
-}, {
-  requireAuth: true,
-  requireTenant: true,
-  cache: { enabled: true, ttl: 300 },
-});
+export const GET = createGETHandler(
+  async context => {
+    // Handler logic
+    return NextResponse.json({ data: [] });
+  },
+  {
+    requireAuth: true,
+    requireTenant: true,
+    cache: { enabled: true, ttl: 300 },
+  }
+);
 
-export const POST = createPOSTHandler(async (context) => {
-  const body = await context.request.json();
-  // Handler logic
-  return NextResponse.json({ success: true });
-}, {
-  requireAuth: true,
-  requireTenant: true,
-  validateBody: bodySchema,
-  maxBodySize: 1024 * 1024, // 1MB
-});
+export const POST = createPOSTHandler(
+  async context => {
+    const body = await context.request.json();
+    // Handler logic
+    return NextResponse.json({ success: true });
+  },
+  {
+    requireAuth: true,
+    requireTenant: true,
+    validateBody: bodySchema,
+    maxBodySize: 1024 * 1024, // 1MB
+  }
+);
 ```
 
 ## Multi-Tenant Architecture
@@ -208,6 +227,7 @@ export const POST = createPOSTHandler(async (context) => {
 ### Tenant Identification
 
 Tenants can be identified via:
+
 - `X-Tenant-ID` header
 - Subdomain (e.g., `tenant1.example.com`)
 - Query parameter (`?tenantId=...`)
@@ -329,12 +349,15 @@ export async function GET(request: NextRequest) {
 // After
 import { createGETHandler } from '@/lib/api/route-handler';
 
-export const GET = createGETHandler(async (context) => {
-  // Handler logic
-}, {
-  requireAuth: true,
-  requireTenant: true,
-});
+export const GET = createGETHandler(
+  async context => {
+    // Handler logic
+  },
+  {
+    requireAuth: true,
+    requireTenant: true,
+  }
+);
 ```
 
 ### Step 4: Enable Middleware

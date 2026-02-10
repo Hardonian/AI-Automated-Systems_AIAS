@@ -23,7 +23,10 @@ export class CostCaps {
     this.limits = limits;
   }
 
-  async checkLimit(userId: string, cost: number): Promise<{ allowed: boolean; reason?: string }> {
+  async checkLimit(
+    userId: string,
+    cost: number
+  ): Promise<{ allowed: boolean; reason?: string }> {
     const key = userId || 'global';
     const current = this.usage.get(key) || {
       userId,

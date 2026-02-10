@@ -18,7 +18,11 @@ interface APIContract {
 }
 
 interface ContractViolation {
-  type: 'breaking_change' | 'missing_endpoint' | 'parameter_mismatch' | 'response_mismatch';
+  type:
+    | 'breaking_change'
+    | 'missing_endpoint'
+    | 'parameter_mismatch'
+    | 'response_mismatch';
   severity: 'low' | 'medium' | 'high' | 'critical';
   endpoint: string;
   message: string;
@@ -65,13 +69,19 @@ class APIContractWatcher {
       const deployedEndpoints = await this.getDeployedEndpoints();
 
       // Compare contracts
-      violations.push(...await this.compareContracts(openApiSpec, deployedEndpoints));
+      violations.push(
+        ...(await this.compareContracts(openApiSpec, deployedEndpoints))
+      );
 
       // Check for missing endpoints
-      violations.push(...await this.checkMissingEndpoints(openApiSpec, deployedEndpoints));
+      violations.push(
+        ...(await this.checkMissingEndpoints(openApiSpec, deployedEndpoints))
+      );
 
       // Check for breaking changes
-      violations.push(...await this.checkBreakingChanges(openApiSpec, deployedEndpoints));
+      violations.push(
+        ...(await this.checkBreakingChanges(openApiSpec, deployedEndpoints))
+      );
 
       const report = this.generateReport(violations);
       await this.storeReport(report);
@@ -93,7 +103,7 @@ class APIContractWatcher {
       'swagger.json',
       'swagger.yaml',
       'api-spec.json',
-      'api-spec.yaml'
+      'api-spec.yaml',
     ];
 
     for (const specPath of specPaths) {
@@ -124,7 +134,7 @@ class APIContractWatcher {
         parameters: [],
         responses: { '200': { description: 'Success' } },
         summary: 'Get users',
-        description: 'Retrieve all users'
+        description: 'Retrieve all users',
       },
       {
         path: '/api/users/{id}',
@@ -132,23 +142,29 @@ class APIContractWatcher {
         parameters: [{ name: 'id', in: 'path', required: true }],
         responses: { '200': { description: 'Success' } },
         summary: 'Get user by ID',
-        description: 'Retrieve a specific user'
-      }
+        description: 'Retrieve a specific user',
+      },
     ];
   }
 
   /**
    * Compare OpenAPI spec with deployed endpoints
    */
-  private async compareContracts(openApiSpec: any, deployedEndpoints: APIContract[]): Promise<ContractViolation[]> {
+  private async compareContracts(
+    openApiSpec: any,
+    deployedEndpoints: APIContract[]
+  ): Promise<ContractViolation[]> {
     const violations: ContractViolation[] = [];
     const specPaths = openApiSpec.paths || {};
 
     for (const [path, methods] of Object.entries(specPaths)) {
-      for (const [method, spec] of Object.entries(methods as Record<string, any>)) {
+      for (const [method, spec] of Object.entries(
+        methods as Record<string, any>
+      )) {
         const specObj = spec as any;
         const deployedEndpoint = deployedEndpoints.find(
-          ep => ep.path === path && ep.method.toLowerCase() === method.toLowerCase()
+          ep =>
+            ep.path === path && ep.method.toLowerCase() === method.toLowerCase()
         );
 
         if (!deployedEndpoint) {
@@ -156,7 +172,7 @@ class APIContractWatcher {
             type: 'missing_endpoint',
             severity: 'high',
             endpoint: `${method.toUpperCase()} ${path}`,
-            message: `Endpoint ${method.toUpperCase()} ${path} is in spec but not deployed`
+            message: `Endpoint ${method.toUpperCase()} ${path} is in spec but not deployed`,
           });
           continue;
         }
@@ -172,7 +188,7 @@ class APIContractWatcher {
             endpoint: `${method.toUpperCase()} ${path}`,
             message: `Parameter count mismatch: spec has ${specParams.length}, deployed has ${deployedParams.length}`,
             expected: specParams,
-            actual: deployedParams
+            actual: deployedParams,
           });
         }
 
@@ -183,7 +199,9 @@ class APIContractWatcher {
         const specStatusCodes = Object.keys(specResponses);
         const deployedStatusCodes = Object.keys(deployedResponses);
 
-        const missingStatusCodes = specStatusCodes.filter(code => !deployedStatusCodes.includes(code));
+        const missingStatusCodes = specStatusCodes.filter(
+          code => !deployedStatusCodes.includes(code)
+        );
         if (missingStatusCodes.length > 0) {
           violations.push({
             type: 'response_mismatch',
@@ -191,7 +209,7 @@ class APIContractWatcher {
             endpoint: `${method.toUpperCase()} ${path}`,
             message: `Missing response codes: ${missingStatusCodes.join(', ')}`,
             expected: specStatusCodes,
-            actual: deployedStatusCodes
+            actual: deployedStatusCodes,
           });
         }
       }
@@ -203,14 +221,18 @@ class APIContractWatcher {
   /**
    * Check for missing endpoints
    */
-  private async checkMissingEndpoints(openApiSpec: any, deployedEndpoints: APIContract[]): Promise<ContractViolation[]> {
+  private async checkMissingEndpoints(
+    openApiSpec: any,
+    deployedEndpoints: APIContract[]
+  ): Promise<ContractViolation[]> {
     const violations: ContractViolation[] = [];
     const specPaths = openApiSpec.paths || {};
 
     for (const [path, methods] of Object.entries(specPaths)) {
       for (const [method] of Object.entries(methods as any)) {
         const deployedEndpoint = deployedEndpoints.find(
-          ep => ep.path === path && ep.method.toLowerCase() === method.toLowerCase()
+          ep =>
+            ep.path === path && ep.method.toLowerCase() === method.toLowerCase()
         );
 
         if (!deployedEndpoint) {
@@ -218,7 +240,7 @@ class APIContractWatcher {
             type: 'missing_endpoint',
             severity: 'high',
             endpoint: `${method.toUpperCase()} ${path}`,
-            message: `Endpoint ${method.toUpperCase()} ${path} is missing from deployment`
+            message: `Endpoint ${method.toUpperCase()} ${path} is missing from deployment`,
           });
         }
       }
@@ -230,7 +252,10 @@ class APIContractWatcher {
   /**
    * Check for breaking changes
    */
-  private async checkBreakingChanges(_openApiSpec: any, _deployedEndpoints: APIContract[]): Promise<ContractViolation[]> {
+  private async checkBreakingChanges(
+    _openApiSpec: any,
+    _deployedEndpoints: APIContract[]
+  ): Promise<ContractViolation[]> {
     const violations: ContractViolation[] = [];
 
     // This would compare with previous versions
@@ -242,11 +267,16 @@ class APIContractWatcher {
    * Generate contract report
    */
   private generateReport(violations: ContractViolation[]): ContractReport {
-    const breakingChanges = violations.filter(v => v.type === 'breaking_change').length;
-    const missingEndpoints = violations.filter(v => v.type === 'missing_endpoint').length;
+    const breakingChanges = violations.filter(
+      v => v.type === 'breaking_change'
+    ).length;
+    const missingEndpoints = violations.filter(
+      v => v.type === 'missing_endpoint'
+    ).length;
 
-    let overallStatus: 'compliant' | 'warnings' | 'violations' | 'critical' = 'compliant';
-    
+    let overallStatus: 'compliant' | 'warnings' | 'violations' | 'critical' =
+      'compliant';
+
     if (violations.some(v => v.severity === 'critical')) {
       overallStatus = 'critical';
     } else if (violations.some(v => v.severity === 'high')) {
@@ -261,7 +291,7 @@ class APIContractWatcher {
       violations,
       breaking_changes: breakingChanges,
       missing_endpoints: missingEndpoints,
-      overall_status: overallStatus
+      overall_status: overallStatus,
     };
   }
 
@@ -282,15 +312,19 @@ class APIContractWatcher {
    * Create GitHub issue for critical violations
    */
   async createCriticalIssue(report: ContractReport): Promise<void> {
-    const criticalViolations = report.violations.filter(v => v.severity === 'critical');
-    
-    if (criticalViolations.length === 0) {return;}
+    const criticalViolations = report.violations.filter(
+      v => v.severity === 'critical'
+    );
+
+    if (criticalViolations.length === 0) {
+      return;
+    }
 
     try {
       const issue = {
         title: `🚨 API Contract: ${criticalViolations.length} Critical Violations Found`,
         body: this.generateIssueBody(report, criticalViolations),
-        labels: ['api', 'contract', 'critical', 'automated']
+        labels: ['api', 'contract', 'critical', 'automated'],
       };
 
       const { data, status } = await this.octokit.rest.issues.create({
@@ -298,7 +332,7 @@ class APIContractWatcher {
         repo: process.env.GITHUB_REPO || 'aias-platform',
         title: issue.title,
         body: issue.body,
-        labels: issue.labels
+        labels: issue.labels,
       });
 
       if (status === 201) {
@@ -312,7 +346,10 @@ class APIContractWatcher {
   /**
    * Generate GitHub issue body
    */
-  private generateIssueBody(report: ContractReport, criticalViolations: ContractViolation[]): string {
+  private generateIssueBody(
+    report: ContractReport,
+    criticalViolations: ContractViolation[]
+  ): string {
     return `
 ## 🚨 API Contract Critical Violations
 
@@ -326,11 +363,15 @@ class APIContractWatcher {
 - **Missing Endpoints:** ${report.missing_endpoints}
 
 ### 🔥 Critical Violations
-${criticalViolations.map(violation => `
+${criticalViolations
+  .map(
+    violation => `
 **Endpoint:** \`${violation.endpoint}\`  
 **Type:** \`${violation.type}\`  
 **Message:** ${violation.message}
-`).join('\n')}
+`
+  )
+  .join('\n')}
 
 ### 🔧 Recommended Actions
 1. Review the critical violations above
@@ -349,16 +390,18 @@ ${criticalViolations.map(violation => `
   async run(): Promise<void> {
     try {
       console.log('Starting API contract watcher...');
-      
+
       const report = await this.runContractValidation();
-      
+
       console.log(`Contract validation completed: ${report.overall_status}`);
-      console.log(`Violations: ${report.violations.length}, Breaking Changes: ${report.breaking_changes}`);
-      
+      console.log(
+        `Violations: ${report.violations.length}, Breaking Changes: ${report.breaking_changes}`
+      );
+
       if (report.overall_status === 'critical') {
         await this.createCriticalIssue(report);
       }
-      
+
       console.log('API contract watcher completed');
     } catch (error) {
       console.error('API contract watcher failed:', error);

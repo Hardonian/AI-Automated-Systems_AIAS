@@ -1,9 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-import { extractUTMParams, extractReferralCode, storeUTMParams } from "@/lib/analytics/utm-tracking";
-import { logger } from "@/lib/logging/structured-logger";
+import {
+  extractUTMParams,
+  extractReferralCode,
+  storeUTMParams,
+} from '@/lib/analytics/utm-tracking';
+import { logger } from '@/lib/logging/structured-logger';
 
 /**
  * UTM Tracker Component
@@ -11,7 +15,9 @@ import { logger } from "@/lib/logging/structured-logger";
  */
 export function UTMTracker() {
   useEffect(() => {
-    if (typeof window === "undefined") {return;}
+    if (typeof window === 'undefined') {
+      return;
+    }
 
     // Extract UTM parameters from current URL
     const utmParams = extractUTMParams(window.location.href);
@@ -25,11 +31,11 @@ export function UTMTracker() {
       } as any);
 
       // Also track page view with UTM parameters
-      fetch("/api/analytics/track", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      fetch('/api/analytics/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          event: "page_view",
+          event: 'page_view',
           properties: {
             ...utmParams,
             ref: referralCode,
@@ -37,11 +43,15 @@ export function UTMTracker() {
             timestamp: new Date().toISOString(),
           },
         }),
-      }).catch((error) => {
-        logger.error("Failed to track page view", error instanceof Error ? error : new Error(String(error)), {
-          component: "UTMTracker",
-          action: "trackPageView",
-        });
+      }).catch(error => {
+        logger.error(
+          'Failed to track page view',
+          error instanceof Error ? error : new Error(String(error)),
+          {
+            component: 'UTMTracker',
+            action: 'trackPageView',
+          }
+        );
       });
     }
   }, []);

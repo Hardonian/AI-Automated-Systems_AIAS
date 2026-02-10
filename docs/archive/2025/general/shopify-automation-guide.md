@@ -22,6 +22,7 @@
 ### 1. Order Processing Automation
 
 **What to Automate:**
+
 - Order confirmation emails
 - Inventory updates
 - Shipping label generation
@@ -32,6 +33,7 @@
 ### 2. Inventory Management
 
 **What to Automate:**
+
 - Low stock alerts
 - Multi-channel sync
 - Reorder notifications
@@ -42,6 +44,7 @@
 ### 3. Customer Support
 
 **What to Automate:**
+
 - Order status inquiries
 - Return requests
 - FAQ responses
@@ -62,4 +65,4 @@
 
 ---
 
-*This article contains affiliate links to Shopify. We may earn a commission if you make a purchase.*
+_This article contains affiliate links to Shopify. We may earn a commission if you make a purchase._

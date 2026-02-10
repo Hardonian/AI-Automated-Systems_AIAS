@@ -2,15 +2,15 @@
 /**
  * Generate OG Image
  * Creates Open Graph image for social sharing
- * 
+ *
  * Note: This is a template. In production, use a service like:
  * - Vercel OG Image Generation (https://vercel.com/docs/concepts/functions/edge-functions/og-image-generation)
  * - Cloudinary
  * - Custom image generation service
  */
 
-import { writeFileSync, mkdirSync } from "fs";
-import { join } from "path";
+import { writeFileSync, mkdirSync } from 'fs';
+import { join } from 'path';
 
 /**
  * Generate OG image metadata
@@ -21,8 +21,8 @@ export function generateOGImageMetadata() {
   return {
     width: 1200,
     height: 630,
-    alt: "AI Automated Systems — Custom AI Platform Development",
-    type: "image/png",
+    alt: 'AI Automated Systems — Custom AI Platform Development',
+    type: 'image/png',
   };
 }
 
@@ -117,19 +117,21 @@ export default async function handler(req: NextRequest) {
 
 if (require.main === module) {
   // Create OG image route
-  const ogImageRoutePath = join(process.cwd(), "app", "api", "og", "route.tsx");
-  const ogImageDir = join(process.cwd(), "app", "api", "og");
-  
+  const ogImageRoutePath = join(process.cwd(), 'app', 'api', 'og', 'route.tsx');
+  const ogImageDir = join(process.cwd(), 'app', 'api', 'og');
+
   try {
     mkdirSync(ogImageDir, { recursive: true });
     writeFileSync(ogImageRoutePath, ogImageHandler);
-    console.log("✅ Created OG image route handler at:", ogImageRoutePath);
-    console.log("\n📝 Next steps:");
-    console.log("1. Install @vercel/og: pnpm add @vercel/og");
-    console.log("2. Update app/layout.tsx to use /api/og?title=...&description=...");
-    console.log("3. Test with: curl http://localhost:3000/api/og?title=Test");
+    console.log('✅ Created OG image route handler at:', ogImageRoutePath);
+    console.log('\n📝 Next steps:');
+    console.log('1. Install @vercel/og: pnpm add @vercel/og');
+    console.log(
+      '2. Update app/layout.tsx to use /api/og?title=...&description=...'
+    );
+    console.log('3. Test with: curl http://localhost:3000/api/og?title=Test');
   } catch (error) {
-    console.error("Failed to create OG image route:", error);
+    console.error('Failed to create OG image route:', error);
     process.exit(1);
   }
 }

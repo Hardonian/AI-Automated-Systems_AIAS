@@ -11,16 +11,19 @@
 This report identifies gaps between the intended schema (from migrations) and the actual database state. All findings are evidence-based from SQL introspection queries.
 
 ### Critical Gaps (Must Fix)
+
 - [ ] **Foundational Tables Missing**: `tenants`, `tenant_members` may not exist
 - [ ] **RLS Policies**: May reference non-existent `user_tenants` table instead of `tenant_members`
 - [ ] **Realtime Configuration**: Tables may not be in `supabase_realtime` publication
 
 ### High Priority Gaps
+
 - [ ] **Missing Indexes**: Performance-critical indexes may be missing
 - [ ] **Missing Triggers**: `updated_at` triggers may not be set up
 - [ ] **Function Security**: Functions may not have proper `search_path` settings
 
 ### Medium Priority Gaps
+
 - [ ] **Column Defaults**: Some columns may have incorrect defaults
 - [ ] **Foreign Key Constraints**: Some FKs may be missing or incorrect
 - [ ] **Grants**: Permissions may be over-permissive
@@ -32,15 +35,18 @@ This report identifies gaps between the intended schema (from migrations) and th
 ### 1. FOUNDATIONAL TABLES
 
 #### Expected Tables (from migrations):
+
 - `tenants` (id, name, subdomain, plan_id, status, settings, limits, created_at, updated_at)
 - `tenant_members` (id, tenant_id, user_id, role, permissions, status, joined_at, created_at, updated_at)
 
 #### Gap Analysis:
+
 **RUN THIS QUERY TO VERIFY:**
+
 ```sql
-SELECT table_name 
-FROM information_schema.tables 
-WHERE table_schema = 'public' 
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
   AND table_name IN ('tenants', 'tenant_members')
 ORDER BY table_name;
 ```
@@ -53,30 +59,35 @@ ORDER BY table_name;
 ### 2. CORE TABLES (Agents & Workflows)
 
 #### Expected Tables:
+
 - `agents` (15 columns including tenant_id, created_by, capabilities JSONB)
 - `agent_executions` (11 columns)
 - `workflows` (16 columns)
 - `workflow_executions` (11 columns)
 
 #### Gap Analysis:
+
 **RUN THIS QUERY TO VERIFY:**
+
 ```sql
-SELECT table_name, 
-  (SELECT COUNT(*) FROM information_schema.columns 
+SELECT table_name,
+  (SELECT COUNT(*) FROM information_schema.columns
    WHERE table_schema = 'public' AND table_name = t.table_name) as column_count
 FROM information_schema.tables t
-WHERE table_schema = 'public' 
+WHERE table_schema = 'public'
   AND table_name IN ('agents', 'agent_executions', 'workflows', 'workflow_executions')
 ORDER BY table_name;
 ```
 
 **Expected Column Counts:**
+
 - `agents`: 15 columns
 - `agent_executions`: 11 columns
 - `workflows`: 16 columns
 - `workflow_executions`: 11 columns
 
 **Common Gaps:**
+
 - Missing `tenant_id` column (critical for RLS)
 - Missing `created_by` column
 - Incorrect JSONB column defaults
@@ -86,21 +97,25 @@ ORDER BY table_name;
 ### 3. BILLING TABLES
 
 #### Expected Tables:
+
 - `subscriptions` (13 columns)
 - `usage_metrics` (6 columns)
 - `billing_events` (5 columns)
 
 #### Gap Analysis:
+
 **RUN THIS QUERY TO VERIFY:**
+
 ```sql
 SELECT table_name
-FROM information_schema.tables 
-WHERE table_schema = 'public' 
+FROM information_schema.tables
+WHERE table_schema = 'public'
   AND table_name IN ('subscriptions', 'usage_metrics', 'billing_events')
 ORDER BY table_name;
 ```
 
 **Common Gaps:**
+
 - Missing Stripe integration columns (`stripe_subscription_id`, `stripe_customer_id`)
 - Missing `tenant_id` for multi-tenant billing
 
@@ -109,6 +124,7 @@ ORDER BY table_name;
 ### 4. OBSERVABILITY TABLES
 
 #### Expected Tables:
+
 - `telemetry_events` (7 columns)
 - `workflow_execution_logs` (12 columns)
 - `agent_execution_logs` (10 columns)
@@ -116,14 +132,16 @@ ORDER BY table_name;
 - `performance_metrics` (5 columns)
 
 #### Gap Analysis:
+
 **RUN THIS QUERY TO VERIFY:**
+
 ```sql
 SELECT table_name
-FROM information_schema.tables 
-WHERE table_schema = 'public' 
+FROM information_schema.tables
+WHERE table_schema = 'public'
   AND table_name IN (
-    'telemetry_events', 
-    'workflow_execution_logs', 
+    'telemetry_events',
+    'workflow_execution_logs',
     'agent_execution_logs',
     'error_logs',
     'performance_metrics'
@@ -132,6 +150,7 @@ ORDER BY table_name;
 ```
 
 **Common Gaps:**
+
 - Missing `step_id`, `step_type` columns in `workflow_execution_logs` (from consolidated migration)
 - Missing `duration_ms` vs `duration` inconsistency
 
@@ -140,15 +159,18 @@ ORDER BY table_name;
 ### 5. WEBHOOK TABLES
 
 #### Expected Tables:
+
 - `webhook_endpoints` (8 columns)
 - `artifacts` (8 columns)
 
 #### Gap Analysis:
+
 **RUN THIS QUERY TO VERIFY:**
+
 ```sql
 SELECT table_name
-FROM information_schema.tables 
-WHERE table_schema = 'public' 
+FROM information_schema.tables
+WHERE table_schema = 'public'
   AND table_name IN ('webhook_endpoints', 'artifacts')
 ORDER BY table_name;
 ```
@@ -160,6 +182,7 @@ ORDER BY table_name;
 #### Expected: RLS enabled on ALL tables
 
 **RUN THIS QUERY TO VERIFY:**
+
 ```sql
 SELECT tablename, rowsecurity as rls_enabled
 FROM pg_tables
@@ -172,6 +195,7 @@ ORDER BY tablename;
 #### RLS Policies
 
 **RUN THIS QUERY TO VERIFY:**
+
 ```sql
 SELECT tablename, COUNT(*) as policy_count
 FROM pg_policies
@@ -181,6 +205,7 @@ ORDER BY tablename;
 ```
 
 **Expected Policy Counts (minimum):**
+
 - `agents`: 4 policies (SELECT, INSERT, UPDATE, DELETE)
 - `workflows`: 4 policies
 - `agent_executions`: 2 policies (SELECT, INSERT)
@@ -205,6 +230,7 @@ ORDER BY tablename;
 #### Expected Indexes (Performance Critical):
 
 **RUN THIS QUERY TO VERIFY:**
+
 ```sql
 SELECT tablename, indexname
 FROM pg_indexes
@@ -214,6 +240,7 @@ ORDER BY tablename, indexname;
 ```
 
 **Expected Indexes:**
+
 - `idx_agents_tenant_id`, `idx_agents_enabled`, `idx_agents_category`
 - `idx_agent_executions_agent_id`, `idx_agent_executions_user_id`, `idx_agent_executions_tenant_id`, `idx_agent_executions_status`, `idx_agent_executions_started_at`
 - `idx_workflows_tenant_id`, `idx_workflows_enabled`, `idx_workflows_category`
@@ -234,10 +261,12 @@ ORDER BY tablename, indexname;
 ### 8. FUNCTIONS
 
 #### Expected Functions:
+
 - `update_updated_at_column()` - Trigger function for updated_at
 - `generate_webhook_secret()` - Generates webhook secrets
 
 **RUN THIS QUERY TO VERIFY:**
+
 ```sql
 SELECT proname, pg_get_functiondef(oid) as definition
 FROM pg_proc p
@@ -254,12 +283,14 @@ ORDER BY proname;
 ### 9. TRIGGERS
 
 #### Expected Triggers:
+
 - `update_agents_updated_at` ON `agents`
 - `update_workflows_updated_at` ON `workflows`
 - `update_subscriptions_updated_at` ON `subscriptions`
 - `update_webhook_endpoints_updated_at` ON `webhook_endpoints`
 
 **RUN THIS QUERY TO VERIFY:**
+
 ```sql
 SELECT c.relname as table_name, t.tgname as trigger_name
 FROM pg_trigger t
@@ -275,9 +306,11 @@ ORDER BY c.relname, t.tgname;
 ### 10. VIEWS
 
 #### Expected Views:
+
 - `user_tenants` - Backward compatibility view mapping to `tenant_members`
 
 **RUN THIS QUERY TO VERIFY:**
+
 ```sql
 SELECT table_name, view_definition
 FROM information_schema.views
@@ -292,6 +325,7 @@ WHERE table_schema = 'public'
 #### Expected: Tables in `supabase_realtime` publication
 
 **RUN THIS QUERY TO VERIFY:**
+
 ```sql
 SELECT pt.tablename
 FROM pg_publication p
@@ -301,6 +335,7 @@ ORDER BY pt.tablename;
 ```
 
 **Expected Tables (if realtime is needed):**
+
 - `agents`
 - `workflows`
 - `workflow_executions`
@@ -315,6 +350,7 @@ ORDER BY pt.tablename;
 #### Expected: Least-privilege grants
 
 **RUN THIS QUERY TO VERIFY:**
+
 ```sql
 SELECT grantee, table_name, privilege_type
 FROM information_schema.role_table_grants
@@ -324,6 +360,7 @@ ORDER BY table_name, grantee, privilege_type;
 ```
 
 **Expected:**
+
 - `anon`: Limited SELECT grants (if any)
 - `authenticated`: SELECT/INSERT/UPDATE/DELETE based on RLS policies
 - `service_role`: Full access (bypasses RLS)

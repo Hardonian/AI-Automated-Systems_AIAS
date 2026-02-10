@@ -1,23 +1,26 @@
 /**
  * OpenTelemetry Observability Setup
- * 
+ *
  * Provides distributed tracing, metrics, and logging integration
  * Supports multiple exporters (OTLP, Console, etc.)
  */
 
-import { NodeSDK } from "@opentelemetry/sdk-node";
-import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
-import { resourceFromAttributes } from "@opentelemetry/resources";
-import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
-import { PeriodicExportingMetricReader, MetricReader } from "@opentelemetry/sdk-metrics";
-import { logger } from "../logging/structured-logger";
-import type { Span, Tracer } from "@opentelemetry/api";
+import { NodeSDK } from '@opentelemetry/sdk-node';
+import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
+import { resourceFromAttributes } from '@opentelemetry/resources';
+import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
+import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-http';
+import {
+  PeriodicExportingMetricReader,
+  MetricReader,
+} from '@opentelemetry/sdk-metrics';
+import { logger } from '../logging/structured-logger';
+import type { Span, Tracer } from '@opentelemetry/api';
 
-const SERVICE_NAME = process.env.OTEL_SERVICE_NAME || "aias-platform";
+const SERVICE_NAME = process.env.OTEL_SERVICE_NAME || 'aias-platform';
 const OTEL_ENDPOINT = process.env.OTEL_EXPORTER_OTLP_ENDPOINT;
-const ENABLE_OTEL = process.env.ENABLE_OTEL === "true";
+const ENABLE_OTEL = process.env.ENABLE_OTEL === 'true';
 
 /**
  * Initialize OpenTelemetry SDK
@@ -25,15 +28,19 @@ const ENABLE_OTEL = process.env.ENABLE_OTEL === "true";
  */
 export function initializeOpenTelemetry(): NodeSDK | null {
   if (!ENABLE_OTEL || !OTEL_ENDPOINT) {
-    logger.info("[OpenTelemetry] Disabled - set ENABLE_OTEL=true and OTEL_EXPORTER_OTLP_ENDPOINT to enable");
+    logger.info(
+      '[OpenTelemetry] Disabled - set ENABLE_OTEL=true and OTEL_EXPORTER_OTLP_ENDPOINT to enable'
+    );
     return null;
   }
 
   try {
     const resource = resourceFromAttributes({
       [SemanticResourceAttributes.SERVICE_NAME]: SERVICE_NAME,
-      [SemanticResourceAttributes.SERVICE_VERSION]: process.env.npm_package_version || "1.0.0",
-      [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: process.env.NODE_ENV || "development",
+      [SemanticResourceAttributes.SERVICE_VERSION]:
+        process.env.npm_package_version || '1.0.0',
+      [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]:
+        process.env.NODE_ENV || 'development',
     });
 
     const metricReader: MetricReader = new PeriodicExportingMetricReader({
@@ -52,7 +59,7 @@ export function initializeOpenTelemetry(): NodeSDK | null {
       instrumentations: [
         getNodeAutoInstrumentations({
           // Disable fs instrumentation in serverless environments
-          "@opentelemetry/instrumentation-fs": {
+          '@opentelemetry/instrumentation-fs': {
             enabled: false,
           },
         }),
@@ -66,15 +73,18 @@ export function initializeOpenTelemetry(): NodeSDK | null {
     });
 
     // Graceful shutdown
-    process.on("SIGTERM", () => {
-      sdk.shutdown()
-        .then(() => logger.info("[OpenTelemetry] Shutdown complete"))
-        .catch((error) => logger.error("[OpenTelemetry] Error during shutdown", error as Error));
+    process.on('SIGTERM', () => {
+      sdk
+        .shutdown()
+        .then(() => logger.info('[OpenTelemetry] Shutdown complete'))
+        .catch(error =>
+          logger.error('[OpenTelemetry] Error during shutdown', error as Error)
+        );
     });
 
     return sdk;
   } catch (error) {
-    logger.error("[OpenTelemetry] Failed to initialize", error as Error, {
+    logger.error('[OpenTelemetry] Failed to initialize', error as Error, {
       serviceName: SERVICE_NAME,
       endpoint: OTEL_ENDPOINT,
     });
@@ -91,7 +101,7 @@ export function getOpenTelemetry() {
   }
 
   try {
-    return require("@opentelemetry/api");
+    return require('@opentelemetry/api');
   } catch {
     return null;
   }
@@ -130,7 +140,11 @@ export async function createSpan<T>(
 /**
  * Record a metric
  */
-export function recordMetric(name: string, value: number, tags?: Record<string, string>) {
+export function recordMetric(
+  name: string,
+  value: number,
+  tags?: Record<string, string>
+) {
   const otel = getOpenTelemetry();
   if (!otel) {
     return;
@@ -141,7 +155,7 @@ export function recordMetric(name: string, value: number, tags?: Record<string, 
     const counter = meter.createCounter(name);
     counter.add(value, tags);
   } catch (error) {
-    logger.error("[OpenTelemetry] Failed to record metric", error as Error, {
+    logger.error('[OpenTelemetry] Failed to record metric', error as Error, {
       metricName: name,
       value,
       tags,

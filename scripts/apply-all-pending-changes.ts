@@ -10,8 +10,10 @@ import { execSync } from 'child_process';
 import { readdirSync, existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
-const SUPABASE_PROJECT_REF = process.env.SUPABASE_PROJECT_REF || process.env.VITE_SUPABASE_PROJECT_ID?.replace(/"/g, '');
-const {SUPABASE_ACCESS_TOKEN} = process.env;
+const SUPABASE_PROJECT_REF =
+  process.env.SUPABASE_PROJECT_REF ||
+  process.env.VITE_SUPABASE_PROJECT_ID?.replace(/"/g, '');
+const { SUPABASE_ACCESS_TOKEN } = process.env;
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');
 const WORKFLOWS_DIR = join(process.cwd(), '.github', 'workflows');
 
@@ -24,11 +26,15 @@ interface ScriptInfo {
 
 async function applySupabaseMigrations() {
   console.log('\n📦 Step 1: Applying Supabase Migrations\n');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
 
   if (!SUPABASE_PROJECT_REF) {
-    console.log('⚠️  SUPABASE_PROJECT_REF not set. Skipping migration application.');
-    console.log('   Set SUPABASE_PROJECT_REF or VITE_SUPABASE_PROJECT_ID to apply migrations.\n');
+    console.log(
+      '⚠️  SUPABASE_PROJECT_REF not set. Skipping migration application.'
+    );
+    console.log(
+      '   Set SUPABASE_PROJECT_REF or VITE_SUPABASE_PROJECT_ID to apply migrations.\n'
+    );
     return false;
   }
 
@@ -39,9 +45,9 @@ async function applySupabaseMigrations() {
       return false;
     }
 
-    const migrationFiles = readdirSync(MIGRATIONS_DIR)
-      .filter(f => f.endsWith('.sql'))
-      .length;
+    const migrationFiles = readdirSync(MIGRATIONS_DIR).filter(f =>
+      f.endsWith('.sql')
+    ).length;
 
     console.log(`📋 Found ${migrationFiles} migration files`);
 
@@ -49,7 +55,7 @@ async function applySupabaseMigrations() {
     console.log('\n🔄 Attempting to apply migrations via Supabase CLI...\n');
 
     let command = 'npx supabase db push';
-    
+
     const env: NodeJS.ProcessEnv = {
       ...process.env,
       NODE_ENV: process.env.NODE_ENV || 'development',
@@ -68,12 +74,17 @@ async function applySupabaseMigrations() {
     if (SUPABASE_PROJECT_REF && SUPABASE_ACCESS_TOKEN) {
       try {
         console.log('🔗 Linking Supabase project...');
-        execSync(`npx supabase link --project-ref ${SUPABASE_PROJECT_REF} --token ${SUPABASE_ACCESS_TOKEN}`, {
-          stdio: 'inherit',
-          env,
-        });
+        execSync(
+          `npx supabase link --project-ref ${SUPABASE_PROJECT_REF} --token ${SUPABASE_ACCESS_TOKEN}`,
+          {
+            stdio: 'inherit',
+            env,
+          }
+        );
       } catch (error: any) {
-        console.log('⚠️  Could not link project (may already be linked or need manual setup)');
+        console.log(
+          '⚠️  Could not link project (may already be linked or need manual setup)'
+        );
       }
     }
 
@@ -87,7 +98,9 @@ async function applySupabaseMigrations() {
       console.log('\n✅ Migrations applied successfully!\n');
       return true;
     } catch (error: any) {
-      console.log('\n⚠️  Supabase CLI migration failed. This might be expected if:');
+      console.log(
+        '\n⚠️  Supabase CLI migration failed. This might be expected if:'
+      );
       console.log('   - Migrations are already applied');
       console.log('   - Database connection is not configured');
       console.log('   - Manual intervention is required\n');
@@ -101,7 +114,7 @@ async function applySupabaseMigrations() {
 
 function checkForMissingWorkflows() {
   console.log('\n🔍 Step 2: Checking for Missing GitHub Actions Workflows\n');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
 
   const scriptsDir = join(process.cwd(), 'scripts');
   const workflowsDir = WORKFLOWS_DIR;
@@ -119,18 +132,25 @@ function checkForMissingWorkflows() {
   // Find scripts that might need workflows
   const scripts: ScriptInfo[] = [];
   const scriptFiles = readdirSync(scriptsDir, { recursive: true })
-    .filter((f): f is string => typeof f === 'string' && (f.endsWith('.ts') || f.endsWith('.js') || f.endsWith('.mjs')))
+    .filter(
+      (f): f is string =>
+        typeof f === 'string' &&
+        (f.endsWith('.ts') || f.endsWith('.js') || f.endsWith('.mjs'))
+    )
     .map((f: string) => join(scriptsDir, f));
 
   for (const scriptPath of scriptFiles) {
     try {
       const content = readFileSync(scriptPath, 'utf-8');
       const scriptName = scriptPath.split('/').pop() || '';
-      
+
       // Check if script mentions manual running or GitHub Actions
-      const needsManualRun = /manual|MANUAL|run manually|TODO.*run|FIXME.*run/i.test(content);
-      const mentionsWorkflow = /github.*action|workflow|\.github/i.test(content);
-      
+      const needsManualRun =
+        /manual|MANUAL|run manually|TODO.*run|FIXME.*run/i.test(content);
+      const mentionsWorkflow = /github.*action|workflow|\.github/i.test(
+        content
+      );
+
       scripts.push({
         path: scriptPath,
         name: scriptName,
@@ -151,8 +171,8 @@ function checkForMissingWorkflows() {
   console.log(`📋 Found ${existingWorkflows.length} existing workflows\n`);
 
   // Find scripts that need workflows but don't have them
-  const scriptsNeedingWorkflows = scripts.filter(s => 
-    s.needsManualRun && !s.hasWorkflow
+  const scriptsNeedingWorkflows = scripts.filter(
+    s => s.needsManualRun && !s.hasWorkflow
   );
 
   if (scriptsNeedingWorkflows.length > 0) {
@@ -170,7 +190,7 @@ function checkForMissingWorkflows() {
 
 function runManualScripts() {
   console.log('\n🚀 Step 3: Running Scripts Flagged for Manual Execution\n');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
 
   const scriptsToRun = [
     // Regenerate types after migrations
@@ -206,7 +226,7 @@ function runManualScripts() {
 
 async function main() {
   console.log('\n🚀 Starting Comprehensive Change Application\n');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
   console.log(`Project Ref: ${SUPABASE_PROJECT_REF || 'Not set'}`);
   console.log(`Access Token: ${SUPABASE_ACCESS_TOKEN ? 'Set' : 'Not set'}\n`);
 
@@ -221,9 +241,9 @@ async function main() {
     runManualScripts();
   }
 
-  console.log(`\n${  '=' .repeat(60)}`);
+  console.log(`\n${'='.repeat(60)}`);
   console.log('✅ Process Complete!\n');
-  
+
   if (missingWorkflows && missingWorkflows.length > 0) {
     console.log('📝 Note: Some scripts may need GitHub Actions workflows.');
     console.log('   Review the list above and create workflows as needed.\n');

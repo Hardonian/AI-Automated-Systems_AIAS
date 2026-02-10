@@ -11,6 +11,7 @@
 **Subject:** Introduction Request: [Company Name]
 
 **Body:**
+
 ```
 Hi [Contact Name],
 
@@ -32,6 +33,7 @@ Thanks!
 **Subject:** [Company Name] - Solving [Problem] in [Market]
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -59,6 +61,7 @@ Thanks,
 **Subject:** [Company Name] - [Tagline]
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -87,6 +90,7 @@ Thanks,
 **Subject:** [Mutual Contact] suggested I reach out
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -112,6 +116,7 @@ Thanks,
 **Subject:** Re: [Original Subject]
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -130,6 +135,7 @@ Thanks,
 **Subject:** Re: [Original Subject] - Quick Update
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -148,6 +154,7 @@ Thanks,
 **Subject:** Last follow-up - [Company Name]
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -168,6 +175,7 @@ Thanks,
 **Subject:** Thanks for your time - [Company Name]
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -193,6 +201,7 @@ Thanks,
 **Subject:** Re: [Question Topic] - [Company Name]
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -211,6 +220,7 @@ Thanks,
 **Subject:** [Requested Materials] - [Company Name]
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -233,6 +243,7 @@ Thanks,
 **Subject:** [Company Name] - Monthly Update
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -262,6 +273,7 @@ Thanks for your support!
 **Subject:** [Company Name] - [Milestone Achieved]
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -281,6 +293,7 @@ Thanks for being part of our journey!
 **Subject:** [Company Name] - Fundraising Update
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -303,6 +316,7 @@ Thanks,
 **Subject:** Re: [Company Name]
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -321,6 +335,7 @@ Thanks,
 **Subject:** Re: [Company Name] - Would love your feedback
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -339,6 +354,7 @@ Thanks,
 **Subject:** Intro request - [Investor Name]
 
 **Body:**
+
 ```
 Hi [Advisor Name],
 
@@ -357,6 +373,7 @@ Thanks!
 **Subject:** Intro request - [Investor Name]
 
 **Body:**
+
 ```
 Hi [Founder Name],
 
@@ -391,10 +408,12 @@ Thanks!
 ## Email Timing
 
 **Best Times to Send:**
+
 - Tuesday-Thursday: 9 AM - 11 AM or 2 PM - 4 PM
 - Avoid Mondays (busy) and Fridays (checking out)
 
 **Follow-Up Timing:**
+
 - First follow-up: 5-7 days
 - Second follow-up: 2 weeks
 - Final follow-up: 1 month
@@ -402,6 +421,7 @@ Thanks!
 ## Tracking
 
 **Track in CRM:**
+
 - Email sent date
 - Response received
 - Meeting scheduled
@@ -409,6 +429,7 @@ Thanks!
 - Next follow-up date
 
 **Use Tools:**
+
 - Airtable/Notion CRM
 - Google Sheets
 - HubSpot (free tier)

@@ -1,14 +1,13 @@
-"use client";
+'use client';
 
-import { Upload, X, Loader2, Image as ImageIcon } from "lucide-react";
-import Image from "next/image";
-import { useState, useRef } from "react";
+import { Upload, X, Loader2, Image as ImageIcon } from 'lucide-react';
+import Image from 'next/image';
+import { useState, useRef } from 'react';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 
 interface ImageUploadProps {
   value?: string;
@@ -17,7 +16,12 @@ interface ImageUploadProps {
   token: string;
 }
 
-export function ImageUpload({ value, onChange, label = "Image", token }: ImageUploadProps) {
+export function ImageUpload({
+  value,
+  onChange,
+  label = 'Image',
+  token,
+}: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(value || null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -25,15 +29,17 @@ export function ImageUpload({ value, onChange, label = "Image", token }: ImageUp
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) {return;}
+    if (!file) {
+      return;
+    }
 
     // Validate file type
-    const validTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     if (!validTypes.includes(file.type)) {
       toast({
-        title: "Invalid file type",
-        description: "Please upload a JPEG, PNG, WebP, or GIF image.",
-        variant: "destructive",
+        title: 'Invalid file type',
+        description: 'Please upload a JPEG, PNG, WebP, or GIF image.',
+        variant: 'destructive',
       });
       return;
     }
@@ -41,16 +47,16 @@ export function ImageUpload({ value, onChange, label = "Image", token }: ImageUp
     // Validate file size (5MB max)
     if (file.size > 5 * 1024 * 1024) {
       toast({
-        title: "File too large",
-        description: "Maximum file size is 5MB.",
-        variant: "destructive",
+        title: 'File too large',
+        description: 'Maximum file size is 5MB.',
+        variant: 'destructive',
       });
       return;
     }
 
     // Show preview
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = e => {
       setPreview(e.target?.result as string);
     };
     reader.readAsDataURL(file);
@@ -59,10 +65,10 @@ export function ImageUpload({ value, onChange, label = "Image", token }: ImageUp
     setUploading(true);
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append('file', file);
 
-      const response = await fetch("/api/content/upload", {
-        method: "POST",
+      const response = await fetch('/api/content/upload', {
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -71,20 +77,20 @@ export function ImageUpload({ value, onChange, label = "Image", token }: ImageUp
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Upload failed");
+        throw new Error(error.error || 'Upload failed');
       }
 
       const data = await response.json();
       onChange(data.url);
       toast({
-        title: "Upload successful",
-        description: "Image uploaded successfully.",
+        title: 'Upload successful',
+        description: 'Image uploaded successfully.',
       });
     } catch (error: any) {
       toast({
-        title: "Upload failed",
-        description: error.message || "Failed to upload image",
-        variant: "destructive",
+        title: 'Upload failed',
+        description: error.message || 'Failed to upload image',
+        variant: 'destructive',
       });
       setPreview(null);
     } finally {
@@ -94,80 +100,75 @@ export function ImageUpload({ value, onChange, label = "Image", token }: ImageUp
 
   const handleRemove = () => {
     setPreview(null);
-    onChange("");
+    onChange('');
     if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      fileInputRef.current.value = '';
     }
   };
 
   return (
-    <div className="space-y-2">
+    <div className='space-y-2'>
       <Label>{label}</Label>
-      <div className="flex items-center gap-4">
+      <div className='flex items-center gap-4'>
         <Input
-          className="flex-1"
-          placeholder="Image URL or upload file"
-          type="url"
-          value={value || ""}
-          onChange={(e) => onChange(e.target.value)}
+          className='flex-1'
+          placeholder='Image URL or upload file'
+          type='url'
+          value={value || ''}
+          onChange={e => onChange(e.target.value)}
         />
         <input
           ref={fileInputRef}
-          accept="image/*"
-          className="hidden"
-          id="image-upload"
-          type="file"
+          accept='image/*'
+          className='hidden'
+          id='image-upload'
+          type='file'
           onChange={handleFileSelect}
         />
         <Button
           disabled={uploading}
-          type="button"
-          variant="outline"
+          type='button'
+          variant='outline'
           onClick={() => fileInputRef.current?.click()}
         >
           {uploading ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
               Uploading...
             </>
           ) : (
             <>
-              <Upload className="mr-2 h-4 w-4" />
+              <Upload className='mr-2 h-4 w-4' />
               Upload
             </>
           )}
         </Button>
       </div>
       {preview && (
-        <div className="relative w-full h-48 border rounded-lg overflow-hidden bg-muted">
-          <Image
-            fill
-            alt="Preview"
-            className="object-contain"
-            src={preview}
-          />
+        <div className='relative h-48 w-full overflow-hidden rounded-lg border bg-muted'>
+          <Image fill alt='Preview' className='object-contain' src={preview} />
           <Button
-            className="absolute top-2 right-2"
-            size="sm"
-            type="button"
-            variant="destructive"
+            className='absolute right-2 top-2'
+            size='sm'
+            type='button'
+            variant='destructive'
             onClick={handleRemove}
           >
-            <X className="h-4 w-4" />
+            <X className='h-4 w-4' />
           </Button>
         </div>
       )}
       {value && !preview && (
-        <div className="relative w-full h-48 border rounded-lg overflow-hidden bg-muted flex items-center justify-center">
-          <ImageIcon className="h-12 w-12 text-muted-foreground" />
+        <div className='relative flex h-48 w-full items-center justify-center overflow-hidden rounded-lg border bg-muted'>
+          <ImageIcon className='h-12 w-12 text-muted-foreground' />
           <Button
-            className="absolute top-2 right-2"
-            size="sm"
-            type="button"
-            variant="ghost"
+            className='absolute right-2 top-2'
+            size='sm'
+            type='button'
+            variant='ghost'
             onClick={handleRemove}
           >
-            <X className="h-4 w-4" />
+            <X className='h-4 w-4' />
           </Button>
         </div>
       )}

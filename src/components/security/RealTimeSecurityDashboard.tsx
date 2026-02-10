@@ -1,18 +1,18 @@
-import { 
-  Shield, 
-  AlertTriangle, 
-  CheckCircle, 
-  XCircle, 
-  Activity, 
-  Users, 
-  Globe, 
+import {
+  Shield,
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
+  Activity,
+  Users,
+  Globe,
   Lock,
   Eye,
   Clock,
   TrendingUp,
   TrendingDown,
   Settings,
-  Download
+  Download,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
@@ -25,7 +25,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 export interface SecurityEvent {
   id: string;
   timestamp: string;
-  type: 'threat_detected' | 'login_attempt' | 'data_access' | 'system_alert' | 'compliance_violation';
+  type:
+    | 'threat_detected'
+    | 'login_attempt'
+    | 'data_access'
+    | 'system_alert'
+    | 'compliance_violation';
   severity: 'low' | 'medium' | 'high' | 'critical';
   source: string;
   description: string;
@@ -69,11 +74,11 @@ const mockSecurityEvents: SecurityEvent[] = [
     details: {
       attempts: 15,
       timeWindow: '5 minutes',
-      blocked: true
+      blocked: true,
     },
     ipAddress: '192.168.1.100',
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-    location: 'Unknown Location'
+    location: 'Unknown Location',
   },
   {
     id: 'sec-002',
@@ -86,10 +91,10 @@ const mockSecurityEvents: SecurityEvent[] = [
     details: {
       userId: 'user_123',
       dataTypes: ['customer_data', 'financial_records'],
-      accessCount: 47
+      accessCount: 47,
     },
     ipAddress: '10.0.0.50',
-    location: 'New York, US'
+    location: 'New York, US',
   },
   {
     id: 'sec-003',
@@ -102,9 +107,9 @@ const mockSecurityEvents: SecurityEvent[] = [
     details: {
       cpuUsage: 85,
       duration: '10 minutes',
-      resolved: true
-    }
-  }
+      resolved: true,
+    },
+  },
 ];
 
 const mockAlerts: SecurityAlert[] = [
@@ -116,7 +121,7 @@ const mockAlerts: SecurityAlert[] = [
     timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
     acknowledged: false,
     resolved: false,
-    actions: ['Block IP', 'Require CAPTCHA', 'Alert Security Team']
+    actions: ['Block IP', 'Require CAPTCHA', 'Alert Security Team'],
   },
   {
     id: 'alert-002',
@@ -126,8 +131,12 @@ const mockAlerts: SecurityAlert[] = [
     timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
     acknowledged: true,
     resolved: false,
-    actions: ['Review Access Logs', 'Contact User', 'Implement Additional Monitoring']
-  }
+    actions: [
+      'Review Access Logs',
+      'Contact User',
+      'Implement Additional Monitoring',
+    ],
+  },
 ];
 
 export const RealTimeSecurityDashboard: React.FC = () => {
@@ -140,7 +149,7 @@ export const RealTimeSecurityDashboard: React.FC = () => {
     falsePositives: 2,
     avgResponseTime: 2.3,
     securityScore: 98,
-    complianceScore: 95
+    complianceScore: 95,
   });
   const [isLive, setIsLive] = useState(true);
   const [selectedTimeRange, setSelectedTimeRange] = useState('24h');
@@ -160,7 +169,7 @@ export const RealTimeSecurityDashboard: React.FC = () => {
             status: 'active',
             details: { device: 'Mobile App', location: 'San Francisco, CA' },
             ipAddress: '203.0.113.1',
-            location: 'San Francisco, CA'
+            location: 'San Francisco, CA',
           };
           return [newEvent, ...prev.slice(0, 9)]; // Keep only last 10 events
         });
@@ -172,34 +181,50 @@ export const RealTimeSecurityDashboard: React.FC = () => {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'bg-red-100 text-red-800 border-red-200';
-      case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'critical':
+        return 'bg-red-100 text-red-800 border-red-200';
+      case 'high':
+        return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'low':
+        return 'bg-green-100 text-green-800 border-green-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'active': return <Activity className="w-4 h-4 text-red-500" />;
-      case 'investigating': return <Eye className="w-4 h-4 text-yellow-500" />;
-      case 'resolved': return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case 'false_positive': return <XCircle className="w-4 h-4 text-gray-500" />;
-      default: return <Activity className="w-4 h-4 text-gray-500" />;
+      case 'active':
+        return <Activity className='h-4 w-4 text-red-500' />;
+      case 'investigating':
+        return <Eye className='h-4 w-4 text-yellow-500' />;
+      case 'resolved':
+        return <CheckCircle className='h-4 w-4 text-green-500' />;
+      case 'false_positive':
+        return <XCircle className='h-4 w-4 text-gray-500' />;
+      default:
+        return <Activity className='h-4 w-4 text-gray-500' />;
     }
   };
 
   const handleAcknowledgeAlert = (alertId: string) => {
-    setAlerts(prev => prev.map(alert => 
-      alert.id === alertId ? { ...alert, acknowledged: true } : alert
-    ));
+    setAlerts(prev =>
+      prev.map(alert =>
+        alert.id === alertId ? { ...alert, acknowledged: true } : alert
+      )
+    );
   };
 
   const handleResolveAlert = (alertId: string) => {
-    setAlerts(prev => prev.map(alert => 
-      alert.id === alertId ? { ...alert, resolved: true, acknowledged: true } : alert
-    ));
+    setAlerts(prev =>
+      prev.map(alert =>
+        alert.id === alertId
+          ? { ...alert, resolved: true, acknowledged: true }
+          : alert
+      )
+    );
   };
 
   const formatTimestamp = (timestamp: string) => {
@@ -207,57 +232,69 @@ export const RealTimeSecurityDashboard: React.FC = () => {
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / (1000 * 60));
-    
-    if (diffMins < 1) {return 'Just now';}
-    if (diffMins < 60) {return `${diffMins}m ago`;}
-    if (diffMins < 1440) {return `${Math.floor(diffMins / 60)}h ago`;}
+
+    if (diffMins < 1) {
+      return 'Just now';
+    }
+    if (diffMins < 60) {
+      return `${diffMins}m ago`;
+    }
+    if (diffMins < 1440) {
+      return `${Math.floor(diffMins / 60)}h ago`;
+    }
     return date.toLocaleDateString();
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className='space-y-6'>
+      <div className='flex items-center justify-between'>
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <Shield className="w-8 h-8" />
+          <h1 className='flex items-center gap-2 text-3xl font-bold'>
+            <Shield className='h-8 w-8' />
             Security Monitoring Dashboard
           </h1>
-          <p className="text-gray-600 mt-1">Real-time security monitoring and threat detection</p>
+          <p className='mt-1 text-gray-600'>
+            Real-time security monitoring and threat detection
+          </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className='flex items-center gap-2'>
           <Button
-            size="sm"
-            variant={isLive ? "destructive" : "default"}
+            size='sm'
+            variant={isLive ? 'destructive' : 'default'}
             onClick={() => setIsLive(!isLive)}
           >
-            <Activity className="w-4 h-4 mr-2" />
+            <Activity className='mr-2 h-4 w-4' />
             {isLive ? 'Live' : 'Paused'}
           </Button>
-          <Button size="sm" variant="outline">
-            <Settings className="w-4 h-4 mr-2" />
+          <Button size='sm' variant='outline'>
+            <Settings className='mr-2 h-4 w-4' />
             Settings
           </Button>
-          <Button size="sm" variant="outline">
-            <Download className="w-4 h-4 mr-2" />
+          <Button size='sm' variant='outline'>
+            <Download className='mr-2 h-4 w-4' />
             Export
           </Button>
         </div>
       </div>
 
       {/* Metrics Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'>
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className='p-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="text-sm font-medium text-gray-600">Security Score</p>
-                <p className="text-2xl font-bold text-green-600">{metrics.securityScore}%</p>
+                <p className='text-sm font-medium text-gray-600'>
+                  Security Score
+                </p>
+                <p className='text-2xl font-bold text-green-600'>
+                  {metrics.securityScore}%
+                </p>
               </div>
-              <Shield className="w-8 h-8 text-green-500" />
+              <Shield className='h-8 w-8 text-green-500' />
             </div>
-            <div className="mt-2">
-              <div className="flex items-center text-sm text-green-600">
-                <TrendingUp className="w-4 h-4 mr-1" />
+            <div className='mt-2'>
+              <div className='flex items-center text-sm text-green-600'>
+                <TrendingUp className='mr-1 h-4 w-4' />
                 +2% from last week
               </div>
             </div>
@@ -265,17 +302,21 @@ export const RealTimeSecurityDashboard: React.FC = () => {
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className='p-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="text-sm font-medium text-gray-600">Active Threats</p>
-                <p className="text-2xl font-bold text-red-600">{metrics.activeThreats}</p>
+                <p className='text-sm font-medium text-gray-600'>
+                  Active Threats
+                </p>
+                <p className='text-2xl font-bold text-red-600'>
+                  {metrics.activeThreats}
+                </p>
               </div>
-              <AlertTriangle className="w-8 h-8 text-red-500" />
+              <AlertTriangle className='h-8 w-8 text-red-500' />
             </div>
-            <div className="mt-2">
-              <div className="flex items-center text-sm text-red-600">
-                <TrendingDown className="w-4 h-4 mr-1" />
+            <div className='mt-2'>
+              <div className='flex items-center text-sm text-red-600'>
+                <TrendingDown className='mr-1 h-4 w-4' />
                 -1 from yesterday
               </div>
             </div>
@@ -283,17 +324,21 @@ export const RealTimeSecurityDashboard: React.FC = () => {
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className='p-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="text-sm font-medium text-gray-600">Threats Blocked</p>
-                <p className="text-2xl font-bold text-blue-600">{metrics.threatsBlocked}</p>
+                <p className='text-sm font-medium text-gray-600'>
+                  Threats Blocked
+                </p>
+                <p className='text-2xl font-bold text-blue-600'>
+                  {metrics.threatsBlocked}
+                </p>
               </div>
-              <Lock className="w-8 h-8 text-blue-500" />
+              <Lock className='h-8 w-8 text-blue-500' />
             </div>
-            <div className="mt-2">
-              <div className="flex items-center text-sm text-blue-600">
-                <TrendingUp className="w-4 h-4 mr-1" />
+            <div className='mt-2'>
+              <div className='flex items-center text-sm text-blue-600'>
+                <TrendingUp className='mr-1 h-4 w-4' />
                 +12 this week
               </div>
             </div>
@@ -301,17 +346,21 @@ export const RealTimeSecurityDashboard: React.FC = () => {
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className='p-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="text-sm font-medium text-gray-600">Avg Response Time</p>
-                <p className="text-2xl font-bold text-purple-600">{metrics.avgResponseTime}s</p>
+                <p className='text-sm font-medium text-gray-600'>
+                  Avg Response Time
+                </p>
+                <p className='text-2xl font-bold text-purple-600'>
+                  {metrics.avgResponseTime}s
+                </p>
               </div>
-              <Clock className="w-8 h-8 text-purple-500" />
+              <Clock className='h-8 w-8 text-purple-500' />
             </div>
-            <div className="mt-2">
-              <div className="flex items-center text-sm text-purple-600">
-                <TrendingDown className="w-4 h-4 mr-1" />
+            <div className='mt-2'>
+              <div className='flex items-center text-sm text-purple-600'>
+                <TrendingDown className='mr-1 h-4 w-4' />
                 -0.5s improvement
               </div>
             </div>
@@ -320,63 +369,70 @@ export const RealTimeSecurityDashboard: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <Tabs className="w-full" defaultValue="events">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="events">Security Events</TabsTrigger>
-          <TabsTrigger value="alerts">Active Alerts</TabsTrigger>
-          <TabsTrigger value="threats">Threat Analysis</TabsTrigger>
-          <TabsTrigger value="compliance">Compliance</TabsTrigger>
+      <Tabs className='w-full' defaultValue='events'>
+        <TabsList className='grid w-full grid-cols-4'>
+          <TabsTrigger value='events'>Security Events</TabsTrigger>
+          <TabsTrigger value='alerts'>Active Alerts</TabsTrigger>
+          <TabsTrigger value='threats'>Threat Analysis</TabsTrigger>
+          <TabsTrigger value='compliance'>Compliance</TabsTrigger>
         </TabsList>
 
-        <TabsContent className="space-y-4" value="events">
+        <TabsContent className='space-y-4' value='events'>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Activity className="w-5 h-5" />
+              <CardTitle className='flex items-center gap-2'>
+                <Activity className='h-5 w-5' />
                 Real-time Security Events
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {events.map((event) => (
-                  <div key={event.id} className="border rounded-lg p-4 hover:bg-gray-50">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start gap-3">
+              <div className='space-y-4'>
+                {events.map(event => (
+                  <div
+                    key={event.id}
+                    className='rounded-lg border p-4 hover:bg-gray-50'
+                  >
+                    <div className='flex items-start justify-between'>
+                      <div className='flex items-start gap-3'>
                         {getStatusIcon(event.status)}
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-semibold">{event.description}</h4>
+                        <div className='flex-1'>
+                          <div className='mb-1 flex items-center gap-2'>
+                            <h4 className='font-semibold'>
+                              {event.description}
+                            </h4>
                             <Badge className={getSeverityColor(event.severity)}>
                               {event.severity}
                             </Badge>
                           </div>
-                          <p className="text-sm text-gray-600 mb-2">{event.source}</p>
-                          <div className="flex items-center gap-4 text-xs text-gray-500">
-                            <span className="flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
+                          <p className='mb-2 text-sm text-gray-600'>
+                            {event.source}
+                          </p>
+                          <div className='flex items-center gap-4 text-xs text-gray-500'>
+                            <span className='flex items-center gap-1'>
+                              <Clock className='h-3 w-3' />
                               {formatTimestamp(event.timestamp)}
                             </span>
                             {event.ipAddress && (
-                              <span className="flex items-center gap-1">
-                                <Globe className="w-3 h-3" />
+                              <span className='flex items-center gap-1'>
+                                <Globe className='h-3 w-3' />
                                 {event.ipAddress}
                               </span>
                             )}
                             {event.location && (
-                              <span className="flex items-center gap-1">
-                                <Users className="w-3 h-3" />
+                              <span className='flex items-center gap-1'>
+                                <Users className='h-3 w-3' />
                                 {event.location}
                               </span>
                             )}
                           </div>
                         </div>
                       </div>
-                      <div className="flex gap-2">
-                        <Button size="sm" variant="outline">
+                      <div className='flex gap-2'>
+                        <Button size='sm' variant='outline'>
                           View Details
                         </Button>
                         {event.status === 'active' && (
-                          <Button size="sm" variant="destructive">
+                          <Button size='sm' variant='destructive'>
                             Block
                           </Button>
                         )}
@@ -389,89 +445,102 @@ export const RealTimeSecurityDashboard: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent className="space-y-4" value="alerts">
+        <TabsContent className='space-y-4' value='alerts'>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5" />
+              <CardTitle className='flex items-center gap-2'>
+                <AlertTriangle className='h-5 w-5' />
                 Active Security Alerts
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {alerts.filter(alert => !alert.resolved).map((alert) => (
-                  <Alert key={alert.id} className={getSeverityColor(alert.severity)}>
-                    <AlertTriangle className="h-4 w-4" />
-                    <AlertDescription>
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h4 className="font-semibold mb-1">{alert.title}</h4>
-                          <p className="text-sm mb-2">{alert.description}</p>
-                          <div className="flex items-center gap-2 text-xs">
-                            <span>{formatTimestamp(alert.timestamp)}</span>
-                            <span>•</span>
-                            <span>Severity: {alert.severity}</span>
-                          </div>
-                          <div className="mt-2">
-                            <p className="text-sm font-medium mb-1">Recommended Actions:</p>
-                            <div className="flex flex-wrap gap-1">
-                              {alert.actions.map((action, index) => (
-                                <Badge key={index} className="text-xs" variant="outline">
-                                  {action}
-                                </Badge>
-                              ))}
+              <div className='space-y-4'>
+                {alerts
+                  .filter(alert => !alert.resolved)
+                  .map(alert => (
+                    <Alert
+                      key={alert.id}
+                      className={getSeverityColor(alert.severity)}
+                    >
+                      <AlertTriangle className='h-4 w-4' />
+                      <AlertDescription>
+                        <div className='flex items-start justify-between'>
+                          <div className='flex-1'>
+                            <h4 className='mb-1 font-semibold'>
+                              {alert.title}
+                            </h4>
+                            <p className='mb-2 text-sm'>{alert.description}</p>
+                            <div className='flex items-center gap-2 text-xs'>
+                              <span>{formatTimestamp(alert.timestamp)}</span>
+                              <span>•</span>
+                              <span>Severity: {alert.severity}</span>
+                            </div>
+                            <div className='mt-2'>
+                              <p className='mb-1 text-sm font-medium'>
+                                Recommended Actions:
+                              </p>
+                              <div className='flex flex-wrap gap-1'>
+                                {alert.actions.map((action, index) => (
+                                  <Badge
+                                    key={index}
+                                    className='text-xs'
+                                    variant='outline'
+                                  >
+                                    {action}
+                                  </Badge>
+                                ))}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="flex gap-2 ml-4">
-                          {!alert.acknowledged && (
+                          <div className='ml-4 flex gap-2'>
+                            {!alert.acknowledged && (
+                              <Button
+                                size='sm'
+                                onClick={() => handleAcknowledgeAlert(alert.id)}
+                              >
+                                Acknowledge
+                              </Button>
+                            )}
                             <Button
-                              size="sm"
-                              onClick={() => handleAcknowledgeAlert(alert.id)}
+                              size='sm'
+                              variant='destructive'
+                              onClick={() => handleResolveAlert(alert.id)}
                             >
-                              Acknowledge
+                              Resolve
                             </Button>
-                          )}
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={() => handleResolveAlert(alert.id)}
-                          >
-                            Resolve
-                          </Button>
+                          </div>
                         </div>
-                      </div>
-                    </AlertDescription>
-                  </Alert>
-                ))}
+                      </AlertDescription>
+                    </Alert>
+                  ))}
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent className="space-y-4" value="threats">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <TabsContent className='space-y-4' value='threats'>
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
             <Card>
               <CardHeader>
                 <CardTitle>Threat Types</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
+                <div className='space-y-3'>
+                  <div className='flex items-center justify-between'>
                     <span>Brute Force Attacks</span>
-                    <Badge variant="destructive">12</Badge>
+                    <Badge variant='destructive'>12</Badge>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div className='flex items-center justify-between'>
                     <span>Data Exfiltration</span>
-                    <Badge variant="destructive">3</Badge>
+                    <Badge variant='destructive'>3</Badge>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div className='flex items-center justify-between'>
                     <span>Privilege Escalation</span>
-                    <Badge variant="destructive">1</Badge>
+                    <Badge variant='destructive'>1</Badge>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div className='flex items-center justify-between'>
                     <span>Malware Detection</span>
-                    <Badge variant="destructive">0</Badge>
+                    <Badge variant='destructive'>0</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -482,22 +551,22 @@ export const RealTimeSecurityDashboard: React.FC = () => {
                 <CardTitle>Geographic Distribution</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
+                <div className='space-y-3'>
+                  <div className='flex items-center justify-between'>
                     <span>United States</span>
-                    <Badge variant="outline">23</Badge>
+                    <Badge variant='outline'>23</Badge>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div className='flex items-center justify-between'>
                     <span>China</span>
-                    <Badge variant="outline">8</Badge>
+                    <Badge variant='outline'>8</Badge>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div className='flex items-center justify-between'>
                     <span>Russia</span>
-                    <Badge variant="outline">5</Badge>
+                    <Badge variant='outline'>5</Badge>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div className='flex items-center justify-between'>
                     <span>Unknown</span>
-                    <Badge variant="outline">11</Badge>
+                    <Badge variant='outline'>11</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -505,24 +574,30 @@ export const RealTimeSecurityDashboard: React.FC = () => {
           </div>
         </TabsContent>
 
-        <TabsContent className="space-y-4" value="compliance">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <TabsContent className='space-y-4' value='compliance'>
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
             <Card>
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-green-600 mb-2">98%</div>
-                <div className="text-sm text-gray-600">SOC 2 Compliance</div>
+              <CardContent className='p-6 text-center'>
+                <div className='mb-2 text-3xl font-bold text-green-600'>
+                  98%
+                </div>
+                <div className='text-sm text-gray-600'>SOC 2 Compliance</div>
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-green-600 mb-2">95%</div>
-                <div className="text-sm text-gray-600">GDPR Compliance</div>
+              <CardContent className='p-6 text-center'>
+                <div className='mb-2 text-3xl font-bold text-green-600'>
+                  95%
+                </div>
+                <div className='text-sm text-gray-600'>GDPR Compliance</div>
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-green-600 mb-2">100%</div>
-                <div className="text-sm text-gray-600">CCPA Compliance</div>
+              <CardContent className='p-6 text-center'>
+                <div className='mb-2 text-3xl font-bold text-green-600'>
+                  100%
+                </div>
+                <div className='text-sm text-gray-600'>CCPA Compliance</div>
               </CardContent>
             </Card>
           </div>

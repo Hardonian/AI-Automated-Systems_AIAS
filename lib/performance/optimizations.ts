@@ -19,7 +19,7 @@ export function lazyLoadComponent<T extends React.ComponentType<any>>(
  */
 export function preloadResource(href: string, as: string): void {
   if (typeof window === 'undefined') return;
-  
+
   const link = document.createElement('link');
   link.rel = 'preload';
   link.href = href;
@@ -32,7 +32,7 @@ export function preloadResource(href: string, as: string): void {
  */
 export function prefetchPage(href: string): void {
   if (typeof window === 'undefined') return;
-  
+
   const link = document.createElement('link');
   link.rel = 'prefetch';
   link.href = href;
@@ -47,13 +47,13 @@ export function debounce<T extends (...args: any[]) => any>(
   wait: number
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout | null = null;
-  
+
   return function executedFunction(...args: Parameters<T>) {
     const later = () => {
       timeout = null;
       func(...args);
     };
-    
+
     if (timeout) {
       clearTimeout(timeout);
     }
@@ -69,7 +69,7 @@ export function throttle<T extends (...args: any[]) => any>(
   limit: number
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
-  
+
   return function executedFunction(...args: Parameters<T>) {
     if (!inThrottle) {
       func(...args);
@@ -91,7 +91,7 @@ export function optimizeImage(
   const params = new URLSearchParams();
   if (width) params.set('w', width.toString());
   params.set('q', quality.toString());
-  
+
   return `${src}?${params.toString()}`;
 }
 
@@ -113,7 +113,7 @@ export function createIntersectionObserver(
   if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
     return null;
   }
-  
+
   return new IntersectionObserver(callback, {
     rootMargin: '50px',
     threshold: 0.1,

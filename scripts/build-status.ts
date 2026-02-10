@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Build Status Summary Script
- * 
+ *
  * Provides a quick overview of build readiness and configuration
  */
 
@@ -22,14 +22,26 @@ try {
   const version = execSync('pnpm --version', { encoding: 'utf-8' }).trim();
   const pkg = JSON.parse(readFileSync('package.json', 'utf-8'));
   const required = pkg.packageManager?.replace('pnpm@', '') || '8.0.0';
-  
+
   if (version === required) {
-    statuses.push({ name: 'pnpm Version', status: '✅', message: `v${version} (matches requirement)` });
+    statuses.push({
+      name: 'pnpm Version',
+      status: '✅',
+      message: `v${version} (matches requirement)`,
+    });
   } else {
-    statuses.push({ name: 'pnpm Version', status: '⚠️', message: `v${version} (required: v${required})` });
+    statuses.push({
+      name: 'pnpm Version',
+      status: '⚠️',
+      message: `v${version} (required: v${required})`,
+    });
   }
 } catch {
-  statuses.push({ name: 'pnpm Version', status: '❌', message: 'Not installed' });
+  statuses.push({
+    name: 'pnpm Version',
+    status: '❌',
+    message: 'Not installed',
+  });
 }
 
 // Check lockfile
@@ -40,17 +52,33 @@ if (existsSync('pnpm-lock.yaml')) {
     const nodeModulesExists = existsSync('node_modules');
     const lockfileAge = Date.now() - lockfileStats.mtimeMs;
     const isRecent = lockfileAge < 3600000; // 1 hour
-    
+
     if (nodeModulesExists || isRecent) {
-      statuses.push({ name: 'Lockfile Sync', status: '✅', message: 'Lockfile present and recent' });
+      statuses.push({
+        name: 'Lockfile Sync',
+        status: '✅',
+        message: 'Lockfile present and recent',
+      });
     } else {
-      statuses.push({ name: 'Lockfile Sync', status: '⚠️', message: 'Lockfile may need regeneration' });
+      statuses.push({
+        name: 'Lockfile Sync',
+        status: '⚠️',
+        message: 'Lockfile may need regeneration',
+      });
     }
   } catch {
-    statuses.push({ name: 'Lockfile Sync', status: '✅', message: 'Lockfile found' });
+    statuses.push({
+      name: 'Lockfile Sync',
+      status: '✅',
+      message: 'Lockfile found',
+    });
   }
 } else {
-  statuses.push({ name: 'Lockfile Sync', status: '❌', message: 'pnpm-lock.yaml not found' });
+  statuses.push({
+    name: 'Lockfile Sync',
+    status: '❌',
+    message: 'pnpm-lock.yaml not found',
+  });
 }
 
 // Check workspace packages
@@ -65,7 +93,7 @@ for (const pkg of workspacePackages) {
 statuses.push({
   name: 'Workspace Packages',
   status: workspaceOk ? '✅' : '❌',
-  message: workspaceOk ? 'All packages found' : 'Missing packages'
+  message: workspaceOk ? 'All packages found' : 'Missing packages',
 });
 
 // Check required files
@@ -81,15 +109,23 @@ for (const { file, name } of requiredFiles) {
   statuses.push({
     name,
     status: existsSync(file) ? '✅' : '❌',
-    message: existsSync(file) ? 'Found' : 'Missing'
+    message: existsSync(file) ? 'Found' : 'Missing',
   });
 }
 
 // Check build artifacts
 if (existsSync('.next')) {
-  statuses.push({ name: 'Build Artifacts', status: '✅', message: '.next directory exists' });
+  statuses.push({
+    name: 'Build Artifacts',
+    status: '✅',
+    message: '.next directory exists',
+  });
 } else {
-  statuses.push({ name: 'Build Artifacts', status: '⚠️', message: 'No build artifacts (run build first)' });
+  statuses.push({
+    name: 'Build Artifacts',
+    status: '⚠️',
+    message: 'No build artifacts (run build first)',
+  });
 }
 
 // Print summary

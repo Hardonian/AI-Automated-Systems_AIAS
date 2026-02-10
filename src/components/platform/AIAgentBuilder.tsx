@@ -3,14 +3,14 @@
  * Create and configure custom AI agents for the platform
  */
 
-import { 
-  Bot, 
+import {
+  Bot,
   Save,
   Eye,
   TestTube,
   Zap,
   BarChart3,
-  Star
+  Star,
   // TrendingUp
 } from 'lucide-react';
 import React, { useState } from 'react';
@@ -21,7 +21,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 // import { Switch } from '@/components/ui/switch';
@@ -34,11 +40,11 @@ interface AIAgentBuilderProps {
   onTest?: (agent: AIAgent) => void;
 }
 
-export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({ 
-  agentId, 
-  onSave, 
-  onDeploy, 
-  onTest 
+export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
+  agentId,
+  onSave,
+  onDeploy,
+  onTest,
 }) => {
   const [agent, setAgent] = useState<AIAgent>({
     id: agentId || 'new',
@@ -52,16 +58,16 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
       expertise: [],
       responseStyle: 'helpful and informative',
       language: 'en',
-      culturalContext: 'global'
+      culturalContext: 'global',
     },
     pricing: {
       type: 'per_use',
-      amount: 0.10,
+      amount: 0.1,
       currency: 'USD',
       freeTier: {
         requests: 100,
-        period: 'month'
-      }
+        period: 'month',
+      },
     },
     status: 'draft',
     metrics: {
@@ -69,11 +75,11 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
       successRate: 0,
       averageResponseTime: 0,
       userRating: 0,
-      revenue: 0
+      revenue: 0,
     },
     tenantId: 'current-tenant',
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   });
 
   const [activeTab, setActiveTab] = useState('basic');
@@ -82,18 +88,46 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
   const [isTesting, setIsTesting] = useState(false);
 
   const modelOptions = [
-    { id: 'gpt-4', name: 'GPT-4', description: 'Most capable model for complex tasks' },
-    { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', description: 'Fast and cost-effective' },
-    { id: 'claude-3', name: 'Claude 3', description: 'Anthropic\'s advanced model' },
-    { id: 'custom', name: 'Custom Model', description: 'Your own trained model' }
+    {
+      id: 'gpt-4',
+      name: 'GPT-4',
+      description: 'Most capable model for complex tasks',
+    },
+    {
+      id: 'gpt-3.5-turbo',
+      name: 'GPT-3.5 Turbo',
+      description: 'Fast and cost-effective',
+    },
+    {
+      id: 'claude-3',
+      name: 'Claude 3',
+      description: "Anthropic's advanced model",
+    },
+    {
+      id: 'custom',
+      name: 'Custom Model',
+      description: 'Your own trained model',
+    },
   ];
 
   const toneOptions = [
-    { id: 'professional', label: 'Professional', description: 'Formal and business-like' },
+    {
+      id: 'professional',
+      label: 'Professional',
+      description: 'Formal and business-like',
+    },
     { id: 'casual', label: 'Casual', description: 'Friendly and relaxed' },
     { id: 'friendly', label: 'Friendly', description: 'Warm and approachable' },
-    { id: 'technical', label: 'Technical', description: 'Precise and detailed' },
-    { id: 'creative', label: 'Creative', description: 'Imaginative and expressive' }
+    {
+      id: 'technical',
+      label: 'Technical',
+      description: 'Precise and detailed',
+    },
+    {
+      id: 'creative',
+      label: 'Creative',
+      description: 'Imaginative and expressive',
+    },
   ];
 
   const capabilityOptions = [
@@ -111,7 +145,7 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
     'Sales Assistance',
     'Research',
     'Planning',
-    'Problem Solving'
+    'Problem Solving',
   ];
 
   const expertiseOptions = [
@@ -129,14 +163,22 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
     'Engineering',
     'Design',
     'Writing',
-    'Research'
+    'Research',
   ];
 
   const pricingTypes = [
-    { id: 'per_use', label: 'Per Use', description: 'Pay for each interaction' },
-    { id: 'subscription', label: 'Subscription', description: 'Monthly or yearly fee' },
+    {
+      id: 'per_use',
+      label: 'Per Use',
+      description: 'Pay for each interaction',
+    },
+    {
+      id: 'subscription',
+      label: 'Subscription',
+      description: 'Monthly or yearly fee',
+    },
     { id: 'one_time', label: 'One-time', description: 'Single purchase' },
-    { id: 'free', label: 'Free', description: 'No cost to users' }
+    { id: 'free', label: 'Free', description: 'No cost to users' },
   ];
 
   const updateAgent = (updates: Partial<AIAgent>) => {
@@ -146,42 +188,44 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
   const updatePersonality = (updates: Partial<AgentPersonality>) => {
     setAgent((prev: AIAgent) => ({
       ...prev,
-      personality: { ...prev.personality, ...updates }
+      personality: { ...prev.personality, ...updates },
     }));
   };
 
   const updatePricing = (updates: Partial<AgentPricing>) => {
     setAgent((prev: AIAgent) => ({
       ...prev,
-      pricing: { ...prev.pricing, ...updates }
+      pricing: { ...prev.pricing, ...updates },
     }));
   };
 
   const addCapability = (capability: string) => {
     if (!agent.capabilities.includes(capability)) {
       updateAgent({
-        capabilities: [...agent.capabilities, capability]
+        capabilities: [...agent.capabilities, capability],
       });
     }
   };
 
   const removeCapability = (capability: string) => {
     updateAgent({
-      capabilities: agent.capabilities.filter((c: string) => c !== capability)
+      capabilities: agent.capabilities.filter((c: string) => c !== capability),
     });
   };
 
   const addExpertise = (expertise: string) => {
     if (!agent.personality.expertise.includes(expertise)) {
       updatePersonality({
-        expertise: [...agent.personality.expertise, expertise]
+        expertise: [...agent.personality.expertise, expertise],
       });
     }
   };
 
   const removeExpertise = (expertise: string) => {
     updatePersonality({
-      expertise: agent.personality.expertise.filter((e: string) => e !== expertise)
+      expertise: agent.personality.expertise.filter(
+        (e: string) => e !== expertise
+      ),
     });
   };
 
@@ -192,13 +236,13 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'x-tenant-id': localStorage.getItem('tenantId') || ''
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'x-tenant-id': localStorage.getItem('tenantId') || '',
         },
         body: JSON.stringify({
           inputText: testMessage,
-          context: {}
-        })
+          context: {},
+        }),
       });
 
       if (response.ok) {
@@ -221,8 +265,8 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'x-tenant-id': localStorage.getItem('tenantId') || ''
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'x-tenant-id': localStorage.getItem('tenantId') || '',
         },
         body: JSON.stringify({
           name: agent.name,
@@ -231,13 +275,17 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
           model: agent.model,
           trainingData: agent.trainingData,
           personality: agent.personality,
-          pricing: agent.pricing
-        })
+          pricing: agent.pricing,
+        }),
       });
 
       if (response.ok) {
         const result = await response.json();
-        setAgent((prev: AIAgent) => ({ ...prev, id: result.agent.id, status: 'draft' }));
+        setAgent((prev: AIAgent) => ({
+          ...prev,
+          id: result.agent.id,
+          status: 'draft',
+        }));
         if (onSave) {
           onSave(agent);
         }
@@ -253,12 +301,12 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'x-tenant-id': localStorage.getItem('tenantId') || ''
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'x-tenant-id': localStorage.getItem('tenantId') || '',
         },
         body: JSON.stringify({
-          trainingData: agent.trainingData
-        })
+          trainingData: agent.trainingData,
+        }),
       });
 
       if (response.ok) {
@@ -273,85 +321,104 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
+    <div className='mx-auto w-full max-w-7xl space-y-6 p-6'>
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="p-3 bg-purple-100 rounded-lg">
-            <Bot className="h-8 w-8 text-purple-600" />
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center gap-4'>
+          <div className='rounded-lg bg-purple-100 p-3'>
+            <Bot className='h-8 w-8 text-purple-600' />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">AI Agent Builder</h1>
-            <p className="text-gray-600">Create and configure intelligent AI agents</p>
+            <h1 className='text-3xl font-bold text-gray-900'>
+              AI Agent Builder
+            </h1>
+            <p className='text-gray-600'>
+              Create and configure intelligent AI agents
+            </p>
           </div>
         </div>
-        
-        <div className="flex items-center gap-3">
-          <Button variant="outline" onClick={handleTest}>
-            <TestTube className="h-4 w-4 mr-2" />
+
+        <div className='flex items-center gap-3'>
+          <Button variant='outline' onClick={handleTest}>
+            <TestTube className='mr-2 h-4 w-4' />
             Test Agent
           </Button>
-          <Button variant="outline" onClick={handleSave}>
-            <Save className="h-4 w-4 mr-2" />
+          <Button variant='outline' onClick={handleSave}>
+            <Save className='mr-2 h-4 w-4' />
             Save
           </Button>
           <Button onClick={handleDeploy}>
-            <Zap className="h-4 w-4 mr-2" />
+            <Zap className='mr-2 h-4 w-4' />
             Deploy
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className='grid grid-cols-1 gap-6 lg:grid-cols-3'>
         {/* Main Configuration */}
-        <div className="lg:col-span-2">
+        <div className='lg:col-span-2'>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="basic">Basic Info</TabsTrigger>
-              <TabsTrigger value="personality">Personality</TabsTrigger>
-              <TabsTrigger value="capabilities">Capabilities</TabsTrigger>
-              <TabsTrigger value="pricing">Pricing</TabsTrigger>
+            <TabsList className='grid w-full grid-cols-4'>
+              <TabsTrigger value='basic'>Basic Info</TabsTrigger>
+              <TabsTrigger value='personality'>Personality</TabsTrigger>
+              <TabsTrigger value='capabilities'>Capabilities</TabsTrigger>
+              <TabsTrigger value='pricing'>Pricing</TabsTrigger>
             </TabsList>
 
-            <TabsContent className="space-y-6" value="basic">
+            <TabsContent className='space-y-6' value='basic'>
               <Card>
                 <CardHeader>
                   <CardTitle>Basic Information</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className='space-y-4'>
                   <div>
-                    <Label htmlFor="agent-name">Agent Name</Label>
+                    <Label htmlFor='agent-name'>Agent Name</Label>
                     <Input
-                      id="agent-name"
-                      placeholder="Enter agent name"
+                      id='agent-name'
+                      placeholder='Enter agent name'
                       value={agent.name}
-                      onChange={(e) => updateAgent({ name: e.target.value })}
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="agent-description">Description</Label>
-                    <Textarea
-                      id="agent-description"
-                      placeholder="Describe what this agent does"
-                      rows={3}
-                      value={agent.description}
-                      onChange={(e) => updateAgent({ description: e.target.value })}
+                      onChange={e => updateAgent({ name: e.target.value })}
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="agent-model">AI Model</Label>
-                    <Select value={agent.model} onValueChange={(value) => updateAgent({ model: value as 'gpt-4' | 'claude-3' | 'custom' | 'multi-model' })}>
+                    <Label htmlFor='agent-description'>Description</Label>
+                    <Textarea
+                      id='agent-description'
+                      placeholder='Describe what this agent does'
+                      rows={3}
+                      value={agent.description}
+                      onChange={e =>
+                        updateAgent({ description: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor='agent-model'>AI Model</Label>
+                    <Select
+                      value={agent.model}
+                      onValueChange={value =>
+                        updateAgent({
+                          model: value as
+                            | 'gpt-4'
+                            | 'claude-3'
+                            | 'custom'
+                            | 'multi-model',
+                        })
+                      }
+                    >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select AI model" />
+                        <SelectValue placeholder='Select AI model' />
                       </SelectTrigger>
                       <SelectContent>
                         {modelOptions.map(option => (
                           <SelectItem key={option.id} value={option.id}>
                             <div>
-                              <div className="font-medium">{option.name}</div>
-                              <div className="text-sm text-gray-500">{option.description}</div>
+                              <div className='font-medium'>{option.name}</div>
+                              <div className='text-sm text-gray-500'>
+                                {option.description}
+                              </div>
                             </div>
                           </SelectItem>
                         ))}
@@ -360,48 +427,68 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
                   </div>
 
                   <div>
-                    <Label htmlFor="response-style">Response Style</Label>
+                    <Label htmlFor='response-style'>Response Style</Label>
                     <Textarea
-                      id="response-style"
+                      id='response-style'
                       placeholder="Describe how the agent should respond (e.g., 'helpful and informative', 'concise and direct')"
                       rows={2}
                       value={agent.personality.responseStyle}
-                      onChange={(e) => updatePersonality({ responseStyle: e.target.value })}
+                      onChange={e =>
+                        updatePersonality({ responseStyle: e.target.value })
+                      }
                     />
                   </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent className="space-y-6" value="personality">
+            <TabsContent className='space-y-6' value='personality'>
               <Card>
                 <CardHeader>
                   <CardTitle>Personality Configuration</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className='space-y-6'>
                   <div>
                     <Label>Communication Tone</Label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                    <div className='mt-2 grid grid-cols-1 gap-3 md:grid-cols-2'>
                       {toneOptions.map(option => (
                         <div
                           key={option.id}
-                          className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                          className={`cursor-pointer rounded-lg border p-3 transition-colors ${
                             agent.personality.tone === option.id
                               ? 'border-purple-500 bg-purple-50'
                               : 'border-gray-200 hover:border-gray-300'
                           }`}
-                          role="button"
+                          role='button'
                           tabIndex={0}
-                          onClick={() => updatePersonality({ tone: option.id as 'professional' | 'casual' | 'friendly' | 'technical' | 'creative' })}
-                          onKeyDown={(e) => {
+                          onClick={() =>
+                            updatePersonality({
+                              tone: option.id as
+                                | 'professional'
+                                | 'casual'
+                                | 'friendly'
+                                | 'technical'
+                                | 'creative',
+                            })
+                          }
+                          onKeyDown={e => {
                             if (e.key === 'Enter' || e.key === ' ') {
                               e.preventDefault();
-                              updatePersonality({ tone: option.id as 'professional' | 'casual' | 'friendly' | 'technical' | 'creative' });
+                              updatePersonality({
+                                tone: option.id as
+                                  | 'professional'
+                                  | 'casual'
+                                  | 'friendly'
+                                  | 'technical'
+                                  | 'creative',
+                              });
                             }
                           }}
                         >
-                          <div className="font-medium">{option.label}</div>
-                          <div className="text-sm text-gray-500">{option.description}</div>
+                          <div className='font-medium'>{option.label}</div>
+                          <div className='text-sm text-gray-500'>
+                            {option.description}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -409,27 +496,35 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
 
                   <div>
                     <Label>Areas of Expertise</Label>
-                    <div className="mt-2">
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        {agent.personality.expertise.map((expertise: string) => (
-                          <Badge key={expertise} className="flex items-center gap-1" variant="secondary">
-                            {expertise}
-                            <button
-                              className="ml-1 hover:text-red-500"
-                              onClick={() => removeExpertise(expertise)}
+                    <div className='mt-2'>
+                      <div className='mb-3 flex flex-wrap gap-2'>
+                        {agent.personality.expertise.map(
+                          (expertise: string) => (
+                            <Badge
+                              key={expertise}
+                              className='flex items-center gap-1'
+                              variant='secondary'
                             >
-                              ×
-                            </button>
-                          </Badge>
-                        ))}
+                              {expertise}
+                              <button
+                                className='ml-1 hover:text-red-500'
+                                onClick={() => removeExpertise(expertise)}
+                              >
+                                ×
+                              </button>
+                            </Badge>
+                          )
+                        )}
                       </div>
                       <Select onValueChange={addExpertise}>
                         <SelectTrigger>
-                          <SelectValue placeholder="Add expertise area" />
+                          <SelectValue placeholder='Add expertise area' />
                         </SelectTrigger>
                         <SelectContent>
                           {expertiseOptions
-                            .filter(e => !agent.personality.expertise.includes(e))
+                            .filter(
+                              e => !agent.personality.expertise.includes(e)
+                            )
                             .map(option => (
                               <SelectItem key={option} value={option}>
                                 {option}
@@ -440,43 +535,49 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                     <div>
-                      <Label htmlFor="language">Language</Label>
-                      <Select 
-                        value={agent.personality.language} 
-                        onValueChange={(value) => updatePersonality({ language: value })}
+                      <Label htmlFor='language'>Language</Label>
+                      <Select
+                        value={agent.personality.language}
+                        onValueChange={value =>
+                          updatePersonality({ language: value })
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="en">English</SelectItem>
-                          <SelectItem value="es">Spanish</SelectItem>
-                          <SelectItem value="fr">French</SelectItem>
-                          <SelectItem value="de">German</SelectItem>
-                          <SelectItem value="zh">Chinese</SelectItem>
-                          <SelectItem value="ja">Japanese</SelectItem>
+                          <SelectItem value='en'>English</SelectItem>
+                          <SelectItem value='es'>Spanish</SelectItem>
+                          <SelectItem value='fr'>French</SelectItem>
+                          <SelectItem value='de'>German</SelectItem>
+                          <SelectItem value='zh'>Chinese</SelectItem>
+                          <SelectItem value='ja'>Japanese</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
                     <div>
-                      <Label htmlFor="cultural-context">Cultural Context</Label>
-                      <Select 
-                        value={agent.personality.culturalContext} 
-                        onValueChange={(value) => updatePersonality({ culturalContext: value })}
+                      <Label htmlFor='cultural-context'>Cultural Context</Label>
+                      <Select
+                        value={agent.personality.culturalContext}
+                        onValueChange={value =>
+                          updatePersonality({ culturalContext: value })
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="global">Global</SelectItem>
-                          <SelectItem value="us">United States</SelectItem>
-                          <SelectItem value="uk">United Kingdom</SelectItem>
-                          <SelectItem value="eu">European Union</SelectItem>
-                          <SelectItem value="asia">Asia</SelectItem>
-                          <SelectItem value="latin-america">Latin America</SelectItem>
+                          <SelectItem value='global'>Global</SelectItem>
+                          <SelectItem value='us'>United States</SelectItem>
+                          <SelectItem value='uk'>United Kingdom</SelectItem>
+                          <SelectItem value='eu'>European Union</SelectItem>
+                          <SelectItem value='asia'>Asia</SelectItem>
+                          <SelectItem value='latin-america'>
+                            Latin America
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -485,21 +586,25 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
               </Card>
             </TabsContent>
 
-            <TabsContent className="space-y-6" value="capabilities">
+            <TabsContent className='space-y-6' value='capabilities'>
               <Card>
                 <CardHeader>
                   <CardTitle>Agent Capabilities</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className='space-y-4'>
                   <div>
                     <Label>Select Capabilities</Label>
-                    <div className="mt-2">
-                      <div className="flex flex-wrap gap-2 mb-3">
+                    <div className='mt-2'>
+                      <div className='mb-3 flex flex-wrap gap-2'>
                         {agent.capabilities.map((capability: string) => (
-                          <Badge key={capability} className="flex items-center gap-1" variant="secondary">
+                          <Badge
+                            key={capability}
+                            className='flex items-center gap-1'
+                            variant='secondary'
+                          >
                             {capability}
                             <button
-                              className="ml-1 hover:text-red-500"
+                              className='ml-1 hover:text-red-500'
                               onClick={() => removeCapability(capability)}
                             >
                               ×
@@ -509,7 +614,7 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
                       </div>
                       <Select onValueChange={addCapability}>
                         <SelectTrigger>
-                          <SelectValue placeholder="Add capability" />
+                          <SelectValue placeholder='Add capability' />
                         </SelectTrigger>
                         <SelectContent>
                           {capabilityOptions
@@ -525,82 +630,111 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
                   </div>
 
                   <div>
-                    <Label htmlFor="training-data">Training Data (Optional)</Label>
+                    <Label htmlFor='training-data'>
+                      Training Data (Optional)
+                    </Label>
                     <Textarea
-                      id="training-data"
-                      placeholder="Enter training data or examples (one per line)"
+                      id='training-data'
+                      placeholder='Enter training data or examples (one per line)'
                       rows={4}
                       value={agent.trainingData.join('\n')}
-                      onChange={(e) => updateAgent({ 
-                        trainingData: e.target.value.split('\n').filter(line => line.trim()) 
-                      })}
+                      onChange={e =>
+                        updateAgent({
+                          trainingData: e.target.value
+                            .split('\n')
+                            .filter(line => line.trim()),
+                        })
+                      }
                     />
-                    <p className="text-sm text-gray-500 mt-1">
-                      Provide specific examples or data to improve the agent&apos;s performance
+                    <p className='mt-1 text-sm text-gray-500'>
+                      Provide specific examples or data to improve the
+                      agent&apos;s performance
                     </p>
                   </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent className="space-y-6" value="pricing">
+            <TabsContent className='space-y-6' value='pricing'>
               <Card>
                 <CardHeader>
                   <CardTitle>Pricing Configuration</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className='space-y-6'>
                   <div>
                     <Label>Pricing Type</Label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                    <div className='mt-2 grid grid-cols-1 gap-3 md:grid-cols-2'>
                       {pricingTypes.map(option => (
                         <div
                           key={option.id}
-                          className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                          className={`cursor-pointer rounded-lg border p-3 transition-colors ${
                             agent.pricing.type === option.id
                               ? 'border-purple-500 bg-purple-50'
                               : 'border-gray-200 hover:border-gray-300'
                           }`}
-                          role="button"
+                          role='button'
                           tabIndex={0}
-                          onClick={() => updatePricing({ type: option.id as 'per_use' | 'subscription' | 'one_time' | 'free' })}
-                          onKeyDown={(e) => {
+                          onClick={() =>
+                            updatePricing({
+                              type: option.id as
+                                | 'per_use'
+                                | 'subscription'
+                                | 'one_time'
+                                | 'free',
+                            })
+                          }
+                          onKeyDown={e => {
                             if (e.key === 'Enter' || e.key === ' ') {
                               e.preventDefault();
-                              updatePricing({ type: option.id as 'per_use' | 'subscription' | 'one_time' | 'free' });
+                              updatePricing({
+                                type: option.id as
+                                  | 'per_use'
+                                  | 'subscription'
+                                  | 'one_time'
+                                  | 'free',
+                              });
                             }
                           }}
                         >
-                          <div className="font-medium">{option.label}</div>
-                          <div className="text-sm text-gray-500">{option.description}</div>
+                          <div className='font-medium'>{option.label}</div>
+                          <div className='text-sm text-gray-500'>
+                            {option.description}
+                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
 
                   {agent.pricing.type !== 'free' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                       <div>
-                        <Label htmlFor="pricing-amount">Price</Label>
-                        <div className="flex gap-2">
+                        <Label htmlFor='pricing-amount'>Price</Label>
+                        <div className='flex gap-2'>
                           <Input
-                            id="pricing-amount"
-                            placeholder="0.00"
-                            step="0.01"
-                            type="number"
+                            id='pricing-amount'
+                            placeholder='0.00'
+                            step='0.01'
+                            type='number'
                             value={agent.pricing.amount}
-                            onChange={(e) => updatePricing({ amount: parseFloat(e.target.value) || 0 })}
+                            onChange={e =>
+                              updatePricing({
+                                amount: parseFloat(e.target.value) || 0,
+                              })
+                            }
                           />
-                          <Select 
-                            value={agent.pricing.currency} 
-                            onValueChange={(value) => updatePricing({ currency: value })}
+                          <Select
+                            value={agent.pricing.currency}
+                            onValueChange={value =>
+                              updatePricing({ currency: value })
+                            }
                           >
-                            <SelectTrigger className="w-20">
+                            <SelectTrigger className='w-20'>
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="USD">USD</SelectItem>
-                              <SelectItem value="EUR">EUR</SelectItem>
-                              <SelectItem value="GBP">GBP</SelectItem>
+                              <SelectItem value='USD'>USD</SelectItem>
+                              <SelectItem value='EUR'>EUR</SelectItem>
+                              <SelectItem value='GBP'>GBP</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -609,36 +743,42 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
                       {agent.pricing.type === 'per_use' && (
                         <div>
                           <Label>Free Tier (Optional)</Label>
-                          <div className="flex gap-2">
+                          <div className='flex gap-2'>
                             <Input
-                              placeholder="100"
-                              type="number"
+                              placeholder='100'
+                              type='number'
                               value={agent.pricing.freeTier?.requests || 0}
-                              onChange={(e) => updatePricing({
-                                freeTier: {
-                                  ...agent.pricing.freeTier,
-                                  requests: parseInt(e.target.value) || 0,
-                                  period: agent.pricing.freeTier?.period || 'month'
-                                }
-                              })}
+                              onChange={e =>
+                                updatePricing({
+                                  freeTier: {
+                                    ...agent.pricing.freeTier,
+                                    requests: parseInt(e.target.value) || 0,
+                                    period:
+                                      agent.pricing.freeTier?.period || 'month',
+                                  },
+                                })
+                              }
                             />
-                            <Select 
-                              value={agent.pricing.freeTier?.period || 'month'} 
-                              onValueChange={(value) => updatePricing({
-                                freeTier: {
-                                  ...agent.pricing.freeTier,
-                                  requests: agent.pricing.freeTier?.requests || 0,
-                                  period: value
-                                }
-                              })}
+                            <Select
+                              value={agent.pricing.freeTier?.period || 'month'}
+                              onValueChange={value =>
+                                updatePricing({
+                                  freeTier: {
+                                    ...agent.pricing.freeTier,
+                                    requests:
+                                      agent.pricing.freeTier?.requests || 0,
+                                    period: value,
+                                  },
+                                })
+                              }
                             >
-                              <SelectTrigger className="w-24">
+                              <SelectTrigger className='w-24'>
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="day">per day</SelectItem>
-                                <SelectItem value="week">per week</SelectItem>
-                                <SelectItem value="month">per month</SelectItem>
+                                <SelectItem value='day'>per day</SelectItem>
+                                <SelectItem value='week'>per week</SelectItem>
+                                <SelectItem value='month'>per month</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
@@ -653,41 +793,45 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-6">
+        <div className='space-y-6'>
           {/* Agent Preview */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Eye className="h-5 w-5" />
+              <CardTitle className='flex items-center gap-2'>
+                <Eye className='h-5 w-5' />
                 Agent Preview
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Bot className="h-8 w-8 text-purple-600" />
+              <div className='space-y-4'>
+                <div className='text-center'>
+                  <div className='mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100'>
+                    <Bot className='h-8 w-8 text-purple-600' />
                   </div>
-                  <h3 className="font-semibold">{agent.name}</h3>
-                  <p className="text-sm text-gray-600">{agent.description}</p>
+                  <h3 className='font-semibold'>{agent.name}</h3>
+                  <p className='text-sm text-gray-600'>{agent.description}</p>
                 </div>
 
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
+                <div className='space-y-2'>
+                  <div className='flex items-center justify-between text-sm'>
                     <span>Model:</span>
-                    <Badge variant="outline">{agent.model}</Badge>
+                    <Badge variant='outline'>{agent.model}</Badge>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
+                  <div className='flex items-center justify-between text-sm'>
                     <span>Tone:</span>
-                    <Badge variant="outline">{agent.personality.tone}</Badge>
+                    <Badge variant='outline'>{agent.personality.tone}</Badge>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
+                  <div className='flex items-center justify-between text-sm'>
                     <span>Capabilities:</span>
                     <span>{agent.capabilities.length}</span>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
+                  <div className='flex items-center justify-between text-sm'>
                     <span>Status:</span>
-                    <Badge variant={agent.status === 'active' ? 'default' : 'secondary'}>
+                    <Badge
+                      variant={
+                        agent.status === 'active' ? 'default' : 'secondary'
+                      }
+                    >
                       {agent.status}
                     </Badge>
                   </div>
@@ -699,45 +843,47 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
           {/* Test Agent */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TestTube className="h-5 w-5" />
+              <CardTitle className='flex items-center gap-2'>
+                <TestTube className='h-5 w-5' />
                 Test Agent
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className='space-y-4'>
               <div>
-                <Label htmlFor="test-message">Test Message</Label>
+                <Label htmlFor='test-message'>Test Message</Label>
                 <Textarea
-                  id="test-message"
-                  placeholder="Type a message to test the agent..."
+                  id='test-message'
+                  placeholder='Type a message to test the agent...'
                   rows={3}
                   value={testMessage}
-                  onChange={(e) => setTestMessage(e.target.value)}
+                  onChange={e => setTestMessage(e.target.value)}
                 />
               </div>
-              
-              <Button 
-                className="w-full" 
+
+              <Button
+                className='w-full'
                 disabled={!testMessage.trim() || isTesting}
                 onClick={handleTest}
               >
                 {isTesting ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                    <div className='mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white' />
                     Testing...
                   </>
                 ) : (
                   <>
-                    <TestTube className="h-4 w-4 mr-2" />
+                    <TestTube className='mr-2 h-4 w-4' />
                     Test Agent
                   </>
                 )}
               </Button>
 
               {testResponse && (
-                <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                  <div className="text-sm font-medium mb-2">Agent Response:</div>
-                  <div className="text-sm text-gray-700">{testResponse}</div>
+                <div className='mt-4 rounded-lg bg-gray-50 p-3'>
+                  <div className='mb-2 text-sm font-medium'>
+                    Agent Response:
+                  </div>
+                  <div className='text-sm text-gray-700'>{testResponse}</div>
                 </div>
               )}
             </CardContent>
@@ -746,35 +892,45 @@ export const AIAgentBuilder: React.FC<AIAgentBuilderProps> = ({
           {/* Agent Metrics */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
+              <CardTitle className='flex items-center gap-2'>
+                <BarChart3 className='h-5 w-5' />
                 Metrics
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-sm">
+              <div className='space-y-3'>
+                <div className='flex items-center justify-between text-sm'>
                   <span>Total Interactions:</span>
-                  <span className="font-medium">{agent.metrics.totalInteractions.toLocaleString()}</span>
+                  <span className='font-medium'>
+                    {agent.metrics.totalInteractions.toLocaleString()}
+                  </span>
                 </div>
-                <div className="flex items-center justify-between text-sm">
+                <div className='flex items-center justify-between text-sm'>
                   <span>Success Rate:</span>
-                  <span className="font-medium">{agent.metrics.successRate.toFixed(1)}%</span>
+                  <span className='font-medium'>
+                    {agent.metrics.successRate.toFixed(1)}%
+                  </span>
                 </div>
-                <div className="flex items-center justify-between text-sm">
+                <div className='flex items-center justify-between text-sm'>
                   <span>Avg Response Time:</span>
-                  <span className="font-medium">{agent.metrics.averageResponseTime.toFixed(1)}s</span>
+                  <span className='font-medium'>
+                    {agent.metrics.averageResponseTime.toFixed(1)}s
+                  </span>
                 </div>
-                <div className="flex items-center justify-between text-sm">
+                <div className='flex items-center justify-between text-sm'>
                   <span>User Rating:</span>
-                  <div className="flex items-center gap-1">
-                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                    <span className="font-medium">{agent.metrics.userRating.toFixed(1)}</span>
+                  <div className='flex items-center gap-1'>
+                    <Star className='h-4 w-4 fill-current text-yellow-400' />
+                    <span className='font-medium'>
+                      {agent.metrics.userRating.toFixed(1)}
+                    </span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between text-sm">
+                <div className='flex items-center justify-between text-sm'>
                   <span>Revenue:</span>
-                  <span className="font-medium">${agent.metrics.revenue.toFixed(2)}</span>
+                  <span className='font-medium'>
+                    ${agent.metrics.revenue.toFixed(2)}
+                  </span>
                 </div>
               </div>
             </CardContent>

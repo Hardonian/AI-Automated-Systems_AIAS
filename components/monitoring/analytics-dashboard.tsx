@@ -1,8 +1,14 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useTelemetry } from "@/lib/monitoring/enhanced-telemetry";
+import { useEffect, useState } from 'react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { useTelemetry } from '@/lib/monitoring/enhanced-telemetry';
 
 export function AnalyticsDashboard() {
   const { getPerformanceMetrics, getEngagement } = useTelemetry();
@@ -10,23 +16,23 @@ export function AnalyticsDashboard() {
   const [engagement, setEngagement] = useState<any>(null);
 
   useEffect(() => {
-    const sessionId = sessionStorage.getItem("sessionId") || "current";
+    const sessionId = sessionStorage.getItem('sessionId') || 'current';
     const perfMetrics = getPerformanceMetrics();
     const eng = getEngagement(sessionId);
-    
+
     setMetrics(perfMetrics);
     setEngagement(eng);
   }, [getPerformanceMetrics, getEngagement]);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
       <Card>
         <CardHeader>
           <CardTitle>Page Views</CardTitle>
           <CardDescription>Total page views this session</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{engagement?.pageViews || 0}</div>
+          <div className='text-2xl font-bold'>{engagement?.pageViews || 0}</div>
         </CardContent>
       </Card>
       <Card>
@@ -35,7 +41,9 @@ export function AnalyticsDashboard() {
           <CardDescription>User interactions tracked</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{engagement?.interactions || 0}</div>
+          <div className='text-2xl font-bold'>
+            {engagement?.interactions || 0}
+          </div>
         </CardContent>
       </Card>
       <Card>
@@ -44,10 +52,10 @@ export function AnalyticsDashboard() {
           <CardDescription>Average response time</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
+          <div className='text-2xl font-bold'>
             {metrics.length > 0
               ? `${Math.round(metrics.reduce((acc, m) => acc + m.value, 0) / metrics.length)}ms`
-              : "N/A"}
+              : 'N/A'}
           </div>
         </CardContent>
       </Card>
@@ -57,7 +65,9 @@ export function AnalyticsDashboard() {
           <CardDescription>Total events tracked</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{engagement?.events?.length || 0}</div>
+          <div className='text-2xl font-bold'>
+            {engagement?.events?.length || 0}
+          </div>
         </CardContent>
       </Card>
     </div>

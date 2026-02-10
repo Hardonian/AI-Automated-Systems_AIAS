@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useRef, useState, MouseEvent, ReactNode } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useRef, useState, MouseEvent, ReactNode } from 'react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 interface SpotlightCardProps {
   children: ReactNode;
@@ -15,7 +15,7 @@ interface SpotlightCardProps {
 export function SpotlightCard({
   children,
   className,
-  spotlightColor = "rgba(6, 182, 212, 0.15)",
+  spotlightColor = 'rgba(6, 182, 212, 0.15)',
   spotlightSize = 600,
 }: SpotlightCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -34,11 +34,13 @@ export function SpotlightCard({
   });
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) {return;}
+    if (!cardRef.current) {
+      return;
+    }
 
     const rect = cardRef.current.getBoundingClientRect();
-    const {width} = rect;
-    const {height} = rect;
+    const { width } = rect;
+    const { height } = rect;
     const mouseXRelative = (e.clientX - rect.left) / width;
     const mouseYRelative = (e.clientY - rect.top) / height;
 
@@ -50,8 +52,8 @@ export function SpotlightCard({
     const y = e.clientY - rect.top;
 
     if (cardRef.current) {
-      cardRef.current.style.setProperty("--mouse-x", `${x}px`);
-      cardRef.current.style.setProperty("--mouse-y", `${y}px`);
+      cardRef.current.style.setProperty('--mouse-x', `${x}px`);
+      cardRef.current.style.setProperty('--mouse-y', `${y}px`);
     }
   };
 
@@ -67,34 +69,36 @@ export function SpotlightCard({
       style={{
         rotateX: isHovered ? rotateX : 0,
         rotateY: isHovered ? rotateY : 0,
-        transformStyle: "preserve-3d",
+        transformStyle: 'preserve-3d',
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
-      {...({ className: cn(
-        "relative group rounded-2xl p-6 transition-all duration-300",
-        "glass-morphism",
-        "border border-white/10",
-        "hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.3)]",
-        className
-      )} as any)}
+      {...({
+        className: cn(
+          'relative group rounded-2xl p-6 transition-all duration-300',
+          'glass-morphism',
+          'border border-white/10',
+          'hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.3)]',
+          className
+        ),
+      } as any)}
     >
       {/* Spotlight gradient overlay */}
       <div
-        className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        className='pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100'
         style={{
           background: `radial-gradient(${spotlightSize}px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), ${spotlightColor}, rgba(168, 85, 247, 0.1), transparent 40%)`,
         }}
       />
 
       {/* Content */}
-      <div className="relative z-10">{children}</div>
+      <div className='relative z-10'>{children}</div>
 
       {/* Shine effect on border */}
-      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+      <div className='pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100'>
         <div
-          className="absolute inset-0 rounded-2xl"
+          className='absolute inset-0 rounded-2xl'
           style={{
             background: `radial-gradient(${spotlightSize * 0.8}px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), transparent 40%, rgba(6, 182, 212, 0.1))`,
           }}

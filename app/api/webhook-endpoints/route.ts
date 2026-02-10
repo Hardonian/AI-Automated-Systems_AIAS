@@ -3,18 +3,21 @@
  * Create and manage tenant-scoped webhook endpoints
  */
 
-import { createClient } from "@supabase/supabase-js";
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
-import { handleApiError } from "@/lib/api/route-handler";
-import { assertCanCreateWebhook } from "@/lib/entitlements/server-gates";
-import { env } from "@/lib/env";
-import { SystemError, ValidationError, formatError } from "@/lib/errors";
-import { logger } from "@/lib/logging/structured-logger";
-import { createClient as createSupabaseClient } from "@/lib/supabase/server";
+import { handleApiError } from '@/lib/api/route-handler';
+import { assertCanCreateWebhook } from '@/lib/entitlements/server-gates';
+import { env } from '@/lib/env';
+import { SystemError, ValidationError, formatError } from '@/lib/errors';
+import { logger } from '@/lib/logging/structured-logger';
+import { createClient as createSupabaseClient } from '@/lib/supabase/server';
 
-const supabaseAdmin = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+const supabaseAdmin = createClient(
+  env.supabase.url,
+  env.supabase.serviceRoleKey
+);
 
 const createWebhookSchema = z.object({
   tenant_id: z.string().uuid(),
@@ -30,10 +33,13 @@ const createWebhookSchema = z.object({
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const supabase = await createSupabaseClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -41,16 +47,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Verify user is member of tenant
     const { data: membership, error: membershipError } = await supabase
-      .from("tenant_members")
-      .select("role")
-      .eq("tenant_id", validated.tenant_id)
-      .eq("user_id", user.id)
-      .eq("status", "active")
+      .from('tenant_members')
+      .select('role')
+      .eq('tenant_id', validated.tenant_id)
+      .eq('user_id', user.id)
+      .eq('status', 'active')
       .single();
 
     if (membershipError || !membership) {
       return NextResponse.json(
-        { error: "Not a member of this tenant" },
+        { error: 'Not a member of this tenant' },
         { status: 403 }
       );
     }
@@ -59,48 +65,47 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
       await assertCanCreateWebhook(validated.tenant_id);
     } catch (entitlementError) {
-      const error = entitlementError instanceof SystemError
-        ? entitlementError
-        : new SystemError("Webhook limit exceeded");
+      const error =
+        entitlementError instanceof SystemError
+          ? entitlementError
+          : new SystemError('Webhook limit exceeded');
       const formatted = formatError(error);
-      return NextResponse.json(
-        { error: formatted.message },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: formatted.message }, { status: 403 });
     }
 
     // Verify system exists and belongs to tenant
     const { data: system, error: systemError } = await supabase
-      .from("workflows")
-      .select("id")
-      .eq("id", validated.system_id)
-      .eq("tenant_id", validated.tenant_id)
+      .from('workflows')
+      .select('id')
+      .eq('id', validated.system_id)
+      .eq('tenant_id', validated.tenant_id)
       .single();
 
     if (systemError || !system) {
       return NextResponse.json(
-        { error: "System not found or does not belong to tenant" },
+        { error: 'System not found or does not belong to tenant' },
         { status: 404 }
       );
     }
 
     // Generate webhook secret using database function
     const { data: secretData, error: secretError } = await supabaseAdmin.rpc(
-      "generate_webhook_secret"
+      'generate_webhook_secret'
     );
 
     if (secretError || !secretData) {
       // Fallback: generate secret client-side if DB function fails
-      const crypto = await import("crypto");
+      const crypto = await import('crypto');
       const randomBytes = crypto.randomBytes(32);
-      const secret = randomBytes.toString("base64")
-        .replace(/\+/g, "-")
-        .replace(/\//g, "_")
-        .replace(/=/g, "");
-      
+      const secret = randomBytes
+        .toString('base64')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=/g, '');
+
       // Use fallback secret
       const { data: endpoint, error: createError } = await supabaseAdmin
-        .from("webhook_endpoints")
+        .from('webhook_endpoints')
         .insert({
           tenant_id: validated.tenant_id,
           system_id: validated.system_id,
@@ -115,7 +120,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
       if (createError || !endpoint) {
         throw new SystemError(
-          `Failed to create webhook endpoint: ${createError?.message || "Unknown error"}`
+          `Failed to create webhook endpoint: ${createError?.message || 'Unknown error'}`
         );
       }
 
@@ -138,7 +143,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Create webhook endpoint
     const { data: endpoint, error: createError } = await supabaseAdmin
-      .from("webhook_endpoints")
+      .from('webhook_endpoints')
       .insert({
         tenant_id: validated.tenant_id,
         system_id: validated.system_id,
@@ -153,14 +158,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     if (createError || !endpoint) {
       throw new SystemError(
-        `Failed to create webhook endpoint: ${createError?.message || "Unknown error"}`
+        `Failed to create webhook endpoint: ${createError?.message || 'Unknown error'}`
       );
     }
 
     // Construct webhook URL
     const webhookUrl = `${request.nextUrl.origin}/api/webhooks/${validated.tenant_id}/${secret}`;
 
-    logger.info("Webhook endpoint created", {
+    logger.info('Webhook endpoint created', {
       endpointId: endpoint.id,
       tenantId: validated.tenant_id,
       systemId: validated.system_id,
@@ -181,9 +186,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   } catch (error) {
     if (error instanceof z.ZodError) {
       const validationError = new ValidationError(
-        "Invalid request data",
-        error.errors.map((issue) => ({
-          path: issue.path.map((p) => String(p)),
+        'Invalid request data',
+        error.errors.map(issue => ({
+          path: issue.path.map(p => String(p)),
           message: issue.message,
         }))
       );
@@ -193,7 +198,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         { status: formatted.statusCode }
       );
     }
-    return handleApiError(error, "Failed to create webhook endpoint");
+    return handleApiError(error, 'Failed to create webhook endpoint');
   }
 }
 
@@ -204,45 +209,52 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const supabase = await createSupabaseClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const tenantId = request.nextUrl.searchParams.get("tenant_id");
+    const tenantId = request.nextUrl.searchParams.get('tenant_id');
     if (!tenantId) {
       return NextResponse.json(
-        { error: "tenant_id query parameter required" },
+        { error: 'tenant_id query parameter required' },
         { status: 400 }
       );
     }
 
     // Verify user is member of tenant
     const { data: membership, error: membershipError } = await supabase
-      .from("tenant_members")
-      .select("role")
-      .eq("tenant_id", tenantId)
-      .eq("user_id", user.id)
-      .eq("status", "active")
+      .from('tenant_members')
+      .select('role')
+      .eq('tenant_id', tenantId)
+      .eq('user_id', user.id)
+      .eq('status', 'active')
       .single();
 
     if (membershipError || !membership) {
       return NextResponse.json(
-        { error: "Not a member of this tenant" },
+        { error: 'Not a member of this tenant' },
         { status: 403 }
       );
     }
 
     // Get webhook endpoints (don't return secrets)
     const { data: endpoints, error: endpointsError } = await supabase
-      .from("webhook_endpoints")
-      .select("id, tenant_id, system_id, name, description, enabled, created_at, updated_at")
-      .eq("tenant_id", tenantId)
-      .order("created_at", { ascending: false });
+      .from('webhook_endpoints')
+      .select(
+        'id, tenant_id, system_id, name, description, enabled, created_at, updated_at'
+      )
+      .eq('tenant_id', tenantId)
+      .order('created_at', { ascending: false });
 
     if (endpointsError) {
-      throw new SystemError(`Failed to fetch webhook endpoints: ${endpointsError.message}`);
+      throw new SystemError(
+        `Failed to fetch webhook endpoints: ${endpointsError.message}`
+      );
     }
 
     // Construct webhook URLs (without secrets - user needs to check secret separately)
@@ -256,19 +268,22 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       created_at: string | null;
       updated_at: string | null;
     };
-    
-    const endpointsArray: WebhookEndpoint[] = (endpoints || []) as WebhookEndpoint[];
-    const endpointsWithUrls = endpointsArray.map((endpoint: WebhookEndpoint) => ({
-      ...endpoint,
-      webhook_url_pattern: `${request.nextUrl.origin}/api/webhooks/${tenantId}/[secret]`,
-      // Note: Secret is not returned for security
-    }));
+
+    const endpointsArray: WebhookEndpoint[] = (endpoints ||
+      []) as WebhookEndpoint[];
+    const endpointsWithUrls = endpointsArray.map(
+      (endpoint: WebhookEndpoint) => ({
+        ...endpoint,
+        webhook_url_pattern: `${request.nextUrl.origin}/api/webhooks/${tenantId}/[secret]`,
+        // Note: Secret is not returned for security
+      })
+    );
 
     return NextResponse.json({
       endpoints: endpointsWithUrls,
       count: endpointsWithUrls.length,
     });
   } catch (error) {
-    return handleApiError(error, "Failed to list webhook endpoints");
+    return handleApiError(error, 'Failed to list webhook endpoints');
   }
 }

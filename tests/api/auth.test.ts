@@ -2,11 +2,11 @@
  * Authentication API Tests
  */
 
-import { NextRequest } from "next/server";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { NextRequest } from 'next/server';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-import { POST as loginPOST } from "@/app/api/auth/login/route";
-import { POST as signupPOST } from "@/app/api/auth/signup/route";
+import { POST as loginPOST } from '@/app/api/auth/login/route';
+import { POST as signupPOST } from '@/app/api/auth/signup/route';
 
 // Mock Supabase client
 const mockSupabaseClient = {
@@ -16,42 +16,42 @@ const mockSupabaseClient = {
   },
 };
 
-vi.mock("@supabase/supabase-js", () => ({
+vi.mock('@supabase/supabase-js', () => ({
   createClient: vi.fn(() => mockSupabaseClient),
 }));
 
-vi.mock("@/lib/env", () => ({
+vi.mock('@/lib/env', () => ({
   env: {
     supabase: {
-      url: "https://test.supabase.co",
-      serviceRoleKey: "test-key",
+      url: 'https://test.supabase.co',
+      serviceRoleKey: 'test-key',
     },
   },
 }));
 
-vi.mock("@/lib/telemetry/track", () => ({
+vi.mock('@/lib/telemetry/track', () => ({
   track: vi.fn(() => Promise.resolve()),
 }));
 
-describe("POST /api/auth/login", () => {
+describe('POST /api/auth/login', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("should login successfully with valid credentials", async () => {
+  it('should login successfully with valid credentials', async () => {
     mockSupabaseClient.auth.signInWithPassword.mockResolvedValue({
       data: {
-        user: { id: "user-123", email: "test@example.com" },
-        session: { access_token: "token" },
+        user: { id: 'user-123', email: 'test@example.com' },
+        session: { access_token: 'token' },
       },
       error: null,
     });
 
-    const request = new NextRequest("http://localhost/api/auth/login", {
-      method: "POST",
+    const request = new NextRequest('http://localhost/api/auth/login', {
+      method: 'POST',
       body: JSON.stringify({
-        email: "test@example.com",
-        password: "password123",
+        email: 'test@example.com',
+        password: 'password123',
       }),
     });
 
@@ -60,21 +60,21 @@ describe("POST /api/auth/login", () => {
 
     expect(response.status).toBe(200);
     expect(data.user).toBeDefined();
-    expect(data.user.email).toBe("test@example.com");
+    expect(data.user.email).toBe('test@example.com');
     expect(data.session).toBeDefined();
   });
 
-  it("should return 401 with invalid credentials", async () => {
+  it('should return 401 with invalid credentials', async () => {
     mockSupabaseClient.auth.signInWithPassword.mockResolvedValue({
       data: { user: null, session: null },
-      error: { message: "Invalid credentials" },
+      error: { message: 'Invalid credentials' },
     });
 
-    const request = new NextRequest("http://localhost/api/auth/login", {
-      method: "POST",
+    const request = new NextRequest('http://localhost/api/auth/login', {
+      method: 'POST',
       body: JSON.stringify({
-        email: "test@example.com",
-        password: "wrongpassword",
+        email: 'test@example.com',
+        password: 'wrongpassword',
       }),
     });
 
@@ -85,11 +85,11 @@ describe("POST /api/auth/login", () => {
     expect(data.error).toBeDefined();
   });
 
-  it("should validate request body", async () => {
-    const request = new NextRequest("http://localhost/api/auth/login", {
-      method: "POST",
+  it('should validate request body', async () => {
+    const request = new NextRequest('http://localhost/api/auth/login', {
+      method: 'POST',
       body: JSON.stringify({
-        email: "invalid-email",
+        email: 'invalid-email',
       }),
     });
 
@@ -99,26 +99,26 @@ describe("POST /api/auth/login", () => {
   });
 });
 
-describe("POST /api/auth/signup", () => {
+describe('POST /api/auth/signup', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("should create account successfully", async () => {
+  it('should create account successfully', async () => {
     mockSupabaseClient.auth.signUp.mockResolvedValue({
       data: {
-        user: { id: "user-123", email: "new@example.com" },
+        user: { id: 'user-123', email: 'new@example.com' },
         session: null,
       },
       error: null,
     });
 
-    const request = new NextRequest("http://localhost/api/auth/signup", {
-      method: "POST",
+    const request = new NextRequest('http://localhost/api/auth/signup', {
+      method: 'POST',
       body: JSON.stringify({
-        email: "new@example.com",
-        password: "password123",
-        name: "Test User",
+        email: 'new@example.com',
+        password: 'password123',
+        name: 'Test User',
       }),
     });
 
@@ -127,16 +127,16 @@ describe("POST /api/auth/signup", () => {
 
     expect(response.status).toBe(201);
     expect(data.user).toBeDefined();
-    expect(data.user.email).toBe("new@example.com");
-    expect(data.message).toContain("created");
+    expect(data.user.email).toBe('new@example.com');
+    expect(data.message).toContain('created');
   });
 
-  it("should validate password length", async () => {
-    const request = new NextRequest("http://localhost/api/auth/signup", {
-      method: "POST",
+  it('should validate password length', async () => {
+    const request = new NextRequest('http://localhost/api/auth/signup', {
+      method: 'POST',
       body: JSON.stringify({
-        email: "test@example.com",
-        password: "short",
+        email: 'test@example.com',
+        password: 'short',
       }),
     });
 
@@ -145,17 +145,17 @@ describe("POST /api/auth/signup", () => {
     expect(response.status).toBe(400);
   });
 
-  it("should return 400 if account already exists", async () => {
+  it('should return 400 if account already exists', async () => {
     mockSupabaseClient.auth.signUp.mockResolvedValue({
       data: { user: null, session: null },
-      error: { message: "User already registered" },
+      error: { message: 'User already registered' },
     });
 
-    const request = new NextRequest("http://localhost/api/auth/signup", {
-      method: "POST",
+    const request = new NextRequest('http://localhost/api/auth/signup', {
+      method: 'POST',
       body: JSON.stringify({
-        email: "existing@example.com",
-        password: "password123",
+        email: 'existing@example.com',
+        password: 'password123',
       }),
     });
 

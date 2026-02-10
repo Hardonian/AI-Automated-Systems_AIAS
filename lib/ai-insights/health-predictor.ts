@@ -3,16 +3,21 @@
  * Detects patterns that precede failures and generates early warnings
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
 export interface HealthSignal {
-  type: "performance_degradation" | "error_spike" | "integration_issue" | "resource_exhaustion" | "anomaly";
-  severity: "low" | "medium" | "high" | "critical";
+  type:
+    | 'performance_degradation'
+    | 'error_spike'
+    | 'integration_issue'
+    | 'resource_exhaustion'
+    | 'anomaly';
+  severity: 'low' | 'medium' | 'high' | 'critical';
   message: string;
   confidence: number; // 0-100
   predictedImpact: string;
@@ -29,11 +34,14 @@ async function detectPerformanceDegradation(): Promise<HealthSignal[]> {
   try {
     // Get recent API response times
     const { data: recentEvents } = await supabase
-      .from("app_events")
-      .select("meta, created_at")
-      .eq("event_type", "api_request")
-      .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
-      .order("created_at", { ascending: false })
+      .from('app_events')
+      .select('meta, created_at')
+      .eq('event_type', 'api_request')
+      .gte(
+        'created_at',
+        new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+      )
+      .order('created_at', { ascending: false })
       .limit(1000);
 
     if (!recentEvents || recentEvents.length < 10) {
@@ -43,7 +51,8 @@ async function detectPerformanceDegradation(): Promise<HealthSignal[]> {
     // Calculate average response time
     const responseTimes: number[] = [];
     recentEvents.forEach((event: { meta: Record<string, unknown> }) => {
-      const duration = (event.meta as Record<string, unknown>)?.duration_ms as number;
+      const duration = (event.meta as Record<string, unknown>)
+        ?.duration_ms as number;
       if (duration) {
         responseTimes.push(duration);
       }
@@ -53,26 +62,37 @@ async function detectPerformanceDegradation(): Promise<HealthSignal[]> {
       return signals;
     }
 
-    const avgResponseTime = responseTimes.reduce((sum, t) => sum + t, 0) / responseTimes.length;
-    const p95ResponseTime = responseTimes.sort((a, b) => a - b)[Math.floor(responseTimes.length * 0.95)];
+    const avgResponseTime =
+      responseTimes.reduce((sum, t) => sum + t, 0) / responseTimes.length;
+    const p95ResponseTime = responseTimes.sort((a, b) => a - b)[
+      Math.floor(responseTimes.length * 0.95)
+    ];
 
     // Compare with historical baseline (simplified - would use actual historical data)
     const baseline = 500; // 500ms baseline
     const threshold = baseline * 1.5; // 50% degradation
 
-    if (avgResponseTime > threshold || (p95ResponseTime && p95ResponseTime > threshold * 2)) {
+    if (
+      avgResponseTime > threshold ||
+      (p95ResponseTime && p95ResponseTime > threshold * 2)
+    ) {
       signals.push({
-        type: "performance_degradation",
-        severity: avgResponseTime > threshold * 2 ? "high" : "medium",
+        type: 'performance_degradation',
+        severity: avgResponseTime > threshold * 2 ? 'high' : 'medium',
         message: `API response time degradation detected: avg ${Math.round(avgResponseTime)}ms, p95 ${p95ResponseTime ? Math.round(p95ResponseTime) : 'N/A'}ms`,
         confidence: 75,
-        predictedImpact: "User experience degradation, potential timeout errors",
-        recommendedAction: "Check database performance, review slow queries, consider scaling resources",
+        predictedImpact:
+          'User experience degradation, potential timeout errors',
+        recommendedAction:
+          'Check database performance, review slow queries, consider scaling resources',
         detectedAt: new Date(),
       });
     }
   } catch (error) {
-    logger.error("Failed to detect performance degradation", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Failed to detect performance degradation',
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 
   return signals;
@@ -91,17 +111,17 @@ async function detectErrorSpikes(): Promise<HealthSignal[]> {
 
     // Get error counts for last hour and previous hour
     const { count: recentErrors } = await supabase
-      .from("app_events")
-      .select("id", { count: "exact", head: true })
-      .eq("event_type", "error")
-      .gte("created_at", oneHourAgo.toISOString());
+      .from('app_events')
+      .select('id', { count: 'exact', head: true })
+      .eq('event_type', 'error')
+      .gte('created_at', oneHourAgo.toISOString());
 
     const { count: previousErrors } = await supabase
-      .from("app_events")
-      .select("id", { count: "exact", head: true })
-      .eq("event_type", "error")
-      .gte("created_at", twoHoursAgo.toISOString())
-      .lt("created_at", oneHourAgo.toISOString());
+      .from('app_events')
+      .select('id', { count: 'exact', head: true })
+      .eq('event_type', 'error')
+      .gte('created_at', twoHoursAgo.toISOString())
+      .lt('created_at', oneHourAgo.toISOString());
 
     const recentCount = recentErrors || 0;
     const previousCount = previousErrors || 0;
@@ -109,17 +129,23 @@ async function detectErrorSpikes(): Promise<HealthSignal[]> {
     // Detect spike (2x increase)
     if (previousCount > 0 && recentCount > previousCount * 2) {
       signals.push({
-        type: "error_spike",
-        severity: recentCount > 100 ? "critical" : recentCount > 50 ? "high" : "medium",
+        type: 'error_spike',
+        severity:
+          recentCount > 100 ? 'critical' : recentCount > 50 ? 'high' : 'medium',
         message: `Error spike detected: ${recentCount} errors in last hour (vs ${previousCount} in previous hour)`,
         confidence: 85,
-        predictedImpact: "Potential system instability, user experience degradation",
-        recommendedAction: "Investigate error patterns, check system logs, verify integrations",
+        predictedImpact:
+          'Potential system instability, user experience degradation',
+        recommendedAction:
+          'Investigate error patterns, check system logs, verify integrations',
         detectedAt: new Date(),
       });
     }
   } catch (error) {
-    logger.error("Failed to detect error spikes", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Failed to detect error spikes',
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 
   return signals;
@@ -136,18 +162,20 @@ async function detectIntegrationIssues(): Promise<HealthSignal[]> {
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
 
     const { data: integrationErrors } = await supabase
-      .from("app_events")
-      .select("meta")
-      .eq("event_type", "error")
-      .gte("created_at", oneHourAgo.toISOString());
+      .from('app_events')
+      .select('meta')
+      .eq('event_type', 'error')
+      .gte('created_at', oneHourAgo.toISOString());
 
     // Group by integration
     const integrationErrorCounts: Record<string, number> = {};
 
     integrationErrors?.forEach((error: { meta: Record<string, unknown> }) => {
-      const integration = (error.meta as Record<string, unknown>)?.integration as string;
+      const integration = (error.meta as Record<string, unknown>)
+        ?.integration as string;
       if (integration) {
-        integrationErrorCounts[integration] = (integrationErrorCounts[integration] || 0) + 1;
+        integrationErrorCounts[integration] =
+          (integrationErrorCounts[integration] || 0) + 1;
       }
     });
 
@@ -155,18 +183,21 @@ async function detectIntegrationIssues(): Promise<HealthSignal[]> {
     for (const [integration, count] of Object.entries(integrationErrorCounts)) {
       if (count > 10) {
         signals.push({
-          type: "integration_issue",
-          severity: count > 50 ? "critical" : count > 20 ? "high" : "medium",
+          type: 'integration_issue',
+          severity: count > 50 ? 'critical' : count > 20 ? 'high' : 'medium',
           message: `${integration} integration experiencing high error rate: ${count} errors in last hour`,
           confidence: 80,
-          predictedImpact: "Workflows using this integration may fail",
+          predictedImpact: 'Workflows using this integration may fail',
           recommendedAction: `Check ${integration} API status, verify credentials, review integration configuration`,
           detectedAt: new Date(),
         });
       }
     }
   } catch (error) {
-    logger.error("Failed to detect integration issues", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Failed to detect integration issues',
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 
   return signals;
@@ -184,38 +215,47 @@ async function detectAnomalies(): Promise<HealthSignal[]> {
 
     // Get user activity patterns
     const { data: recentActivity } = await supabase
-      .from("app_events")
-      .select("user_id, event_type, created_at")
-      .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
-      .order("created_at", { ascending: false })
+      .from('app_events')
+      .select('user_id, event_type, created_at')
+      .gte(
+        'created_at',
+        new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+      )
+      .order('created_at', { ascending: false })
       .limit(1000);
 
     // Group by user
     const userActivity: Record<string, number> = {};
     recentActivity?.forEach((event: { user_id?: string }) => {
-      const userId = event.user_id || "unknown";
+      const userId = event.user_id || 'unknown';
       userActivity[userId] = (userActivity[userId] || 0) + 1;
     });
 
     // Detect unusually high activity (potential bot or issue)
-    const avgActivity = Object.values(userActivity).reduce((sum, count) => sum + count, 0) / Object.keys(userActivity).length;
+    const avgActivity =
+      Object.values(userActivity).reduce((sum, count) => sum + count, 0) /
+      Object.keys(userActivity).length;
     const threshold = avgActivity * 5; // 5x average
 
     for (const [userId, count] of Object.entries(userActivity)) {
       if (count > threshold) {
         signals.push({
-          type: "anomaly",
-          severity: "low",
+          type: 'anomaly',
+          severity: 'low',
           message: `Unusual activity pattern detected for user ${userId}: ${count} events in 24h`,
           confidence: 60,
-          predictedImpact: "Potential bot activity or system issue",
-          recommendedAction: "Review user activity, check for automation issues",
+          predictedImpact: 'Potential bot activity or system issue',
+          recommendedAction:
+            'Review user activity, check for automation issues',
           detectedAt: new Date(),
         });
       }
     }
   } catch (error) {
-    logger.error("Failed to detect anomalies", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Failed to detect anomalies',
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 
   return signals;
@@ -228,17 +268,13 @@ export async function getPredictiveHealthSignals(): Promise<HealthSignal[]> {
   const signals: HealthSignal[] = [];
 
   // Run all detectors in parallel
-  const [
-    performanceSignals,
-    errorSignals,
-    integrationSignals,
-    anomalySignals,
-  ] = await Promise.all([
-    detectPerformanceDegradation(),
-    detectErrorSpikes(),
-    detectIntegrationIssues(),
-    detectAnomalies(),
-  ]);
+  const [performanceSignals, errorSignals, integrationSignals, anomalySignals] =
+    await Promise.all([
+      detectPerformanceDegradation(),
+      detectErrorSpikes(),
+      detectIntegrationIssues(),
+      detectAnomalies(),
+    ]);
 
   signals.push(...performanceSignals);
   signals.push(...errorSignals);
@@ -247,5 +283,7 @@ export async function getPredictiveHealthSignals(): Promise<HealthSignal[]> {
 
   // Sort by severity (critical > high > medium > low)
   const severityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
-  return signals.sort((a, b) => severityOrder[b.severity] - severityOrder[a.severity]);
+  return signals.sort(
+    (a, b) => severityOrder[b.severity] - severityOrder[a.severity]
+  );
 }

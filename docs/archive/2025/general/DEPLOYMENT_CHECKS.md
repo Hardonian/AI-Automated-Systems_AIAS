@@ -11,6 +11,7 @@
 ## 🎯 Executive Summary
 
 Production deployment infrastructure has been verified and configured across:
+
 - ✅ **Vercel** (Web/Next.js)
 - ✅ **Expo EAS** (iOS/Android mobile)
 - ✅ **Supabase** (Database & Backend)
@@ -23,11 +24,13 @@ All critical configuration files are present and properly structured. Environmen
 ## 1. 🔍 Vercel Configuration
 
 ### Project Link Status
+
 - **Status:** ⚠️ Requires manual linking in CI/CD
 - **Action Required:** Ensure `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` are set in GitHub Secrets
 - **Link Command:** `vercel link --yes` (automated in workflows)
 
 ### Configuration File: `vercel.json`
+
 ```json
 {
   "buildCommand": "pnpm run db:generate && pnpm run build",
@@ -43,6 +46,7 @@ All critical configuration files are present and properly structured. Environmen
 ```
 
 **Verification:**
+
 - ✅ Framework: Next.js configured
 - ✅ Build command includes Prisma generation
 - ✅ Security headers configured (X-Frame-Options, CSP, etc.)
@@ -50,13 +54,16 @@ All critical configuration files are present and properly structured. Environmen
 - ✅ Root directory: `.` (project root)
 
 ### Production Branch
+
 - **Configured:** `main`
 - **Workflows:** `.github/workflows/deploy-main.yml`, `.github/workflows/auto-deploy-vercel.yml`
 
 ### Required Environment Variables (Vercel Dashboard)
+
 Ensure these are set in Vercel → Settings → Environment Variables:
 
 **Required:**
+
 - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
 - `SUPABASE_SERVICE_ROLE_KEY` - Server-side only (not exposed to client)
@@ -64,6 +71,7 @@ Ensure these are set in Vercel → Settings → Environment Variables:
 - `DIRECT_URL` - Direct database connection (for migrations)
 
 **Optional:**
+
 - `NEXT_PUBLIC_SITE_URL` - Production domain
 - `NEXTAUTH_SECRET` - Auth secret
 - `STRIPE_SECRET_KEY` - Payment processing
@@ -74,11 +82,13 @@ Ensure these are set in Vercel → Settings → Environment Variables:
 ## 2. 🧱 Supabase Configuration
 
 ### Project Reference
+
 - **Project Ref:** `ghqyxhbyyirveptgwoqm`
 - **Status:** ✅ Verified in codebase
 - **Config File:** `supabase/config.toml`
 
 ### Connection Verification
+
 ```bash
 # Verify connection
 npx supabase status
@@ -86,17 +96,21 @@ npx supabase link --project-ref ghqyxhbyyirveptgwoqm
 ```
 
 ### Environment Parity
+
 **Supabase Dashboard → Settings → API:**
+
 - `NEXT_PUBLIC_SUPABASE_URL` = `https://ghqyxhbyyirveptgwoqm.supabase.co`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` = (from dashboard)
 - `SUPABASE_SERVICE_ROLE_KEY` = (from dashboard)
 
 **GitHub Secrets Required:**
+
 - `SUPABASE_ACCESS_TOKEN` - For CLI operations
 - `SUPABASE_PROJECT_REF` - `ghqyxhbyyirveptgwoqm`
 - `SUPABASE_DB_PASSWORD` - Database password (if needed)
 
 ### Database Migrations
+
 - **Status:** ✅ Automated in `deploy-main.yml`
 - **Command:** `npm run supa:migrate:apply`
 - **Location:** `supabase/migrations/`
@@ -106,14 +120,17 @@ npx supabase link --project-ref ghqyxhbyyirveptgwoqm
 ## 3. 🌐 Domain & SSL Verification
 
 ### Domain Configuration
+
 - **Status:** ⚠️ Requires manual verification
 - **Action:** Verify production domain in Vercel Dashboard → Settings → Domains
 
 ### SSL Status
+
 - **Expected:** ✅ Automatic SSL via Vercel
 - **Verification:** Check Vercel Dashboard → Domains → SSL Certificate
 
 ### Domain Commands
+
 ```bash
 # List domains
 vercel domains ls
@@ -130,16 +147,19 @@ vercel alias <deployment-url> yourdomain.com
 ## 4. ⚙️ Expo EAS Mobile Pipeline
 
 ### Configuration File: `eas.json`
+
 - **Status:** ✅ Created
 - **Runtime Version Policy:** `appVersion`
 - **Channels:** `development`, `preview`, `production`
 
 ### Build Profiles
+
 - **Development:** Internal distribution, simulator enabled
 - **Preview:** Internal distribution, no simulator
 - **Production:** Store distribution, auto-increment version
 
 ### Required Secrets (GitHub)
+
 - `EXPO_TOKEN` - Expo access token
 - `APPLE_ID` - Apple Developer account email
 - `APP_STORE_CONNECT_APP_ID` - App Store Connect app ID
@@ -147,12 +167,14 @@ vercel alias <deployment-url> yourdomain.com
 - `GOOGLE_SERVICE_ACCOUNT_KEY` - Google Play service account JSON
 
 ### Workflow: `.github/workflows/mobile.yml`
+
 - **Trigger:** Push tags matching `v*.*.*` (e.g., `v1.0.0`)
 - **Manual Trigger:** Available via workflow_dispatch
 - **Builds:** iOS and Android
 - **Submission:** Automatic to App Store & Play Store (production profile)
 
 ### EAS Diagnostics
+
 ```bash
 # Verify EAS setup
 eas diagnostics
@@ -168,6 +190,7 @@ eas credentials:list
 ### Web Deployment Workflows
 
 #### 1. `.github/workflows/deploy-main.yml`
+
 - **Trigger:** Push to `main` branch
 - **Environment:** `production`
 - **Steps:**
@@ -178,6 +201,7 @@ eas credentials:list
 - **Status:** ✅ Configured
 
 #### 2. `.github/workflows/auto-deploy-vercel.yml`
+
 - **Trigger:** Push to `main` branch
 - **Steps:**
   1. Type check & lint
@@ -189,6 +213,7 @@ eas credentials:list
 ### Mobile Deployment Workflow
 
 #### `.github/workflows/mobile.yml`
+
 - **Trigger:** Push tags `v*.*.*`
 - **Manual:** Available via workflow_dispatch
 - **Steps:**
@@ -199,12 +224,14 @@ eas credentials:list
 ### Required GitHub Secrets
 
 **Vercel:**
+
 - `VERCEL_TOKEN` - Vercel API token
 - `VERCEL_ORG_ID` - Vercel organization ID
 - `VERCEL_PROJECT_ID` - Vercel project ID
 - `VERCEL_PROJECT_DOMAIN` - Production domain (optional)
 
 **Supabase:**
+
 - `SUPABASE_ACCESS_TOKEN` - Supabase CLI token
 - `SUPABASE_PROJECT_REF` - `ghqyxhbyyirveptgwoqm`
 - `SUPABASE_DB_PASSWORD` - Database password
@@ -213,6 +240,7 @@ eas credentials:list
 - `SUPABASE_SERVICE_ROLE_KEY` - Service role key
 
 **Expo:**
+
 - `EXPO_TOKEN` - Expo access token
 - `APPLE_ID` - Apple Developer email
 - `APP_STORE_CONNECT_APP_ID` - App Store Connect app ID
@@ -220,6 +248,7 @@ eas credentials:list
 - `GOOGLE_SERVICE_ACCOUNT_KEY` - Google Play service account JSON
 
 **Optional:**
+
 - `SLACK_WEBHOOK_URL` - Deployment notifications
 
 ---
@@ -229,12 +258,14 @@ eas credentials:list
 ### Endpoints Available
 
 #### `/api/health` (Simple)
+
 - **Status:** ✅ Created
 - **Runtime:** Edge
 - **Response:** `{ ok: true, ts: <timestamp> }`
 - **Use Case:** Basic uptime monitoring
 
 #### `/api/healthz` (Comprehensive)
+
 - **Status:** ✅ Existing
 - **Runtime:** Node.js
 - **Checks:**
@@ -246,6 +277,7 @@ eas credentials:list
 - **Use Case:** Full system health checks
 
 ### Verification
+
 ```bash
 # Simple health check
 curl https://your-domain.vercel.app/api/health
@@ -258,15 +290,19 @@ curl https://your-domain.vercel.app/api/healthz
 
 ## 7. 🔐 Environment Variable Audit
 
-### Client-Side (NEXT_PUBLIC_*)
+### Client-Side (NEXT*PUBLIC*\*)
+
 These are exposed to the browser:
+
 - `NEXT_PUBLIC_SUPABASE_URL` ✅
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` ✅
 - `NEXT_PUBLIC_SITE_URL` ✅
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` ✅
 
 ### Server-Side Only
+
 These must NOT be exposed to the client:
+
 - `SUPABASE_SERVICE_ROLE_KEY` ✅
 - `DATABASE_URL` ✅
 - `NEXTAUTH_SECRET` ✅
@@ -274,9 +310,10 @@ These must NOT be exposed to the client:
 - `OPENAI_API_KEY` ✅
 
 ### Environment Parity Checklist
+
 - [ ] Vercel Production env vars match Supabase Dashboard
 - [ ] GitHub Secrets match Vercel env vars
-- [ ] Expo env vars (EXPO_PUBLIC_*) match web env vars where applicable
+- [ ] Expo env vars (EXPO*PUBLIC*\*) match web env vars where applicable
 - [ ] Local `.env.local` matches production (for testing)
 
 ---
@@ -349,6 +386,7 @@ eas update --branch production --message "Bug fixes"
 ## 9. 🔄 Rollback Procedures
 
 ### Vercel Rollback
+
 ```bash
 # List recent deployments
 vercel ls
@@ -360,6 +398,7 @@ vercel rollback <deployment-url>
 ```
 
 ### Supabase Rollback
+
 ```bash
 # Revert migration (manual)
 # 1. Create new migration that reverses changes
@@ -369,6 +408,7 @@ vercel rollback <deployment-url>
 ```
 
 ### Expo Rollback
+
 ```bash
 # Revert OTA update
 eas update --branch production --message "Revert to previous version" --republish
@@ -381,6 +421,7 @@ eas update --branch production --message "Revert to previous version" --republis
 ## 10. ✅ Verification Checklist
 
 ### Pre-Deployment
+
 - [ ] All environment variables set in Vercel Dashboard
 - [ ] GitHub Secrets configured
 - [ ] Supabase project linked (`ghqyxhbyyirveptgwoqm`)
@@ -388,6 +429,7 @@ eas update --branch production --message "Revert to previous version" --republis
 - [ ] Health endpoints responding (`/api/health`, `/api/healthz`)
 
 ### Post-Deployment
+
 - [ ] Deployment visible in Vercel Dashboard
 - [ ] Health check returns 200 OK
 - [ ] Database migrations applied successfully
@@ -395,6 +437,7 @@ eas update --branch production --message "Revert to previous version" --republis
 - [ ] Production domain resolves correctly
 
 ### Mobile Deployment
+
 - [ ] EAS project linked
 - [ ] Apple Developer credentials configured
 - [ ] Google Play service account configured
@@ -406,24 +449,28 @@ eas update --branch production --message "Revert to previous version" --republis
 ## 11. 🚨 Troubleshooting
 
 ### Vercel Build Failures
+
 1. Check build logs: `vercel logs <deployment-url>`
 2. Verify environment variables are set
 3. Check `vercel.json` syntax
 4. Verify root directory is correct
 
 ### Supabase Connection Issues
+
 1. Verify project ref: `ghqyxhbyyirveptgwoqm`
 2. Check API keys in Supabase Dashboard
 3. Verify RLS policies allow access
 4. Check CORS settings
 
 ### Expo Build Failures
+
 1. Run `eas diagnostics`
 2. Verify credentials: `eas credentials:list`
 3. Check `eas.json` syntax
 4. Verify app.json/app.config.js exists
 
 ### Environment Variable Mismatches
+
 1. Compare Vercel Dashboard → Environment Variables
 2. Compare GitHub Secrets
 3. Check `.env.example` for required vars
@@ -434,11 +481,13 @@ eas update --branch production --message "Revert to previous version" --republis
 ## 12. 📞 Support & Resources
 
 ### Documentation
+
 - [Vercel Deployment Docs](https://vercel.com/docs)
 - [Supabase CLI Docs](https://supabase.com/docs/guides/cli)
 - [Expo EAS Docs](https://docs.expo.dev/build/introduction/)
 
 ### Dashboard Links
+
 - Vercel: https://vercel.com/dashboard
 - Supabase: https://supabase.com/dashboard/project/ghqyxhbyyirveptgwoqm
 - Expo: https://expo.dev/accounts/[your-account]/projects
@@ -448,6 +497,7 @@ eas update --branch production --message "Revert to previous version" --republis
 ## 13. 📝 Change Log
 
 ### 2025-11-09 - Initial Audit
+
 - ✅ Created `eas.json` for Expo EAS configuration
 - ✅ Created `/api/health` endpoint (edge runtime)
 - ✅ Created `.github/workflows/mobile.yml` for mobile deployments

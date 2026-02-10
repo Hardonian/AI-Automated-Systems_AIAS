@@ -3,6 +3,7 @@
 # Incident Runbook: API Latency Degradation
 
 ## Overview
+
 This runbook guides response to API latency regressions exceeding SLO thresholds.
 
 **SLO Target:** API P95 ≤ 400ms  
@@ -18,6 +19,7 @@ This runbook guides response to API latency regressions exceeding SLO thresholds
 ## Detection
 
 ### Symptoms
+
 - `/api/metrics` shows `api_p95_ms > 400ms`
 - User reports of slow page loads
 - Error rate increases (>1% 5xx)
@@ -26,6 +28,7 @@ This runbook guides response to API latency regressions exceeding SLO thresholds
 ### What to Capture
 
 1. **Metrics Snapshot**
+
    ```bash
    curl https://your-domain.com/api/metrics > metrics-snapshot-$(date +%Y%m%d-%H%M%S).json
    ```
@@ -55,6 +58,7 @@ This runbook guides response to API latency regressions exceeding SLO thresholds
   - Confirm affected endpoints
 
 - [ ] **Check Database**
+
   ```sql
   -- Run in Supabase SQL Editor
   SELECT pid, now() - pg_stat_activity.query_start AS duration, query
@@ -87,18 +91,21 @@ This runbook guides response to API latency regressions exceeding SLO thresholds
 ### 3. Mitigation (15-30 min)
 
 **If Database-Related:**
+
 - [ ] Add missing indexes (if safe)
 - [ ] Kill long-running queries (if safe)
 - [ ] Scale database resources (if needed)
 - [ ] Enable query result caching
 
 **If Code-Related:**
+
 - [ ] Revert recent deployment (if regression)
 - [ ] Enable edge caching for static responses
 - [ ] Optimize N+1 queries
 - [ ] Add request timeouts
 
 **If Infrastructure-Related:**
+
 - [ ] Scale function concurrency
 - [ ] Check Vercel region routing
 - [ ] Review CDN cache hit rates
@@ -123,12 +130,14 @@ This runbook guides response to API latency regressions exceeding SLO thresholds
 ## Escalation
 
 **Escalate if:**
+
 - P95 > 1000ms for 15+ minutes
 - Error rate > 5%
 - Database unresponsive
 - Multiple services affected
 
 **Escalation Contacts:**
+
 - On-call engineer (check PagerDuty/rotation)
 - Database admin (Supabase support)
 - Infrastructure lead

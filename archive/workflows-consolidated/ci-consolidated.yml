@@ -245,7 +245,7 @@ jobs:
             exit 1
           fi
           echo "✅ Vercel build successful"
-          
+
           # Validate build output
           echo "🔍 Validating Vercel build output..."
           if ! pnpm run validate:build; then

@@ -3,17 +3,17 @@
  * Extends executor-with-artifacts to log each step execution
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 import {
   WorkflowDefinition,
   WorkflowExecutionContext,
   WorkflowExecutionResult,
   WorkflowStep,
-} from "./dsl";
-import { workflowExecutorWithArtifacts } from "./executor-with-artifacts";
+} from './dsl';
+import { workflowExecutorWithArtifacts } from './executor-with-artifacts';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -33,9 +33,9 @@ export class WorkflowExecutorWithLogs {
     try {
       // Get workflow definition
       const { data: workflowData, error: workflowError } = await supabase
-        .from("workflows")
-        .select("*")
-        .eq("id", context.workflowId)
+        .from('workflows')
+        .select('*')
+        .eq('id', context.workflowId)
         .single();
 
       if (workflowError || !workflowData) {
@@ -50,7 +50,12 @@ export class WorkflowExecutorWithLogs {
         startStepId: workflowData.start_step_id,
         trigger: workflowData.trigger,
         initialState: workflowData.initial_state || {},
-        category: (workflowData.category as "automation" | "reconciliation" | "consulting" | "custom") || "custom",
+        category:
+          (workflowData.category as
+            | 'automation'
+            | 'reconciliation'
+            | 'consulting'
+            | 'custom') || 'custom',
         enabled: workflowData.enabled ?? true,
         createdAt: workflowData.created_at || new Date().toISOString(),
         updatedAt: workflowData.updated_at || new Date().toISOString(),
@@ -64,29 +69,32 @@ export class WorkflowExecutorWithLogs {
         await this.logStep({
           executionId: runId,
           workflowId: context.workflowId,
-          stepId: "workflow_start",
-          stepType: "workflow",
-          status: "running",
+          stepId: 'workflow_start',
+          stepType: 'workflow',
+          status: 'running',
           input: context.input,
           startedAt: new Date().toISOString(),
         });
       }
 
       // Execute workflow (this will create artifacts)
-      const result = await workflowExecutorWithArtifacts.execute(context, runId);
+      const result = await workflowExecutorWithArtifacts.execute(
+        context,
+        runId
+      );
 
       // Log each step execution
       if (runId && workflowDefinition.steps) {
         for (const step of workflowDefinition.steps) {
           // Get step result from execution state if available
           const stepResult = result.state?.[step.id];
-          
+
           await this.logStep({
             executionId: runId,
             workflowId: context.workflowId,
             stepId: step.id,
             stepType: step.type,
-            status: stepResult ? "completed" : "pending",
+            status: stepResult ? 'completed' : 'pending',
             input: stepResult ? undefined : step,
             output: stepResult,
             startedAt: new Date().toISOString(),
@@ -100,9 +108,9 @@ export class WorkflowExecutorWithLogs {
         await this.logStep({
           executionId: runId,
           workflowId: context.workflowId,
-          stepId: "workflow_complete",
-          stepType: "workflow",
-          status: result.status === "completed" ? "completed" : "failed",
+          stepId: 'workflow_complete',
+          stepType: 'workflow',
+          status: result.status === 'completed' ? 'completed' : 'failed',
           output: result.output,
           error: result.error,
           startedAt: new Date(startTime).toISOString(),
@@ -120,16 +128,17 @@ export class WorkflowExecutorWithLogs {
 
       return result;
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
-      
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
+
       // Log error
       if (runId) {
         await this.logStep({
           executionId: runId,
           workflowId: context.workflowId,
-          stepId: "workflow_error",
-          stepType: "error",
-          status: "failed",
+          stepId: 'workflow_error',
+          stepType: 'error',
+          status: 'failed',
           error: {
             message: errorObj.message,
             stack: errorObj.stack,
@@ -141,7 +150,7 @@ export class WorkflowExecutorWithLogs {
         });
       }
 
-      logger.error("Workflow execution failed", errorObj, {
+      logger.error('Workflow execution failed', errorObj, {
         workflowId: context.workflowId,
         tenantId: context.tenantId,
         runId,
@@ -159,7 +168,7 @@ export class WorkflowExecutorWithLogs {
     workflowId: string;
     stepId: string;
     stepType: string;
-    status: "pending" | "running" | "completed" | "failed" | "skipped";
+    status: 'pending' | 'running' | 'completed' | 'failed' | 'skipped';
     input?: unknown;
     output?: unknown;
     error?: unknown;
@@ -171,12 +180,12 @@ export class WorkflowExecutorWithLogs {
     try {
       // Get tenant_id from execution
       const { data: execution } = await supabase
-        .from("workflow_executions")
-        .select("tenant_id, user_id")
-        .eq("id", params.executionId)
+        .from('workflow_executions')
+        .select('tenant_id, user_id')
+        .eq('id', params.executionId)
         .single();
 
-      const { error } = await supabase.from("workflow_execution_logs").insert({
+      const { error } = await supabase.from('workflow_execution_logs').insert({
         execution_id: params.executionId,
         workflow_id: params.workflowId,
         user_id: execution?.user_id || null,
@@ -194,10 +203,16 @@ export class WorkflowExecutorWithLogs {
       });
 
       if (error) {
-        logger.warn("Failed to log step execution", { error: error.message, stepId: params.stepId });
+        logger.warn('Failed to log step execution', {
+          error: error.message,
+          stepId: params.stepId,
+        });
       }
     } catch (error) {
-      logger.warn("Failed to log step execution", { error, stepId: params.stepId });
+      logger.warn('Failed to log step execution', {
+        error,
+        stepId: params.stepId,
+      });
     }
   }
 }

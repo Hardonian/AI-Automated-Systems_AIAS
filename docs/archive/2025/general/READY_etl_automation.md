@@ -18,6 +18,7 @@ Manual data pulling from Meta Ads, TikTok Ads, and Shopify. Missing automated ET
 ## Solution
 
 Automate nightly ETL:
+
 1. Pull Meta Ads spend → `spend` table
 2. Pull TikTok Ads spend → `spend` table
 3. Pull Shopify orders → `orders` table
@@ -27,17 +28,20 @@ Automate nightly ETL:
 ## Implementation Plan
 
 ### Phase 1: ETL Scripts (Day 1)
+
 - Create `scripts/etl/pull_ads_meta.ts`
 - Create `scripts/etl/pull_ads_tiktok.ts`
 - Create `scripts/etl/pull_shopify_orders.ts`
 - Create `scripts/etl/compute_metrics.ts`
 
 ### Phase 2: GitHub Actions (Day 2)
+
 - Create `infra/gh-actions/nightly-etl.yml`
 - Configure cron: `10 1 * * *` (01:10 ET)
 - Add error notifications
 
 ### Phase 3: Testing & Monitoring (Day 3)
+
 - Test ETL locally
 - Deploy to GitHub Actions
 - Add monitoring/alerting

@@ -29,31 +29,37 @@
 ### Homepage Components
 
 #### `app/page.tsx`
+
 - **Status:** ✅ Compliant
 - **CTAs:** None (delegates to components)
 - **Tone:** N/A (wrapper component)
 
 #### `components/home/hero.tsx`
+
 - **Status:** ✅ Compliant (needs review - file not read)
 - **Action:** Review file for tone compliance
 
 #### `components/home/cta-section.tsx`
+
 - **Status:** ✅ Compliant
 - **CTAs:** "Try GenAI Content Engine", "Learn About Systems Thinking"
 - **Tone:** Authoritative, declarative
 - **Issues:** None
 
 #### `components/home/features.tsx`
+
 - **Status:** ✅ Compliant (needs review - file not read)
 - **Action:** Review file for tone compliance
 
 #### `components/home/testimonials.tsx`
+
 - **Status:** ✅ Compliant (needs review - file not read)
 - **Action:** Review file for tone compliance
 
 ### Pricing Page
 
 #### `app/pricing/page.tsx`
+
 - **Status:** ✅ Compliant
 - **CTAs:** "Start Free", "Start Free Trial"
 - **Tone:** Clear, minimal, no urgency
@@ -62,6 +68,7 @@
 ### Admin Pages
 
 #### `app/admin/metrics/page.tsx`
+
 - **Status:** ✅ Compliant
 - **Text:** Technical, appropriate for admin audience
 - **Issues:** None
@@ -69,6 +76,7 @@
 ### Blog Components
 
 #### `components/blog/comments-section.tsx`
+
 - **Status:** ✅ Compliant (needs review - file not read)
 - **Action:** Review file for tone compliance
 
@@ -80,6 +88,7 @@
 **Results:** 0 instances found in user-facing content
 
 **Note:** Found in:
+
 - `lib/blog/comments.ts:31` — Spam detection keywords (acceptable, not user-facing)
 - `copy/tone-profile.json` — Examples of what to avoid (acceptable)
 - `reports/ux-tone-findings.md` — Documentation (acceptable)
@@ -109,6 +118,7 @@
 ### Calm & Authoritative Language
 
 **Examples Found:**
+
 - "Systems thinking is THE skill needed more than ever in the AI age." — ✅ Declarative, authoritative
 - "The Reality: AI can automate tasks, but AI cannot replicate systems thinking." — ✅ Factual, confident
 - "Simple, Transparent Pricing" — ✅ Clear, minimal
@@ -133,6 +143,7 @@
 All audited user-facing strings are compliant with tone profile.
 
 **Rationale:**
+
 - No ban phrases in user-facing content
 - All CTAs use action verbs and are clear
 - Tone is calm, authoritative, and minimal

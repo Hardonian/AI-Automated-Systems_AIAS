@@ -13,7 +13,7 @@ jobs:
   maintenance:
     name: Supabase Maintenance & Backup
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -50,7 +50,7 @@ jobs:
         run: |
           # Vacuum and analyze
           supabase db execute --sql "VACUUM ANALYZE;"
-          
+
           # Check for long-running queries
           supabase db execute --sql "
             SELECT pid, now() - pg_stat_activity.query_start AS duration, query 
@@ -64,18 +64,18 @@ jobs:
           cat > ops/dashboards/reports/maintenance-$(date +%Y%m%d).md << EOF
           # Supabase Maintenance Report
           Date: $(date +%Y-%m-%d)
-          
+
           ## Backup Status
           - Backup created: backup-$(date +%Y%m%d).sql
-          
+
           ## Database Health
           - Last maintenance: $(date)
           - Next maintenance: $(date -d '+7 days')
-          
+
           ## Performance Metrics
           - Database size: Check Supabase dashboard
           - Active connections: Check Supabase dashboard
-          
+
           EOF
 
       - name: Upload backup to artifact storage

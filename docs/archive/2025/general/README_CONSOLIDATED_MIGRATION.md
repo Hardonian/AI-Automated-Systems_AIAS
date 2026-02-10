@@ -18,6 +18,7 @@ After reviewing all individual migration files, this consolidated migration ensu
 ## Migration Details
 
 ### File Information
+
 - **File**: `supabase/migrations/20250129000000_consolidated_rls_policies_and_functions.sql`
 - **Size**: ~851 lines
 - **Policies Created**: 152+ RLS policies
@@ -26,6 +27,7 @@ After reviewing all individual migration files, this consolidated migration ensu
 ### Tables Covered
 
 #### Core Tables
+
 - `badges` - Public read, admin write
 - `segments` - Public read, admin write
 - `user_segments` - Users view own, admins manage all
@@ -37,6 +39,7 @@ After reviewing all individual migration files, this consolidated migration ensu
 - `compliance_metrics` - Admin only
 
 #### API & Integration Tables
+
 - `api_services` - Public read, admin write
 - `integrations` - Public read, admin write
 - `tenant_integrations` - Tenant members can view/manage
@@ -44,6 +47,7 @@ After reviewing all individual migration files, this consolidated migration ensu
 - `app_events` - Users view own, service role full access
 
 #### Analytics & Metrics Tables
+
 - `metrics_log` - Service role full access, authenticated read
 - `orchestrator_reports` - Service role full access, authenticated read
 - `dependency_reports` - Service role full access, authenticated read
@@ -57,16 +61,19 @@ After reviewing all individual migration files, this consolidated migration ensu
 - `affiliate_conversions` - Service role full access
 
 #### Privacy & Compliance Tables
+
 - `consent_records` - Users view own via data_subjects, service role insert
 - `data_processing_activities` - Admin only
 - `failed_login_attempts` - Admin and service role only
 
 #### Platform Tables
+
 - `demo_environments` - Public read active, admin write
 - `interactive_tutorials` - Public read, admin write
 - `workflow_definitions` - Tenant members can view/manage
 
 #### Enhanced Policies for Existing Tables
+
 - `moderation_flags` - Users can create, admins manage
 - `push_subscriptions` - Users manage own
 - `user_follows` - Users manage own
@@ -93,10 +100,12 @@ After reviewing all individual migration files, this consolidated migration ensu
 ## Security Features
 
 ### Function Security
+
 - All `SECURITY DEFINER` functions have `SET search_path = public` to prevent search_path injection attacks
 - Helper functions are granted proper execute permissions
 
 ### Performance Optimizations
+
 - Created indexes on frequently queried columns:
   - `idx_tenant_members_user_tenant_active` - For tenant membership checks
   - `idx_automation_workflows_created_by` - For workflow ownership checks
@@ -113,6 +122,7 @@ After reviewing all individual migration files, this consolidated migration ensu
 ## Idempotency
 
 The migration is fully idempotent:
+
 - Uses `DROP POLICY IF EXISTS` before creating policies
 - Uses `CREATE INDEX IF NOT EXISTS` for indexes
 - Uses `DO $$` blocks with existence checks for conditional operations
@@ -131,6 +141,7 @@ Before deploying to production:
 ## Dependencies
 
 This migration depends on:
+
 - `public.is_admin(UUID)` function (from `complete_schema.sql`)
 - `public.has_role(UUID, app_role)` function (from `complete_schema.sql`)
 - `public.is_tenant_member(UUID, UUID)` function (from `tenant_members` migration)
@@ -139,6 +150,7 @@ This migration depends on:
 ## Migration Order
 
 This migration should be run after:
+
 - All table creation migrations
 - `20250120000003_tenant_members_table.sql` (for tenant membership checks)
 - Any migrations that create helper functions like `is_admin()`
@@ -146,6 +158,7 @@ This migration should be run after:
 ## Rollback
 
 If needed, rollback can be performed by:
+
 1. Dropping all policies created by this migration
 2. Removing indexes created by this migration
 3. Reverting function security settings

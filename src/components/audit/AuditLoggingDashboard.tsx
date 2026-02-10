@@ -1,8 +1,8 @@
-import { 
-  FileText, 
-  Search, 
-  Filter, 
-  Download, 
+import {
+  FileText,
+  Search,
+  Filter,
+  Download,
   // Calendar,
   User,
   Activity,
@@ -17,7 +17,7 @@ import {
   XCircle,
   RefreshCw,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
 } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
 
@@ -26,7 +26,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export interface AuditLog {
   id: string;
@@ -80,9 +86,9 @@ const mockAuditLogs: AuditLog[] = [
     details: {
       method: 'password',
       twoFactor: true,
-      sessionId: 'sess_abc123'
+      sessionId: 'sess_abc123',
     },
-    tags: ['authentication', 'login']
+    tags: ['authentication', 'login'],
   },
   {
     id: 'audit-002',
@@ -100,16 +106,16 @@ const mockAuditLogs: AuditLog[] = [
     details: {
       dataType: 'personal_information',
       recordCount: 150,
-      purpose: 'customer_support'
+      purpose: 'customer_support',
     },
     changes: [
       {
         field: 'last_accessed',
         oldValue: '2024-01-20T15:30:00Z',
-        newValue: '2024-01-23T10:25:00Z'
-      }
+        newValue: '2024-01-23T10:25:00Z',
+      },
     ],
-    tags: ['data_access', 'customer_data']
+    tags: ['data_access', 'customer_data'],
   },
   {
     id: 'audit-003',
@@ -129,9 +135,9 @@ const mockAuditLogs: AuditLog[] = [
       vulnerabilitiesFound: 2,
       criticalIssues: 0,
       highIssues: 1,
-      mediumIssues: 1
+      mediumIssues: 1,
     },
-    tags: ['security', 'scan', 'vulnerability']
+    tags: ['security', 'scan', 'vulnerability'],
   },
   {
     id: 'audit-004',
@@ -149,21 +155,21 @@ const mockAuditLogs: AuditLog[] = [
     details: {
       targetUser: 'user-123',
       permissionType: 'admin_access',
-      granted: true
+      granted: true,
     },
     changes: [
       {
         field: 'role',
         oldValue: 'user',
-        newValue: 'admin'
+        newValue: 'admin',
       },
       {
         field: 'permissions',
         oldValue: ['read', 'write'],
-        newValue: ['read', 'write', 'admin', 'delete']
-      }
+        newValue: ['read', 'write', 'admin', 'delete'],
+      },
     ],
-    tags: ['permissions', 'admin', 'user_management']
+    tags: ['permissions', 'admin', 'user_management'],
   },
   {
     id: 'audit-005',
@@ -182,23 +188,27 @@ const mockAuditLogs: AuditLog[] = [
       exportType: 'csv',
       recordCount: 5000,
       dataRange: '2024-01-01 to 2024-01-23',
-      purpose: 'monthly_report'
+      purpose: 'monthly_report',
     },
-    tags: ['data_export', 'analytics', 'reporting']
-  }
+    tags: ['data_export', 'analytics', 'reporting'],
+  },
 ];
 
 export const AuditLoggingDashboard: React.FC = () => {
   const [auditLogs] = useState<AuditLog[]>(mockAuditLogs);
   const [filters, setFilters] = useState<AuditFilter>({
     dateRange: {
-      start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      end: new Date().toISOString().split('T')[0]
-    }
+      start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0],
+      end: new Date().toISOString().split('T')[0],
+    },
   });
   const [selectedLog] = useState<AuditLog | null>(null);
   const [expandedLogs, setExpandedLogs] = useState<Set<string>>(new Set());
-  const [sortBy, setSortBy] = useState<'timestamp' | 'severity' | 'action'>('timestamp');
+  const [sortBy, setSortBy] = useState<'timestamp' | 'severity' | 'action'>(
+    'timestamp'
+  );
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const filteredAndSortedLogs = useMemo(() => {
@@ -206,25 +216,44 @@ export const AuditLoggingDashboard: React.FC = () => {
       const logDate = new Date(log.timestamp);
       const startDate = new Date(filters.dateRange.start);
       const endDate = new Date(filters.dateRange.end);
-      
+
       const dateMatch = logDate >= startDate && logDate <= endDate;
       const userMatch = !filters.userId || log.userId === filters.userId;
-      const actionMatch = !filters.action || log.action.toLowerCase().includes(filters.action.toLowerCase());
-      const resourceMatch = !filters.resourceType || log.resourceType === filters.resourceType;
-      const severityMatch = !filters.severity || log.severity === filters.severity;
+      const actionMatch =
+        !filters.action ||
+        log.action.toLowerCase().includes(filters.action.toLowerCase());
+      const resourceMatch =
+        !filters.resourceType || log.resourceType === filters.resourceType;
+      const severityMatch =
+        !filters.severity || log.severity === filters.severity;
       const statusMatch = !filters.status || log.status === filters.status;
-      const searchMatch = !filters.searchQuery || 
+      const searchMatch =
+        !filters.searchQuery ||
         log.action.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
-        log.resource.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
-        log.userName.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
-        log.tags.some(tag => tag.toLowerCase().includes(filters.searchQuery.toLowerCase()));
+        log.resource
+          .toLowerCase()
+          .includes(filters.searchQuery.toLowerCase()) ||
+        log.userName
+          .toLowerCase()
+          .includes(filters.searchQuery.toLowerCase()) ||
+        log.tags.some(tag =>
+          tag.toLowerCase().includes(filters.searchQuery.toLowerCase())
+        );
 
-      return dateMatch && userMatch && actionMatch && resourceMatch && severityMatch && statusMatch && searchMatch;
+      return (
+        dateMatch &&
+        userMatch &&
+        actionMatch &&
+        resourceMatch &&
+        severityMatch &&
+        statusMatch &&
+        searchMatch
+      );
     });
 
     return filtered.sort((a, b) => {
       let aValue: any, bValue: any;
-      
+
       switch (sortBy) {
         case 'timestamp':
           aValue = new Date(a.timestamp).getTime();
@@ -254,31 +283,46 @@ export const AuditLoggingDashboard: React.FC = () => {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'bg-red-100 text-red-800 border-red-200';
-      case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'critical':
+        return 'bg-red-100 text-red-800 border-red-200';
+      case 'high':
+        return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'low':
+        return 'bg-green-100 text-green-800 border-green-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'success': return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case 'failure': return <XCircle className="w-4 h-4 text-red-500" />;
-      case 'pending': return <Clock className="w-4 h-4 text-yellow-500" />;
-      default: return <Activity className="w-4 h-4 text-gray-500" />;
+      case 'success':
+        return <CheckCircle className='h-4 w-4 text-green-500' />;
+      case 'failure':
+        return <XCircle className='h-4 w-4 text-red-500' />;
+      case 'pending':
+        return <Clock className='h-4 w-4 text-yellow-500' />;
+      default:
+        return <Activity className='h-4 w-4 text-gray-500' />;
     }
   };
 
   const getResourceTypeIcon = (type: string) => {
     switch (type) {
-      case 'user': return <User className="w-4 h-4" />;
-      case 'data': return <Database className="w-4 h-4" />;
-      case 'system': return <Settings className="w-4 h-4" />;
-      case 'security': return <Shield className="w-4 h-4" />;
-      case 'compliance': return <FileText className="w-4 h-4" />;
-      default: return <Activity className="w-4 h-4" />;
+      case 'user':
+        return <User className='h-4 w-4' />;
+      case 'data':
+        return <Database className='h-4 w-4' />;
+      case 'system':
+        return <Settings className='h-4 w-4' />;
+      case 'security':
+        return <Shield className='h-4 w-4' />;
+      case 'compliance':
+        return <FileText className='h-4 w-4' />;
+      default:
+        return <Activity className='h-4 w-4' />;
     }
   };
 
@@ -290,7 +334,7 @@ export const AuditLoggingDashboard: React.FC = () => {
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit'
+      second: '2-digit',
     });
   };
 
@@ -308,7 +352,17 @@ export const AuditLoggingDashboard: React.FC = () => {
 
   const handleExport = () => {
     const csvContent = [
-      ['Timestamp', 'User', 'Action', 'Resource', 'Type', 'Severity', 'Status', 'IP Address', 'Location'],
+      [
+        'Timestamp',
+        'User',
+        'Action',
+        'Resource',
+        'Type',
+        'Severity',
+        'Status',
+        'IP Address',
+        'Location',
+      ],
       ...filteredAndSortedLogs.map(log => [
         log.timestamp,
         log.userName,
@@ -318,9 +372,11 @@ export const AuditLoggingDashboard: React.FC = () => {
         log.severity,
         log.status,
         log.ipAddress,
-        log.location
-      ])
-    ].map(row => row.join(',')).join('\n');
+        log.location,
+      ]),
+    ]
+      .map(row => row.join(','))
+      .join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
@@ -332,26 +388,28 @@ export const AuditLoggingDashboard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className='space-y-6'>
+      <div className='flex items-center justify-between'>
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <FileText className="w-8 h-8" />
+          <h1 className='flex items-center gap-2 text-3xl font-bold'>
+            <FileText className='h-8 w-8' />
             Audit Logging Dashboard
           </h1>
-          <p className="text-gray-600 mt-1">Comprehensive audit trail and compliance monitoring</p>
+          <p className='mt-1 text-gray-600'>
+            Comprehensive audit trail and compliance monitoring
+          </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={handleExport}>
-            <Download className="w-4 h-4 mr-2" />
+        <div className='flex items-center gap-2'>
+          <Button variant='outline' onClick={handleExport}>
+            <Download className='mr-2 h-4 w-4' />
             Export CSV
           </Button>
-          <Button variant="outline">
-            <RefreshCw className="w-4 h-4 mr-2" />
+          <Button variant='outline'>
+            <RefreshCw className='mr-2 h-4 w-4' />
             Refresh
           </Button>
           <Button>
-            <Settings className="w-4 h-4 mr-2" />
+            <Settings className='mr-2 h-4 w-4' />
             Settings
           </Button>
         </div>
@@ -360,112 +418,144 @@ export const AuditLoggingDashboard: React.FC = () => {
       {/* Filters */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Filter className="w-5 h-5" />
+          <CardTitle className='flex items-center gap-2'>
+            <Filter className='h-5 w-5' />
             Filters & Search
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'>
             <div>
-              <label className="text-sm font-medium mb-2 block">Date Range</label>
-              <div className="flex gap-2">
+              <label className='mb-2 block text-sm font-medium'>
+                Date Range
+              </label>
+              <div className='flex gap-2'>
                 <Input
-                  type="date"
+                  type='date'
                   value={filters.dateRange.start}
-                  onChange={(e) => setFilters(prev => ({
-                    ...prev,
-                    dateRange: { ...prev.dateRange, start: e.target.value }
-                  }))}
+                  onChange={e =>
+                    setFilters(prev => ({
+                      ...prev,
+                      dateRange: { ...prev.dateRange, start: e.target.value },
+                    }))
+                  }
                 />
                 <Input
-                  type="date"
+                  type='date'
                   value={filters.dateRange.end}
-                  onChange={(e) => setFilters(prev => ({
-                    ...prev,
-                    dateRange: { ...prev.dateRange, end: e.target.value }
-                  }))}
+                  onChange={e =>
+                    setFilters(prev => ({
+                      ...prev,
+                      dateRange: { ...prev.dateRange, end: e.target.value },
+                    }))
+                  }
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium mb-2 block">Search</label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <label className='mb-2 block text-sm font-medium'>Search</label>
+              <div className='relative'>
+                <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400' />
                 <Input
-                  className="pl-10"
-                  placeholder="Search logs..."
+                  className='pl-10'
+                  placeholder='Search logs...'
                   value={filters.searchQuery || ''}
-                  onChange={(e) => setFilters(prev => ({ ...prev, searchQuery: e.target.value }))}
+                  onChange={e =>
+                    setFilters(prev => ({
+                      ...prev,
+                      searchQuery: e.target.value,
+                    }))
+                  }
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium mb-2 block">Resource Type</label>
+              <label className='mb-2 block text-sm font-medium'>
+                Resource Type
+              </label>
               <Select
                 value={filters.resourceType || ''}
-                onValueChange={(value) => setFilters(prev => ({ ...prev, resourceType: value || undefined }))}
+                onValueChange={value =>
+                  setFilters(prev => ({
+                    ...prev,
+                    resourceType: value || undefined,
+                  }))
+                }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="All types" />
+                  <SelectValue placeholder='All types' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All types</SelectItem>
-                  <SelectItem value="user">User</SelectItem>
-                  <SelectItem value="data">Data</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
-                  <SelectItem value="security">Security</SelectItem>
-                  <SelectItem value="compliance">Compliance</SelectItem>
+                  <SelectItem value=''>All types</SelectItem>
+                  <SelectItem value='user'>User</SelectItem>
+                  <SelectItem value='data'>Data</SelectItem>
+                  <SelectItem value='system'>System</SelectItem>
+                  <SelectItem value='security'>Security</SelectItem>
+                  <SelectItem value='compliance'>Compliance</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div>
-              <label className="text-sm font-medium mb-2 block">Severity</label>
+              <label className='mb-2 block text-sm font-medium'>Severity</label>
               <Select
                 value={filters.severity || ''}
-                onValueChange={(value) => setFilters(prev => ({ ...prev, severity: value || undefined }))}
+                onValueChange={value =>
+                  setFilters(prev => ({
+                    ...prev,
+                    severity: value || undefined,
+                  }))
+                }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="All severities" />
+                  <SelectValue placeholder='All severities' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All severities</SelectItem>
-                  <SelectItem value="critical">Critical</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value=''>All severities</SelectItem>
+                  <SelectItem value='critical'>Critical</SelectItem>
+                  <SelectItem value='high'>High</SelectItem>
+                  <SelectItem value='medium'>Medium</SelectItem>
+                  <SelectItem value='low'>Low</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          <div className="flex items-center justify-between mt-4">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium">Sort by:</label>
-                <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
-                  <SelectTrigger className="w-32">
+          <div className='mt-4 flex items-center justify-between'>
+            <div className='flex items-center gap-4'>
+              <div className='flex items-center gap-2'>
+                <label className='text-sm font-medium'>Sort by:</label>
+                <Select
+                  value={sortBy}
+                  onValueChange={(value: any) => setSortBy(value)}
+                >
+                  <SelectTrigger className='w-32'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="timestamp">Timestamp</SelectItem>
-                    <SelectItem value="severity">Severity</SelectItem>
-                    <SelectItem value="action">Action</SelectItem>
+                    <SelectItem value='timestamp'>Timestamp</SelectItem>
+                    <SelectItem value='severity'>Severity</SelectItem>
+                    <SelectItem value='action'>Action</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                size='sm'
+                variant='outline'
+                onClick={() =>
+                  setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'))
+                }
               >
-                {sortOrder === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                {sortOrder === 'asc' ? (
+                  <ChevronUp className='h-4 w-4' />
+                ) : (
+                  <ChevronDown className='h-4 w-4' />
+                )}
               </Button>
             </div>
-            <div className="text-sm text-gray-600">
+            <div className='text-sm text-gray-600'>
               Showing {filteredAndSortedLogs.length} of {auditLogs.length} logs
             </div>
           </div>
@@ -475,77 +565,94 @@ export const AuditLoggingDashboard: React.FC = () => {
       {/* Audit Logs */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Activity className="w-5 h-5" />
+          <CardTitle className='flex items-center gap-2'>
+            <Activity className='h-5 w-5' />
             Audit Logs
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {filteredAndSortedLogs.map((log) => (
-              <div key={log.id} className="border rounded-lg p-4 hover:bg-gray-50">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-3">
+          <div className='space-y-4'>
+            {filteredAndSortedLogs.map(log => (
+              <div
+                key={log.id}
+                className='rounded-lg border p-4 hover:bg-gray-50'
+              >
+                <div className='flex items-start justify-between'>
+                  <div className='flex items-start gap-3'>
                     {getResourceTypeIcon(log.resourceType)}
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-semibold capitalize">{log.action}</h4>
+                    <div className='flex-1'>
+                      <div className='mb-1 flex items-center gap-2'>
+                        <h4 className='font-semibold capitalize'>
+                          {log.action}
+                        </h4>
                         <Badge className={getSeverityColor(log.severity)}>
                           {log.severity}
                         </Badge>
-                        <div className="flex items-center gap-1">
+                        <div className='flex items-center gap-1'>
                           {getStatusIcon(log.status)}
-                          <span className="text-sm text-gray-600 capitalize">{log.status}</span>
+                          <span className='text-sm capitalize text-gray-600'>
+                            {log.status}
+                          </span>
                         </div>
                       </div>
-                      <p className="text-sm text-gray-600 mb-2">
-                        <strong>{log.userName}</strong> performed <strong>{log.action}</strong> on <strong>{log.resource}</strong>
+                      <p className='mb-2 text-sm text-gray-600'>
+                        <strong>{log.userName}</strong> performed{' '}
+                        <strong>{log.action}</strong> on{' '}
+                        <strong>{log.resource}</strong>
                       </p>
-                      <div className="flex items-center gap-4 text-xs text-gray-500">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
+                      <div className='flex items-center gap-4 text-xs text-gray-500'>
+                        <span className='flex items-center gap-1'>
+                          <Clock className='h-3 w-3' />
                           {formatTimestamp(log.timestamp)}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Globe className="w-3 h-3" />
+                        <span className='flex items-center gap-1'>
+                          <Globe className='h-3 w-3' />
                           {log.ipAddress}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <User className="w-3 h-3" />
+                        <span className='flex items-center gap-1'>
+                          <User className='h-3 w-3' />
                           {log.location}
                         </span>
                       </div>
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {log.tags.map((tag) => (
-                          <Badge key={tag} className="text-xs" variant="outline">
+                      <div className='mt-2 flex flex-wrap gap-1'>
+                        {log.tags.map(tag => (
+                          <Badge
+                            key={tag}
+                            className='text-xs'
+                            variant='outline'
+                          >
                             {tag}
                           </Badge>
                         ))}
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className='flex gap-2'>
                     <Button
-                      size="sm"
-                      variant="outline"
+                      size='sm'
+                      variant='outline'
                       onClick={() => toggleLogExpansion(log.id)}
                     >
-                      <Eye className="w-4 h-4 mr-2" />
+                      <Eye className='mr-2 h-4 w-4' />
                       {expandedLogs.has(log.id) ? 'Hide' : 'Show'} Details
                     </Button>
                   </div>
                 </div>
 
                 {expandedLogs.has(log.id) && (
-                  <div className="mt-4 pt-4 border-t space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className='mt-4 space-y-4 border-t pt-4'>
+                    <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                       <div>
-                        <h5 className="font-semibold text-sm mb-2">Details</h5>
-                        <div className="space-y-1 text-sm">
+                        <h5 className='mb-2 text-sm font-semibold'>Details</h5>
+                        <div className='space-y-1 text-sm'>
                           {Object.entries(log.details).map(([key, value]) => (
-                            <div key={key} className="flex justify-between">
-                              <span className="text-gray-600 capitalize">{key.replace(/([A-Z])/g, ' $1')}:</span>
-                              <span className="font-medium">{JSON.stringify(value)}</span>
+                            <div key={key} className='flex justify-between'>
+                              <span className='capitalize text-gray-600'>
+                                {key.replace(/([A-Z])/g, ' $1')}:
+                              </span>
+                              <span className='font-medium'>
+                                {JSON.stringify(value)}
+                              </span>
                             </div>
                           ))}
                         </div>
@@ -553,15 +660,26 @@ export const AuditLoggingDashboard: React.FC = () => {
 
                       {log.changes && log.changes.length > 0 && (
                         <div>
-                          <h5 className="font-semibold text-sm mb-2">Changes</h5>
-                          <div className="space-y-2">
+                          <h5 className='mb-2 text-sm font-semibold'>
+                            Changes
+                          </h5>
+                          <div className='space-y-2'>
                             {log.changes.map((change, index) => (
-                              <div key={index} className="text-sm border rounded p-2">
-                                <div className="font-medium">{change.field}</div>
-                                <div className="text-gray-600">
-                                  <span className="text-red-600">- {JSON.stringify(change.oldValue)}</span>
+                              <div
+                                key={index}
+                                className='rounded border p-2 text-sm'
+                              >
+                                <div className='font-medium'>
+                                  {change.field}
+                                </div>
+                                <div className='text-gray-600'>
+                                  <span className='text-red-600'>
+                                    - {JSON.stringify(change.oldValue)}
+                                  </span>
                                   <br />
-                                  <span className="text-green-600">+ {JSON.stringify(change.newValue)}</span>
+                                  <span className='text-green-600'>
+                                    + {JSON.stringify(change.newValue)}
+                                  </span>
                                 </div>
                               </div>
                             ))}

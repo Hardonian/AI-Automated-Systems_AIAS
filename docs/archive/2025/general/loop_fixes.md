@@ -12,6 +12,7 @@
 **Solution:** Implement nightly ETL → `metrics_daily` → CAC dashboard
 
 **Implementation:**
+
 1. Add CAC calculation to `compute_metrics.ts`
 2. Create CAC dashboard widget
 3. Alert on CAC anomalies
@@ -29,6 +30,7 @@
 **Solution:** Aggregate feature usage from events table → dashboard
 
 **Implementation:**
+
 1. Query events table for feature usage
 2. Create feature adoption dashboard
 3. Add to product roadmap prioritization
@@ -46,6 +48,7 @@
 **Solution:** Categorize tickets, identify trends, prioritize fixes
 
 **Implementation:**
+
 1. Integrate support system API
 2. Categorize tickets (bug, feature request, billing, etc.)
 3. Generate monthly trend report
@@ -75,6 +78,7 @@
 **Solution:** Auto-fix common errors (rate limits, timeouts)
 
 **Implementation:**
+
 1. Categorize errors (rate limit, timeout, auth, etc.)
 2. Implement auto-fix logic for common errors
 3. Monitor auto-fix success rate

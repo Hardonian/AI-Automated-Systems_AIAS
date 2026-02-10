@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 /**
  * Performance Beacon Component
@@ -9,7 +9,9 @@ import { useEffect } from "react";
  */
 export function PerformanceBeacon() {
   useEffect(() => {
-    if (typeof window === "undefined") {return;}
+    if (typeof window === 'undefined') {
+      return;
+    }
 
     // Collect Web Vitals
     const vitals: Record<string, number> = {};
@@ -17,7 +19,7 @@ export function PerformanceBeacon() {
     // TTFB (Time to First Byte)
     if (performance.getEntriesByType) {
       const navigation = performance.getEntriesByType(
-        "navigation"
+        'navigation'
       )[0] as PerformanceNavigationTiming;
       if (navigation) {
         vitals.ttfb = navigation.responseStart - navigation.requestStart;
@@ -26,15 +28,15 @@ export function PerformanceBeacon() {
     }
 
     // LCP (Largest Contentful Paint)
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       try {
-        const lcpObserver = new PerformanceObserver((list) => {
+        const lcpObserver = new PerformanceObserver(list => {
           const entries = list.getEntries();
           const lastEntry = entries[entries.length - 1] as any;
           vitals.lcp = lastEntry.renderTime || lastEntry.loadTime;
           sendTelemetry();
         });
-        lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
+        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
       } catch (e) {
         // PerformanceObserver not supported
       }
@@ -42,7 +44,7 @@ export function PerformanceBeacon() {
       // CLS (Cumulative Layout Shift)
       try {
         let clsValue = 0;
-        const clsObserver = new PerformanceObserver((list) => {
+        const clsObserver = new PerformanceObserver(list => {
           for (const entry of list.getEntries()) {
             if (!(entry as any).hadRecentInput) {
               clsValue += (entry as any).value;
@@ -50,21 +52,21 @@ export function PerformanceBeacon() {
           }
           vitals.cls = clsValue;
         });
-        clsObserver.observe({ entryTypes: ["layout-shift"] });
+        clsObserver.observe({ entryTypes: ['layout-shift'] });
       } catch (e) {
         // PerformanceObserver not supported
       }
 
       // INP (Interaction to Next Paint) - polyfill needed for older browsers
       try {
-        const inpObserver = new PerformanceObserver((list) => {
+        const inpObserver = new PerformanceObserver(list => {
           for (const entry of list.getEntries()) {
-            if (entry.entryType === "event") {
+            if (entry.entryType === 'event') {
               vitals.inp = (entry as any).processingStart - entry.startTime;
             }
           }
         });
-        inpObserver.observe({ entryTypes: ["event"] });
+        inpObserver.observe({ entryTypes: ['event'] });
       } catch (e) {
         // PerformanceObserver not supported
       }
@@ -87,15 +89,12 @@ export function PerformanceBeacon() {
 
       // Use sendBeacon for reliable delivery
       if (navigator.sendBeacon) {
-        navigator.sendBeacon(
-          "/api/telemetry",
-          JSON.stringify(payload)
-        );
+        navigator.sendBeacon('/api/telemetry', JSON.stringify(payload));
       } else {
         // Fallback to fetch
-        fetch("/api/telemetry", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        fetch('/api/telemetry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
           keepalive: true,
         }).catch(() => {
@@ -110,7 +109,7 @@ export function PerformanceBeacon() {
     }, 5000);
 
     // Send on page unload
-    window.addEventListener("beforeunload", () => {
+    window.addEventListener('beforeunload', () => {
       sendTelemetry();
     });
 

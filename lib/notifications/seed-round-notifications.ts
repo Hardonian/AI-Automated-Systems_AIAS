@@ -3,14 +3,18 @@
  * Sends notifications for health scores, LOI expirations, investor follow-ups, etc.
  */
 
-import { seedRoundDB } from "@/lib/database/seed-round-db";
+import { seedRoundDB } from '@/lib/database/seed-round-db';
 
 export interface Notification {
   id: string;
-  type: "health_score" | "loi_expiration" | "investor_followup" | "case_study_approval";
+  type:
+    | 'health_score'
+    | 'loi_expiration'
+    | 'investor_followup'
+    | 'case_study_approval';
   title: string;
   message: string;
-  priority: "low" | "medium" | "high" | "critical";
+  priority: 'low' | 'medium' | 'high' | 'critical';
   actionUrl?: string;
   createdAt: string;
 }
@@ -26,32 +30,32 @@ export async function checkHealthScoreAlerts(): Promise<Notification[]> {
 
     for (const customer of customers) {
       // Red status - critical alert
-      if (customer.status === "red") {
+      if (customer.status === 'red') {
         notifications.push({
           id: `health-${customer.id}`,
-          type: "health_score",
+          type: 'health_score',
           title: `Critical: ${customer.company_name} Health Score`,
           message: `${customer.company_name} has a critical health score of ${customer.health_score}. Immediate action required.`,
-          priority: "critical",
+          priority: 'critical',
           actionUrl: `/admin/metrics/customer-health?customer=${customer.id}`,
           createdAt: new Date().toISOString(),
         });
       }
       // Yellow status - warning
-      else if (customer.status === "yellow") {
+      else if (customer.status === 'yellow') {
         notifications.push({
           id: `health-${customer.id}`,
-          type: "health_score",
+          type: 'health_score',
           title: `Warning: ${customer.company_name} At Risk`,
           message: `${customer.company_name} has an at-risk health score of ${customer.health_score}. Review recommended.`,
-          priority: "high",
+          priority: 'high',
           actionUrl: `/admin/metrics/customer-health?customer=${customer.id}`,
           createdAt: new Date().toISOString(),
         });
       }
     }
   } catch (error) {
-    console.error("Error checking health score alerts:", error);
+    console.error('Error checking health score alerts:', error);
   }
 
   return notifications;
@@ -75,13 +79,17 @@ export async function checkLOIExpirations(): Promise<Notification[]> {
         );
 
         // Alert 30 days before expiration
-        if (daysUntilExpiration <= 30 && daysUntilExpiration > 0 && loi.status === "signed") {
+        if (
+          daysUntilExpiration <= 30 &&
+          daysUntilExpiration > 0 &&
+          loi.status === 'signed'
+        ) {
           notifications.push({
             id: `loi-exp-${loi.id}`,
-            type: "loi_expiration",
+            type: 'loi_expiration',
             title: `LOI Expiring Soon: ${loi.company_name}`,
             message: `LOI from ${loi.company_name} expires in ${daysUntilExpiration} days. Follow up to convert to customer.`,
-            priority: daysUntilExpiration <= 7 ? "critical" : "high",
+            priority: daysUntilExpiration <= 7 ? 'critical' : 'high',
             actionUrl: `/admin/lois?loi=${loi.id}`,
             createdAt: new Date().toISOString(),
           });
@@ -89,7 +97,7 @@ export async function checkLOIExpirations(): Promise<Notification[]> {
       }
     }
   } catch (error) {
-    console.error("Error checking LOI expirations:", error);
+    console.error('Error checking LOI expirations:', error);
   }
 
   return notifications;
@@ -116,10 +124,10 @@ export async function checkInvestorFollowUps(): Promise<Notification[]> {
         if (daysUntilFollowUp <= 0) {
           notifications.push({
             id: `investor-followup-${investor.id}`,
-            type: "investor_followup",
+            type: 'investor_followup',
             title: `Follow Up: ${investor.name}`,
-            message: `Follow-up reminder for ${investor.name}${investor.firm ? ` at ${investor.firm}` : ""}. ${daysUntilFollowUp < 0 ? "Overdue!" : "Due today."}`,
-            priority: daysUntilFollowUp < -7 ? "critical" : "high",
+            message: `Follow-up reminder for ${investor.name}${investor.firm ? ` at ${investor.firm}` : ''}. ${daysUntilFollowUp < 0 ? 'Overdue!' : 'Due today.'}`,
+            priority: daysUntilFollowUp < -7 ? 'critical' : 'high',
             actionUrl: `/admin/investors?investor=${investor.id}`,
             createdAt: new Date().toISOString(),
           });
@@ -127,7 +135,7 @@ export async function checkInvestorFollowUps(): Promise<Notification[]> {
       }
     }
   } catch (error) {
-    console.error("Error checking investor follow-ups:", error);
+    console.error('Error checking investor follow-ups:', error);
   }
 
   return notifications;

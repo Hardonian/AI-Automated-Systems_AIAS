@@ -1,60 +1,72 @@
-"use client";
-import { useState, useEffect } from "react";
+'use client';
+import { useState, useEffect } from 'react';
 
-import { hapticTap } from "./Haptics";
+import { hapticTap } from './Haptics';
 
-import { logger } from "@/lib/logging/structured-logger";
-import { supabase } from "@/lib/supabase/client";
+import { logger } from '@/lib/logging/structured-logger';
+import { supabase } from '@/lib/supabase/client';
 
 export async function requestPushPermission() {
-  if (!("Notification" in window) || !("serviceWorker" in navigator)) {
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) {
     return false;
   }
-  
-  if (Notification.permission === "granted") {
+
+  if (Notification.permission === 'granted') {
     return true;
   }
-  
+
   const permission = await Notification.requestPermission();
-  return permission === "granted";
+  return permission === 'granted';
 }
 
 export async function subscribeToPush() {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {return false;}
-  
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return false;
+  }
+
   const permission = await requestPushPermission();
-  if (!permission) {return false;}
-  
+  if (!permission) {
+    return false;
+  }
+
   try {
     const registration = await navigator.serviceWorker.ready;
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "") as any,
+      applicationServerKey: urlBase64ToUint8Array(
+        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''
+      ) as any,
     });
-    
+
     const { endpoint, keys } = subscription.toJSON();
-    
-    await (supabase.from("push_subscriptions") as any).upsert({
+
+    await (supabase.from('push_subscriptions') as any).upsert({
       user_id: user.id,
       endpoint: endpoint!,
       p256dh: keys!.p256dh,
       auth: keys!.auth,
     } as any);
-    
+
     return true;
   } catch (error) {
-    logger.error("Push subscription failed", error instanceof Error ? error : new Error(String(error)), {
-      component: "PushNotificationButton",
-      action: "requestPushPermission",
-    });
+    logger.error(
+      'Push subscription failed',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        component: 'PushNotificationButton',
+        action: 'requestPushPermission',
+      }
+    );
     return false;
   }
 }
 
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
-  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
   const rawData = window.atob(base64);
   const outputArray = new Uint8Array(rawData.length);
   for (let i = 0; i < rawData.length; ++i) {
@@ -68,20 +80,24 @@ export default function PushNotificationButton() {
   const [supported, setSupported] = useState(false);
 
   useEffect(() => {
-    setSupported("Notification" in window && "serviceWorker" in navigator);
+    setSupported('Notification' in window && 'serviceWorker' in navigator);
     checkSubscription();
   }, []);
 
   async function checkSubscription() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {return;}
-    
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return;
+    }
+
     const { data } = await supabase
-      .from("push_subscriptions")
-      .select("*")
-      .eq("user_id", user.id)
+      .from('push_subscriptions')
+      .select('*')
+      .eq('user_id', user.id)
       .limit(1);
-    
+
     setSubscribed(!!data && data.length > 0);
   }
 
@@ -99,12 +115,12 @@ export default function PushNotificationButton() {
 
   return (
     <button
-      className={`h-10 px-4 rounded-xl text-sm font-medium ${
-        subscribed ? "bg-secondary" : "bg-primary text-primary-fg"
+      className={`h-10 rounded-xl px-4 text-sm font-medium ${
+        subscribed ? 'bg-secondary' : 'text-primary-fg bg-primary'
       }`}
       onClick={handleSubscribe}
     >
-      {subscribed ? "🔔 Notifications On" : "🔕 Enable Notifications"}
+      {subscribed ? '🔔 Notifications On' : '🔕 Enable Notifications'}
     </button>
   );
 }

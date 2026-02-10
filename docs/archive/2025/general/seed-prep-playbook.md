@@ -50,66 +50,78 @@ This playbook walks you through everything needed to successfully raise seed fun
 ## Pitch Deck Structure
 
 ### Slide 1: Title Slide
+
 - Company name and logo
 - Tagline/one-liner
 - Founder names and contact info
 - Date
 
 ### Slide 2: Problem
+
 - What problem are you solving?
 - Why is it important?
 - Use data/stats if possible
 
 ### Slide 3: Solution
+
 - Your product/service
 - How it solves the problem
 - Key features
 
 ### Slide 4: Market Opportunity
+
 - Total Addressable Market (TAM)
 - Serviceable Addressable Market (SAM)
 - Serviceable Obtainable Market (SOM)
 - Market growth trends
 
 ### Slide 5: Business Model
+
 - How you make money
 - Pricing strategy
 - Revenue streams
 
 ### Slide 6: Traction
+
 - Key metrics (users, revenue, growth)
 - Customer testimonials
 - Notable milestones
 - Use graphs/charts
 
 ### Slide 7: Competition
+
 - Competitive landscape
 - Your differentiation
 - Competitive advantages
 
 ### Slide 8: Go-to-Market Strategy
+
 - How you'll acquire customers
 - Marketing channels
 - Sales strategy
 
 ### Slide 9: Team
+
 - Founders' backgrounds
 - Key team members
 - Advisors
 - Why you're the right team
 
 ### Slide 10: Financials
+
 - Revenue projections (12-24 months)
 - Key assumptions
 - Unit economics
 - Path to profitability
 
 ### Slide 11: Ask
+
 - Funding amount needed
 - Use of funds breakdown
 - Milestones this funding enables
 
 ### Slide 12: Contact
+
 - Contact information
 - Next steps
 
@@ -118,24 +130,28 @@ This playbook walks you through everything needed to successfully raise seed fun
 ### Target Investor Types
 
 **Angel Investors:**
+
 - High-net-worth individuals
 - Often founders themselves
 - Typically invest $10K-100K CAD
 - More hands-on, mentorship-focused
 
 **Seed Funds:**
+
 - Early-stage VC funds
 - Typically invest $100K-1M CAD
 - More structured process
 - Portfolio approach
 
 **Accelerators/Incubators:**
+
 - Y Combinator, Techstars, etc.
 - Provide funding + program
 - Network and mentorship
 - Demo day at end
 
 **Family Offices:**
+
 - Wealthy families' investment vehicles
 - Can invest significant amounts
 - Often patient capital
@@ -143,18 +159,21 @@ This playbook walks you through everything needed to successfully raise seed fun
 ### Finding Investors
 
 **Warm Introductions (Best):**
+
 - Ask advisors, mentors, other founders
 - LinkedIn connections
 - Industry events and conferences
 - Alumni networks
 
 **Cold Outreach:**
+
 - Research investors who invest in your space
 - Personalize emails (reference portfolio companies)
 - Use LinkedIn to find mutual connections
 - Be respectful and concise
 
 **Platforms:**
+
 - AngelList (now Wellfound)
 - Gust
 - Crunchbase (to find investors)
@@ -165,6 +184,7 @@ This playbook walks you through everything needed to successfully raise seed fun
 **Subject:** [Company Name] - [Tagline/Mission]
 
 **Body:**
+
 ```
 Hi [Investor Name],
 
@@ -193,6 +213,7 @@ Thanks,
 ### Documents to Prepare
 
 **Corporate:**
+
 - [ ] Certificate of incorporation
 - [ ] Articles of incorporation
 - [ ] Shareholders' agreement
@@ -200,6 +221,7 @@ Thanks,
 - [ ] Corporate minute book
 
 **Financial:**
+
 - [ ] Financial statements (if available)
 - [ ] Bank statements
 - [ ] Tax returns
@@ -207,6 +229,7 @@ Thanks,
 - [ ] Cap table
 
 **Legal:**
+
 - [ ] Founder agreements
 - [ ] Employee agreements
 - [ ] Contractor agreements
@@ -214,12 +237,14 @@ Thanks,
 - [ ] Terms of service/privacy policy
 
 **Product:**
+
 - [ ] Product demo
 - [ ] Technical documentation
 - [ ] User metrics
 - [ ] Customer testimonials
 
 **Market:**
+
 - [ ] Market research
 - [ ] Competitive analysis
 - [ ] Customer surveys/interviews
@@ -238,36 +263,43 @@ Thanks,
 ### Common Questions to Prepare For
 
 **About the Problem:**
+
 - Why is this problem worth solving?
 - How big is the problem?
 - What are people doing now?
 
 **About the Solution:**
+
 - How does your solution work?
 - Why is your approach better?
 - What's your competitive advantage?
 
 **About the Market:**
+
 - How big is the market?
 - How fast is it growing?
 - Who are your customers?
 
 **About Traction:**
+
 - What traction do you have?
 - What are your key metrics?
 - What's your growth rate?
 
 **About the Team:**
+
 - Why are you the right team?
 - What relevant experience do you have?
 - How will you scale the team?
 
 **About the Business:**
+
 - How do you make money?
 - What are your unit economics?
 - What's your path to profitability?
 
 **About the Ask:**
+
 - How much are you raising?
 - What will you use the funds for?
 - What milestones will this enable?
@@ -294,34 +326,42 @@ Thanks,
 ### Key Terms
 
 **Valuation:**
+
 - Pre-money valuation: Company value before investment
 - Post-money valuation: Pre-money + investment amount
 
 **Investment Amount:**
+
 - How much you're raising
 - Minimum/maximum raise amounts
 
 **Equity:**
+
 - Percentage of company being sold
 - Example: $500K at $2M pre-money = 20% equity
 
 **Vesting:**
+
 - Founder shares typically vest over 4 years
 - 1-year cliff, then monthly
 
 **Board Seats:**
+
 - How many board members
 - Who gets seats
 
 **Liquidation Preference:**
+
 - Investor gets paid first in exit
 - Typically 1x (their investment back)
 
 **Anti-Dilution:**
+
 - Protection against down rounds
 - Weighted average or full ratchet
 
 **Pro-Rata Rights:**
+
 - Right to invest in future rounds
 - Maintain ownership percentage
 
@@ -337,26 +377,31 @@ Thanks,
 ### Before Raising Equity
 
 **Bootstrapping:**
+
 - Fund with revenue and savings
 - Retain full ownership
 - Slower growth, more control
 
 **Revenue-Based Financing:**
+
 - Repay as percentage of revenue
 - No equity dilution
 - Good for recurring revenue businesses
 
 **Grants:**
+
 - Government grants (IRAP, SR&ED)
 - Non-dilutive funding
 - See grant list in `/ops/funding/`
 
 **Debt:**
+
 - Bank loans
 - Business credit
 - Personal guarantees often required
 
 **Friends & Family:**
+
 - Raise from personal network
 - Simpler terms
 - Can strain relationships
@@ -386,12 +431,14 @@ Thanks,
 ## Success Metrics
 
 **Good Signs:**
+
 - Investors ask for follow-up meetings
 - Multiple investors interested
 - Term sheets received
 - Due diligence progressing
 
 **Warning Signs:**
+
 - No follow-up interest
 - Constant rejections
 - Can't get meetings
@@ -400,6 +447,7 @@ Thanks,
 ## Resources
 
 **Canadian Resources:**
+
 - **BDC:** Business Development Bank of Canada
 - **IRAP:** Industrial Research Assistance Program
 - **MaRS:** MaRS Discovery District
@@ -407,11 +455,13 @@ Thanks,
 - **Startup Communities:** Local startup ecosystems
 
 **Tools:**
+
 - **Pitch Deck Templates:** Canva, Slidebean
 - **Financial Models:** Causal, Airtable templates
 - **Investor CRM:** Airtable, Notion, HubSpot
 
 **Legal:**
+
 - Find a startup lawyer (many offer package deals)
 - Review term sheets carefully
 - Understand what you're signing

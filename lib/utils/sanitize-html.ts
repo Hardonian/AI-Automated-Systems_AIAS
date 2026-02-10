@@ -1,6 +1,6 @@
 /**
  * HTML Sanitization Utility
- * 
+ *
  * Provides safe HTML rendering by sanitizing potentially dangerous content.
  * For client-side use, we'll use a simple tag whitelist approach.
  * For production, consider using DOMPurify for more robust sanitization.
@@ -9,7 +9,7 @@
 /**
  * Simple HTML sanitizer using a whitelist approach
  * This is a basic implementation - for production, consider using DOMPurify
- * 
+ *
  * NOTE: This function requires browser DOM APIs, so it only works client-side.
  * For server-side rendering, use sanitizeHTMLServer instead.
  */
@@ -22,19 +22,43 @@ export function sanitizeHTML(html: string): string {
   // Client-side: Create a temporary DOM element to parse and sanitize
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
-  
+
   // Whitelist of allowed tags and attributes
   const allowedTags = [
-    'p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-    'ul', 'ol', 'li', 'a', 'blockquote', 'code', 'pre', 'img',
-    'div', 'span', 'table', 'thead', 'tbody', 'tr', 'td', 'th'
+    'p',
+    'br',
+    'strong',
+    'em',
+    'u',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'ul',
+    'ol',
+    'li',
+    'a',
+    'blockquote',
+    'code',
+    'pre',
+    'img',
+    'div',
+    'span',
+    'table',
+    'thead',
+    'tbody',
+    'tr',
+    'td',
+    'th',
   ];
-  
+
   const allowedAttributes: Record<string, string[]> = {
-    'a': ['href', 'title', 'target', 'rel'],
-    'img': ['src', 'alt', 'title', 'width', 'height'],
-    'code': ['class'],
-    'pre': ['class'],
+    a: ['href', 'title', 'target', 'rel'],
+    img: ['src', 'alt', 'title', 'width', 'height'],
+    code: ['class'],
+    pre: ['class'],
   };
 
   // Recursively sanitize nodes
@@ -94,9 +118,9 @@ export function sanitizeHTML(html: string): string {
   }
 
   // Sanitize the body content
-  const {body} = doc;
+  const { body } = doc;
   const sanitizedDiv = document.createElement('div');
-  
+
   for (const child of Array.from(body.childNodes)) {
     const sanitized = sanitizeNode(child);
     if (sanitized) {
@@ -114,24 +138,30 @@ export function sanitizeHTML(html: string): string {
 export function sanitizeHTMLServer(html: string): string {
   // Basic server-side sanitization: remove script tags and dangerous attributes
   // For production, consider using a library like sanitize-html or DOMPurify (isomorphic version)
-  
+
   let sanitized = html;
-  
+
   // Remove script tags and their content
-  sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-  
+  sanitized = sanitized.replace(
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    ''
+  );
+
   // Remove event handlers (onclick, onerror, etc.)
   sanitized = sanitized.replace(/\s*on\w+\s*=\s*["'][^"']*["']/gi, '');
-  
+
   // Remove javascript: and data: URLs from href and src
-  sanitized = sanitized.replace(/(href|src)\s*=\s*["'](javascript|data):[^"']*["']/gi, '');
-  
+  sanitized = sanitized.replace(
+    /(href|src)\s*=\s*["'](javascript|data):[^"']*["']/gi,
+    ''
+  );
+
   return sanitized;
 }
 
 /**
  * Main sanitization function that works in both client and server contexts
- * 
+ *
  * NOTE: For better security, consider using DOMPurify via dompurify-wrapper.ts
  */
 export function sanitize(html: string): string {
@@ -140,7 +170,7 @@ export function sanitize(html: string): string {
   if (typeof window !== 'undefined') {
     return sanitizeHTML(html);
   }
-  
+
   // Server-side: use basic sanitization (DOMPurify requires async initialization)
   // For server-side with DOMPurify, use sanitizeHTMLAsync from dompurify-wrapper
   return sanitizeHTMLServer(html);

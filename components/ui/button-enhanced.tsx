@@ -54,8 +54,8 @@ export function EnhancedButton({
     >
       {loading && (
         <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          <span className="sr-only">Loading</span>
+          <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+          <span className='sr-only'>Loading</span>
         </>
       )}
       <span className={loading ? 'opacity-0' : 'opacity-100'}>{children}</span>

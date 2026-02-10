@@ -19,6 +19,7 @@
 **Website:** https://nrc-cnrc.gc.ca/eng/irap/index.html
 
 **Notes:**
+
 - Can take 3-6 months for approval
 - Requires technical merit and commercial potential
 - Consultants available to help with applications
@@ -36,6 +37,7 @@
 **Website:** https://www.canada.ca/en/revenue-agency/services/scientific-research-experimental-development-tax-incentive-program.html
 
 **Notes:**
+
 - Most significant R&D incentive in Canada
 - Can be retroactive
 - Consider hiring SR&ED consultant
@@ -53,6 +55,7 @@
 **Website:** https://ised-isde.canada.ca/site/canada-digital-adoption-program/en
 
 **Notes:**
+
 - Boost Your Business Technology stream
 - Grow Your Business Online stream
 - Requires digital advisor engagement
@@ -70,6 +73,7 @@
 **Website:** https://ised-isde.canada.ca/site/strategic-innovation-fund/en
 
 **Notes:**
+
 - For larger companies/projects
 - Minimum project size typically $10M+
 - Longer application process
@@ -87,6 +91,7 @@
 **Website:** https://www.tradecommissioner.gc.ca/canexport/index.aspx
 
 **Notes:**
+
 - For export-focused businesses
 - Reimbursement-based (50% of eligible costs)
 - Requires export plan
@@ -98,11 +103,13 @@
 #### Ontario
 
 **Ontario Centre of Innovation (OCI) - Voucher Program**
+
 - Up to $150K CAD
 - Technology adoption vouchers
 - Website: https://www.oc-innovation.ca/
 
 **Ontario Interactive Digital Media Tax Credit**
+
 - Up to 40% of eligible costs
 - For interactive digital media products
 - Website: https://www.ontario.ca/page/ontario-interactive-digital-media-tax-credit
@@ -112,11 +119,13 @@
 #### British Columbia
 
 **BC Tech Co-op Grants**
+
 - Up to $10K CAD
 - For tech co-op placements
 - Website: https://www.bctechassociation.ca/
 
 **BC Scale-Up Program**
+
 - For scaling businesses
 - Various funding amounts
 - Website: https://www.bctechassociation.ca/
@@ -126,11 +135,13 @@
 #### Quebec
 
 **Investissement Québec**
+
 - Various programs
 - Grants, loans, tax credits
 - Website: https://www.investquebec.com/
 
 **Québec Research and Innovation Tax Credit**
+
 - Up to 37.5% of eligible R&D expenses
 - Website: https://www.revenuquebec.ca/
 
@@ -139,6 +150,7 @@
 #### Alberta
 
 **Alberta Innovates - Product Demonstration Program**
+
 - Up to $250K CAD
 - For product development and demonstration
 - Website: https://albertainnovates.ca/
@@ -159,6 +171,7 @@
 **Website:** https://www.techstars.com/
 
 **Notes:**
+
 - Highly competitive
 - Strong network and mentorship
 - Demo day at end
@@ -175,6 +188,7 @@
 **Website:** https://www.ycombinator.com/
 
 **Notes:**
+
 - Most prestigious accelerator
 - Remote-friendly
 - Extremely competitive
@@ -191,6 +205,7 @@
 **Website:** https://www.creativedestructionlab.com/
 
 **Notes:**
+
 - Focus on scalable science-based companies
 - No equity taken
 - Strong mentorship network
@@ -207,6 +222,7 @@
 **Website:** https://www.nextcanada.com/next-ai/
 
 **Notes:**
+
 - AI-focused
 - No equity taken
 - Strong AI/ML network
@@ -218,16 +234,19 @@
 #### Toronto
 
 **MaRS Discovery District**
+
 - Incubator/accelerator
 - Various programs
 - Website: https://www.marsdd.com/
 
 **OneEleven**
+
 - Scale-up space
 - Community-focused
 - Website: https://oneeleven.com/
 
 **Rocket Lab**
+
 - Early-stage accelerator
 - Website: https://www.rocketlab.ca/
 
@@ -236,11 +255,13 @@
 #### Montreal
 
 **Notman House**
+
 - Startup community hub
 - Events and programs
 - Website: https://notman.org/
 
 **FounderFuel**
+
 - Accelerator program
 - Website: https://www.founderfuel.com/
 
@@ -249,10 +270,12 @@
 #### Vancouver
 
 **Spring Activator**
+
 - Impact-focused accelerator
 - Website: https://www.spring.is/
 
 **Launch Academy**
+
 - Tech startup accelerator
 - Website: https://launchacademy.ca/
 
@@ -261,11 +284,13 @@
 #### Waterloo
 
 **Communitech**
+
 - Tech hub and accelerator
 - Various programs
 - Website: https://www.communitech.ca/
 
 **Velocity**
+
 - University of Waterloo accelerator
 - Website: https://velocity.uwaterloo.ca/
 
@@ -284,6 +309,7 @@
 **Website:** https://www.futurpreneur.ca/
 
 **Notes:**
+
 - No equity taken
 - Requires business plan
 - Mentorship included
@@ -299,6 +325,7 @@
 **Website:** https://www.bdc.ca/
 
 **Notes:**
+
 - Government-backed
 - More flexible than traditional banks
 - Can provide both debt and equity
@@ -364,16 +391,19 @@
 ## Resources
 
 **Grant Consultants:**
+
 - SR&ED consultants (specialized)
 - General grant writing services
 - Regional business development centers
 
 **Information Sources:**
+
 - **Innovation Canada:** https://www.ic.gc.ca/
 - **Canada Business Network:** https://www.canada.ca/en/services/business.html
 - **Regional Development Agencies:** Various provinces
 
 **Networking:**
+
 - Local startup communities
 - Industry associations
 - Government business advisors
@@ -383,17 +413,20 @@
 ## Important Notes
 
 **Disclaimer:**
+
 - Information accurate as of 2025, but programs change frequently
 - Always verify current eligibility and deadlines
 - Some programs may have limited funding
 - Application processes can be competitive
 
 **Tax Considerations:**
+
 - Grants may be taxable income
 - Consult with accountant
 - SR&ED is tax credit (different from grants)
 
 **Legal Considerations:**
+
 - Some grants have strings attached
 - Review terms carefully
 - Consult legal counsel if needed
@@ -404,6 +437,7 @@
 **Next Review:** Quarterly (programs change frequently)
 
 **Action Items:**
+
 - [ ] Identify 3-5 relevant programs
 - [ ] Review eligibility requirements
 - [ ] Prepare application materials

@@ -5,6 +5,7 @@
 ## Overview
 
 This setup implements a production-ready Next.js 14+ front-end with:
+
 - **Design System**: TailwindCSS + shadcn/ui + Radix + Framer Motion
 - **Accessibility**: WCAG 2.2 AA compliant
 - **Performance**: Optimized for Core Web Vitals (LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.05)
@@ -76,6 +77,7 @@ npm start
 ### UI Components
 
 All components follow shadcn/ui patterns:
+
 - `Button` - Multiple variants (default, secondary, outline, ghost, destructive)
 - `Input` - Form inputs with proper focus states
 - `Select` - Dropdown selects with Radix UI
@@ -135,6 +137,7 @@ npx ts-node scripts/ingest-external-ui.ts --src ./external-dump --dest ./compone
 ## CI/CD
 
 The GitHub Actions workflow (`.github/workflows/ui-ingest.yml`):
+
 - Runs on pull requests
 - Executes external UI ingestion if `external-dump` exists
 - Builds project to verify changes
@@ -150,6 +153,7 @@ The GitHub Actions workflow (`.github/workflows/ui-ingest.yml`):
 ### Performance HUD
 
 Development-only overlay showing:
+
 - LCP (Largest Contentful Paint)
 - CLS (Cumulative Layout Shift)
 - INP (Interaction to Next Paint)
@@ -157,6 +161,7 @@ Development-only overlay showing:
 ### Theme Toggle
 
 System-aware theme switching:
+
 - Light mode
 - Dark mode
 - System preference (default)
@@ -181,6 +186,7 @@ System-aware theme switching:
 ## Support
 
 For issues or questions:
+
 1. Check `/docs/` for detailed guides
 2. Review component examples in `components/`
 3. Run `npm run typecheck` for TypeScript errors

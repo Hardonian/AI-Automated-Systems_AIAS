@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-import { ErrorState } from "@/components/ui/empty-state";
-import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
-import { logger } from "@/lib/utils/logger";
+import { ErrorState } from '@/components/ui/empty-state';
+import { telemetry } from '@/lib/monitoring/enhanced-telemetry';
+import { logger } from '@/lib/utils/logger';
 
 export default function Error({
   error,
@@ -17,23 +17,25 @@ export default function Error({
     // Track error with telemetry
     telemetry.trackError(error, {
       digest: error.digest,
-      page: typeof window !== 'undefined' ? window.location.pathname : 'unknown',
+      page:
+        typeof window !== 'undefined' ? window.location.pathname : 'unknown',
     });
     // Use logger instead of console.error for environment-aware logging
-    logger.error("Application error", error, {
+    logger.error('Application error', error, {
       digest: error.digest,
-      page: typeof window !== 'undefined' ? window.location.pathname : 'unknown',
+      page:
+        typeof window !== 'undefined' ? window.location.pathname : 'unknown',
     });
   }, [error]);
 
   return (
-    <div className="container flex min-h-[60vh] flex-col items-center justify-center py-16">
+    <div className='container flex min-h-[60vh] flex-col items-center justify-center py-16'>
       <ErrorState
-        title="Something went wrong"
+        title='Something went wrong'
         description="We're sorry, but something unexpected happened. Please try again."
         error={error}
         onRetry={reset}
-        showDetails={process.env.NODE_ENV === "development"}
+        showDetails={process.env.NODE_ENV === 'development'}
       />
     </div>
   );

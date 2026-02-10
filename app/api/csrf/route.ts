@@ -1,8 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { addSecurityHeaders, generateCSRFToken } from "@/lib/middleware/security";
+import {
+  addSecurityHeaders,
+  generateCSRFToken,
+} from '@/lib/middleware/security';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/csrf
@@ -16,16 +19,15 @@ export async function GET(request: NextRequest) {
   const token = generateCSRFToken();
   const response = NextResponse.json({ token });
 
-  const isHttps = new URL(request.url).protocol === "https:";
-  response.cookies.set("csrf-token", token, {
+  const isHttps = new URL(request.url).protocol === 'https:';
+  response.cookies.set('csrf-token', token, {
     httpOnly: false,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production" ? isHttps : false,
-    path: "/",
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production' ? isHttps : false,
+    path: '/',
   });
 
   addSecurityHeaders(response);
-  response.headers.set("Cache-Control", "no-store");
+  response.headers.set('Cache-Control', 'no-store');
   return response;
 }
-

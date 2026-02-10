@@ -1,16 +1,28 @@
-"use client";
+'use client';
 
-import { Loader2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { logger } from "@/lib/logging/structured-logger";
-import { track } from "@/lib/telemetry/track";
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { logger } from '@/lib/logging/structured-logger';
+import { track } from '@/lib/telemetry/track';
 
 interface WorkflowTemplate {
   id: string;
@@ -37,12 +49,19 @@ interface WorkflowFormProps {
   onCancel?: () => void;
 }
 
-export function WorkflowForm({ template, onSuccess, onCancel }: WorkflowFormProps) {
+export function WorkflowForm({
+  template,
+  onSuccess,
+  onCancel,
+}: WorkflowFormProps) {
   const [templates, setTemplates] = useState<WorkflowTemplate[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState<WorkflowTemplate | null>(template || null);
-  const [workflowName, setWorkflowName] = useState("");
-  const [workflowDescription, setWorkflowDescription] = useState("");
-  const [config, setConfig] = useState<Record<string, Record<string, unknown>>>({});
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<WorkflowTemplate | null>(template || null);
+  const [workflowName, setWorkflowName] = useState('');
+  const [workflowDescription, setWorkflowDescription] = useState('');
+  const [config, setConfig] = useState<Record<string, Record<string, unknown>>>(
+    {}
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -65,15 +84,21 @@ export function WorkflowForm({ template, onSuccess, onCancel }: WorkflowFormProp
 
   async function fetchTemplates() {
     try {
-      const response = await fetch("/api/workflows/templates");
-      if (!response.ok) {throw new Error("Failed to fetch templates");}
+      const response = await fetch('/api/workflows/templates');
+      if (!response.ok) {
+        throw new Error('Failed to fetch templates');
+      }
       const data = await response.json();
       setTemplates(data.templates);
     } catch (err) {
-      logger.error("Failed to fetch templates", err instanceof Error ? err : new Error(String(err)), {
-        component: "WorkflowForm",
-        action: "fetchTemplates",
-      });
+      logger.error(
+        'Failed to fetch templates',
+        err instanceof Error ? err : new Error(String(err)),
+        {
+          component: 'WorkflowForm',
+          action: 'fetchTemplates',
+        }
+      );
     }
   }
 
@@ -83,56 +108,59 @@ export function WorkflowForm({ template, onSuccess, onCancel }: WorkflowFormProp
     setError(null);
 
     try {
-      const response = await fetch("/api/v1/workflows", {
-        method: "POST",
+      const response = await fetch('/api/v1/workflows', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token") || ""}`,
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('access_token') || ''}`,
         },
         body: JSON.stringify({
           name: workflowName,
           description: workflowDescription,
           template_id: selectedTemplate?.id,
-          steps: selectedTemplate?.steps.map((step) => ({
-            id: step.id,
-            type: step.type,
-            config: config[step.id] || step.config,
-          })) || [],
+          steps:
+            selectedTemplate?.steps.map(step => ({
+              id: step.id,
+              type: step.type,
+              config: config[step.id] || step.config,
+            })) || [],
           enabled: true,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to create workflow");
+        throw new Error(errorData.error || 'Failed to create workflow');
       }
 
       const data = await response.json();
-      
+
       // Track workflow creation
-      const userId = localStorage.getItem("user_id") || "anonymous";
+      const userId = localStorage.getItem('user_id') || 'anonymous';
       await track(userId, {
-        type: "workflow_created",
-        path: "/onboarding/create-workflow",
+        type: 'workflow_created',
+        path: '/onboarding/create-workflow',
         meta: {
           workflow_id: data.workflow.id,
           workflow_name: workflowName,
           template_id: selectedTemplate?.id,
           timestamp: new Date().toISOString(),
         },
-        app: "web",
+        app: 'web',
       });
 
       onSuccess?.(data.workflow);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create workflow");
+      setError(
+        err instanceof Error ? err.message : 'Failed to create workflow'
+      );
     } finally {
       setLoading(false);
     }
   }
 
   function updateStepConfig(stepId: string, field: string, value: unknown) {
-    setConfig((prev) => ({
+    setConfig(prev => ({
       ...prev,
       [stepId]: {
         ...prev[stepId],
@@ -143,27 +171,29 @@ export function WorkflowForm({ template, onSuccess, onCancel }: WorkflowFormProp
 
   if (!selectedTemplate && templates.length > 0) {
     return (
-      <div className="space-y-4">
+      <div className='space-y-4'>
         <div>
           <Label>Select Template</Label>
           <Select
-            value={(selectedTemplate as any)?.id || ""}
-            onValueChange={(value) => {
-              const template = templates.find((t) => t.id === value);
+            value={(selectedTemplate as any)?.id || ''}
+            onValueChange={value => {
+              const template = templates.find(t => t.id === value);
               setSelectedTemplate(template || null);
             }}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Choose a workflow template" />
+              <SelectValue placeholder='Choose a workflow template' />
             </SelectTrigger>
             <SelectContent>
-              {templates.map((t) => (
+              {templates.map(t => (
                 <SelectItem key={t.id} value={t.id}>
-                  <div className="flex items-center gap-2">
+                  <div className='flex items-center gap-2'>
                     <span>{t.icon}</span>
                     <div>
-                      <div className="font-medium">{t.name}</div>
-                      <div className="text-xs text-muted-foreground">{t.description}</div>
+                      <div className='font-medium'>{t.name}</div>
+                      <div className='text-xs text-muted-foreground'>
+                        {t.description}
+                      </div>
                     </div>
                   </div>
                 </SelectItem>
@@ -180,50 +210,53 @@ export function WorkflowForm({ template, onSuccess, onCancel }: WorkflowFormProp
   }
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
-      <div className="space-y-4">
+    <form className='space-y-6' onSubmit={handleSubmit}>
+      <div className='space-y-4'>
         <div>
-          <Label htmlFor="workflow-name">Workflow Name</Label>
+          <Label htmlFor='workflow-name'>Workflow Name</Label>
           <Input
             required
-            id="workflow-name"
-            placeholder="My Workflow"
+            id='workflow-name'
+            placeholder='My Workflow'
             value={workflowName}
-            onChange={(e) => setWorkflowName(e.target.value)}
+            onChange={e => setWorkflowName(e.target.value)}
           />
         </div>
 
         <div>
-          <Label htmlFor="workflow-description">Description</Label>
+          <Label htmlFor='workflow-description'>Description</Label>
           <Textarea
-            id="workflow-description"
-            placeholder="Describe what this workflow does"
+            id='workflow-description'
+            placeholder='Describe what this workflow does'
             rows={3}
             value={workflowDescription}
-            onChange={(e) => setWorkflowDescription(e.target.value)}
+            onChange={e => setWorkflowDescription(e.target.value)}
           />
         </div>
 
-        <div className="space-y-4">
-          <div className="text-sm font-medium">Configuration</div>
-          {selectedTemplate.steps.map((step) => (
+        <div className='space-y-4'>
+          <div className='text-sm font-medium'>Configuration</div>
+          {selectedTemplate.steps.map(step => (
             <Card key={step.id}>
               <CardHeader>
-                <CardTitle className="text-base">{step.name}</CardTitle>
+                <CardTitle className='text-base'>{step.name}</CardTitle>
                 <CardDescription>{step.description}</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-3">
-                {step.requiredFields?.map((field) => (
+              <CardContent className='space-y-3'>
+                {step.requiredFields?.map(field => (
                   <div key={field}>
                     <Label htmlFor={`${step.id}-${field}`}>
-                      {field.charAt(0).toUpperCase() + field.slice(1).replace(/_/g, " ")}
+                      {field.charAt(0).toUpperCase() +
+                        field.slice(1).replace(/_/g, ' ')}
                     </Label>
                     <Input
                       id={`${step.id}-${field}`}
                       placeholder={`Enter ${field}`}
                       required={step.requiredFields?.includes(field)}
-                      value={(config[step.id]?.[field] as string) || ""}
-                      onChange={(e) => updateStepConfig(step.id, field, e.target.value)}
+                      value={(config[step.id]?.[field] as string) || ''}
+                      onChange={e =>
+                        updateStepConfig(step.id, field, e.target.value)
+                      }
                     />
                   </div>
                 ))}
@@ -233,24 +266,26 @@ export function WorkflowForm({ template, onSuccess, onCancel }: WorkflowFormProp
         </div>
 
         {error && (
-          <div className="p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg">
-            <div className="text-sm text-red-800 dark:text-red-200">{error}</div>
+          <div className='rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950'>
+            <div className='text-sm text-red-800 dark:text-red-200'>
+              {error}
+            </div>
           </div>
         )}
 
-        <div className="flex gap-4">
-          <Button disabled={loading} type="submit">
+        <div className='flex gap-4'>
+          <Button disabled={loading} type='submit'>
             {loading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                 Creating...
               </>
             ) : (
-              "Create Workflow"
+              'Create Workflow'
             )}
           </Button>
           {onCancel && (
-            <Button type="button" variant="outline" onClick={onCancel}>
+            <Button type='button' variant='outline' onClick={onCancel}>
               Cancel
             </Button>
           )}

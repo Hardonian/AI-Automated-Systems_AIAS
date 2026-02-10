@@ -1,13 +1,19 @@
-"use client";
-import Link from "next/link";
-import { useState } from "react";
+'use client';
+import Link from 'next/link';
+import { useState } from 'react';
 
-import FadeIn from "@/components/motion/fade-in";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
+import FadeIn from '@/components/motion/fade-in';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
 
 export function ROICalculator() {
   const [hoursPerWeek, setHoursPerWeek] = useState([10]);
@@ -25,34 +31,34 @@ export function ROICalculator() {
   const paybackPeriod = monthlyCost / monthlySavings; // in months
 
   return (
-    <section className="py-20 bg-muted/30">
+    <section className='bg-muted/30 py-20'>
       <FadeIn>
-        <div className="container max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+        <div className='container mx-auto max-w-4xl'>
+          <div className='mb-12 text-center'>
+            <h2 className='mb-4 text-3xl font-bold md:text-4xl'>
               Calculate Your ROI
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className='text-lg text-muted-foreground'>
               See how much time and money you'll save with AI automation
             </p>
           </div>
 
-          <Card className="border-primary/20 shadow-lg">
+          <Card className='border-primary/20 shadow-lg'>
             <CardHeader>
               <CardTitle>ROI Calculator</CardTitle>
               <CardDescription>
                 Adjust the sliders to see your potential savings
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
+            <CardContent className='space-y-6'>
+              <div className='space-y-4'>
                 <div>
-                  <Label htmlFor="hours">
+                  <Label htmlFor='hours'>
                     Hours saved per week: <strong>{hoursSaved}</strong>
                   </Label>
                   <Slider
-                    className="mt-2"
-                    id="hours"
+                    className='mt-2'
+                    id='hours'
                     max={40}
                     min={1}
                     step={1}
@@ -62,83 +68,113 @@ export function ROICalculator() {
                 </div>
 
                 <div>
-                  <Label htmlFor="rate">
+                  <Label htmlFor='rate'>
                     Average hourly rate (CAD $): <strong>${hourlyRate}</strong>
                   </Label>
-                  <div className="mt-2">
+                  <div className='mt-2'>
                     <Input
-                      className="max-w-xs"
-                      id="rate"
+                      className='max-w-xs'
+                      id='rate'
                       max={200}
                       min={20}
-                      type="number"
+                      type='number'
                       value={hourlyRate}
-                      onChange={(e) => setHourlyRate(Number(e.target.value))}
+                      onChange={e => setHourlyRate(Number(e.target.value))}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="employees">
+                  <Label htmlFor='employees'>
                     Number of employees: <strong>{employees}</strong>
                   </Label>
                   <Slider
-                    className="mt-2"
-                    id="employees"
+                    className='mt-2'
+                    id='employees'
                     max={10}
                     min={1}
                     step={1}
                     value={[employees]}
-                    onValueChange={(val) => setEmployees(val[0] || 1)}
+                    onValueChange={val => setEmployees(val[0] || 1)}
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6 border-t">
-                <div className="space-y-2">
-                  <div className="text-sm text-muted-foreground">Monthly Savings</div>
-                  <div className="text-3xl font-bold text-primary">
-                    CAD ${monthlySavings.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              <div className='grid grid-cols-1 gap-4 border-t pt-6 md:grid-cols-2'>
+                <div className='space-y-2'>
+                  <div className='text-sm text-muted-foreground'>
+                    Monthly Savings
+                  </div>
+                  <div className='text-3xl font-bold text-primary'>
+                    CAD $
+                    {monthlySavings.toLocaleString('en-CA', {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <div className="text-sm text-muted-foreground">Yearly Savings</div>
-                  <div className="text-3xl font-bold text-primary">
-                    CAD ${yearlySavings.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                <div className='space-y-2'>
+                  <div className='text-sm text-muted-foreground'>
+                    Yearly Savings
+                  </div>
+                  <div className='text-3xl font-bold text-primary'>
+                    CAD $
+                    {yearlySavings.toLocaleString('en-CA', {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <div className="text-sm text-muted-foreground">Monthly Cost</div>
-                  <div className="text-2xl font-semibold">
+                <div className='space-y-2'>
+                  <div className='text-sm text-muted-foreground'>
+                    Monthly Cost
+                  </div>
+                  <div className='text-2xl font-semibold'>
                     CAD ${monthlyCost}/month
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <div className="text-sm text-muted-foreground">Monthly ROI</div>
-                  <div className="text-2xl font-semibold text-green-600">
-                    {monthlyROI > 0 ? '+' : ''}{monthlyROI.toFixed(0)}%
+                <div className='space-y-2'>
+                  <div className='text-sm text-muted-foreground'>
+                    Monthly ROI
+                  </div>
+                  <div className='text-2xl font-semibold text-green-600'>
+                    {monthlyROI > 0 ? '+' : ''}
+                    {monthlyROI.toFixed(0)}%
                   </div>
                 </div>
-                <div className="space-y-2 md:col-span-2">
-                  <div className="text-sm text-muted-foreground">Payback Period</div>
-                  <div className="text-xl font-semibold">
-                    {paybackPeriod < 1 
-                      ? '< 1 month' 
+                <div className='space-y-2 md:col-span-2'>
+                  <div className='text-sm text-muted-foreground'>
+                    Payback Period
+                  </div>
+                  <div className='text-xl font-semibold'>
+                    {paybackPeriod < 1
+                      ? '< 1 month'
                       : `${paybackPeriod.toFixed(1)} months`}
                   </div>
                 </div>
               </div>
 
-              <div className="pt-6 border-t">
-                <div className="bg-primary/5 p-4 rounded-lg mb-4">
-                  <p className="text-sm">
-                    <strong>Example:</strong> If you save {hoursSaved} hours/week at ${hourlyRate}/hour for {employees} employee{employees > 1 ? 's' : ''}, 
-                    you'll save <strong>CAD ${monthlySavings.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/month</strong> 
-                    {' '}with a monthly cost of only CAD ${monthlyCost}/month.
+              <div className='border-t pt-6'>
+                <div className='mb-4 rounded-lg bg-primary/5 p-4'>
+                  <p className='text-sm'>
+                    <strong>Example:</strong> If you save {hoursSaved}{' '}
+                    hours/week at ${hourlyRate}/hour for {employees} employee
+                    {employees > 1 ? 's' : ''}, you'll save{' '}
+                    <strong>
+                      CAD $
+                      {monthlySavings.toLocaleString('en-CA', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                      /month
+                    </strong>{' '}
+                    with a monthly cost of only CAD ${monthlyCost}/month.
                   </p>
                 </div>
-                <Button asChild className="w-full" size="lg">
-                  <Link href="/signup">Start Free Trial — Save {hoursSaved} Hours/Week</Link>
+                <Button asChild className='w-full' size='lg'>
+                  <Link href='/signup'>
+                    Start Free Trial — Save {hoursSaved} Hours/Week
+                  </Link>
                 </Button>
               </div>
             </CardContent>

@@ -9,6 +9,7 @@
 ### Choosing Between Zapier and Make
 
 **Zapier:**
+
 - ✅ Easier to use, more intuitive
 - ✅ Better for simple workflows
 - ✅ More popular integrations
@@ -16,6 +17,7 @@
 - ❌ Limited free tier
 
 **Make.com:**
+
 - ✅ More affordable ($15-30/month)
 - ✅ More powerful (visual builder)
 - ✅ Better for complex workflows
@@ -29,11 +31,13 @@
 ### Step 1: Create Account
 
 **Zapier:**
+
 1. Go to https://zapier.com
 2. Sign up (free trial available)
 3. Choose Professional plan ($30/month) for best features
 
 **Make.com:**
+
 1. Go to https://make.com
 2. Sign up (free trial available)
 3. Choose Core plan ($15/month) for most features
@@ -47,6 +51,7 @@ The workflows are documented in `ops/automation-blueprints/zapier-make-flows.jso
 ### Zapier Setup
 
 **Trigger:**
+
 1. Click **Create Zap**
 2. Choose trigger: **Google Forms** (or Typeform, Webflow, etc.)
 3. Event: **New Form Submission**
@@ -54,6 +59,7 @@ The workflows are documented in `ops/automation-blueprints/zapier-make-flows.jso
 5. Test trigger with sample submission
 
 **Action 1: Notion**
+
 1. Add action: **Notion**
 2. Action: **Create Database Entry**
 3. Connect Notion account
@@ -68,6 +74,7 @@ The workflows are documented in `ops/automation-blueprints/zapier-make-flows.jso
 6. Test action
 
 **Action 2: Gmail**
+
 1. Add action: **Gmail**
 2. Action: **Send Email**
 3. To: `{{trigger.email}}`
@@ -76,6 +83,7 @@ The workflows are documented in `ops/automation-blueprints/zapier-make-flows.jso
 6. Test action
 
 **Action 3: Slack** (Optional)
+
 1. Add action: **Slack**
 2. Action: **Send Direct Message**
 3. Channel: `#leads`
@@ -83,37 +91,44 @@ The workflows are documented in `ops/automation-blueprints/zapier-make-flows.jso
 5. Test action
 
 **Activate Zap:**
+
 - Click **Turn on Zap**
 - Monitor first few runs
 
 ### Make.com Setup
 
 **Scenario Setup:**
+
 1. Click **Create a new scenario**
 2. Name it: "Form to CRM and Email"
 
 **Module 1: Trigger**
+
 1. Add trigger: **Google Forms** → **Watch Responses**
 2. Connect Google account
 3. Select form
 4. Run scenario to get sample data
 
 **Module 2: Notion**
+
 1. Add module: **Notion** → **Create a Database Entry**
 2. Connect Notion account
 3. Select database
 4. Map fields (same as Zapier above)
 
 **Module 3: Gmail**
+
 1. Add module: **Gmail** → **Send an Email**
 2. Map email fields
 3. Add email template
 
 **Module 4: Slack** (Optional)
+
 1. Add module: **Slack** → **Send a Direct Message**
 2. Configure message
 
 **Activate:**
+
 - Click **Save** → **Run once** to test
 - Enable **Schedule** if needed
 
@@ -129,12 +144,14 @@ The workflows are documented in `ops/automation-blueprints/zapier-make-flows.jso
 ### Zapier Setup
 
 **Trigger:**
+
 1. Create Zap
 2. Trigger: **Stripe** → **Payment Succeeded**
 3. Connect Stripe account
 4. Test trigger
 
 **Action 1: Supabase**
+
 1. Action: **Supabase** → **Insert Row**
 2. Connect Supabase account
 3. Table: `transactions`
@@ -146,12 +163,14 @@ The workflows are documented in `ops/automation-blueprints/zapier-make-flows.jso
    - `date` → `{{trigger.created}}`
 
 **Action 2: Google Sheets**
+
 1. Action: **Google Sheets** → **Append Row**
 2. Spreadsheet: **Finance Dashboard**
 3. Worksheet: **Transactions**
 4. Values: Map each column
 
 **Action 3: Slack**
+
 1. Action: **Slack** → **Send Message**
 2. Channel: `#revenue`
 3. Message: `💰 New sale: ${{trigger.amount_cad}} CAD from {{trigger.customer_email}}`
@@ -159,6 +178,7 @@ The workflows are documented in `ops/automation-blueprints/zapier-make-flows.jso
 ### Supabase Table Setup
 
 **Create transactions table:**
+
 ```sql
 CREATE TABLE transactions (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -174,6 +194,7 @@ CREATE TABLE transactions (
 ### Google Sheet Setup
 
 **Create Finance Dashboard Sheet:**
+
 1. Create new Google Sheet
 2. Name it: "Finance Dashboard"
 3. Create worksheet: "Transactions"
@@ -185,15 +206,18 @@ CREATE TABLE transactions (
 ### Setup
 
 **Trigger:**
+
 - **Buffer** → Post Published
 - OR **Hootsuite** → Post Published
 - OR **Facebook** → Post Published
 
 **Action:**
+
 - **Google Sheets** → Append Row
 - **Supabase** → Insert Row (optional)
 
 **Map Fields:**
+
 - Date, Platform, Content, URL, Engagement metrics
 
 ## Email Templates
@@ -203,6 +227,7 @@ CREATE TABLE transactions (
 **Subject:** Thanks for reaching out!
 
 **Body:**
+
 ```
 Hi {{name}},
 
@@ -224,6 +249,7 @@ Best regards,
 **Subject:** Re: {{subject}}
 
 **Body:**
+
 ```
 Hi {{customer_name}},
 
@@ -251,25 +277,31 @@ Best regards,
 ### Common Issues
 
 **Issue: "Authentication failed"**
+
 - Solution: Reconnect account, check permissions
 
 **Issue: "Field mapping error"**
+
 - Solution: Check field names match exactly, use correct data format
 
 **Issue: "Webhook not receiving data"**
+
 - Solution: Verify webhook URL, check Stripe webhook settings
 
 **Issue: "Rate limit exceeded"**
+
 - Solution: Upgrade plan or reduce workflow frequency
 
 ## Cost Estimates
 
 ### Zapier
+
 - **Starter:** $20/month (5 Zaps, 750 tasks)
 - **Professional:** $30/month (20 Zaps, 2,000 tasks) ← Recommended
 - **Team:** $75/month (unlimited Zaps)
 
 ### Make.com
+
 - **Free:** $0 (1,000 operations/month)
 - **Core:** $15/month (10,000 operations) ← Recommended
 - **Pro:** $30/month (40,000 operations)
@@ -286,12 +318,14 @@ Best regards,
 ## Maintenance
 
 ### Weekly Review
+
 - Check workflow execution logs
 - Review error rates
 - Optimize workflows
 - Remove unused Zaps/scenarios
 
 ### Monthly Review
+
 - Calculate automation ROI
 - Review costs
 - Identify new automation opportunities

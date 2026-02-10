@@ -1,16 +1,22 @@
-"use client";
-import { useState } from "react";
+'use client';
+import { useState } from 'react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 
 interface Comment {
   id: string;
   author: string;
   content: string;
   timestamp: string;
-  status: "approved" | "pending";
+  status: 'approved' | 'pending';
   systemsThinkingInsight?: string;
   likes?: number;
   replies?: Comment[];
@@ -22,9 +28,9 @@ interface CommentsSectionProps {
 
 export function CommentsSection({ articleSlug }: CommentsSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
-  const [newComment, setNewComment] = useState("");
-  const [author, setAuthor] = useState("");
-  const [email, setEmail] = useState("");
+  const [newComment, setNewComment] = useState('');
+  const [author, setAuthor] = useState('');
+  const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,10 +38,10 @@ export function CommentsSection({ articleSlug }: CommentsSectionProps) {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/blog/comments", {
-        method: "POST",
+      const response = await fetch('/api/blog/comments', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           articleSlug,
@@ -53,108 +59,118 @@ export function CommentsSection({ articleSlug }: CommentsSectionProps) {
 
       if (data.success) {
         setComments([...comments, data.comment]);
-        setNewComment("");
-        setAuthor("");
-        setEmail("");
+        setNewComment('');
+        setAuthor('');
+        setEmail('');
       }
     } catch (error) {
-      console.error("Failed to post comment:", error);
+      console.error('Failed to post comment:', error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section className="mt-12">
+    <section className='mt-12'>
       <Card>
         <CardHeader>
           <CardTitle>AI-Moderated Comments</CardTitle>
           <CardDescription>
-            Join the discussion. All comments are moderated by AI using systems thinking principles 
-            to ensure quality, relevance, and constructive dialogue.
+            Join the discussion. All comments are moderated by AI using systems
+            thinking principles to ensure quality, relevance, and constructive
+            dialogue.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className='space-y-6'>
           {/* Comment Form */}
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className='space-y-4' onSubmit={handleSubmit}>
             <div>
-              <label className="block text-sm font-medium mb-2">Name</label>
+              <label className='mb-2 block text-sm font-medium'>Name</label>
               <Input
                 required
-                placeholder="Your name"
+                placeholder='Your name'
                 value={author}
-                onChange={(e) => setAuthor(e.target.value)}
+                onChange={e => setAuthor(e.target.value)}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Email</label>
+              <label className='mb-2 block text-sm font-medium'>Email</label>
               <Input
                 required
-                placeholder="your@email.com"
-                type="email"
+                placeholder='your@email.com'
+                type='email'
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Comment</label>
+              <label className='mb-2 block text-sm font-medium'>Comment</label>
               <textarea
                 required
-                className="w-full px-4 py-2 border rounded-md"
-                placeholder="Share your thoughts... (AI moderation ensures quality discussions)"
+                className='w-full rounded-md border px-4 py-2'
+                placeholder='Share your thoughts... (AI moderation ensures quality discussions)'
                 rows={4}
                 value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
+                onChange={e => setNewComment(e.target.value)}
               />
-              <p className="text-xs text-muted-foreground mt-1">
-                💡 Tip: Comments that demonstrate systems thinking or multiple perspectives are highly valued!
+              <p className='mt-1 text-xs text-muted-foreground'>
+                💡 Tip: Comments that demonstrate systems thinking or multiple
+                perspectives are highly valued!
               </p>
             </div>
-            <Button disabled={isSubmitting} type="submit">
-              {isSubmitting ? "Submitting..." : "Post Comment"}
+            <Button disabled={isSubmitting} type='submit'>
+              {isSubmitting ? 'Submitting...' : 'Post Comment'}
             </Button>
           </form>
 
           {/* Comments List */}
-          <div className="space-y-4 mt-8">
-            <h3 className="font-semibold">
-              Comments ({comments.filter(c => c.status === "approved").length})
+          <div className='mt-8 space-y-4'>
+            <h3 className='font-semibold'>
+              Comments ({comments.filter(c => c.status === 'approved').length})
             </h3>
-            {comments.filter(c => c.status === "approved").length === 0 ? (
-              <p className="text-muted-foreground text-sm">
+            {comments.filter(c => c.status === 'approved').length === 0 ? (
+              <p className='text-sm text-muted-foreground'>
                 No comments yet. Be the first to share your thoughts!
               </p>
             ) : (
               comments
-                .filter(c => c.status === "approved")
-                .map((comment) => (
-                  <Card key={comment.id} className="bg-muted/30">
-                    <CardContent className="pt-6">
-                      <div className="flex items-start justify-between mb-2">
+                .filter(c => c.status === 'approved')
+                .map(comment => (
+                  <Card key={comment.id} className='bg-muted/30'>
+                    <CardContent className='pt-6'>
+                      <div className='mb-2 flex items-start justify-between'>
                         <div>
-                          <p className="font-semibold">{comment.author}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {new Date(comment.timestamp).toLocaleDateString("en-CA", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                              hour: "numeric",
-                              minute: "numeric",
-                            })}
+                          <p className='font-semibold'>{comment.author}</p>
+                          <p className='text-xs text-muted-foreground'>
+                            {new Date(comment.timestamp).toLocaleDateString(
+                              'en-CA',
+                              {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: 'numeric',
+                                minute: 'numeric',
+                              }
+                            )}
                           </p>
                         </div>
                       </div>
-                      <p className="text-muted-foreground mb-3">{comment.content}</p>
+                      <p className='mb-3 text-muted-foreground'>
+                        {comment.content}
+                      </p>
                       {comment.systemsThinkingInsight && (
-                        <div className="bg-primary/10 border-l-4 border-primary p-3 rounded-r-lg mb-3">
-                          <p className="text-xs text-muted-foreground">
-                            <strong>🧠 Systems Thinking Insight:</strong> {comment.systemsThinkingInsight}
+                        <div className='mb-3 rounded-r-lg border-l-4 border-primary bg-primary/10 p-3'>
+                          <p className='text-xs text-muted-foreground'>
+                            <strong>🧠 Systems Thinking Insight:</strong>{' '}
+                            {comment.systemsThinkingInsight}
                           </p>
                         </div>
                       )}
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <button className="hover:text-foreground">Like ({comment.likes || 0})</button>
-                        <button className="hover:text-foreground">Reply</button>
+                      <div className='flex items-center gap-4 text-sm text-muted-foreground'>
+                        <button className='hover:text-foreground'>
+                          Like ({comment.likes || 0})
+                        </button>
+                        <button className='hover:text-foreground'>Reply</button>
                       </div>
                     </CardContent>
                   </Card>
@@ -163,11 +179,13 @@ export function CommentsSection({ articleSlug }: CommentsSectionProps) {
           </div>
 
           {/* AI Moderation Notice */}
-          <div className="bg-muted/50 p-4 rounded-lg mt-6">
-            <p className="text-sm text-muted-foreground">
-              <strong>AI Moderation:</strong> Comments are automatically moderated using AI systems thinking analysis. 
-              Comments that demonstrate systems thinking, multiple perspectives, or constructive dialogue are prioritized. 
-              Spam, toxic content, and off-topic comments are automatically filtered.
+          <div className='mt-6 rounded-lg bg-muted/50 p-4'>
+            <p className='text-sm text-muted-foreground'>
+              <strong>AI Moderation:</strong> Comments are automatically
+              moderated using AI systems thinking analysis. Comments that
+              demonstrate systems thinking, multiple perspectives, or
+              constructive dialogue are prioritized. Spam, toxic content, and
+              off-topic comments are automatically filtered.
             </p>
           </div>
         </CardContent>

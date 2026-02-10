@@ -1,14 +1,19 @@
-"use client";
+'use client';
 
-import { ArrowLeft } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { ArrowLeft } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { WorkflowForm } from "@/components/workflows/WorkflowForm";
-import { logger } from "@/lib/logging/structured-logger";
-
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { WorkflowForm } from '@/components/workflows/WorkflowForm';
+import { logger } from '@/lib/logging/structured-logger';
 
 interface WorkflowTemplate {
   id: string;
@@ -18,7 +23,7 @@ interface WorkflowTemplate {
   icon: string;
   requiredIntegrations: string[];
   estimatedTimeMinutes: number;
-  difficulty: "easy" | "medium" | "advanced";
+  difficulty: 'easy' | 'medium' | 'advanced';
   steps: Array<{
     id: string;
     type: string;
@@ -32,14 +37,17 @@ interface WorkflowTemplate {
 export default function CreateWorkflowPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const templateId = searchParams.get("template");
+  const templateId = searchParams.get('template');
   const [template, setTemplate] = useState<WorkflowTemplate | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (templateId) {
-      fetchTemplate(templateId).catch((error) => {
-        logger.error("Failed to fetch template", error instanceof Error ? error : new Error(String(error)));
+      fetchTemplate(templateId).catch(error => {
+        logger.error(
+          'Failed to fetch template',
+          error instanceof Error ? error : new Error(String(error))
+        );
       });
     } else {
       setLoading(false);
@@ -49,15 +57,23 @@ export default function CreateWorkflowPage() {
   async function fetchTemplate(id: string) {
     try {
       const response = await fetch(`/api/workflows/templates`);
-      if (!response.ok) {throw new Error("Failed to fetch template");}
+      if (!response.ok) {
+        throw new Error('Failed to fetch template');
+      }
       const data = await response.json();
-      const foundTemplate = data.templates.find((t: WorkflowTemplate) => t.id === id);
+      const foundTemplate = data.templates.find(
+        (t: WorkflowTemplate) => t.id === id
+      );
       setTemplate(foundTemplate || null);
-      } catch (err) {
-        logger.error("Failed to fetch template", err instanceof Error ? err : new Error(String(err)), {
-          component: "CreateWorkflowPage",
-          action: "fetchTemplate",
-        });
+    } catch (err) {
+      logger.error(
+        'Failed to fetch template',
+        err instanceof Error ? err : new Error(String(err)),
+        {
+          component: 'CreateWorkflowPage',
+          action: 'fetchTemplate',
+        }
+      );
     } finally {
       setLoading(false);
     }
@@ -69,17 +85,17 @@ export default function CreateWorkflowPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="text-center">Loading...</div>
+      <div className='container mx-auto p-6'>
+        <div className='text-center'>Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className='container mx-auto space-y-6 p-6'>
       <div>
-        <h1 className="text-3xl font-bold mb-2">Create Your Workflow</h1>
-        <p className="text-muted-foreground">
+        <h1 className='mb-2 text-3xl font-bold'>Create Your Workflow</h1>
+        <p className='text-muted-foreground'>
           Configure your workflow settings and customize it to your needs
         </p>
       </div>
@@ -90,17 +106,20 @@ export default function CreateWorkflowPage() {
           <CardDescription>
             {template
               ? `Configuring: ${template.name}`
-              : "Fill in the details below to create your workflow"}
+              : 'Fill in the details below to create your workflow'}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <WorkflowForm template={template || undefined} onSuccess={handleSuccess} />
+          <WorkflowForm
+            template={template || undefined}
+            onSuccess={handleSuccess}
+          />
         </CardContent>
       </Card>
 
-      <div className="flex justify-start">
-        <Button variant="outline" onClick={() => router.back()}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
+      <div className='flex justify-start'>
+        <Button variant='outline' onClick={() => router.back()}>
+          <ArrowLeft className='mr-2 h-4 w-4' />
           Back
         </Button>
       </div>

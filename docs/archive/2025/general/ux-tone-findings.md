@@ -28,17 +28,17 @@ Analysis of user-facing strings across JSX components and i18n files to identify
 
 **Current CTAs Found:**
 
-| Location | Current Text | Recommended | Status |
-|----------|--------------|-------------|--------|
-| `components/home/hero.tsx` | "Try GenAI Engine" | ✅ Keep | ✅ |
-| `components/home/hero.tsx` | "Book Demo" | ✅ Keep | ✅ |
-| `components/home/cta-section.tsx` | "Try GenAI Content Engine" | ✅ Keep | ✅ |
-| `components/home/cta-section.tsx` | "Learn About Systems Thinking" | ✅ Keep | ✅ |
-| `src/lib/i18n.ts` | "Get Started" | ✅ Keep | ✅ |
-| `src/lib/i18n.ts` | "Sign Up" | ✅ Keep | ✅ |
-| `src/lib/i18n.ts` | "Learn More" | ✅ Keep | ✅ |
-| `src/components/Pricing.tsx` | "Contact Sales" (Enterprise) | ✅ Keep | ✅ |
-| `src/components/Pricing.tsx` | "Get Started" (Other plans) | ✅ Keep | ✅ |
+| Location                          | Current Text                   | Recommended | Status |
+| --------------------------------- | ------------------------------ | ----------- | ------ |
+| `components/home/hero.tsx`        | "Try GenAI Engine"             | ✅ Keep     | ✅     |
+| `components/home/hero.tsx`        | "Book Demo"                    | ✅ Keep     | ✅     |
+| `components/home/cta-section.tsx` | "Try GenAI Content Engine"     | ✅ Keep     | ✅     |
+| `components/home/cta-section.tsx` | "Learn About Systems Thinking" | ✅ Keep     | ✅     |
+| `src/lib/i18n.ts`                 | "Get Started"                  | ✅ Keep     | ✅     |
+| `src/lib/i18n.ts`                 | "Sign Up"                      | ✅ Keep     | ✅     |
+| `src/lib/i18n.ts`                 | "Learn More"                   | ✅ Keep     | ✅     |
+| `src/components/Pricing.tsx`      | "Contact Sales" (Enterprise)   | ✅ Keep     | ✅     |
+| `src/components/Pricing.tsx`      | "Get Started" (Other plans)    | ✅ Keep     | ✅     |
 
 **Analysis:** CTAs are consistent and appropriate. No changes needed.
 
@@ -78,6 +78,7 @@ Analysis of user-facing strings across JSX components and i18n files to identify
 **Status:** ✅ All ICU placeholders preserved correctly
 
 **Found Placeholders:**
+
 - `{count}` — Used in various contexts
 - `{name}` — User names
 - `{date}` — Dates and timestamps
@@ -103,14 +104,17 @@ Analysis of user-facing strings across JSX components and i18n files to identify
 ### Files Requiring Review
 
 **High Priority:**
+
 - `components/home/hero.tsx` — Standardize "GenAI Engine" → "GenAI Content Engine"
 - `components/home/cta-section.tsx` — Already consistent ✅
 
 **Medium Priority:**
+
 - `src/lib/i18n.ts` — Review all strings for tone consistency
 - `src/components/platform/NotificationCenter.tsx` — Review button labels
 
 **Low Priority:**
+
 - Documentation files — Tone is acceptable for docs
 
 ## Tone Profile
@@ -134,12 +138,12 @@ Analysis of user-facing strings across JSX components and i18n files to identify
 
 ## Metrics
 
-| Metric | Current | Target | Status |
-|--------|---------|--------|--------|
-| Banned Phrases | 0 | 0 | ✅ |
-| CTA Consistency | ~95% | 100% | 🟡 |
-| Tone Consistency | ~90% | 100% | 🟡 |
-| ICU Placeholders | ✅ Preserved | ✅ Preserved | ✅ |
+| Metric           | Current      | Target       | Status |
+| ---------------- | ------------ | ------------ | ------ |
+| Banned Phrases   | 0            | 0            | ✅     |
+| CTA Consistency  | ~95%         | 100%         | 🟡     |
+| Tone Consistency | ~90%         | 100%         | 🟡     |
+| ICU Placeholders | ✅ Preserved | ✅ Preserved | ✅     |
 
 ## Next Steps
 

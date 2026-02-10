@@ -2,7 +2,9 @@ import { z } from 'zod';
 
 const envSchema = z.object({
   // Core - Load dynamically from environment
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  NODE_ENV: z
+    .enum(['development', 'production', 'test'])
+    .default('development'),
   NEXT_PUBLIC_APP_URL: z.string().url().optional(),
   NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
   NEXTAUTH_URL: z.string().url().optional(),
@@ -33,7 +35,9 @@ const envSchema = z.object({
   STRIPE_PRICE_ADDON: z.string().optional(),
 
   // AI Providers - Optional
-  AI_PRIMARY_PROVIDER: z.enum(['openai', 'anthropic', 'gemini']).default('openai'),
+  AI_PRIMARY_PROVIDER: z
+    .enum(['openai', 'anthropic', 'gemini'])
+    .default('openai'),
   OPENAI_API_KEY: z.string().optional(),
   ANTHROPIC_API_KEY: z.string().optional(),
   GOOGLE_API_KEY: z.string().optional(),
@@ -55,26 +59,42 @@ const envSchema = z.object({
   CONTENT_STUDIO_TOKEN: z.string().optional(),
 
   // Feature Flags
-  ENABLE_LEMON_SQUEEZY: z.string().transform(val => val === 'true').default('false'),
-  ENABLE_SENTRY: z.string().transform(val => val === 'true').default('false'),
-  ENABLE_OTEL: z.string().transform(val => val === 'true').default('true'),
+  ENABLE_LEMON_SQUEEZY: z
+    .string()
+    .transform(val => val === 'true')
+    .default('false'),
+  ENABLE_SENTRY: z
+    .string()
+    .transform(val => val === 'true')
+    .default('false'),
+  ENABLE_OTEL: z
+    .string()
+    .transform(val => val === 'true')
+    .default('true'),
 });
 
 // Parse with safeParse to handle missing optional vars gracefully
 const parseResult = envSchema.safeParse(process.env);
 
 if (!parseResult.success) {
-  console.warn('⚠️  Some environment variables are missing or invalid:', parseResult.error.format());
+  console.warn(
+    '⚠️  Some environment variables are missing or invalid:',
+    parseResult.error.format()
+  );
 }
 
-export const env = parseResult.success ? parseResult.data : {} as z.infer<typeof envSchema>;
+export const env = parseResult.success
+  ? parseResult.data
+  : ({} as z.infer<typeof envSchema>);
 
 // Helper to get app URL from multiple possible env vars
 function getAppUrl(): string {
-  return env.NEXT_PUBLIC_SITE_URL || 
-         env.NEXT_PUBLIC_APP_URL || 
-         env.NEXTAUTH_URL || 
-         'https://aias-consultancy.com';
+  return (
+    env.NEXT_PUBLIC_SITE_URL ||
+    env.NEXT_PUBLIC_APP_URL ||
+    env.NEXTAUTH_URL ||
+    'https://aias-consultancy.com'
+  );
 }
 
 // Helper to get Supabase URL from multiple possible env vars
@@ -87,11 +107,11 @@ function getSupabaseUrl(): string {
       // Only throw in production non-Vercel environments (local production builds)
       throw new Error(
         'Missing required environment variable: SUPABASE_URL or NEXT_PUBLIC_SUPABASE_URL\n' +
-        'Please set this variable in:\n' +
-        '- Vercel: Dashboard → Settings → Environment Variables\n' +
-        '- Supabase: Dashboard → Settings → API\n' +
-        '- GitHub Actions: Repository → Settings → Secrets\n' +
-        '- Local: .env.local file'
+          'Please set this variable in:\n' +
+          '- Vercel: Dashboard → Settings → Environment Variables\n' +
+          '- Supabase: Dashboard → Settings → API\n' +
+          '- GitHub Actions: Repository → Settings → Secrets\n' +
+          '- Local: .env.local file'
       );
     }
     return '';
@@ -109,11 +129,11 @@ function getSupabaseAnonKey(): string {
       // Only throw in production non-Vercel environments (local production builds)
       throw new Error(
         'Missing required environment variable: SUPABASE_ANON_KEY or NEXT_PUBLIC_SUPABASE_ANON_KEY\n' +
-        'Please set this variable in:\n' +
-        '- Vercel: Dashboard → Settings → Environment Variables\n' +
-        '- Supabase: Dashboard → Settings → API\n' +
-        '- GitHub Actions: Repository → Settings → Secrets\n' +
-        '- Local: .env.local file'
+          'Please set this variable in:\n' +
+          '- Vercel: Dashboard → Settings → Environment Variables\n' +
+          '- Supabase: Dashboard → Settings → API\n' +
+          '- GitHub Actions: Repository → Settings → Secrets\n' +
+          '- Local: .env.local file'
       );
     }
     return '';

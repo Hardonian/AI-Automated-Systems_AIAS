@@ -26,7 +26,9 @@ describe('PersonaEngine', () => {
   describe('detectPersona', () => {
     it('should detect persona from user ID', () => {
       const persona = personaEngine.detectPersona('user-1');
-      expect(['ops_lead', 'founder', 'accountant', 'consultant']).toContain(persona);
+      expect(['ops_lead', 'founder', 'accountant', 'consultant']).toContain(
+        persona
+      );
     });
   });
 
@@ -66,9 +68,7 @@ describe('PersonaEngine', () => {
           { name: 'Revenue', value: 1000 },
           { name: 'Users', value: 100 },
         ],
-        workflows: [
-          { id: 'wf-1', name: 'Workflow 1', status: 'active' },
-        ],
+        workflows: [{ id: 'wf-1', name: 'Workflow 1', status: 'active' }],
       };
 
       const adapted = personaEngine.adaptDashboard('founder', content);

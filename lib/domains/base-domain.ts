@@ -18,7 +18,7 @@ export interface IDomainService {
 export interface IDomainRepository<T> {
   findById(id: string): Promise<T | null>;
   findAll(params?: unknown): Promise<T[]>;
-  create(data: Omit<T, "id" | "created_at" | "updated_at">): Promise<T>;
+  create(data: Omit<T, 'id' | 'created_at' | 'updated_at'>): Promise<T>;
   update(id: string, data: Partial<T>): Promise<T>;
   delete(id: string): Promise<void>;
 }
@@ -36,7 +36,9 @@ export interface IDomainEvent {
 /**
  * Domain event handler
  */
-export type DomainEventHandler<T extends IDomainEvent> = (event: T) => Promise<void>;
+export type DomainEventHandler<T extends IDomainEvent> = (
+  event: T
+) => Promise<void>;
 
 /**
  * Base domain class

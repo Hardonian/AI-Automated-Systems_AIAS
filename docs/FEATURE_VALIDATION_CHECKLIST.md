@@ -11,6 +11,7 @@
 This checklist tracks the validation status of features required for the sprint goal: "User Activation & Onboarding MVP".
 
 **Validation Status Legend:**
+
 - ✅ **Working** - Feature exists, tested, and works end-to-end
 - ⚠️ **Partial** - Feature exists but has issues or incomplete
 - ❌ **Not Working** - Feature exists but broken
@@ -26,6 +27,7 @@ This checklist tracks the validation status of features required for the sprint 
 **Status:** ❓ **Unknown**
 
 **Required Steps:**
+
 1. Welcome screen
 2. Connect integration (Shopify or Wave)
 3. Create workflow from template
@@ -33,10 +35,12 @@ This checklist tracks the validation status of features required for the sprint 
 5. Explore
 
 **Files to Check:**
+
 - `app/onboarding/page.tsx`
 - `components/onboarding/OnboardingWizard.tsx`
 
 **Manual Test Steps:**
+
 1. Navigate to `/onboarding`
 2. Complete all 5 steps
 3. Verify progress tracking works
@@ -44,11 +48,13 @@ This checklist tracks the validation status of features required for the sprint 
 5. Verify data persists between steps
 
 **Telemetry Events:**
+
 - `onboarding_started` - Fires when user starts onboarding
 - `onboarding_step_completed` - Fires when user completes each step
 - `onboarding_completed` - Fires when user completes all steps
 
 **Validation Results:**
+
 - [ ] Feature exists in code
 - [ ] All 5 steps render
 - [ ] Progress tracking works
@@ -58,9 +64,11 @@ This checklist tracks the validation status of features required for the sprint 
 - [ ] Tested with 1+ users
 
 **Issues Found:**
+
 - _Document issues here_
 
 **Action Items:**
+
 - _Document action items here_
 
 ---
@@ -70,6 +78,7 @@ This checklist tracks the validation status of features required for the sprint 
 **Status:** ❓ **Unknown**
 
 **Required Functionality:**
+
 - OAuth flow initiates
 - User can authorize Shopify
 - Tokens stored securely
@@ -77,11 +86,13 @@ This checklist tracks the validation status of features required for the sprint 
 - Connection status displays
 
 **Files to Check:**
+
 - `app/api/integrations/shopify/route.ts`
 - `lib/integrations/shopify.ts`
 - `components/integrations/ShopifyCard.tsx`
 
 **Manual Test Steps:**
+
 1. Navigate to integrations page
 2. Click "Connect Shopify"
 3. Complete OAuth flow
@@ -90,11 +101,13 @@ This checklist tracks the validation status of features required for the sprint 
 6. Test token refresh
 
 **Telemetry Events:**
+
 - `integration_connect_started` - Fires when user starts OAuth flow
 - `integration_connected` - Fires when OAuth succeeds
 - `integration_connect_failed` - Fires when OAuth fails
 
 **Validation Results:**
+
 - [ ] Feature exists in code
 - [ ] OAuth flow works
 - [ ] Tokens stored securely
@@ -105,9 +118,11 @@ This checklist tracks the validation status of features required for the sprint 
 - [ ] Tested with 1+ users
 
 **Issues Found:**
+
 - _Document issues here_
 
 **Action Items:**
+
 - _Document action items here_
 
 ---
@@ -117,6 +132,7 @@ This checklist tracks the validation status of features required for the sprint 
 **Status:** ❓ **Unknown**
 
 **Required Functionality:**
+
 - OAuth flow initiates
 - User can authorize Wave
 - Tokens stored securely
@@ -124,11 +140,13 @@ This checklist tracks the validation status of features required for the sprint 
 - Connection status displays
 
 **Files to Check:**
+
 - `app/api/integrations/wave/route.ts`
 - `lib/integrations/wave.ts`
 - `components/integrations/WaveCard.tsx`
 
 **Manual Test Steps:**
+
 1. Navigate to integrations page
 2. Click "Connect Wave"
 3. Complete OAuth flow
@@ -137,11 +155,13 @@ This checklist tracks the validation status of features required for the sprint 
 6. Test token refresh
 
 **Telemetry Events:**
+
 - `integration_connect_started` - Fires when user starts OAuth flow
 - `integration_connected` - Fires when OAuth succeeds
 - `integration_connect_failed` - Fires when OAuth fails
 
 **Validation Results:**
+
 - [ ] Feature exists in code
 - [ ] OAuth flow works
 - [ ] Tokens stored securely
@@ -152,9 +172,11 @@ This checklist tracks the validation status of features required for the sprint 
 - [ ] Tested with 1+ users
 
 **Issues Found:**
+
 - _Document issues here_
 
 **Action Items:**
+
 - _Document action items here_
 
 ---
@@ -164,17 +186,20 @@ This checklist tracks the validation status of features required for the sprint 
 **Status:** ❓ **Unknown**
 
 **Required Functionality:**
+
 - Templates display in grid/list
 - Template cards show descriptions
 - User can select template
 - User can configure template
 
 **Files to Check:**
+
 - `app/onboarding/select-template/page.tsx`
 - `components/templates/TemplateCard.tsx`
 - `lib/workflows/templates.ts`
 
 **Manual Test Steps:**
+
 1. Navigate to template selection page
 2. Verify templates display
 3. Click on a template
@@ -183,10 +208,12 @@ This checklist tracks the validation status of features required for the sprint 
 6. Verify configuration form appears
 
 **Telemetry Events:**
+
 - `template_viewed` - Fires when user views template
 - `template_selected` - Fires when user selects template
 
 **Validation Results:**
+
 - [ ] Feature exists in code
 - [ ] Templates display
 - [ ] Template selection works
@@ -195,9 +222,11 @@ This checklist tracks the validation status of features required for the sprint 
 - [ ] Tested with 1+ users
 
 **Issues Found:**
+
 - _Document issues here_
 
 **Action Items:**
+
 - _Document action items here_
 
 ---
@@ -207,17 +236,20 @@ This checklist tracks the validation status of features required for the sprint 
 **Status:** ❓ **Unknown**
 
 **Required Functionality:**
+
 - User can create workflow from template
 - Configuration form validates inputs
 - Workflow record created in database
 - Success confirmation displays
 
 **Files to Check:**
+
 - `app/api/workflows/route.ts`
 - `components/workflows/WorkflowForm.tsx`
 - `app/onboarding/create-workflow/page.tsx`
 
 **Manual Test Steps:**
+
 1. Select a template
 2. Fill out configuration form
 3. Submit workflow creation
@@ -226,10 +258,12 @@ This checklist tracks the validation status of features required for the sprint 
 6. Test validation (empty fields, invalid inputs)
 
 **Telemetry Events:**
+
 - `workflow_created` - Fires when workflow created successfully
 - `workflow_creation_failed` - Fires when workflow creation fails
 
 **Validation Results:**
+
 - [ ] Feature exists in code
 - [ ] Workflow creation works
 - [ ] Validation works
@@ -240,9 +274,11 @@ This checklist tracks the validation status of features required for the sprint 
 - [ ] Tested with 1+ users
 
 **Issues Found:**
+
 - _Document issues here_
 
 **Action Items:**
+
 - _Document action items here_
 
 ---
@@ -252,17 +288,20 @@ This checklist tracks the validation status of features required for the sprint 
 **Status:** ❓ **Unknown**
 
 **Required Functionality:**
+
 - Workflow executes successfully
 - Execution results display
 - Success/error states handled
 - User receives confirmation
 
 **Files to Check:**
+
 - `lib/workflows/executor.ts`
 - `components/workflows/ExecutionResults.tsx`
 - `app/onboarding/results/page.tsx`
 
 **Manual Test Steps:**
+
 1. Create a workflow
 2. Trigger workflow execution
 3. Verify execution runs
@@ -271,11 +310,13 @@ This checklist tracks the validation status of features required for the sprint 
 6. Verify confirmation message
 
 **Telemetry Events:**
+
 - `workflow_executed` - Fires when workflow executes
 - `workflow_execution_succeeded` - Fires when execution succeeds
 - `workflow_execution_failed` - Fires when execution fails
 
 **Validation Results:**
+
 - [ ] Feature exists in code
 - [ ] Workflow execution works
 - [ ] Results display correctly
@@ -285,9 +326,11 @@ This checklist tracks the validation status of features required for the sprint 
 - [ ] Tested with 1+ users
 
 **Issues Found:**
+
 - _Document issues here_
 
 **Action Items:**
+
 - _Document action items here_
 
 ---
@@ -299,12 +342,14 @@ This checklist tracks the validation status of features required for the sprint 
 **Status:** ❌ **Not Instrumented**
 
 **Required Events:**
+
 1. `user_signed_up` - Fires on signup
 2. `integration_connected` - Fires when integration connected
 3. `workflow_created` - Fires when workflow created
 4. `user_activated` - Fires when user activates (integration + workflow)
 
 **Validation Results:**
+
 - [ ] `user_signed_up` event fires
 - [ ] `integration_connected` event fires
 - [ ] `workflow_created` event fires
@@ -313,9 +358,11 @@ This checklist tracks the validation status of features required for the sprint 
 - [ ] Can calculate activation rate from events
 
 **Issues Found:**
+
 - _Document issues here_
 
 **Action Items:**
+
 - _Document action items here_
 
 ---
@@ -328,9 +375,11 @@ This checklist tracks the validation status of features required for the sprint 
 **Events Instrumented:** 0/4
 
 **Critical Blockers:**
+
 - _Document blockers here_
 
 **Next Steps:**
+
 1. Validate onboarding flow
 2. Validate integration OAuth flows
 3. Validate workflow templates and creation

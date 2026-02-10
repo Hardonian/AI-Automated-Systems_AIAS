@@ -1,6 +1,6 @@
 /**
  * Rate Limiting Utility
- * 
+ *
  * Provides rate limiting for API routes to prevent abuse.
  * Uses in-memory store for simple cases, can be extended to use Redis for distributed systems.
  */
@@ -18,9 +18,12 @@ class RateLimiter {
 
   constructor() {
     // Clean up expired entries every 5 minutes
-    this._cleanupInterval = setInterval(() => {
-      this.cleanup();
-    }, 5 * 60 * 1000);
+    this._cleanupInterval = setInterval(
+      () => {
+        this.cleanup();
+      },
+      5 * 60 * 1000
+    );
   }
 
   /**
@@ -75,7 +78,7 @@ class RateLimiter {
    */
   private cleanup(): void {
     const now = Date.now();
-    Object.keys(this.store).forEach((key) => {
+    Object.keys(this.store).forEach(key => {
       const entry = this.store[key];
       if (entry && entry.resetTime < now) {
         delete this.store[key];
@@ -107,17 +110,17 @@ export const rateLimiter = new RateLimiter();
 
 /**
  * Rate limit middleware for API routes
- * 
+ *
  * @example
  * ```ts
  * export async function POST(request: Request) {
  *   const ip = request.headers.get('x-forwarded-for') || 'unknown';
  *   const limit = rateLimit(ip, 10, 60000); // 10 requests per minute
- *   
+ *
  *   if (!limit.allowed) {
  *     return new Response('Too Many Requests', { status: 429 });
  *   }
- *   
+ *
  *   // ... your handler
  * }
  * ```
@@ -140,11 +143,11 @@ export function getClientIP(request: Request): string {
     const firstIp = forwardedFor.split(',')[0];
     return firstIp ? firstIp.trim() : 'unknown';
   }
-  
+
   const realIP = request.headers.get('x-real-ip');
   if (realIP) {
     return realIP;
   }
-  
+
   return 'unknown';
 }

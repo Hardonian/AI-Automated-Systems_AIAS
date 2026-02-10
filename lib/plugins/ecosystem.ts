@@ -72,35 +72,41 @@ export const pluginManifestSchema = z.object({
   description: z.string().max(500),
   author: z.string(),
   license: z.string(),
-  
+
   // Entry points
   entryPoint: z.string(), // Path to main module
   icon: z.string().url().optional(),
   screenshots: z.array(z.string().url()).optional(),
-  
+
   // Configuration
   configSchema: z.record(z.unknown()).optional(), // JSON Schema
   defaultConfig: z.record(z.unknown()).optional(),
-  
+
   // Dependencies
   dependencies: z.array(pluginDependencySchema).optional(),
   peerDependencies: z.array(z.string()).optional(),
-  
+
   // Permissions & Sandbox
   requiredPermissions: z.array(pluginPermissionSchema),
   sandbox: pluginSandboxSchema,
-  
+
   // Metadata
   tags: z.array(z.string().max(50)).max(20).optional(),
   category: z.string().optional(),
   homepage: z.string().url().optional(),
   repository: z.string().url().optional(),
   documentation: z.string().url().optional(),
-  
+
   // Versioning
-  minPlatformVersion: z.string().regex(/^\d+\.\d+\.\d+$/).optional(),
-  maxPlatformVersion: z.string().regex(/^\d+\.\d+\.\d+$/).optional(),
-  
+  minPlatformVersion: z
+    .string()
+    .regex(/^\d+\.\d+\.\d+$/)
+    .optional(),
+  maxPlatformVersion: z
+    .string()
+    .regex(/^\d+\.\d+\.\d+$/)
+    .optional(),
+
   // Status
   published: z.boolean().default(false),
   verified: z.boolean().default(false),
@@ -130,23 +136,29 @@ export interface PluginAPI {
   // Data access
   readData?(path: string): Promise<unknown>;
   writeData?(path: string, data: unknown): Promise<void>;
-  
+
   // Workflow execution
-  executeWorkflow?(workflowId: string, input: Record<string, unknown>): Promise<unknown>;
-  
+  executeWorkflow?(
+    workflowId: string,
+    input: Record<string, unknown>
+  ): Promise<unknown>;
+
   // Agent invocation
-  invokeAgent?(agentId: string, input: Record<string, unknown>): Promise<unknown>;
-  
+  invokeAgent?(
+    agentId: string,
+    input: Record<string, unknown>
+  ): Promise<unknown>;
+
   // API calls
   apiRequest?(url: string, options?: RequestInit): Promise<Response>;
-  
+
   // Notifications
   sendNotification?(channel: string, message: string): Promise<void>;
-  
+
   // Configuration
   getConfig?(): Record<string, unknown>;
   setConfig?(config: Record<string, unknown>): void;
-  
+
   // Logging
   log?(message: string, level?: 'info' | 'warn' | 'error'): void;
 }
@@ -280,7 +292,9 @@ export class PluginRegistry {
    * Check dependencies
    */
   private async checkDependencies(manifest: PluginManifest): Promise<void> {
-    if (!manifest.dependencies) {return;}
+    if (!manifest.dependencies) {
+      return;
+    }
 
     for (const dep of manifest.dependencies) {
       const depManifest = this.plugins.get(dep.pluginId);
@@ -322,7 +336,10 @@ export class PluginRegistry {
     }
 
     if (context.permissions.includes('execute_workflows')) {
-      api.executeWorkflow = async (_workflowId: string, _input: Record<string, unknown>) => {
+      api.executeWorkflow = async (
+        _workflowId: string,
+        _input: Record<string, unknown>
+      ) => {
         // Would call workflow executor
         return {};
       };
@@ -333,7 +350,11 @@ export class PluginRegistry {
         // Check sandbox restrictions
         if (manifest.sandbox.blockedDomains) {
           const urlObj = new URL(url);
-          if (manifest.sandbox.blockedDomains.some(domain => urlObj.hostname.includes(domain))) {
+          if (
+            manifest.sandbox.blockedDomains.some(domain =>
+              urlObj.hostname.includes(domain)
+            )
+          ) {
             throw new Error(`Access to ${urlObj.hostname} is blocked`);
           }
         }
@@ -358,7 +379,10 @@ export class PluginRegistry {
    * Load plugin module (would dynamically import)
    */
   private async loadPluginModule(_manifest: PluginManifest): Promise<{
-    execute: (input: Record<string, unknown>, api: PluginAPI) => Promise<unknown>;
+    execute: (
+      input: Record<string, unknown>,
+      api: PluginAPI
+    ) => Promise<unknown>;
   }> {
     // Would dynamically import plugin code
     // For now, return mock

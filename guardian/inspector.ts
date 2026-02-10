@@ -50,7 +50,7 @@ export class GuardianInspector {
     const guardianDir = join(process.cwd(), 'guardian');
     this.logsPath = join(guardianDir, 'logs');
     this.reportsPath = join(guardianDir, 'reports');
-    
+
     if (!existsSync(this.reportsPath)) {
       require('fs').mkdirSync(this.reportsPath, { recursive: true });
     }
@@ -63,7 +63,7 @@ export class GuardianInspector {
     const events = this.loadEvents();
     const now = new Date();
     const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    
+
     const recentEvents = events.filter(
       e => new Date(e.timestamp) >= oneWeekAgo
     );
@@ -72,7 +72,7 @@ export class GuardianInspector {
     const byRiskLevel: Record<string, number> = {};
     const byDataClass: Record<string, number> = {};
     const byScope: Record<string, number> = {};
-    
+
     recentEvents.forEach(event => {
       byRiskLevel[event.risk_level] = (byRiskLevel[event.risk_level] || 0) + 1;
       byDataClass[event.data_class] = (byDataClass[event.data_class] || 0) + 1;
@@ -121,7 +121,10 @@ export class GuardianInspector {
     };
 
     // Save report
-    const reportPath = join(this.reportsPath, `trust_report_${now.toISOString().split('T')[0]}.json`);
+    const reportPath = join(
+      this.reportsPath,
+      `trust_report_${now.toISOString().split('T')[0]}.json`
+    );
     writeFileSync(reportPath, JSON.stringify(report, null, 2), 'utf-8');
 
     return report;
@@ -132,15 +135,17 @@ export class GuardianInspector {
    */
   private loadEvents(): GuardianEvent[] {
     const events: GuardianEvent[] = [];
-    
-    if (!existsSync(this.logsPath)) {return events;}
+
+    if (!existsSync(this.logsPath)) {
+      return events;
+    }
 
     const files = readdirSync(this.logsPath).filter(f => f.endsWith('.jsonl'));
-    
+
     files.forEach(file => {
       const filePath = join(this.logsPath, file);
       const lines = readFileSync(filePath, 'utf-8').trim().split('\n');
-      
+
       lines.forEach(line => {
         if (line.trim()) {
           try {
@@ -152,8 +157,9 @@ export class GuardianInspector {
       });
     });
 
-    return events.sort((a, b) => 
-      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    return events.sort(
+      (a, b) =>
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
   }
 
@@ -164,27 +170,33 @@ export class GuardianInspector {
     const anomalies: string[] = [];
 
     // Check for spike in high-risk events
-    const highRiskEvents = events.filter(e => 
-      e.risk_level === 'high' || e.risk_level === 'critical'
+    const highRiskEvents = events.filter(
+      e => e.risk_level === 'high' || e.risk_level === 'critical'
     );
-    
+
     if (highRiskEvents.length > events.length * 0.2) {
-      anomalies.push(`High concentration of high-risk events: ${highRiskEvents.length}/${events.length}`);
+      anomalies.push(
+        `High concentration of high-risk events: ${highRiskEvents.length}/${events.length}`
+      );
     }
 
     // Check for unusual external API calls
-    const externalCalls = events.filter(e => 
-      e.scope === 'external' && e.type === 'api_call'
+    const externalCalls = events.filter(
+      e => e.scope === 'external' && e.type === 'api_call'
     );
-    
+
     if (externalCalls.length > 10) {
-      anomalies.push(`Unusual number of external API calls: ${externalCalls.length}`);
+      anomalies.push(
+        `Unusual number of external API calls: ${externalCalls.length}`
+      );
     }
 
     // Check for credential access
     const credentialEvents = events.filter(e => e.data_class === 'credentials');
     if (credentialEvents.length > 0) {
-      anomalies.push(`Credential access detected: ${credentialEvents.length} events`);
+      anomalies.push(
+        `Credential access detected: ${credentialEvents.length} events`
+      );
     }
 
     // Check for blocked events
@@ -200,10 +212,12 @@ export class GuardianInspector {
    * Calculate guardian confidence score
    */
   private calculateConfidenceScore(events: GuardianEvent[]): number {
-    if (events.length === 0) {return 1.0;}
+    if (events.length === 0) {
+      return 1.0;
+    }
 
     let safeOperations = 0;
-    
+
     events.forEach(event => {
       // Safe if low/medium risk and allowed
       if (
@@ -250,7 +264,7 @@ export class GuardianInspector {
       recommendations.push({
         type: 'tighten',
         scope: 'external',
-        reason: `High percentage of external data access (${Math.round(externalEvents.length / events.length * 100)}%)`,
+        reason: `High percentage of external data access (${Math.round((externalEvents.length / events.length) * 100)}%)`,
         impact: 'Increased privacy protection',
       });
     }
@@ -274,7 +288,7 @@ export class GuardianInspector {
    */
   async generateWeeklyReport(): Promise<string> {
     const report = await this.analyzeLogs();
-    
+
     const markdown = `# Guardian Weekly Trust Report
 
 Generated: ${report.generated_at}
@@ -306,28 +320,45 @@ ${Object.entries(report.summary.by_scope)
 
 ## Anomalies Detected
 
-${report.summary.anomalies.length > 0
-  ? report.summary.anomalies.map(a => `- ${a}`).join('\n')
-  : '- No anomalies detected'}
+${
+  report.summary.anomalies.length > 0
+    ? report.summary.anomalies.map(a => `- ${a}`).join('\n')
+    : '- No anomalies detected'
+}
 
 ## Recommendations
 
-${report.recommendations.length > 0
-  ? report.recommendations.map(r => `### ${r.type.toUpperCase()}: ${r.scope}
+${
+  report.recommendations.length > 0
+    ? report.recommendations
+        .map(
+          r => `### ${r.type.toUpperCase()}: ${r.scope}
   - **Reason**: ${r.reason}
-  - **Impact**: ${r.impact}`).join('\n\n')
-  : '- No recommendations at this time'}
+  - **Impact**: ${r.impact}`
+        )
+        .join('\n\n')
+    : '- No recommendations at this time'
+}
 
 ## Recent Events
 
-${report.events.slice(0, 10).map(e => `- **${e.timestamp}** [${e.risk_level}] ${e.type}: ${e.description} (${e.action_taken})`).join('\n')}
+${report.events
+  .slice(0, 10)
+  .map(
+    e =>
+      `- **${e.timestamp}** [${e.risk_level}] ${e.type}: ${e.description} (${e.action_taken})`
+  )
+  .join('\n')}
 
 ---
 
 *This report is generated automatically by the Guardian system.*
 `;
 
-    const reportPath = join(this.reportsPath, `weekly_${report.generated_at.split('T')[0]}.md`);
+    const reportPath = join(
+      this.reportsPath,
+      `weekly_${report.generated_at.split('T')[0]}.md`
+    );
     writeFileSync(reportPath, markdown, 'utf-8');
 
     return markdown;
@@ -339,7 +370,9 @@ ${report.events.slice(0, 10).map(e => `- **${e.timestamp}** [${e.risk_level}] ${
   async runHourlyAnalysis(): Promise<void> {
     console.log('[GUARDIAN INSPECTOR] Running hourly analysis...');
     const report = await this.analyzeLogs();
-    console.log(`[GUARDIAN INSPECTOR] Analysis complete: ${report.summary.total_events} events, ${(report.guardian_confidence_score * 100).toFixed(1)}% confidence`);
+    console.log(
+      `[GUARDIAN INSPECTOR] Analysis complete: ${report.summary.total_events} events, ${(report.guardian_confidence_score * 100).toFixed(1)}% confidence`
+    );
   }
 }
 

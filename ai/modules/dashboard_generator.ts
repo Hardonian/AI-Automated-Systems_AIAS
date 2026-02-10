@@ -57,41 +57,48 @@ export class DashboardGenerator {
   async generate(): Promise<ModuleResult> {
     try {
       const dashboard = await this.buildDashboard();
-      
+
       // Generate JSON dashboard
       await this.generateJSONDashboard(dashboard);
-      
+
       // Generate Markdown dashboard
       await this.generateMarkdownDashboard(dashboard);
 
       const artifacts = [
         join(process.cwd(), 'app', 'admin', 'reliability.json'),
-        join(process.cwd(), 'app', 'admin', 'reliability.md')
+        join(process.cwd(), 'app', 'admin', 'reliability.md'),
       ];
 
       return {
         status: 'success',
         message: 'Dashboards generated successfully',
-        data: { dashboard, artifacts }
+        data: { dashboard, artifacts },
       };
     } catch (error: any) {
       return {
         status: 'error',
         message: `Dashboard generation failed: ${error.message}`,
-        errors: [error.message]
+        errors: [error.message],
       };
     }
   }
 
   private async buildDashboard(): Promise<ReliabilityDashboard> {
     // Aggregate data from all sources
-    const [uptimeData, performanceData, dependencyData, costData, securityData, trends] = await Promise.all([
+    const [
+      uptimeData,
+      performanceData,
+      dependencyData,
+      costData,
+      securityData,
+      trends,
+    ] = await Promise.all([
       this.getUptimeData(),
       this.getPerformanceData(),
       this.getDependencyData(),
       this.getCostData(),
       this.getSecurityData(),
-      this.getTrends()
+      this.getTrends(),
     ]);
 
     return {
@@ -102,7 +109,7 @@ export class DashboardGenerator {
       cost: costData,
       security: securityData,
       trends,
-      recommendations: []
+      recommendations: [],
     };
   }
 
@@ -130,25 +137,29 @@ export class DashboardGenerator {
         .order('ts', { ascending: false })
         .limit(7);
 
-      const trend = this.calculateTrend(historical?.map((h: any) => h.metric?.uptime_percent) || []);
+      const trend = this.calculateTrend(
+        historical?.map((h: any) => h.metric?.uptime_percent) || []
+      );
 
       return {
         current,
         target,
         status,
-        trend
+        trend,
       };
     } catch (error) {
       return {
         current: 100,
         target: 99.9,
         status: 'healthy',
-        trend: 'stable'
+        trend: 'stable',
       };
     }
   }
 
-  private async getPerformanceData(): Promise<ReliabilityDashboard['performance']> {
+  private async getPerformanceData(): Promise<
+    ReliabilityDashboard['performance']
+  > {
     try {
       const { data } = await this.supabase
         .from('metrics_log')
@@ -156,7 +167,10 @@ export class DashboardGenerator {
         .order('ts', { ascending: false })
         .limit(100);
 
-      const latencies = data?.map((d: any) => d.metric?.latency || d.metric?.response_time).filter(Boolean) || [];
+      const latencies =
+        data
+          ?.map((d: any) => d.metric?.latency || d.metric?.response_time)
+          .filter(Boolean) || [];
       const errors = data?.filter((d: any) => d.metric?.error).length || 0;
 
       const sortedLatencies = latencies.sort((a: number, b: number) => a - b);
@@ -166,18 +180,20 @@ export class DashboardGenerator {
       return {
         latency_p95,
         error_rate: (errors / (data?.length || 1)) * 100,
-        throughput: data?.length || 0
+        throughput: data?.length || 0,
       };
     } catch (error) {
       return {
         latency_p95: 0,
         error_rate: 0,
-        throughput: 0
+        throughput: 0,
       };
     }
   }
 
-  private async getDependencyData(): Promise<ReliabilityDashboard['dependencies']> {
+  private async getDependencyData(): Promise<
+    ReliabilityDashboard['dependencies']
+  > {
     try {
       const { data } = await this.supabase
         .from('dependency_reports')
@@ -190,13 +206,15 @@ export class DashboardGenerator {
       return {
         outdated: report.outdated?.length || 0,
         vulnerabilities: report.vulnerabilities?.length || 0,
-        critical_vulnerabilities: report.vulnerabilities?.filter((v: any) => v.severity === 'critical').length || 0
+        critical_vulnerabilities:
+          report.vulnerabilities?.filter((v: any) => v.severity === 'critical')
+            .length || 0,
       };
     } catch (error) {
       return {
         outdated: 0,
         vulnerabilities: 0,
-        critical_vulnerabilities: 0
+        critical_vulnerabilities: 0,
       };
     }
   }
@@ -217,14 +235,17 @@ export class DashboardGenerator {
         current_monthly: forecast.current_monthly || 0,
         projected_monthly: forecast.projected_monthly || 0,
         budget,
-        status: (forecast.projected_monthly || 0) > budget ? 'over_budget' : 'within_budget'
+        status:
+          (forecast.projected_monthly || 0) > budget
+            ? 'over_budget'
+            : 'within_budget',
       };
     } catch (error) {
       return {
         current_monthly: 0,
         projected_monthly: 0,
         budget: this.config.budget || 75,
-        status: 'within_budget'
+        status: 'within_budget',
       };
     }
   }
@@ -240,20 +261,21 @@ export class DashboardGenerator {
 
       const audit = data?.audit || {};
       const issues = audit.issues || [];
-      const complianceScore = issues.length === 0 ? 100 : Math.max(0, 100 - (issues.length * 10));
+      const complianceScore =
+        issues.length === 0 ? 100 : Math.max(0, 100 - issues.length * 10);
 
       return {
         secrets_exposed: audit.secrets?.exposed || 0,
         rls_enabled: audit.rls?.status === 'enabled',
         tls_enforced: audit.tls?.status === 'enforced',
-        compliance_score: complianceScore
+        compliance_score: complianceScore,
       };
     } catch (error) {
       return {
         secrets_exposed: 0,
         rls_enabled: false,
         tls_enforced: false,
-        compliance_score: 0
+        compliance_score: 0,
       };
     }
   }
@@ -280,27 +302,29 @@ export class DashboardGenerator {
         last_7_days: {
           uptime: uptime.slice(-7),
           latency: latency.slice(-7),
-          cost: cost.slice(-7)
-        }
+          cost: cost.slice(-7),
+        },
       };
     } catch (error) {
       return {
         last_7_days: {
           uptime: [],
           latency: [],
-          cost: []
-        }
+          cost: [],
+        },
       };
     }
   }
 
-  private calculateTrend(values: number[]): 'improving' | 'degrading' | 'stable' {
+  private calculateTrend(
+    values: number[]
+  ): 'improving' | 'degrading' | 'stable' {
     if (values.length < 2) return 'stable';
 
     const first = values[0];
     const last = values[values.length - 1];
     if (first === undefined || last === undefined) return 'stable';
-    
+
     const diff = last - first;
 
     if (diff > 0.1) return 'improving';
@@ -308,7 +332,9 @@ export class DashboardGenerator {
     return 'stable';
   }
 
-  private async generateJSONDashboard(dashboard: ReliabilityDashboard): Promise<void> {
+  private async generateJSONDashboard(
+    dashboard: ReliabilityDashboard
+  ): Promise<void> {
     const adminDir = join(process.cwd(), 'app', 'admin');
     if (!existsSync(adminDir)) {
       mkdirSync(adminDir, { recursive: true });
@@ -320,7 +346,9 @@ export class DashboardGenerator {
     );
   }
 
-  private async generateMarkdownDashboard(dashboard: ReliabilityDashboard): Promise<void> {
+  private async generateMarkdownDashboard(
+    dashboard: ReliabilityDashboard
+  ): Promise<void> {
     const adminDir = join(process.cwd(), 'app', 'admin');
     if (!existsSync(adminDir)) {
       mkdirSync(adminDir, { recursive: true });
@@ -366,30 +394,36 @@ export class DashboardGenerator {
 ## Trends (Last 7 Days)
 
 ### Uptime
-${dashboard.trends.last_7_days.uptime.length > 0 
-  ? dashboard.trends.last_7_days.uptime.map((v, i) => `- Day ${i + 1}: ${v.toFixed(2)}%`).join('\n')
-  : 'No data available'
+${
+  dashboard.trends.last_7_days.uptime.length > 0
+    ? dashboard.trends.last_7_days.uptime
+        .map((v, i) => `- Day ${i + 1}: ${v.toFixed(2)}%`)
+        .join('\n')
+    : 'No data available'
 }
 
 ### Latency
-${dashboard.trends.last_7_days.latency.length > 0
-  ? dashboard.trends.last_7_days.latency.map((v, i) => `- Day ${i + 1}: ${v.toFixed(0)}ms`).join('\n')
-  : 'No data available'
+${
+  dashboard.trends.last_7_days.latency.length > 0
+    ? dashboard.trends.last_7_days.latency
+        .map((v, i) => `- Day ${i + 1}: ${v.toFixed(0)}ms`)
+        .join('\n')
+    : 'No data available'
 }
 
 ### Cost
-${dashboard.trends.last_7_days.cost.length > 0
-  ? dashboard.trends.last_7_days.cost.map((v, i) => `- Day ${i + 1}: $${v.toFixed(2)}`).join('\n')
-  : 'No data available'
+${
+  dashboard.trends.last_7_days.cost.length > 0
+    ? dashboard.trends.last_7_days.cost
+        .map((v, i) => `- Day ${i + 1}: $${v.toFixed(2)}`)
+        .join('\n')
+    : 'No data available'
 }
 
 ---
 *Auto-generated by Orchestrator*
 `;
 
-    writeFileSync(
-      join(adminDir, 'reliability.md'),
-      markdown
-    );
+    writeFileSync(join(adminDir, 'reliability.md'), markdown);
   }
 }

@@ -8,7 +8,13 @@ export interface EmailTemplate {
   id: string;
   name: string;
   subject: string;
-  stage: 'awareness' | 'consideration' | 'decision' | 'onboarding' | 'retention' | 'reengagement';
+  stage:
+    | 'awareness'
+    | 'consideration'
+    | 'decision'
+    | 'onboarding'
+    | 'retention'
+    | 'reengagement';
   category: string;
   body: string; // HTML body
   textBody?: string; // Plain text fallback
@@ -810,7 +816,7 @@ AIAS Platform • Built in Canada 🇨🇦 • aias-platform.com
   {
     id: 'onboarding-welcome',
     name: 'Onboarding Welcome',
-    subject: 'Welcome to AIAS Platform — Let\'s Get You Started',
+    subject: "Welcome to AIAS Platform — Let's Get You Started",
     stage: 'onboarding',
     category: 'onboarding',
     variables: ['firstName', 'planName'],
@@ -985,7 +991,8 @@ AIAS Platform • Built in Canada 🇨🇦 • aias-platform.com
   {
     id: 'advanced-features',
     name: 'Advanced Features Highlight',
-    subject: 'Unlock Advanced Features: Systems Thinking + GenAI Content Engine',
+    subject:
+      'Unlock Advanced Features: Systems Thinking + GenAI Content Engine',
     stage: 'retention',
     category: 'features',
     variables: ['firstName'],
@@ -1145,7 +1152,7 @@ AIAS Platform • Built in Canada 🇨🇦 • aias-platform.com
   {
     id: 'win-back-inactive',
     name: 'Win-Back: Inactive User',
-    subject: 'We Miss You — Here\'s What\'s New at AIAS',
+    subject: "We Miss You — Here's What's New at AIAS",
     stage: 'reengagement',
     category: 'win-back',
     variables: ['firstName'],
@@ -1287,7 +1294,9 @@ export function getTemplateById(id: string): EmailTemplate | undefined {
 /**
  * Get templates by stage
  */
-export function getTemplatesByStage(stage: EmailTemplate['stage']): EmailTemplate[] {
+export function getTemplatesByStage(
+  stage: EmailTemplate['stage']
+): EmailTemplate[] {
   return emailTemplates.filter(t => t.stage === stage);
 }
 
@@ -1301,7 +1310,10 @@ export function getTemplatesByCategory(category: string): EmailTemplate[] {
 /**
  * Replace template variables
  */
-export function replaceTemplateVariables(template: string, variables: Record<string, string>): string {
+export function replaceTemplateVariables(
+  template: string,
+  variables: Record<string, string>
+): string {
   let result = template;
   for (const [key, value] of Object.entries(variables)) {
     const regex = new RegExp(`\\{\\{${key}\\}\\}`, 'g');

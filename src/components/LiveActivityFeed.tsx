@@ -4,10 +4,22 @@ import { useEffect, useState } from 'react';
 
 const activities = [
   { icon: Zap, text: 'Customer support workflow automated', value: '+32%' },
-  { icon: TrendingUp, text: 'Data processing pipeline optimized', value: '2.4x faster' },
-  { icon: Activity, text: 'Invoice automation deployed', value: '15 hrs saved/week' },
+  {
+    icon: TrendingUp,
+    text: 'Data processing pipeline optimized',
+    value: '2.4x faster',
+  },
+  {
+    icon: Activity,
+    text: 'Invoice automation deployed',
+    value: '15 hrs saved/week',
+  },
   { icon: Zap, text: 'Lead qualification agent active', value: '94% accuracy' },
-  { icon: TrendingUp, text: 'Report generation automated', value: '8 hrs saved/month' },
+  {
+    icon: TrendingUp,
+    text: 'Report generation automated',
+    value: '8 hrs saved/month',
+  },
 ];
 
 export const LiveActivityFeed = () => {
@@ -28,40 +40,42 @@ export const LiveActivityFeed = () => {
   return (
     <motion.div
       animate={{ opacity: 1, y: 0 }}
-      className="relative"
+      className='relative'
       initial={{ opacity: 0, y: 20 }}
       transition={{ delay: 0.8 }}
     >
-      <div className="bg-gradient-card backdrop-blur-sm border border-primary/20 rounded-2xl p-6 shadow-card overflow-hidden">
+      <div className='bg-gradient-card overflow-hidden rounded-2xl border border-primary/20 p-6 shadow-card backdrop-blur-sm'>
         {/* Animated background pulse */}
         <motion.div
           animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }}
-          className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl"
+          className='absolute right-0 top-0 h-32 w-32 rounded-full bg-primary/20 blur-3xl'
           transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        <div className="relative space-y-4">
+        <div className='relative space-y-4'>
           {/* Live counter */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-2'>
               <motion.div
                 animate={{ scale: [1, 1.2, 1] }}
-                className="w-2 h-2 bg-green-500 rounded-full"
+                className='h-2 w-2 rounded-full bg-green-500'
                 transition={{ duration: 2, repeat: Infinity }}
               />
-              <span className="text-sm text-muted-foreground">Live Activity</span>
+              <span className='text-sm text-muted-foreground'>
+                Live Activity
+              </span>
             </div>
             <motion.div
               key={activeWorkflows}
               animate={{ scale: 1, opacity: 1 }}
-              className="text-2xl font-bold bg-gradient-accent bg-clip-text text-transparent"
+              className='bg-gradient-accent bg-clip-text text-2xl font-bold text-transparent'
               initial={{ scale: 1.2, opacity: 0 }}
             >
               {activeWorkflows}
             </motion.div>
           </div>
 
-          <div className="text-xs text-muted-foreground">
+          <div className='text-xs text-muted-foreground'>
             Active automations this week
           </div>
 
@@ -70,17 +84,23 @@ export const LiveActivityFeed = () => {
             <motion.div
               key={currentActivity}
               animate={{ x: 0, opacity: 1 }}
-              className="flex items-start gap-3 pt-4 border-t border-border"
+              className='flex items-start gap-3 border-t border-border pt-4'
               exit={{ x: -20, opacity: 0 }}
               initial={{ x: 20, opacity: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="p-2 bg-primary/10 rounded-lg">
-                {activity.icon && <activity.icon className="w-4 h-4 text-primary" />}
+              <div className='rounded-lg bg-primary/10 p-2'>
+                {activity.icon && (
+                  <activity.icon className='h-4 w-4 text-primary' />
+                )}
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-foreground/80 line-clamp-2">{activity.text}</p>
-                <p className="text-xs text-accent font-semibold mt-1">{activity.value}</p>
+              <div className='min-w-0 flex-1'>
+                <p className='line-clamp-2 text-sm text-foreground/80'>
+                  {activity.text}
+                </p>
+                <p className='mt-1 text-xs font-semibold text-accent'>
+                  {activity.value}
+                </p>
               </div>
             </motion.div>
           )}

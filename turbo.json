@@ -41,11 +41,7 @@
       "dependsOn": ["^typecheck"],
       "outputs": [],
       "cache": true,
-      "inputs": [
-        "**/*.ts",
-        "**/*.tsx",
-        "tsconfig.json"
-      ]
+      "inputs": ["**/*.ts", "**/*.tsx", "tsconfig.json"]
     },
     "lint": {
       "dependsOn": ["^lint"],

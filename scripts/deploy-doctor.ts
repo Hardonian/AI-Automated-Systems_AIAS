@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Deploy Doctor - Diagnostic tool for deployment configuration
- * 
+ *
  * Checks for common misconfigurations that prevent reliable deployments:
  * - Missing required environment variables
  * - Node version mismatches
@@ -23,7 +23,12 @@ interface DiagnosticResult {
 const results: DiagnosticResult[] = [];
 
 // Helper to add results
-function addResult(check: string, status: 'pass' | 'fail' | 'warn', message: string, fix?: string) {
+function addResult(
+  check: string,
+  status: 'pass' | 'fail' | 'warn',
+  message: string,
+  fix?: string
+) {
   results.push({ check, status, message, fix });
 }
 
@@ -41,16 +46,30 @@ function checkNodeVersion() {
     const nodeVersion = engines.node;
 
     if (!nodeVersion) {
-      addResult('Node Version', 'warn', 'No Node version specified in package.json engines', 'Add "engines": { "node": ">=20 <21" } to package.json');
+      addResult(
+        'Node Version',
+        'warn',
+        'No Node version specified in package.json engines',
+        'Add "engines": { "node": ">=20 <21" } to package.json'
+      );
       return;
     }
 
     if (!nodeVersion.includes('20')) {
-      addResult('Node Version', 'fail', `Node version mismatch: ${nodeVersion} (should include 20)`, 'Update engines.node to ">=20 <21"');
+      addResult(
+        'Node Version',
+        'fail',
+        `Node version mismatch: ${nodeVersion} (should include 20)`,
+        'Update engines.node to ">=20 <21"'
+      );
       return;
     }
 
-    addResult('Node Version', 'pass', `Node version correctly specified: ${nodeVersion}`);
+    addResult(
+      'Node Version',
+      'pass',
+      `Node version correctly specified: ${nodeVersion}`
+    );
   } catch (error) {
     addResult('Node Version', 'fail', `Error checking Node version: ${error}`);
   }
@@ -66,21 +85,39 @@ function checkPackageManager() {
     }
 
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
-    const {packageManager} = packageJson;
+    const { packageManager } = packageJson;
 
     if (!packageManager) {
-      addResult('Package Manager', 'warn', 'No packageManager field in package.json', 'Add "packageManager": "pnpm@8.15.0" to package.json');
+      addResult(
+        'Package Manager',
+        'warn',
+        'No packageManager field in package.json',
+        'Add "packageManager": "pnpm@8.15.0" to package.json'
+      );
       return;
     }
 
     if (!packageManager.startsWith('pnpm@')) {
-      addResult('Package Manager', 'fail', `Wrong package manager: ${packageManager} (should be pnpm)`, 'Update packageManager to "pnpm@8.15.0"');
+      addResult(
+        'Package Manager',
+        'fail',
+        `Wrong package manager: ${packageManager} (should be pnpm)`,
+        'Update packageManager to "pnpm@8.15.0"'
+      );
       return;
     }
 
-    addResult('Package Manager', 'pass', `Package manager correctly specified: ${packageManager}`);
+    addResult(
+      'Package Manager',
+      'pass',
+      `Package manager correctly specified: ${packageManager}`
+    );
   } catch (error) {
-    addResult('Package Manager', 'fail', `Error checking package manager: ${error}`);
+    addResult(
+      'Package Manager',
+      'fail',
+      `Error checking package manager: ${error}`
+    );
   }
 }
 
@@ -101,12 +138,22 @@ function checkLockfiles() {
       hasCorrectLockfile = true;
     } else if (!lockfile.expected && exists) {
       hasWrongLockfile = true;
-      addResult('Lockfiles', 'fail', `Found ${lockfile.name} (should use pnpm-lock.yaml only)`, `Remove ${lockfile.name} and use pnpm install`);
+      addResult(
+        'Lockfiles',
+        'fail',
+        `Found ${lockfile.name} (should use pnpm-lock.yaml only)`,
+        `Remove ${lockfile.name} and use pnpm install`
+      );
     }
   }
 
   if (!hasCorrectLockfile) {
-    addResult('Lockfiles', 'warn', 'No pnpm-lock.yaml found', 'Run pnpm install to generate lockfile');
+    addResult(
+      'Lockfiles',
+      'warn',
+      'No pnpm-lock.yaml found',
+      'Run pnpm install to generate lockfile'
+    );
   } else if (!hasWrongLockfile) {
     addResult('Lockfiles', 'pass', 'Correct lockfile present (pnpm-lock.yaml)');
   }
@@ -123,7 +170,11 @@ function checkDeployScripts() {
 
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
     const scripts = packageJson.scripts || {};
-    const requiredScripts = ['build', 'vercel:deploy:preview', 'vercel:deploy:prod'];
+    const requiredScripts = [
+      'build',
+      'vercel:deploy:preview',
+      'vercel:deploy:prod',
+    ];
 
     const missing: string[] = [];
     for (const script of requiredScripts) {
@@ -133,13 +184,22 @@ function checkDeployScripts() {
     }
 
     if (missing.length > 0) {
-      addResult('Deploy Scripts', 'fail', `Missing deploy scripts: ${missing.join(', ')}`, `Add missing scripts to package.json`);
+      addResult(
+        'Deploy Scripts',
+        'fail',
+        `Missing deploy scripts: ${missing.join(', ')}`,
+        `Add missing scripts to package.json`
+      );
       return;
     }
 
     addResult('Deploy Scripts', 'pass', 'All required deploy scripts present');
   } catch (error) {
-    addResult('Deploy Scripts', 'fail', `Error checking deploy scripts: ${error}`);
+    addResult(
+      'Deploy Scripts',
+      'fail',
+      `Error checking deploy scripts: ${error}`
+    );
   }
 }
 
@@ -148,7 +208,12 @@ function checkEnvExample() {
   try {
     const envExamplePath = join(process.cwd(), '.env.example');
     if (!existsSync(envExamplePath)) {
-      addResult('Environment Variables', 'warn', '.env.example not found', 'Create .env.example with required variables');
+      addResult(
+        'Environment Variables',
+        'warn',
+        '.env.example not found',
+        'Create .env.example with required variables'
+      );
       return;
     }
 
@@ -169,13 +234,26 @@ function checkEnvExample() {
     }
 
     if (missing.length > 0) {
-      addResult('Environment Variables', 'warn', `Missing variables in .env.example: ${missing.join(', ')}`, `Add missing variables to .env.example`);
+      addResult(
+        'Environment Variables',
+        'warn',
+        `Missing variables in .env.example: ${missing.join(', ')}`,
+        `Add missing variables to .env.example`
+      );
       return;
     }
 
-    addResult('Environment Variables', 'pass', 'Required variables documented in .env.example');
+    addResult(
+      'Environment Variables',
+      'pass',
+      'Required variables documented in .env.example'
+    );
   } catch (error) {
-    addResult('Environment Variables', 'warn', `Error checking .env.example: ${error}`);
+    addResult(
+      'Environment Variables',
+      'warn',
+      `Error checking .env.example: ${error}`
+    );
   }
 }
 
@@ -184,7 +262,11 @@ function checkWorkflows() {
   try {
     const workflowsPath = join(process.cwd(), '.github', 'workflows');
     if (!existsSync(workflowsPath)) {
-      addResult('GitHub Workflows', 'fail', '.github/workflows directory not found');
+      addResult(
+        'GitHub Workflows',
+        'fail',
+        '.github/workflows directory not found'
+      );
       return;
     }
 
@@ -203,7 +285,12 @@ function checkWorkflows() {
     }
 
     if (missing.length > 0) {
-      addResult('GitHub Workflows', 'fail', `Missing workflows: ${missing.join(', ')}`, `Create missing workflow files`);
+      addResult(
+        'GitHub Workflows',
+        'fail',
+        `Missing workflows: ${missing.join(', ')}`,
+        `Create missing workflow files`
+      );
       return;
     }
 
@@ -218,7 +305,12 @@ function checkWorkflows() {
     }
 
     if (foundDeprecated.length > 0) {
-      addResult('GitHub Workflows', 'warn', `Deprecated workflows found: ${foundDeprecated.join(', ')}`, `Remove deprecated workflows or mark as disabled`);
+      addResult(
+        'GitHub Workflows',
+        'warn',
+        `Deprecated workflows found: ${foundDeprecated.join(', ')}`,
+        `Remove deprecated workflows or mark as disabled`
+      );
       return;
     }
 
@@ -233,19 +325,36 @@ function checkVercelConfig() {
   try {
     const vercelJsonPath = join(process.cwd(), 'vercel.json');
     if (!existsSync(vercelJsonPath)) {
-      addResult('Vercel Config', 'warn', 'vercel.json not found', 'Create vercel.json if needed for custom configuration');
+      addResult(
+        'Vercel Config',
+        'warn',
+        'vercel.json not found',
+        'Create vercel.json if needed for custom configuration'
+      );
       return;
     }
 
     const vercelJson = JSON.parse(readFileSync(vercelJsonPath, 'utf-8'));
-    
+
     // Check if Git integration is disabled
-    if (vercelJson.git?.deploymentEnabled?.main === true || vercelJson.github?.deploymentEnabled?.main === true) {
-      addResult('Vercel Config', 'fail', 'Vercel Git integration is enabled (conflicts with GitHub Actions)', 'Set git.deploymentEnabled and github.deploymentEnabled to false in vercel.json');
+    if (
+      vercelJson.git?.deploymentEnabled?.main === true ||
+      vercelJson.github?.deploymentEnabled?.main === true
+    ) {
+      addResult(
+        'Vercel Config',
+        'fail',
+        'Vercel Git integration is enabled (conflicts with GitHub Actions)',
+        'Set git.deploymentEnabled and github.deploymentEnabled to false in vercel.json'
+      );
       return;
     }
 
-    addResult('Vercel Config', 'pass', 'Vercel Git integration correctly disabled');
+    addResult(
+      'Vercel Config',
+      'pass',
+      'Vercel Git integration correctly disabled'
+    );
   } catch (error) {
     addResult('Vercel Config', 'warn', `Error checking vercel.json: ${error}`);
   }
@@ -276,10 +385,10 @@ function runDiagnostics() {
   let hasWarnings = false;
 
   for (const result of results) {
-    const {status} = result;
+    const { status } = result;
     const emoji = statusEmoji[status];
     console.log(`${emoji} ${result.check}: ${result.message}`);
-    
+
     if (result.fix) {
       console.log(`   💡 Fix: ${result.fix}`);
     }
@@ -291,8 +400,8 @@ function runDiagnostics() {
     }
   }
 
-  console.log(`\n${  '='.repeat(60)}`);
-  
+  console.log(`\n${'='.repeat(60)}`);
+
   if (hasFailures) {
     console.log('\n❌ FAILURES DETECTED - Deployment will likely fail');
     console.log('Please fix the issues above before deploying.\n');

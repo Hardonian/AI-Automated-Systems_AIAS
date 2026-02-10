@@ -31,11 +31,13 @@ export async function sendEmailViaResend(
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: options.from || 'AI Automated Systems <inquiries@aiautomatedsystems.ca>',
+        from:
+          options.from ||
+          'AI Automated Systems <inquiries@aiautomatedsystems.ca>',
         to: options.to,
         reply_to: options.replyTo,
         subject: options.subject,
@@ -43,9 +45,10 @@ export async function sendEmailViaResend(
         text: options.text,
         attachments: options.attachments?.map(att => ({
           filename: att.filename,
-          content: typeof att.content === 'string' 
-            ? att.content 
-            : Buffer.from(att.content).toString('base64'),
+          content:
+            typeof att.content === 'string'
+              ? att.content
+              : Buffer.from(att.content).toString('base64'),
           content_type: att.contentType,
         })),
       }),
@@ -53,14 +56,19 @@ export async function sendEmailViaResend(
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(`Resend API error: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`);
+      throw new Error(
+        `Resend API error: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`
+      );
     }
 
     const data = await response.json();
     logger.info('Email sent via Resend', { emailId: data.id, to: options.to });
     return { id: data.id, message: 'Email sent successfully' };
   } catch (error) {
-    const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+    const errorObj: Error =
+      (error as any) instanceof Error
+        ? (error as Error)
+        : new Error(String(error));
     logger.error('Failed to send email via Resend', errorObj, {
       to: options.to,
     });
@@ -87,9 +95,19 @@ export async function sendEmailViaSendGrid(
     // Add attachments if any
     if (options.attachments) {
       for (const att of options.attachments) {
-        const blob = typeof att.content === 'string'
-          ? new Blob([att.content], { type: att.contentType || 'application/octet-stream' })
-          : new Blob([Buffer.isBuffer(att.content) ? new Uint8Array(att.content) : att.content], { type: att.contentType || 'application/octet-stream' });
+        const blob =
+          typeof att.content === 'string'
+            ? new Blob([att.content], {
+                type: att.contentType || 'application/octet-stream',
+              })
+            : new Blob(
+                [
+                  Buffer.isBuffer(att.content)
+                    ? new Uint8Array(att.content)
+                    : att.content,
+                ],
+                { type: att.contentType || 'application/octet-stream' }
+              );
         formData.append('attachments', blob, att.filename);
       }
     }
@@ -97,21 +115,26 @@ export async function sendEmailViaSendGrid(
     const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
       },
       body: formData,
     });
 
     if (!response.ok) {
       const errorData = await response.text();
-      throw new Error(`SendGrid API error: ${response.status} ${response.statusText} - ${errorData}`);
+      throw new Error(
+        `SendGrid API error: ${response.status} ${response.statusText} - ${errorData}`
+      );
     }
 
     const messageId = response.headers.get('x-message-id') || 'unknown';
     logger.info('Email sent via SendGrid', { messageId, to: options.to });
     return { id: messageId, message: 'Email sent successfully' };
   } catch (error) {
-    const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+    const errorObj: Error =
+      (error as any) instanceof Error
+        ? (error as Error)
+        : new Error(String(error));
     logger.error('Failed to send email via SendGrid', errorObj, {
       to: options.to,
     });
@@ -129,7 +152,10 @@ export async function sendEmailViaMailgun(
 ): Promise<{ id: string; message: string }> {
   try {
     const formData = new FormData();
-    formData.append('from', options.from || `AI Automated Systems <inquiries@${domain}>`);
+    formData.append(
+      'from',
+      options.from || `AI Automated Systems <inquiries@${domain}>`
+    );
     formData.append('to', options.to);
     if (options.replyTo) formData.append('h:Reply-To', options.replyTo);
     formData.append('subject', options.subject);
@@ -139,31 +165,52 @@ export async function sendEmailViaMailgun(
     // Add attachments if any
     if (options.attachments) {
       for (const att of options.attachments) {
-        const blob = typeof att.content === 'string'
-          ? new Blob([att.content], { type: att.contentType || 'application/octet-stream' })
-          : new Blob([Buffer.isBuffer(att.content) ? new Uint8Array(att.content) : att.content], { type: att.contentType || 'application/octet-stream' });
+        const blob =
+          typeof att.content === 'string'
+            ? new Blob([att.content], {
+                type: att.contentType || 'application/octet-stream',
+              })
+            : new Blob(
+                [
+                  Buffer.isBuffer(att.content)
+                    ? new Uint8Array(att.content)
+                    : att.content,
+                ],
+                { type: att.contentType || 'application/octet-stream' }
+              );
         formData.append('attachment', blob, att.filename);
       }
     }
 
-    const response = await fetch(`https://api.mailgun.net/v3/${domain}/messages`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Basic ${Buffer.from(`api:${apiKey}`).toString('base64')}`,
-      },
-      body: formData,
-    });
+    const response = await fetch(
+      `https://api.mailgun.net/v3/${domain}/messages`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Basic ${Buffer.from(`api:${apiKey}`).toString('base64')}`,
+        },
+        body: formData,
+      }
+    );
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(`Mailgun API error: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`);
+      throw new Error(
+        `Mailgun API error: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`
+      );
     }
 
     const data = await response.json();
-    logger.info('Email sent via Mailgun', { messageId: data.id, to: options.to });
+    logger.info('Email sent via Mailgun', {
+      messageId: data.id,
+      to: options.to,
+    });
     return { id: data.id, message: 'Email sent successfully' };
   } catch (error) {
-    const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+    const errorObj: Error =
+      (error as any) instanceof Error
+        ? (error as Error)
+        : new Error(String(error));
     logger.error('Failed to send email via Mailgun', errorObj, {
       to: options.to,
     });
@@ -174,7 +221,9 @@ export async function sendEmailViaMailgun(
 /**
  * Send email using configured provider
  */
-export async function sendEmail(options: EmailOptions): Promise<{ id: string; message: string }> {
+export async function sendEmail(
+  options: EmailOptions
+): Promise<{ id: string; message: string }> {
   const resendKey = process.env.RESEND_API_KEY;
   const sendgridKey = process.env.SENDGRID_API_KEY;
   const mailgunKey = process.env.MAILGUN_API_KEY;
@@ -184,11 +233,11 @@ export async function sendEmail(options: EmailOptions): Promise<{ id: string; me
   if (resendKey) {
     return sendEmailViaResend(options, resendKey);
   }
-  
+
   if (sendgridKey) {
     return sendEmailViaSendGrid(options, sendgridKey);
   }
-  
+
   if (mailgunKey && mailgunDomain) {
     return sendEmailViaMailgun(options, mailgunKey, mailgunDomain);
   }

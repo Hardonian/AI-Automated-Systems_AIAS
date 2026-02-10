@@ -1,10 +1,12 @@
 > Archived on 2025-11-12. Superseded by: (see docs/final index)
 
 # Onboarding Flow Optimization
+
 **Owner:** Growth Team  
 **Objective:** Reduce refund rate by 40% (from 5% to 3%) through improved onboarding experience, increasing net revenue by $1,000/month at current scale.
 
 **Steps:**
+
 1. Design optimized onboarding flow with progress indicators and value demonstration
 2. Build treatment variant with interactive tutorial and success metrics
 3. Set up feature flag `onboarding_optimization_v2` with 50/50 split
@@ -13,7 +15,8 @@
 6. Scale to 50/50 split and collect data until 7,600 users reached
 7. Analyze results and decide on full rollout
 
-**Dependencies:** 
+**Dependencies:**
+
 - `experiments` table in Supabase
 - `events` table for tracking
 - Feature flag middleware (`middleware/flags.ts`)
@@ -21,7 +24,8 @@
 
 **KPI:** Refund Rate | **30-day signal:** Day 1 activation rate increases by >10%
 
-**Done when:** 
+**Done when:**
+
 - Refund rate reduces by at least 20% (minimum success threshold)
 - Day 1 activation rate improves or stays neutral
 - Statistical significance reached (7,600 users)

@@ -27,11 +27,11 @@ If making requests from the browser, authentication cookies are automatically in
 
 Rate limits are enforced per plan:
 
-| Plan | Rate Limit |
-|------|------------|
-| Free | 100 requests/hour |
+| Plan    | Rate Limit          |
+| ------- | ------------------- |
+| Free    | 100 requests/hour   |
 | Starter | 1,000 requests/hour |
-| Pro | 5,000 requests/hour |
+| Pro     | 5,000 requests/hour |
 
 Rate limit headers are included in all responses:
 
@@ -66,14 +66,14 @@ All responses are JSON. Successful responses return a `200` status code.
 
 ## Error Codes
 
-| Code | Status | Description |
-|------|--------|-------------|
-| `UNAUTHORIZED` | 401 | Invalid or missing authentication |
-| `FORBIDDEN` | 403 | Insufficient permissions |
-| `NOT_FOUND` | 404 | Resource not found |
-| `VALIDATION_ERROR` | 400 | Invalid request data |
-| `RATE_LIMIT_EXCEEDED` | 429 | Rate limit exceeded |
-| `INTERNAL_ERROR` | 500 | Server error |
+| Code                  | Status | Description                       |
+| --------------------- | ------ | --------------------------------- |
+| `UNAUTHORIZED`        | 401    | Invalid or missing authentication |
+| `FORBIDDEN`           | 403    | Insufficient permissions          |
+| `NOT_FOUND`           | 404    | Resource not found                |
+| `VALIDATION_ERROR`    | 400    | Invalid request data              |
+| `RATE_LIMIT_EXCEEDED` | 429    | Rate limit exceeded               |
+| `INTERNAL_ERROR`      | 500    | Server error                      |
 
 ## Pagination
 

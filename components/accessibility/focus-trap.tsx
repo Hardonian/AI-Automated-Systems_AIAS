@@ -1,5 +1,5 @@
-"use client";
-import { useEffect, useRef, ReactNode } from "react";
+'use client';
+import { useEffect, useRef, ReactNode } from 'react';
 
 interface FocusTrapProps {
   children: ReactNode;
@@ -9,11 +9,15 @@ interface FocusTrapProps {
 
 /**
  * Focus Trap Component
- * 
+ *
  * Traps keyboard focus within a container (e.g., modals, dropdowns)
  * for improved accessibility and keyboard navigation.
  */
-export function FocusTrap({ children, active = true, onEscape }: FocusTrapProps) {
+export function FocusTrap({
+  children,
+  active = true,
+  onEscape,
+}: FocusTrapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,7 +31,7 @@ export function FocusTrap({ children, active = true, onEscape }: FocusTrapProps)
     const lastElement = focusableElements[focusableElements.length - 1];
 
     const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
+      if (e.key !== 'Tab') return;
 
       if (e.shiftKey) {
         // Shift + Tab
@@ -45,7 +49,7 @@ export function FocusTrap({ children, active = true, onEscape }: FocusTrapProps)
     };
 
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && onEscape) {
+      if (e.key === 'Escape' && onEscape) {
         onEscape();
       }
     };
@@ -53,12 +57,12 @@ export function FocusTrap({ children, active = true, onEscape }: FocusTrapProps)
     // Focus first element when trap activates
     firstElement?.focus();
 
-    container.addEventListener("keydown", handleTabKey);
-    document.addEventListener("keydown", handleEscape);
+    container.addEventListener('keydown', handleTabKey);
+    document.addEventListener('keydown', handleEscape);
 
     return () => {
-      container.removeEventListener("keydown", handleTabKey);
-      document.removeEventListener("keydown", handleEscape);
+      container.removeEventListener('keydown', handleTabKey);
+      document.removeEventListener('keydown', handleEscape);
     };
   }, [active, onEscape]);
 

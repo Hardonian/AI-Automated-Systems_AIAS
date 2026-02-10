@@ -77,11 +77,13 @@ export const usageSummarySchema = z.object({
     start: z.string().datetime(),
     end: z.string().datetime(),
   }),
-  metrics: z.record(z.object({
-    current: z.number().int(),
-    limit: z.number().int(),
-    percentage: z.number().min(0).max(100),
-  })),
+  metrics: z.record(
+    z.object({
+      current: z.number().int(),
+      limit: z.number().int(),
+      percentage: z.number().min(0).max(100),
+    })
+  ),
   totalCost: z.number().optional(),
 });
 
@@ -183,7 +185,9 @@ export class BillingService {
   /**
    * Record usage metric
    */
-  async recordUsage(metric: Omit<UsageMetric, 'id' | 'timestamp'>): Promise<UsageMetric> {
+  async recordUsage(
+    metric: Omit<UsageMetric, 'id' | 'timestamp'>
+  ): Promise<UsageMetric> {
     const usageMetric: UsageMetric = {
       ...metric,
       id: this.generateId(),
@@ -206,8 +210,9 @@ export class BillingService {
     tenantId?: string,
     period?: { start: Date; end: Date }
   ): Promise<UsageSummary> {
-    const subscription = Array.from(this.subscriptions.values())
-      .find(s => s.userId === userId && (!tenantId || s.tenantId === tenantId));
+    const subscription = Array.from(this.subscriptions.values()).find(
+      s => s.userId === userId && (!tenantId || s.tenantId === tenantId)
+    );
 
     if (!subscription) {
       throw new Error('Subscription not found');
@@ -215,7 +220,8 @@ export class BillingService {
 
     const key = tenantId || userId;
     const metrics = this.usageMetrics.get(key) || [];
-    const periodStart = period?.start || new Date(subscription.currentPeriodStart);
+    const periodStart =
+      period?.start || new Date(subscription.currentPeriodStart);
     const periodEnd = period?.end || new Date(subscription.currentPeriodEnd);
 
     const filteredMetrics = metrics.filter(m => {
@@ -225,7 +231,7 @@ export class BillingService {
 
     // Calculate usage by metric type
     const usageByType: Record<string, { current: number; limit: number }> = {};
-    
+
     filteredMetrics.forEach(metric => {
       if (!usageByType[metric.metricType]) {
         usageByType[metric.metricType] = { current: 0, limit: 0 };
@@ -251,7 +257,7 @@ export class BillingService {
     Object.entries(usageByType).forEach(([type, usage]) => {
       const limitKey = type.replace('_', '') as keyof typeof limits;
       const limit = limits[limitKey] || -1;
-      
+
       summary.metrics[type] = {
         current: usage.current,
         limit: limit === -1 ? Infinity : limit,
@@ -270,8 +276,9 @@ export class BillingService {
     metricType: UsageMetric['metricType'],
     quantity: number = 1
   ): Promise<{ allowed: boolean; remaining: number; limit: number }> {
-    const subscription = Array.from(this.subscriptions.values())
-      .find(s => s.userId === userId && s.status === 'active');
+    const subscription = Array.from(this.subscriptions.values()).find(
+      s => s.userId === userId && s.status === 'active'
+    );
 
     if (!subscription) {
       return { allowed: false, remaining: 0, limit: 0 };
@@ -289,7 +296,10 @@ export class BillingService {
 
     return {
       allowed,
-      remaining: Math.max(0, metric.limit === Infinity ? Infinity : metric.limit - metric.current),
+      remaining: Math.max(
+        0,
+        metric.limit === Infinity ? Infinity : metric.limit - metric.current
+      ),
       limit: metric.limit,
     };
   }
@@ -321,28 +331,36 @@ export class BillingService {
   /**
    * Sync Stripe subscription
    */
-  private async syncStripeSubscription(_stripeSubscription: Record<string, unknown>): Promise<void> {
+  private async syncStripeSubscription(
+    _stripeSubscription: Record<string, unknown>
+  ): Promise<void> {
     // Would sync with database
   }
 
   /**
    * Handle subscription deleted
    */
-  private async handleSubscriptionDeleted(_stripeSubscription: Record<string, unknown>): Promise<void> {
+  private async handleSubscriptionDeleted(
+    _stripeSubscription: Record<string, unknown>
+  ): Promise<void> {
     // Would update subscription status
   }
 
   /**
    * Handle payment succeeded
    */
-  private async handlePaymentSucceeded(_invoice: Record<string, unknown>): Promise<void> {
+  private async handlePaymentSucceeded(
+    _invoice: Record<string, unknown>
+  ): Promise<void> {
     // Would update subscription and send confirmation
   }
 
   /**
    * Handle payment failed
    */
-  private async handlePaymentFailed(_invoice: Record<string, unknown>): Promise<void> {
+  private async handlePaymentFailed(
+    _invoice: Record<string, unknown>
+  ): Promise<void> {
     // Would update subscription status and send notification
   }
 

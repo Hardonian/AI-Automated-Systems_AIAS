@@ -45,10 +45,12 @@ export const kpiDefinitionSchema = z.object({
   formula: z.string(), // Mathematical formula or query
   unit: z.string(), // e.g., 'CAD', 'hours', 'percentage'
   target: z.number().optional(),
-  threshold: z.object({
-    warning: z.number().optional(),
-    critical: z.number().optional(),
-  }).optional(),
+  threshold: z
+    .object({
+      warning: z.number().optional(),
+      critical: z.number().optional(),
+    })
+    .optional(),
   aggregation: z.enum(['sum', 'avg', 'min', 'max', 'count', 'custom']),
   timeRange: z.enum(['hour', 'day', 'week', 'month', 'quarter', 'year']),
 });
@@ -74,7 +76,15 @@ export type BusinessMetric = z.infer<typeof businessMetricSchema>;
  */
 export const semanticFieldSchema = z.object({
   name: z.string(),
-  type: z.enum(['string', 'number', 'boolean', 'date', 'enum', 'object', 'array']),
+  type: z.enum([
+    'string',
+    'number',
+    'boolean',
+    'date',
+    'enum',
+    'object',
+    'array',
+  ]),
   description: z.string(),
   required: z.boolean().default(false),
   validation: z.record(z.unknown()).optional(),
@@ -93,11 +103,15 @@ export const semanticEntitySchema = z.object({
   entityType: entityTypeSchema,
   description: z.string(),
   fields: z.array(semanticFieldSchema),
-  relationships: z.array(z.object({
-    targetEntity: z.string().uuid(),
-    relationshipType: z.enum(['one-to-one', 'one-to-many', 'many-to-many']),
-    foreignKey: z.string().optional(),
-  })).optional(),
+  relationships: z
+    .array(
+      z.object({
+        targetEntity: z.string().uuid(),
+        relationshipType: z.enum(['one-to-one', 'one-to-many', 'many-to-many']),
+        foreignKey: z.string().optional(),
+      })
+    )
+    .optional(),
   businessRules: z.array(z.string()).optional(),
   validStates: z.array(businessStateSchema).optional(),
 });
@@ -109,7 +123,13 @@ export type SemanticEntity = z.infer<typeof semanticEntitySchema>;
  */
 export const workflowOutputSchema = z.object({
   workflowId: z.string().uuid(),
-  outputType: z.enum(['data', 'report', 'analysis', 'recommendation', 'action']),
+  outputType: z.enum([
+    'data',
+    'report',
+    'analysis',
+    'recommendation',
+    'action',
+  ]),
   schema: z.record(z.unknown()), // JSON Schema
   semanticMapping: z.record(z.string()), // Maps output fields to semantic entities
   validation: z.record(z.unknown()).optional(),
@@ -162,7 +182,10 @@ export class SemanticLayer {
   /**
    * Validate data against semantic entity
    */
-  validateEntity(entityId: string, data: unknown): {
+  validateEntity(
+    entityId: string,
+    data: unknown
+  ): {
     valid: boolean;
     errors: string[];
   } {
@@ -203,7 +226,10 @@ export class SemanticLayer {
   /**
    * Validate field type
    */
-  private validateFieldType(type: SemanticField['type'], value: unknown): boolean {
+  private validateFieldType(
+    type: SemanticField['type'],
+    value: unknown
+  ): boolean {
     switch (type) {
       case 'string':
         return typeof value === 'string';
@@ -214,7 +240,9 @@ export class SemanticLayer {
       case 'date':
         return value instanceof Date || typeof value === 'string';
       case 'object':
-        return typeof value === 'object' && value !== null && !Array.isArray(value);
+        return (
+          typeof value === 'object' && value !== null && !Array.isArray(value)
+        );
       case 'array':
         return Array.isArray(value);
       default:
@@ -252,11 +280,13 @@ export class SemanticLayer {
       throw new Error(`Entity ${entityId} not found`);
     }
 
-    const fields = entity.fields.map(field => {
-      const optional = field.required ? '' : '?';
-      const tsType = this.mapToTypeScriptType(field.type);
-      return `  ${field.name}${optional}: ${tsType};`;
-    }).join('\n');
+    const fields = entity.fields
+      .map(field => {
+        const optional = field.required ? '' : '?';
+        const tsType = this.mapToTypeScriptType(field.type);
+        return `  ${field.name}${optional}: ${tsType};`;
+      })
+      .join('\n');
 
     return `export interface ${entity.name} {\n${fields}\n}`;
   }
@@ -294,13 +324,15 @@ export class SemanticLayer {
       throw new Error(`Entity ${entityId} not found`);
     }
 
-    const fields = entity.fields.map(field => {
-      let zodType = this.mapToZodType(field.type);
-      if (!field.required) {
-        zodType = `${zodType}.optional()`;
-      }
-      return `  ${field.name}: ${zodType},`;
-    }).join('\n');
+    const fields = entity.fields
+      .map(field => {
+        let zodType = this.mapToZodType(field.type);
+        if (!field.required) {
+          zodType = `${zodType}.optional()`;
+        }
+        return `  ${field.name}: ${zodType},`;
+      })
+      .join('\n');
 
     return `export const ${entity.name.toLowerCase()}Schema = z.object({\n${fields}\n});`;
   }

@@ -8,4 +8,4 @@ This document tracks alignment issues between business goals and technical imple
 
 ---
 
-*Generated: Initial scaffold*
+_Generated: Initial scaffold_

@@ -8,14 +8,33 @@ import DOMPurify from 'isomorphic-dompurify';
 /**
  * Sanitize HTML content
  */
-export function sanitizeHTML(html: string, options?: {
-  allowTags?: string[];
-  allowAttributes?: string[];
-}): string {
+export function sanitizeHTML(
+  html: string,
+  options?: {
+    allowTags?: string[];
+    allowAttributes?: string[];
+  }
+): string {
   const config: any = {
     ALLOWED_TAGS: options?.allowTags || [
-      'p', 'br', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li',
-      'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'code', 'pre',
+      'p',
+      'br',
+      'strong',
+      'em',
+      'u',
+      'a',
+      'ul',
+      'ol',
+      'li',
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6',
+      'blockquote',
+      'code',
+      'pre',
     ],
     ALLOWED_ATTR: options?.allowAttributes || ['href', 'title', 'alt'],
     ALLOW_DATA_ATTR: false,
@@ -179,16 +198,16 @@ export function validateAndSanitize(input: unknown): {
 export function sanitizeFileName(fileName: string): string {
   // Remove path components
   let sanitized = fileName.replace(/[\/\\]/g, '');
-  
+
   // Remove dangerous characters
   sanitized = sanitized.replace(/[<>:"|?*\x00-\x1F]/g, '');
-  
+
   // Limit length
   sanitized = sanitized.substring(0, 255);
-  
+
   // Remove trailing dots and spaces (Windows)
   sanitized = sanitized.replace(/[.\s]+$/, '');
-  
+
   return sanitized || 'file';
 }
 
@@ -198,18 +217,20 @@ export function sanitizeFileName(fileName: string): string {
 export function sanitizeURL(url: string): string {
   try {
     const parsed = new URL(url);
-    
+
     // Only allow http and https
     if (!['http:', 'https:'].includes(parsed.protocol)) {
       throw new Error('Invalid protocol');
     }
-    
+
     // Remove javascript: and data: schemes
-    if (parsed.href.toLowerCase().includes('javascript:') || 
-        parsed.href.toLowerCase().includes('data:')) {
+    if (
+      parsed.href.toLowerCase().includes('javascript:') ||
+      parsed.href.toLowerCase().includes('data:')
+    ) {
       throw new Error('Dangerous URL scheme');
     }
-    
+
     return parsed.href;
   } catch {
     // Return safe default

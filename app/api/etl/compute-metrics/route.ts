@@ -1,18 +1,18 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextRequest, NextResponse } from "next/server";
+import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
 
-import { env } from "@/lib/env";
-import { SystemError, ValidationError, formatError } from "@/lib/errors";
-import { logger } from "@/lib/logging/structured-logger";
-import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
+import { env } from '@/lib/env';
+import { SystemError, ValidationError, formatError } from '@/lib/errors';
+import { logger } from '@/lib/logging/structured-logger';
+import { telemetry } from '@/lib/monitoring/enhanced-telemetry';
 
-export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 /**
  * ETL endpoint for computing aggregated metrics
  * Used by Zapier automation as fallback if GitHub Actions unavailable
- * 
+ *
  * Authentication: Bearer token via ZAPIER_SECRET env var
  */
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -20,11 +20,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   try {
     // Authenticate request
-    const authHeader = req.headers.get("authorization");
+    const authHeader = req.headers.get('authorization');
     const zapierSecret = process.env.ZAPIER_SECRET;
 
     if (!zapierSecret) {
-      const error = new SystemError("Zapier secret not configured");
+      const error = new SystemError('Zapier secret not configured');
       const formatted = formatError(error);
       return NextResponse.json(
         { error: formatted.message },
@@ -32,8 +32,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      const error = new ValidationError("Missing or invalid authorization header");
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      const error = new ValidationError(
+        'Missing or invalid authorization header'
+      );
       const formatted = formatError(error);
       return NextResponse.json(
         { error: formatted.message },
@@ -43,7 +45,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const token = authHeader.substring(7);
     if (token !== zapierSecret) {
-      const error = new ValidationError("Invalid authorization token");
+      const error = new ValidationError('Invalid authorization token');
       const formatted = formatError(error);
       return NextResponse.json(
         { error: formatted.message },
@@ -74,39 +76,48 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     // Initialize Supabase client
-    const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+    const supabase = createClient(
+      env.supabase.url,
+      env.supabase.serviceRoleKey
+    );
 
     // Call the database function to recompute metrics
     // Assuming the function exists: recompute_metrics_daily(start_date, end_date)
-    const { data, error } = await supabase.rpc("recompute_metrics_daily", {
-      start_date: startDate.toISOString().split("T")[0],
-      end_date: endDate.toISOString().split("T")[0],
+    const { data, error } = await supabase.rpc('recompute_metrics_daily', {
+      start_date: startDate.toISOString().split('T')[0],
+      end_date: endDate.toISOString().split('T')[0],
     });
 
     if (error) {
       // If function doesn't exist, try alternative approach
-      logger.warn("recompute_metrics_daily function not found, attempting manual computation", { error: error.message });
-      
+      logger.warn(
+        'recompute_metrics_daily function not found, attempting manual computation',
+        { error: error.message }
+      );
+
       // Manual computation: aggregate spend data by date
       const { data: spendData, error: spendError } = await supabase
-        .from("spend")
-        .select("*")
-        .gte("date", startDate.toISOString().split("T")[0])
-        .lte("date", endDate.toISOString().split("T")[0]);
+        .from('spend')
+        .select('*')
+        .gte('date', startDate.toISOString().split('T')[0])
+        .lte('date', endDate.toISOString().split('T')[0]);
 
       if (spendError) {
         throw new Error(`Failed to fetch spend data: ${spendError.message}`);
       }
 
       // Group by date and compute metrics
-      const metricsByDate = new Map<string, {
-        date: string;
-        total_spend_cents: number;
-        total_clicks: number;
-        total_impressions: number;
-        total_conversions: number;
-        platforms: string[];
-      }>();
+      const metricsByDate = new Map<
+        string,
+        {
+          date: string;
+          total_spend_cents: number;
+          total_clicks: number;
+          total_impressions: number;
+          total_conversions: number;
+          platforms: string[];
+        }
+      >();
 
       interface SpendRow {
         date: string;
@@ -119,7 +130,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       }
 
       spendData?.forEach((row: SpendRow) => {
-        const {date} = row;
+        const { date } = row;
         if (!metricsByDate.has(date)) {
           metricsByDate.set(date, {
             date,
@@ -145,26 +156,28 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       let recordsInserted = 0;
 
       // Batch insert all metrics at once
-      const metricsToInsert = Array.from(metricsByDate.values()).map(metrics => ({
-        date: metrics.date,
-        total_spend_cents: metrics.total_spend_cents,
-        total_clicks: metrics.total_clicks,
-        total_impressions: metrics.total_impressions,
-        total_conversions: metrics.total_conversions,
-        platforms: metrics.platforms,
-      }));
+      const metricsToInsert = Array.from(metricsByDate.values()).map(
+        metrics => ({
+          date: metrics.date,
+          total_spend_cents: metrics.total_spend_cents,
+          total_clicks: metrics.total_clicks,
+          total_impressions: metrics.total_impressions,
+          total_conversions: metrics.total_conversions,
+          platforms: metrics.platforms,
+        })
+      );
 
       const { data: upsertedRows, error: upsertError } = await supabase
-        .from("metrics_daily")
+        .from('metrics_daily')
         .upsert(metricsToInsert, {
-          onConflict: "date",
+          onConflict: 'date',
         })
-        .select("date");
+        .select('date');
 
       if (upsertError) {
-        logger.warn("Failed to batch insert metrics", {
+        logger.warn('Failed to batch insert metrics', {
           error: upsertError.message,
-          metricCount: metricsToInsert.length
+          metricCount: metricsToInsert.length,
         });
       } else {
         recordsInserted = upsertedRows?.length ?? metricsToInsert.length;
@@ -173,20 +186,23 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       const duration = Date.now() - startTime;
 
       telemetry.trackPerformance({
-        name: "etl_compute_metrics",
+        name: 'etl_compute_metrics',
         value: duration,
-        unit: "ms",
-        tags: { status: "success", records: recordsInserted.toString() },
+        unit: 'ms',
+        tags: { status: 'success', records: recordsInserted.toString() },
       });
 
-      logger.info("Metrics computation completed", { recordsInserted, duration });
+      logger.info('Metrics computation completed', {
+        recordsInserted,
+        duration,
+      });
 
       return NextResponse.json({
         success: true,
         recordsInserted,
         dateRange: {
-          start: startDate.toISOString().split("T")[0],
-          end: endDate.toISOString().split("T")[0],
+          start: startDate.toISOString().split('T')[0],
+          end: endDate.toISOString().split('T')[0],
         },
         duration_ms: duration,
       });
@@ -195,19 +211,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const duration = Date.now() - startTime;
 
     telemetry.trackPerformance({
-      name: "etl_compute_metrics",
+      name: 'etl_compute_metrics',
       value: duration,
-      unit: "ms",
-      tags: { status: "success" },
+      unit: 'ms',
+      tags: { status: 'success' },
     });
 
-    logger.info("Metrics computation completed", { duration });
+    logger.info('Metrics computation completed', { duration });
 
     return NextResponse.json({
       success: true,
       dateRange: {
-        start: startDate.toISOString().split("T")[0],
-        end: endDate.toISOString().split("T")[0],
+        start: startDate.toISOString().split('T')[0],
+        end: endDate.toISOString().split('T')[0],
       },
       duration_ms: duration,
       functionResult: data,
@@ -215,18 +231,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   } catch (error: unknown) {
     const duration = Date.now() - startTime;
     const systemError = new SystemError(
-      "Compute Metrics ETL error",
+      'Compute Metrics ETL error',
       error instanceof Error ? error : new Error(String(error))
     );
 
     telemetry.trackPerformance({
-      name: "etl_compute_metrics",
+      name: 'etl_compute_metrics',
       value: duration,
-      unit: "ms",
-      tags: { status: "error" },
+      unit: 'ms',
+      tags: { status: 'error' },
     });
 
-    logger.error("Compute Metrics ETL failed", systemError, { duration });
+    logger.error('Compute Metrics ETL failed', systemError, { duration });
 
     const formatted = formatError(systemError);
     return NextResponse.json(

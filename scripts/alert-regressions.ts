@@ -4,9 +4,9 @@
  * Detects regressions and creates GitHub issues or sends webhooks
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-import { env } from "../lib/env";
+import { env } from '../lib/env';
 
 interface Regression {
   source: string;
@@ -17,22 +17,19 @@ interface Regression {
 }
 
 async function detectRegressions(): Promise<Regression[]> {
-  const supabase = createClient(
-    env.supabase.url,
-    env.supabase.serviceRoleKey
-  );
+  const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
   const regressions: Regression[] = [];
 
   // Get latest metrics for each source
-  const sources = ["vercel", "supabase", "expo", "ci", "telemetry"];
+  const sources = ['vercel', 'supabase', 'expo', 'ci', 'telemetry'];
 
   for (const source of sources) {
     const { data: metrics } = await supabase
-      .from("metrics_log")
-      .select("metric, ts")
-      .eq("source", source)
-      .order("ts", { ascending: false })
+      .from('metrics_log')
+      .select('metric, ts')
+      .eq('source', source)
+      .order('ts', { ascending: false })
       .limit(3); // Check last 3 to detect consecutive regressions
 
     if (!metrics || metrics.length < 2) {
@@ -45,8 +42,8 @@ async function detectRegressions(): Promise<Regression[]> {
     // Check for regressions (>10% worse)
     for (const key in current) {
       if (
-        typeof current[key] === "number" &&
-        typeof previous[key] === "number" &&
+        typeof current[key] === 'number' &&
+        typeof previous[key] === 'number' &&
         previous[key] > 0
       ) {
         const changePercent =
@@ -71,14 +68,14 @@ async function detectRegressions(): Promise<Regression[]> {
 
 async function createGitHubIssue(regressions: Regression[]) {
   const githubToken = process.env.GITHUB_TOKEN;
-  const repo = process.env.GITHUB_REPOSITORY || "your-org/aias-platform";
+  const repo = process.env.GITHUB_REPOSITORY || 'your-org/aias-platform';
 
   if (!githubToken) {
-    console.warn("⚠️  GITHUB_TOKEN not set, skipping GitHub issue creation");
+    console.warn('⚠️  GITHUB_TOKEN not set, skipping GitHub issue creation');
     return;
   }
 
-  const title = "🚨 Performance Regression Detected";
+  const title = '🚨 Performance Regression Detected';
   const body = `## Performance Regression Alert
 
 **Detected:** ${new Date().toISOString()}
@@ -86,31 +83,31 @@ async function createGitHubIssue(regressions: Regression[]) {
 ### Regressions Found
 
 ${regressions
-    .map(
-      (r) => `- **${r.source}/${r.metric}**: ${r.previous.toFixed(2)} → ${r.current.toFixed(2)} (+${r.changePercent.toFixed(1)}%)
+  .map(
+    r => `- **${r.source}/${r.metric}**: ${r.previous.toFixed(2)} → ${r.current.toFixed(2)} (+${r.changePercent.toFixed(1)}%)
 `
-    )
-    .join("\n")}
+  )
+  .join('\n')}
 
 ### Recommended Actions
 
 ${regressions
-    .map((r) => {
-      if (r.metric.includes("LCP") || r.metric.includes("lcp")) {
-        return `- **${r.source}/${r.metric}**: Enable image optimization, reduce render-blocking resources`;
-      }
-      if (r.metric.includes("CLS") || r.metric.includes("cls")) {
-        return `- **${r.source}/${r.metric}**: Add explicit dimensions to images`;
-      }
-      if (r.metric.includes("Latency") || r.metric.includes("latency")) {
-        return `- **${r.source}/${r.metric}**: Review queries, add indexes`;
-      }
-      if (r.metric.includes("bundle")) {
-        return `- **${r.source}/${r.metric}**: Optimize bundle size`;
-      }
-      return `- **${r.source}/${r.metric}**: Review and optimize`;
-    })
-    .join("\n")}
+  .map(r => {
+    if (r.metric.includes('LCP') || r.metric.includes('lcp')) {
+      return `- **${r.source}/${r.metric}**: Enable image optimization, reduce render-blocking resources`;
+    }
+    if (r.metric.includes('CLS') || r.metric.includes('cls')) {
+      return `- **${r.source}/${r.metric}**: Add explicit dimensions to images`;
+    }
+    if (r.metric.includes('Latency') || r.metric.includes('latency')) {
+      return `- **${r.source}/${r.metric}**: Review queries, add indexes`;
+    }
+    if (r.metric.includes('bundle')) {
+      return `- **${r.source}/${r.metric}**: Optimize bundle size`;
+    }
+    return `- **${r.source}/${r.metric}**: Review and optimize`;
+  })
+  .join('\n')}
 
 ---
 
@@ -121,16 +118,16 @@ ${regressions
     const response = await fetch(
       `https://api.github.com/repos/${repo}/issues`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${githubToken}`,
-          Accept: "application/vnd.github.v3+json",
-          "Content-Type": "application/json",
+          Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           title,
           body,
-          labels: ["performance", "regression", "automated"],
+          labels: ['performance', 'regression', 'automated'],
         }),
       }
     );
@@ -144,7 +141,7 @@ ${regressions
       console.error(`❌ Failed to create GitHub issue: ${error}`);
     }
   } catch (error: any) {
-    console.error("Error creating GitHub issue:", error.message);
+    console.error('Error creating GitHub issue:', error.message);
   }
 }
 
@@ -159,15 +156,15 @@ async function sendWebhook(regressions: Regression[]) {
     text: `🚨 Performance Regression Detected`,
     blocks: [
       {
-        type: "section",
+        type: 'section',
         text: {
-          type: "mrkdwn",
+          type: 'mrkdwn',
           text: `*Performance Regression Alert*\n\n${regressions
             .map(
-              (r) =>
+              r =>
                 `• ${r.source}/${r.metric}: ${r.previous.toFixed(2)} → ${r.current.toFixed(2)} (+${r.changePercent.toFixed(1)}%)`
             )
-            .join("\n")}`,
+            .join('\n')}`,
         },
       },
     ],
@@ -175,23 +172,23 @@ async function sendWebhook(regressions: Regression[]) {
 
   try {
     await fetch(webhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    console.log("✅ Sent webhook notification");
+    console.log('✅ Sent webhook notification');
   } catch (error: any) {
-    console.error("Error sending webhook:", error.message);
+    console.error('Error sending webhook:', error.message);
   }
 }
 
 async function main() {
-  console.log("🔍 Checking for performance regressions...\n");
+  console.log('🔍 Checking for performance regressions...\n');
 
   const regressions = await detectRegressions();
 
   if (regressions.length === 0) {
-    console.log("✅ No regressions detected");
+    console.log('✅ No regressions detected');
     return;
   }
 
@@ -203,9 +200,11 @@ async function main() {
   }
 
   // Check for consecutive regressions (3+)
-  const consecutiveRegressions = regressions.filter((r) => r.changePercent > 10);
+  const consecutiveRegressions = regressions.filter(r => r.changePercent > 10);
   if (consecutiveRegressions.length >= 3) {
-    console.log("\n🚨 Three or more consecutive regressions detected - creating alerts...");
+    console.log(
+      '\n🚨 Three or more consecutive regressions detected - creating alerts...'
+    );
 
     // Create GitHub issue
     await createGitHubIssue(regressions);
@@ -213,13 +212,15 @@ async function main() {
     // Send webhook if configured
     await sendWebhook(regressions);
   } else {
-    console.log("\n⚠️  Regressions detected but not severe enough to trigger alerts");
+    console.log(
+      '\n⚠️  Regressions detected but not severe enough to trigger alerts'
+    );
   }
 }
 
 if (require.main === module) {
-  main().catch((error) => {
-    console.error("Fatal error:", error);
+  main().catch(error => {
+    console.error('Fatal error:', error);
     process.exit(1);
   });
 }

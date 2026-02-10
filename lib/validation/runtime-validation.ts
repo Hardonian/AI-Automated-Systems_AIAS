@@ -3,7 +3,7 @@
  * Provides runtime validation to complement TypeScript's compile-time checks
  */
 
-import { z } from "zod";
+import { z } from 'zod';
 
 export interface ValidationResult<T> {
   success: boolean;
@@ -26,7 +26,7 @@ export function validate<T>(
 ): ValidationResult<T> {
   try {
     const result = schema.safeParse(data);
-    
+
     if (result.success) {
       return {
         success: true,
@@ -34,7 +34,7 @@ export function validate<T>(
       };
     }
 
-    const errors: ValidationError[] = result.error.errors.map((err) => ({
+    const errors: ValidationError[] = result.error.errors.map(err => ({
       path: err.path.map(String),
       message: err.message,
       code: err.code,
@@ -50,8 +50,9 @@ export function validate<T>(
       errors: [
         {
           path: [],
-          message: error instanceof Error ? error.message : "Unknown validation error",
-          code: "UNKNOWN_ERROR",
+          message:
+            error instanceof Error ? error.message : 'Unknown validation error',
+          code: 'UNKNOWN_ERROR',
         },
       ],
     };
@@ -61,10 +62,15 @@ export function validate<T>(
 /**
  * Assert data matches schema, throw if invalid
  */
-export function assert<T>(schema: z.ZodSchema<T>, data: unknown): asserts data is T {
+export function assert<T>(
+  schema: z.ZodSchema<T>,
+  data: unknown
+): asserts data is T {
   const result = validate(schema, data);
   if (!result.success) {
-    const errorMessages = result.errors?.map(e => `${e.path.join(".")}: ${e.message}`).join(", ");
+    const errorMessages = result.errors
+      ?.map(e => `${e.path.join('.')}: ${e.message}`)
+      .join(', ');
     throw new Error(`Validation failed: ${errorMessages}`);
   }
 }
@@ -72,7 +78,10 @@ export function assert<T>(schema: z.ZodSchema<T>, data: unknown): asserts data i
 /**
  * Validate API request body
  */
-export function validateRequestBody<T>(schema: z.ZodSchema<T>, body: unknown): T {
+export function validateRequestBody<T>(
+  schema: z.ZodSchema<T>,
+  body: unknown
+): T {
   assert(schema, body);
   return body;
 }
@@ -80,7 +89,10 @@ export function validateRequestBody<T>(schema: z.ZodSchema<T>, body: unknown): T
 /**
  * Validate query parameters
  */
-export function validateQueryParams<T>(schema: z.ZodSchema<T>, params: unknown): T {
+export function validateQueryParams<T>(
+  schema: z.ZodSchema<T>,
+  params: unknown
+): T {
   assert(schema, params);
   return params;
 }
@@ -88,10 +100,15 @@ export function validateQueryParams<T>(schema: z.ZodSchema<T>, params: unknown):
 /**
  * Validate environment variables
  */
-export function validateEnv<T>(schema: z.ZodSchema<T>, env: Record<string, string | undefined>): T {
+export function validateEnv<T>(
+  schema: z.ZodSchema<T>,
+  env: Record<string, string | undefined>
+): T {
   const result = validate(schema, env);
   if (!result.success) {
-    const errorMessages = result.errors?.map(e => `${e.path.join(".")}: ${e.message}`).join("\n");
+    const errorMessages = result.errors
+      ?.map(e => `${e.path.join('.')}: ${e.message}`)
+      .join('\n');
     throw new Error(`Environment validation failed:\n${errorMessages}`);
   }
   return result.data!;

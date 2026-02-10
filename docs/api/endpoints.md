@@ -11,11 +11,13 @@ GET /api/v1/workflows
 ```
 
 **Query Parameters:**
+
 - `status` (optional): Filter by status (`active`, `paused`, `archived`)
 - `page` (optional): Page number (default: 1)
 - `limit` (optional): Items per page (default: 20, max: 100)
 
 **Response:**
+
 ```json
 {
   "workflows": [
@@ -39,6 +41,7 @@ GET /api/v1/workflows/{workflowId}
 ```
 
 **Response:**
+
 ```json
 {
   "workflow": {
@@ -76,6 +79,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "workflow": {
@@ -120,6 +124,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "execution": {
@@ -142,6 +147,7 @@ GET /api/v1/agents
 ```
 
 **Response:**
+
 ```json
 {
   "agents": [
@@ -179,6 +185,7 @@ GET /api/integrations
 ```
 
 **Response:**
+
 ```json
 {
   "integrations": [
@@ -219,6 +226,7 @@ GET /api/analytics/usage
 ```
 
 **Response:**
+
 ```json
 {
   "plan": "starter",
@@ -236,6 +244,7 @@ GET /api/analytics/workflows
 ```
 
 **Response:**
+
 ```json
 {
   "total": 10,
@@ -253,10 +262,11 @@ GET /api/analytics/time-saved
 ```
 
 **Response:**
+
 ```json
 {
   "hours": 12.5,
-  "value": 625.00,
+  "value": 625.0,
   "hourlyRate": 50,
   "executions": 150
 }
@@ -269,6 +279,7 @@ GET /api/analytics/execution-history
 ```
 
 **Response:**
+
 ```json
 [
   {
@@ -288,10 +299,12 @@ GET /api/workflows/templates
 ```
 
 **Query Parameters:**
+
 - `category` (optional): Filter by category
 - `integration` (optional): Filter by required integration
 
 **Response:**
+
 ```json
 {
   "templates": [

@@ -9,7 +9,8 @@ import { env } from '@/lib/env';
 
 const siteUrl = env.app.siteUrl || 'https://aiautomatedsystems.ca';
 const siteName = 'AI Automated Systems';
-const defaultDescription = 'We build custom AI platforms — not integrations. See TokPulse and Hardonia Suite. Save 10+ hours/week. 40% ROI increase. From strategy to deployment. Schedule a free strategy call. No credit card required.';
+const defaultDescription =
+  'We build custom AI platforms — not integrations. See TokPulse and Hardonia Suite. Save 10+ hours/week. 40% ROI increase. From strategy to deployment. Schedule a free strategy call. No credit card required.';
 
 export interface SEOConfig {
   title: string;
@@ -125,7 +126,10 @@ export function generateMetadata(config: SEOConfig): Metadata {
 /**
  * Generate structured data (JSON-LD) for rich snippets
  */
-export function generateStructuredData(type: 'Organization' | 'WebSite' | 'Article' | 'Product', data: Record<string, unknown>) {
+export function generateStructuredData(
+  type: 'Organization' | 'WebSite' | 'Article' | 'Product',
+  data: Record<string, unknown>
+) {
   const base = {
     '@context': 'https://schema.org',
     '@type': type,
@@ -256,7 +260,9 @@ export const seoKeywords = {
 /**
  * Generate keywords for a page based on categories
  */
-export function generateKeywords(categories: (keyof typeof seoKeywords)[]): string[] {
+export function generateKeywords(
+  categories: (keyof typeof seoKeywords)[]
+): string[] {
   const keywords = new Set<string>();
   categories.forEach(category => {
     seoKeywords[category].forEach(keyword => keywords.add(keyword));

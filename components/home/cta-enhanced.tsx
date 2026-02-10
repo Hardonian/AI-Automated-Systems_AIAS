@@ -14,7 +14,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { trackCTAClick, detectExitIntent } from '@/lib/cro/optimization';
 
-
 interface CTAEnhancedProps {
   variant?: 'primary' | 'secondary';
   urgency?: 'low' | 'medium' | 'high';
@@ -63,53 +62,51 @@ export function CTAEnhanced({
   };
 
   return (
-    <div className="relative">
+    <div className='relative'>
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5 }}
-        {...({ className: "flex flex-col items-center gap-4" } as any)}
+        {...({ className: 'flex flex-col items-center gap-4' } as any)}
       >
         {showUrgency && timeLeft !== null && timeLeft > 0 && (
-          <Badge className="animate-pulse" variant="destructive">
-            <Clock className="h-3 w-3 mr-1" />
+          <Badge className='animate-pulse' variant='destructive'>
+            <Clock className='mr-1 h-3 w-3' />
             Limited time: {formatTime(timeLeft)} left
           </Badge>
         )}
 
         {showSocialProof && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Users className="h-4 w-4" />
+          <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+            <Users className='h-4 w-4' />
             <span>Join 500+ businesses automating with AIAS</span>
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
+        <div className='flex flex-col items-center gap-4 sm:flex-row'>
           <Button
             asChild
-            className="group relative overflow-hidden"
-            size="lg"
+            className='group relative overflow-hidden'
+            size='lg'
             onClick={handleClick}
           >
-            <Link href="/signup">
+            <Link href='/signup'>
               Start Free Trial
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
             </Link>
           </Button>
 
           <Button
             asChild
-            size="lg"
-            variant="outline"
+            size='lg'
+            variant='outline'
             onClick={() => trackCTAClick('schedule-call', 'homepage', 'medium')}
           >
-            <Link href="/contact">
-              Schedule Strategy Call
-            </Link>
+            <Link href='/contact'>Schedule Strategy Call</Link>
           </Button>
         </div>
 
-        <p className="text-xs text-muted-foreground text-center">
+        <p className='text-center text-xs text-muted-foreground'>
           No credit card required • 14-day free trial • Cancel anytime
         </p>
 
@@ -117,19 +114,23 @@ export function CTAEnhanced({
           <motion.div
             animate={{ opacity: 1, scale: 1 }}
             initial={{ opacity: 0, scale: 0.9 }}
-            {...({ className: "fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" } as any)}
+            {...({
+              className:
+                'fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4',
+            } as any)}
             onClick={() => setShowExitIntent(false)}
           >
             <div
-              className="bg-card rounded-lg p-6 max-w-md w-full"
-              onClick={(e) => e.stopPropagation()}
+              className='w-full max-w-md rounded-lg bg-card p-6'
+              onClick={e => e.stopPropagation()}
             >
-              <h3 className="text-xl font-bold mb-2">Wait! Don't Miss Out</h3>
-              <p className="text-muted-foreground mb-4">
-                Get started today and save 10+ hours per week with AI automation.
+              <h3 className='mb-2 text-xl font-bold'>Wait! Don't Miss Out</h3>
+              <p className='mb-4 text-muted-foreground'>
+                Get started today and save 10+ hours per week with AI
+                automation.
               </p>
-              <Button asChild className="w-full" onClick={handleClick}>
-                <Link href="/signup">Start Free Trial Now</Link>
+              <Button asChild className='w-full' onClick={handleClick}>
+                <Link href='/signup'>Start Free Trial Now</Link>
               </Button>
             </div>
           </motion.div>

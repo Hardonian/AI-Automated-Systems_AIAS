@@ -7,24 +7,28 @@
 ## CRM Options Comparison
 
 ### Notion CRM
+
 - **Pros:** Free tier available, flexible database structure, good for solo/small teams
 - **Cons:** Limited API rate limits, not built specifically for CRM
 - **Best for:** Solo founders, small teams, content-heavy workflows
 - **Cost:** $0 (Free) - $10/month (Personal Pro)
 
 ### Airtable CRM
+
 - **Pros:** Spreadsheet-like interface, powerful automations, good API
 - **Cons:** Pricing can escalate quickly, learning curve
 - **Best for:** Teams needing spreadsheet familiarity with CRM power
 - **Cost:** $20/month (Plus) - $45/month (Pro)
 
 ### Google Sheets CRM
+
 - **Pros:** Free, familiar interface, easy sharing
 - **Cons:** Limited automation, no native CRM features
 - **Best for:** Bootstrapped startups, simple use cases
 - **Cost:** $0 (Free) - $6/month/user (Google Workspace)
 
 ### HubSpot CRM
+
 - **Pros:** Powerful, free tier available, comprehensive features
 - **Cons:** Can be overwhelming, upselling pressure
 - **Best for:** Growth-stage companies, complex sales processes
@@ -35,6 +39,7 @@
 ### 1. Create Lead Database
 
 **Properties:**
+
 - Name (Title)
 - Email (Email)
 - Company (Text)
@@ -52,6 +57,7 @@
 ### 2. Create Deal Pipeline View
 
 **Views:**
+
 - "All Leads" - Default view
 - "My Leads" - Filter by Owner = Me
 - "Hot Leads" - Filter by Status = Qualified or Negotiating
@@ -61,12 +67,14 @@
 ### 3. Integration Setup
 
 **Via Zapier:**
+
 1. Connect Notion account
 2. Select database: "CRM Leads"
 3. Map form fields to database properties
 4. Test and activate
 
 **Via Make:**
+
 1. Add Notion module
 2. Authenticate
 3. Select database
@@ -76,16 +84,19 @@
 ### 4. Automation Rules
 
 **When lead added:**
+
 - Send welcome email
 - Create Slack notification
 - Assign owner (round-robin or by source)
 
 **When status changes to "Qualified":**
+
 - Create calendar event for follow-up
 - Send internal notification
 - Update forecast
 
 **When status changes to "Closed Won":**
+
 - Create customer record
 - Send celebration message
 - Update revenue dashboard
@@ -95,12 +106,11 @@
 ### 1. Create Base Structure
 
 **Tables:**
+
 - **Leads** (Main table)
   - Name, Email, Company, Phone, Status, Source, Value, Close Date, Owner, Notes
-  
 - **Companies** (Linked table)
   - Company Name, Industry, Website, Employee Count, Annual Revenue
-  
 - **Activities** (Linked table)
   - Type (Call, Email, Meeting), Date, Notes, Related Lead
 
@@ -114,11 +124,13 @@
 ### 3. Automation Setup
 
 **Airtable Automations:**
+
 - When record created → Send email
 - When field changes → Update related record
 - Schedule → Weekly pipeline review email
 
 **External Integrations:**
+
 - Zapier/Make for cross-platform automation
 - Webhooks for custom integrations
 
@@ -138,16 +150,19 @@ Columns: Month, Target, Closed, Pipeline, Forecast
 ### 2. Add Formulas
 
 **Conversion Rate:**
+
 ```
 =COUNTIF(Leads!F:F,"Closed Won")/COUNT(Leads!A:A)
 ```
 
 **Pipeline Value:**
+
 ```
 =SUMIF(Leads!F:F,"<>Closed Lost",Leads!H:H)
 ```
 
 **This Month Closed:**
+
 ```
 =SUMIFS(Leads!H:H,Leads!F:F,"Closed Won",Leads!I:I,">="&EOMONTH(TODAY(),-1)+1)
 ```
@@ -155,11 +170,13 @@ Columns: Month, Target, Closed, Pipeline, Forecast
 ### 3. Integration Setup
 
 **Via Zapier:**
+
 1. Google Sheets "Append Row" action
 2. Map form fields to columns
 3. Test and activate
 
 **Via Apps Script (Advanced):**
+
 - Custom automation scripts
 - Email triggers
 - API integrations
@@ -208,18 +225,21 @@ Columns: Month, Target, Closed, Pipeline, Forecast
 ### Reporting & Analytics
 
 **Weekly Metrics:**
+
 - New leads added
 - Conversion rate by source
 - Average deal size
 - Sales cycle length
 
 **Monthly Metrics:**
+
 - Pipeline value
 - Win rate
 - Lost reasons analysis
 - Source ROI
 
 **Dashboard Integration:**
+
 - Export to `/ops/dashboards/kpi-tracker-template.csv`
 - Update weekly via automation
 - Review in daily routine

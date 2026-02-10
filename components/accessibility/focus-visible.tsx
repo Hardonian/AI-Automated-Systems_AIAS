@@ -3,15 +3,15 @@
  * Ensures keyboard navigation is visible
  */
 
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 export function FocusVisibleStyles() {
   useEffect(() => {
     // Add focus-visible polyfill if needed
     // Modern browsers support :focus-visible natively
-    const style = document.createElement("style");
+    const style = document.createElement('style');
     style.textContent = `
       /* Ensure focus is visible for keyboard navigation */
       *:focus-visible {

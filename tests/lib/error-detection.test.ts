@@ -17,7 +17,7 @@ describe('lib/utils/error-detection', () => {
     it('should record errors', () => {
       const error = new Error('Test error');
       recordError(error, { context: 'test' });
-      
+
       const recentErrors = errorDetector.getRecentErrors(5);
       expect(recentErrors.length).toBeGreaterThan(0);
       expect(recentErrors[0]?.error.message).toBe('Test error');
@@ -27,7 +27,7 @@ describe('lib/utils/error-detection', () => {
       const error = new Error('Test error');
       const context = { userId: '123', action: 'test' };
       recordError(error, context);
-      
+
       const recentErrors = errorDetector.getRecentErrors(5);
       expect(recentErrors[0]?.context).toEqual(context);
     });
@@ -37,7 +37,7 @@ describe('lib/utils/error-detection', () => {
     it('should get recent errors', () => {
       recordError(new Error('Error 1'));
       recordError(new Error('Error 2'));
-      
+
       const recentErrors = errorDetector.getRecentErrors(5);
       expect(recentErrors.length).toBe(2);
     });
@@ -47,7 +47,7 @@ describe('lib/utils/error-detection', () => {
       for (let i = 0; i < 11; i++) {
         recordError(new Error(`Error ${i}`));
       }
-      
+
       const alerts = errorDetector.getRecentAlerts(1);
       expect(alerts.length).toBeGreaterThan(0);
     });
@@ -55,7 +55,7 @@ describe('lib/utils/error-detection', () => {
     it('should reset error tracking', () => {
       recordError(new Error('Test error'));
       expect(errorDetector.getRecentErrors(5).length).toBe(1);
-      
+
       errorDetector.reset();
       expect(errorDetector.getRecentErrors(5).length).toBe(0);
     });

@@ -55,11 +55,13 @@ export const workflowExecutionLogSchema = z.object({
   stepsExecuted: z.number().int(),
   stepsSucceeded: z.number().int(),
   stepsFailed: z.number().int(),
-  error: z.object({
-    message: z.string(),
-    code: z.string().optional(),
-    stack: z.string().optional(),
-  }).optional(),
+  error: z
+    .object({
+      message: z.string(),
+      code: z.string().optional(),
+      stack: z.string().optional(),
+    })
+    .optional(),
   input: z.record(z.unknown()).optional(),
   output: z.record(z.unknown()).optional(),
 });
@@ -82,10 +84,12 @@ export const agentExecutionLogSchema = z.object({
   cost: z.number().optional(),
   input: z.record(z.unknown()).optional(),
   output: z.record(z.unknown()).optional(),
-  error: z.object({
-    message: z.string(),
-    code: z.string().optional(),
-  }).optional(),
+  error: z
+    .object({
+      message: z.string(),
+      code: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type AgentExecutionLog = z.infer<typeof agentExecutionLogSchema>;
@@ -134,11 +138,13 @@ export const workflowHeatmapSchema = z.object({
     start: z.string().datetime(),
     end: z.string().datetime(),
   }),
-  executions: z.array(z.object({
-    timestamp: z.string().datetime(),
-    status: z.enum(['success', 'failure']),
-    duration: z.number().int(),
-  })),
+  executions: z.array(
+    z.object({
+      timestamp: z.string().datetime(),
+      status: z.enum(['success', 'failure']),
+      duration: z.number().int(),
+    })
+  ),
   successRate: z.number().min(0).max(1),
   avgDuration: z.number().int(),
   totalExecutions: z.number().int(),
@@ -175,11 +181,13 @@ export const costAnalysisSchema = z.object({
     end: z.string().datetime(),
   }),
   totalCost: z.number(),
-  breakdown: z.array(z.object({
-    category: z.string(),
-    cost: z.number(),
-    usage: z.number().int(),
-  })),
+  breakdown: z.array(
+    z.object({
+      category: z.string(),
+      cost: z.number(),
+      usage: z.number().int(),
+    })
+  ),
   byTenant: z.record(z.number()).optional(),
   byWorkflow: z.record(z.number()).optional(),
   byAgent: z.record(z.number()).optional(),
@@ -194,12 +202,14 @@ export const healthCheckSchema = z.object({
   service: z.string(),
   status: z.enum(['healthy', 'degraded', 'down']),
   timestamp: z.string().datetime(),
-  checks: z.array(z.object({
-    name: z.string(),
-    status: z.enum(['pass', 'fail', 'warn']),
-    message: z.string().optional(),
-    duration: z.number().int().optional(),
-  })),
+  checks: z.array(
+    z.object({
+      name: z.string(),
+      status: z.enum(['pass', 'fail', 'warn']),
+      message: z.string().optional(),
+      duration: z.number().int().optional(),
+    })
+  ),
   metadata: z.record(z.unknown()).optional(),
 });
 
@@ -243,8 +253,12 @@ export class ObservabilityService {
 
     this.workflowLogs.push(workflowLog);
     this.trackEvent({
-      type: log.status === 'completed' ? 'workflow_completed' : 
-            log.status === 'failed' ? 'workflow_failed' : 'workflow_started',
+      type:
+        log.status === 'completed'
+          ? 'workflow_completed'
+          : log.status === 'failed'
+            ? 'workflow_failed'
+            : 'workflow_started',
       userId: log.userId,
       tenantId: log.tenantId,
       properties: {
@@ -268,8 +282,12 @@ export class ObservabilityService {
 
     this.agentLogs.push(agentLog);
     this.trackEvent({
-      type: log.status === 'completed' ? 'agent_completed' :
-            log.status === 'failed' ? 'agent_failed' : 'agent_invoked',
+      type:
+        log.status === 'completed'
+          ? 'agent_completed'
+          : log.status === 'failed'
+            ? 'agent_failed'
+            : 'agent_invoked',
       userId: log.userId,
       tenantId: log.tenantId,
       properties: {
@@ -340,22 +358,29 @@ export class ObservabilityService {
     period: { start: Date; end: Date }
   ): WorkflowHeatmap {
     const logs = this.workflowLogs.filter(log => {
-      if (log.workflowId !== workflowId) {return false;}
+      if (log.workflowId !== workflowId) {
+        return false;
+      }
       const startedAt = new Date(log.startedAt);
       return startedAt >= period.start && startedAt <= period.end;
     });
 
     const executions = logs.map(log => ({
       timestamp: log.startedAt,
-      status: log.status === 'completed' ? 'success' as const : 'failure' as const,
+      status:
+        log.status === 'completed'
+          ? ('success' as const)
+          : ('failure' as const),
       duration: log.duration || 0,
     }));
 
     const successful = executions.filter(e => e.status === 'success').length;
-    const successRate = executions.length > 0 ? successful / executions.length : 0;
-    const avgDuration = executions.length > 0
-      ? executions.reduce((sum, e) => sum + e.duration, 0) / executions.length
-      : 0;
+    const successRate =
+      executions.length > 0 ? successful / executions.length : 0;
+    const avgDuration =
+      executions.length > 0
+        ? executions.reduce((sum, e) => sum + e.duration, 0) / executions.length
+        : 0;
 
     return {
       workflowId,
@@ -378,7 +403,9 @@ export class ObservabilityService {
     period: { start: Date; end: Date }
   ): AgentEfficiency {
     const logs = this.agentLogs.filter(log => {
-      if (log.agentId !== agentId) {return false;}
+      if (log.agentId !== agentId) {
+        return false;
+      }
       const startedAt = new Date(log.startedAt);
       return startedAt >= period.start && startedAt <= period.end;
     });
@@ -388,19 +415,22 @@ export class ObservabilityService {
     const successRate = logs.length > 0 ? successful / logs.length : 0;
 
     const durations = logs.map(l => l.duration || 0).filter(d => d > 0);
-    const avgDuration = durations.length > 0
-      ? durations.reduce((sum, d) => sum + d, 0) / durations.length
-      : 0;
+    const avgDuration =
+      durations.length > 0
+        ? durations.reduce((sum, d) => sum + d, 0) / durations.length
+        : 0;
 
     const tokenUsages = logs.map(l => l.tokenUsage || 0).filter(t => t > 0);
-    const avgTokenUsage = tokenUsages.length > 0
-      ? tokenUsages.reduce((sum, t) => sum + t, 0) / tokenUsages.length
-      : undefined;
+    const avgTokenUsage =
+      tokenUsages.length > 0
+        ? tokenUsages.reduce((sum, t) => sum + t, 0) / tokenUsages.length
+        : undefined;
 
     const costs = logs.map(l => l.cost || 0).filter(c => c > 0);
-    const avgCost = costs.length > 0
-      ? costs.reduce((sum, c) => sum + c, 0) / costs.length
-      : undefined;
+    const avgCost =
+      costs.length > 0
+        ? costs.reduce((sum, c) => sum + c, 0) / costs.length
+        : undefined;
 
     return {
       agentId,
@@ -435,7 +465,8 @@ export class ObservabilityService {
 
     logs.forEach(log => {
       if (log.tenantId) {
-        byTenant[log.tenantId] = (byTenant[log.tenantId] || 0) + (log.cost || 0);
+        byTenant[log.tenantId] =
+          (byTenant[log.tenantId] || 0) + (log.cost || 0);
       }
       if (log.agentId) {
         byAgent[log.agentId] = (byAgent[log.agentId] || 0) + (log.cost || 0);
@@ -448,9 +479,7 @@ export class ObservabilityService {
         end: period.end.toISOString(),
       },
       totalCost,
-      breakdown: [
-        { category: 'agents', cost: totalCost, usage: logs.length },
-      ],
+      breakdown: [{ category: 'agents', cost: totalCost, usage: logs.length }],
       byTenant: Object.keys(byTenant).length > 0 ? byTenant : undefined,
       byAgent: Object.keys(byAgent).length > 0 ? byAgent : undefined,
     };
@@ -476,7 +505,7 @@ export class ObservabilityService {
     ];
 
     const allPassed = checks.every(c => c.status === 'pass');
-    const status = allPassed ? 'healthy' as const : 'degraded' as const;
+    const status = allPassed ? ('healthy' as const) : ('degraded' as const);
 
     return {
       service,
@@ -493,7 +522,10 @@ export class ObservabilityService {
     if (error.message.includes('critical') || error.message.includes('fatal')) {
       return 'critical';
     }
-    if (error.message.includes('warning') || error.message.includes('deprecated')) {
+    if (
+      error.message.includes('warning') ||
+      error.message.includes('deprecated')
+    ) {
       return 'low';
     }
     return 'medium';

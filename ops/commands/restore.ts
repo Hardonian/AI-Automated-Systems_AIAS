@@ -6,10 +6,7 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
-export async function restore(options: {
-  file?: string;
-  dryRun?: boolean;
-}) {
+export async function restore(options: { file?: string; dryRun?: boolean }) {
   console.log('🔄 Restoring database from snapshot...\n');
 
   if (options.dryRun) {
@@ -22,8 +19,9 @@ export async function restore(options: {
   let snapshotFile = options.file;
   if (!snapshotFile) {
     // Find latest snapshot
-    const files = fs.readdirSync(snapshotDir)
-      .filter((f) => f.endsWith('.sql') || f.endsWith('.sql.enc'))
+    const files = fs
+      .readdirSync(snapshotDir)
+      .filter(f => f.endsWith('.sql') || f.endsWith('.sql.enc'))
       .sort()
       .reverse();
 

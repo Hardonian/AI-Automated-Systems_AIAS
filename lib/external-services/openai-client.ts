@@ -40,19 +40,22 @@ export async function callOpenAI(
 
       for (let attempt = 0; attempt < maxRetries; attempt++) {
         try {
-          const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${apiKey}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              model: request.model || 'gpt-4',
-              messages: request.messages,
-              temperature: request.temperature ?? 0.7,
-              max_tokens: request.max_tokens ?? 1000,
-            }),
-          });
+          const response = await fetch(
+            'https://api.openai.com/v1/chat/completions',
+            {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                model: request.model || 'gpt-4',
+                messages: request.messages,
+                temperature: request.temperature ?? 0.7,
+                max_tokens: request.max_tokens ?? 1000,
+              }),
+            }
+          );
 
           if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
@@ -64,7 +67,7 @@ export async function callOpenAI(
           }
 
           const data = await response.json();
-          
+
           logger.info('OpenAI API call successful', {
             model: request.model || 'gpt-4',
             tokens: data.usage?.total_tokens,
@@ -74,7 +77,7 @@ export async function callOpenAI(
           return data;
         } catch (error) {
           lastError = error instanceof Error ? error : new Error(String(error));
-          
+
           // Don't retry on non-retryable errors
           if (error instanceof NetworkError && !error.retryable) {
             throw error;
@@ -95,17 +98,22 @@ export async function callOpenAI(
       }
 
       // All retries failed
-      throw lastError || new NetworkError('OpenAI API call failed after retries');
+      throw (
+        lastError || new NetworkError('OpenAI API call failed after retries')
+      );
     },
     async () => {
       // Fallback response when circuit is open
       logger.warn('OpenAI circuit breaker is open, using fallback response');
       return {
-        choices: [{
-          message: {
-            content: "I'm temporarily unavailable due to service issues. Please try again in a moment.",
+        choices: [
+          {
+            message: {
+              content:
+                "I'm temporarily unavailable due to service issues. Please try again in a moment.",
+            },
           },
-        }],
+        ],
       };
     },
     {

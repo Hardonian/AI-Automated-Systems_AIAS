@@ -1,12 +1,18 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { ActivationChart } from "@/components/metrics/ActivationChart";
-import { FunnelChart } from "@/components/metrics/FunnelChart";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { logger } from "@/lib/logging/structured-logger";
+import { ActivationChart } from '@/components/metrics/ActivationChart';
+import { FunnelChart } from '@/components/metrics/FunnelChart';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { logger } from '@/lib/logging/structured-logger';
 interface ActivationMetrics {
   metrics: {
     activation_rate: number;
@@ -40,15 +46,18 @@ export default function ActivationMetricsDashboard() {
   useEffect(() => {
     void fetchMetrics();
     // Refresh every 5 minutes
-    const interval = setInterval(() => {
-      void fetchMetrics();
-    }, 5 * 60 * 1000);
+    const interval = setInterval(
+      () => {
+        void fetchMetrics();
+      },
+      5 * 60 * 1000
+    );
     return () => clearInterval(interval);
   }, []);
 
   async function fetchMetrics() {
     try {
-      const response = await fetch("/api/admin/metrics?days=30");
+      const response = await fetch('/api/admin/metrics?days=30');
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
@@ -56,12 +65,17 @@ export default function ActivationMetricsDashboard() {
       setMetrics(data);
       setError(null);
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to fetch metrics";
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to fetch metrics';
       setError(errorMessage);
-      logger.error("Failed to fetch activation metrics", err instanceof Error ? err : new Error(String(err)), {
-        component: "ActivationMetricsPage",
-        action: "fetchMetrics"
-      });
+      logger.error(
+        'Failed to fetch activation metrics',
+        err instanceof Error ? err : new Error(String(err)),
+        {
+          component: 'ActivationMetricsPage',
+          action: 'fetchMetrics',
+        }
+      );
     } finally {
       setLoading(false);
     }
@@ -69,16 +83,16 @@ export default function ActivationMetricsDashboard() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="text-center">Loading activation metrics...</div>
+      <div className='container mx-auto p-6'>
+        <div className='text-center'>Loading activation metrics...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto p-6">
-        <Card className="border-red-500">
+      <div className='container mx-auto p-6'>
+        <Card className='border-red-500'>
           <CardHeader>
             <CardTitle>Error Loading Metrics</CardTitle>
             <CardDescription>{error}</CardDescription>
@@ -90,8 +104,8 @@ export default function ActivationMetricsDashboard() {
 
   if (!metrics) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="text-center">No metrics available</div>
+      <div className='container mx-auto p-6'>
+        <div className='text-center'>No metrics available</div>
       </div>
     );
   }
@@ -99,57 +113,67 @@ export default function ActivationMetricsDashboard() {
   const { metrics: m, funnel } = metrics;
 
   // Calculate funnel conversion rates
-  const signupToIntegration = funnel.signups > 0 ? (funnel.integrations / funnel.signups) * 100 : 0;
-  const integrationToWorkflow = funnel.integrations > 0 ? (funnel.workflows / funnel.integrations) * 100 : 0;
-  const workflowToActivation = funnel.workflows > 0 ? (funnel.activations / funnel.workflows) * 100 : 0;
+  const signupToIntegration =
+    funnel.signups > 0 ? (funnel.integrations / funnel.signups) * 100 : 0;
+  const integrationToWorkflow =
+    funnel.integrations > 0
+      ? (funnel.workflows / funnel.integrations) * 100
+      : 0;
+  const workflowToActivation =
+    funnel.workflows > 0 ? (funnel.activations / funnel.workflows) * 100 : 0;
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className='container mx-auto space-y-6 p-6'>
+      <div className='flex items-center justify-between'>
         <div>
-          <h1 className="text-3xl font-bold">Activation Metrics Dashboard</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className='text-3xl font-bold'>Activation Metrics Dashboard</h1>
+          <p className='mt-2 text-muted-foreground'>
             Track user activation funnel and key metrics
           </p>
         </div>
-        <div className="text-right">
-          <div className="text-sm text-muted-foreground">
+        <div className='text-right'>
+          <div className='text-sm text-muted-foreground'>
             Last {metrics.period.days} days
           </div>
-          <div className="text-xs text-muted-foreground">
-            {new Date(metrics.period.start_date).toLocaleDateString()} - {new Date(metrics.period.end_date).toLocaleDateString()}
+          <div className='text-xs text-muted-foreground'>
+            {new Date(metrics.period.start_date).toLocaleDateString()} -{' '}
+            {new Date(metrics.period.end_date).toLocaleDateString()}
           </div>
         </div>
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-4'>
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Activation Rate</CardTitle>
+            <CardTitle className='text-lg'>Activation Rate</CardTitle>
             <CardDescription>Users who activated</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className={`text-3xl font-bold ${m.activation_rate >= 60 ? "text-green-600" : m.activation_rate >= 40 ? "text-yellow-600" : "text-red-600"}`}>
+            <div
+              className={`text-3xl font-bold ${m.activation_rate >= 60 ? 'text-green-600' : m.activation_rate >= 40 ? 'text-yellow-600' : 'text-red-600'}`}
+            >
               {m.activation_rate.toFixed(1)}%
             </div>
-            <div className="text-sm text-muted-foreground mt-2">
+            <div className='mt-2 text-sm text-muted-foreground'>
               Target: &gt;60%
             </div>
-            <Progress className="mt-2" value={m.activation_rate} />
+            <Progress className='mt-2' value={m.activation_rate} />
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Time to Activation</CardTitle>
+            <CardTitle className='text-lg'>Time to Activation</CardTitle>
             <CardDescription>Median time</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className={`text-3xl font-bold ${m.time_to_activation_hours <= 24 ? "text-green-600" : m.time_to_activation_hours <= 48 ? "text-yellow-600" : "text-red-600"}`}>
+            <div
+              className={`text-3xl font-bold ${m.time_to_activation_hours <= 24 ? 'text-green-600' : m.time_to_activation_hours <= 48 ? 'text-yellow-600' : 'text-red-600'}`}
+            >
               {m.time_to_activation_hours.toFixed(1)}h
             </div>
-            <div className="text-sm text-muted-foreground mt-2">
+            <div className='mt-2 text-sm text-muted-foreground'>
               Target: &lt;24 hours
             </div>
           </CardContent>
@@ -157,30 +181,30 @@ export default function ActivationMetricsDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Day 7 Retention</CardTitle>
+            <CardTitle className='text-lg'>Day 7 Retention</CardTitle>
             <CardDescription>Users returning</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className={`text-3xl font-bold ${m.day_7_retention >= 40 ? "text-green-600" : m.day_7_retention >= 25 ? "text-yellow-600" : "text-red-600"}`}>
+            <div
+              className={`text-3xl font-bold ${m.day_7_retention >= 40 ? 'text-green-600' : m.day_7_retention >= 25 ? 'text-yellow-600' : 'text-red-600'}`}
+            >
               {m.day_7_retention.toFixed(1)}%
             </div>
-            <div className="text-sm text-muted-foreground mt-2">
+            <div className='mt-2 text-sm text-muted-foreground'>
               Target: &gt;40%
             </div>
-            <Progress className="mt-2" value={m.day_7_retention} />
+            <Progress className='mt-2' value={m.day_7_retention} />
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Total Signups</CardTitle>
+            <CardTitle className='text-lg'>Total Signups</CardTitle>
             <CardDescription>New users</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">
-              {m.total_signups}
-            </div>
-            <div className="text-sm text-muted-foreground mt-2">
+            <div className='text-3xl font-bold'>{m.total_signups}</div>
+            <div className='mt-2 text-sm text-muted-foreground'>
               {m.total_activations} activated
             </div>
           </CardContent>
@@ -191,92 +215,118 @@ export default function ActivationMetricsDashboard() {
       <Card>
         <CardHeader>
           <CardTitle>Activation Funnel</CardTitle>
-          <CardDescription>User journey from signup to activation</CardDescription>
+          <CardDescription>
+            User journey from signup to activation
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-6">
+          <div className='space-y-6'>
             {/* Signups */}
             <div>
-              <div className="flex justify-between items-center mb-2">
-                <div className="font-semibold">Signups</div>
-                <div className="text-sm text-muted-foreground">{funnel.signups} users</div>
+              <div className='mb-2 flex items-center justify-between'>
+                <div className='font-semibold'>Signups</div>
+                <div className='text-sm text-muted-foreground'>
+                  {funnel.signups} users
+                </div>
               </div>
-              <Progress className="h-3" value={100} />
+              <Progress className='h-3' value={100} />
             </div>
 
             {/* Integrations */}
             <div>
-              <div className="flex justify-between items-center mb-2">
-                <div className="font-semibold">Integration Connected</div>
-                <div className="text-sm text-muted-foreground">
-                  {funnel.integrations} users ({signupToIntegration.toFixed(1)}%)
+              <div className='mb-2 flex items-center justify-between'>
+                <div className='font-semibold'>Integration Connected</div>
+                <div className='text-sm text-muted-foreground'>
+                  {funnel.integrations} users ({signupToIntegration.toFixed(1)}
+                  %)
                 </div>
               </div>
-              <Progress className="h-3" value={signupToIntegration} />
+              <Progress className='h-3' value={signupToIntegration} />
             </div>
 
             {/* Workflows */}
             <div>
-              <div className="flex justify-between items-center mb-2">
-                <div className="font-semibold">Workflow Created</div>
-                <div className="text-sm text-muted-foreground">
+              <div className='mb-2 flex items-center justify-between'>
+                <div className='font-semibold'>Workflow Created</div>
+                <div className='text-sm text-muted-foreground'>
                   {funnel.workflows} users ({integrationToWorkflow.toFixed(1)}%)
                 </div>
               </div>
-              <Progress className="h-3" value={integrationToWorkflow} />
+              <Progress className='h-3' value={integrationToWorkflow} />
             </div>
 
             {/* Activations */}
             <div>
-              <div className="flex justify-between items-center mb-2">
-                <div className="font-semibold">Activated</div>
-                <div className="text-sm text-muted-foreground">
-                  {funnel.activations} users ({workflowToActivation.toFixed(1)}%)
+              <div className='mb-2 flex items-center justify-between'>
+                <div className='font-semibold'>Activated</div>
+                <div className='text-sm text-muted-foreground'>
+                  {funnel.activations} users ({workflowToActivation.toFixed(1)}
+                  %)
                 </div>
               </div>
-              <Progress className="h-3" value={workflowToActivation} />
+              <Progress className='h-3' value={workflowToActivation} />
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 gap-6">
+      <div className='grid grid-cols-1 gap-6'>
         <ActivationChart
           data={[
             // Placeholder data - in production, this would come from time-series queries
-            { date: "Week 1", activationRate: m.activation_rate, timeToActivation: m.time_to_activation_hours, day7Retention: m.day_7_retention },
-            { date: "Week 2", activationRate: m.activation_rate * 1.1, timeToActivation: m.time_to_activation_hours * 0.9, day7Retention: m.day_7_retention * 1.05 },
-            { date: "Week 3", activationRate: m.activation_rate * 1.2, timeToActivation: m.time_to_activation_hours * 0.8, day7Retention: m.day_7_retention * 1.1 },
-            { date: "Week 4", activationRate: m.activation_rate, timeToActivation: m.time_to_activation_hours, day7Retention: m.day_7_retention },
+            {
+              date: 'Week 1',
+              activationRate: m.activation_rate,
+              timeToActivation: m.time_to_activation_hours,
+              day7Retention: m.day_7_retention,
+            },
+            {
+              date: 'Week 2',
+              activationRate: m.activation_rate * 1.1,
+              timeToActivation: m.time_to_activation_hours * 0.9,
+              day7Retention: m.day_7_retention * 1.05,
+            },
+            {
+              date: 'Week 3',
+              activationRate: m.activation_rate * 1.2,
+              timeToActivation: m.time_to_activation_hours * 0.8,
+              day7Retention: m.day_7_retention * 1.1,
+            },
+            {
+              date: 'Week 4',
+              activationRate: m.activation_rate,
+              timeToActivation: m.time_to_activation_hours,
+              day7Retention: m.day_7_retention,
+            },
           ]}
         />
         <FunnelChart data={funnel} />
       </div>
 
       {/* Detailed Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
         <Card>
           <CardHeader>
             <CardTitle>Funnel Breakdown</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              <div className="flex justify-between">
+            <div className='space-y-3'>
+              <div className='flex justify-between'>
                 <span>Signups</span>
-                <span className="font-mono">{funnel.signups}</span>
+                <span className='font-mono'>{funnel.signups}</span>
               </div>
-              <div className="flex justify-between">
+              <div className='flex justify-between'>
                 <span>Integrations</span>
-                <span className="font-mono">{funnel.integrations}</span>
+                <span className='font-mono'>{funnel.integrations}</span>
               </div>
-              <div className="flex justify-between">
+              <div className='flex justify-between'>
                 <span>Workflows</span>
-                <span className="font-mono">{funnel.workflows}</span>
+                <span className='font-mono'>{funnel.workflows}</span>
               </div>
-              <div className="flex justify-between">
+              <div className='flex justify-between'>
                 <span>Activations</span>
-                <span className="font-mono">{funnel.activations}</span>
+                <span className='font-mono'>{funnel.activations}</span>
               </div>
             </div>
           </CardContent>
@@ -287,22 +337,22 @@ export default function ActivationMetricsDashboard() {
             <CardTitle>User Activity</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              <div className="flex justify-between">
+            <div className='space-y-3'>
+              <div className='flex justify-between'>
                 <span>Unique Active Users</span>
-                <span className="font-mono">{m.unique_active_users}</span>
+                <span className='font-mono'>{m.unique_active_users}</span>
               </div>
-              <div className="flex justify-between">
+              <div className='flex justify-between'>
                 <span>Total Integrations</span>
-                <span className="font-mono">{m.total_integrations}</span>
+                <span className='font-mono'>{m.total_integrations}</span>
               </div>
-              <div className="flex justify-between">
+              <div className='flex justify-between'>
                 <span>Total Workflows</span>
-                <span className="font-mono">{m.total_workflows}</span>
+                <span className='font-mono'>{m.total_workflows}</span>
               </div>
-              <div className="flex justify-between">
+              <div className='flex justify-between'>
                 <span>Total Activations</span>
-                <span className="font-mono">{m.total_activations}</span>
+                <span className='font-mono'>{m.total_activations}</span>
               </div>
             </div>
           </CardContent>

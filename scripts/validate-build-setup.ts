@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Build Setup Validation Script
- * 
+ *
  * Validates all prerequisites for a successful Vercel build:
  * - Lockfile sync status
  * - Workspace dependencies
@@ -38,22 +38,22 @@ function checkFile(file: string, description: string): boolean {
 function checkPackageJson(): boolean {
   try {
     const pkg = JSON.parse(readFileSync('package.json', 'utf-8'));
-    
+
     // Check package manager
     if (!pkg.packageManager || !pkg.packageManager.startsWith('pnpm@')) {
       warnings.push('⚠️  packageManager not specified or not pnpm');
     }
-    
+
     // Check engines
     if (!pkg.engines?.node) {
       warnings.push('⚠️  Node.js engine version not specified');
     }
-    
+
     // Check workspaces
     if (!pkg.workspaces || pkg.workspaces.length === 0) {
       warnings.push('⚠️  No workspaces defined');
     }
-    
+
     return true;
   } catch (error) {
     errors.push(`❌ Failed to parse package.json: ${error}`);
@@ -64,19 +64,23 @@ function checkPackageJson(): boolean {
 function checkLockfileSync(): boolean {
   try {
     // Try to install with frozen lockfile to check sync
-    execSync('pnpm install --frozen-lockfile --dry-run', { 
+    execSync('pnpm install --frozen-lockfile --dry-run', {
       stdio: 'pipe',
-      encoding: 'utf-8'
+      encoding: 'utf-8',
     });
     return true;
   } catch (error: any) {
     const output = error.stdout?.toString() || error.stderr?.toString() || '';
     if (output.includes('ERR_PNPM_OUTDATED_LOCKFILE')) {
-      errors.push('❌ Lockfile is out of sync with package.json. Run: pnpm install');
+      errors.push(
+        '❌ Lockfile is out of sync with package.json. Run: pnpm install'
+      );
       return false;
     }
     // Other errors might be okay (network issues, etc.)
-    warnings.push('⚠️  Could not verify lockfile sync (this is okay if dependencies are already installed)');
+    warnings.push(
+      '⚠️  Could not verify lockfile sync (this is okay if dependencies are already installed)'
+    );
     return true;
   }
 }
@@ -85,31 +89,38 @@ function checkWorkspaceDependencies(): boolean {
   try {
     const packages = ['packages/config', 'packages/lib'];
     let allValid = true;
-    
+
     for (const pkg of packages) {
       const pkgPath = join(pkg, 'package.json');
       if (!existsSync(pkgPath)) {
         warnings.push(`⚠️  Workspace package not found: ${pkg}`);
         continue;
       }
-      
+
       const pkgJson = JSON.parse(readFileSync(pkgPath, 'utf-8'));
       const deps = { ...pkgJson.dependencies, ...pkgJson.devDependencies };
-      
+
       // Check for workspace: protocol usage
       for (const [dep, version] of Object.entries(deps)) {
         if (typeof version === 'string' && version.startsWith('workspace:')) {
-          const workspaceName = version.replace('workspace:', '').replace('*', '');
-          const workspacePath = join('packages', dep.replace('@ai-consultancy/', ''));
-          
+          const workspaceName = version
+            .replace('workspace:', '')
+            .replace('*', '');
+          const workspacePath = join(
+            'packages',
+            dep.replace('@ai-consultancy/', '')
+          );
+
           if (!existsSync(join(workspacePath, 'package.json'))) {
-            errors.push(`❌ Workspace dependency ${dep} points to non-existent package`);
+            errors.push(
+              `❌ Workspace dependency ${dep} points to non-existent package`
+            );
             allValid = false;
           }
         }
       }
     }
-    
+
     return allValid;
   } catch (error) {
     warnings.push(`⚠️  Could not validate workspace dependencies: ${error}`);
@@ -118,15 +129,20 @@ function checkWorkspaceDependencies(): boolean {
 }
 
 function checkTypeScriptConfig(): boolean {
-  const tsconfigFiles = ['tsconfig.json', 'apps/web/tsconfig.json', 'packages/lib/tsconfig.json', 'packages/config/tsconfig.json'];
+  const tsconfigFiles = [
+    'tsconfig.json',
+    'apps/web/tsconfig.json',
+    'packages/lib/tsconfig.json',
+    'packages/config/tsconfig.json',
+  ];
   let allValid = true;
-  
+
   for (const file of tsconfigFiles) {
     if (!existsSync(file)) {
       warnings.push(`⚠️  TypeScript config not found: ${file}`);
       continue;
     }
-    
+
     try {
       JSON.parse(readFileSync(file, 'utf-8'));
     } catch (error) {
@@ -134,7 +150,7 @@ function checkTypeScriptConfig(): boolean {
       allValid = false;
     }
   }
-  
+
   return allValid;
 }
 
@@ -143,18 +159,18 @@ function checkVercelConfig(): boolean {
     warnings.push('⚠️  vercel.json not found (using defaults)');
     return true;
   }
-  
+
   try {
     const config = JSON.parse(readFileSync('vercel.json', 'utf-8'));
-    
+
     if (!config.installCommand || !config.installCommand.includes('pnpm')) {
       warnings.push('⚠️  Vercel installCommand should use pnpm');
     }
-    
+
     if (!config.buildCommand || !config.buildCommand.includes('vercel-build')) {
       warnings.push('⚠️  Vercel buildCommand should use vercel-build script');
     }
-    
+
     return true;
   } catch (error) {
     errors.push(`❌ Invalid vercel.json: ${error}`);

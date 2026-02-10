@@ -5,23 +5,27 @@
 ## ✅ Completed Components
 
 ### Core Architecture
+
 - ✅ `/guardian/core.ts` - Core Guardian service with risk assessment and ledger management
 - ✅ `/guardian/middleware.ts` - Event interception hooks for telemetry and API calls
 - ✅ `/guardian/policies/default.yaml` - Policy configuration system
 - ✅ `/guardian/logs/` - Immutable ledger system (JSONL with hash-chaining)
 
 ### Inspector & Analysis
+
 - ✅ `/guardian/inspector.ts` - Background agent for log analysis and trust reports
 - ✅ `/guardian/recommendations.ts` - Trust Fabric AI layer with adaptive learning
 - ✅ `/guardian/explainer.ts` - Guardian GPT explainer component
 
 ### User Interface
+
 - ✅ `/src/pages/TrustDashboard.tsx` - User-facing transparency dashboard
 - ✅ `/src/pages/GuardianOnboarding.tsx` - Interactive onboarding walkthrough
 - ✅ Route: `/dashboard/trust` - Trust dashboard route
 - ✅ Route: `/guardian/onboarding` - Onboarding route
 
 ### Database & Infrastructure
+
 - ✅ `/supabase/migrations/20250121000000_guardian_trust_ledger.sql` - Database schema
   - `trust_ledger_roots` table
   - `guardian_preferences` table
@@ -29,6 +33,7 @@
   - RLS policies (user-only access)
 
 ### CLI Commands
+
 - ✅ `/ops/commands/guardian.ts` - CLI commands
   - `ops guardian:verify` - Verify ledger integrity
   - `ops guardian:audit` - Run comprehensive audit
@@ -38,12 +43,14 @@
   - `ops guardian:import-fabric` - Import Trust Fabric model
 
 ### Documentation
+
 - ✅ `/docs/trust-fabric-overview.md` - Comprehensive overview
 - ✅ `/docs/privacy-api-reference.md` - API documentation
 - ✅ `/docs/how-guardian-learns.md` - Learning system documentation
 - ✅ `/ops/reports/trust-governance.md` - Governance scorecard template
 
 ### Integration
+
 - ✅ App initialization integration (auto-loads middleware)
 - ✅ Monitoring service hooks
 - ✅ Privacy Guard integration (PII redaction)
@@ -51,18 +58,21 @@
 ## Features Implemented
 
 ### Privacy Insurance Features
+
 - ✅ **Private Mode Pulse**: Quick toggle to freeze telemetry
 - ✅ **Emergency Data Lockdown**: 1-click killswitch
 - ✅ **Sensitive Context Detection**: Auto-mute when camera/mic active
 - ✅ **MFA Bubble**: Elevated session expiration based on risk
 
 ### Accountability Protocols
+
 - ✅ Append-only trust ledger (hash-chained)
 - ✅ Cryptographic verification
 - ✅ Daily hash roots stored in Supabase
 - ✅ RLS policies (user-only access)
 
 ### Trust Fabric AI
+
 - ✅ Adaptive learning from user behavior
 - ✅ Privacy mode toggle frequency tracking
 - ✅ Signal disabling pattern learning
@@ -72,6 +82,7 @@
 - ✅ Export/Import functionality
 
 ### Transparency Dashboard
+
 - ✅ Event timeline
 - ✅ Risk distribution visualization
 - ✅ Data class breakdown
@@ -81,6 +92,7 @@
 - ✅ Event detail modals
 
 ### Reports & Compliance
+
 - ✅ Weekly trust reports (markdown)
 - ✅ CI/CD audit checks
 - ✅ Ledger integrity verification

@@ -1,8 +1,8 @@
-"use server";
+'use server';
 
-import { createClient } from "@supabase/supabase-js";
-import { env } from "@/lib/env";
-import type { Database } from "@/src/integrations/supabase/types";
+import { createClient } from '@supabase/supabase-js';
+import { env } from '@/lib/env';
+import type { Database } from '@/src/integrations/supabase/types';
 
 /**
  * Server Action: Assign Admin Role
@@ -20,7 +20,7 @@ export async function assignAdminRole(userId: string): Promise<{
     if (!supabaseUrl || !supabaseServiceKey) {
       return {
         success: false,
-        error: "Server configuration error: Missing Supabase credentials",
+        error: 'Server configuration error: Missing Supabase credentials',
       };
     }
 
@@ -32,31 +32,31 @@ export async function assignAdminRole(userId: string): Promise<{
     });
 
     // Assign admin role (trigger will auto-generate token)
-    const { error: roleError } = await ((supabase
-      .from("user_roles")
-      .insert({
+    const { error: roleError } = await ((
+      supabase.from('user_roles').insert({
         user_id: userId,
-        role: "admin",
-      }) as any)
-      .onConflict("user_id,role")
+        role: 'admin',
+      }) as any
+    )
+      .onConflict('user_id,role')
       .ignore() as any);
 
     if (roleError) {
-      console.error("Role assignment error:", roleError);
+      console.error('Role assignment error:', roleError);
       return {
         success: false,
-        error: "Failed to assign admin role",
+        error: 'Failed to assign admin role',
       };
     }
 
     // Get or create Content Studio token
     const { data: token, error: tokenError } = await (supabase.rpc(
-      "get_or_create_content_studio_token" as any,
+      'get_or_create_content_studio_token' as any,
       { _user_id: userId }
     ) as any);
 
     if (tokenError) {
-      console.error("Token generation error:", tokenError);
+      console.error('Token generation error:', tokenError);
       // Don't fail if token generation fails - trigger should handle it
     }
 
@@ -65,10 +65,11 @@ export async function assignAdminRole(userId: string): Promise<{
       token: (token as string | null) || undefined,
     };
   } catch (error) {
-    console.error("Admin role assignment error:", error);
+    console.error('Admin role assignment error:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "An unexpected error occurred",
+      error:
+        error instanceof Error ? error.message : 'An unexpected error occurred',
     };
   }
 }
@@ -88,7 +89,7 @@ export async function getContentStudioToken(): Promise<{
     if (!supabaseUrl || !supabaseServiceKey) {
       return {
         success: false,
-        error: "Server configuration error",
+        error: 'Server configuration error',
       };
     }
 
@@ -96,12 +97,13 @@ export async function getContentStudioToken(): Promise<{
     // For now, return error - should be called via API route with session
     return {
       success: false,
-      error: "Use /api/content/auth endpoint instead",
+      error: 'Use /api/content/auth endpoint instead',
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "An unexpected error occurred",
+      error:
+        error instanceof Error ? error.message : 'An unexpected error occurred',
     };
   }
 }

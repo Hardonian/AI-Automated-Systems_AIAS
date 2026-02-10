@@ -1,9 +1,9 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
 
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 /**
  * GET /api/content/auth
  * Get Content Studio token for authenticated admin user
@@ -13,14 +13,24 @@ export async function GET(_request: NextRequest) {
     // Get Supabase client
     const supabaseUrl = env.supabase.url;
     const supabaseAnonKey = env.supabase.anonKey;
-    
+
     const cookieStore = await cookies();
     const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
       cookies: {
         get(name: string) {
           return cookieStore.get(name)?.value;
         },
-        set(_name: string, _value: string, _options?: { path?: string; maxAge?: number; domain?: string; sameSite?: 'lax' | 'strict' | 'none'; secure?: boolean }) {
+        set(
+          _name: string,
+          _value: string,
+          _options?: {
+            path?: string;
+            maxAge?: number;
+            domain?: string;
+            sameSite?: 'lax' | 'strict' | 'none';
+            secure?: boolean;
+          }
+        ) {
           // Cookie setting handled by Next.js
         },
         remove(_name: string, _options?: { path?: string; domain?: string }) {
@@ -30,50 +40,62 @@ export async function GET(_request: NextRequest) {
     });
 
     // Get current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json(
-        { error: "Not authenticated" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
     // Check if user is admin
     const { data: roleData, error: roleError } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("role", "admin")
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .eq('role', 'admin')
       .single();
 
     if (roleError || !roleData) {
       return NextResponse.json(
-        { error: "Admin access required" },
+        { error: 'Admin access required' },
         { status: 403 }
       );
     }
 
     // Get or create token
-    const supabaseAdmin = createServerClient(supabaseUrl, env.supabase.serviceRoleKey, {
-      cookies: {
-        get() { return undefined; },
-        set() {},
-        remove() {},
-      },
-    });
+    const supabaseAdmin = createServerClient(
+      supabaseUrl,
+      env.supabase.serviceRoleKey,
+      {
+        cookies: {
+          get() {
+            return undefined;
+          },
+          set() {},
+          remove() {},
+        },
+      }
+    );
     const { data: tokenData, error: tokenError } = await supabaseAdmin.rpc(
-      "get_or_create_content_studio_token",
+      'get_or_create_content_studio_token',
       { _user_id: user.id }
     );
 
     if (tokenError) {
-      logger.error("Token generation error", tokenError instanceof Error ? tokenError : new Error(String(tokenError)), {
-        component: "ContentAuthAPI",
-        action: "generateToken",
-      });
+      logger.error(
+        'Token generation error',
+        tokenError instanceof Error
+          ? tokenError
+          : new Error(String(tokenError)),
+        {
+          component: 'ContentAuthAPI',
+          action: 'generateToken',
+        }
+      );
       return NextResponse.json(
-        { error: "Failed to generate token" },
+        { error: 'Failed to generate token' },
         { status: 500 }
       );
     }
@@ -83,9 +105,15 @@ export async function GET(_request: NextRequest) {
       token: tokenData,
     });
   } catch (error: unknown) {
-    logger.error("Auth error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
+    logger.error(
+      'Auth error:',
+      error instanceof Error ? error : new Error(String(error)),
+      { component: 'route', action: 'unknown' }
+    );
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Authentication failed" },
+      {
+        error: error instanceof Error ? error.message : 'Authentication failed',
+      },
       { status: 500 }
     );
   }
@@ -101,46 +129,46 @@ export async function POST(request: NextRequest) {
     const { token } = body;
 
     if (!token) {
-      return NextResponse.json(
-        { error: "Token required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Token required' }, { status: 400 });
     }
 
     // Verify token exists and get user
     const supabaseUrl = env.supabase.url;
-    const supabaseAdmin = createServerClient(supabaseUrl, env.supabase.serviceRoleKey, {
-      cookies: {
-        get() { return undefined; },
-        set() {},
-        remove() {},
-      },
-    });
+    const supabaseAdmin = createServerClient(
+      supabaseUrl,
+      env.supabase.serviceRoleKey,
+      {
+        cookies: {
+          get() {
+            return undefined;
+          },
+          set() {},
+          remove() {},
+        },
+      }
+    );
 
     const { data: profile, error } = await supabaseAdmin
-      .from("profiles")
-      .select("id, email, display_name")
-      .eq("content_studio_token", token)
+      .from('profiles')
+      .select('id, email, display_name')
+      .eq('content_studio_token', token)
       .single();
 
     if (error || !profile) {
-      return NextResponse.json(
-        { error: "Invalid token" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
     }
 
     // Verify user is still admin
     const { data: roleData } = await supabaseAdmin
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", profile.id)
-      .eq("role", "admin")
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', profile.id)
+      .eq('role', 'admin')
       .single();
 
     if (!roleData) {
       return NextResponse.json(
-        { error: "User is no longer an admin" },
+        { error: 'User is no longer an admin' },
         { status: 403 }
       );
     }
@@ -154,9 +182,13 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error: unknown) {
-    logger.error("Token verification error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
+    logger.error(
+      'Token verification error:',
+      error instanceof Error ? error : new Error(String(error)),
+      { component: 'route', action: 'unknown' }
+    );
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Verification failed" },
+      { error: error instanceof Error ? error.message : 'Verification failed' },
       { status: 500 }
     );
   }

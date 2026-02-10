@@ -5,7 +5,10 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-import type { EdgeAIOptimizationJobData, EdgeAIBenchmarkJobData } from './queue';
+import type {
+  EdgeAIOptimizationJobData,
+  EdgeAIBenchmarkJobData,
+} from './queue';
 import { getModelDownloadUrl, uploadArtifact } from './storage';
 import type {
   EdgeAIModelFormat,
@@ -28,7 +31,14 @@ export async function processOptimizationJob(
   optimizedSizeBytes: number;
   compressionRatio: number;
 }> {
-  const { jobId, modelId, deviceProfileId, targetFormat, quantizationType, optimizationLevel } = data;
+  const {
+    jobId,
+    modelId,
+    deviceProfileId,
+    targetFormat,
+    quantizationType,
+    optimizationLevel,
+  } = data;
 
   logger.info('Starting optimization job', {
     jobId,
@@ -65,7 +75,10 @@ export async function processOptimizationJob(
     }
 
     // Get model file download URL
-    const downloadResult = await getModelDownloadUrl(model.original_file_path, 3600);
+    const downloadResult = await getModelDownloadUrl(
+      model.original_file_path,
+      3600
+    );
     if (!downloadResult.success || !downloadResult.url) {
       throw new Error('Failed to get model download URL');
     }
@@ -106,7 +119,8 @@ export async function processOptimizationJob(
     // Calculate compression ratio
     const originalSize = model.original_size_bytes || 0;
     const optimizedSize = optimizedModelBuffer.length;
-    const compressionRatio = originalSize > 0 ? originalSize / optimizedSize : 1;
+    const compressionRatio =
+      originalSize > 0 ? originalSize / optimizedSize : 1;
 
     logger.info('Optimization completed', {
       jobId,
@@ -121,10 +135,14 @@ export async function processOptimizationJob(
       compressionRatio,
     };
   } catch (error) {
-    logger.error('Optimization job failed', error instanceof Error ? error : new Error(String(error)), {
-      jobId,
-      modelId,
-    });
+    logger.error(
+      'Optimization job failed',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        jobId,
+        modelId,
+      }
+    );
     throw error;
   }
 }
@@ -156,7 +174,15 @@ export async function processBenchmarkJob(
   powerConsumptionWatts?: number;
   accuracyMetrics?: Record<string, number>;
 }> {
-  const { benchmarkId, modelId, optimizationJobId, deviceProfileId, batchSize, numIterations, warmupIterations: _warmupIterations } = data;
+  const {
+    benchmarkId,
+    modelId,
+    optimizationJobId,
+    deviceProfileId,
+    batchSize,
+    numIterations,
+    warmupIterations: _warmupIterations,
+  } = data;
 
   logger.info('Starting benchmark job', {
     benchmarkId,
@@ -226,9 +252,13 @@ export async function processBenchmarkJob(
 
     return results;
   } catch (error) {
-    logger.error('Benchmark job failed', error instanceof Error ? error : new Error(String(error)), {
-      benchmarkId,
-    });
+    logger.error(
+      'Benchmark job failed',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        benchmarkId,
+      }
+    );
     throw error;
   }
 }
@@ -307,7 +337,8 @@ async function simulateBenchmark(
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   // Generate realistic latency values based on device type
-  const baseLatency = deviceType === 'jetson' ? 15 : deviceType === 'ai_pc' ? 8 : 25;
+  const baseLatency =
+    deviceType === 'jetson' ? 15 : deviceType === 'ai_pc' ? 8 : 25;
   const meanLatency = baseLatency / batchSize;
   const stdDev = meanLatency * 0.2;
 
@@ -340,9 +371,16 @@ async function simulateBenchmark(
       baseline: 100,
     },
     cpuUtilizationPercent: 60 + Math.random() * 20,
-    gpuUtilizationPercent: deviceType === 'jetson' || deviceType === 'ai_pc' ? 70 + Math.random() * 20 : undefined,
-    npuUtilizationPercent: deviceType === 'ai_pc' || deviceType === 'mobile_npu' ? 80 + Math.random() * 15 : undefined,
-    powerConsumptionWatts: deviceType === 'jetson' ? 10 + Math.random() * 5 : undefined,
+    gpuUtilizationPercent:
+      deviceType === 'jetson' || deviceType === 'ai_pc'
+        ? 70 + Math.random() * 20
+        : undefined,
+    npuUtilizationPercent:
+      deviceType === 'ai_pc' || deviceType === 'mobile_npu'
+        ? 80 + Math.random() * 15
+        : undefined,
+    powerConsumptionWatts:
+      deviceType === 'jetson' ? 10 + Math.random() * 5 : undefined,
     accuracyMetrics: {
       top1: 0.92 + Math.random() * 0.05,
       top5: 0.97 + Math.random() * 0.02,

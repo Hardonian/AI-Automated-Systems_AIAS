@@ -62,7 +62,7 @@ function archiveMigrations() {
     try {
       const sourcePath = join(MIGRATIONS_DIR, migration);
       const destPath = join(ARCHIVE_DIR, migration);
-      
+
       renameSync(sourcePath, destPath);
       console.log(`✅ Archived: ${migration}`);
       archivedCount++;
@@ -72,7 +72,7 @@ function archiveMigrations() {
     }
   }
 
-  console.log(`\n${  '='.repeat(60)}`);
+  console.log(`\n${'='.repeat(60)}`);
   console.log(`✅ Successfully archived ${archivedCount} migrations`);
   if (errorCount > 0) {
     console.log(`❌ Failed to archive ${errorCount} migrations`);

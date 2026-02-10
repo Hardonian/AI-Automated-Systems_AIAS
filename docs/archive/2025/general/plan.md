@@ -20,9 +20,11 @@
 ## Target Metrics
 
 ### Primary Metric
+
 - **CAC** (target: reduce by 20%, from $50 to $40)
 
 ### Secondary Metrics
+
 - **Referral Rate** (target: 10% of new customers from referrals)
 - **Referral CAC** (target: <$10 per referred customer)
 - **LTV of Referred Customers** (target: same or higher than paid customers)
@@ -51,10 +53,12 @@
 ## Program Design
 
 ### Rewards Structure
+
 - **Referrer:** $20 credit or 1 month free (whichever is higher value)
 - **Referee:** 20% discount on first month
 
 ### Referral Flow
+
 1. Customer receives referral link/code
 2. Referee signs up using link/code
 3. Referee completes first payment
@@ -64,10 +68,12 @@
 ### Variants
 
 #### Variant A (Control)
+
 - No referral program
 - All customers from paid channels
 
 #### Variant B (Treatment)
+
 - Referral program active
 - Track referral vs. paid attribution
 
@@ -76,16 +82,19 @@
 ## Rollout Plan
 
 ### Phase 1: Beta Launch (Week 1-2)
+
 - **Audience:** Top 20% of customers (by LTV or engagement)
 - **Goal:** Validate program mechanics and reward structure
 - **Success Criteria:** >5% of beta customers refer someone
 
 ### Phase 2: Full Launch (Week 3-12)
+
 - **Audience:** All customers
 - **Goal:** Scale referrals and measure CAC impact
 - **Success Criteria:** 10% of new customers from referrals
 
 ### Phase 3: Optimization (Week 13+)
+
 - **Goal:** Optimize rewards and messaging
 - **Success Criteria:** Maintain or improve referral rate
 
@@ -94,11 +103,13 @@
 ## Rollback Plan
 
 **Trigger Conditions:**
+
 - CAC increases (program costs more than it saves)
 - Referral fraud detected (>5% of referrals)
 - Customer complaints about program (>10 complaints/week)
 
 **Rollback Steps:**
+
 1. Pause new referral signups
 2. Honor existing referrals in pipeline
 3. Analyze program economics
@@ -109,6 +120,7 @@
 ## Metrics Tracking
 
 ### Events to Track
+
 - `referral_link_shared`
 - `referral_link_clicked`
 - `referral_signup_started`
@@ -117,9 +129,10 @@
 - `referral_fraud_detected`
 
 ### Database Queries
+
 ```sql
 -- CAC by acquisition channel
-SELECT 
+SELECT
   acquisition_channel,
   SUM(spend) as total_spend,
   COUNT(DISTINCT user_id) as new_customers,
@@ -129,7 +142,7 @@ WHERE signup_date >= '2025-01-28'
 GROUP BY acquisition_channel;
 
 -- Referral program ROI
-SELECT 
+SELECT
   COUNT(*) as referrals,
   SUM(referrer_reward_cost + referee_discount_cost) as total_cost,
   COUNT(*) * (SELECT AVG(ltv) FROM customers) as estimated_ltv,
@@ -152,6 +165,7 @@ WHERE completed = true;
 ## Financial Impact
 
 ### Base Scenario (Month 1)
+
 - **Current CAC:** $50
 - **Current Monthly Spend:** $20,000 (400 new customers)
 - **Target CAC:** $40 (20% reduction)
@@ -161,6 +175,7 @@ WHERE completed = true;
 - **Annual Impact:** +$36,000/year
 
 ### At Scale (Month 12)
+
 - **Current CAC:** $26
 - **Current Monthly Spend:** $42,000 (1,615 new customers)
 - **Target CAC:** $21 (20% reduction)

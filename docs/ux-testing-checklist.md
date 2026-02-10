@@ -5,6 +5,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 ## First-Time Visitor Experience
 
 ### Homepage
+
 - [ ] Clear value proposition visible above the fold
 - [ ] Primary CTA is prominent and clear
 - [ ] Navigation is intuitive and accessible
@@ -14,6 +15,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 - [ ] No console errors or warnings
 
 ### Sign-Up Flow
+
 - [ ] Form is clear and easy to understand
 - [ ] Validation messages are helpful, not technical
 - [ ] Error states are clear and actionable
@@ -23,6 +25,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 - [ ] Keyboard navigation works throughout
 
 ### Onboarding
+
 - [ ] Steps are clearly numbered or indicated
 - [ ] Progress indicator shows completion
 - [ ] Each step has clear instructions
@@ -34,6 +37,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 ## Returning User Experience
 
 ### Dashboard
+
 - [ ] Quick access to most-used features
 - [ ] Clear navigation to all sections
 - [ ] Data loads with appropriate loading states
@@ -42,6 +46,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 - [ ] Mobile dashboard is functional
 
 ### Forms & Inputs
+
 - [ ] Labels are clear and descriptive
 - [ ] Placeholder text is helpful
 - [ ] Validation happens at appropriate times
@@ -53,6 +58,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 ## Error Handling
 
 ### Error Messages
+
 - [ ] Use plain language, not technical jargon
 - [ ] Explain what went wrong
 - [ ] Suggest how to fix it
@@ -60,6 +66,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 - [ ] Don't blame the user
 
 ### Error States
+
 - [ ] Visual indicator (icon, color)
 - [ ] Clear heading
 - [ ] Helpful message
@@ -67,6 +74,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 - [ ] Accessible (screen reader friendly)
 
 ### Loading States
+
 - [ ] Show progress indicator
 - [ ] Use descriptive text ("Loading your workflows..." not just "Loading...")
 - [ ] Don't block entire UI unnecessarily
@@ -75,6 +83,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 ## Mobile Experience
 
 ### Responsive Design
+
 - [ ] No horizontal scrolling
 - [ ] Touch targets are at least 44x44px
 - [ ] Text is readable without zooming
@@ -83,6 +92,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 - [ ] Images scale appropriately
 
 ### Performance
+
 - [ ] Page loads in < 3 seconds on 3G
 - [ ] Images are optimized
 - [ ] No layout shift during load
@@ -91,6 +101,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 ## Accessibility
 
 ### Keyboard Navigation
+
 - [ ] All interactive elements are keyboard accessible
 - [ ] Tab order is logical
 - [ ] Focus indicators are visible
@@ -98,6 +109,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 - [ ] Escape key closes modals/dialogs
 
 ### Screen Readers
+
 - [ ] All images have alt text
 - [ ] Form inputs have labels
 - [ ] Buttons have descriptive text
@@ -106,6 +118,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 - [ ] ARIA labels where needed
 
 ### Visual
+
 - [ ] Color contrast meets WCAG AA (4.5:1 for text)
 - [ ] Information isn't conveyed by color alone
 - [ ] Focus indicators are visible
@@ -114,12 +127,14 @@ This checklist helps ensure consistent user experience across all pages and flow
 ## Performance
 
 ### Load Times
+
 - [ ] First Contentful Paint < 1.8s
 - [ ] Largest Contentful Paint < 2.5s
 - [ ] Time to Interactive < 3.5s
 - [ ] Total Blocking Time < 300ms
 
 ### Perceived Performance
+
 - [ ] Loading states show immediately
 - [ ] Skeleton screens for slow content
 - [ ] Progressive enhancement
@@ -128,6 +143,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 ## Trust & Security
 
 ### Trust Signals
+
 - [ ] Security badges visible
 - [ ] Privacy policy accessible
 - [ ] Terms of service accessible
@@ -135,6 +151,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 - [ ] Clear refund/cancellation policy
 
 ### Security
+
 - [ ] HTTPS everywhere
 - [ ] No sensitive data in URLs
 - [ ] Forms use POST, not GET
@@ -144,6 +161,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 ## Content Quality
 
 ### Copy
+
 - [ ] Clear and concise
 - [ ] Uses active voice
 - [ ] No jargon unless necessary
@@ -151,6 +169,7 @@ This checklist helps ensure consistent user experience across all pages and flow
 - [ ] Helpful, not condescending
 
 ### Visual Hierarchy
+
 - [ ] Most important content is most prominent
 - [ ] Headings create clear structure
 - [ ] Whitespace guides the eye

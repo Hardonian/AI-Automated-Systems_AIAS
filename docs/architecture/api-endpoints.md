@@ -5,9 +5,11 @@
 ## Authentication
 
 ### POST /api/auth/signup
+
 Create a new user account.
 
 **Request Body:**
+
 ```typescript
 {
   email: string;
@@ -19,21 +21,24 @@ Create a new user account.
 ```
 
 **Response:**
+
 ```typescript
 {
   user: {
     id: string;
     email: string;
     name: string;
-  };
+  }
   token: string;
 }
 ```
 
 ### POST /api/auth/login
+
 Authenticate user and return JWT token.
 
 **Request Body:**
+
 ```typescript
 {
   email: string;
@@ -43,13 +48,14 @@ Authenticate user and return JWT token.
 ```
 
 **Response:**
+
 ```typescript
 {
   user: {
     id: string;
     email: string;
     name: string;
-  };
+  }
   token: string;
 }
 ```
@@ -57,14 +63,17 @@ Authenticate user and return JWT token.
 ## Workflows
 
 ### GET /api/workflows
+
 List all workflows for the authenticated user.
 
 **Query Parameters:**
+
 - `page`: number (default: 1)
 - `limit`: number (default: 20)
 - `enabled`: boolean (optional)
 
 **Response:**
+
 ```typescript
 {
   workflows: Workflow[];
@@ -77,11 +86,13 @@ List all workflows for the authenticated user.
 ```
 
 ### POST /api/workflows
+
 Create a new workflow.
 
 **Request Body:** (See `createWorkflowSchema` in `/lib/api/schemas.ts`)
 
 **Response:**
+
 ```typescript
 {
   workflow: Workflow;
@@ -89,9 +100,11 @@ Create a new workflow.
 ```
 
 ### POST /api/workflows/execute
+
 Execute a workflow.
 
 **Request Body:**
+
 ```typescript
 {
   workflowId: string;
@@ -101,6 +114,7 @@ Execute a workflow.
 ```
 
 **Response:**
+
 ```typescript
 {
   executionId: string;
@@ -112,9 +126,11 @@ Execute a workflow.
 ## AI Agents
 
 ### GET /api/agents
+
 List all agents.
 
 **Response:**
+
 ```typescript
 {
   agents: Agent[];
@@ -122,11 +138,13 @@ List all agents.
 ```
 
 ### POST /api/agents
+
 Create a new agent.
 
 **Request Body:** (See `createAgentSchema` in `/lib/api/schemas.ts`)
 
 **Response:**
+
 ```typescript
 {
   agent: Agent;
@@ -134,38 +152,43 @@ Create a new agent.
 ```
 
 ### POST /api/agents/chat
+
 Chat with an agent.
 
 **Request Body:** (See `chatRequestSchema` in `/lib/api/schemas.ts`)
 
 **Response:**
+
 ```typescript
 {
   message: {
     role: 'assistant';
     content: string;
-  };
+  }
 }
 ```
 
 ## Analytics
 
 ### GET /api/analytics/usage
+
 Get usage analytics.
 
 **Query Parameters:**
+
 - `start`: ISO datetime string
 - `end`: ISO datetime string
 - `groupBy`: string[] (optional)
 
 **Response:**
+
 ```typescript
 {
   metrics: {
     workflows: number;
     executions: number;
     apiCalls: number;
-  };
+  }
   timeSeries: Array<{
     date: string;
     value: number;
@@ -176,9 +199,11 @@ Get usage analytics.
 ## Billing
 
 ### GET /api/billing/subscription-status
+
 Get current subscription status.
 
 **Response:**
+
 ```typescript
 {
   tier: 'free' | 'pro' | 'enterprise';
@@ -189,9 +214,11 @@ Get current subscription status.
 ```
 
 ### POST /api/billing/upgrade
+
 Upgrade subscription.
 
 **Request Body:**
+
 ```typescript
 {
   plan: 'pro' | 'enterprise';
@@ -201,6 +228,7 @@ Upgrade subscription.
 ```
 
 **Response:**
+
 ```typescript
 {
   checkoutUrl: string;
@@ -210,12 +238,14 @@ Upgrade subscription.
 ## Rate Limits
 
 All API endpoints are rate-limited:
+
 - **Strict:** 10 requests/minute (auth endpoints)
 - **Moderate:** 60 requests/minute (standard endpoints)
 - **Lenient:** 100 requests/minute (read-only endpoints)
 - **API:** 1000 requests/minute (high-volume endpoints)
 
 Rate limit headers:
+
 - `X-RateLimit-Limit`: Maximum requests
 - `X-RateLimit-Remaining`: Remaining requests
 - `X-RateLimit-Reset`: Unix timestamp when limit resets
@@ -235,6 +265,7 @@ All errors follow this format:
 ```
 
 Common status codes:
+
 - `400`: Bad Request (validation error)
 - `401`: Unauthorized (authentication required)
 - `403`: Forbidden (insufficient permissions)

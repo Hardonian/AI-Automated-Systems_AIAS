@@ -12,12 +12,12 @@ jobs:
   validate-vercel:
     name: Validate Vercel Configuration
     runs-on: ubuntu-latest
-    
+
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

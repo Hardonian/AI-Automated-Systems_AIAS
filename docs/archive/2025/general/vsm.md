@@ -7,23 +7,24 @@
 
 ## Value Stream Stages
 
-| Stage | Lead Time | Cycle Time | Queue/WIP | Rework % | Notes |
-|-------|-----------|------------|-----------|----------|-------|
-| **Code** | - | - | - | - | Development stage |
-| Commit | 0h | 5min | 0 | 0% | Git commit |
-| CI Pipeline | 15min | 12min | 3 PRs | 5% | Quality gates, tests |
-| Review | 24h | 2h | 8 PRs | 10% | Code review queue |
-| Merge | 5min | 2min | 0 | 0% | Merge to main |
-| Build | 10min | 8min | 0 | 2% | Docker build |
-| Deploy (Staging) | 5min | 3min | 0 | 1% | Staging deployment |
-| Deploy (Prod) | 30min | 15min | 0 | 1% | Production deployment |
-| **Customer Impact** | - | - | - | - | Live in production |
+| Stage               | Lead Time | Cycle Time | Queue/WIP | Rework % | Notes                 |
+| ------------------- | --------- | ---------- | --------- | -------- | --------------------- |
+| **Code**            | -         | -          | -         | -        | Development stage     |
+| Commit              | 0h        | 5min       | 0         | 0%       | Git commit            |
+| CI Pipeline         | 15min     | 12min      | 3 PRs     | 5%       | Quality gates, tests  |
+| Review              | 24h       | 2h         | 8 PRs     | 10%      | Code review queue     |
+| Merge               | 5min      | 2min       | 0         | 0%       | Merge to main         |
+| Build               | 10min     | 8min       | 0         | 2%       | Docker build          |
+| Deploy (Staging)    | 5min      | 3min       | 0         | 1%       | Staging deployment    |
+| Deploy (Prod)       | 30min     | 15min      | 0         | 1%       | Production deployment |
+| **Customer Impact** | -         | -          | -         | -        | Live in production    |
 
 ## Lead Time Analysis
 
 **Total Lead Time:** ~26h 5min (commit to production)
 
 **Breakdown:**
+
 - Development: Variable (not measured)
 - CI Pipeline: 15min
 - Review: 24h (bottleneck)
@@ -36,6 +37,7 @@
 **Total Cycle Time:** ~42min (active work time)
 
 **Breakdown:**
+
 - CI Pipeline: 12min
 - Review: 2h (active review time)
 - Merge: 2min
@@ -45,6 +47,7 @@
 ## Queues and WIP
 
 **Current Queues:**
+
 - CI Pipeline: 3 PRs waiting
 - Review Queue: 8 PRs waiting
 - Build Queue: 0 items
@@ -55,6 +58,7 @@
 ## Rework Analysis
 
 **Estimated Rework %:**
+
 - CI Failures: 5% (tests, linting)
 - Review Feedback: 10% (code changes)
 - Build Failures: 2% (infrastructure)
@@ -64,14 +68,14 @@
 
 ## Handoffs
 
-| From | To | Handoff Time | Issues |
-|------|-----|-------------|--------|
-| Developer | CI | 0min | ✅ Automated |
-| CI | Reviewer | 5min | ⚠️ Manual notification |
-| Reviewer | Developer | 2h | ⚠️ Async communication |
-| Developer | Merge | 0min | ✅ Automated |
-| Merge | Build | 2min | ✅ Automated |
-| Build | Deploy | 0min | ✅ Automated |
+| From      | To        | Handoff Time | Issues                 |
+| --------- | --------- | ------------ | ---------------------- |
+| Developer | CI        | 0min         | ✅ Automated           |
+| CI        | Reviewer  | 5min         | ⚠️ Manual notification |
+| Reviewer  | Developer | 2h           | ⚠️ Async communication |
+| Developer | Merge     | 0min         | ✅ Automated           |
+| Merge     | Build     | 2min         | ✅ Automated           |
+| Build     | Deploy    | 0min         | ✅ Automated           |
 
 ## Bottlenecks
 
@@ -105,6 +109,7 @@
 ## Metrics Tracking
 
 **Key Metrics:**
+
 - Lead Time: Target <12h
 - Cycle Time: Target <30min
 - Rework %: Target <10%

@@ -81,12 +81,12 @@ jobs:
     if: |
       github.event_name == 'workflow_dispatch' || 
       github.event_name == 'schedule'
-    
+
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
       SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

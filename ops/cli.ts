@@ -39,7 +39,7 @@ program
   .command('doctor')
   .description('Run comprehensive health checks')
   .option('-v, --verbose', 'Verbose output')
-  .action(async (options) => {
+  .action(async options => {
     const exitCode = await doctor(options);
     process.exit(exitCode);
   });
@@ -48,7 +48,7 @@ program
   .command('init')
   .description('Initialize production framework')
   .option('--force', 'Force re-initialization')
-  .action(async (options) => {
+  .action(async options => {
     await init(options);
   });
 
@@ -56,7 +56,7 @@ program
   .command('check')
   .description('Run quick validation checks')
   .option('--type <type>', 'Check type: env|db|api|all', 'all')
-  .action(async (options) => {
+  .action(async options => {
     const exitCode = await check(options);
     process.exit(exitCode);
   });
@@ -67,7 +67,7 @@ program
   .option('--dry-run', 'Dry run without actual deployment')
   .option('--version <version>', 'Specify version (semver)')
   .option('--skip-tests', 'Skip tests')
-  .action(async (options) => {
+  .action(async options => {
     const exitCode = await release(options);
     process.exit(exitCode);
   });
@@ -77,7 +77,7 @@ program
   .description('Create database snapshot')
   .option('--encrypt', 'Encrypt snapshot')
   .option('--tables <tables>', 'Comma-separated table list')
-  .action(async (options) => {
+  .action(async options => {
     await snapshot(options);
   });
 
@@ -86,7 +86,7 @@ program
   .description('Restore database from snapshot')
   .option('--file <file>', 'Snapshot file path')
   .option('--dry-run', 'Dry run without actual restore')
-  .action(async (options) => {
+  .action(async options => {
     await restore(options);
   });
 
@@ -95,7 +95,7 @@ program
   .description('Rotate secrets and update environments')
   .option('--key <key>', 'Specific key to rotate')
   .option('--force', 'Force rotation even if not expired')
-  .action(async (options) => {
+  .action(async options => {
     await rotateSecrets(options);
   });
 
@@ -104,7 +104,7 @@ program
   .description('Scan Supabase RLS policies')
   .option('--fix', 'Auto-generate missing policies')
   .option('--report', 'Generate audit report')
-  .action(async (options) => {
+  .action(async options => {
     const exitCode = await sbGuard(options);
     process.exit(exitCode);
   });
@@ -114,7 +114,7 @@ program
   .description('Run E2E tests')
   .option('--headed', 'Run in headed mode')
   .option('--project <project>', 'Specific project to test')
-  .action(async (options) => {
+  .action(async options => {
     const exitCode = await testE2E(options);
     process.exit(exitCode);
   });
@@ -123,7 +123,7 @@ program
   .command('benchmark')
   .description('Run performance benchmarks')
   .option('--output <output>', 'Output format: json|html', 'html')
-  .action(async (options) => {
+  .action(async options => {
     await benchmark(options);
   });
 
@@ -131,7 +131,7 @@ program
   .command('lintfix')
   .description('Auto-fix linting issues')
   .option('--all', 'Fix all files')
-  .action(async (options) => {
+  .action(async options => {
     await lintfix(options);
   });
 
@@ -139,7 +139,7 @@ program
   .command('docs')
   .description('Generate documentation')
   .option('--rebuild', 'Force rebuild all docs')
-  .action(async (options) => {
+  .action(async options => {
     await docs(options);
   });
 
@@ -147,7 +147,7 @@ program
   .command('changelog')
   .description('Generate changelog')
   .option('--version <version>', 'Version to generate changelog for')
-  .action(async (options) => {
+  .action(async options => {
     await changelog(options);
   });
 
@@ -160,7 +160,7 @@ guardianCmd
   .command('verify')
   .description('Verify ledger integrity')
   .option('-v, --verbose', 'Verbose output')
-  .action(async (options) => {
+  .action(async options => {
     const exitCode = await guardian.verify(options);
     process.exit(exitCode);
   });
@@ -171,7 +171,7 @@ guardianCmd
   .option('--fix', 'Auto-fix issues')
   .option('--report', 'Generate audit report')
   .option('-v, --verbose', 'Verbose output')
-  .action(async (options) => {
+  .action(async options => {
     const exitCode = await guardian.audit(options);
     process.exit(exitCode);
   });
@@ -181,7 +181,7 @@ guardianCmd
   .description('Generate Guardian report')
   .option('--weekly', 'Generate weekly report')
   .option('--format <format>', 'Output format: json|markdown', 'json')
-  .action(async (options) => {
+  .action(async options => {
     const exitCode = await guardian.report(options);
     process.exit(exitCode);
   });
@@ -190,7 +190,7 @@ guardianCmd
   .command('export-fabric')
   .description('Export Trust Fabric model')
   .option('--output <path>', 'Output file path')
-  .action(async (options) => {
+  .action(async options => {
     const exitCode = await guardian.exportFabric(options);
     process.exit(exitCode);
   });
@@ -199,7 +199,7 @@ guardianCmd
   .command('import-fabric')
   .description('Import Trust Fabric model')
   .requiredOption('--file <path>', 'Input file path')
-  .action(async (options) => {
+  .action(async options => {
     const exitCode = await guardian.importFabric(options);
     process.exit(exitCode);
   });

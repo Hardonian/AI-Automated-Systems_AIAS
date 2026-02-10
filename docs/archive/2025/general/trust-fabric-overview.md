@@ -79,6 +79,7 @@ Elevated sessions expire sooner when Guardian detects increased risk.
 ### Emergency Data Lockdown
 
 1-click killswitch that:
+
 - Wipes local telemetry cache
 - Pauses background sync
 - Enables maximum privacy mode
@@ -201,6 +202,7 @@ guardian/
 ## Support
 
 For questions or issues, see:
+
 - `docs/privacy-api-reference.md`
 - `docs/how-guardian-learns.md`
 - `AI_COMPLIANCE.md`

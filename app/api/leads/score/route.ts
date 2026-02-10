@@ -13,12 +13,15 @@ const scoreLeadSchema = z.object({
 });
 
 export const POST = createPOSTHandler(
-  async (context) => {
+  async context => {
     const body = scoreLeadSchema.parse(await context.request.json());
     const tenantId = context.tenantId || undefined;
-    
-    const score = await leadScoringService.calculateScore(body.leadId, tenantId);
-    
+
+    const score = await leadScoringService.calculateScore(
+      body.leadId,
+      tenantId
+    );
+
     return NextResponse.json(score);
   },
   {

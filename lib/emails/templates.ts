@@ -77,7 +77,7 @@ Best regards,
 The AIAS Team
     `,
   },
-  
+
   trial_ending: {
     id: 'trial_ending',
     name: 'Trial Ending Reminder',
@@ -123,7 +123,7 @@ Upgrade: {{siteUrl}}/pricing
 Questions? Reply to this email.
     `,
   },
-  
+
   upgrade_success: {
     id: 'upgrade_success',
     name: 'Upgrade Success',
@@ -179,7 +179,7 @@ Your next billing date is {{nextBillingDate}}.
 Welcome aboard!
     `,
   },
-  
+
   feature_announcement: {
     id: 'feature_announcement',
     name: 'Feature Announcement',
@@ -219,13 +219,20 @@ Try It Now: {{featureUrl}}
 We'd love to hear your feedback!
     `,
   },
-  
+
   renewal_reminder: {
     id: 'renewal_reminder',
     name: 'Renewal Reminder',
     subject: 'Your subscription renews in {{daysRemaining}} days',
-    variables: ['userName', 'daysRemaining', 'renewalDate', 'planName', 'amount'],
-    html: `
+    variables: [
+      'userName',
+      'daysRemaining',
+      'renewalDate',
+      'planName',
+      'amount',
+    ],
+    html:
+      `
       <!DOCTYPE html>
       <html>
         <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -235,7 +242,10 @@ We'd love to hear your feedback!
           
           <p>Your <strong>{{planName}}</strong> subscription will renew on <strong>{{renewalDate}}</strong>.</p>
           
-          <p>Amount: <strong>` + '$' + '{{amount}}' + `</strong></p>
+          <p>Amount: <strong>` +
+      '$' +
+      '{{amount}}' +
+      `</strong></p>
           
           <p>Your payment method on file will be charged automatically. No action needed unless you want to make changes.</p>
           
@@ -247,14 +257,18 @@ We'd love to hear your feedback!
         </body>
       </html>
     `,
-    text: `
+    text:
+      `
 Subscription Renewal Reminder
 
 Hi {{userName}},
 
 Your {{planName}} subscription will renew on {{renewalDate}}.
 
-Amount: ` + '$' + '{{amount}}' + `
+Amount: ` +
+      '$' +
+      '{{amount}}' +
+      `
 
 Your payment method on file will be charged automatically.
 
@@ -275,7 +289,8 @@ export function renderEmailTemplate(
     throw new Error(`Template ${templateId} not found`);
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aiautomatedsystems.ca';
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://aiautomatedsystems.ca';
   const allVariables = { ...variables, siteUrl };
 
   const replaceVariables = (str: string): string => {

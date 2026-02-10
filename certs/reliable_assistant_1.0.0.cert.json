@@ -43,11 +43,7 @@
     }
   },
   "policy_compliance": {
-    "policies_checked": [
-      "data_access",
-      "tool_usage",
-      "fsm_transitions"
-    ],
+    "policies_checked": ["data_access", "tool_usage", "fsm_transitions"],
     "violations": [],
     "passed": true
   },

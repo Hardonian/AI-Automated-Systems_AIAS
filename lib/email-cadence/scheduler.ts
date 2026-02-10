@@ -36,9 +36,13 @@ function loadEmailTemplate(templatePath: string): string {
     const fullPath = join(process.cwd(), 'emails', templatePath);
     return readFileSync(fullPath, 'utf-8');
   } catch (error) {
-    logger.error('Failed to load email template', error instanceof Error ? error : new Error(String(error)), {
-      templatePath,
-    });
+    logger.error(
+      'Failed to load email template',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        templatePath,
+      }
+    );
     throw error;
   }
 }
@@ -48,16 +52,19 @@ function loadEmailTemplate(templatePath: string): string {
  */
 function loadEmailComponents(): Record<string, string> {
   const components: Record<string, string> = {};
-  
+
   try {
     components.header = loadEmailTemplate('shared/components/header.html');
     components.footer = loadEmailTemplate('shared/components/footer.html');
     components.button = loadEmailTemplate('shared/components/button.html');
     components.layout = loadEmailTemplate('shared/components/layout.html');
   } catch (error) {
-    logger.warn('Failed to load some email components', error instanceof Error ? error : new Error(String(error)));
+    logger.warn(
+      'Failed to load some email components',
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
-  
+
   return components;
 }
 
@@ -89,33 +96,37 @@ function getTrialDaysRemaining(user: UserData): number {
 export async function sendTrialWelcomeEmail(user: UserData): Promise<boolean> {
   try {
     // Use new welcome email function from Supabase
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '';
+    const supabaseUrl =
+      process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '';
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    
+
     if (supabaseServiceKey && supabaseUrl) {
-      const response = await fetch(`${supabaseUrl}/functions/v1/welcome-email`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${supabaseServiceKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: user.id,
-          email: user.email,
-          firstName: user.firstName,
-        }),
-      });
-      
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/welcome-email`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${supabaseServiceKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            email: user.email,
+            firstName: user.firstName,
+          }),
+        }
+      );
+
       if (response.ok) {
         logger.info('Welcome email sent via function', { userId: user.id });
         return true;
       }
     }
-    
+
     // Fallback to original implementation
     const template = loadEmailTemplate('lifecycle/trial_welcome.html');
     const components = loadEmailComponents();
-    
+
     const variables = {
       user: {
         first_name: user.firstName || 'there',
@@ -130,7 +141,8 @@ export async function sendTrialWelcomeEmail(user: UserData): Promise<boolean> {
       },
       product: {
         product_name: 'AIAS Platform',
-        site_url: process.env.NEXT_PUBLIC_SITE_URL || 'https://aiautomatedsystems.ca',
+        site_url:
+          process.env.NEXT_PUBLIC_SITE_URL || 'https://aiautomatedsystems.ca',
       },
       urls: {
         dashboard_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://aiautomatedsystems.ca'}/dashboard`,
@@ -155,20 +167,31 @@ export async function sendTrialWelcomeEmail(user: UserData): Promise<boolean> {
     });
 
     if (result.success) {
-      logger.info('Trial welcome email sent', { userId: user.id, email: user.email });
-    } else {
-      logger.error('Failed to send trial welcome email', new Error(result.error || 'Unknown error'), {
+      logger.info('Trial welcome email sent', {
         userId: user.id,
         email: user.email,
       });
+    } else {
+      logger.error(
+        'Failed to send trial welcome email',
+        new Error(result.error || 'Unknown error'),
+        {
+          userId: user.id,
+          email: user.email,
+        }
+      );
     }
 
     return result.success;
   } catch (error) {
-    logger.error('Error sending trial welcome email', error instanceof Error ? error : new Error(String(error)), {
-      userId: user.id,
-      email: user.email,
-    });
+    logger.error(
+      'Error sending trial welcome email',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        userId: user.id,
+        email: user.email,
+      }
+    );
     return false;
   }
 }
@@ -180,7 +203,7 @@ export async function sendTrialDay7Email(user: UserData): Promise<boolean> {
   try {
     const template = loadEmailTemplate('lifecycle/trial_day7.html');
     const components = loadEmailComponents();
-    
+
     const variables = {
       user: {
         first_name: user.firstName || 'there',
@@ -209,9 +232,13 @@ export async function sendTrialDay7Email(user: UserData): Promise<boolean> {
 
     return result.success;
   } catch (error) {
-    logger.error('Error sending trial day 7 email', error instanceof Error ? error : new Error(String(error)), {
-      userId: user.id,
-    });
+    logger.error(
+      'Error sending trial day 7 email',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        userId: user.id,
+      }
+    );
     return false;
   }
 }
@@ -223,10 +250,14 @@ export async function sendTrialEndingEmail(user: UserData): Promise<boolean> {
   try {
     const template = loadEmailTemplate('lifecycle/trial_ending.html');
     const components = loadEmailComponents();
-    
+
     const trialDaysLeft = getTrialDaysRemaining(user);
-    const trialEndDate = user.trialEndDate 
-      ? new Date(user.trialEndDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    const trialEndDate = user.trialEndDate
+      ? new Date(user.trialEndDate).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })
       : 'soon';
 
     const variables = {
@@ -259,9 +290,13 @@ export async function sendTrialEndingEmail(user: UserData): Promise<boolean> {
 
     return result.success;
   } catch (error) {
-    logger.error('Error sending trial ending email', error instanceof Error ? error : new Error(String(error)), {
-      userId: user.id,
-    });
+    logger.error(
+      'Error sending trial ending email',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        userId: user.id,
+      }
+    );
     return false;
   }
 }
@@ -269,11 +304,14 @@ export async function sendTrialEndingEmail(user: UserData): Promise<boolean> {
 /**
  * Send monthly summary email for paid users
  */
-export async function sendMonthlySummaryEmail(user: UserData, reportPeriod: string): Promise<boolean> {
+export async function sendMonthlySummaryEmail(
+  user: UserData,
+  reportPeriod: string
+): Promise<boolean> {
   try {
     const template = loadEmailTemplate('lifecycle/paid_monthly_summary.html');
     const components = loadEmailComponents();
-    
+
     const variables = {
       user: {
         first_name: user.firstName || 'there',
@@ -287,9 +325,10 @@ export async function sendMonthlySummaryEmail(user: UserData, reportPeriod: stri
         analysis_summary: `You've executed ${user.automationCount || 0} automations this month, saving approximately ${user.timeSavedHours || 0} hours.`,
       },
       workflow: {
-        next_recommendation: user.workflowCount && user.workflowCount < 3
-          ? 'Create 2-3 more workflows to unlock the full power of automation. Most users see value after 3-5 workflows.'
-          : 'Explore advanced features like conditional logic and multi-step workflows to further optimize your automations.',
+        next_recommendation:
+          user.workflowCount && user.workflowCount < 3
+            ? 'Create 2-3 more workflows to unlock the full power of automation. Most users see value after 3-5 workflows.'
+            : 'Explore advanced features like conditional logic and multi-step workflows to further optimize your automations.',
       },
       urls: {
         dashboard_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://aiautomatedsystems.ca'}/dashboard`,
@@ -313,9 +352,13 @@ export async function sendMonthlySummaryEmail(user: UserData, reportPeriod: stri
 
     return result.success;
   } catch (error) {
-    logger.error('Error sending monthly summary email', error instanceof Error ? error : new Error(String(error)), {
-      userId: user.id,
-    });
+    logger.error(
+      'Error sending monthly summary email',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        userId: user.id,
+      }
+    );
     return false;
   }
 }
@@ -323,9 +366,11 @@ export async function sendMonthlySummaryEmail(user: UserData, reportPeriod: stri
 /**
  * Get emails to send for a user based on their trial status
  */
-export async function getEmailsToSend(user: UserData): Promise<Array<{ type: string; send: () => Promise<boolean> }>> {
+export async function getEmailsToSend(
+  user: UserData
+): Promise<Array<{ type: string; send: () => Promise<boolean> }>> {
   const emails: Array<{ type: string; send: () => Promise<boolean> }> = [];
-  
+
   if (!user.trialStartDate) {
     return emails; // Not a trial user
   }
@@ -366,7 +411,7 @@ export async function getEmailsToSend(user: UserData): Promise<Array<{ type: str
  */
 export async function processScheduledEmails(user: UserData): Promise<void> {
   const emailsToSend = await getEmailsToSend(user);
-  
+
   for (const email of emailsToSend) {
     try {
       await email.send();
@@ -375,10 +420,14 @@ export async function processScheduledEmails(user: UserData): Promise<void> {
         emailType: email.type,
       });
     } catch (error) {
-      logger.error('Failed to send scheduled email', error instanceof Error ? error : new Error(String(error)), {
-        userId: user.id,
-        emailType: email.type,
-      });
+      logger.error(
+        'Failed to send scheduled email',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          userId: user.id,
+          emailType: email.type,
+        }
+      );
     }
   }
 }

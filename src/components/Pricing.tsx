@@ -55,60 +55,62 @@ const plans = [
 
 export const Pricing = () => {
   return (
-    <section className="py-24 relative" id="pricing">
-      <div className="container mx-auto px-4">
+    <section className='relative py-24' id='pricing'>
+      <div className='container mx-auto px-4'>
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3 sm:space-y-4">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold px-4">
+        <div className='mx-auto mb-12 max-w-3xl space-y-3 text-center sm:mb-16 sm:space-y-4'>
+          <h2 className='px-4 text-3xl font-bold sm:text-4xl md:text-5xl'>
             Simple, Transparent
-            <span className="block mt-2 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+            <span className='to-primary-glow mt-2 block bg-gradient-to-r from-primary bg-clip-text text-transparent'>
               Pricing
             </span>
           </h2>
-          <p className="text-lg sm:text-xl text-muted-foreground px-4">
+          <p className='px-4 text-lg text-muted-foreground sm:text-xl'>
             Choose the perfect plan for your business needs
           </p>
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+        <div className='mx-auto grid max-w-6xl gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3'>
           {plans.map((plan, index) => (
             <div
               key={plan.name}
-              className={`relative p-6 sm:p-8 rounded-xl border transition-all duration-300 ${
+              className={`relative rounded-xl border p-6 transition-all duration-300 sm:p-8 ${
                 plan.popular
-                  ? 'bg-gradient-card backdrop-blur-sm border-primary shadow-glow sm:scale-105'
-                  : 'bg-gradient-card backdrop-blur-sm border-border hover:border-primary/50'
+                  ? 'bg-gradient-card shadow-glow border-primary backdrop-blur-sm sm:scale-105'
+                  : 'bg-gradient-card border-border backdrop-blur-sm hover:border-primary/50'
               }`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="px-4 py-1 rounded-full bg-gradient-primary text-sm font-medium text-primary-foreground shadow-glow">
+                <div className='absolute -top-4 left-1/2 -translate-x-1/2 transform'>
+                  <span className='bg-gradient-primary shadow-glow rounded-full px-4 py-1 text-sm font-medium text-primary-foreground'>
                     Most Popular
                   </span>
                 </div>
               )}
 
-              <div className="space-y-6">
+              <div className='space-y-6'>
                 {/* Plan Header */}
                 <div>
-                  <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                  <p className="text-sm text-muted-foreground">{plan.description}</p>
+                  <h3 className='mb-2 text-2xl font-bold'>{plan.name}</h3>
+                  <p className='text-sm text-muted-foreground'>
+                    {plan.description}
+                  </p>
                 </div>
 
                 {/* Price */}
-                <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-bold">{plan.price}</span>
-                  <span className="text-muted-foreground">/{plan.period}</span>
+                <div className='flex items-baseline gap-2'>
+                  <span className='text-4xl font-bold'>{plan.price}</span>
+                  <span className='text-muted-foreground'>/{plan.period}</span>
                 </div>
 
                 {/* Features */}
-                <ul className="space-y-3">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">{feature}</span>
+                <ul className='space-y-3'>
+                  {plan.features.map(feature => (
+                    <li key={feature} className='flex items-start gap-3'>
+                      <Check className='mt-0.5 h-5 w-5 flex-shrink-0 text-primary' />
+                      <span className='text-sm'>{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -120,7 +122,7 @@ export const Pricing = () => {
                       ? 'bg-gradient-primary shadow-glow'
                       : 'bg-secondary hover:bg-secondary/80'
                   }`}
-                  size="lg"
+                  size='lg'
                 >
                   {plan.name === 'Enterprise' ? 'Contact Sales' : 'Get Started'}
                 </Button>

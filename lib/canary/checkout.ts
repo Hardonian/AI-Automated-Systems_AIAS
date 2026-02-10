@@ -11,7 +11,7 @@ import { canaryMonitor } from './monitor';
  */
 export async function useCanaryCheckout(userId: string): Promise<boolean> {
   const config = await getCanaryFlag('checkout');
-  
+
   if (!config.enabled || config.percentage === 0) {
     return false;
   }
@@ -28,7 +28,7 @@ export async function recordCheckoutRequest(
   latency: number
 ): Promise<void> {
   const isCanary = await useCanaryCheckout(userId);
-  
+
   if (isCanary) {
     await canaryMonitor.recordRequest('checkout', success, latency);
   }
@@ -37,7 +37,9 @@ export async function recordCheckoutRequest(
 /**
  * Get checkout handler (canary or stable)
  */
-export async function getCheckoutHandler(userId: string): Promise<'canary' | 'stable'> {
+export async function getCheckoutHandler(
+  userId: string
+): Promise<'canary' | 'stable'> {
   const useCanary = await useCanaryCheckout(userId);
   return useCanary ? 'canary' : 'stable';
 }

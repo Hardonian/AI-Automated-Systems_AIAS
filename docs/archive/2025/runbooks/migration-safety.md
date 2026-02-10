@@ -19,12 +19,14 @@ The migration canary flag is controlled by the `MIGRATION_CANARY` environment va
 ### Usage
 
 **For Safe Migrations (CREATE, ALTER ADD, etc.):**
+
 ```bash
 # No flag needed - safe operations allowed
 supabase db push
 ```
 
 **For Destructive Migrations (DROP, TRUNCATE, ALTER DROP, etc.):**
+
 ```bash
 # Must set canary flag to true
 MIGRATION_CANARY=true supabase db push
@@ -89,6 +91,7 @@ DROP TABLE IF EXISTS deprecated_table;
 ### 2. Use Safe Migration Patterns
 
 **Instead of DROP:**
+
 ```sql
 -- Add new column
 ALTER TABLE users ADD COLUMN new_email TEXT;
@@ -102,6 +105,7 @@ ALTER TABLE users DROP COLUMN old_email;
 ```
 
 **Instead of TRUNCATE:**
+
 ```sql
 -- Archive data first
 CREATE TABLE users_archive AS SELECT * FROM users WHERE created_at < '2024-01-01';

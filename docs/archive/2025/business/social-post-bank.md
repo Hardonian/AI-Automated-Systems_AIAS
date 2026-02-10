@@ -11,8 +11,9 @@
 ## Launch Announcements
 
 ### Launch Post (Twitter)
+
 ```
-🚀 AIAS Platform is live! 
+🚀 AIAS Platform is live!
 
 AI automation for Canadian businesses — save 10+ hours/week with no-code workflows.
 
@@ -26,6 +27,7 @@ Try it free: https://aias-platform.com
 ```
 
 ### Launch Post (LinkedIn)
+
 ```
 Excited to announce the launch of AIAS Platform — AI automation for Canadian businesses.
 
@@ -47,6 +49,7 @@ Try it free: https://aias-platform.com
 ## Problem-Solution Posts
 
 ### Problem Post
+
 ```
 Canadian SMBs waste 10+ hours/week on repetitive tasks.
 
@@ -61,6 +64,7 @@ There's a better way. 👇
 ```
 
 ### Solution Post
+
 ```
 AI automation that speaks Canadian business.
 
@@ -80,6 +84,7 @@ Try it free: https://aias-platform.com
 ## Feature Highlights
 
 ### No-Code Builder
+
 ```
 Build automation workflows in 30 minutes — no coding required.
 
@@ -94,6 +99,7 @@ Try it free: https://aias-platform.com
 ```
 
 ### Canadian Integrations
+
 ```
 Canadian integrations that actually work.
 
@@ -108,6 +114,7 @@ Canadian integrations that actually work.
 ```
 
 ### AI Agents
+
 ```
 AI agents that understand your business.
 
@@ -126,6 +133,7 @@ Built for Canadian businesses, powered by AI.
 ## Case Studies & Testimonials
 
 ### E-Commerce Case Study
+
 ```
 "AIAS Platform saved me 10 hours/week on order processing."
 
@@ -140,6 +148,7 @@ Read the full case study: https://aias-platform.com/case-studies
 ```
 
 ### Consultant Case Study
+
 ```
 "Proposal automation cut my proposal time from 2 hours to 5 minutes."
 
@@ -160,6 +169,7 @@ Try it free: https://aias-platform.com
 ## Tips & Best Practices
 
 ### Automation Tip
+
 ```
 💡 Automation Tip: Start with one workflow
 
@@ -174,6 +184,7 @@ Most users save 10+ hours/week with just 3-5 workflows.
 ```
 
 ### Time-Saving Tip
+
 ```
 ⏱️ Time-Saving Tip: Automate your Shopify store
 
@@ -194,6 +205,7 @@ Try it free: https://aias-platform.com
 ## Canadian-Focused Posts
 
 ### Made in Canada
+
 ```
 🇨🇦 Made in Canada, for Canadian businesses.
 
@@ -208,6 +220,7 @@ Built by Canadians, for Canadians.
 ```
 
 ### PIPEDA Compliance
+
 ```
 Privacy-first automation for Canadian businesses.
 
@@ -225,6 +238,7 @@ Your data stays in Canada. Privacy-first, always.
 ## Engagement Posts
 
 ### Question Post
+
 ```
 What's your biggest time-waster as a solo operator?
 
@@ -236,6 +250,7 @@ Share yours below 👇
 ```
 
 ### Poll Post
+
 ```
 Poll: What's your biggest automation challenge?
 
@@ -252,6 +267,7 @@ D) Other (comment below)
 ## Call-to-Action Posts
 
 ### Free Trial
+
 ```
 Try AIAS Platform free — no credit card required.
 
@@ -265,6 +281,7 @@ Start automating today: https://aias-platform.com
 ```
 
 ### Product Hunt Launch
+
 ```
 🚀 AIAS Platform is live on Product Hunt!
 

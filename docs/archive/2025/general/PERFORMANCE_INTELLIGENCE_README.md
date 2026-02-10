@@ -20,12 +20,14 @@ The Performance Intelligence Layer automatically:
 ### Database Schema
 
 **Table: `metrics_log`**
+
 - Stores aggregated performance metrics from all sources
 - Flexible JSONB structure for different metric types
 - RLS policies for secure access
 - Indexed for efficient querying
 
 **Functions:**
+
 - `get_latest_metrics(source_filter)` - Get latest metrics by source
 - `detect_regressions(source_filter, threshold)` - Compare current vs previous metrics
 - `metrics_dashboard` view - Aggregated dashboard data
@@ -33,9 +35,11 @@ The Performance Intelligence Layer automatically:
 ### API Endpoints
 
 #### `/api/metrics` (GET)
+
 Returns aggregated performance metrics in JSON format.
 
 **Response:**
+
 ```json
 {
   "performance": {
@@ -53,9 +57,11 @@ Returns aggregated performance metrics in JSON format.
 **Cache:** 60 seconds (s-maxage=60)
 
 #### `/api/telemetry` (POST)
+
 Ingests performance beacons from client-side code.
 
 **Payload:**
+
 ```json
 {
   "url": "/page",
@@ -68,6 +74,7 @@ Ingests performance beacons from client-side code.
 ```
 
 **Features:**
+
 - IP anonymization (stores only IP prefix)
 - User agent truncation
 - Best-effort delivery (doesn't break on failure)
@@ -77,6 +84,7 @@ Ingests performance beacons from client-side code.
 **Route:** `/admin/metrics`
 
 Visual dashboard showing:
+
 - Web Vitals (LCP, CLS, INP, TTFB, FCP)
 - Supabase performance metrics
 - Expo build metrics
@@ -89,19 +97,24 @@ Auto-refreshes every 60 seconds.
 ### Scripts
 
 #### `scripts/collect-metrics.ts`
+
 Collects metrics from all sources:
+
 - **Vercel:** Web Vitals via Analytics API
 - **Supabase:** Query performance and latency
 - **Expo:** Bundle size and build duration
 - **GitHub Actions:** CI timing and success rates
 
 **Usage:**
+
 ```bash
 npm run perf:collect
 ```
 
 #### `scripts/generate-performance-report.ts`
+
 Analyzes metrics and generates `PERFORMANCE_REPORT.md`:
+
 - Regression detection
 - Health scores
 - Cost estimates
@@ -109,29 +122,36 @@ Analyzes metrics and generates `PERFORMANCE_REPORT.md`:
 - 7-day trends
 
 **Usage:**
+
 ```bash
 npm run perf:report
 ```
 
 #### `scripts/auto-optimize.ts`
+
 Analyzes metrics and suggests optimizations:
+
 - Image optimization recommendations
 - Database index suggestions
 - Bundle size optimizations
 - CI concurrency tuning
 
 **Usage:**
+
 ```bash
 npm run perf:optimize
 ```
 
 #### `scripts/alert-regressions.ts`
+
 Detects regressions and creates alerts:
+
 - GitHub issue creation (if 3+ consecutive regressions)
 - Webhook notifications (if configured)
 - Regression analysis
 
 **Usage:**
+
 ```bash
 npm run perf:alert
 ```
@@ -139,7 +159,9 @@ npm run perf:alert
 ### Client-Side Components
 
 #### `components/performance-beacon.tsx`
+
 Automatically sends Web Vitals to `/api/telemetry`:
+
 - LCP (Largest Contentful Paint)
 - CLS (Cumulative Layout Shift)
 - INP (Interaction to Next Paint)
@@ -162,11 +184,13 @@ Runs at 2 AM UTC via `.github/workflows/telemetry.yml`:
 ### Manual Execution
 
 Run all steps:
+
 ```bash
 npm run perf:all
 ```
 
 Or individually:
+
 ```bash
 npm run perf:collect   # Collect metrics
 npm run perf:report    # Generate report
@@ -179,10 +203,12 @@ npm run perf:alert     # Check for regressions
 ### Environment Variables
 
 Required:
+
 - `SUPABASE_URL` - Supabase project URL
 - `SUPABASE_SERVICE_ROLE_KEY` - Service role key for writes
 
 Optional:
+
 - `VERCEL_TOKEN` - For Vercel Analytics API
 - `VERCEL_PROJECT_ID` - Vercel project ID
 - `GITHUB_TOKEN` - For CI metrics and issue creation
@@ -192,6 +218,7 @@ Optional:
 ### GitHub Secrets
 
 Set these in your repository settings:
+
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `VERCEL_TOKEN` (optional)
@@ -202,6 +229,7 @@ Set these in your repository settings:
 ## 📈 Metrics Collected
 
 ### Web Vitals
+
 - **LCP** - Largest Contentful Paint (target: <2500ms)
 - **CLS** - Cumulative Layout Shift (target: <0.1)
 - **INP** - Interaction to Next Paint (target: <200ms)
@@ -209,17 +237,20 @@ Set these in your repository settings:
 - **FCP** - First Contentful Paint (target: <1800ms)
 
 ### Supabase
+
 - Average query latency
 - Query execution time
 - Row counts
 - Edge latency
 
 ### Expo
+
 - Bundle size (MB)
 - Build duration
 - Build success rate
 
 ### CI/CD
+
 - Average build time
 - Success rate
 - Queue length
@@ -229,6 +260,7 @@ Set these in your repository settings:
 ### Regression Detection
 
 A regression is detected when:
+
 - A metric worsens by >10% compared to previous measurement
 - Three consecutive regressions occur
 
@@ -261,6 +293,7 @@ A regression is detected when:
 ### Dashboard Access
 
 Visit `/admin/metrics` to view:
+
 - Real-time metrics
 - 7-day trends
 - Health status
@@ -299,4 +332,4 @@ Returns JSON with all aggregated metrics.
 
 ---
 
-*Built with ❤️ for continuous performance improvement*
+_Built with ❤️ for continuous performance improvement_

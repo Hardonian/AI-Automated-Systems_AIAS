@@ -5,7 +5,6 @@ import { SignJWT, jwtVerify } from 'jose';
 
 import { prisma } from './database';
 
-
 const supabase = createClient(
   config.supabase.url,
   config.supabase.serviceRoleKey || ''
@@ -44,7 +43,9 @@ export class AuthService {
       where: { email },
     });
 
-    if (!user) {return null;}
+    if (!user) {
+      return null;
+    }
 
     return {
       id: user.id,
@@ -60,7 +61,9 @@ export class AuthService {
       where: { id },
     });
 
-    if (!user) {return null;}
+    if (!user) {
+      return null;
+    }
 
     return {
       id: user.id,
@@ -71,12 +74,16 @@ export class AuthService {
     };
   }
 
-  static async getUserBySupabaseId(supabaseId: string): Promise<AuthUser | null> {
+  static async getUserBySupabaseId(
+    supabaseId: string
+  ): Promise<AuthUser | null> {
     const user = await prisma.user.findUnique({
       where: { supabaseId },
     });
 
-    if (!user) {return null;}
+    if (!user) {
+      return null;
+    }
 
     return {
       id: user.id,
@@ -87,7 +94,10 @@ export class AuthService {
     };
   }
 
-  static async updateUser(id: string, data: Partial<AuthUser>): Promise<AuthUser> {
+  static async updateUser(
+    id: string,
+    data: Partial<AuthUser>
+  ): Promise<AuthUser> {
     const user = await prisma.user.update({
       where: { id },
       data: {
@@ -108,13 +118,13 @@ export class AuthService {
   }
 
   static async createJWT(user: AuthUser): Promise<string> {
-    const {jwtSecret} = config.security;
+    const { jwtSecret } = config.security;
     if (!jwtSecret) {
       throw new Error('JWT secret is not configured');
     }
     const secret = new TextEncoder().encode(jwtSecret);
-    
-    return new SignJWT({ 
+
+    return new SignJWT({
       userId: user.id,
       email: user.email,
     })
@@ -124,15 +134,17 @@ export class AuthService {
       .sign(secret);
   }
 
-  static async verifyJWT(token: string): Promise<{ userId: string; email: string } | null> {
+  static async verifyJWT(
+    token: string
+  ): Promise<{ userId: string; email: string } | null> {
     try {
-      const {jwtSecret} = config.security;
+      const { jwtSecret } = config.security;
       if (!jwtSecret) {
         throw new Error('JWT secret is not configured');
       }
       const secret = new TextEncoder().encode(jwtSecret);
       const { payload } = await jwtVerify(token, secret);
-      
+
       return {
         userId: payload.userId as string,
         email: payload.email as string,
@@ -146,13 +158,19 @@ export class AuthService {
     return bcrypt.hash(password, 12);
   }
 
-  static async verifyPassword(password: string, hash: string): Promise<boolean> {
+  static async verifyPassword(
+    password: string,
+    hash: string
+  ): Promise<boolean> {
     return bcrypt.compare(password, hash);
   }
 
   static async getSupabaseUser(accessToken: string): Promise<any> {
-    const { data: { user }, error } = await supabase.auth.getUser(accessToken);
-    
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(accessToken);
+
     if (error || !user) {
       throw new Error('Invalid access token');
     }
@@ -160,9 +178,11 @@ export class AuthService {
     return user;
   }
 
-  static async createOrUpdateUserFromSupabase(supabaseUser: any): Promise<AuthUser> {
+  static async createOrUpdateUserFromSupabase(
+    supabaseUser: any
+  ): Promise<AuthUser> {
     const existingUser = await this.getUserBySupabaseId(supabaseUser.id);
-    
+
     if (existingUser) {
       return this.updateUser(existingUser.id, {
         email: supabaseUser.email,

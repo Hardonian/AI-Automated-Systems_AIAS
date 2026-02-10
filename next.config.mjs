@@ -21,39 +21,39 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  
+
   // Removed standalone output for faster builds
   images: {
-    formats: ["image/avif", "image/webp"],
+    formats: ['image/avif', 'image/webp'],
     // Reduced sizes for faster builds (still covers all common breakpoints)
     deviceSizes: [640, 828, 1200, 1920, 2048],
     imageSizes: [16, 32, 64, 96, 128, 256],
     minimumCacheTTL: 60,
     dangerouslyAllowSVG: true,
-    contentDispositionType: "attachment",
+    contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "images.unsplash.com",
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
       },
     ],
   },
   // Package optimization (moved to experimental in Next.js 15)
   experimental: {
     optimizePackageImports: [
-    "lucide-react",
-    "@radix-ui/react-dialog",
-    "@radix-ui/react-select",
-    "@radix-ui/react-accordion",
-    "@radix-ui/react-alert-dialog",
-    "@radix-ui/react-dropdown-menu",
-    "@radix-ui/react-popover",
-    "@radix-ui/react-tooltip",
-    "@radix-ui/react-dropdown-menu",
-    "framer-motion",
-    "recharts",
-    "@tanstack/react-query",
+      'lucide-react',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-select',
+      '@radix-ui/react-accordion',
+      '@radix-ui/react-alert-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-popover',
+      '@radix-ui/react-tooltip',
+      '@radix-ui/react-dropdown-menu',
+      'framer-motion',
+      'recharts',
+      '@tanstack/react-query',
     ],
     // Reduce memory usage during build
     webpackBuildWorker: true,
@@ -83,9 +83,12 @@ const nextConfig = {
   },
   // Performance optimizations
   compiler: {
-    removeConsole: process.env.NODE_ENV === "production" ? {
-      exclude: ["error", "warn", "info"], // Keep error, warn, and info for production logging
-    } : false,
+    removeConsole:
+      process.env.NODE_ENV === 'production'
+        ? {
+            exclude: ['error', 'warn', 'info'], // Keep error, warn, and info for production logging
+          }
+        : false,
     // Enable SWC minification (default in Next.js 15)
     // Additional optimizations
   },
@@ -109,13 +112,13 @@ const nextConfig = {
       // Exclude ioredis from client bundle (Node.js only)
       config.externals.push('ioredis');
     }
-    
+
     // Ignore migrations module during build analysis
     config.resolve.alias = config.resolve.alias || {};
     if (!isServer) {
       config.resolve.alias['@/lib/database/migrations'] = false;
     }
-    
+
     // Add path aliases for webpack resolution (resolve from workspace root)
     const rootDir = __dirname;
     config.resolve.alias['@/components'] = path.resolve(rootDir, 'components');
@@ -124,21 +127,27 @@ const nextConfig = {
     config.resolve.alias['@'] = rootDir;
 
     // Supabase removed — redirect package imports to local shims
-    config.resolve.alias['@supabase/supabase-js'] = path.resolve(rootDir, 'lib/shims/supabase-js.ts');
-    config.resolve.alias['@supabase/ssr'] = path.resolve(rootDir, 'lib/shims/supabase-ssr.ts');
-    
+    config.resolve.alias['@supabase/supabase-js'] = path.resolve(
+      rootDir,
+      'lib/shims/supabase-js.ts'
+    );
+    config.resolve.alias['@supabase/ssr'] = path.resolve(
+      rootDir,
+      'lib/shims/supabase-ssr.ts'
+    );
+
     if (!isServer) {
       // Optimize client bundle
       config.optimization = {
         ...config.optimization,
         splitChunks: {
-          chunks: "all",
+          chunks: 'all',
           cacheGroups: {
             default: false,
             vendors: false,
             framework: {
-              name: "framework",
-              chunks: "all",
+              name: 'framework',
+              chunks: 'all',
               test: /(?<!node_modules.*)[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|use-subscription)[\\/]/,
               priority: 40,
               enforce: true,
@@ -146,20 +155,22 @@ const nextConfig = {
             lib: {
               test: /[\\/]node_modules[\\/]/,
               name(module) {
-                const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)?.[1];
-                return `lib-${packageName?.replace("@", "")}`;
+                const packageName = module.context.match(
+                  /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+                )?.[1];
+                return `lib-${packageName?.replace('@', '')}`;
               },
               priority: 30,
               minChunks: 1,
               reuseExistingChunk: true,
             },
             commons: {
-              name: "commons",
+              name: 'commons',
               minChunks: 2,
               priority: 20,
             },
             shared: {
-              name: "shared",
+              name: 'shared',
               minChunks: 2,
               priority: 10,
               reuseExistingChunk: true,
@@ -175,38 +186,39 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: "/:path*",
+        source: '/:path*',
         headers: [
           {
-            key: "X-DNS-Prefetch-Control",
-            value: "on",
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
           },
           {
-            key: "X-Frame-Options",
-            value: "SAMEORIGIN",
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
           },
           {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
           },
           {
-            key: "X-XSS-Protection",
-            value: "1; mode=block",
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
           },
           {
-            key: "Referrer-Policy",
-            value: "strict-origin-when-cross-origin",
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
           },
           {
-            key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+            key: 'Permissions-Policy',
+            value:
+              'camera=(), microphone=(), geolocation=(), interest-cohort=()',
           },
           {
-            key: "Strict-Transport-Security",
-            value: "max-age=31536000; includeSubDomains; preload",
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
           },
           {
-            key: "Content-Security-Policy",
+            key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://browser.sentry-cdn.com https://vercel.live",
@@ -219,9 +231,9 @@ const nextConfig = {
               "base-uri 'self'",
               "form-action 'self'",
               "frame-ancestors 'self'",
-              "upgrade-insecure-requests",
-              "report-uri /api/csp-report",
-            ].join("; "),
+              'upgrade-insecure-requests',
+              'report-uri /api/csp-report',
+            ].join('; '),
           },
         ],
       },

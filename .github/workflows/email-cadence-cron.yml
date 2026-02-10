@@ -44,7 +44,7 @@ jobs:
         run: |
           echo "Triggering email cadence scheduler..."
           EMAIL_TYPE="${{ github.event.inputs.email_type || 'all' }}"
-          
+
           curl -X POST \
             "${{ env.SUPABASE_URL }}/functions/v1/email-cadence-scheduler" \
             -H "Authorization: Bearer ${{ env.SUPABASE_SERVICE_ROLE_KEY }}" \

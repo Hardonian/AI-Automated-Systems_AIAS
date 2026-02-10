@@ -1,15 +1,15 @@
 /**
  * Cost Alerts API
- * 
+ *
  * Get cost alerts and notifications.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { costMonitor } from "@/lib/cost-tracking/cost-monitor";
-import { logger } from "@/lib/logging/structured-logger";
-import { addSecurityHeaders } from "@/lib/middleware/security";
-export const dynamic = "force-dynamic";
+import { costMonitor } from '@/lib/cost-tracking/cost-monitor';
+import { logger } from '@/lib/logging/structured-logger';
+import { addSecurityHeaders } from '@/lib/middleware/security';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/cost/alerts
@@ -18,8 +18,8 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get("limit") || "50", 10);
-    const activeOnly = searchParams.get("active") === "true";
+    const limit = parseInt(searchParams.get('limit') || '50', 10);
+    const activeOnly = searchParams.get('active') === 'true';
 
     const alerts = activeOnly
       ? costMonitor.getActiveAlerts()
@@ -34,9 +34,13 @@ export async function GET(request: NextRequest) {
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    logger.error("Error fetching alerts:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
+    logger.error(
+      'Error fetching alerts:',
+      error instanceof Error ? error : new Error(String(error)),
+      { component: 'route', action: 'unknown' }
+    );
     return NextResponse.json(
-      { error: "Failed to fetch alerts" },
+      { error: 'Failed to fetch alerts' },
       { status: 500 }
     );
   }

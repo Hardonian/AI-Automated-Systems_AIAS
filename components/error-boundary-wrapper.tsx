@@ -3,10 +3,10 @@
  * Wraps pages/components with error boundary for graceful error handling
  */
 
-"use client";
+'use client';
 
-import { EnhancedErrorBoundary } from "@/lib/error-handling/error-boundary-enhanced";
-import { ErrorState } from "@/components/ui/empty-state";
+import { EnhancedErrorBoundary } from '@/lib/error-handling/error-boundary-enhanced';
+import { ErrorState } from '@/components/ui/empty-state';
 
 interface ErrorBoundaryWrapperProps {
   children: React.ReactNode;
@@ -20,10 +20,10 @@ export function ErrorBoundaryWrapper({
   resetKeys,
 }: ErrorBoundaryWrapperProps) {
   const defaultFallback = (
-    <div className="container py-16">
+    <div className='container py-16'>
       <ErrorState
-        title="Something went wrong"
-        description="We encountered an error loading this page. Please try again."
+        title='Something went wrong'
+        description='We encountered an error loading this page. Please try again.'
         onRetry={() => window.location.reload()}
       />
     </div>

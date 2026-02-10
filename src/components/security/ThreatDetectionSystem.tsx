@@ -1,8 +1,8 @@
-import { 
-  Brain, 
-  Shield, 
-  AlertTriangle, 
-  CheckCircle, 
+import {
+  Brain,
+  Shield,
+  AlertTriangle,
+  CheckCircle,
   XCircle,
   Activity,
   Zap,
@@ -13,7 +13,7 @@ import {
   Play,
   Pause,
   TrendingUp,
-  Target
+  Target,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
@@ -47,7 +47,12 @@ export interface ThreatEvent {
   source: string;
   target: string;
   description: string;
-  status: 'detected' | 'analyzing' | 'confirmed' | 'mitigated' | 'false_positive';
+  status:
+    | 'detected'
+    | 'analyzing'
+    | 'confirmed'
+    | 'mitigated'
+    | 'false_positive';
   riskScore: number;
   automatedResponse: boolean;
   actions: string[];
@@ -56,7 +61,11 @@ export interface ThreatEvent {
 
 export interface AIAnalysis {
   threatId: string;
-  analysisType: 'pattern_recognition' | 'anomaly_detection' | 'behavioral_analysis' | 'network_analysis';
+  analysisType:
+    | 'pattern_recognition'
+    | 'anomaly_detection'
+    | 'behavioral_analysis'
+    | 'network_analysis';
   confidence: number;
   findings: string[];
   recommendations: string[];
@@ -81,7 +90,7 @@ const mockThreatPatterns: ThreatPattern[] = [
     lastDetected: '2024-01-23T10:30:00Z',
     status: 'active',
     indicators: ['rapid_failed_logins', 'single_ip_source', 'common_passwords'],
-    mitigation: ['block_ip', 'rate_limiting', 'captcha_requirement']
+    mitigation: ['block_ip', 'rate_limiting', 'captcha_requirement'],
   },
   {
     id: 'pattern-002',
@@ -94,7 +103,7 @@ const mockThreatPatterns: ThreatPattern[] = [
     lastDetected: '2024-01-23T09:15:00Z',
     status: 'investigating',
     indicators: ['large_data_volume', 'unusual_time', 'bulk_download'],
-    mitigation: ['quarantine_user', 'review_access', 'alert_admin']
+    mitigation: ['quarantine_user', 'review_access', 'alert_admin'],
   },
   {
     id: 'pattern-003',
@@ -106,9 +115,13 @@ const mockThreatPatterns: ThreatPattern[] = [
     frequency: 5,
     lastDetected: '2024-01-23T08:45:00Z',
     status: 'resolved',
-    indicators: ['admin_endpoint_access', 'permission_requests', 'role_changes'],
-    mitigation: ['deny_access', 'require_approval', 'log_attempt']
-  }
+    indicators: [
+      'admin_endpoint_access',
+      'permission_requests',
+      'role_changes',
+    ],
+    mitigation: ['deny_access', 'require_approval', 'log_attempt'],
+  },
 ];
 
 const mockThreatEvents: ThreatEvent[] = [
@@ -129,8 +142,8 @@ const mockThreatEvents: ThreatEvent[] = [
       attempts: 15,
       timeWindow: '5 minutes',
       usernames: ['admin', 'root', 'user'],
-      blocked: true
-    }
+      blocked: true,
+    },
   },
   {
     id: 'event-002',
@@ -149,9 +162,9 @@ const mockThreatEvents: ThreatEvent[] = [
       dataVolume: '2.5GB',
       recordCount: 50000,
       exportType: 'CSV',
-      timeOfDay: 'off_hours'
-    }
-  }
+      timeOfDay: 'off_hours',
+    },
+  },
 ];
 
 const mockAIAnalyses: AIAnalysis[] = [
@@ -162,33 +175,37 @@ const mockAIAnalyses: AIAnalysis[] = [
     findings: [
       'Attack pattern matches known brute force signatures',
       'IP address has been flagged in threat intelligence feeds',
-      'Attack timing suggests automated script usage'
+      'Attack timing suggests automated script usage',
     ],
     recommendations: [
       'Implement CAPTCHA for failed login attempts',
       'Consider IP reputation scoring',
-      'Enable account lockout after 3 failed attempts'
+      'Enable account lockout after 3 failed attempts',
     ],
     falsePositiveProbability: 5,
     riskAssessment: {
       immediate: 90,
       shortTerm: 75,
-      longTerm: 40
+      longTerm: 40,
     },
     nextSteps: [
       'Monitor for similar attacks from other IPs',
       'Review authentication logs for compromised accounts',
-      'Update threat intelligence rules'
-    ]
-  }
+      'Update threat intelligence rules',
+    ],
+  },
 ];
 
 export const ThreatDetectionSystem: React.FC = () => {
-  const [threatPatterns, setThreatPatterns] = useState<ThreatPattern[]>(mockThreatPatterns);
-  const [threatEvents, setThreatEvents] = useState<ThreatEvent[]>(mockThreatEvents);
+  const [threatPatterns, setThreatPatterns] =
+    useState<ThreatPattern[]>(mockThreatPatterns);
+  const [threatEvents, setThreatEvents] =
+    useState<ThreatEvent[]>(mockThreatEvents);
   const [aiAnalyses, setAiAnalyses] = useState<AIAnalysis[]>(mockAIAnalyses);
   const [isMonitoring, setIsMonitoring] = useState(true);
-  const [selectedThreat, setSelectedThreat] = useState<ThreatEvent | null>(null);
+  const [selectedThreat, setSelectedThreat] = useState<ThreatEvent | null>(
+    null
+  );
   const [aiProcessing, setAiProcessing] = useState(false);
 
   useEffect(() => {
@@ -211,12 +228,12 @@ export const ThreatDetectionSystem: React.FC = () => {
           details: {
             activity: 'unusual_network_traffic',
             volume: 'high',
-            duration: '10 minutes'
-          }
+            duration: '10 minutes',
+          },
         };
-        
+
         setThreatEvents(prev => [newEvent, ...prev.slice(0, 9)]);
-        
+
         // Simulate AI analysis
         if (Math.random() > 0.7) {
           setAiProcessing(true);
@@ -228,24 +245,24 @@ export const ThreatDetectionSystem: React.FC = () => {
               findings: [
                 'Network traffic pattern deviates from baseline',
                 'Unusual data transfer volume detected',
-                'Connection from non-standard port'
+                'Connection from non-standard port',
               ],
               recommendations: [
                 'Investigate source IP reputation',
                 'Monitor for data exfiltration attempts',
-                'Review network access controls'
+                'Review network access controls',
               ],
               falsePositiveProbability: Math.floor(Math.random() * 20) + 10,
               riskAssessment: {
                 immediate: Math.floor(Math.random() * 30) + 60,
                 shortTerm: Math.floor(Math.random() * 40) + 40,
-                longTerm: Math.floor(Math.random() * 50) + 20
+                longTerm: Math.floor(Math.random() * 50) + 20,
               },
               nextSteps: [
                 'Continue monitoring',
                 'Update threat detection rules',
-                'Alert security team if pattern continues'
-              ]
+                'Alert security team if pattern continues',
+              ],
             };
             setAiAnalyses(prev => [analysis, ...prev.slice(0, 4)]);
             setAiProcessing(false);
@@ -259,22 +276,33 @@ export const ThreatDetectionSystem: React.FC = () => {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'bg-red-100 text-red-800 border-red-200';
-      case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'critical':
+        return 'bg-red-100 text-red-800 border-red-200';
+      case 'high':
+        return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'low':
+        return 'bg-green-100 text-green-800 border-green-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'detected': return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
-      case 'analyzing': return <Brain className="w-4 h-4 text-blue-500" />;
-      case 'confirmed': return <CheckCircle className="w-4 h-4 text-red-500" />;
-      case 'mitigated': return <Shield className="w-4 h-4 text-green-500" />;
-      case 'false_positive': return <XCircle className="w-4 h-4 text-gray-500" />;
-      default: return <Activity className="w-4 h-4 text-gray-500" />;
+      case 'detected':
+        return <AlertTriangle className='h-4 w-4 text-yellow-500' />;
+      case 'analyzing':
+        return <Brain className='h-4 w-4 text-blue-500' />;
+      case 'confirmed':
+        return <CheckCircle className='h-4 w-4 text-red-500' />;
+      case 'mitigated':
+        return <Shield className='h-4 w-4 text-green-500' />;
+      case 'false_positive':
+        return <XCircle className='h-4 w-4 text-gray-500' />;
+      default:
+        return <Activity className='h-4 w-4 text-gray-500' />;
     }
   };
 
@@ -283,73 +311,93 @@ export const ThreatDetectionSystem: React.FC = () => {
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / (1000 * 60));
-    
-    if (diffMins < 1) {return 'Just now';}
-    if (diffMins < 60) {return `${diffMins}m ago`;}
-    if (diffMins < 1440) {return `${Math.floor(diffMins / 60)}h ago`;}
+
+    if (diffMins < 1) {
+      return 'Just now';
+    }
+    if (diffMins < 60) {
+      return `${diffMins}m ago`;
+    }
+    if (diffMins < 1440) {
+      return `${Math.floor(diffMins / 60)}h ago`;
+    }
     return date.toLocaleDateString();
   };
 
   const handleThreatResponse = (eventId: string, action: string) => {
-    setThreatEvents(prev => prev.map(event => 
-      event.id === eventId 
-        ? { 
-            ...event, 
-            status: action === 'mitigate' ? 'mitigated' : 'false_positive',
-            actions: [...event.actions, action]
-          }
-        : event
-    ));
+    setThreatEvents(prev =>
+      prev.map(event =>
+        event.id === eventId
+          ? {
+              ...event,
+              status: action === 'mitigate' ? 'mitigated' : 'false_positive',
+              actions: [...event.actions, action],
+            }
+          : event
+      )
+    );
   };
 
   const getRiskLevel = (score: number) => {
-    if (score >= 80) {return { level: 'Critical', color: 'text-red-600' };}
-    if (score >= 60) {return { level: 'High', color: 'text-orange-600' };}
-    if (score >= 40) {return { level: 'Medium', color: 'text-yellow-600' };}
+    if (score >= 80) {
+      return { level: 'Critical', color: 'text-red-600' };
+    }
+    if (score >= 60) {
+      return { level: 'High', color: 'text-orange-600' };
+    }
+    if (score >= 40) {
+      return { level: 'Medium', color: 'text-yellow-600' };
+    }
     return { level: 'Low', color: 'text-green-600' };
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className='space-y-6'>
+      <div className='flex items-center justify-between'>
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <Brain className="w-8 h-8" />
+          <h1 className='flex items-center gap-2 text-3xl font-bold'>
+            <Brain className='h-8 w-8' />
             AI-Powered Threat Detection
           </h1>
-          <p className="text-gray-600 mt-1">Advanced machine learning threat detection and automated response</p>
+          <p className='mt-1 text-gray-600'>
+            Advanced machine learning threat detection and automated response
+          </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className='flex items-center gap-2'>
           <Button
-            variant={isMonitoring ? "destructive" : "default"}
+            variant={isMonitoring ? 'destructive' : 'default'}
             onClick={() => setIsMonitoring(!isMonitoring)}
           >
-            {isMonitoring ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
+            {isMonitoring ? (
+              <Pause className='mr-2 h-4 w-4' />
+            ) : (
+              <Play className='mr-2 h-4 w-4' />
+            )}
             {isMonitoring ? 'Stop Monitoring' : 'Start Monitoring'}
           </Button>
-          <Button variant="outline">
-            <Settings className="w-4 h-4 mr-2" />
+          <Button variant='outline'>
+            <Settings className='mr-2 h-4 w-4' />
             Configure AI
           </Button>
         </div>
       </div>
 
       {/* AI Status */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-4'>
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className='p-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="text-sm font-medium text-gray-600">AI Status</p>
-                <p className="text-2xl font-bold text-green-600">
+                <p className='text-sm font-medium text-gray-600'>AI Status</p>
+                <p className='text-2xl font-bold text-green-600'>
                   {isMonitoring ? 'Active' : 'Inactive'}
                 </p>
               </div>
-              <Brain className="w-8 h-8 text-green-500" />
+              <Brain className='h-8 w-8 text-green-500' />
             </div>
-            <div className="mt-2">
-              <div className="flex items-center text-sm text-gray-600">
-                <Activity className="w-4 h-4 mr-1" />
+            <div className='mt-2'>
+              <div className='flex items-center text-sm text-gray-600'>
+                <Activity className='mr-1 h-4 w-4' />
                 {aiProcessing ? 'Processing...' : 'Monitoring'}
               </div>
             </div>
@@ -357,17 +405,21 @@ export const ThreatDetectionSystem: React.FC = () => {
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className='p-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="text-sm font-medium text-gray-600">Threats Detected</p>
-                <p className="text-2xl font-bold text-red-600">{threatEvents.length}</p>
+                <p className='text-sm font-medium text-gray-600'>
+                  Threats Detected
+                </p>
+                <p className='text-2xl font-bold text-red-600'>
+                  {threatEvents.length}
+                </p>
               </div>
-              <AlertTriangle className="w-8 h-8 text-red-500" />
+              <AlertTriangle className='h-8 w-8 text-red-500' />
             </div>
-            <div className="mt-2">
-              <div className="flex items-center text-sm text-red-600">
-                <TrendingUp className="w-4 h-4 mr-1" />
+            <div className='mt-2'>
+              <div className='flex items-center text-sm text-red-600'>
+                <TrendingUp className='mr-1 h-4 w-4' />
                 +3 this hour
               </div>
             </div>
@@ -375,17 +427,17 @@ export const ThreatDetectionSystem: React.FC = () => {
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className='p-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="text-sm font-medium text-gray-600">AI Accuracy</p>
-                <p className="text-2xl font-bold text-blue-600">94.2%</p>
+                <p className='text-sm font-medium text-gray-600'>AI Accuracy</p>
+                <p className='text-2xl font-bold text-blue-600'>94.2%</p>
               </div>
-              <Target className="w-8 h-8 text-blue-500" />
+              <Target className='h-8 w-8 text-blue-500' />
             </div>
-            <div className="mt-2">
-              <div className="flex items-center text-sm text-blue-600">
-                <TrendingUp className="w-4 h-4 mr-1" />
+            <div className='mt-2'>
+              <div className='flex items-center text-sm text-blue-600'>
+                <TrendingUp className='mr-1 h-4 w-4' />
                 +2.1% this week
               </div>
             </div>
@@ -393,17 +445,19 @@ export const ThreatDetectionSystem: React.FC = () => {
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className='p-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="text-sm font-medium text-gray-600">Auto Response</p>
-                <p className="text-2xl font-bold text-purple-600">87%</p>
+                <p className='text-sm font-medium text-gray-600'>
+                  Auto Response
+                </p>
+                <p className='text-2xl font-bold text-purple-600'>87%</p>
               </div>
-              <Zap className="w-8 h-8 text-purple-500" />
+              <Zap className='h-8 w-8 text-purple-500' />
             </div>
-            <div className="mt-2">
-              <div className="flex items-center text-sm text-purple-600">
-                <TrendingUp className="w-4 h-4 mr-1" />
+            <div className='mt-2'>
+              <div className='flex items-center text-sm text-purple-600'>
+                <TrendingUp className='mr-1 h-4 w-4' />
                 +5.3% this month
               </div>
             </div>
@@ -411,60 +465,74 @@ export const ThreatDetectionSystem: React.FC = () => {
         </Card>
       </div>
 
-      <Tabs className="w-full" defaultValue="events">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="events">Threat Events</TabsTrigger>
-          <TabsTrigger value="patterns">Threat Patterns</TabsTrigger>
-          <TabsTrigger value="analysis">AI Analysis</TabsTrigger>
-          <TabsTrigger value="response">Auto Response</TabsTrigger>
+      <Tabs className='w-full' defaultValue='events'>
+        <TabsList className='grid w-full grid-cols-4'>
+          <TabsTrigger value='events'>Threat Events</TabsTrigger>
+          <TabsTrigger value='patterns'>Threat Patterns</TabsTrigger>
+          <TabsTrigger value='analysis'>AI Analysis</TabsTrigger>
+          <TabsTrigger value='response'>Auto Response</TabsTrigger>
         </TabsList>
 
-        <TabsContent className="space-y-4" value="events">
+        <TabsContent className='space-y-4' value='events'>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5" />
+              <CardTitle className='flex items-center gap-2'>
+                <AlertTriangle className='h-5 w-5' />
                 Real-time Threat Events
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {threatEvents.map((event) => (
-                  <div key={event.id} className="border rounded-lg p-4 hover:bg-gray-50">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start gap-3">
+              <div className='space-y-4'>
+                {threatEvents.map(event => (
+                  <div
+                    key={event.id}
+                    className='rounded-lg border p-4 hover:bg-gray-50'
+                  >
+                    <div className='flex items-start justify-between'>
+                      <div className='flex items-start gap-3'>
                         {getStatusIcon(event.status)}
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-semibold">{event.threatType}</h4>
+                        <div className='flex-1'>
+                          <div className='mb-1 flex items-center gap-2'>
+                            <h4 className='font-semibold'>
+                              {event.threatType}
+                            </h4>
                             <Badge className={getSeverityColor(event.severity)}>
                               {event.severity}
                             </Badge>
-                            <Badge variant="outline">
+                            <Badge variant='outline'>
                               {event.confidence}% confidence
                             </Badge>
                           </div>
-                          <p className="text-sm text-gray-600 mb-2">{event.description}</p>
-                          <div className="flex items-center gap-4 text-xs text-gray-500">
-                            <span className="flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
+                          <p className='mb-2 text-sm text-gray-600'>
+                            {event.description}
+                          </p>
+                          <div className='flex items-center gap-4 text-xs text-gray-500'>
+                            <span className='flex items-center gap-1'>
+                              <Clock className='h-3 w-3' />
                               {formatTimestamp(event.timestamp)}
                             </span>
-                            <span className="flex items-center gap-1">
-                              <Globe className="w-3 h-3" />
+                            <span className='flex items-center gap-1'>
+                              <Globe className='h-3 w-3' />
                               {event.source}
                             </span>
-                            <span className="flex items-center gap-1">
-                              <Target className="w-3 h-3" />
+                            <span className='flex items-center gap-1'>
+                              <Target className='h-3 w-3' />
                               {event.target}
                             </span>
                           </div>
-                          <div className="mt-2">
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-medium">Risk Score:</span>
-                              <div className="flex items-center gap-2">
-                                <Progress className="w-20 h-2" value={event.riskScore} />
-                                <span className={`text-sm font-bold ${getRiskLevel(event.riskScore).color}`}>
+                          <div className='mt-2'>
+                            <div className='flex items-center gap-2'>
+                              <span className='text-sm font-medium'>
+                                Risk Score:
+                              </span>
+                              <div className='flex items-center gap-2'>
+                                <Progress
+                                  className='h-2 w-20'
+                                  value={event.riskScore}
+                                />
+                                <span
+                                  className={`text-sm font-bold ${getRiskLevel(event.riskScore).color}`}
+                                >
                                   {event.riskScore}
                                 </span>
                               </div>
@@ -472,30 +540,34 @@ export const ThreatDetectionSystem: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="flex gap-2">
+                      <div className='flex gap-2'>
                         <Button
-                          size="sm"
-                          variant="outline"
+                          size='sm'
+                          variant='outline'
                           onClick={() => setSelectedThreat(event)}
                         >
-                          <Eye className="w-4 h-4 mr-2" />
+                          <Eye className='mr-2 h-4 w-4' />
                           Details
                         </Button>
                         {event.status === 'detected' && (
                           <>
                             <Button
-                              size="sm"
-                              onClick={() => handleThreatResponse(event.id, 'mitigate')}
+                              size='sm'
+                              onClick={() =>
+                                handleThreatResponse(event.id, 'mitigate')
+                              }
                             >
-                              <Shield className="w-4 h-4 mr-2" />
+                              <Shield className='mr-2 h-4 w-4' />
                               Mitigate
                             </Button>
                             <Button
-                              size="sm"
-                              variant="destructive"
-                              onClick={() => handleThreatResponse(event.id, 'false_positive')}
+                              size='sm'
+                              variant='destructive'
+                              onClick={() =>
+                                handleThreatResponse(event.id, 'false_positive')
+                              }
                             >
-                              <XCircle className="w-4 h-4 mr-2" />
+                              <XCircle className='mr-2 h-4 w-4' />
                               False Positive
                             </Button>
                           </>
@@ -503,11 +575,17 @@ export const ThreatDetectionSystem: React.FC = () => {
                       </div>
                     </div>
                     {event.actions.length > 0 && (
-                      <div className="mt-3 pt-3 border-t">
-                        <h5 className="text-sm font-medium mb-2">Actions Taken:</h5>
-                        <div className="flex flex-wrap gap-1">
+                      <div className='mt-3 border-t pt-3'>
+                        <h5 className='mb-2 text-sm font-medium'>
+                          Actions Taken:
+                        </h5>
+                        <div className='flex flex-wrap gap-1'>
                           {event.actions.map((action, index) => (
-                            <Badge key={index} className="text-xs" variant="outline">
+                            <Badge
+                              key={index}
+                              className='text-xs'
+                              variant='outline'
+                            >
                               {action}
                             </Badge>
                           ))}
@@ -521,47 +599,61 @@ export const ThreatDetectionSystem: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent className="space-y-4" value="patterns">
+        <TabsContent className='space-y-4' value='patterns'>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Brain className="w-5 h-5" />
+              <CardTitle className='flex items-center gap-2'>
+                <Brain className='h-5 w-5' />
                 Learned Threat Patterns
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {threatPatterns.map((pattern) => (
-                  <div key={pattern.id} className="border rounded-lg p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h4 className="font-semibold">{pattern.name}</h4>
+              <div className='space-y-4'>
+                {threatPatterns.map(pattern => (
+                  <div key={pattern.id} className='rounded-lg border p-4'>
+                    <div className='flex items-start justify-between'>
+                      <div className='flex-1'>
+                        <div className='mb-2 flex items-center gap-2'>
+                          <h4 className='font-semibold'>{pattern.name}</h4>
                           <Badge className={getSeverityColor(pattern.severity)}>
                             {pattern.severity}
                           </Badge>
-                          <Badge variant="outline">
+                          <Badge variant='outline'>
                             {pattern.confidence}% confidence
                           </Badge>
                         </div>
-                        <p className="text-sm text-gray-600 mb-3">{pattern.description}</p>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <p className='mb-3 text-sm text-gray-600'>
+                          {pattern.description}
+                        </p>
+
+                        <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                           <div>
-                            <h5 className="text-sm font-medium mb-2">Indicators:</h5>
-                            <div className="flex flex-wrap gap-1">
+                            <h5 className='mb-2 text-sm font-medium'>
+                              Indicators:
+                            </h5>
+                            <div className='flex flex-wrap gap-1'>
                               {pattern.indicators.map((indicator, index) => (
-                                <Badge key={index} className="text-xs" variant="outline">
+                                <Badge
+                                  key={index}
+                                  className='text-xs'
+                                  variant='outline'
+                                >
                                   {indicator.replace(/_/g, ' ')}
                                 </Badge>
                               ))}
                             </div>
                           </div>
                           <div>
-                            <h5 className="text-sm font-medium mb-2">Mitigation:</h5>
-                            <div className="flex flex-wrap gap-1">
+                            <h5 className='mb-2 text-sm font-medium'>
+                              Mitigation:
+                            </h5>
+                            <div className='flex flex-wrap gap-1'>
                               {pattern.mitigation.map((action, index) => (
-                                <Badge key={index} className="text-xs" variant="outline">
+                                <Badge
+                                  key={index}
+                                  className='text-xs'
+                                  variant='outline'
+                                >
                                   {action.replace(/_/g, ' ')}
                                 </Badge>
                               ))}
@@ -569,7 +661,7 @@ export const ThreatDetectionSystem: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="ml-4 text-right text-sm text-gray-500">
+                      <div className='ml-4 text-right text-sm text-gray-500'>
                         <div>Frequency: {pattern.frequency}</div>
                         <div>Last: {formatTimestamp(pattern.lastDetected)}</div>
                         <Badge className={getSeverityColor(pattern.status)}>
@@ -584,52 +676,69 @@ export const ThreatDetectionSystem: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent className="space-y-4" value="analysis">
+        <TabsContent className='space-y-4' value='analysis'>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Brain className="w-5 h-5" />
+              <CardTitle className='flex items-center gap-2'>
+                <Brain className='h-5 w-5' />
                 AI Analysis Results
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className='space-y-4'>
                 {aiAnalyses.map((analysis, index) => (
-                  <div key={index} className="border rounded-lg p-4">
-                    <div className="flex items-start justify-between mb-4">
+                  <div key={index} className='rounded-lg border p-4'>
+                    <div className='mb-4 flex items-start justify-between'>
                       <div>
-                        <h4 className="font-semibold capitalize">
+                        <h4 className='font-semibold capitalize'>
                           {analysis.analysisType.replace(/_/g, ' ')} Analysis
                         </h4>
-                        <p className="text-sm text-gray-600">
-                          Confidence: {analysis.confidence}% | 
-                          False Positive Probability: {analysis.falsePositiveProbability}%
+                        <p className='text-sm text-gray-600'>
+                          Confidence: {analysis.confidence}% | False Positive
+                          Probability: {analysis.falsePositiveProbability}%
                         </p>
                       </div>
-                      <Badge variant="outline">
+                      <Badge variant='outline'>
                         {analysis.confidence}% confidence
                       </Badge>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className='mb-4 grid grid-cols-1 gap-4 md:grid-cols-3'>
                       <div>
-                        <h5 className="text-sm font-medium mb-2">Risk Assessment</h5>
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-sm">
+                        <h5 className='mb-2 text-sm font-medium'>
+                          Risk Assessment
+                        </h5>
+                        <div className='space-y-2'>
+                          <div className='flex justify-between text-sm'>
                             <span>Immediate:</span>
-                            <span className={getRiskLevel(analysis.riskAssessment.immediate).color}>
+                            <span
+                              className={
+                                getRiskLevel(analysis.riskAssessment.immediate)
+                                  .color
+                              }
+                            >
                               {analysis.riskAssessment.immediate}%
                             </span>
                           </div>
-                          <div className="flex justify-between text-sm">
+                          <div className='flex justify-between text-sm'>
                             <span>Short-term:</span>
-                            <span className={getRiskLevel(analysis.riskAssessment.shortTerm).color}>
+                            <span
+                              className={
+                                getRiskLevel(analysis.riskAssessment.shortTerm)
+                                  .color
+                              }
+                            >
                               {analysis.riskAssessment.shortTerm}%
                             </span>
                           </div>
-                          <div className="flex justify-between text-sm">
+                          <div className='flex justify-between text-sm'>
                             <span>Long-term:</span>
-                            <span className={getRiskLevel(analysis.riskAssessment.longTerm).color}>
+                            <span
+                              className={
+                                getRiskLevel(analysis.riskAssessment.longTerm)
+                                  .color
+                              }
+                            >
                               {analysis.riskAssessment.longTerm}%
                             </span>
                           </div>
@@ -637,11 +746,13 @@ export const ThreatDetectionSystem: React.FC = () => {
                       </div>
 
                       <div>
-                        <h5 className="text-sm font-medium mb-2">Key Findings</h5>
-                        <ul className="space-y-1 text-sm">
+                        <h5 className='mb-2 text-sm font-medium'>
+                          Key Findings
+                        </h5>
+                        <ul className='space-y-1 text-sm'>
                           {analysis.findings.map((finding, idx) => (
-                            <li key={idx} className="flex items-start gap-1">
-                              <CheckCircle className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                            <li key={idx} className='flex items-start gap-1'>
+                              <CheckCircle className='mt-0.5 h-3 w-3 flex-shrink-0 text-green-500' />
                               {finding}
                             </li>
                           ))}
@@ -649,11 +760,13 @@ export const ThreatDetectionSystem: React.FC = () => {
                       </div>
 
                       <div>
-                        <h5 className="text-sm font-medium mb-2">Recommendations</h5>
-                        <ul className="space-y-1 text-sm">
+                        <h5 className='mb-2 text-sm font-medium'>
+                          Recommendations
+                        </h5>
+                        <ul className='space-y-1 text-sm'>
                           {analysis.recommendations.map((rec, idx) => (
-                            <li key={idx} className="flex items-start gap-1">
-                              <Target className="w-3 h-3 text-blue-500 mt-0.5 flex-shrink-0" />
+                            <li key={idx} className='flex items-start gap-1'>
+                              <Target className='mt-0.5 h-3 w-3 flex-shrink-0 text-blue-500' />
                               {rec}
                             </li>
                           ))}
@@ -662,10 +775,14 @@ export const ThreatDetectionSystem: React.FC = () => {
                     </div>
 
                     <div>
-                      <h5 className="text-sm font-medium mb-2">Next Steps</h5>
-                      <div className="flex flex-wrap gap-1">
+                      <h5 className='mb-2 text-sm font-medium'>Next Steps</h5>
+                      <div className='flex flex-wrap gap-1'>
                         {analysis.nextSteps.map((step, idx) => (
-                          <Badge key={idx} className="text-xs" variant="outline">
+                          <Badge
+                            key={idx}
+                            className='text-xs'
+                            variant='outline'
+                          >
                             {step}
                           </Badge>
                         ))}
@@ -678,61 +795,62 @@ export const ThreatDetectionSystem: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent className="space-y-4" value="response">
+        <TabsContent className='space-y-4' value='response'>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Zap className="w-5 h-5" />
+              <CardTitle className='flex items-center gap-2'>
+                <Zap className='h-5 w-5' />
                 Automated Response System
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className='space-y-4'>
                 <Alert>
-                  <Shield className="h-4 w-4" />
+                  <Shield className='h-4 w-4' />
                   <AlertDescription>
-                    Automated response system is currently active and monitoring for threats.
-                    AI will automatically execute predefined responses based on threat severity and type.
+                    Automated response system is currently active and monitoring
+                    for threats. AI will automatically execute predefined
+                    responses based on threat severity and type.
                   </AlertDescription>
                 </Alert>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-3">
-                    <h4 className="font-semibold">Response Rules</h4>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between p-3 border rounded">
-                        <span className="text-sm">Brute Force Attack</span>
-                        <Badge variant="outline">Block IP + Rate Limit</Badge>
+                <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+                  <div className='space-y-3'>
+                    <h4 className='font-semibold'>Response Rules</h4>
+                    <div className='space-y-2'>
+                      <div className='flex items-center justify-between rounded border p-3'>
+                        <span className='text-sm'>Brute Force Attack</span>
+                        <Badge variant='outline'>Block IP + Rate Limit</Badge>
                       </div>
-                      <div className="flex items-center justify-between p-3 border rounded">
-                        <span className="text-sm">Data Exfiltration</span>
-                        <Badge variant="outline">Quarantine User</Badge>
+                      <div className='flex items-center justify-between rounded border p-3'>
+                        <span className='text-sm'>Data Exfiltration</span>
+                        <Badge variant='outline'>Quarantine User</Badge>
                       </div>
-                      <div className="flex items-center justify-between p-3 border rounded">
-                        <span className="text-sm">Privilege Escalation</span>
-                        <Badge variant="outline">Deny Access + Alert</Badge>
+                      <div className='flex items-center justify-between rounded border p-3'>
+                        <span className='text-sm'>Privilege Escalation</span>
+                        <Badge variant='outline'>Deny Access + Alert</Badge>
                       </div>
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                    <h4 className="font-semibold">Response Statistics</h4>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
+                  <div className='space-y-3'>
+                    <h4 className='font-semibold'>Response Statistics</h4>
+                    <div className='space-y-2'>
+                      <div className='flex justify-between text-sm'>
                         <span>Total Responses:</span>
-                        <span className="font-medium">47</span>
+                        <span className='font-medium'>47</span>
                       </div>
-                      <div className="flex justify-between text-sm">
+                      <div className='flex justify-between text-sm'>
                         <span>Successful Mitigations:</span>
-                        <span className="font-medium text-green-600">42</span>
+                        <span className='font-medium text-green-600'>42</span>
                       </div>
-                      <div className="flex justify-between text-sm">
+                      <div className='flex justify-between text-sm'>
                         <span>False Positives:</span>
-                        <span className="font-medium text-yellow-600">3</span>
+                        <span className='font-medium text-yellow-600'>3</span>
                       </div>
-                      <div className="flex justify-between text-sm">
+                      <div className='flex justify-between text-sm'>
                         <span>Average Response Time:</span>
-                        <span className="font-medium">2.3s</span>
+                        <span className='font-medium'>2.3s</span>
                       </div>
                     </div>
                   </div>

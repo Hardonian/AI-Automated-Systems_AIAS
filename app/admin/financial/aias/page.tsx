@@ -1,41 +1,54 @@
 /**
  * AIAS Financial Reports
- * 
+ *
  * Protected page for AIAS-specific financial data.
  * Requires Financial Admin access.
  * Data is stored in internal/private/financial/aias/ (encrypted with git-crypt).
  */
 
-import { Shield, Lock, FileText } from "lucide-react";
-import { redirect } from "next/navigation";
+import { Shield, Lock, FileText } from 'lucide-react';
+import { redirect } from 'next/navigation';
 
-import { AdminLayout } from "@/components/admin/admin-layout";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { checkAdminAccess, AdminRole, hasAdminRole } from "@/lib/auth/admin-auth";
+import { AdminLayout } from '@/components/admin/admin-layout';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  checkAdminAccess,
+  AdminRole,
+  hasAdminRole,
+} from '@/lib/auth/admin-auth';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 export default async function AIASFinancialPage() {
   // Check admin access
   const adminCheck = await checkAdminAccess();
 
   if (!adminCheck.isAdmin) {
-    redirect(adminCheck.redirect || "/signin");
+    redirect(adminCheck.redirect || '/signin');
   }
 
   // Check financial admin access
   if (!adminCheck.user) {
-    redirect("/admin?error=access_denied");
+    redirect('/admin?error=access_denied');
   }
 
-  const hasFinancialAccess = await hasAdminRole(adminCheck.user.id, AdminRole.FINANCIAL_ADMIN);
+  const hasFinancialAccess = await hasAdminRole(
+    adminCheck.user.id,
+    AdminRole.FINANCIAL_ADMIN
+  );
 
   if (!hasFinancialAccess) {
     return (
       <AdminLayout>
-        <Alert variant="destructive">
-          <Lock className="h-4 w-4" />
+        <Alert variant='destructive'>
+          <Lock className='h-4 w-4' />
           <AlertTitle>Access Denied</AlertTitle>
           <AlertDescription>
             Financial Admin access is required to view AIAS financial data.
@@ -48,35 +61,36 @@ export default async function AIASFinancialPage() {
 
   return (
     <AdminLayout requireFinancialAccess={true}>
-      <div className="space-y-6">
+      <div className='space-y-6'>
         {/* Header */}
         <div>
-          <h1 className="text-4xl font-bold flex items-center gap-2">
-            <Shield className="h-8 w-8 text-primary" />
+          <h1 className='flex items-center gap-2 text-4xl font-bold'>
+            <Shield className='h-8 w-8 text-primary' />
             AIAS Financial Reports
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className='mt-2 text-muted-foreground'>
             Confidential financial data for AI Automated Systems
           </p>
         </div>
 
         {/* Security Notice */}
         <Alert>
-          <Lock className="h-4 w-4" />
+          <Lock className='h-4 w-4' />
           <AlertTitle>Protected Data</AlertTitle>
           <AlertDescription>
-            This page contains sensitive financial information. All data is encrypted
-            with git-crypt and stored in internal/private/financial/aias/.
-            Access is restricted to Financial Admins only.
+            This page contains sensitive financial information. All data is
+            encrypted with git-crypt and stored in
+            internal/private/financial/aias/. Access is restricted to Financial
+            Admins only.
           </AlertDescription>
         </Alert>
 
         {/* Financial Reports */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
+              <CardTitle className='flex items-center gap-2'>
+                <FileText className='h-5 w-5' />
                 Monthly Reports
               </CardTitle>
               <CardDescription>
@@ -84,7 +98,7 @@ export default async function AIASFinancialPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
+              <p className='text-sm text-muted-foreground'>
                 Monthly financial reports are stored in the protected directory.
                 Use the API to fetch reports: /api/admin/financial/aias/reports
               </p>
@@ -93,8 +107,8 @@ export default async function AIASFinancialPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
+              <CardTitle className='flex items-center gap-2'>
+                <FileText className='h-5 w-5' />
                 Annual Reports
               </CardTitle>
               <CardDescription>
@@ -102,8 +116,9 @@ export default async function AIASFinancialPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Annual reports and summaries are available through the protected API.
+              <p className='text-sm text-muted-foreground'>
+                Annual reports and summaries are available through the protected
+                API.
               </p>
             </CardContent>
           </Card>
@@ -116,7 +131,7 @@ export default async function AIASFinancialPage() {
             <CardDescription>Where financial data is stored</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2 text-sm">
+            <div className='space-y-2 text-sm'>
               <p>
                 <strong>Location:</strong> internal/private/financial/aias/
               </p>

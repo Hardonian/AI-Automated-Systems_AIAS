@@ -59,7 +59,10 @@ export class AIGuardrail {
     throw lastError || new Error('AI call failed after retries');
   }
 
-  private async withTimeout<T>(fn: () => Promise<T>, timeout: number): Promise<T> {
+  private async withTimeout<T>(
+    fn: () => Promise<T>,
+    timeout: number
+  ): Promise<T> {
     return Promise.race([
       fn(),
       new Promise<T>((_, reject) =>
@@ -69,7 +72,7 @@ export class AIGuardrail {
   }
 
   private sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
 

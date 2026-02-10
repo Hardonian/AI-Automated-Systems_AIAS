@@ -27,7 +27,7 @@ export async function verify(_options: { verbose?: boolean }): Promise<number> {
   }
 }
 
-export async function audit(options: { 
+export async function audit(options: {
   fix?: boolean;
   report?: boolean;
   verbose?: boolean;
@@ -51,7 +51,12 @@ export async function audit(options: {
   }
 
   // Check policy files
-  const policyPath = join(process.cwd(), 'guardian', 'policies', 'default.yaml');
+  const policyPath = join(
+    process.cwd(),
+    'guardian',
+    'policies',
+    'default.yaml'
+  );
   if (!existsSync(policyPath)) {
     issues.push('Default policy file not found');
   }
@@ -65,14 +70,23 @@ export async function audit(options: {
   // Generate report if requested
   if (options.report) {
     const report = await guardianInspector.analyzeLogs();
-    const reportPath = join(process.cwd(), 'guardian', 'reports', `audit_${new Date().toISOString().split('T')[0]}.json`);
+    const reportPath = join(
+      process.cwd(),
+      'guardian',
+      'reports',
+      `audit_${new Date().toISOString().split('T')[0]}.json`
+    );
     require('fs').writeFileSync(
       reportPath,
-      JSON.stringify({
-        audit_date: new Date().toISOString(),
-        issues,
-        report,
-      }, null, 2),
+      JSON.stringify(
+        {
+          audit_date: new Date().toISOString(),
+          issues,
+          report,
+        },
+        null,
+        2
+      ),
       'utf-8'
     );
     console.log(`\n📄 Audit report saved to: ${reportPath}`);
@@ -111,10 +125,14 @@ Generated: ${report.generated_at}
 - Violations Prevented: ${report.violations_prevented}
 
 ## Risk Distribution
-${Object.entries(report.summary.by_risk_level).map(([level, count]) => `- ${level}: ${count}`).join('\n')}
+${Object.entries(report.summary.by_risk_level)
+  .map(([level, count]) => `- ${level}: ${count}`)
+  .join('\n')}
 
 ## Data Classes
-${Object.entries(report.summary.by_data_class).map(([cls, count]) => `- ${cls}: ${count}`).join('\n')}
+${Object.entries(report.summary.by_data_class)
+  .map(([cls, count]) => `- ${cls}: ${count}`)
+  .join('\n')}
 
 ## Recommendations
 ${report.recommendations.map(r => `- ${r.type}: ${r.reason}`).join('\n')}
@@ -134,7 +152,9 @@ export async function exportFabric(options: {
   console.log('📦 Exporting Trust Fabric model...\n');
 
   const model = trustFabricAI.exportModel();
-  const outputPath = options.output || join(process.cwd(), 'guardian', 'trust_fabric_export.json');
+  const outputPath =
+    options.output ||
+    join(process.cwd(), 'guardian', 'trust_fabric_export.json');
 
   require('fs').writeFileSync(
     outputPath,
@@ -146,9 +166,7 @@ export async function exportFabric(options: {
   return 0;
 }
 
-export async function importFabric(options: {
-  file: string;
-}): Promise<number> {
+export async function importFabric(options: { file: string }): Promise<number> {
   console.log('📥 Importing Trust Fabric model...\n');
 
   if (!existsSync(options.file)) {
@@ -177,11 +195,15 @@ export async function status(): Promise<number> {
   console.log(`Recent Events: ${ledgerEvents.length}`);
   console.log(`\nLast 5 Events:`);
   ledgerEvents.slice(0, 5).forEach(event => {
-    console.log(`  - [${event.timestamp}] ${event.type} (${event.scope}) - ${event.guardian_action}`);
+    console.log(
+      `  - [${event.timestamp}] ${event.type} (${event.scope}) - ${event.guardian_action}`
+    );
   });
 
   const integrity = guardianService.verifyLedgerIntegrity();
-  console.log(`\nLedger Integrity: ${integrity.valid ? '✅ Valid' : '❌ Invalid'}`);
+  console.log(
+    `\nLedger Integrity: ${integrity.valid ? '✅ Valid' : '❌ Invalid'}`
+  );
 
   return 0;
 }

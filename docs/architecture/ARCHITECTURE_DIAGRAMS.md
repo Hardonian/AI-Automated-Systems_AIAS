@@ -100,7 +100,7 @@ graph TD
     J --> K
     K --> L[Store in Immutable Ledger]
     L --> M[Never Delete, Only Offset]
-    
+
     N[Correction Needed] --> O[Create Offset Entry]
     O --> P[Link to Original Entry]
     P --> L
@@ -118,22 +118,22 @@ stateDiagram-v2
     Lead --> Customer: Direct Conversion
     MQL --> Lead: Score Drops
     SQL --> MQL: Disqualified
-    
+
     note right of Subscriber
         Initial contact
         No engagement yet
     end note
-    
+
     note right of MQL
         Marketing Qualified
         Engaged but not sales-ready
     end note
-    
+
     note right of SQL
         Sales Qualified
         Ready for sales team
     end note
-    
+
     note right of Customer
         Converted
         Revenue generated

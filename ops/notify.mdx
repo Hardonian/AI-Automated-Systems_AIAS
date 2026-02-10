@@ -25,44 +25,51 @@ The notification utility is located at `ops/notify.ts` and provides:
 ## Alert Types
 
 ### Reliability Alerts
+
 Triggered when performance metrics exceed SLO thresholds for 3+ cycles.
 
 **Example:**
-```typescript
-import { sendAlert, createReliabilityAlert } from "@/ops/notify";
 
-const alert = createReliabilityAlert("api_p95_ms", 500, 400, 3);
+```typescript
+import { sendAlert, createReliabilityAlert } from '@/ops/notify';
+
+const alert = createReliabilityAlert('api_p95_ms', 500, 400, 3);
 await sendAlert(alert);
 ```
 
 ### Security Alerts
+
 Triggered when security issues are detected.
 
 **Example:**
-```typescript
-import { sendAlert, createSecurityAlert } from "@/ops/notify";
 
-const alert = createSecurityAlert("Secrets exposed", "high", {
+```typescript
+import { sendAlert, createSecurityAlert } from '@/ops/notify';
+
+const alert = createSecurityAlert('Secrets exposed', 'high', {
   count: 2,
-  files: ["config.example.json"]
+  files: ['config.example.json'],
 });
 await sendAlert(alert);
 ```
 
 ### Cost Alerts
+
 Triggered when spending approaches or exceeds budget thresholds.
 
 **Example:**
-```typescript
-import { sendAlert, createCostAlert } from "@/ops/notify";
 
-const alert = createCostAlert("vercel", 75, 50, 150);
+```typescript
+import { sendAlert, createCostAlert } from '@/ops/notify';
+
+const alert = createCostAlert('vercel', 75, 50, 150);
 await sendAlert(alert);
 ```
 
 ## Integration with Agent
 
 The Hardonia Ops Agent uses this utility when:
+
 - Performance regressions persist 3+ cycles
 - Security issues are detected
 - Budget thresholds are exceeded
@@ -94,13 +101,13 @@ To test alert functionality without sending real alerts:
 
 ```typescript
 // Check if webhook is configured
-const webhookUrl = getWebhookUrl("reliability");
-console.log("Webhook configured:", !!webhookUrl);
+const webhookUrl = getWebhookUrl('reliability');
+console.log('Webhook configured:', !!webhookUrl);
 
 // Create test alert (won't send if webhook not configured)
-const testAlert = createReliabilityAlert("test_metric", 100, 50, 3);
+const testAlert = createReliabilityAlert('test_metric', 100, 50, 3);
 const sent = await sendAlert(testAlert);
-console.log("Alert sent:", sent);
+console.log('Alert sent:', sent);
 ```
 
 ---

@@ -36,10 +36,10 @@ jobs:
         run: |
           # Create benchmark results directory
           mkdir -p bench/results
-          
+
           # Run benchmarks (example - adjust based on actual benchmark files)
           # pnpm tsx bench/example.bench.ts > bench/results/latest.json || true
-          
+
           # For now, create placeholder result
           echo '[]' > bench/results/latest.json
 

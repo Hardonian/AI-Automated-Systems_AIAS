@@ -32,6 +32,7 @@ const results = await compare(
 ### Benchmark Results
 
 Results include:
+
 - Iterations: Number of runs
 - Total Time: Total execution time
 - Average Time: Average per iteration
@@ -44,6 +45,7 @@ Results include:
 ### Pre-Merge Validation
 
 The `pre-merge-validation.yml` workflow runs on every PR:
+
 - Type checking
 - Linting
 - Format checking
@@ -54,6 +56,7 @@ Results are automatically commented on PRs.
 ### Performance PR Monitoring
 
 The `performance-pr.yml` workflow:
+
 - Runs benchmarks
 - Analyzes bundle size
 - Compares with baseline
@@ -62,6 +65,7 @@ The `performance-pr.yml` workflow:
 ### Weekly Benchmarks
 
 The `benchmarks.yml` workflow runs weekly:
+
 - Executes all benchmarks
 - Analyzes trends
 - Detects regressions
@@ -80,6 +84,7 @@ node scripts/bench-trend.js trends
 ## Performance Budgets
 
 Set performance budgets in CI:
+
 - Bundle size limits
 - Lighthouse scores
 - API response times
@@ -96,6 +101,7 @@ Set performance budgets in CI:
 ## Configuration
 
 Benchmark configuration:
+
 - `iterations`: Number of runs (default: 1000)
 - `warmup`: Warmup runs (default: 10)
 - `timeout`: Maximum time (default: 5000ms)

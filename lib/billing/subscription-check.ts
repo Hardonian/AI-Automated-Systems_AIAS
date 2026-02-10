@@ -16,13 +16,18 @@ export interface SubscriptionStatus {
 }
 
 // Cache subscription status for 5 minutes
-const subscriptionCache = new Map<string, { status: SubscriptionStatus; expiresAt: number }>();
+const subscriptionCache = new Map<
+  string,
+  { status: SubscriptionStatus; expiresAt: number }
+>();
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 /**
  * Check if user has active premium subscription
  */
-export async function checkPremiumSubscription(userId: string): Promise<SubscriptionStatus> {
+export async function checkPremiumSubscription(
+  userId: string
+): Promise<SubscriptionStatus> {
   // Check cache first
   const cached = subscriptionCache.get(userId);
   if (cached && cached.expiresAt > Date.now()) {
@@ -30,7 +35,10 @@ export async function checkPremiumSubscription(userId: string): Promise<Subscrip
   }
 
   try {
-    const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+    const supabase = createClient(
+      env.supabase.url,
+      env.supabase.serviceRoleKey
+    );
 
     // Check for active subscription in database
     const { data: subscription, error } = await supabase
@@ -50,15 +58,18 @@ export async function checkPremiumSubscription(userId: string): Promise<Subscrip
     }
 
     // Check if subscription is premium tier
-    const isPremium = subscription.plan?.includes('premium') || 
-                      subscription.plan?.includes('pro') ||
-                      subscription.plan?.includes('enterprise') ||
-                      false;
+    const isPremium =
+      subscription.plan?.includes('premium') ||
+      subscription.plan?.includes('pro') ||
+      subscription.plan?.includes('enterprise') ||
+      false;
 
     const status: SubscriptionStatus = {
       isPremium,
       plan: subscription.plan,
-      expiresAt: subscription.current_period_end ? new Date(subscription.current_period_end) : undefined,
+      expiresAt: subscription.current_period_end
+        ? new Date(subscription.current_period_end)
+        : undefined,
       cancelAtPeriodEnd: subscription.cancel_at_period_end || false,
     };
 
@@ -68,14 +79,21 @@ export async function checkPremiumSubscription(userId: string): Promise<Subscrip
       expiresAt: Date.now() + CACHE_TTL_MS,
     });
 
-    logger.info('Subscription check completed', { userId, isPremium, plan: subscription.plan });
+    logger.info('Subscription check completed', {
+      userId,
+      isPremium,
+      plan: subscription.plan,
+    });
     return status;
   } catch (error) {
-    const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+    const errorObj: Error =
+      (error as any) instanceof Error
+        ? (error as Error)
+        : new Error(String(error));
     logger.error('Failed to check subscription', errorObj, {
       userId,
     });
-    
+
     // Fail gracefully - assume not premium
     const status: SubscriptionStatus = { isPremium: false };
     subscriptionCache.set(userId, {
@@ -96,13 +114,18 @@ export async function checkPremiumSubscriptionViaStripe(
   try {
     const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
     if (!stripeSecretKey) {
-      logger.warn('Stripe secret key not configured, falling back to database check');
+      logger.warn(
+        'Stripe secret key not configured, falling back to database check'
+      );
       return checkPremiumSubscription(userId);
     }
 
     // Get Stripe customer ID from database if not provided
     if (!stripeCustomerId) {
-      const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+      const supabase = createClient(
+        env.supabase.url,
+        env.supabase.serviceRoleKey
+      );
       const { data: user } = await supabase
         .from('users')
         .select('stripe_customer_id')
@@ -117,20 +140,23 @@ export async function checkPremiumSubscriptionViaStripe(
     }
 
     // Check Stripe subscriptions
-    const response = await fetch(`https://api.stripe.com/v1/customers/${stripeCustomerId}/subscriptions`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${stripeSecretKey}`,
-      },
-    });
+    const response = await fetch(
+      `https://api.stripe.com/v1/customers/${stripeCustomerId}/subscriptions`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${stripeSecretKey}`,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`Stripe API error: ${response.status}`);
     }
 
     const data = await response.json();
-    const activeSubscriptions = data.data.filter((sub: any) => 
-      sub.status === 'active' || sub.status === 'trialing'
+    const activeSubscriptions = data.data.filter(
+      (sub: any) => sub.status === 'active' || sub.status === 'trialing'
     );
 
     if (activeSubscriptions.length === 0) {
@@ -140,15 +166,17 @@ export async function checkPremiumSubscriptionViaStripe(
     // Check if any subscription is premium tier
     const premiumSubscription = activeSubscriptions.find((sub: any) => {
       const planId = sub.items?.data[0]?.price?.id || '';
-      return planId.includes('premium') || 
-             planId.includes('pro') || 
-             planId.includes('enterprise');
+      return (
+        planId.includes('premium') ||
+        planId.includes('pro') ||
+        planId.includes('enterprise')
+      );
     });
 
     const status: SubscriptionStatus = {
       isPremium: !!premiumSubscription,
       plan: premiumSubscription?.items?.data[0]?.price?.nickname,
-      expiresAt: premiumSubscription?.current_period_end 
+      expiresAt: premiumSubscription?.current_period_end
         ? new Date(premiumSubscription.current_period_end * 1000)
         : undefined,
       cancelAtPeriodEnd: premiumSubscription?.cancel_at_period_end || false,
@@ -162,11 +190,14 @@ export async function checkPremiumSubscriptionViaStripe(
 
     return status;
   } catch (error) {
-    const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+    const errorObj: Error =
+      (error as any) instanceof Error
+        ? (error as Error)
+        : new Error(String(error));
     logger.error('Failed to check subscription via Stripe', errorObj, {
       userId,
     });
-    
+
     // Fallback to database check
     return checkPremiumSubscription(userId);
   }

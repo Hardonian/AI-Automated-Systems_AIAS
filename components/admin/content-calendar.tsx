@@ -1,66 +1,72 @@
-"use client";
-import { Calendar, CheckCircle, Clock, FileText } from "lucide-react";
-import Link from "next/link";
+'use client';
+import { Calendar, CheckCircle, Clock, FileText } from 'lucide-react';
+import Link from 'next/link';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getUpcomingPosts, getPublishedPosts } from "@/lib/blog/content-calendar";
-
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  getUpcomingPosts,
+  getPublishedPosts,
+} from '@/lib/blog/content-calendar';
 
 export function ContentCalendarView() {
   const upcomingPosts = getUpcomingPosts(14);
   const publishedPosts = getPublishedPosts(10);
 
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-4'>
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+          <CardHeader className='pb-3'>
+            <CardTitle className='text-sm font-medium text-muted-foreground'>
               Published This Month
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">
-              {publishedPosts.length}
-            </div>
+            <div className='text-3xl font-bold'>{publishedPosts.length}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+          <CardHeader className='pb-3'>
+            <CardTitle className='text-sm font-medium text-muted-foreground'>
               Scheduled
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">
-              {upcomingPosts.filter(p => p.status === "scheduled").length}
+            <div className='text-3xl font-bold'>
+              {upcomingPosts.filter(p => p.status === 'scheduled').length}
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+          <CardHeader className='pb-3'>
+            <CardTitle className='text-sm font-medium text-muted-foreground'>
               Drafts
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">
-              {upcomingPosts.filter(p => p.status === "draft").length}
+            <div className='text-3xl font-bold'>
+              {upcomingPosts.filter(p => p.status === 'draft').length}
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+          <CardHeader className='pb-3'>
+            <CardTitle className='text-sm font-medium text-muted-foreground'>
               Target: 4 Posts/Month
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-green-600">
-              {publishedPosts.length >= 4 ? "✓" : publishedPosts.length}
+            <div className='text-3xl font-bold text-green-600'>
+              {publishedPosts.length >= 4 ? '✓' : publishedPosts.length}
             </div>
           </CardContent>
         </Card>
@@ -69,8 +75,8 @@ export function ContentCalendarView() {
       {/* Upcoming Posts */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
+          <CardTitle className='flex items-center gap-2'>
+            <Calendar className='h-5 w-5' />
             Upcoming Posts (Next 14 Days)
           </CardTitle>
           <CardDescription>
@@ -78,52 +84,56 @@ export function ContentCalendarView() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className='space-y-4'>
             {upcomingPosts.length === 0 ? (
-              <p className="text-muted-foreground text-center py-8">
+              <p className='py-8 text-center text-muted-foreground'>
                 No upcoming posts scheduled. Create a new post to get started.
               </p>
             ) : (
-              upcomingPosts.map((post) => (
+              upcomingPosts.map(post => (
                 <div
                   key={post.date}
-                  className="flex items-start justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                  className='flex items-start justify-between rounded-lg border p-4 transition-colors hover:bg-muted/50'
                 >
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <time className="text-sm font-medium">
-                        {new Date(post.date).toLocaleDateString("en-CA", {
-                          month: "short",
-                          day: "numeric",
+                  <div className='flex-1'>
+                    <div className='mb-2 flex items-center gap-2'>
+                      <time className='text-sm font-medium'>
+                        {new Date(post.date).toLocaleDateString('en-CA', {
+                          month: 'short',
+                          day: 'numeric',
                         })}
                       </time>
                       <Badge
                         variant={
-                          post.status === "published"
-                            ? "default"
-                            : post.status === "scheduled"
-                            ? "secondary"
-                            : "outline"
+                          post.status === 'published'
+                            ? 'default'
+                            : post.status === 'scheduled'
+                              ? 'secondary'
+                              : 'outline'
                         }
                       >
                         {post.status}
                       </Badge>
-                      <Badge variant="outline">{post.category}</Badge>
+                      <Badge variant='outline'>{post.category}</Badge>
                     </div>
-                    <h4 className="font-semibold mb-1">{post.title}</h4>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {post.affiliateProducts.map((product) => (
-                        <Badge key={product} className="text-xs" variant="outline">
+                    <h4 className='mb-1 font-semibold'>{post.title}</h4>
+                    <div className='mt-2 flex flex-wrap gap-2'>
+                      {post.affiliateProducts.map(product => (
+                        <Badge
+                          key={product}
+                          className='text-xs'
+                          variant='outline'
+                        >
                           {product}
                         </Badge>
                       ))}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    {post.status === "scheduled" ? (
-                      <Clock className="h-5 w-5 text-yellow-600" />
+                  <div className='flex items-center gap-2'>
+                    {post.status === 'scheduled' ? (
+                      <Clock className='h-5 w-5 text-yellow-600' />
                     ) : (
-                      <FileText className="h-5 w-5 text-muted-foreground" />
+                      <FileText className='h-5 w-5 text-muted-foreground' />
                     )}
                   </div>
                 </div>
@@ -136,42 +146,40 @@ export function ContentCalendarView() {
       {/* Published Posts */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CheckCircle className="h-5 w-5" />
+          <CardTitle className='flex items-center gap-2'>
+            <CheckCircle className='h-5 w-5' />
             Recently Published
           </CardTitle>
-          <CardDescription>
-            Posts published in the last 30 days
-          </CardDescription>
+          <CardDescription>Posts published in the last 30 days</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {publishedPosts.map((post) => (
+          <div className='space-y-4'>
+            {publishedPosts.map(post => (
               <div
                 key={post.date}
-                className="flex items-start justify-between p-4 border rounded-lg"
+                className='flex items-start justify-between rounded-lg border p-4'
               >
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <time className="text-sm text-muted-foreground">
-                      {new Date(post.date).toLocaleDateString("en-CA", {
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric",
+                <div className='flex-1'>
+                  <div className='mb-2 flex items-center gap-2'>
+                    <time className='text-sm text-muted-foreground'>
+                      {new Date(post.date).toLocaleDateString('en-CA', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
                       })}
                     </time>
-                    <Badge variant="default">Published</Badge>
-                    <Badge variant="outline">{post.category}</Badge>
+                    <Badge variant='default'>Published</Badge>
+                    <Badge variant='outline'>{post.category}</Badge>
                   </div>
-                  <h4 className="font-semibold mb-1">{post.title}</h4>
+                  <h4 className='mb-1 font-semibold'>{post.title}</h4>
                   <Link
-                    className="text-sm text-primary hover:underline"
-                    href={`/blog/${post.title.toLowerCase().replace(/\s+/g, "-")}`}
+                    className='text-sm text-primary hover:underline'
+                    href={`/blog/${post.title.toLowerCase().replace(/\s+/g, '-')}`}
                   >
                     View Post →
                   </Link>
                 </div>
-                <CheckCircle className="h-5 w-5 text-green-600" />
+                <CheckCircle className='h-5 w-5 text-green-600' />
               </div>
             ))}
           </div>
@@ -179,12 +187,12 @@ export function ContentCalendarView() {
       </Card>
 
       {/* Actions */}
-      <div className="flex gap-4">
+      <div className='flex gap-4'>
         <Button asChild>
-          <Link href="/admin/content-calendar/new">Create New Post</Link>
+          <Link href='/admin/content-calendar/new'>Create New Post</Link>
         </Button>
-        <Button asChild variant="outline">
-          <Link href="/genai-content-engine">Use GenAI Content Engine</Link>
+        <Button asChild variant='outline'>
+          <Link href='/genai-content-engine'>Use GenAI Content Engine</Link>
         </Button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 > Archived on 2025-11-12. Superseded by: (see docs/final index)
 
 # Statement of Work (SOW) Template
+
 ## Professional Consulting Agreement Document
 
 **Purpose:** Define scope, deliverables, timeline, and terms for consulting engagement  
@@ -11,32 +12,38 @@
 
 ## 📋 PROJECT INFORMATION
 
-**Project Name:** _______________________  
-**Client Name:** _______________________  
-**Client Address:** _______________________  
-**Consultant Name/Company:** _______________________  
-**SOW Date:** _______________________  
-**SOW Number:** _______________________  
-**Effective Date:** _______________________  
-**Expiration Date:** _______________________  
+**Project Name:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Client Name:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Client Address:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Consultant Name/Company:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**SOW Date:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**SOW Number:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Effective Date:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Expiration Date:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***
 
 ---
 
 ## 1. EXECUTIVE SUMMARY
 
 **Project Overview:**
-_________________________________________________________________
-_________________________________________________________________
-_________________________________________________________________
+
+---
+
+---
+
+---
 
 **Objectives:**
-1. _____________________________________________________________
-2. _____________________________________________________________
-3. _____________________________________________________________
+
+1. ***
+2. ***
+3. ***
 
 **Expected Outcomes:**
-_________________________________________________________________
-_________________________________________________________________
+
+---
+
+---
 
 ---
 
@@ -45,6 +52,7 @@ _________________________________________________________________
 ### 2.1 In Scope
 
 **Phase 1: Discovery & Assessment**
+
 - [ ] Client discovery interviews
 - [ ] Automation readiness assessment
 - [ ] Current process mapping
@@ -52,6 +60,7 @@ _________________________________________________________________
 - [ ] Stakeholder analysis
 
 **Phase 2: Strategy & Planning**
+
 - [ ] Automation opportunity identification
 - [ ] Priority matrix development
 - [ ] ROI calculation and business case
@@ -59,12 +68,14 @@ _________________________________________________________________
 - [ ] Risk assessment
 
 **Phase 3: Implementation (Optional)**
+
 - [ ] Automation design and build
 - [ ] Testing and QA
 - [ ] Training and change management
 - [ ] Go-live support
 
 **Deliverables:**
+
 1. Discovery Report
 2. Automation Strategy Document
 3. ROI Business Case
@@ -76,6 +87,7 @@ _________________________________________________________________
 ### 2.2 Out of Scope
 
 **Explicitly Excluded:**
+
 - [ ] Custom software development beyond platform capabilities
 - [ ] Integration with unsupported third-party systems
 - [ ] Ongoing maintenance after project completion
@@ -87,52 +99,57 @@ _________________________________________________________________
 ## 3. DELIVERABLES
 
 ### Deliverable 1: Discovery Report
+
 **Description:** Comprehensive assessment of current state, processes, and opportunities  
 **Format:** PDF document, 20-30 pages  
-**Due Date:** _____ weeks from project start  
+**Due Date:** **\_** weeks from project start  
 **Approval Required:** Yes
 
 ### Deliverable 2: Automation Strategy Document
+
 **Description:** Strategic plan with prioritized automation opportunities  
 **Format:** PDF document, 15-20 pages  
-**Due Date:** _____ weeks from project start  
+**Due Date:** **\_** weeks from project start  
 **Approval Required:** Yes
 
 ### Deliverable 3: ROI Business Case
+
 **Description:** Detailed ROI analysis and financial justification  
 **Format:** Excel + PDF document  
-**Due Date:** _____ weeks from project start  
+**Due Date:** **\_** weeks from project start  
 **Approval Required:** Yes
 
 ### Deliverable 4: Implementation Roadmap
+
 **Description:** Phased implementation plan with timeline and milestones  
 **Format:** PDF document, 10-15 pages  
-**Due Date:** _____ weeks from project start  
+**Due Date:** **\_** weeks from project start  
 **Approval Required:** Yes
 
 ---
 
 ## 4. TIMELINE & MILESTONES
 
-**Project Duration:** _____ weeks/months  
-**Start Date:** _______________________  
-**Target Completion:** _______________________  
+**Project Duration:** **\_** weeks/months  
+**Start Date:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Target Completion:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***
 
 ### Key Milestones
 
-| Milestone | Due Date | Deliverable | Payment Trigger |
-|-----------|----------|-------------|-----------------|
-| Discovery Complete | | Discovery Report | _____% |
-| Strategy Complete | | Strategy Document | _____% |
-| Business Case Complete | | ROI Business Case | _____% |
-| Roadmap Complete | | Implementation Roadmap | _____% |
-| Project Complete | | Final Report | _____% |
+| Milestone              | Due Date | Deliverable            | Payment Trigger |
+| ---------------------- | -------- | ---------------------- | --------------- |
+| Discovery Complete     |          | Discovery Report       | **\_**%         |
+| Strategy Complete      |          | Strategy Document      | **\_**%         |
+| Business Case Complete |          | ROI Business Case      | **\_**%         |
+| Roadmap Complete       |          | Implementation Roadmap | **\_**%         |
+| Project Complete       |          | Final Report           | **\_**%         |
 
 ---
 
 ## 5. RESOURCES & RESPONSIBILITIES
 
 ### 5.1 Consultant Responsibilities
+
 - Provide expertise and guidance
 - Deliver agreed deliverables on time
 - Communicate regularly
@@ -140,6 +157,7 @@ _________________________________________________________________
 - Escalate issues promptly
 
 ### 5.2 Client Responsibilities
+
 - Provide access to systems and tools
 - Participate in interviews and meetings
 - Provide necessary documentation
@@ -150,11 +168,13 @@ _________________________________________________________________
 ### 5.3 Project Team
 
 **Consultant Team:**
+
 - Project Lead: [Name]
 - Technical Consultant: [Name]
 - [Additional roles as needed]
 
 **Client Team:**
+
 - Project Sponsor: [Name]
 - Project Manager: [Name]
 - Key Stakeholders: [Names]
@@ -164,23 +184,27 @@ _________________________________________________________________
 ## 6. FEES & PAYMENT TERMS
 
 ### 6.1 Fee Structure
+
 **Option A: Fixed Fee**
-- Total Project Fee: $________________
+
+- Total Project Fee: $**\*\***\_\_\_\_**\*\***
 - Payment Schedule:
-  - Upon signing: $________________ (_____%)
-  - Milestone 1: $________________ (_____%)
-  - Milestone 2: $________________ (_____%)
-  - Upon completion: $________________ (_____%)
+  - Upon signing: $**\*\***\_\_\_\_**\*\*** (**\_**%)
+  - Milestone 1: $**\*\***\_\_\_\_**\*\*** (**\_**%)
+  - Milestone 2: $**\*\***\_\_\_\_**\*\*** (**\_**%)
+  - Upon completion: $**\*\***\_\_\_\_**\*\*** (**\_**%)
 
 **Option B: Time & Materials**
-- Hourly Rate: $________________/hour
-- Estimated Hours: _____ hours
-- Estimated Total: $________________
-- Maximum Not-to-Exceed: $________________
+
+- Hourly Rate: $**\*\***\_\_\_\_**\*\***/hour
+- Estimated Hours: **\_** hours
+- Estimated Total: $**\*\***\_\_\_\_**\*\***
+- Maximum Not-to-Exceed: $**\*\***\_\_\_\_**\*\***
 
 ### 6.2 Payment Terms
-- Payment Due: _____ days from invoice date
-- Late Payment: _____% interest per month
+
+- Payment Due: **\_** days from invoice date
+- Late Payment: **\_**% interest per month
 - Expenses: [Reimbursable/Included/Not applicable]
 
 ---
@@ -188,12 +212,14 @@ _________________________________________________________________
 ## 7. INTELLECTUAL PROPERTY
 
 **Consultant Deliverables:**
+
 - [ ] Consultant retains IP, grants license to client
 - [ ] Client owns IP upon full payment
 - [ ] Joint ownership
 - [ ] [Other arrangement]
 
 **Client Materials:**
+
 - Client retains all IP in provided materials
 - Consultant may use anonymized case studies with permission
 
@@ -202,11 +228,13 @@ _________________________________________________________________
 ## 8. CONFIDENTIALITY
 
 **Confidential Information:**
+
 - Both parties agree to maintain confidentiality
-- Duration: _____ years after project completion
+- Duration: **\_** years after project completion
 - Exclusions: [Public information, etc.]
 
 **Non-Disclosure:**
+
 - Standard NDA applies
 - [Reference to separate NDA if applicable]
 
@@ -215,13 +243,15 @@ _________________________________________________________________
 ## 9. TERMINATION
 
 **Termination by Client:**
-- May terminate with _____ days written notice
+
+- May terminate with **\_** days written notice
 - Payment due for work completed
 - Deliverables provided for paid work
 
 **Termination by Consultant:**
+
 - May terminate for non-payment or breach
-- _____ days written notice required
+- **\_** days written notice required
 - Deliverables provided for paid work
 
 ---
@@ -229,11 +259,13 @@ _________________________________________________________________
 ## 10. WARRANTIES & LIMITATIONS
 
 **Consultant Warrants:**
+
 - Services performed professionally
 - Deliverables meet specifications
 - Qualified personnel assigned
 
 **Limitations:**
+
 - No guarantee of specific results
 - Client responsible for implementation decisions
 - Maximum liability: [Amount or percentage]
@@ -243,11 +275,13 @@ _________________________________________________________________
 ## 11. CHANGE MANAGEMENT
 
 **Change Orders:**
+
 - Written change orders required
 - Additional fees apply
 - Timeline may adjust
 
 **Scope Changes:**
+
 - Document in writing
 - Both parties must agree
 - Update fees and timeline
@@ -257,7 +291,8 @@ _________________________________________________________________
 ## 12. ACCEPTANCE CRITERIA
 
 **Deliverable Acceptance:**
-- Client has _____ days to review
+
+- Client has **\_** days to review
 - Feedback provided in writing
 - Revisions included in scope
 - Additional revisions billable
@@ -266,7 +301,7 @@ _________________________________________________________________
 
 ## 13. GOVERNING LAW
 
-**Jurisdiction:** _______________________  
+**Jurisdiction:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
 **Dispute Resolution:** [Arbitration/Mediation/Litigation]  
 **Language:** English
 
@@ -276,17 +311,17 @@ _________________________________________________________________
 
 **Client:**
 
-Name: _______________________  
-Title: _______________________  
-Signature: _______________________  
-Date: _______________________
+Name: \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+Title: \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+Signature: \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+Date: \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***
 
 **Consultant:**
 
-Name: _______________________  
-Title: _______________________  
-Signature: _______________________  
-Date: _______________________
+Name: \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+Title: \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+Signature: \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+Date: \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***
 
 ---
 

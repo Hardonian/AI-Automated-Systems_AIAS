@@ -1,15 +1,20 @@
 /**
  * Security Monitoring
- * 
+ *
  * Tracks security events, suspicious activity, and potential threats.
  */
 
-import { logger } from "@/lib/logging/structured-logger";
-import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
+import { logger } from '@/lib/logging/structured-logger';
+import { telemetry } from '@/lib/monitoring/enhanced-telemetry';
 
 export interface SecurityEvent {
-  type: "rate_limit" | "csrf_failure" | "suspicious_activity" | "injection_attempt" | "unauthorized_access";
-  severity: "low" | "medium" | "high" | "critical";
+  type:
+    | 'rate_limit'
+    | 'csrf_failure'
+    | 'suspicious_activity'
+    | 'injection_attempt'
+    | 'unauthorized_access';
+  severity: 'low' | 'medium' | 'high' | 'critical';
   ip: string;
   path: string;
   userAgent?: string;
@@ -29,7 +34,7 @@ class SecurityMonitor {
   /**
    * Log security event
    */
-  logEvent(event: Omit<SecurityEvent, "timestamp">): void {
+  logEvent(event: Omit<SecurityEvent, 'timestamp'>): void {
     const fullEvent: SecurityEvent = {
       ...event,
       timestamp: Date.now(),
@@ -43,7 +48,7 @@ class SecurityMonitor {
     }
 
     // Log to console in development
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === 'development') {
       console.warn(`[SECURITY] ${event.type}:`, event);
     }
 
@@ -68,7 +73,7 @@ class SecurityMonitor {
     });
 
     // Alert on critical events
-    if (event.severity === "critical") {
+    if (event.severity === 'critical') {
       this.alertCritical(fullEvent);
     }
   }
@@ -83,15 +88,15 @@ class SecurityMonitor {
   /**
    * Get events by type
    */
-  getEventsByType(type: SecurityEvent["type"]): SecurityEvent[] {
-    return this.events.filter((e) => e.type === type);
+  getEventsByType(type: SecurityEvent['type']): SecurityEvent[] {
+    return this.events.filter(e => e.type === type);
   }
 
   /**
    * Get events by severity
    */
-  getEventsBySeverity(severity: SecurityEvent["severity"]): SecurityEvent[] {
-    return this.events.filter((e) => e.severity === severity);
+  getEventsBySeverity(severity: SecurityEvent['severity']): SecurityEvent[] {
+    return this.events.filter(e => e.severity === severity);
   }
 
   /**
@@ -99,7 +104,7 @@ class SecurityMonitor {
    */
   isSuspiciousIP(ip: string, threshold: number = 5): boolean {
     const recentEvents = this.events.filter(
-      (e) => e.ip === ip && Date.now() - e.timestamp < 60 * 60 * 1000 // Last hour
+      e => e.ip === ip && Date.now() - e.timestamp < 60 * 60 * 1000 // Last hour
     );
     return recentEvents.length >= threshold;
   }
@@ -114,12 +119,12 @@ class SecurityMonitor {
     // - Notify security team
     // - Log to external security monitoring service
 
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV === 'production') {
       // TODO: Integrate with external alerting system (PagerDuty, Opsgenie, etc.)
-      logger.fatal("CRITICAL SECURITY ALERT", new Error(event.type), {
+      logger.fatal('CRITICAL SECURITY ALERT', new Error(event.type), {
         event,
-        component: "SecurityMonitor",
-        action: "handleSecurityEvent",
+        component: 'SecurityMonitor',
+        action: 'handleSecurityEvent',
       });
     }
   }
@@ -137,12 +142,12 @@ class SecurityMonitor {
     const bySeverity: Record<string, number> = {};
     let recentCritical = 0;
 
-    this.events.forEach((event) => {
+    this.events.forEach(event => {
       byType[event.type] = (byType[event.type] || 0) + 1;
       bySeverity[event.severity] = (bySeverity[event.severity] || 0) + 1;
 
       if (
-        event.severity === "critical" &&
+        event.severity === 'critical' &&
         Date.now() - event.timestamp < 24 * 60 * 60 * 1000
       ) {
         recentCritical++;

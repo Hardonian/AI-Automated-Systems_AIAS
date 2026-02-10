@@ -22,25 +22,25 @@
 
 ```typescript
 // app/api/example/route.ts (OLD)
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
-    
+    const id = searchParams.get('id');
+
     if (!id) {
-      return NextResponse.json({ error: "ID required" }, { status: 400 });
+      return NextResponse.json({ error: 'ID required' }, { status: 400 });
     }
-    
+
     // Business logic
     const data = await fetchData(id);
-    
+
     return NextResponse.json(data);
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
@@ -53,25 +53,25 @@ export async function GET(req: NextRequest) {
 
 ```typescript
 // app/api/example/route.ts (NEW)
-import { NextRequest, NextResponse } from "next/server";
-import { createGETHandler } from "@/lib/api/route-handler";
-import { z } from "zod";
+import { NextRequest, NextResponse } from 'next/server';
+import { createGETHandler } from '@/lib/api/route-handler';
+import { z } from 'zod';
 
 const querySchema = z.object({
   id: z.string().uuid(),
 });
 
 export const GET = createGETHandler(
-  async (context) => {
+  async context => {
     const { request } = context;
     const { searchParams } = new URL(request.url);
-    
+
     // Validation is automatic via validateBody/query params
-    const id = searchParams.get("id")!; // Safe after validation
-    
+    const id = searchParams.get('id')!; // Safe after validation
+
     // Business logic
     const data = await fetchData(id);
-    
+
     return NextResponse.json(data);
   },
   {
@@ -81,7 +81,7 @@ export const GET = createGETHandler(
     cache: {
       enabled: true,
       ttl: 300, // 5 minutes
-      tags: ["example"],
+      tags: ['example'],
     },
   }
 );
@@ -94,7 +94,7 @@ export const GET = createGETHandler(
 ### Step 1: Import Route Handler
 
 ```typescript
-import { createGETHandler, createPOSTHandler } from "@/lib/api/route-handler";
+import { createGETHandler, createPOSTHandler } from '@/lib/api/route-handler';
 ```
 
 ### Step 2: Wrap Handler Function
@@ -107,10 +107,12 @@ export async function GET(req: NextRequest) {
 
 // NEW
 export const GET = createGETHandler(
-  async (context) => {
+  async context => {
     // handler code - use context.request instead of req
   },
-  { /* options */ }
+  {
+    /* options */
+  }
 );
 ```
 
@@ -130,7 +132,7 @@ const { searchParams } = new URL(request.url);
 ### Step 4: Add Validation Schema
 
 ```typescript
-import { z } from "zod";
+import { z } from 'zod';
 
 const bodySchema = z.object({
   name: z.string().min(1),
@@ -138,7 +140,7 @@ const bodySchema = z.object({
 });
 
 export const POST = createPOSTHandler(
-  async (context) => {
+  async context => {
     // Body is already validated
     const body = await context.request.json();
     // Use body safely
@@ -156,7 +158,7 @@ export const POST = createPOSTHandler(
 try {
   // code
 } catch (error) {
-  return NextResponse.json({ error: "..." }, { status: 500 });
+  return NextResponse.json({ error: '...' }, { status: 500 });
 }
 
 // NEW
@@ -169,6 +171,7 @@ try {
 ## Options Reference
 
 ### `requireAuth: boolean`
+
 Requires authentication. User ID extracted from JWT token.
 
 ```typescript
@@ -178,6 +181,7 @@ Requires authentication. User ID extracted from JWT token.
 ```
 
 ### `requireTenant: boolean`
+
 Requires tenant ID and validates tenant access.
 
 ```typescript
@@ -188,6 +192,7 @@ Requires tenant ID and validates tenant access.
 ```
 
 ### `validateBody: ZodSchema`
+
 Validates request body with Zod schema.
 
 ```typescript
@@ -204,6 +209,7 @@ const schema = z.object({
 ```
 
 ### `cache: CacheOptions`
+
 Enables response caching.
 
 ```typescript
@@ -217,6 +223,7 @@ Enables response caching.
 ```
 
 ### `rateLimit: RateLimitOptions`
+
 Configures rate limiting.
 
 ```typescript
@@ -229,6 +236,7 @@ Configures rate limiting.
 ```
 
 ### `maxBodySize: number`
+
 Maximum request body size in bytes.
 
 ```typescript
@@ -244,10 +252,10 @@ Maximum request body size in bytes.
 ### Example 1: Public GET Endpoint with Caching
 
 ```typescript
-import { createGETHandler } from "@/lib/api/route-handler";
+import { createGETHandler } from '@/lib/api/route-handler';
 
 export const GET = createGETHandler(
-  async (context) => {
+  async context => {
     const data = await fetchPublicData();
     return NextResponse.json(data);
   },
@@ -263,8 +271,8 @@ export const GET = createGETHandler(
 ### Example 2: Authenticated POST with Validation
 
 ```typescript
-import { createPOSTHandler } from "@/lib/api/route-handler";
-import { z } from "zod";
+import { createPOSTHandler } from '@/lib/api/route-handler';
+import { z } from 'zod';
 
 const createUserSchema = z.object({
   name: z.string().min(1),
@@ -272,15 +280,15 @@ const createUserSchema = z.object({
 });
 
 export const POST = createPOSTHandler(
-  async (context) => {
+  async context => {
     const body = await context.request.json();
     const userId = context.userId!; // Available when requireAuth: true
-    
+
     const user = await createUser({
       ...body,
       createdBy: userId,
     });
-    
+
     return NextResponse.json(user, { status: 201 });
   },
   {
@@ -293,21 +301,21 @@ export const POST = createPOSTHandler(
 ### Example 3: Tenant-Scoped Endpoint
 
 ```typescript
-import { createGETHandler } from "@/lib/api/route-handler";
+import { createGETHandler } from '@/lib/api/route-handler';
 
 export const GET = createGETHandler(
-  async (context) => {
+  async context => {
     const tenantId = context.tenantId!;
     const data = await fetchTenantData(tenantId);
     return NextResponse.json(data);
   },
   {
     requireTenant: true,
-    requiredPermission: "read",
+    requiredPermission: 'read',
     cache: {
       enabled: true,
       ttl: 300,
-      tags: ["tenant-data"],
+      tags: ['tenant-data'],
     },
   }
 );
@@ -371,7 +379,7 @@ const body = await request.json();
 
 ```typescript
 // Check cache stats
-import { cacheService } from "@/lib/performance/cache";
+import { cacheService } from '@/lib/performance/cache';
 const stats = await cacheService.getStats();
 console.log(stats);
 ```
@@ -382,23 +390,23 @@ console.log(stats);
 
 ```typescript
 // tests/api/example.test.ts
-import { GET } from "@/app/api/example/route";
-import { NextRequest } from "next/server";
+import { GET } from '@/app/api/example/route';
+import { NextRequest } from 'next/server';
 
-describe("GET /api/example", () => {
-  it("should return data", async () => {
-    const req = new NextRequest("http://localhost/api/example?id=123");
+describe('GET /api/example', () => {
+  it('should return data', async () => {
+    const req = new NextRequest('http://localhost/api/example?id=123');
     const res = await GET(req);
     const data = await res.json();
-    
+
     expect(res.status).toBe(200);
     expect(data).toBeDefined();
   });
-  
-  it("should validate input", async () => {
-    const req = new NextRequest("http://localhost/api/example");
+
+  it('should validate input', async () => {
+    const req = new NextRequest('http://localhost/api/example');
     const res = await GET(req);
-    
+
     expect(res.status).toBe(400);
   });
 });

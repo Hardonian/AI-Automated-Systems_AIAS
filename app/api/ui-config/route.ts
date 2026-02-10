@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { logger } from "@/lib/logging/structured-logger";
-import { addSecurityHeaders } from "@/lib/middleware/security";
-import { getPublicRuntimeUiConfig } from "@/lib/runtime-ui/server";
+import { logger } from '@/lib/logging/structured-logger';
+import { addSecurityHeaders } from '@/lib/middleware/security';
+import { getPublicRuntimeUiConfig } from '@/lib/runtime-ui/server';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
 
 /**
  * GET /api/ui-config
@@ -23,19 +23,26 @@ export async function GET() {
       source,
     });
     response.headers.set(
-      "Cache-Control",
-      source === "edge-config"
-        ? "public, max-age=0, s-maxage=30, stale-while-revalidate=300"
-        : "public, max-age=0, s-maxage=5, stale-while-revalidate=30"
+      'Cache-Control',
+      source === 'edge-config'
+        ? 'public, max-age=0, s-maxage=30, stale-while-revalidate=300'
+        : 'public, max-age=0, s-maxage=5, stale-while-revalidate=30'
     );
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    logger.error("Error in GET /api/ui-config", error instanceof Error ? error : new Error(String(error)), {
-      component: "route",
-      action: "GET",
-    });
-    const response = NextResponse.json({ error: "Failed to retrieve UI config" }, { status: 500 });
+    logger.error(
+      'Error in GET /api/ui-config',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        component: 'route',
+        action: 'GET',
+      }
+    );
+    const response = NextResponse.json(
+      { error: 'Failed to retrieve UI config' },
+      { status: 500 }
+    );
     addSecurityHeaders(response);
     return response;
   }

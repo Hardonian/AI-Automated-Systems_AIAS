@@ -18,6 +18,7 @@ Current SaaS pricing is flat-rate. Missing usage-based tiers that would increase
 ## Solution
 
 Add usage-based pricing tiers:
+
 1. Free: 3 workflows, 1000 API calls/month
 2. Starter: $29/mo - 10 workflows, 10K API calls
 3. Pro: $99/mo - Unlimited workflows, 100K API calls
@@ -26,21 +27,25 @@ Add usage-based pricing tiers:
 ## Implementation Plan
 
 ### Phase 1: Usage Tracking (Days 1-2)
+
 - Track workflow count per user
 - Track API usage per user
 - Create usage aggregation
 
 ### Phase 2: Pricing Page Update (Days 3-4)
+
 - Redesign pricing page with usage tiers
 - Add usage calculator
 - Add "Current Usage" widget
 
 ### Phase 3: Upgrade Flow (Days 5-6)
+
 - Add upgrade prompts in-app
 - Create upgrade checkout flow
 - Add usage warnings (80% threshold)
 
 ### Phase 4: Launch (Day 7)
+
 - A/B test pricing page
 - Monitor upgrade rates
 - Iterate based on feedback

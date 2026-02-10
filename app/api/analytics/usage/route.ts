@@ -1,13 +1,13 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextRequest, NextResponse } from "next/server";
+import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
 
-import { handleApiError } from "@/lib/api/route-handler";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { handleApiError } from '@/lib/api/route-handler';
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/analytics/usage
@@ -16,19 +16,22 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   try {
     // Get user from auth
-    const authHeader = request.headers.get("authorization");
-    const token = authHeader?.startsWith("Bearer ")
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.startsWith('Bearer ')
       ? authHeader.substring(7)
-      : request.cookies.get("sb-access-token")?.value;
+      : request.cookies.get('sb-access-token')?.value;
 
     if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get current month
@@ -36,38 +39,51 @@ export async function GET(request: NextRequest) {
 
     // Get usage
     const { data: usage, error } = await supabase
-      .from("automation_usage")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("month", month)
+      .from('automation_usage')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('month', month)
       .single();
 
-    if (error && error.code !== "PGRST116") {
+    if (error && error.code !== 'PGRST116') {
       // PGRST116 = not found, which is OK (will return defaults)
-      logger.error("Failed to get usage", error instanceof Error ? error : new Error(String(error)), {
-        userId: user.id,
-      });
+      logger.error(
+        'Failed to get usage',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          userId: user.id,
+        }
+      );
     }
 
     // If no usage record exists, get user plan and return defaults
     if (!usage) {
       // Get user plan
       const { data: subscription } = await supabase
-        .from("user_subscriptions")
-        .select("plan_id, subscription_plans(tier)")
-        .eq("user_id", user.id)
-        .eq("status", "active")
+        .from('user_subscriptions')
+        .select('plan_id, subscription_plans(tier)')
+        .eq('user_id', user.id)
+        .eq('status', 'active')
         .single();
 
-      let plan = "free";
+      let plan = 'free';
       const plans = subscription?.subscription_plans;
-      if (plans && !Array.isArray(plans) && typeof plans === 'object' && 'tier' in plans) {
+      if (
+        plans &&
+        !Array.isArray(plans) &&
+        typeof plans === 'object' &&
+        'tier' in plans
+      ) {
         plan = (plans as { tier: string }).tier;
       }
 
       // Normalize plan
-      if (plan === "professional") {plan = "pro";}
-      if (plan === "starter" || plan === "standard") {plan = "starter";}
+      if (plan === 'professional') {
+        plan = 'pro';
+      }
+      if (plan === 'starter' || plan === 'standard') {
+        plan = 'starter';
+      }
 
       const limits: Record<string, number> = {
         free: 100,
@@ -88,7 +104,10 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(usage);
   } catch (error) {
-    logger.error("Error in GET /api/analytics/usage", error instanceof Error ? error : undefined);
-    return handleApiError(error, "Failed to get usage data");
+    logger.error(
+      'Error in GET /api/analytics/usage',
+      error instanceof Error ? error : undefined
+    );
+    return handleApiError(error, 'Failed to get usage data');
   }
 }

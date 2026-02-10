@@ -76,19 +76,49 @@ interface SecurityAudit {
 
 export class SecurityAuditor {
   private secretPatterns = [
-    { pattern: /AKIA[0-9A-Z]{16}/g, name: 'AWS Access Key', severity: 'critical' },
-    { pattern: /sk_live_[0-9a-zA-Z]{32}/g, name: 'Stripe Secret Key', severity: 'critical' },
-    { pattern: /SUPABASE_SERVICE_ROLE_KEY=[a-zA-Z0-9_-]{100,}/g, name: 'Supabase Service Role Key', severity: 'critical' },
-    { pattern: /VERCEL_TOKEN=[a-zA-Z0-9_-]{40,}/g, name: 'Vercel Token', severity: 'high' },
-    { pattern: /GITHUB_TOKEN=[a-zA-Z0-9_-]{40,}/g, name: 'GitHub Token', severity: 'high' },
-    { pattern: /OPENAI_API_KEY=sk-[a-zA-Z0-9_-]{48,}/g, name: 'OpenAI API Key', severity: 'high' },
-    { pattern: /password\s*=\s*["'][^"']{8,}["']/gi, name: 'Password in Config', severity: 'medium' },
-    { pattern: /api[_-]?key\s*=\s*["'][^"']{20,}["']/gi, name: 'API Key Pattern', severity: 'medium' }
+    {
+      pattern: /AKIA[0-9A-Z]{16}/g,
+      name: 'AWS Access Key',
+      severity: 'critical',
+    },
+    {
+      pattern: /sk_live_[0-9a-zA-Z]{32}/g,
+      name: 'Stripe Secret Key',
+      severity: 'critical',
+    },
+    {
+      pattern: /SUPABASE_SERVICE_ROLE_KEY=[a-zA-Z0-9_-]{100,}/g,
+      name: 'Supabase Service Role Key',
+      severity: 'critical',
+    },
+    {
+      pattern: /VERCEL_TOKEN=[a-zA-Z0-9_-]{40,}/g,
+      name: 'Vercel Token',
+      severity: 'high',
+    },
+    {
+      pattern: /GITHUB_TOKEN=[a-zA-Z0-9_-]{40,}/g,
+      name: 'GitHub Token',
+      severity: 'high',
+    },
+    {
+      pattern: /OPENAI_API_KEY=sk-[a-zA-Z0-9_-]{48,}/g,
+      name: 'OpenAI API Key',
+      severity: 'high',
+    },
+    {
+      pattern: /password\s*=\s*["'][^"']{8,}["']/gi,
+      name: 'Password in Config',
+      severity: 'medium',
+    },
+    {
+      pattern: /api[_-]?key\s*=\s*["'][^"']{20,}["']/gi,
+      name: 'API Key Pattern',
+      severity: 'medium',
+    },
   ];
 
-  constructor(
-    private supabase: any
-  ) {}
+  constructor(private supabase: any) {}
 
   async audit(): Promise<ModuleResult> {
     try {
@@ -101,7 +131,7 @@ export class SecurityAuditor {
         gdpr: await this.auditGDPR(),
         sbom: await this.generateSBOM(),
         issues: [],
-        recommendations: []
+        recommendations: [],
       };
 
       // Collect all issues
@@ -124,13 +154,13 @@ export class SecurityAuditor {
       return {
         status,
         message: `Security audit: ${audit.secrets.exposed} secrets exposed, ${audit.licenses.restricted} restricted licenses, ${audit.issues.length} issues`,
-        data: audit
+        data: audit,
       };
     } catch (error: any) {
       return {
         status: 'error',
         message: `Security audit failed: ${error.message}`,
-        errors: [error.message]
+        errors: [error.message],
       };
     }
   }
@@ -143,7 +173,7 @@ export class SecurityAuditor {
       '.env.production',
       'config/**/*.json',
       '**/*.config.js',
-      '**/*.config.ts'
+      '**/*.config.ts',
     ];
 
     // Check .env files (but never print values)
@@ -159,7 +189,7 @@ export class SecurityAuditor {
                 exposed.push({
                   file,
                   pattern: name,
-                  severity: severity as 'low' | 'medium' | 'high' | 'critical'
+                  severity: severity as 'low' | 'medium' | 'high' | 'critical',
                 });
               }
             });
@@ -173,13 +203,13 @@ export class SecurityAuditor {
     const status = exposed.some(e => e.severity === 'critical')
       ? 'critical'
       : exposed.length > 0
-      ? 'warning'
-      : 'ok';
+        ? 'warning'
+        : 'ok';
 
     return {
       status,
       exposed: exposed.length,
-      patterns: exposed
+      patterns: exposed,
     };
   }
 
@@ -188,7 +218,7 @@ export class SecurityAuditor {
       // Run license-checker
       const output = execSync('npx license-checker --json', {
         encoding: 'utf-8',
-        stdio: 'pipe'
+        stdio: 'pipe',
       });
 
       const licenses = JSON.parse(output);
@@ -199,12 +229,12 @@ export class SecurityAuditor {
 
       Object.entries(licenses).forEach(([packageName, info]: [string, any]) => {
         const license = (info.licenses || '').toString().toUpperCase();
-        
+
         if (restrictedLicenses.some(rl => license.includes(rl))) {
           issues.push({
             package: packageName,
             license: info.licenses,
-            issue: 'GPL license may require open-sourcing'
+            issue: 'GPL license may require open-sourcing',
           });
         }
 
@@ -212,7 +242,7 @@ export class SecurityAuditor {
           issues.push({
             package: packageName,
             license: info.licenses,
-            issue: 'Non-commercial license restriction'
+            issue: 'Non-commercial license restriction',
           });
         }
       });
@@ -221,7 +251,7 @@ export class SecurityAuditor {
         gpl: issues.filter(i => i.issue.includes('GPL')).length,
         restricted: issues.length,
         total: Object.keys(licenses).length,
-        issues
+        issues,
       };
     } catch (error) {
       console.warn('Could not audit licenses:', error);
@@ -229,7 +259,7 @@ export class SecurityAuditor {
         gpl: 0,
         restricted: 0,
         total: 0,
-        issues: []
+        issues: [],
       };
     }
   }
@@ -237,28 +267,29 @@ export class SecurityAuditor {
   private async auditTLS(): Promise<SecurityAudit['tls']> {
     // Check API routes for HTTPS enforcement
     const endpoints: SecurityAudit['tls']['endpoints'] = [];
-    
+
     // Check middleware.ts for HTTPS redirects
     const middlewarePath = join(process.cwd(), 'middleware.ts');
     if (existsSync(middlewarePath)) {
       const content = readFileSync(middlewarePath, 'utf-8');
-      const hasHttpsRedirect = content.includes('https') || content.includes('secure');
+      const hasHttpsRedirect =
+        content.includes('https') || content.includes('secure');
       endpoints.push({
         url: 'middleware',
         https: hasHttpsRedirect,
-        valid_cert: true
+        valid_cert: true,
       });
     }
 
     const status = endpoints.every(e => e.https)
       ? 'enforced'
       : endpoints.some(e => e.https)
-      ? 'partial'
-      : 'missing';
+        ? 'partial'
+        : 'missing';
 
     return {
       status,
-      endpoints
+      endpoints,
     };
   }
 
@@ -271,28 +302,31 @@ export class SecurityAuditor {
       const routes = this.findRoutes(apiDir);
       routes.forEach(route => {
         const content = readFileSync(route, 'utf-8');
-        if (!content.includes('Access-Control-Allow-Origin') && !content.includes('cors')) {
+        if (
+          !content.includes('Access-Control-Allow-Origin') &&
+          !content.includes('cors')
+        ) {
           issues.push({
             endpoint: route,
-            issue: 'Missing CORS headers'
+            issue: 'Missing CORS headers',
           });
         }
       });
     }
 
-    const status = issues.length === 0 ? 'ok' : issues.length < 5 ? 'warning' : 'critical';
+    const status =
+      issues.length === 0 ? 'ok' : issues.length < 5 ? 'warning' : 'critical';
 
     return {
       status,
-      issues
+      issues,
     };
   }
 
   private async auditRLS(): Promise<SecurityAudit['rls']> {
     try {
       // Query Supabase for RLS status
-      const { data: tables } = await this.supabase
-        .rpc('get_table_rls_status');
+      const { data: tables } = await this.supabase.rpc('get_table_rls_status');
 
       if (!tables) {
         // Fallback: check migration files
@@ -301,7 +335,7 @@ export class SecurityAuditor {
 
       const rlsStatus = tables.map((t: any) => ({
         table: t.table_name,
-        rls_enabled: t.rls_enabled
+        rls_enabled: t.rls_enabled,
       }));
 
       const allEnabled = rlsStatus.every((s: any) => s.rls_enabled);
@@ -309,7 +343,7 @@ export class SecurityAuditor {
 
       return {
         status: allEnabled ? 'enabled' : someEnabled ? 'partial' : 'disabled',
-        tables: rlsStatus
+        tables: rlsStatus,
       };
     } catch (error) {
       return this.checkRLSFromMigrations();
@@ -326,13 +360,13 @@ export class SecurityAuditor {
         const content = readFileSync(join(migrationsDir, file), 'utf-8');
         const rlsMatches = content.match(/enable row level security/gi);
         const tableMatches = content.match(/create table.*?(\w+)/gi);
-        
+
         if (tableMatches) {
           tableMatches.forEach(match => {
             const tableName = match.replace(/create table.*?\.?(\w+).*/i, '$1');
             tables.push({
               table: tableName,
-              rls_enabled: !!rlsMatches
+              rls_enabled: !!rlsMatches,
             });
           });
         }
@@ -344,7 +378,7 @@ export class SecurityAuditor {
 
     return {
       status: allEnabled ? 'enabled' : someEnabled ? 'partial' : 'disabled',
-      tables
+      tables,
     };
   }
 
@@ -355,21 +389,21 @@ export class SecurityAuditor {
     checks.push({
       check: 'Data retention policy',
       status: 'pass', // Would check actual retention settings
-      details: '90-day retention configured'
+      details: '90-day retention configured',
     });
 
     // Check PII handling
     checks.push({
       check: 'PII redaction',
       status: 'skip', // PrivacyGuard module removed
-      details: 'PII redaction not implemented'
+      details: 'PII redaction not implemented',
     });
 
     // Check audit logging
     checks.push({
       check: 'Audit logging',
       status: 'pass',
-      details: 'Audit logs enabled'
+      details: 'Audit logs enabled',
     });
 
     const allPass = checks.every(c => c.status === 'pass');
@@ -377,7 +411,7 @@ export class SecurityAuditor {
 
     return {
       status: allPass ? 'pass' : someFail ? 'fail' : 'warning',
-      checks
+      checks,
     };
   }
 
@@ -385,11 +419,14 @@ export class SecurityAuditor {
     try {
       // Generate CycloneDX SBOM using @cyclonedx/cyclonedx-npm
       const sbomPath = join(process.cwd(), 'security', 'sbom.json');
-      
+
       try {
-        execSync('npx @cyclonedx/cyclonedx-npm --output-file security/sbom.json', {
-          stdio: 'pipe'
-        });
+        execSync(
+          'npx @cyclonedx/cyclonedx-npm --output-file security/sbom.json',
+          {
+            stdio: 'pipe',
+          }
+        );
       } catch (error) {
         // Fallback: generate basic SBOM from package.json
         await this.generateBasicSBOM(sbomPath);
@@ -403,14 +440,14 @@ export class SecurityAuditor {
         generated: true,
         path: sbomPath,
         packages: sbom.components?.length || 0,
-        vulnerabilities: 0 // Would scan SBOM for known vulnerabilities
+        vulnerabilities: 0, // Would scan SBOM for known vulnerabilities
       };
     } catch (error) {
       return {
         generated: false,
         path: '',
         packages: 0,
-        vulnerabilities: 0
+        vulnerabilities: 0,
       };
     }
   }
@@ -418,9 +455,9 @@ export class SecurityAuditor {
   private async generateBasicSBOM(path: string): Promise<void> {
     const { writeFileSync, mkdirSync } = require('fs');
     const { dirname } = require('path');
-    
+
     mkdirSync(dirname(path), { recursive: true });
-    
+
     const packageJson = JSON.parse(readFileSync('package.json', 'utf-8'));
     const sbom = {
       bomFormat: 'CycloneDX',
@@ -428,12 +465,12 @@ export class SecurityAuditor {
       version: 1,
       components: Object.entries({
         ...packageJson.dependencies,
-        ...packageJson.devDependencies
+        ...packageJson.devDependencies,
       }).map(([name, version]) => ({
         type: 'library',
         name,
-        version: (version as string).replace(/^[\^~]/, '')
-      }))
+        version: (version as string).replace(/^[\^~]/, ''),
+      })),
     };
 
     writeFileSync(path, JSON.stringify(sbom, null, 2));
@@ -448,7 +485,7 @@ export class SecurityAuditor {
           type: 'secret_exposure',
           severity: pattern.severity,
           description: `Secret pattern "${pattern.pattern}" found in ${pattern.file}`,
-          remediation: 'Remove secret from file and rotate credentials'
+          remediation: 'Remove secret from file and rotate credentials',
         });
       });
     }
@@ -458,7 +495,7 @@ export class SecurityAuditor {
         type: 'license_risk',
         severity: 'medium',
         description: `${audit.licenses.restricted} packages with restricted licenses`,
-        remediation: 'Review license compatibility and consider alternatives'
+        remediation: 'Review license compatibility and consider alternatives',
       });
     }
 
@@ -467,7 +504,7 @@ export class SecurityAuditor {
         type: 'tls_enforcement',
         severity: 'high',
         description: 'TLS/HTTPS not fully enforced',
-        remediation: 'Enable HTTPS redirects in middleware'
+        remediation: 'Enable HTTPS redirects in middleware',
       });
     }
 
@@ -476,7 +513,7 @@ export class SecurityAuditor {
         type: 'rls_disabled',
         severity: 'critical',
         description: 'Row Level Security not enabled on all tables',
-        remediation: 'Enable RLS on all Supabase tables'
+        remediation: 'Enable RLS on all Supabase tables',
       });
     }
 
@@ -487,15 +524,21 @@ export class SecurityAuditor {
     const recommendations: string[] = [];
 
     if (audit.secrets.exposed > 0) {
-      recommendations.push(`🚨 ${audit.secrets.exposed} secret patterns detected - rotate credentials immediately`);
+      recommendations.push(
+        `🚨 ${audit.secrets.exposed} secret patterns detected - rotate credentials immediately`
+      );
     }
 
     if (audit.licenses.gpl > 0) {
-      recommendations.push(`⚠️ ${audit.licenses.gpl} GPL-licensed packages may require open-sourcing`);
+      recommendations.push(
+        `⚠️ ${audit.licenses.gpl} GPL-licensed packages may require open-sourcing`
+      );
     }
 
     if (audit.rls.status !== 'enabled') {
-      recommendations.push(`🔒 Enable Row Level Security on all database tables`);
+      recommendations.push(
+        `🔒 Enable Row Level Security on all database tables`
+      );
     }
 
     if (audit.tls.status !== 'enforced') {
@@ -511,12 +554,12 @@ export class SecurityAuditor {
 
   private async storeAudit(audit: SecurityAudit): Promise<void> {
     try {
-      await this.supabase
-        .from('security_audits')
-        .insert([{
+      await this.supabase.from('security_audits').insert([
+        {
           audit,
-          created_at: new Date().toISOString()
-        }]);
+          created_at: new Date().toISOString(),
+        },
+      ]);
     } catch (error) {
       console.warn('Could not store security audit:', error);
     }
@@ -531,12 +574,12 @@ export class SecurityAuditor {
       secrets: audit.secrets.status,
       licenses: {
         gpl: audit.licenses.gpl,
-        restricted: audit.licenses.restricted
+        restricted: audit.licenses.restricted,
       },
       tls: audit.tls.status,
       rls: audit.rls.status,
       gdpr: audit.gdpr.status,
-      issues: audit.issues.length
+      issues: audit.issues.length,
     };
 
     // Write to admin/compliance.json
@@ -569,10 +612,14 @@ Generated: ${new Date().toISOString()}
 
 ## Issues
 
-${audit.issues.map(i => `### ${i.severity.toUpperCase()}: ${i.type}
+${audit.issues
+  .map(
+    i => `### ${i.severity.toUpperCase()}: ${i.type}
 - **Description:** ${i.description}
 - **Remediation:** ${i.remediation}
-`).join('\n')}
+`
+  )
+  .join('\n')}
 
 ## Recommendations
 

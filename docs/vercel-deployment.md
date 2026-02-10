@@ -16,6 +16,7 @@ The project uses a custom build script (`vercel-build.sh`) configured in `vercel
 ### Build Script (vercel-build.sh)
 
 The build script:
+
 1. Sets up pnpm using corepack
 2. Installs dependencies with frozen lockfile
 3. Generates Prisma client (if DATABASE_URL is available)
@@ -43,6 +44,7 @@ These secrets must be configured in GitHub → Settings → Secrets → Actions:
 ### frontend-deploy.yml
 
 Main deployment workflow that:
+
 - Runs on PRs and pushes to main
 - Validates required secrets
 - Builds and tests the application
@@ -52,6 +54,7 @@ Main deployment workflow that:
 ### vercel-build-check.yml
 
 Validation workflow that:
+
 - Runs on PRs and pushes to main/develop
 - Validates vercel.json configuration
 - Simulates Vercel build environment
@@ -61,6 +64,7 @@ Validation workflow that:
 ### ci.yml & ci-consolidated.yml
 
 CI workflows that:
+
 - Run lint, typecheck, format checks
 - Run tests
 - Build the application

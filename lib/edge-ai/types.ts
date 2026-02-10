@@ -3,7 +3,7 @@
  * Core types for models, devices, jobs, benchmarks, and artifacts
  */
 
-export type EdgeAIModelFormat = 
+export type EdgeAIModelFormat =
   | 'onnx'
   | 'tflite'
   | 'gguf'
@@ -13,7 +13,7 @@ export type EdgeAIModelFormat =
   | 'ncnn'
   | 'other';
 
-export type EdgeAIQuantizationType = 
+export type EdgeAIQuantizationType =
   | 'int8'
   | 'int4'
   | 'fp8'
@@ -22,7 +22,7 @@ export type EdgeAIQuantizationType =
   | 'dynamic'
   | 'none';
 
-export type EdgeAIDeviceType = 
+export type EdgeAIDeviceType =
   | 'ai_pc'
   | 'jetson'
   | 'android'
@@ -32,7 +32,7 @@ export type EdgeAIDeviceType =
   | 'mobile_npu'
   | 'custom';
 
-export type EdgeAIJobStatus = 
+export type EdgeAIJobStatus =
   | 'pending'
   | 'queued'
   | 'running'
@@ -40,7 +40,7 @@ export type EdgeAIJobStatus =
   | 'failed'
   | 'cancelled';
 
-export type EdgeAIArtifactType = 
+export type EdgeAIArtifactType =
   | 'optimized_model'
   | 'sdk_scaffold'
   | 'docker_image'

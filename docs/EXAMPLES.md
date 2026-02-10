@@ -21,7 +21,7 @@ import { createGETHandler } from '@/lib/api/route-handler';
 import { NextResponse } from 'next/server';
 
 export const GET = createGETHandler(
-  async (context) => {
+  async context => {
     // Your logic here
     return NextResponse.json({ data: 'example' });
   },
@@ -48,10 +48,10 @@ const requestSchema = z.object({
 });
 
 export const POST = createPOSTHandler(
-  async (context) => {
+  async context => {
     const body = await context.request.json();
     const validated = requestSchema.parse(body);
-    
+
     // Process validated data
     return NextResponse.json({ success: true });
   },
@@ -134,9 +134,7 @@ import { callOpenAI } from '@/lib/external-services/openai-client';
 
 const response = await callOpenAI(
   {
-    messages: [
-      { role: 'user', content: 'Hello' }
-    ],
+    messages: [{ role: 'user', content: 'Hello' }],
   },
   process.env.OPENAI_API_KEY!
 );
@@ -150,10 +148,14 @@ const response = await callOpenAI(
 import { cacheService } from '@/lib/performance/cache';
 
 // Set cache
-await cacheService.set('key', { data: 'value' }, {
-  ttl: 300, // 5 minutes
-  tags: ['user-data'],
-});
+await cacheService.set(
+  'key',
+  { data: 'value' },
+  {
+    ttl: 300, // 5 minutes
+    tags: ['user-data'],
+  }
+);
 
 // Get cache
 const cached = await cacheService.get('key');
@@ -239,12 +241,16 @@ import { trackError } from '@/lib/monitoring/enhanced-error-tracker';
 try {
   // Your code
 } catch (error) {
-  const errorId = trackError(error, {
-    userId: user.id,
-    url: request.url,
-    method: request.method,
-  }, 'high');
-  
+  const errorId = trackError(
+    error,
+    {
+      userId: user.id,
+      url: request.url,
+      method: request.method,
+    },
+    'high'
+  );
+
   // Log error ID for reference
   logger.error('Error tracked', error, { errorId });
 }
@@ -310,9 +316,9 @@ import { createClient } from '@supabase/supabase-js';
 import { env } from '@/lib/env';
 
 export const GET = createGETHandler(
-  async (context) => {
+  async context => {
     const { userId, tenantId } = context;
-    
+
     if (!userId) {
       throw new AuthenticationError('Authentication required');
     }
@@ -320,7 +326,7 @@ export const GET = createGETHandler(
     // Check cache first
     const cacheKey = `user-data:${userId}`;
     const cached = await cacheService.get(cacheKey, { tenantId });
-    
+
     if (cached) {
       logger.info('Cache hit', { userId, cacheKey });
       return NextResponse.json(cached);

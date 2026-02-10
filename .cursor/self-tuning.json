@@ -48,11 +48,7 @@
       "**/.next/**",
       "**/dist/**"
     ],
-    "testing": [
-      "**/node_modules/**",
-      "**/.next/**",
-      "**/dist/**"
-    ]
+    "testing": ["**/node_modules/**", "**/.next/**", "**/dist/**"]
   },
   "autoAdjustment": {
     "enabled": true,

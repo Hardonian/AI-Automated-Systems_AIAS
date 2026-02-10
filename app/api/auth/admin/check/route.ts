@@ -1,15 +1,15 @@
 /**
  * Admin Access Check API
- * 
+ *
  * Checks if current user has admin access.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { getAdminUser, hasAdminRole, AdminRole } from "@/lib/auth/admin-auth";
-import { logger } from "@/lib/logging/structured-logger";
-import { addSecurityHeaders } from "@/lib/middleware/security";
-export const dynamic = "force-dynamic";
+import { getAdminUser, hasAdminRole, AdminRole } from '@/lib/auth/admin-auth';
+import { logger } from '@/lib/logging/structured-logger';
+import { addSecurityHeaders } from '@/lib/middleware/security';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/auth/admin/check
@@ -26,7 +26,10 @@ export async function GET(_request: NextRequest) {
       );
     }
 
-    const hasFinancialAccess = await hasAdminRole(adminUser.id, AdminRole.FINANCIAL_ADMIN);
+    const hasFinancialAccess = await hasAdminRole(
+      adminUser.id,
+      AdminRole.FINANCIAL_ADMIN
+    );
 
     const response = NextResponse.json({
       isAdmin: true,
@@ -38,9 +41,17 @@ export async function GET(_request: NextRequest) {
     addSecurityHeaders(response);
     return response;
   } catch (error) {
-    logger.error("Error checking admin access:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
+    logger.error(
+      'Error checking admin access:',
+      error instanceof Error ? error : new Error(String(error)),
+      { component: 'route', action: 'unknown' }
+    );
     return NextResponse.json(
-      { isAdmin: false, hasFinancialAccess: false, error: "Internal server error" },
+      {
+        isAdmin: false,
+        hasFinancialAccess: false,
+        error: 'Internal server error',
+      },
       { status: 500 }
     );
   }

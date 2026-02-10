@@ -47,10 +47,11 @@ This guide explains how to configure Prisma to use UpStash Postgres, leveraging 
    - Go to Settings → Environment Variables
 
 2. **Add UpStash Postgres Variables:**
+
    ```bash
    # Primary connection (for Prisma client)
    UPSTASH_POSTGRES_URL=postgresql://default:password@host.upstash.io:5432/defaultdb
-   
+
    # Direct connection (for migrations)
    UPSTASH_POSTGRES_DIRECT_URL=postgresql://default:password@host.upstash.io:5432/defaultdb
    ```
@@ -66,6 +67,7 @@ This guide explains how to configure Prisma to use UpStash Postgres, leveraging 
 #### For Local Development
 
 Add to `.env.local`:
+
 ```bash
 # UpStash Postgres (recommended for production)
 UPSTASH_POSTGRES_URL=postgresql://default:password@host.upstash.io:5432/defaultdb
@@ -81,6 +83,7 @@ DIRECT_URL=postgresql://localhost:5432/aias_platform
 The Prisma schema is already configured to work with UpStash Postgres. No changes needed!
 
 The schema uses:
+
 ```prisma
 datasource db {
   provider = "postgresql"
@@ -90,6 +93,7 @@ datasource db {
 ```
 
 The build process automatically:
+
 - Uses `UPSTASH_POSTGRES_URL` if available, otherwise `DATABASE_URL`
 - Sets `DIRECT_URL` from `UPSTASH_POSTGRES_DIRECT_URL` or falls back to `DATABASE_URL`
 
@@ -109,6 +113,7 @@ pnpm run db:push
 ### 5. Verify Connection
 
 Test the connection:
+
 ```bash
 # Check Prisma connection
 pnpm run db:studio
@@ -178,6 +183,7 @@ The system checks environment variables in this order:
 ## Build Process
 
 The Vercel build automatically:
+
 1. Sets `DATABASE_URL` from `UPSTASH_POSTGRES_URL` if available
 2. Sets `DIRECT_URL` from `UPSTASH_POSTGRES_DIRECT_URL` or uses `DATABASE_URL`
 3. Generates Prisma Client
@@ -204,11 +210,13 @@ If you're currently using Supabase Postgres and want to migrate to UpStash:
 ## Cost Optimization
 
 ### UpStash Postgres Pricing
+
 - **Free Tier:** 10K reads/day, 10K writes/day
 - **Pay-as-you-go:** $0.20 per 100K reads, $0.20 per 100K writes
 - **Typical Usage:** ~1M requests/month = ~$2-4/month
 
 ### Combined with Redis
+
 - Use same UpStash account for both Redis and Postgres
 - Unified billing and management
 - Better cost efficiency
@@ -229,6 +237,7 @@ If you're currently using Supabase Postgres and want to migrate to UpStash:
 **Issue:** `Prisma schema validation - Environment variable not found`
 
 **Solution:**
+
 - Verify `UPSTASH_POSTGRES_URL` or `DATABASE_URL` is set
 - Check environment variables in Vercel dashboard
 - Ensure variable names are correct (case-sensitive)
@@ -238,6 +247,7 @@ If you're currently using Supabase Postgres and want to migrate to UpStash:
 **Issue:** `prisma migrate deploy` fails
 
 **Solution:**
+
 - Verify `UPSTASH_POSTGRES_DIRECT_URL` or `DIRECT_URL` is set
 - Check database credentials are correct
 - Ensure database is accessible from build environment
@@ -248,6 +258,7 @@ If you're currently using Supabase Postgres and want to migrate to UpStash:
 **Issue:** Build times out during Prisma generation
 
 **Solution:**
+
 - UpStash Postgres is serverless and may have cold starts
 - Consider using connection pooling
 - Check UpStash dashboard for connection limits
@@ -256,12 +267,14 @@ If you're currently using Supabase Postgres and want to migrate to UpStash:
 ## Monitoring
 
 ### UpStash Dashboard
+
 - Monitor database usage
 - Track query performance
 - View connection metrics
 - Set up alerts
 
 ### Application Logs
+
 - Check Prisma query logs (in development)
 - Monitor connection errors
 - Track migration status
@@ -269,6 +282,7 @@ If you're currently using Supabase Postgres and want to migrate to UpStash:
 ## Support
 
 For issues or questions:
+
 - UpStash Documentation: https://docs.upstash.com/postgres
 - Prisma Documentation: https://www.prisma.io/docs
 - Check application logs for detailed error messages

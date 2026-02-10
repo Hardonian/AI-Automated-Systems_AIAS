@@ -2,10 +2,10 @@
 /**
  * Remove Unused Exports Script
  * Identifies and removes unused exports from the codebase
- * 
+ *
  * Usage:
  *   pnpm tsx scripts/remove-unused-exports.ts [--dry-run]
- * 
+ *
  * This script:
  * 1. Runs ts-prune to find unused exports
  * 2. Runs knip to find unused code
@@ -18,7 +18,8 @@ import { writeFileSync } from 'fs';
 // import { readFileSync } from 'fs';
 // import { join } from 'path';
 
-const DRY_RUN = process.argv.includes('--dry-run') || process.argv.includes('--check');
+const DRY_RUN =
+  process.argv.includes('--dry-run') || process.argv.includes('--check');
 
 interface UnusedExport {
   file: string;
@@ -67,7 +68,7 @@ async function findUnusedExports(): Promise<UnusedExport[]> {
     });
 
     const knipData = JSON.parse(knipOutput);
-    
+
     // Parse knip results
     if (knipData.exports) {
       for (const [file, exports] of Object.entries(knipData.exports)) {
@@ -92,7 +93,7 @@ async function findUnusedExports(): Promise<UnusedExport[]> {
 
 async function generateReport(unused: UnusedExport[]): Promise<void> {
   const reportPath = 'reports/unused-exports-removal.md';
-  
+
   const report = `# Unused Exports Removal Report
 
 **Generated:** ${new Date().toISOString()}
@@ -105,13 +106,16 @@ Found ${unused.length} unused exports across the codebase.
 ## Unused Exports by File
 
 ${unused
-  .reduce((acc, item) => {
-    if (!acc[item.file]) {
-      acc[item.file] = [];
-    }
-    acc[item.file].push(item);
-    return acc;
-  }, {} as Record<string, UnusedExport[]>)
+  .reduce(
+    (acc, item) => {
+      if (!acc[item.file]) {
+        acc[item.file] = [];
+      }
+      acc[item.file].push(item);
+      return acc;
+    },
+    {} as Record<string, UnusedExport[]>
+  )
   .entries()
   .map(([file, items]) => {
     return `### ${file}\n\n${items.map((item: UnusedExport) => `- \`${item.export}\` (line ${item.line}): ${item.reason}`).join('\n')}\n`;
@@ -145,13 +149,16 @@ async function main() {
   console.log(`\n📊 Found ${unused.length} unused exports\n`);
 
   // Group by file
-  const byFile = unused.reduce((acc, item) => {
-    if (!acc[item.file]) {
-      acc[item.file] = [];
-    }
-    acc[item.file].push(item);
-    return acc;
-  }, {} as Record<string, UnusedExport[]>);
+  const byFile = unused.reduce(
+    (acc, item) => {
+      if (!acc[item.file]) {
+        acc[item.file] = [];
+      }
+      acc[item.file].push(item);
+      return acc;
+    },
+    {} as Record<string, UnusedExport[]>
+  );
 
   console.log('Files with unused exports:');
   for (const [file, items] of Object.entries(byFile)) {

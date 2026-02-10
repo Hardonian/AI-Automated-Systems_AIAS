@@ -1,9 +1,9 @@
-"use client";
-import { useState, useEffect } from "react";
+'use client';
+import { useState, useEffect } from 'react';
 
-import { hapticTap } from "../gamification/Haptics";
+import { hapticTap } from '../gamification/Haptics';
 
-import { supabase } from "@/lib/supabase/client";
+import { supabase } from '@/lib/supabase/client';
 
 export default function FollowButton({ userId }: { userId: string }) {
   const [following, setFollowing] = useState(false);
@@ -15,59 +15,74 @@ export default function FollowButton({ userId }: { userId: string }) {
   }, [userId]);
 
   async function checkFollowStatus() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user || user.id === userId) {return;}
-    
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user || user.id === userId) {
+      return;
+    }
+
     const { data } = await supabase
-      .from("user_follows")
-      .select("*")
-      .eq("follower_id", user.id)
-      .eq("following_id", userId)
+      .from('user_follows')
+      .select('*')
+      .eq('follower_id', user.id)
+      .eq('following_id', userId)
       .single();
-    
+
     setFollowing(!!data);
   }
 
   async function loadFollowerCount() {
     const { count } = await supabase
-      .from("user_follows")
-      .select("*", { count: "exact", head: true })
-      .eq("following_id", userId);
-    
-    if (count !== null) {setFollowerCount(count);}
+      .from('user_follows')
+      .select('*', { count: 'exact', head: true })
+      .eq('following_id', userId);
+
+    if (count !== null) {
+      setFollowerCount(count);
+    }
   }
 
   async function toggleFollow() {
     hapticTap();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user || user.id === userId) {return;}
-    
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user || user.id === userId) {
+      return;
+    }
+
     if (following) {
       await supabase
-        .from("user_follows")
+        .from('user_follows')
         .delete()
-        .eq("follower_id", user.id)
-        .eq("following_id", userId);
+        .eq('follower_id', user.id)
+        .eq('following_id', userId);
       setFollowing(false);
       setFollowerCount(c => Math.max(0, c - 1));
     } else {
-      await (supabase.from("user_follows") as any).insert({ follower_id: user.id, following_id: userId } as any);
+      await (supabase.from('user_follows') as any).insert({
+        follower_id: user.id,
+        following_id: userId,
+      } as any);
       setFollowing(true);
       setFollowerCount(c => c + 1);
     }
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className='flex items-center gap-2'>
       <button
-        className={`h-10 px-4 rounded-xl text-sm font-medium ${
-          following ? "bg-secondary" : "bg-primary text-primary-fg"
+        className={`h-10 rounded-xl px-4 text-sm font-medium ${
+          following ? 'bg-secondary' : 'text-primary-fg bg-primary'
         }`}
         onClick={toggleFollow}
       >
-        {following ? "Following" : "Follow"}
+        {following ? 'Following' : 'Follow'}
       </button>
-      <div className="text-sm text-muted-foreground">{followerCount} followers</div>
+      <div className='text-sm text-muted-foreground'>
+        {followerCount} followers
+      </div>
     </div>
   );
 }

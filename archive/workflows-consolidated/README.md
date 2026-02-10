@@ -16,6 +16,7 @@ The following migration workflows were consolidated:
 **New unified workflow:** `.github/workflows/migrations-unified.yml`
 
 Features:
+
 - Single workflow handles both Supabase and Prisma migrations
 - Staging testing for PRs
 - Migration guardian health checks
@@ -37,6 +38,7 @@ The following deployment workflows were consolidated:
 **New unified workflow:** `.github/workflows/deploy-unified.yml`
 
 Features:
+
 - Single workflow handles all deployment types
 - Pre-deployment checks (deploy doctor)
 - Frontend, agents, content, and canary deployments
@@ -59,6 +61,7 @@ The following CI/build check workflows were consolidated:
 **New unified workflow:** `.github/workflows/ci-unified.yml`
 
 Features:
+
 - Single workflow handles all CI checks
 - Code quality (lint, typecheck, format)
 - Security scans
@@ -72,6 +75,7 @@ Features:
 ## Alerting/Notification Systems → `notifications-unified.yml`
 
 All Slack/webhook notifications were consolidated into a single notification workflow that:
+
 - Monitors unified workflows (CI, Deployment, Migrations)
 - Sends status notifications automatically
 - Supports custom notifications via workflow_dispatch
@@ -89,6 +93,7 @@ All Slack/webhook notifications were consolidated into a single notification wor
 ## Rollback
 
 If needed, workflows can be restored from this archive directory. However, the unified workflows provide better:
+
 - Maintainability
 - Consistency
 - Reduced duplication

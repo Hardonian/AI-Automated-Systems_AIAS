@@ -16,10 +16,10 @@ const crmSyncSchema = z.object({
 });
 
 export const POST = createPOSTHandler(
-  async (context) => {
+  async context => {
     const body = crmSyncSchema.parse(await context.request.json());
     const tenantId = context.tenantId || undefined;
-    
+
     const result = await crmIntegrationService.syncLeadToCRM(
       body.leadId,
       {
@@ -29,14 +29,14 @@ export const POST = createPOSTHandler(
       },
       tenantId
     );
-    
+
     if (!result.success) {
       return NextResponse.json(
         { error: result.error || 'CRM sync failed' },
         { status: 400 }
       );
     }
-    
+
     return NextResponse.json(result);
   },
   {

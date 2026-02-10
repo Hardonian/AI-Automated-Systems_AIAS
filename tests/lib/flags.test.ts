@@ -5,7 +5,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import flagsConfig from '@/config/flags.json';
-import { getAllFlags, getFlag, getFlagMetadata, isCanaryEnabled, isFlagEnabled } from '@/src/lib/flags';
+import {
+  getAllFlags,
+  getFlag,
+  getFlagMetadata,
+  isCanaryEnabled,
+  isFlagEnabled,
+} from '@/src/lib/flags';
 
 describe('lib/flags', () => {
   const originalEnv = process.env.NODE_ENV;

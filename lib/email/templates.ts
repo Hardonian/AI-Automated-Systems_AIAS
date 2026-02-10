@@ -21,7 +21,7 @@ export function getBookingConfirmationTemplate(data: {
   phoneNumber?: string;
 }): EmailTemplate {
   const { name, date, time, meetingType, meetingLink, phoneNumber } = data;
-  
+
   return {
     subject: `Booking Confirmed: ${meetingType} Meeting on ${date}`,
     html: `
@@ -97,7 +97,7 @@ export function getLeadGenPDFTemplate(data: {
   pdfUrl?: string;
 }): EmailTemplate {
   const { name, pdfUrl } = data;
-  
+
   return {
     subject: 'Your Free System Prompts Guide is Ready!',
     html: `
@@ -178,7 +178,7 @@ export function getWelcomeEmailTemplate(data: {
   loginUrl: string;
 }): EmailTemplate {
   const { name, loginUrl } = data;
-  
+
   return {
     subject: 'Welcome to AIAS Platform!',
     html: `
@@ -252,7 +252,7 @@ export function getPasswordResetTemplate(data: {
   expiresIn: string;
 }): EmailTemplate {
   const { name, resetUrl, expiresIn } = data;
-  
+
   return {
     subject: 'Reset Your Password',
     html: `

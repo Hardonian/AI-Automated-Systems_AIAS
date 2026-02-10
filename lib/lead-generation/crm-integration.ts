@@ -39,7 +39,10 @@ interface LeadRecord {
 }
 
 class CRMIntegrationService {
-  private supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+  private supabase = createClient(
+    env.supabase.url,
+    env.supabase.serviceRoleKey
+  );
 
   /**
    * Sync lead to CRM
@@ -77,19 +80,33 @@ class CRMIntegrationService {
 
       // Update lead with CRM ID
       if (result.success && result.crmId) {
-        await this.updateLeadCRMId(leadId, result.crmId, crmConfig.provider, tenantId);
+        await this.updateLeadCRMId(
+          leadId,
+          result.crmId,
+          crmConfig.provider,
+          tenantId
+        );
       }
 
       // Track sync
-      await this.trackSync(leadId, crmConfig.provider, result.success, tenantId);
+      await this.trackSync(
+        leadId,
+        crmConfig.provider,
+        result.success,
+        tenantId
+      );
 
       return result;
     } catch (error) {
-      logger.error('CRM sync failed', error instanceof Error ? error : new Error(String(error)), {
-        leadId,
-        provider: crmConfig.provider,
-        tenantId,
-      });
+      logger.error(
+        'CRM sync failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          leadId,
+          provider: crmConfig.provider,
+          tenantId,
+        }
+      );
 
       return {
         success: false,
@@ -105,28 +122,37 @@ class CRMIntegrationService {
     lead: CRMLead,
     config: CRMConfig
   ): Promise<{ success: boolean; crmId?: string; error?: string }> {
-    return withCircuitBreaker<{ success: boolean; crmId?: string; error?: string }>(
+    return withCircuitBreaker<{
+      success: boolean;
+      crmId?: string;
+      error?: string;
+    }>(
       'salesforce',
       async () => {
-        const response = await fetch(`${config.apiUrl || 'https://api.salesforce.com'}/services/data/v57.0/sobjects/Lead`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${config.apiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            Email: lead.email,
-            FirstName: lead.firstName,
-            LastName: lead.lastName,
-            Company: lead.company,
-            Phone: lead.phone,
-            LeadSource: lead.source,
-          }),
-        });
+        const response = await fetch(
+          `${config.apiUrl || 'https://api.salesforce.com'}/services/data/v57.0/sobjects/Lead`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${config.apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              Email: lead.email,
+              FirstName: lead.firstName,
+              LastName: lead.lastName,
+              Company: lead.company,
+              Phone: lead.phone,
+              LeadSource: lead.source,
+            }),
+          }
+        );
 
         if (!response.ok) {
           const error = await response.json().catch(() => ({}));
-          throw new Error(`Salesforce API error: ${response.status} - ${JSON.stringify(error)}`);
+          throw new Error(
+            `Salesforce API error: ${response.status} - ${JSON.stringify(error)}`
+          );
         }
 
         const data = await response.json();
@@ -149,30 +175,39 @@ class CRMIntegrationService {
     lead: CRMLead,
     config: CRMConfig
   ): Promise<{ success: boolean; crmId?: string; error?: string }> {
-    return withCircuitBreaker<{ success: boolean; crmId?: string; error?: string }>(
+    return withCircuitBreaker<{
+      success: boolean;
+      crmId?: string;
+      error?: string;
+    }>(
       'hubspot',
       async () => {
-        const response = await fetch(`https://api.hubapi.com/crm/v3/objects/contacts`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${config.apiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            properties: {
-              email: lead.email,
-              firstname: lead.firstName,
-              lastname: lead.lastName,
-              company: lead.company,
-              phone: lead.phone,
-              hs_lead_status: lead.status || 'NEW',
+        const response = await fetch(
+          `https://api.hubapi.com/crm/v3/objects/contacts`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${config.apiKey}`,
+              'Content-Type': 'application/json',
             },
-          }),
-        });
+            body: JSON.stringify({
+              properties: {
+                email: lead.email,
+                firstname: lead.firstName,
+                lastname: lead.lastName,
+                company: lead.company,
+                phone: lead.phone,
+                hs_lead_status: lead.status || 'NEW',
+              },
+            }),
+          }
+        );
 
         if (!response.ok) {
           const error = await response.json().catch(() => ({}));
-          throw new Error(`HubSpot API error: ${response.status} - ${JSON.stringify(error)}`);
+          throw new Error(
+            `HubSpot API error: ${response.status} - ${JSON.stringify(error)}`
+          );
         }
 
         const data = await response.json();
@@ -195,25 +230,34 @@ class CRMIntegrationService {
     lead: CRMLead,
     config: CRMConfig
   ): Promise<{ success: boolean; crmId?: string; error?: string }> {
-    return withCircuitBreaker<{ success: boolean; crmId?: string; error?: string }>(
+    return withCircuitBreaker<{
+      success: boolean;
+      crmId?: string;
+      error?: string;
+    }>(
       'pipedrive',
       async () => {
-        const response = await fetch(`https://api.pipedrive.com/v1/persons?api_token=${config.apiKey}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: [{ value: lead.email, primary: true }],
-            name: `${lead.firstName || ''} ${lead.lastName || ''}`.trim(),
-            org_name: lead.company,
-            phone: [{ value: lead.phone || '', primary: true }],
-          }),
-        });
+        const response = await fetch(
+          `https://api.pipedrive.com/v1/persons?api_token=${config.apiKey}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: [{ value: lead.email, primary: true }],
+              name: `${lead.firstName || ''} ${lead.lastName || ''}`.trim(),
+              org_name: lead.company,
+              phone: [{ value: lead.phone || '', primary: true }],
+            }),
+          }
+        );
 
         if (!response.ok) {
           const error = await response.json().catch(() => ({}));
-          throw new Error(`Pipedrive API error: ${response.status} - ${JSON.stringify(error)}`);
+          throw new Error(
+            `Pipedrive API error: ${response.status} - ${JSON.stringify(error)}`
+          );
         }
 
         const data = await response.json();
@@ -243,13 +287,17 @@ class CRMIntegrationService {
       };
     }
 
-    return withCircuitBreaker<{ success: boolean; crmId?: string; error?: string }>(
+    return withCircuitBreaker<{
+      success: boolean;
+      crmId?: string;
+      error?: string;
+    }>(
       'custom-crm',
       async () => {
         const response = await fetch(config.apiUrl!, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${config.apiKey}`,
+            Authorization: `Bearer ${config.apiKey}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(lead),
@@ -257,7 +305,9 @@ class CRMIntegrationService {
 
         if (!response.ok) {
           const error = await response.json().catch(() => ({}));
-          throw new Error(`Custom CRM API error: ${response.status} - ${JSON.stringify(error)}`);
+          throw new Error(
+            `Custom CRM API error: ${response.status} - ${JSON.stringify(error)}`
+          );
         }
 
         const data = await response.json();
@@ -292,7 +342,10 @@ class CRMIntegrationService {
   /**
    * Get lead
    */
-  private async getLead(leadId: string, tenantId?: string): Promise<LeadRecord | null> {
+  private async getLead(
+    leadId: string,
+    tenantId?: string
+  ): Promise<LeadRecord | null> {
     let query = this.supabase.from('leads').select('*').eq('id', leadId);
 
     if (tenantId) {
@@ -300,7 +353,9 @@ class CRMIntegrationService {
     }
 
     const { data, error } = await query.single();
-    if (error) {throw error;}
+    if (error) {
+      throw error;
+    }
     return data;
   }
 
@@ -364,7 +419,9 @@ class CRMIntegrationService {
         }
       } catch (error) {
         failed++;
-        errors.push(`${leadId}: ${error instanceof Error ? error.message : String(error)}`);
+        errors.push(
+          `${leadId}: ${error instanceof Error ? error.message : String(error)}`
+        );
       }
     }
 

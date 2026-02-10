@@ -4,20 +4,24 @@
  * Generates a rollback migration template
  */
 
-import { writeFileSync, existsSync } from "fs";
-import { join } from "path";
+import { writeFileSync, existsSync } from 'fs';
+import { join } from 'path';
 
 const originalMigration = process.argv[2];
-const reason = process.argv[3] || "Migration issue detected";
+const reason = process.argv[3] || 'Migration issue detected';
 
 if (!originalMigration) {
-  console.error("Usage: pnpm run create:rollback <original-migration> [reason]");
-  console.error("Example: pnpm run create:rollback 20250131000000_add_user_preferences.sql 'Causing performance issues'");
+  console.error(
+    'Usage: pnpm run create:rollback <original-migration> [reason]'
+  );
+  console.error(
+    "Example: pnpm run create:rollback 20250131000000_add_user_preferences.sql 'Causing performance issues'"
+  );
   process.exit(1);
 }
 
 // Check if original migration exists
-const migrationsDir = join(process.cwd(), "supabase/migrations");
+const migrationsDir = join(process.cwd(), 'supabase/migrations');
 const originalPath = join(migrationsDir, originalMigration);
 
 if (!existsSync(originalPath)) {
@@ -26,9 +30,18 @@ if (!existsSync(originalPath)) {
 }
 
 // Generate rollback filename
-const timestamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "").replace("T", "");
-const originalName = originalMigration.replace(/^\d+_/, "").replace(/\.sql$/, "");
-const rollbackFile = join(migrationsDir, `${timestamp}_rollback_${originalName}.sql`);
+const timestamp = new Date()
+  .toISOString()
+  .replace(/[-:]/g, '')
+  .replace(/\..+/, '')
+  .replace('T', '');
+const originalName = originalMigration
+  .replace(/^\d+_/, '')
+  .replace(/\.sql$/, '');
+const rollbackFile = join(
+  migrationsDir,
+  `${timestamp}_rollback_${originalName}.sql`
+);
 
 const rollbackTemplate = `-- Rollback Migration
 -- Reverts: ${originalMigration}
@@ -56,5 +69,5 @@ COMMIT;
 
 writeFileSync(rollbackFile, rollbackTemplate);
 console.log(`✅ Rollback migration created: ${rollbackFile}`);
-console.log("⚠️  Review and modify before applying!");
+console.log('⚠️  Review and modify before applying!');
 console.log(`📝 Original migration: ${originalPath}`);

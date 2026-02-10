@@ -76,24 +76,24 @@ jobs:
         run: |
           echo "Validating required environment variables..."
           MISSING_SECRETS=()
-          
+
           if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
             MISSING_SECRETS+=("VERCEL_TOKEN")
           fi
-          
+
           if [ -z "${{ secrets.VERCEL_ORG_ID }}" ]; then
             MISSING_SECRETS+=("VERCEL_ORG_ID")
           fi
-          
+
           if [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
             MISSING_SECRETS+=("VERCEL_PROJECT_ID")
           fi
-          
+
           if [ ${#MISSING_SECRETS[@]} -ne 0 ]; then
             echo "❌ Missing required secrets: ${MISSING_SECRETS[*]}"
             exit 1
           fi
-          
+
           echo "✅ All required secrets are present"
 
   # ============================================================================
@@ -223,14 +223,14 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          ENABLE_EXPERIMENTAL_COREPACK: "1"
+          ENABLE_EXPERIMENTAL_COREPACK: '1'
 
       - name: Build for Vercel
         run: |
           set -euo pipefail
           echo "🔨 Building for Vercel..."
           npx vercel@latest build --token="${{ secrets.VERCEL_TOKEN }}"
-          
+
           # Validate build output
           pnpm run validate:build || echo "Build validation skipped"
         env:
@@ -279,14 +279,14 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
-            
+
             const botComment = comments.find(comment => 
               comment.user.type === 'Bot' && 
               comment.body.includes('Preview deployment')
             );
-            
+
             const body = `## 🚀 Preview Deployment\n\n**Preview URL:** ${process.env.PREVIEW_URL}\n\nThis preview will be updated automatically on each push to this PR.\n\n### Quality Checks\n- ✅ Lint passed\n- ✅ Type check passed\n- ✅ Tests passed\n- ✅ Build successful`;
-            
+
             if (botComment) {
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,

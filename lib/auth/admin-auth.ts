@@ -1,13 +1,13 @@
 /**
  * Admin Authentication & Authorization
- * 
+ *
  * Provides utilities for checking admin access and protecting admin routes.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { serverLogger } from "@/lib/utils/logger";
+import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { serverLogger } from '@/lib/utils/logger';
 
 export interface AdminUser {
   id: string;
@@ -20,11 +20,15 @@ export interface AdminUser {
  * Check if user is admin
  */
 export async function isAdmin(userId?: string): Promise<boolean> {
-  if (!userId) {return false;}
+  if (!userId) {
+    return false;
+  }
 
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     // Never evaluate admin status for a different user in a user-scoped context.
     if (!user || user.id !== userId) {
@@ -32,18 +36,23 @@ export async function isAdmin(userId?: string): Promise<boolean> {
     }
 
     const { data, error } = await supabase
-      .from("profiles" as any)
-      .select("role")
-      .eq("id", userId)
+      .from('profiles' as any)
+      .select('role')
+      .eq('id', userId)
       .single();
 
-    if (error || !data) {return false;}
+    if (error || !data) {
+      return false;
+    }
 
     // Check if user has admin role
     const profileData = data as { role?: string } | null;
-    return profileData?.role === "admin" || profileData?.role === "super_admin";
+    return profileData?.role === 'admin' || profileData?.role === 'super_admin';
   } catch (error) {
-    serverLogger.error("Error checking admin status", error instanceof Error ? error : new Error(String(error)));
+    serverLogger.error(
+      'Error checking admin status',
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }
@@ -55,29 +64,42 @@ export async function getAdminUser(): Promise<AdminUser | null> {
   try {
     const supabase = await createServerSupabaseClient();
 
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {return null;}
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+    if (userError || !user) {
+      return null;
+    }
 
     const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
       .single();
 
-    if (profileError || !profile) {return null;}
+    if (profileError || !profile) {
+      return null;
+    }
 
-    const role = String((profile as any)?.role ?? "");
-    const adminStatus = role === "admin" || role === "super_admin" || role === "financial_admin";
-    if (!adminStatus) {return null;}
+    const role = String((profile as any)?.role ?? '');
+    const adminStatus =
+      role === 'admin' || role === 'super_admin' || role === 'financial_admin';
+    if (!adminStatus) {
+      return null;
+    }
 
     return {
       id: user.id,
-      email: user.email || "",
+      email: user.email || '',
       role,
       isAdmin: true,
     };
   } catch (error) {
-    serverLogger.error("Error getting admin user", error instanceof Error ? error : new Error(String(error)));
+    serverLogger.error(
+      'Error getting admin user',
+      error instanceof Error ? error : new Error(String(error))
+    );
     return null;
   }
 }
@@ -94,7 +116,7 @@ export async function requireAdmin(
     return {
       authorized: false,
       response: NextResponse.json(
-        { error: "Unauthorized: Admin access required" },
+        { error: 'Unauthorized: Admin access required' },
         { status: 403 }
       ),
     };
@@ -120,7 +142,7 @@ export async function checkAdminAccess(): Promise<{
     return {
       isAdmin: false,
       user: null,
-      redirect: "/signin?redirect=/admin",
+      redirect: '/signin?redirect=/admin',
     };
   }
 
@@ -134,9 +156,9 @@ export async function checkAdminAccess(): Promise<{
  * Admin role levels
  */
 export enum AdminRole {
-  ADMIN = "admin",
-  SUPER_ADMIN = "super_admin",
-  FINANCIAL_ADMIN = "financial_admin",
+  ADMIN = 'admin',
+  SUPER_ADMIN = 'super_admin',
+  FINANCIAL_ADMIN = 'financial_admin',
 }
 
 /**
@@ -147,7 +169,9 @@ export async function hasAdminRole(
   requiredRole: AdminRole
 ): Promise<boolean> {
   const user = await getAdminUser();
-  if (!user || user.id !== userId) {return false;}
+  if (!user || user.id !== userId) {
+    return false;
+  }
 
   const roleHierarchy: Record<AdminRole, number> = {
     [AdminRole.ADMIN]: 1,

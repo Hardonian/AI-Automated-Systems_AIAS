@@ -1,4 +1,11 @@
-import { CheckCircle, PlayCircle, PauseCircle, RotateCcw, ArrowRight, ArrowLeft } from 'lucide-react';
+import {
+  CheckCircle,
+  PlayCircle,
+  PauseCircle,
+  RotateCcw,
+  ArrowRight,
+  ArrowLeft,
+} from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
 import { Badge } from '@/components/ui/badge';
@@ -34,7 +41,12 @@ export interface Tutorial {
   id: string;
   title: string;
   description: string;
-  category: 'getting-started' | 'automation' | 'ai-agents' | 'marketplace' | 'security';
+  category:
+    | 'getting-started'
+    | 'automation'
+    | 'ai-agents'
+    | 'marketplace'
+    | 'security';
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   estimatedTime: number; // in minutes
   steps: TutorialStep[];
@@ -51,7 +63,7 @@ interface InteractiveTutorialProps {
 export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
   tutorial,
   onComplete,
-  onProgress
+  onProgress,
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -117,11 +129,11 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
     if (step.content.quiz) {
       const isCorrect = answerIndex === step.content.quiz.correct;
       setUserAnswers(prev => ({ ...prev, [currentStep]: answerIndex }));
-      
+
       if (isCorrect) {
         handleStepComplete(currentStep, answerIndex);
       }
-      
+
       return isCorrect;
     }
     return false;
@@ -129,20 +141,20 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
 
   const renderStepContent = () => {
     const step = currentStepData;
-    
+
     switch (step.type) {
       case 'demo':
         return (
-          <div className="space-y-4">
-            <div className="bg-gray-50 p-6 rounded-lg border-2 border-dashed border-gray-300">
-              <div className="text-center text-gray-600">
-                <PlayCircle className="w-12 h-12 mx-auto mb-4" />
-                <p className="text-lg font-medium">Interactive Demo</p>
-                <p className="text-sm">Watch the automation in action</p>
+          <div className='space-y-4'>
+            <div className='rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-6'>
+              <div className='text-center text-gray-600'>
+                <PlayCircle className='mx-auto mb-4 h-12 w-12' />
+                <p className='text-lg font-medium'>Interactive Demo</p>
+                <p className='text-sm'>Watch the automation in action</p>
               </div>
             </div>
             {step.content.text && (
-              <div className="prose max-w-none">
+              <div className='prose max-w-none'>
                 <p>{step.content.text}</p>
               </div>
             )}
@@ -151,23 +163,28 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
 
       case 'interactive':
         return (
-          <div className="space-y-4">
-            <div className="bg-blue-50 p-6 rounded-lg">
-              <h4 className="font-semibold text-blue-900 mb-2">Try it yourself!</h4>
-              <p className="text-blue-800">{step.content.text}</p>
+          <div className='space-y-4'>
+            <div className='rounded-lg bg-blue-50 p-6'>
+              <h4 className='mb-2 font-semibold text-blue-900'>
+                Try it yourself!
+              </h4>
+              <p className='text-blue-800'>{step.content.text}</p>
             </div>
-            <div className="flex gap-2">
+            <div className='flex gap-2'>
               <Button onClick={() => handleStepComplete(currentStep)}>
                 Mark as Complete
               </Button>
-              <Button variant="outline" onClick={() => setShowHints(!showHints)}>
+              <Button
+                variant='outline'
+                onClick={() => setShowHints(!showHints)}
+              >
                 {showHints ? 'Hide' : 'Show'} Hints
               </Button>
             </div>
             {showHints && step.hints && (
-              <div className="bg-yellow-50 p-4 rounded-lg">
-                <h5 className="font-medium text-yellow-900 mb-2">Hints:</h5>
-                <ul className="list-disc list-inside text-yellow-800 space-y-1">
+              <div className='rounded-lg bg-yellow-50 p-4'>
+                <h5 className='mb-2 font-medium text-yellow-900'>Hints:</h5>
+                <ul className='list-inside list-disc space-y-1 text-yellow-800'>
                   {step.hints.map((hint, index) => (
                     <li key={index}>{hint}</li>
                   ))}
@@ -179,17 +196,17 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
 
       case 'quiz':
         return (
-          <div className="space-y-4">
-            <div className="bg-purple-50 p-6 rounded-lg">
-              <h4 className="font-semibold text-purple-900 mb-4">
+          <div className='space-y-4'>
+            <div className='rounded-lg bg-purple-50 p-6'>
+              <h4 className='mb-4 font-semibold text-purple-900'>
                 {step.content.quiz?.question}
               </h4>
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 {step.content.quiz?.options.map((option, index) => (
                   <Button
                     key={index}
-                    className="w-full justify-start text-left"
-                    variant="outline"
+                    className='w-full justify-start text-left'
+                    variant='outline'
                     onClick={() => {
                       const isCorrect = handleQuizAnswer(index);
                       if (isCorrect) {
@@ -212,24 +229,27 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
 
       case 'code':
         return (
-          <div className="space-y-4">
-            <div className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-              <pre className="text-sm">
+          <div className='space-y-4'>
+            <div className='overflow-x-auto rounded-lg bg-gray-900 p-4 text-gray-100'>
+              <pre className='text-sm'>
                 <code>{step.content.code}</code>
               </pre>
             </div>
-            <div className="flex gap-2">
+            <div className='flex gap-2'>
               <Button onClick={() => handleStepComplete(currentStep)}>
                 I Understand This Code
               </Button>
-              <Button variant="outline" onClick={() => setShowHints(!showHints)}>
+              <Button
+                variant='outline'
+                onClick={() => setShowHints(!showHints)}
+              >
                 {showHints ? 'Hide' : 'Show'} Explanation
               </Button>
             </div>
             {showHints && step.hints && (
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h5 className="font-medium mb-2">Code Explanation:</h5>
-                <ul className="list-disc list-inside space-y-1 text-sm">
+              <div className='rounded-lg bg-gray-50 p-4'>
+                <h5 className='mb-2 font-medium'>Code Explanation:</h5>
+                <ul className='list-inside list-disc space-y-1 text-sm'>
                   {step.hints.map((hint, index) => (
                     <li key={index}>{hint}</li>
                   ))}
@@ -245,39 +265,45 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className='mx-auto w-full max-w-4xl'>
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className='flex items-center justify-between'>
           <div>
-            <CardTitle className="text-2xl">{tutorial.title}</CardTitle>
-            <p className="text-gray-600 mt-1">{tutorial.description}</p>
+            <CardTitle className='text-2xl'>{tutorial.title}</CardTitle>
+            <p className='mt-1 text-gray-600'>{tutorial.description}</p>
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="secondary">{tutorial.difficulty}</Badge>
-            <Badge variant="outline">{tutorial.estimatedTime} min</Badge>
+          <div className='flex items-center gap-2'>
+            <Badge variant='secondary'>{tutorial.difficulty}</Badge>
+            <Badge variant='outline'>{tutorial.estimatedTime} min</Badge>
           </div>
-        </div>
-        
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span>Progress</span>
-            <span>{currentStep + 1} of {tutorial.steps.length}</span>
-          </div>
-          <Progress className="h-2" value={progress} />
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className='space-y-2'>
+          <div className='flex items-center justify-between text-sm'>
+            <span>Progress</span>
+            <span>
+              {currentStep + 1} of {tutorial.steps.length}
+            </span>
+          </div>
+          <Progress className='h-2' value={progress} />
+        </div>
+
+        <div className='flex items-center gap-2'>
           <Button
-            size="sm"
-            variant="outline"
+            size='sm'
+            variant='outline'
             onClick={() => setIsPlaying(!isPlaying)}
           >
-            {isPlaying ? <PauseCircle className="w-4 h-4" /> : <PlayCircle className="w-4 h-4" />}
+            {isPlaying ? (
+              <PauseCircle className='h-4 w-4' />
+            ) : (
+              <PlayCircle className='h-4 w-4' />
+            )}
             {isPlaying ? 'Pause' : 'Play'}
           </Button>
           <Button
-            size="sm"
-            variant="outline"
+            size='sm'
+            variant='outline'
             onClick={() => {
               setCurrentStep(0);
               setCompletedSteps(new Set());
@@ -285,41 +311,39 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
               setScore(0);
             }}
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className='h-4 w-4' />
             Restart
           </Button>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">
+      <CardContent className='space-y-6'>
+        <div className='flex items-center justify-between'>
+          <h3 className='text-lg font-semibold'>
             Step {currentStep + 1}: {currentStepData.title}
           </h3>
           {completedSteps.has(currentStep) && (
-            <CheckCircle className="w-6 h-6 text-green-500" />
+            <CheckCircle className='h-6 w-6 text-green-500' />
           )}
         </div>
 
-        <div className="min-h-[300px]">
-          {renderStepContent()}
-        </div>
+        <div className='min-h-[300px]'>{renderStepContent()}</div>
 
-        <div className="flex justify-between">
+        <div className='flex justify-between'>
           <Button
             disabled={currentStep === 0}
-            variant="outline"
+            variant='outline'
             onClick={handlePrevious}
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className='mr-2 h-4 w-4' />
             Previous
           </Button>
-          
-          <div className="flex gap-2">
+
+          <div className='flex gap-2'>
             {currentStep < tutorial.steps.length - 1 ? (
               <Button onClick={handleNext}>
                 Next
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className='ml-2 h-4 w-4' />
               </Button>
             ) : (
               <Button onClick={() => onComplete?.(tutorial.id, score)}>
@@ -330,9 +354,11 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
         </div>
 
         {score > 0 && (
-          <div className="bg-green-50 p-4 rounded-lg text-center">
-            <h4 className="font-semibold text-green-900 mb-2">Tutorial Completed!</h4>
-            <p className="text-green-800">Your score: {Math.round(score)}%</p>
+          <div className='rounded-lg bg-green-50 p-4 text-center'>
+            <h4 className='mb-2 font-semibold text-green-900'>
+              Tutorial Completed!
+            </h4>
+            <p className='text-green-800'>Your score: {Math.round(score)}%</p>
           </div>
         )}
       </CardContent>

@@ -25,13 +25,16 @@ export const paginationSchema = z.object({
   offset: z.coerce.number().int().min(0).optional(),
 });
 
-export const dateRangeSchema = z.object({
-  start: z.string().datetime().optional(),
-  end: z.string().datetime().optional(),
-}).refine(
-  (data) => !data.start || !data.end || new Date(data.start) <= new Date(data.end),
-  { message: "Start date must be before end date" }
-);
+export const dateRangeSchema = z
+  .object({
+    start: z.string().datetime().optional(),
+    end: z.string().datetime().optional(),
+  })
+  .refine(
+    data =>
+      !data.start || !data.end || new Date(data.start) <= new Date(data.end),
+    { message: 'Start date must be before end date' }
+  );
 
 export const sortSchema = z.object({
   field: z.string().min(1),
@@ -50,13 +53,17 @@ export const loginSchema = z.object({
 
 export const signupSchema = z.object({
   email: emailSchema,
-  password: z.string().min(8).max(128).regex(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-    "Password must contain uppercase, lowercase, and number"
-  ),
+  password: z
+    .string()
+    .min(8)
+    .max(128)
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+      'Password must contain uppercase, lowercase, and number'
+    ),
   name: z.string().min(2).max(100).trim(),
   company: z.string().max(200).trim().optional(),
-  acceptTerms: z.boolean().refine(val => val === true, "Must accept terms"),
+  acceptTerms: z.boolean().refine(val => val === true, 'Must accept terms'),
 });
 
 export const resetPasswordSchema = z.object({
@@ -65,10 +72,14 @@ export const resetPasswordSchema = z.object({
 
 export const changePasswordSchema = z.object({
   currentPassword: z.string().min(1),
-  newPassword: z.string().min(8).max(128).regex(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-    "Password must contain uppercase, lowercase, and number"
-  ),
+  newPassword: z
+    .string()
+    .min(8)
+    .max(128)
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+      'Password must contain uppercase, lowercase, and number'
+    ),
 });
 
 // ============================================
@@ -87,7 +98,11 @@ export const updateUserSchema = z.object({
 
 export const createTenantSchema = z.object({
   name: z.string().min(2).max(200).trim(),
-  slug: z.string().min(2).max(100).regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens"),
+  slug: z
+    .string()
+    .min(2)
+    .max(100)
+    .regex(/^[a-z0-9-]+$/, 'Slug must be lowercase alphanumeric with hyphens'),
   plan: z.enum(['free', 'pro', 'enterprise']).default('free'),
 });
 
@@ -108,7 +123,11 @@ export const workflowTriggerSchema = z.discriminatedUnion('type', [
   }),
   z.object({
     type: z.literal('schedule'),
-    cron: z.string().regex(/^(\*|([0-9]|[1-5][0-9])|\*\/([0-9]|[1-5][0-9])) (\*|([0-9]|1[0-9]|2[0-3])|\*\/([0-9]|1[0-9]|2[0-3])) (\*|([1-9]|[12][0-9]|3[01])|\*\/([1-9]|[12][0-9]|3[01])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))$/),
+    cron: z
+      .string()
+      .regex(
+        /^(\*|([0-9]|[1-5][0-9])|\*\/([0-9]|[1-5][0-9])) (\*|([0-9]|1[0-9]|2[0-3])|\*\/([0-9]|1[0-9]|2[0-3])) (\*|([1-9]|[12][0-9]|3[01])|\*\/([1-9]|[12][0-9]|3[01])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))$/
+      ),
     timezone: z.string().default('UTC'),
   }),
   z.object({
@@ -125,10 +144,12 @@ export const workflowStepSchema = z.object({
   id: z.string().uuid(),
   type: z.enum(['api', 'database', 'ai', 'notification', 'condition', 'loop']),
   config: z.record(z.unknown()),
-  retry: z.object({
-    maxAttempts: z.number().int().min(0).max(10).default(3),
-    backoff: z.enum(['linear', 'exponential']).default('exponential'),
-  }).optional(),
+  retry: z
+    .object({
+      maxAttempts: z.number().int().min(0).max(10).default(3),
+      backoff: z.enum(['linear', 'exponential']).default('exponential'),
+    })
+    .optional(),
   timeout: z.number().int().min(1000).max(300000).optional(),
 });
 
@@ -153,14 +174,22 @@ export const executeWorkflowSchema = z.object({
 // AI Agents
 // ============================================
 
-export const agentPersonalitySchema = z.enum(['professional', 'friendly', 'technical', 'casual', 'formal']);
+export const agentPersonalitySchema = z.enum([
+  'professional',
+  'friendly',
+  'technical',
+  'casual',
+  'formal',
+]);
 
 export const createAgentSchema = z.object({
   name: z.string().min(3).max(200).trim(),
   description: z.string().max(1000).trim().optional(),
   personality: agentPersonalitySchema.default('professional'),
   instructions: z.string().min(10).max(10000).trim(),
-  model: z.enum(['gpt-4', 'gpt-3.5-turbo', 'claude-3-opus', 'claude-3-sonnet']).default('gpt-4'),
+  model: z
+    .enum(['gpt-4', 'gpt-3.5-turbo', 'claude-3-opus', 'claude-3-sonnet'])
+    .default('gpt-4'),
   temperature: z.number().min(0).max(2).default(0.7),
   tools: z.array(z.string()).max(20).optional(),
   enabled: z.boolean().default(true),
@@ -225,7 +254,11 @@ export const updateSubscriptionSchema = z.object({
 
 export const createBlogPostSchema = z.object({
   title: z.string().min(5).max(200).trim(),
-  slug: z.string().min(3).max(200).regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens"),
+  slug: z
+    .string()
+    .min(3)
+    .max(200)
+    .regex(/^[a-z0-9-]+$/, 'Slug must be lowercase alphanumeric with hyphens'),
   content: z.string().min(100).max(50000),
   excerpt: z.string().max(500).trim().optional(),
   category: z.string().max(50).optional(),
@@ -292,11 +325,15 @@ export const updateLeadSchema = createLeadSchema.partial();
 export const leadScoreSchema = z.object({
   leadId: uuidSchema,
   score: z.number().int().min(0).max(100),
-  factors: z.array(z.object({
-    factor: z.string(),
-    value: z.number(),
-    weight: z.number(),
-  })).optional(),
+  factors: z
+    .array(
+      z.object({
+        factor: z.string(),
+        value: z.number(),
+        weight: z.number(),
+      })
+    )
+    .optional(),
 });
 
 // ============================================
@@ -306,7 +343,11 @@ export const leadScoreSchema = z.object({
 export const fileUploadSchema = z.object({
   filename: z.string().min(1).max(255),
   contentType: z.string().min(1).max(100),
-  size: z.number().int().min(1).max(100 * 1024 * 1024), // 100MB max
+  size: z
+    .number()
+    .int()
+    .min(1)
+    .max(100 * 1024 * 1024), // 100MB max
   metadata: z.record(z.unknown()).optional(),
 });
 
@@ -331,6 +372,8 @@ export type SignupInput = z.infer<typeof signupSchema>;
 export type CreateWorkflowInput = z.infer<typeof createWorkflowSchema>;
 export type CreateAgentInput = z.infer<typeof createAgentSchema>;
 export type ChatRequestInput = z.infer<typeof chatRequestSchema>;
-export type CreateCheckoutSessionInput = z.infer<typeof createCheckoutSessionSchema>;
+export type CreateCheckoutSessionInput = z.infer<
+  typeof createCheckoutSessionSchema
+>;
 export type CreateBlogPostInput = z.infer<typeof createBlogPostSchema>;
 export type CreateLeadInput = z.infer<typeof createLeadSchema>;

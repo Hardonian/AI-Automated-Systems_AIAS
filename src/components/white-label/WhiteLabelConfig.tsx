@@ -1,7 +1,7 @@
-import { 
-  Palette, 
-  Settings, 
-  Globe, 
+import {
+  Palette,
+  Settings,
+  Globe,
   Upload,
   Download,
   Eye,
@@ -11,7 +11,7 @@ import {
   Type,
   Zap,
   Shield,
-  BarChart3
+  BarChart3,
 } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -85,16 +85,18 @@ const mockWhiteLabelConfigs: WhiteLabelConfig[] = [
       secondaryColor: '#1e40af',
       accentColor: '#3b82f6',
       fontFamily: 'Inter',
-      customCss: '.custom-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }'
+      customCss:
+        '.custom-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }',
     },
     content: {
       companyName: 'TechCorp',
       tagline: 'Enterprise Automation Solutions',
-      description: 'Transform your business with our cutting-edge automation platform',
+      description:
+        'Transform your business with our cutting-edge automation platform',
       contactEmail: 'contact@techcorp.com',
       supportEmail: 'support@techcorp.com',
       privacyPolicy: 'https://techcorp.com/privacy',
-      termsOfService: 'https://techcorp.com/terms'
+      termsOfService: 'https://techcorp.com/terms',
     },
     features: {
       customDomain: true,
@@ -104,7 +106,7 @@ const mockWhiteLabelConfigs: WhiteLabelConfig[] = [
       removeBranding: true,
       customWorkflows: true,
       apiAccess: true,
-      whiteLabelSupport: true
+      whiteLabelSupport: true,
     },
     deployment: {
       subdomain: 'techcorp',
@@ -112,14 +114,14 @@ const mockWhiteLabelConfigs: WhiteLabelConfig[] = [
       sslEnabled: true,
       cdnEnabled: true,
       region: 'us-east-1',
-      lastDeployed: '2024-01-23T10:30:00Z'
+      lastDeployed: '2024-01-23T10:30:00Z',
     },
     analytics: {
       googleAnalytics: 'GA-123456789',
       customTracking: 'techcorp-tracking.js',
       heatmaps: true,
-      userBehavior: true
-    }
+      userBehavior: true,
+    },
   },
   {
     id: 'wl-002',
@@ -133,7 +135,7 @@ const mockWhiteLabelConfigs: WhiteLabelConfig[] = [
       secondaryColor: '#5b21b6',
       accentColor: '#8b5cf6',
       fontFamily: 'Poppins',
-      customCss: '.startup-theme { --primary: #7c3aed; --secondary: #5b21b6; }'
+      customCss: '.startup-theme { --primary: #7c3aed; --secondary: #5b21b6; }',
     },
     content: {
       companyName: 'StartupFlow',
@@ -142,7 +144,7 @@ const mockWhiteLabelConfigs: WhiteLabelConfig[] = [
       contactEmail: 'hello@startupflow.io',
       supportEmail: 'help@startupflow.io',
       privacyPolicy: 'https://startupflow.io/privacy',
-      termsOfService: 'https://startupflow.io/terms'
+      termsOfService: 'https://startupflow.io/terms',
     },
     features: {
       customDomain: true,
@@ -152,7 +154,7 @@ const mockWhiteLabelConfigs: WhiteLabelConfig[] = [
       removeBranding: true,
       customWorkflows: false,
       apiAccess: true,
-      whiteLabelSupport: false
+      whiteLabelSupport: false,
     },
     deployment: {
       subdomain: 'startupflow',
@@ -160,19 +162,23 @@ const mockWhiteLabelConfigs: WhiteLabelConfig[] = [
       sslEnabled: true,
       cdnEnabled: false,
       region: 'us-west-2',
-      lastDeployed: '2024-01-20T15:45:00Z'
+      lastDeployed: '2024-01-20T15:45:00Z',
     },
     analytics: {
       googleAnalytics: 'GA-987654321',
       heatmaps: false,
-      userBehavior: true
-    }
-  }
+      userBehavior: true,
+    },
+  },
 ];
 
 export const WhiteLabelConfig: React.FC = () => {
-  const [configs, setConfigs] = useState<WhiteLabelConfig[]>(mockWhiteLabelConfigs);
-  const [selectedConfig, setSelectedConfig] = useState<WhiteLabelConfig | null>(null);
+  const [configs, setConfigs] = useState<WhiteLabelConfig[]>(
+    mockWhiteLabelConfigs
+  );
+  const [selectedConfig, setSelectedConfig] = useState<WhiteLabelConfig | null>(
+    null
+  );
   const [isDeploying, setIsDeploying] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -187,24 +193,33 @@ export const WhiteLabelConfig: React.FC = () => {
     setIsDeploying(true);
     // Simulate deployment
     await new Promise(resolve => setTimeout(resolve, 3000));
-    setConfigs(prev => prev.map(config => 
-      config.id === configId 
-        ? { 
-            ...config, 
-            status: 'active',
-            deployment: { ...config.deployment, lastDeployed: new Date().toISOString() }
-          }
-        : config
-    ));
+    setConfigs(prev =>
+      prev.map(config =>
+        config.id === configId
+          ? {
+              ...config,
+              status: 'active',
+              deployment: {
+                ...config.deployment,
+                lastDeployed: new Date().toISOString(),
+              },
+            }
+          : config
+      )
+    );
     setIsDeploying(false);
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'inactive': return 'bg-gray-100 text-gray-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'active':
+        return 'bg-green-100 text-green-800';
+      case 'inactive':
+        return 'bg-gray-100 text-gray-800';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -214,26 +229,23 @@ export const WhiteLabelConfig: React.FC = () => {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
   if (selectedConfig) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
+      <div className='space-y-6'>
+        <div className='flex items-center justify-between'>
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2">
-              <Palette className="w-8 h-8" />
+            <h1 className='flex items-center gap-2 text-3xl font-bold'>
+              <Palette className='h-8 w-8' />
               White-Label Configuration
             </h1>
-            <p className="text-gray-600 mt-1">{selectedConfig.name}</p>
+            <p className='mt-1 text-gray-600'>{selectedConfig.name}</p>
           </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setSelectedConfig(null)}
-            >
+          <div className='flex items-center gap-2'>
+            <Button variant='outline' onClick={() => setSelectedConfig(null)}>
               ← Back to Configurations
             </Button>
             <Button
@@ -241,132 +253,150 @@ export const WhiteLabelConfig: React.FC = () => {
               onClick={() => handleDeploy(selectedConfig.id)}
             >
               {isDeploying ? (
-                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                <RefreshCw className='mr-2 h-4 w-4 animate-spin' />
               ) : (
-                <Zap className="w-4 h-4 mr-2" />
+                <Zap className='mr-2 h-4 w-4' />
               )}
               {isDeploying ? 'Deploying...' : 'Deploy Changes'}
             </Button>
             <Button disabled={isSaving} onClick={handleSave}>
               {isSaving ? (
-                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                <RefreshCw className='mr-2 h-4 w-4 animate-spin' />
               ) : (
-                <Save className="w-4 h-4 mr-2" />
+                <Save className='mr-2 h-4 w-4' />
               )}
               {isSaving ? 'Saving...' : 'Save Changes'}
             </Button>
           </div>
         </div>
 
-        <Tabs className="w-full" defaultValue="branding">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="branding">Branding</TabsTrigger>
-            <TabsTrigger value="content">Content</TabsTrigger>
-            <TabsTrigger value="features">Features</TabsTrigger>
-            <TabsTrigger value="deployment">Deployment</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+        <Tabs className='w-full' defaultValue='branding'>
+          <TabsList className='grid w-full grid-cols-5'>
+            <TabsTrigger value='branding'>Branding</TabsTrigger>
+            <TabsTrigger value='content'>Content</TabsTrigger>
+            <TabsTrigger value='features'>Features</TabsTrigger>
+            <TabsTrigger value='deployment'>Deployment</TabsTrigger>
+            <TabsTrigger value='analytics'>Analytics</TabsTrigger>
           </TabsList>
 
-          <TabsContent className="space-y-4" value="branding">
+          <TabsContent className='space-y-4' value='branding'>
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Palette className="w-5 h-5" />
+                <CardTitle className='flex items-center gap-2'>
+                  <Palette className='h-5 w-5' />
                   Visual Branding
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
+              <CardContent className='space-y-6'>
+                <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                  <div className='space-y-4'>
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Logo</label>
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                        <Image className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                        <p className="text-sm text-gray-600 mb-2">Upload your logo</p>
-                        <Button size="sm" variant="outline">
-                          <Upload className="w-4 h-4 mr-2" />
+                      <label className='mb-2 block text-sm font-medium'>
+                        Logo
+                      </label>
+                      <div className='rounded-lg border-2 border-dashed border-gray-300 p-6 text-center'>
+                        <Image className='mx-auto mb-2 h-8 w-8 text-gray-400' />
+                        <p className='mb-2 text-sm text-gray-600'>
+                          Upload your logo
+                        </p>
+                        <Button size='sm' variant='outline'>
+                          <Upload className='mr-2 h-4 w-4' />
                           Choose File
                         </Button>
                       </div>
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Favicon</label>
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                        <Image className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                        <p className="text-sm text-gray-600 mb-2">Upload favicon (32x32px)</p>
-                        <Button size="sm" variant="outline">
-                          <Upload className="w-4 h-4 mr-2" />
+                      <label className='mb-2 block text-sm font-medium'>
+                        Favicon
+                      </label>
+                      <div className='rounded-lg border-2 border-dashed border-gray-300 p-6 text-center'>
+                        <Image className='mx-auto mb-2 h-8 w-8 text-gray-400' />
+                        <p className='mb-2 text-sm text-gray-600'>
+                          Upload favicon (32x32px)
+                        </p>
+                        <Button size='sm' variant='outline'>
+                          <Upload className='mr-2 h-4 w-4' />
                           Choose File
                         </Button>
                       </div>
                     </div>
                   </div>
 
-                  <div className="space-y-4">
+                  <div className='space-y-4'>
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Primary Color</label>
-                      <div className="flex items-center gap-2">
+                      <label className='mb-2 block text-sm font-medium'>
+                        Primary Color
+                      </label>
+                      <div className='flex items-center gap-2'>
                         <Input
-                          className="w-16 h-10"
-                          type="color"
+                          className='h-10 w-16'
+                          type='color'
                           value={selectedConfig.branding.primaryColor}
                         />
                         <Input
-                          className="flex-1"
+                          className='flex-1'
                           value={selectedConfig.branding.primaryColor}
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Secondary Color</label>
-                      <div className="flex items-center gap-2">
+                      <label className='mb-2 block text-sm font-medium'>
+                        Secondary Color
+                      </label>
+                      <div className='flex items-center gap-2'>
                         <Input
-                          className="w-16 h-10"
-                          type="color"
+                          className='h-10 w-16'
+                          type='color'
                           value={selectedConfig.branding.secondaryColor}
                         />
                         <Input
-                          className="flex-1"
+                          className='flex-1'
                           value={selectedConfig.branding.secondaryColor}
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Accent Color</label>
-                      <div className="flex items-center gap-2">
+                      <label className='mb-2 block text-sm font-medium'>
+                        Accent Color
+                      </label>
+                      <div className='flex items-center gap-2'>
                         <Input
-                          className="w-16 h-10"
-                          type="color"
+                          className='h-10 w-16'
+                          type='color'
                           value={selectedConfig.branding.accentColor}
                         />
                         <Input
-                          className="flex-1"
+                          className='flex-1'
                           value={selectedConfig.branding.accentColor}
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Font Family</label>
-                      <select className="w-full p-2 border rounded-md">
-                        <option value="Inter">Inter</option>
-                        <option value="Poppins">Poppins</option>
-                        <option value="Roboto">Roboto</option>
-                        <option value="Open Sans">Open Sans</option>
-                        <option value="Lato">Lato</option>
+                      <label className='mb-2 block text-sm font-medium'>
+                        Font Family
+                      </label>
+                      <select className='w-full rounded-md border p-2'>
+                        <option value='Inter'>Inter</option>
+                        <option value='Poppins'>Poppins</option>
+                        <option value='Roboto'>Roboto</option>
+                        <option value='Open Sans'>Open Sans</option>
+                        <option value='Lato'>Lato</option>
                       </select>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Custom CSS</label>
+                  <label className='mb-2 block text-sm font-medium'>
+                    Custom CSS
+                  </label>
                   <Textarea
-                    className="min-h-[200px] font-mono text-sm"
-                    placeholder="Enter custom CSS..."
+                    className='min-h-[200px] font-mono text-sm'
+                    placeholder='Enter custom CSS...'
                     value={selectedConfig.branding.customCss}
                   />
                 </div>
@@ -374,53 +404,67 @@ export const WhiteLabelConfig: React.FC = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent className="space-y-4" value="content">
+          <TabsContent className='space-y-4' value='content'>
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Type className="w-5 h-5" />
+                <CardTitle className='flex items-center gap-2'>
+                  <Type className='h-5 w-5' />
                   Content & Copy
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <CardContent className='space-y-4'>
+                <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Company Name</label>
+                    <label className='mb-2 block text-sm font-medium'>
+                      Company Name
+                    </label>
                     <Input value={selectedConfig.content.companyName} />
                   </div>
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Tagline</label>
+                    <label className='mb-2 block text-sm font-medium'>
+                      Tagline
+                    </label>
                     <Input value={selectedConfig.content.tagline} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Description</label>
+                  <label className='mb-2 block text-sm font-medium'>
+                    Description
+                  </label>
                   <Textarea
-                    className="min-h-[100px]"
-                    placeholder="Enter platform description..."
+                    className='min-h-[100px]'
+                    placeholder='Enter platform description...'
                     value={selectedConfig.content.description}
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Contact Email</label>
+                    <label className='mb-2 block text-sm font-medium'>
+                      Contact Email
+                    </label>
                     <Input value={selectedConfig.content.contactEmail} />
                   </div>
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Support Email</label>
+                    <label className='mb-2 block text-sm font-medium'>
+                      Support Email
+                    </label>
                     <Input value={selectedConfig.content.supportEmail} />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Privacy Policy URL</label>
+                    <label className='mb-2 block text-sm font-medium'>
+                      Privacy Policy URL
+                    </label>
                     <Input value={selectedConfig.content.privacyPolicy} />
                   </div>
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Terms of Service URL</label>
+                    <label className='mb-2 block text-sm font-medium'>
+                      Terms of Service URL
+                    </label>
                     <Input value={selectedConfig.content.termsOfService} />
                   </div>
                 </div>
@@ -428,86 +472,107 @@ export const WhiteLabelConfig: React.FC = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent className="space-y-4" value="features">
+          <TabsContent className='space-y-4' value='features'>
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="w-5 h-5" />
+                <CardTitle className='flex items-center gap-2'>
+                  <Settings className='h-5 w-5' />
                   Feature Configuration
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {Object.entries(selectedConfig.features).map(([feature, enabled]) => (
-                    <div key={feature} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div>
-                        <h4 className="font-semibold capitalize">
-                          {feature.replace(/([A-Z])/g, ' $1').trim()}
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          {getFeatureDescription(feature)}
-                        </p>
+                <div className='space-y-4'>
+                  {Object.entries(selectedConfig.features).map(
+                    ([feature, enabled]) => (
+                      <div
+                        key={feature}
+                        className='flex items-center justify-between rounded-lg border p-4'
+                      >
+                        <div>
+                          <h4 className='font-semibold capitalize'>
+                            {feature.replace(/([A-Z])/g, ' $1').trim()}
+                          </h4>
+                          <p className='text-sm text-gray-600'>
+                            {getFeatureDescription(feature)}
+                          </p>
+                        </div>
+                        <Switch checked={enabled} />
                       </div>
-                      <Switch checked={enabled} />
-                    </div>
-                  ))}
+                    )
+                  )}
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent className="space-y-4" value="deployment">
+          <TabsContent className='space-y-4' value='deployment'>
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Globe className="w-5 h-5" />
+                <CardTitle className='flex items-center gap-2'>
+                  <Globe className='h-5 w-5' />
                   Deployment Settings
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <CardContent className='space-y-4'>
+                <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Subdomain</label>
+                    <label className='mb-2 block text-sm font-medium'>
+                      Subdomain
+                    </label>
                     <Input value={selectedConfig.deployment.subdomain} />
                   </div>
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Custom Domain</label>
-                    <Input value={selectedConfig.deployment.customDomain || ''} />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Region</label>
-                    <select className="w-full p-2 border rounded-md">
-                      <option value="us-east-1">US East (N. Virginia)</option>
-                      <option value="us-west-2">US West (Oregon)</option>
-                      <option value="eu-west-1">Europe (Ireland)</option>
-                      <option value="ap-southeast-1">Asia Pacific (Singapore)</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Last Deployed</label>
-                    <Input 
-                      disabled 
-                      value={formatDate(selectedConfig.deployment.lastDeployed)} 
+                    <label className='mb-2 block text-sm font-medium'>
+                      Custom Domain
+                    </label>
+                    <Input
+                      value={selectedConfig.deployment.customDomain || ''}
                     />
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+                  <div>
+                    <label className='mb-2 block text-sm font-medium'>
+                      Region
+                    </label>
+                    <select className='w-full rounded-md border p-2'>
+                      <option value='us-east-1'>US East (N. Virginia)</option>
+                      <option value='us-west-2'>US West (Oregon)</option>
+                      <option value='eu-west-1'>Europe (Ireland)</option>
+                      <option value='ap-southeast-1'>
+                        Asia Pacific (Singapore)
+                      </option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className='mb-2 block text-sm font-medium'>
+                      Last Deployed
+                    </label>
+                    <Input
+                      disabled
+                      value={formatDate(selectedConfig.deployment.lastDeployed)}
+                    />
+                  </div>
+                </div>
+
+                <div className='space-y-3'>
+                  <div className='flex items-center justify-between rounded-lg border p-3'>
                     <div>
-                      <h4 className="font-semibold">SSL Certificate</h4>
-                      <p className="text-sm text-gray-600">Enable HTTPS for secure connections</p>
+                      <h4 className='font-semibold'>SSL Certificate</h4>
+                      <p className='text-sm text-gray-600'>
+                        Enable HTTPS for secure connections
+                      </p>
                     </div>
                     <Switch checked={selectedConfig.deployment.sslEnabled} />
                   </div>
 
-                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className='flex items-center justify-between rounded-lg border p-3'>
                     <div>
-                      <h4 className="font-semibold">CDN</h4>
-                      <p className="text-sm text-gray-600">Enable content delivery network for faster loading</p>
+                      <h4 className='font-semibold'>CDN</h4>
+                      <p className='text-sm text-gray-600'>
+                        Enable content delivery network for faster loading
+                      </p>
                     </div>
                     <Switch checked={selectedConfig.deployment.cdnEnabled} />
                   </div>
@@ -516,42 +581,52 @@ export const WhiteLabelConfig: React.FC = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent className="space-y-4" value="analytics">
+          <TabsContent className='space-y-4' value='analytics'>
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5" />
+                <CardTitle className='flex items-center gap-2'>
+                  <BarChart3 className='h-5 w-5' />
                   Analytics Configuration
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className='space-y-4'>
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Google Analytics ID</label>
-                  <Input value={selectedConfig.analytics.googleAnalytics || ''} />
+                  <label className='mb-2 block text-sm font-medium'>
+                    Google Analytics ID
+                  </label>
+                  <Input
+                    value={selectedConfig.analytics.googleAnalytics || ''}
+                  />
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Custom Tracking Code</label>
+                  <label className='mb-2 block text-sm font-medium'>
+                    Custom Tracking Code
+                  </label>
                   <Textarea
-                    className="min-h-[100px] font-mono text-sm"
-                    placeholder="Enter custom tracking JavaScript..."
+                    className='min-h-[100px] font-mono text-sm'
+                    placeholder='Enter custom tracking JavaScript...'
                     value={selectedConfig.analytics.customTracking || ''}
                   />
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className='space-y-3'>
+                  <div className='flex items-center justify-between rounded-lg border p-3'>
                     <div>
-                      <h4 className="font-semibold">Heatmaps</h4>
-                      <p className="text-sm text-gray-600">Track user interactions and clicks</p>
+                      <h4 className='font-semibold'>Heatmaps</h4>
+                      <p className='text-sm text-gray-600'>
+                        Track user interactions and clicks
+                      </p>
                     </div>
                     <Switch checked={selectedConfig.analytics.heatmaps} />
                   </div>
 
-                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className='flex items-center justify-between rounded-lg border p-3'>
                     <div>
-                      <h4 className="font-semibold">User Behavior Tracking</h4>
-                      <p className="text-sm text-gray-600">Monitor user journeys and behavior patterns</p>
+                      <h4 className='font-semibold'>User Behavior Tracking</h4>
+                      <p className='text-sm text-gray-600'>
+                        Monitor user journeys and behavior patterns
+                      </p>
                     </div>
                     <Switch checked={selectedConfig.analytics.userBehavior} />
                   </div>
@@ -565,78 +640,88 @@ export const WhiteLabelConfig: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className='space-y-6'>
+      <div className='flex items-center justify-between'>
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <Palette className="w-8 h-8" />
+          <h1 className='flex items-center gap-2 text-3xl font-bold'>
+            <Palette className='h-8 w-8' />
             White-Label Configurations
           </h1>
-          <p className="text-gray-600 mt-1">Manage white-label deployments and custom branding</p>
+          <p className='mt-1 text-gray-600'>
+            Manage white-label deployments and custom branding
+          </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline">
-            <Download className="w-4 h-4 mr-2" />
+        <div className='flex items-center gap-2'>
+          <Button variant='outline'>
+            <Download className='mr-2 h-4 w-4' />
             Export Config
           </Button>
           <Button>
-            <Settings className="w-4 h-4 mr-2" />
+            <Settings className='mr-2 h-4 w-4' />
             New Configuration
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {configs.map((config) => (
-          <Card key={config.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
+        {configs.map(config => (
+          <Card
+            key={config.id}
+            className='cursor-pointer transition-shadow hover:shadow-lg'
+          >
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">{config.name}</CardTitle>
+              <div className='flex items-center justify-between'>
+                <CardTitle className='text-lg'>{config.name}</CardTitle>
                 <Badge className={getStatusColor(config.status)}>
                   {config.status}
                 </Badge>
               </div>
-              <p className="text-gray-600 text-sm">{config.domain}</p>
+              <p className='text-sm text-gray-600'>{config.domain}</p>
             </CardHeader>
-            
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm">
-                  <Globe className="w-4 h-4" />
-                  {config.deployment.customDomain || `${config.deployment.subdomain}.aias.com`}
+
+            <CardContent className='space-y-4'>
+              <div className='space-y-2'>
+                <div className='flex items-center gap-2 text-sm'>
+                  <Globe className='h-4 w-4' />
+                  {config.deployment.customDomain ||
+                    `${config.deployment.subdomain}.aias.com`}
                 </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Shield className="w-4 h-4" />
-                  {config.deployment.sslEnabled ? 'SSL Enabled' : 'SSL Disabled'}
+                <div className='flex items-center gap-2 text-sm'>
+                  <Shield className='h-4 w-4' />
+                  {config.deployment.sslEnabled
+                    ? 'SSL Enabled'
+                    : 'SSL Disabled'}
                 </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <BarChart3 className="w-4 h-4" />
-                  {config.analytics.googleAnalytics ? 'Analytics Enabled' : 'No Analytics'}
+                <div className='flex items-center gap-2 text-sm'>
+                  <BarChart3 className='h-4 w-4' />
+                  {config.analytics.googleAnalytics
+                    ? 'Analytics Enabled'
+                    : 'No Analytics'}
                 </div>
               </div>
 
-              <div className="pt-4 border-t">
-                <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
+              <div className='border-t pt-4'>
+                <div className='mb-3 flex items-center justify-between text-sm text-gray-600'>
                   <span>Last Deployed</span>
                   <span>{formatDate(config.deployment.lastDeployed)}</span>
                 </div>
-                
-                <div className="flex gap-2">
+
+                <div className='flex gap-2'>
                   <Button
-                    className="flex-1"
-                    size="sm"
+                    className='flex-1'
+                    size='sm'
                     onClick={() => setSelectedConfig(config)}
                   >
-                    <Eye className="w-4 h-4 mr-2" />
+                    <Eye className='mr-2 h-4 w-4' />
                     Configure
                   </Button>
                   <Button
                     disabled={isDeploying || config.status === 'active'}
-                    size="sm"
-                    variant="outline"
+                    size='sm'
+                    variant='outline'
                     onClick={() => handleDeploy(config.id)}
                   >
-                    <Zap className="w-4 h-4" />
+                    <Zap className='h-4 w-4' />
                   </Button>
                 </div>
               </div>
@@ -657,7 +742,7 @@ const getFeatureDescription = (feature: string): string => {
     removeBranding: 'Remove all AIAS branding and references',
     customWorkflows: 'Create custom workflow templates',
     apiAccess: 'Full API access for custom integrations',
-    whiteLabelSupport: 'Dedicated white-label support team'
+    whiteLabelSupport: 'Dedicated white-label support team',
   };
   return descriptions[feature] || 'Feature description not available';
 };

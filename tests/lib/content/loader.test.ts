@@ -1,23 +1,26 @@
-import { writeFile, mkdir, rm } from "fs/promises";
-import { join } from "path";
+import { writeFile, mkdir, rm } from 'fs/promises';
+import { join } from 'path';
 
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
-import { defaultAIASContent, defaultSettlerContent } from "@/lib/content/defaults";
+import {
+  defaultAIASContent,
+  defaultSettlerContent,
+} from '@/lib/content/defaults';
 import {
   loadAIASContent,
   saveAIASContent,
   loadSettlerContent,
   saveSettlerContent,
-} from "@/lib/content/loader";
+} from '@/lib/content/loader';
 
 // Mock the content directory for testing
-const TEST_CONTENT_DIR = join(process.cwd(), "content-test");
-const TEST_AIAS_PATH = join(TEST_CONTENT_DIR, "aias.json");
-const TEST_SETTLER_PATH = join(TEST_CONTENT_DIR, "settler.json");
+const TEST_CONTENT_DIR = join(process.cwd(), 'content-test');
+const TEST_AIAS_PATH = join(TEST_CONTENT_DIR, 'aias.json');
+const TEST_SETTLER_PATH = join(TEST_CONTENT_DIR, 'settler.json');
 
-describe("Content Loader", () => {
-  beforeEach(async (_) => {
+describe('Content Loader', () => {
+  beforeEach(async _ => {
     // Clean up test directory
     try {
       await rm(TEST_CONTENT_DIR, { recursive: true, force: true });
@@ -35,7 +38,7 @@ describe("Content Loader", () => {
     }
   });
 
-  describe("loadAIASContent", () => {
+  describe('loadAIASContent', () => {
     it("should return defaults when file doesn't exist", async () => {
       // Temporarily override the path (in a real test, we'd mock fs)
       // For now, we'll test that defaults are returned
@@ -45,26 +48,26 @@ describe("Content Loader", () => {
       expect(content.hero.title).toBeDefined();
     });
 
-    it("should load and validate content from file", async () => {
+    it('should load and validate content from file', async () => {
       // Create test directory and file
       await mkdir(TEST_CONTENT_DIR, { recursive: true });
       const testContent = {
         ...defaultAIASContent,
         hero: {
           ...defaultAIASContent.hero,
-          title: "Test Title",
+          title: 'Test Title',
         },
       };
       await writeFile(TEST_AIAS_PATH, JSON.stringify(testContent, null, 2));
 
       // Note: In a real implementation, we'd need to mock the path
       // For now, this test verifies the structure
-      expect(testContent.hero.title).toBe("Test Title");
+      expect(testContent.hero.title).toBe('Test Title');
     });
   });
 
-  describe("saveAIASContent", () => {
-    it("should validate content before saving", async () => {
+  describe('saveAIASContent', () => {
+    it('should validate content before saving', async () => {
       const invalidContent = {
         hero: {
           // Missing required fields
@@ -72,19 +75,17 @@ describe("Content Loader", () => {
       } as any;
 
       // This should throw a validation error
-      await expect(
-        saveAIASContent(invalidContent as any)
-      ).rejects.toThrow();
+      await expect(saveAIASContent(invalidContent as any)).rejects.toThrow();
     });
 
-    it("should save valid content", async () => {
+    it('should save valid content', async () => {
       const validContent = defaultAIASContent;
       // This should not throw
       await expect(saveAIASContent(validContent)).resolves.not.toThrow();
     });
   });
 
-  describe("loadSettlerContent", () => {
+  describe('loadSettlerContent', () => {
     it("should return defaults when file doesn't exist", async () => {
       const content = await loadSettlerContent();
       expect(content).toBeDefined();
@@ -93,50 +94,48 @@ describe("Content Loader", () => {
     });
   });
 
-  describe("saveSettlerContent", () => {
-    it("should validate content before saving", async () => {
+  describe('saveSettlerContent', () => {
+    it('should validate content before saving', async () => {
       const invalidContent = {
         hero: {
           // Missing required fields
         },
       } as any;
 
-      await expect(
-        saveSettlerContent(invalidContent as any)
-      ).rejects.toThrow();
+      await expect(saveSettlerContent(invalidContent as any)).rejects.toThrow();
     });
 
-    it("should save valid content", async () => {
+    it('should save valid content', async () => {
       const validContent = defaultSettlerContent;
       await expect(saveSettlerContent(validContent)).resolves.not.toThrow();
     });
   });
 
-  describe("Content Schema Validation", () => {
-    it("should validate hero schema", () => {
+  describe('Content Schema Validation', () => {
+    it('should validate hero schema', () => {
       const validHero = {
-        title: "Test Title",
-        subtitle: "Test Subtitle",
-        description: "Test Description",
+        title: 'Test Title',
+        subtitle: 'Test Subtitle',
+        description: 'Test Description',
         primaryCta: {
-          label: "Click Me",
-          href: "/test",
+          label: 'Click Me',
+          href: '/test',
           visible: true,
         },
       };
 
       // Should not throw
-      expect(validHero.title).toBe("Test Title");
+      expect(validHero.title).toBe('Test Title');
     });
 
-    it("should reject invalid hero schema", () => {
+    it('should reject invalid hero schema', () => {
       const invalidHero = {
         // Missing required title
-        subtitle: "Test",
+        subtitle: 'Test',
       };
 
       // This would fail validation
-      expect(invalidHero).not.toHaveProperty("title");
+      expect(invalidHero).not.toHaveProperty('title');
     });
   });
 });

@@ -4,9 +4,9 @@
  */
 
 export class TimeoutError extends Error {
-  constructor(message: string = "Operation timed out") {
+  constructor(message: string = 'Operation timed out') {
     super(message);
-    this.name = "TimeoutError";
+    this.name = 'TimeoutError';
   }
 }
 
@@ -26,7 +26,12 @@ export async function withTimeout<T>(
     promise,
     new Promise<T>((_, reject) =>
       setTimeout(
-        () => reject(new TimeoutError(errorMessage || `Operation timed out after ${timeoutMs}ms`)),
+        () =>
+          reject(
+            new TimeoutError(
+              errorMessage || `Operation timed out after ${timeoutMs}ms`
+            )
+          ),
         timeoutMs
       )
     ),
@@ -45,7 +50,10 @@ export function createTimeout(
 ): Promise<never> {
   return new Promise((_, reject) =>
     setTimeout(
-      () => reject(new TimeoutError(errorMessage || `Timeout after ${timeoutMs}ms`)),
+      () =>
+        reject(
+          new TimeoutError(errorMessage || `Timeout after ${timeoutMs}ms`)
+        ),
       timeoutMs
     )
   );
@@ -57,16 +65,16 @@ export function createTimeout(
 export const DEFAULT_TIMEOUTS = {
   /** External API calls (Shopify, Wave, etc.) */
   EXTERNAL_API: 30000, // 30 seconds
-  
+
   /** Internal API calls */
   INTERNAL_API: 10000, // 10 seconds
-  
+
   /** Database queries */
   DATABASE: 5000, // 5 seconds
-  
+
   /** File operations */
   FILE_OPERATION: 10000, // 10 seconds
-  
+
   /** Workflow execution */
   WORKFLOW_EXECUTION: 60000, // 60 seconds
 } as const;

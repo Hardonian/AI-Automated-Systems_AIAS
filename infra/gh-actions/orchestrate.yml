@@ -2,11 +2,11 @@ name: Orchestrate (Diagnose → Fix → Deploy)
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - "ops/cadence.json"
-      - "scripts/agents/**.ts"
-      - "infra/gh-actions/**.yml"
+      - 'ops/cadence.json'
+      - 'scripts/agents/**.ts'
+      - 'infra/gh-actions/**.yml'
 jobs:
   run:
     runs-on: ubuntu-latest

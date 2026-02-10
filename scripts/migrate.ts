@@ -2,7 +2,7 @@
 /**
  * Migrate Database
  * Triggers GitHub Actions workflow to apply migrations using GitHub secrets
- * 
+ *
  * Usage: pnpm tsx scripts/migrate.ts
  */
 
@@ -20,7 +20,9 @@ async function triggerMigration() {
       console.log('⚠️  GitHub CLI (gh) not found.');
       console.log('\nTo apply migrations, use one of these methods:\n');
       console.log('Method 1: GitHub Actions (Recommended)');
-      console.log('  1. Go to: https://github.com/YOUR_ORG/YOUR_REPO/actions/workflows/apply-migrations.yml');
+      console.log(
+        '  1. Go to: https://github.com/YOUR_ORG/YOUR_REPO/actions/workflows/apply-migrations.yml'
+      );
       console.log('  2. Click "Run workflow"');
       console.log('  3. Type "apply" in the confirmation field');
       console.log('  4. Click "Run workflow"\n');
@@ -29,7 +31,9 @@ async function triggerMigration() {
       console.log('Method 3: Manual via Supabase CLI');
       console.log('  export SUPABASE_PROJECT_REF="your-project-ref"');
       console.log('  export SUPABASE_ACCESS_TOKEN="your-access-token"');
-      console.log('  pnpm exec supabase link --project-ref $SUPABASE_PROJECT_REF');
+      console.log(
+        '  pnpm exec supabase link --project-ref $SUPABASE_PROJECT_REF'
+      );
       console.log('  pnpm exec supabase db push\n');
       return;
     }

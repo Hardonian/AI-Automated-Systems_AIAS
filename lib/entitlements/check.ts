@@ -3,14 +3,14 @@
  * Verifies user access to features based on their plan
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
-export type PlanTier = "free" | "trial" | "starter" | "pro" | "enterprise";
+export type PlanTier = 'free' | 'trial' | 'starter' | 'pro' | 'enterprise';
 
 export interface FeatureAccess {
   allowed: boolean;
@@ -83,33 +83,41 @@ export async function checkFeatureAccess(
   try {
     // Get user plan
     const { data: subscription } = await supabase
-      .from("user_subscriptions")
-      .select("plan_id, subscription_plans(tier)")
-      .eq("user_id", userId)
-      .eq("status", "active")
+      .from('user_subscriptions')
+      .select('plan_id, subscription_plans(tier)')
+      .eq('user_id', userId)
+      .eq('status', 'active')
       .single();
 
-    let plan: string | PlanTier = "free";
-    if (subscription?.subscription_plans && Array.isArray(subscription.subscription_plans) && subscription.subscription_plans[0]?.tier) {
+    let plan: string | PlanTier = 'free';
+    if (
+      subscription?.subscription_plans &&
+      Array.isArray(subscription.subscription_plans) &&
+      subscription.subscription_plans[0]?.tier
+    ) {
       plan = subscription.subscription_plans[0].tier as PlanTier;
     } else {
       const { data: profile } = await supabase
-        .from("profiles")
-        .select("subscription_tier, trial_started_at")
-        .eq("id", userId)
+        .from('profiles')
+        .select('subscription_tier, trial_started_at')
+        .eq('id', userId)
         .single();
 
       if (profile?.subscription_tier) {
         plan = profile.subscription_tier.toLowerCase();
       } else if (profile?.trial_started_at) {
-        plan = "trial";
+        plan = 'trial';
       }
     }
 
     // Normalize plan
-    if (plan === "professional") {plan = "pro";}
-    if (plan === "standard") {plan = "starter";}
-    
+    if (plan === 'professional') {
+      plan = 'pro';
+    }
+    if (plan === 'standard') {
+      plan = 'starter';
+    }
+
     // Ensure plan is a valid PlanTier
     const normalizedPlan = plan as PlanTier;
 
@@ -117,72 +125,86 @@ export async function checkFeatureAccess(
     const planAccess = featureConfig[normalizedPlan];
 
     // Check boolean features
-    if (typeof planAccess === "boolean") {
+    if (typeof planAccess === 'boolean') {
       if (planAccess) {
         return { allowed: true };
       } else {
         // Find which plan has this feature
         const upgradePlan = Object.keys(featureConfig).find(
-          (p) => featureConfig[p as PlanTier] === true
+          p => featureConfig[p as PlanTier] === true
         ) as PlanTier | undefined;
 
         return {
           allowed: false,
-          reason: `This feature requires ${upgradePlan || "Pro"} plan`,
-          upgradePlan: upgradePlan || "pro",
+          reason: `This feature requires ${upgradePlan || 'Pro'} plan`,
+          upgradePlan: upgradePlan || 'pro',
         };
       }
     }
 
     // Check limit-based features
-    if (typeof planAccess === "object") {
+    if (typeof planAccess === 'object') {
       // For now, just check if feature exists for plan
       // Actual limit checking is done elsewhere (usage tracking)
       return { allowed: true };
     }
 
-    return { allowed: false, reason: "Feature not available" };
+    return { allowed: false, reason: 'Feature not available' };
   } catch (error) {
-    logger.error("Failed to check feature access", error instanceof Error ? error : new Error(String(error)), {
-      userId,
-      feature,
-    });
-    return { allowed: false, reason: "Error checking access" };
+    logger.error(
+      'Failed to check feature access',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        userId,
+        feature,
+      }
+    );
+    return { allowed: false, reason: 'Error checking access' };
   }
 }
 
 /**
  * Check if user can create more workflows
  */
-export async function canCreateWorkflow(userId: string): Promise<FeatureAccess> {
+export async function canCreateWorkflow(
+  userId: string
+): Promise<FeatureAccess> {
   try {
-    const access = await checkFeatureAccess(userId, "workflows");
+    const access = await checkFeatureAccess(userId, 'workflows');
     if (!access.allowed) {
       return access;
     }
 
     // Get current workflow count
     const { count } = await supabase
-      .from("workflows")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", userId);
+      .from('workflows')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId);
 
     // Get user plan
     const { data: subscription } = await supabase
-      .from("user_subscriptions")
-      .select("plan_id, subscription_plans(tier)")
-      .eq("user_id", userId)
-      .eq("status", "active")
+      .from('user_subscriptions')
+      .select('plan_id, subscription_plans(tier)')
+      .eq('user_id', userId)
+      .eq('status', 'active')
       .single();
 
-    let plan: string | PlanTier = "free";
-    if (subscription?.subscription_plans && Array.isArray(subscription.subscription_plans) && subscription.subscription_plans[0]?.tier) {
+    let plan: string | PlanTier = 'free';
+    if (
+      subscription?.subscription_plans &&
+      Array.isArray(subscription.subscription_plans) &&
+      subscription.subscription_plans[0]?.tier
+    ) {
       plan = subscription.subscription_plans[0].tier as PlanTier;
     }
-    
+
     // Normalize plan
-    if (plan === "professional") {plan = "pro";}
-    if (plan === "standard") {plan = "starter";}
+    if (plan === 'professional') {
+      plan = 'pro';
+    }
+    if (plan === 'standard') {
+      plan = 'starter';
+    }
     const normalizedPlan = plan as PlanTier;
 
     const maxWorkflows = FEATURES.workflows[normalizedPlan]?.max || 3;
@@ -195,15 +217,22 @@ export async function canCreateWorkflow(userId: string): Promise<FeatureAccess> 
       return {
         allowed: false,
         reason: `You've reached your workflow limit (${maxWorkflows}). Upgrade to create more.`,
-        upgradePlan: normalizedPlan === "free" || normalizedPlan === "trial" ? "starter" : "pro",
+        upgradePlan:
+          normalizedPlan === 'free' || normalizedPlan === 'trial'
+            ? 'starter'
+            : 'pro',
       };
     }
 
     return { allowed: true };
   } catch (error) {
-    logger.error("Failed to check workflow creation", error instanceof Error ? error : new Error(String(error)), {
-      userId,
-    });
-    return { allowed: false, reason: "Error checking workflow limit" };
+    logger.error(
+      'Failed to check workflow creation',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        userId,
+      }
+    );
+    return { allowed: false, reason: 'Error checking workflow limit' };
   }
 }

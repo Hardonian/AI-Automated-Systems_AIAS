@@ -11,65 +11,68 @@ export const Hero = () => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start start", "end start"]
+    offset: ['start start', 'end start'],
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [0, 300]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   return (
-    <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero">
+    <section
+      ref={ref}
+      className='bg-gradient-hero relative flex min-h-screen items-center justify-center overflow-hidden'
+    >
       {/* Animated mesh background */}
-      <motion.div 
-        className="absolute inset-0 bg-gradient-mesh"
+      <motion.div
+        className='bg-gradient-mesh absolute inset-0'
         style={{ opacity }}
       />
 
       {/* Floating orbs */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className='absolute inset-0 overflow-hidden'>
         <motion.div
-          animate={{ 
+          animate={{
             x: [0, 100, 0],
             y: [0, -100, 0],
             scale: [1, 1.2, 1],
           }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl"
-          transition={{ 
-            duration: 20, 
-            repeat: Infinity, 
-            ease: "easeInOut" 
+          className='absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-primary/20 blur-3xl'
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: 'easeInOut',
           }}
         />
         <motion.div
-          animate={{ 
+          animate={{
             x: [0, -100, 0],
             y: [0, 100, 0],
             scale: [1, 1.3, 1],
           }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl"
-          transition={{ 
-            duration: 25, 
-            repeat: Infinity, 
-            ease: "easeInOut",
-            delay: 2
+          className='absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-accent/20 blur-3xl'
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: 2,
           }}
         />
       </div>
 
-      <motion.div 
-        className="container mx-auto px-4 py-32 relative z-10"
+      <motion.div
+        className='container relative z-10 mx-auto px-4 py-32'
         style={{ y }}
       >
-        <div className="max-w-5xl mx-auto text-center space-y-8">
+        <div className='mx-auto max-w-5xl space-y-8 text-center'>
           {/* Badge */}
           <motion.div
             animate={{ opacity: 1, y: 0 }}
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-card/50 backdrop-blur-sm border border-primary/20 shadow-glow">
-              <Sparkles className="w-5 h-5 text-primary animate-pulse" />
-              <span className="text-sm font-semibold bg-gradient-accent bg-clip-text text-transparent">
+            <div className='shadow-glow inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/50 px-6 py-3 backdrop-blur-sm'>
+              <Sparkles className='h-5 w-5 animate-pulse text-primary' />
+              <span className='bg-gradient-accent bg-clip-text text-sm font-semibold text-transparent'>
                 We Build Intelligent Systems That Think For You
               </span>
             </div>
@@ -81,9 +84,9 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 30 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight">
-              <span className="block mb-2 sm:mb-4">AI Agent &</span>
-              <span className="block bg-gradient-accent bg-clip-text text-transparent animate-shimmer bg-[length:200%_100%]">
+            <h1 className='text-4xl font-bold leading-tight sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl'>
+              <span className='mb-2 block sm:mb-4'>AI Agent &</span>
+              <span className='bg-gradient-accent block animate-shimmer bg-[length:200%_100%] bg-clip-text text-transparent'>
                 Automation Consultancy
               </span>
             </h1>
@@ -92,12 +95,12 @@ export const Hero = () => {
           {/* Subheadline */}
           <motion.p
             animate={{ opacity: 1, y: 0 }}
-            className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4"
+            className='mx-auto max-w-3xl px-4 text-lg leading-relaxed text-muted-foreground sm:text-xl md:text-2xl lg:text-3xl'
             initial={{ opacity: 0, y: 30 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
             Stop scaling chaos. Start scaling intelligence.
-            <span className="block mt-2 text-foreground/90">
+            <span className='mt-2 block text-foreground/90'>
               Out-of-the-box solutions or fully customized agentic workflows.
             </span>
           </motion.p>
@@ -105,28 +108,35 @@ export const Hero = () => {
           {/* CTA Buttons */}
           <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center pt-6 sm:pt-8 px-4"
+            className='flex flex-col items-stretch justify-center gap-3 px-4 pt-6 sm:flex-row sm:items-center sm:gap-4 sm:pt-8'
             initial={{ opacity: 0, y: 30 }}
             transition={{ duration: 0.8, delay: 0.8 }}
           >
-            <motion.div className="w-full sm:w-auto" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button 
-                className="w-full sm:w-auto bg-gradient-primary shadow-glow text-base sm:text-lg px-8 sm:px-10 py-6 sm:py-7 hover:shadow-accent transition-all group min-h-[48px]" 
-                size="lg"
+            <motion.div
+              className='w-full sm:w-auto'
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button
+                className='bg-gradient-primary shadow-glow group min-h-[48px] w-full px-8 py-6 text-base transition-all hover:shadow-accent sm:w-auto sm:px-10 sm:py-7 sm:text-lg'
+                size='lg'
               >
                 Schedule Consultation
-                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1 sm:h-5 sm:w-5' />
               </Button>
             </motion.div>
-            
-            <Link className="w-full sm:w-auto" to="/roi-calculator">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button 
-                  className="w-full sm:w-auto text-base sm:text-lg px-8 sm:px-10 py-6 sm:py-7 border-primary/30 hover:border-accent hover:text-accent bg-card/30 backdrop-blur-sm min-h-[48px]" 
-                  size="lg" 
-                  variant="outline"
+
+            <Link className='w-full sm:w-auto' to='/roi-calculator'>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button
+                  className='min-h-[48px] w-full border-primary/30 bg-card/30 px-8 py-6 text-base backdrop-blur-sm hover:border-accent hover:text-accent sm:w-auto sm:px-10 sm:py-7 sm:text-lg'
+                  size='lg'
+                  variant='outline'
                 >
-                  <Calculator className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
+                  <Calculator className='mr-2 h-4 w-4 sm:h-5 sm:w-5' />
                   Calculate ROI
                 </Button>
               </motion.div>
@@ -136,35 +146,61 @@ export const Hero = () => {
           {/* Enhanced Stats with Proof Points */}
           <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 pt-12 sm:pt-16 md:pt-24 max-w-5xl mx-auto px-4"
+            className='mx-auto grid max-w-5xl grid-cols-1 gap-4 px-4 pt-12 sm:grid-cols-2 sm:gap-6 sm:pt-16 md:gap-8 md:pt-24 lg:grid-cols-4'
             initial={{ opacity: 0, y: 40 }}
             transition={{ duration: 0.8, delay: 1 }}
           >
             {[
-              { value: '42+', label: 'Active Workflows', subtext: 'Across 15+ Industries', delay: 0, icon: '⚡' },
-              { value: '10k+', label: 'Hours Saved', subtext: 'Monthly for Clients', delay: 0.1, icon: '⏱️' },
-              { value: '24/7', label: 'AI Operations', subtext: 'Zero Downtime', delay: 0.2, icon: '🤖' },
-              { value: '99.9%', label: 'Uptime', subtext: 'Enterprise SLA', delay: 0.3, icon: '🛡️' },
+              {
+                value: '42+',
+                label: 'Active Workflows',
+                subtext: 'Across 15+ Industries',
+                delay: 0,
+                icon: '⚡',
+              },
+              {
+                value: '10k+',
+                label: 'Hours Saved',
+                subtext: 'Monthly for Clients',
+                delay: 0.1,
+                icon: '⏱️',
+              },
+              {
+                value: '24/7',
+                label: 'AI Operations',
+                subtext: 'Zero Downtime',
+                delay: 0.2,
+                icon: '🤖',
+              },
+              {
+                value: '99.9%',
+                label: 'Uptime',
+                subtext: 'Enterprise SLA',
+                delay: 0.3,
+                icon: '🛡️',
+              },
             ].map((stat, index) => (
               <motion.div
                 key={`stat-${index}`}
                 animate={{ opacity: 1, scale: 1 }}
-                className="relative group"
+                className='group relative'
                 initial={{ opacity: 0, scale: 0.8 }}
                 transition={{ duration: 0.5, delay: 1.2 + stat.delay }}
                 whileHover={{ scale: 1.05, y: -8 }}
               >
-                <div className="p-4 sm:p-6 bg-card/60 backdrop-blur-sm rounded-2xl border border-border group-hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10">
-                  <motion.div 
-                    className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300"
-                  />
-                  <div className="relative text-center">
-                    <div className="text-2xl mb-2">{stat.icon}</div>
-                    <div className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-accent bg-clip-text text-transparent">
+                <div className='rounded-2xl border border-border bg-card/60 p-4 backdrop-blur-sm transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 group-hover:border-primary/50 sm:p-6'>
+                  <motion.div className='bg-gradient-primary absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-5' />
+                  <div className='relative text-center'>
+                    <div className='mb-2 text-2xl'>{stat.icon}</div>
+                    <div className='bg-gradient-accent bg-clip-text text-3xl font-bold text-transparent sm:text-4xl md:text-5xl'>
                       {stat.value}
                     </div>
-                    <div className="text-sm font-semibold text-foreground mt-1">{stat.label}</div>
-                    <div className="text-xs text-muted-foreground mt-1">{stat.subtext}</div>
+                    <div className='mt-1 text-sm font-semibold text-foreground'>
+                      {stat.label}
+                    </div>
+                    <div className='mt-1 text-xs text-muted-foreground'>
+                      {stat.subtext}
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -174,20 +210,20 @@ export const Hero = () => {
           {/* Scroll indicator */}
           <motion.div
             animate={{ opacity: 1 }}
-            className="pt-16"
+            className='pt-16'
             initial={{ opacity: 0 }}
             transition={{ duration: 1, delay: 1.5 }}
           >
             <motion.div
               animate={{ y: [0, 10, 0] }}
-              className="inline-flex flex-col items-center gap-2 text-muted-foreground"
+              className='inline-flex flex-col items-center gap-2 text-muted-foreground'
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <span className="text-sm">Explore Solutions</span>
-              <div className="w-6 h-10 border-2 border-primary/30 rounded-full flex items-start justify-center p-2">
+              <span className='text-sm'>Explore Solutions</span>
+              <div className='flex h-10 w-6 items-start justify-center rounded-full border-2 border-primary/30 p-2'>
                 <motion.div
                   animate={{ y: [0, 12, 0] }}
-                  className="w-1.5 h-1.5 bg-primary rounded-full"
+                  className='h-1.5 w-1.5 rounded-full bg-primary'
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
               </div>
@@ -197,7 +233,7 @@ export const Hero = () => {
       </motion.div>
 
       {/* Gradient overlay at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      <div className='absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent' />
     </section>
   );
 };

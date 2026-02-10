@@ -146,6 +146,7 @@ We take security seriously and appreciate responsible disclosure of security vul
 Please report security issues to: **scottrmhardie@gmail.com**
 
 Include:
+
 - Description of the vulnerability
 - Steps to reproduce
 - Potential impact
@@ -154,6 +155,7 @@ Include:
 ### Scope
 
 We welcome reports on:
+
 - Web application vulnerabilities
 - API security issues
 - Authentication and authorization flaws
@@ -163,6 +165,7 @@ We welcome reports on:
 ### Response
 
 We will:
+
 - Acknowledge receipt within 48 hours
 - Provide updates on our progress
 - Work with you to understand and resolve the issue
@@ -197,6 +200,7 @@ Security researchers who follow these guidelines will not face legal action from
 ### Scope
 
 This security policy applies to:
+
 - The AIAS Platform codebase
 - Our infrastructure and services
 - Our documentation and resources

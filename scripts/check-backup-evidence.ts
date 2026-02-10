@@ -4,15 +4,15 @@
  * Used by compliance report generation
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-import { env } from "@/lib/env";
+import { env } from '@/lib/env';
 
 interface BackupEvidence {
   present: boolean;
   lastBackupDate?: string;
   backupCount?: number;
-  status: "PASS" | "FAIL" | "UNKNOWN";
+  status: 'PASS' | 'FAIL' | 'UNKNOWN';
   message: string;
 }
 
@@ -35,16 +35,19 @@ export async function checkBackupEvidence(): Promise<BackupEvidence> {
 
     // Check for backup metadata in orchestrator_reports or similar table
     // This is a metadata check only - no actual backup data is accessed
-    
+
     // Option 1: Check orchestrator reports for backup evidence
     const { data: reports, error: reportsError } = await supabase
-      .from("orchestrator_reports")
-      .select("cycle, report, created_at")
-      .order("created_at", { ascending: false })
+      .from('orchestrator_reports')
+      .select('cycle, report, created_at')
+      .order('created_at', { ascending: false })
       .limit(10);
 
     if (reportsError) {
-      console.warn("Could not check orchestrator reports:", reportsError.message);
+      console.warn(
+        'Could not check orchestrator reports:',
+        reportsError.message
+      );
     }
 
     // Option 2: Check if backup-related metadata exists
@@ -58,10 +61,10 @@ export async function checkBackupEvidence(): Promise<BackupEvidence> {
     if (reports && reports.length > 0) {
       for (const report of reports) {
         const reportData = report.report;
-        if (reportData && typeof reportData === "object") {
+        if (reportData && typeof reportData === 'object') {
           // Check if report mentions backups
           const reportStr = JSON.stringify(reportData).toLowerCase();
-          if (reportStr.includes("backup") || reportStr.includes("restore")) {
+          if (reportStr.includes('backup') || reportStr.includes('restore')) {
             backupMentioned = true;
             backupCount++;
             if (!lastBackupDate) {
@@ -81,7 +84,7 @@ export async function checkBackupEvidence(): Promise<BackupEvidence> {
         present: true,
         lastBackupDate: lastBackupDate || new Date().toISOString(),
         backupCount,
-        status: "PASS",
+        status: 'PASS',
         message: `Backup evidence found: ${backupCount} backup references in recent reports`,
       };
     }
@@ -92,14 +95,15 @@ export async function checkBackupEvidence(): Promise<BackupEvidence> {
 
     return {
       present: false,
-      status: "UNKNOWN",
-      message: "Backup evidence not found in metadata. Check Supabase Dashboard → Database → Backups manually.",
+      status: 'UNKNOWN',
+      message:
+        'Backup evidence not found in metadata. Check Supabase Dashboard → Database → Backups manually.',
     };
   } catch (error: any) {
-    console.error("Error checking backup evidence:", error);
+    console.error('Error checking backup evidence:', error);
     return {
       present: false,
-      status: "FAIL",
+      status: 'FAIL',
       message: `Error checking backup evidence: ${error.message}`,
     };
   }
@@ -109,33 +113,38 @@ export async function checkBackupEvidence(): Promise<BackupEvidence> {
  * Generate backup evidence line for compliance report
  */
 export function formatBackupEvidenceLine(evidence: BackupEvidence): string {
-  const statusIcon = evidence.status === "PASS" ? "✅" : evidence.status === "FAIL" ? "❌" : "⚠️";
-  
+  const statusIcon =
+    evidence.status === 'PASS'
+      ? '✅'
+      : evidence.status === 'FAIL'
+        ? '❌'
+        : '⚠️';
+
   let line = `- **Backup Evidence:** ${statusIcon} ${evidence.status}`;
-  
+
   if (evidence.present && evidence.lastBackupDate) {
     line += `\n  - Last backup verified: ${evidence.lastBackupDate}`;
   }
-  
+
   if (evidence.backupCount !== undefined && evidence.backupCount > 0) {
     line += `\n  - Backup references found: ${evidence.backupCount}`;
   }
-  
+
   line += `\n  - ${evidence.message}`;
-  
+
   return line;
 }
 
 // CLI usage
 if (require.main === module) {
   checkBackupEvidence()
-    .then((evidence) => {
-      console.log("Backup Evidence Check:");
+    .then(evidence => {
+      console.log('Backup Evidence Check:');
       console.log(formatBackupEvidenceLine(evidence));
-      process.exit(evidence.status === "PASS" ? 0 : 1);
+      process.exit(evidence.status === 'PASS' ? 0 : 1);
     })
-    .catch((error) => {
-      console.error("Failed to check backup evidence:", error);
+    .catch(error => {
+      console.error('Failed to check backup evidence:', error);
       process.exit(1);
     });
 }

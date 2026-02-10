@@ -1,53 +1,57 @@
 // [STAKE+TRUST:BEGIN:privacy_page]
-"use client";
+'use client';
 
 // import { readFile } from "fs/promises"; // Will be used for reading privacy policy file
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { sanitize } from "@/lib/utils/sanitize-html";
+import { sanitize } from '@/lib/utils/sanitize-html';
 
 export default function Privacy() {
-  const [content, setContent] = useState<string>("");
+  const [content, setContent] = useState<string>('');
 
   useEffect(() => {
     // Load privacy policy content
     // In production, this would fetch from a CMS or markdown file
-    fetch("/docs/trust/PRIVACY_POLICY_DRAFT.md")
-      .then((r) => r.text())
-      .then((text) => {
+    fetch('/docs/trust/PRIVACY_POLICY_DRAFT.md')
+      .then(r => r.text())
+      .then(text => {
         // Simple markdown to HTML conversion (basic)
         // In production, use a proper markdown library like react-markdown
         const html = text
-          .replace(/^# (.*$)/gim, "<h1>$1</h1>")
-          .replace(/^## (.*$)/gim, "<h2>$1</h2>")
-          .replace(/^### (.*$)/gim, "<h3>$1</h3>")
-          .replace(/^\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
-          .replace(/^\*(.*?)\*/gim, "<em>$1</em>")
-          .replace(/^- (.*$)/gim, "<li>$1</li>")
-          .replace(/\n/gim, "<br/>");
+          .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+          .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+          .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+          .replace(/^\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+          .replace(/^\*(.*?)\*/gim, '<em>$1</em>')
+          .replace(/^- (.*$)/gim, '<li>$1</li>')
+          .replace(/\n/gim, '<br/>');
         // Sanitize HTML to prevent XSS attacks
         setContent(sanitize(html));
       })
       .catch(() => {
         setContent(
-          "<p>Privacy policy content is being loaded. Please check back soon or contact privacy@example.com for immediate inquiries.</p>"
+          '<p>Privacy policy content is being loaded. Please check back soon or contact privacy@example.com for immediate inquiries.</p>'
         );
       });
   }, []);
 
   return (
-    <div className="container py-8">
+    <div className='container py-8'>
       <article
         dangerouslySetInnerHTML={{ __html: content }}
-        className="prose dark:prose-invert max-w-none"
+        className='prose max-w-none dark:prose-invert'
       />
-      <div className="mt-8 p-4 bg-muted rounded-lg">
-        <p className="text-sm text-muted-foreground">
-          <strong>Note:</strong> This is a draft privacy policy and requires legal review before being considered legally binding.
+      <div className='mt-8 rounded-lg bg-muted p-4'>
+        <p className='text-sm text-muted-foreground'>
+          <strong>Note:</strong> This is a draft privacy policy and requires
+          legal review before being considered legally binding.
         </p>
-        <p className="text-sm text-muted-foreground mt-2">
-          For privacy inquiries, contact:{" "}
-          <a className="text-primary hover:underline" href="mailto:privacy@example.com">
+        <p className='mt-2 text-sm text-muted-foreground'>
+          For privacy inquiries, contact:{' '}
+          <a
+            className='text-primary hover:underline'
+            href='mailto:privacy@example.com'
+          >
             privacy@example.com
           </a>
         </p>

@@ -1,24 +1,41 @@
-import { createClient } from "@supabase/supabase-js";
-import { TrendingUp, Users, Eye, Activity, MessageSquare, Zap } from "lucide-react";
+import { createClient } from '@supabase/supabase-js';
+import {
+  TrendingUp,
+  Users,
+  Eye,
+  Activity,
+  MessageSquare,
+  Zap,
+} from 'lucide-react';
 
-import { DashboardClient } from "./dashboard-client";
-import { createClient as createServerClient } from "@/lib/supabase/server";
+import { DashboardClient } from './dashboard-client';
+import { createClient as createServerClient } from '@/lib/supabase/server';
 
-import { DashboardUpgradeSection } from "@/components/dashboard/dashboard-upgrade-section";
-import { RealtimeDashboard } from "@/components/dashboard/realtime-dashboard";
-import { HealthMonitor } from "@/components/monitoring/health-monitor";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { enrichWithExternalData, generateSampleMetrics, getIndustryBenchmarks } from "@/lib/data-enrichment";
-import type { Database } from "@/src/integrations/supabase/types";
+import { DashboardUpgradeSection } from '@/components/dashboard/dashboard-upgrade-section';
+import { RealtimeDashboard } from '@/components/dashboard/realtime-dashboard';
+import { HealthMonitor } from '@/components/monitoring/health-monitor';
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  enrichWithExternalData,
+  generateSampleMetrics,
+  getIndustryBenchmarks,
+} from '@/lib/data-enrichment';
+import type { Database } from '@/src/integrations/supabase/types';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 /**
  * Public Dashboard: "Loud & High" Social Proof Metrics
- * 
+ *
  * Server Component that displays real-time aggregated metrics from Supabase.
  * This acts as "smoke signals" showing the ecosystem is alive and active.
- * 
+ *
  * Now includes Supabase Realtime subscriptions for live updates.
  */
 
@@ -73,11 +90,11 @@ async function getKPIData(): Promise<{
 
     // Fetch KPI views
     const [kpi1, kpi2, kpi3, profilesCount, postsCount] = await Promise.all([
-      supabase.from("kpi_new_users_week").select("*").single(),
-      supabase.from("kpi_avg_post_views").select("*").single(),
-      supabase.from("kpi_actions_last_hour").select("*").single(),
-      supabase.from("profiles").select("id", { count: "exact", head: true }),
-      supabase.from("posts").select("id", { count: "exact", head: true }),
+      supabase.from('kpi_new_users_week').select('*').single(),
+      supabase.from('kpi_avg_post_views').select('*').single(),
+      supabase.from('kpi_actions_last_hour').select('*').single(),
+      supabase.from('profiles').select('id', { count: 'exact', head: true }),
+      supabase.from('posts').select('id', { count: 'exact', head: true }),
     ]);
 
     interface KPIResult {
@@ -97,16 +114,16 @@ async function getKPIData(): Promise<{
       actionsLastHour: kpi3Data?.actions_count || 0,
       totalUsers: profilesCount.count || 0,
       totalPosts: postsCount.count || 0,
-      engagementRate: "0.00",
+      engagementRate: '0.00',
       periodStart: oneWeekAgo.toISOString(),
       periodEnd: now.toISOString(),
-      note: "Live metrics from Supabase",
+      note: 'Live metrics from Supabase',
       kpi1Met: kpi1Data?.threshold_met || false,
       kpi2Met: kpi2Data?.threshold_met || false,
       kpi3Met: kpi3Data?.threshold_met || false,
     };
   } catch (error) {
-    console.error("Error fetching KPI data", error);
+    console.error('Error fetching KPI data', error);
     // Return sample data on error with KPI met flags
     const sample = generateSampleMetrics();
     return {
@@ -135,9 +152,9 @@ async function getRecentActivity(): Promise<ActivityEntry[]> {
     });
 
     const { data } = await supabase
-      .from("activity_log")
-      .select("activity_type, created_at, metadata")
-      .order("created_at", { ascending: false })
+      .from('activity_log')
+      .select('activity_type, created_at, metadata')
+      .order('created_at', { ascending: false })
       .limit(10);
 
     return (data || []) as ActivityEntry[];
@@ -163,9 +180,9 @@ async function getTopPosts(): Promise<TopPost[]> {
     });
 
     const { data } = await supabase
-      .from("posts")
-      .select("id, title, view_count, created_at")
-      .order("view_count", { ascending: false })
+      .from('posts')
+      .select('id, title, view_count, created_at')
+      .order('view_count', { ascending: false })
       .limit(5);
 
     return (data || []) as TopPost[];
@@ -179,129 +196,144 @@ export default async function DashboardPage() {
   const recentActivity = await getRecentActivity();
   const topPosts = await getTopPosts();
   const benchmarks = getIndustryBenchmarks();
-  
+
   // Enrich with external data
-  const techNews = await enrichWithExternalData("tech_news");
+  const techNews = await enrichWithExternalData('tech_news');
 
   const allCylindersFiring =
-    kpiData.kpi1Met &&
-    kpiData.kpi2Met &&
-    kpiData.kpi3Met;
+    kpiData.kpi1Met && kpiData.kpi2Met && kpiData.kpi3Met;
 
   // Get user plan from database
-  let userPlan: "free" | "trial" | "starter" | "pro" = "free";
+  let userPlan: 'free' | 'trial' | 'starter' | 'pro' = 'free';
   let isFirstVisit = true;
-  
+
   try {
     const supabase = await createServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
     if (user) {
       // Get user profile to determine plan
       const { data: profile } = await supabase
-        .from("profiles" as any)
-        .select("subscription_tier, created_at")
-        .eq("id", user.id)
+        .from('profiles' as any)
+        .select('subscription_tier, created_at')
+        .eq('id', user.id)
         .single();
-      
-      const profileData = profile as { subscription_tier?: string | null; created_at?: string | null } | null;
+
+      const profileData = profile as {
+        subscription_tier?: string | null;
+        created_at?: string | null;
+      } | null;
       if (profileData) {
         // Map subscription_tier to userPlan
-        const tier = profileData.subscription_tier?.toLowerCase() || "free";
-        if (tier === "starter" || tier === "pro" || tier === "enterprise") {
-          userPlan = tier as "starter" | "pro";
-        } else if (tier === "trial") {
-          userPlan = "trial";
+        const tier = profileData.subscription_tier?.toLowerCase() || 'free';
+        if (tier === 'starter' || tier === 'pro' || tier === 'enterprise') {
+          userPlan = tier as 'starter' | 'pro';
+        } else if (tier === 'trial') {
+          userPlan = 'trial';
         } else {
-          userPlan = "free";
+          userPlan = 'free';
         }
-        
+
         // Check if user has created any workflows (determine first visit)
         const { data: workflowsData } = await supabase
-          .from("workflows")
-          .select("id")
+          .from('workflows')
+          .select('id')
           .limit(1);
-        
+
         isFirstVisit = !workflowsData || workflowsData.length === 0;
       }
     }
   } catch (error) {
     // Fallback to defaults on error
-    const { serverLogger } = await import("@/lib/utils/logger");
-    serverLogger.error("Error fetching user data for dashboard", error instanceof Error ? error : new Error(String(error)));
-    userPlan = "trial";
+    const { serverLogger } = await import('@/lib/utils/logger');
+    serverLogger.error(
+      'Error fetching user data for dashboard',
+      error instanceof Error ? error : new Error(String(error))
+    );
+    userPlan = 'trial';
     isFirstVisit = true;
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className='container mx-auto px-4 py-8'>
       {/* Upgrade prompts and welcome dashboard */}
-      <DashboardUpgradeSection isFirstVisit={isFirstVisit} userPlan={userPlan} />
-      
+      <DashboardUpgradeSection
+        isFirstVisit={isFirstVisit}
+        userPlan={userPlan}
+      />
+
       {/* Quick Links */}
-      <div className="mb-6 flex gap-4">
+      <div className='mb-6 flex gap-4'>
         <a
-          className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-          href="/dashboard/analytics"
+          className='rounded-lg bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90'
+          href='/dashboard/analytics'
         >
           View Analytics
         </a>
         <a
-          className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors"
-          href="/workflows"
+          className='rounded-lg bg-secondary px-4 py-2 text-secondary-foreground transition-colors hover:bg-secondary/90'
+          href='/workflows'
         >
           Manage Workflows
         </a>
       </div>
-      
+
       {/* Client-side components for upgrade nudges and checklist */}
       <DashboardClient />
-      
+
       {/* Show empty state for first-time users */}
       {isFirstVisit && (
-        <div className="mb-8">
+        <div className='mb-8'>
           {/* Welcome dashboard will be shown by DashboardUpgradeSection if isFirstVisit is true */}
         </div>
       )}
 
-      <div className="mb-8 px-4">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Ecosystem Dashboard</h1>
-        <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
+      <div className='mb-8 px-4'>
+        <h1 className='mb-4 text-4xl font-bold md:text-5xl'>
+          Ecosystem Dashboard
+        </h1>
+        <p className='text-base leading-relaxed text-muted-foreground md:text-lg'>
           Real-time metrics showing our living, breathing community
         </p>
         {allCylindersFiring && (
-          <Badge className="mt-4" variant="default">
-            <Zap className="w-4 h-4 mr-1" />
+          <Badge className='mt-4' variant='default'>
+            <Zap className='mr-1 h-4 w-4' />
             All Cylinders Firing ✓
           </Badge>
         )}
       </div>
 
       {/* Health Monitor */}
-      <div className="mb-8">
+      <div className='mb-8'>
         <HealthMonitor autoRefresh={true} refreshInterval={60000} />
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 px-4">
+      <div className='mb-8 grid grid-cols-1 gap-6 px-4 md:grid-cols-3'>
         <Card>
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Users className="w-5 h-5" />
+          <CardHeader className='pb-4'>
+            <CardTitle className='flex items-center gap-2 text-lg'>
+              <Users className='h-5 w-5' />
               New Users This Week
             </CardTitle>
-            <CardDescription className="text-sm mt-1">KPI 1: Growth Momentum</CardDescription>
+            <CardDescription className='mt-1 text-sm'>
+              KPI 1: Growth Momentum
+            </CardDescription>
           </CardHeader>
-          <CardContent className="pt-6">
-            <div className="text-3xl font-bold mb-3">{kpiData.newUsersThisWeek}</div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+          <CardContent className='pt-6'>
+            <div className='mb-3 text-3xl font-bold'>
+              {kpiData.newUsersThisWeek}
+            </div>
+            <p className='text-sm leading-relaxed text-muted-foreground'>
               Threshold: 50+ users
               {kpiData.kpi1Met ? (
-                <Badge className="ml-2" variant="default">
+                <Badge className='ml-2' variant='default'>
                   ✓ Met
                 </Badge>
               ) : (
-                <Badge className="ml-2" variant="secondary">
+                <Badge className='ml-2' variant='secondary'>
                   Needs Growth
                 </Badge>
               )}
@@ -310,25 +342,27 @@ export default async function DashboardPage() {
         </Card>
 
         <Card>
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Eye className="w-5 h-5" />
+          <CardHeader className='pb-4'>
+            <CardTitle className='flex items-center gap-2 text-lg'>
+              <Eye className='h-5 w-5' />
               Average Post Views
             </CardTitle>
-            <CardDescription className="text-sm mt-1">KPI 2: Content Engagement</CardDescription>
+            <CardDescription className='mt-1 text-sm'>
+              KPI 2: Content Engagement
+            </CardDescription>
           </CardHeader>
-          <CardContent className="pt-6">
-            <div className="text-3xl font-bold mb-3">
+          <CardContent className='pt-6'>
+            <div className='mb-3 text-3xl font-bold'>
               {Math.round(kpiData.avgPostViews)}
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className='text-sm leading-relaxed text-muted-foreground'>
               Threshold: 100+ views
               {kpiData.kpi2Met ? (
-                <Badge className="ml-2" variant="default">
+                <Badge className='ml-2' variant='default'>
                   ✓ Met
                 </Badge>
               ) : (
-                <Badge className="ml-2" variant="secondary">
+                <Badge className='ml-2' variant='secondary'>
                   Building
                 </Badge>
               )}
@@ -337,23 +371,27 @@ export default async function DashboardPage() {
         </Card>
 
         <Card>
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Activity className="w-5 h-5" />
+          <CardHeader className='pb-4'>
+            <CardTitle className='flex items-center gap-2 text-lg'>
+              <Activity className='h-5 w-5' />
               Actions Last Hour
             </CardTitle>
-            <CardDescription className="text-sm mt-1">KPI 3: Real-Time Engagement</CardDescription>
+            <CardDescription className='mt-1 text-sm'>
+              KPI 3: Real-Time Engagement
+            </CardDescription>
           </CardHeader>
-          <CardContent className="pt-6">
-            <div className="text-3xl font-bold mb-3">{kpiData.actionsLastHour}</div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+          <CardContent className='pt-6'>
+            <div className='mb-3 text-3xl font-bold'>
+              {kpiData.actionsLastHour}
+            </div>
+            <p className='text-sm leading-relaxed text-muted-foreground'>
               Threshold: 20+ actions
               {kpiData.kpi3Met ? (
-                <Badge className="ml-2" variant="default">
+                <Badge className='ml-2' variant='default'>
                   ✓ Met
                 </Badge>
               ) : (
-                <Badge className="ml-2" variant="secondary">
+                <Badge className='ml-2' variant='secondary'>
                   Active
                 </Badge>
               )}
@@ -363,57 +401,64 @@ export default async function DashboardPage() {
       </div>
 
       {/* Real-time Dashboard Component */}
-      <div className="mb-8">
+      <div className='mb-8'>
         <RealtimeDashboard />
       </div>
 
       {/* Additional Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 px-4">
+      <div className='mb-8 grid grid-cols-1 gap-6 px-4 md:grid-cols-2'>
         <Card>
-          <CardHeader className="pb-4">
-            <CardTitle className="text-lg">Community Overview</CardTitle>
+          <CardHeader className='pb-4'>
+            <CardTitle className='text-lg'>Community Overview</CardTitle>
           </CardHeader>
-          <CardContent className="pt-6">
-            <div className="space-y-4">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Total Users</span>
-                <span className="font-semibold">{kpiData.totalUsers}</span>
+          <CardContent className='pt-6'>
+            <div className='space-y-4'>
+              <div className='flex justify-between'>
+                <span className='text-muted-foreground'>Total Users</span>
+                <span className='font-semibold'>{kpiData.totalUsers}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Total Posts</span>
-                <span className="font-semibold">{kpiData.totalPosts}</span>
+              <div className='flex justify-between'>
+                <span className='text-muted-foreground'>Total Posts</span>
+                <span className='font-semibold'>{kpiData.totalPosts}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Industry Avg Sign-Up</span>
-                <span className="font-semibold">{benchmarks.avgSignUpRate}%</span>
+              <div className='flex justify-between'>
+                <span className='text-muted-foreground'>
+                  Industry Avg Sign-Up
+                </span>
+                <span className='font-semibold'>
+                  {benchmarks.avgSignUpRate}%
+                </span>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <MessageSquare className="w-5 h-5" />
+          <CardHeader className='pb-4'>
+            <CardTitle className='flex items-center gap-2 text-lg'>
+              <MessageSquare className='h-5 w-5' />
               Most Engaged Posts
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-6">
+          <CardContent className='pt-6'>
             {topPosts.length > 0 ? (
-              <div className="space-y-3">
-                {topPosts.map((post) => (
-                  <div key={post.id} className="flex justify-between items-center">
-                    <span className="text-sm truncate flex-1">
+              <div className='space-y-3'>
+                {topPosts.map(post => (
+                  <div
+                    key={post.id}
+                    className='flex items-center justify-between'
+                  >
+                    <span className='flex-1 truncate text-sm'>
                       {post.title || `Post #${post.id}`}
                     </span>
-                    <Badge className="ml-2" variant="secondary">
+                    <Badge className='ml-2' variant='secondary'>
                       {post.view_count || 0} views
                     </Badge>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">
+              <p className='text-sm text-muted-foreground'>
                 No posts yet. Be the first to create content!
               </p>
             )}
@@ -422,33 +467,37 @@ export default async function DashboardPage() {
       </div>
 
       {/* Recent Activity Feed */}
-      <Card className="mx-4">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <TrendingUp className="w-5 h-5" />
+      <Card className='mx-4'>
+        <CardHeader className='pb-4'>
+          <CardTitle className='flex items-center gap-2 text-lg'>
+            <TrendingUp className='h-5 w-5' />
             Recent Activity
           </CardTitle>
-          <CardDescription className="text-sm mt-1">Live engagement signals from the community</CardDescription>
+          <CardDescription className='mt-1 text-sm'>
+            Live engagement signals from the community
+          </CardDescription>
         </CardHeader>
-        <CardContent className="pt-6">
+        <CardContent className='pt-6'>
           {recentActivity.length > 0 ? (
-            <div className="space-y-2">
+            <div className='space-y-2'>
               {recentActivity.map((activity, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between p-2 rounded-lg bg-muted/50"
+                  className='flex items-center justify-between rounded-lg bg-muted/50 p-2'
                 >
-                  <span className="text-sm capitalize">
-                    {activity.activity_type?.replace(/_/g, " ") || "Unknown"}
+                  <span className='text-sm capitalize'>
+                    {activity.activity_type?.replace(/_/g, ' ') || 'Unknown'}
                   </span>
-                  <span className="text-xs text-muted-foreground">
-                    {activity.created_at ? new Date(activity.created_at).toLocaleTimeString() : ""}
+                  <span className='text-xs text-muted-foreground'>
+                    {activity.created_at
+                      ? new Date(activity.created_at).toLocaleTimeString()
+                      : ''}
                   </span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">
+            <p className='text-sm text-muted-foreground'>
               Activity feed will appear here as users engage with the platform.
             </p>
           )}
@@ -457,36 +506,51 @@ export default async function DashboardPage() {
 
       {/* External Data Enrichment */}
       {techNews && 'articles' in techNews && (
-        <Card className="mt-6 mx-4">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-lg">Tech Community Insights</CardTitle>
-            <CardDescription className="text-sm mt-1">
-              Enriched with data from {techNews.source === "dev.to" ? "Dev.to API" : "sample data"}
+        <Card className='mx-4 mt-6'>
+          <CardHeader className='pb-4'>
+            <CardTitle className='text-lg'>Tech Community Insights</CardTitle>
+            <CardDescription className='mt-1 text-sm'>
+              Enriched with data from{' '}
+              {techNews.source === 'dev.to' ? 'Dev.to API' : 'sample data'}
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-6">
+          <CardContent className='pt-6'>
             {techNews.articles && techNews.articles.length > 0 ? (
-              <div className="space-y-2">
-                {techNews.articles.slice(0, 3).map((article: { title?: string; url?: string; description?: string; author?: string }, idx: number) => (
-                  <div key={idx} className="text-sm">
-                    <a
-                      className="text-primary hover:underline"
-                      href={article.url}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      {article.title}
-                    </a>
-                    <span className="text-muted-foreground ml-2">
-                      by {article.author}
-                    </span>
-                  </div>
-                ))}
+              <div className='space-y-2'>
+                {techNews.articles.slice(0, 3).map(
+                  (
+                    article: {
+                      title?: string;
+                      url?: string;
+                      description?: string;
+                      author?: string;
+                    },
+                    idx: number
+                  ) => (
+                    <div key={idx} className='text-sm'>
+                      <a
+                        className='text-primary hover:underline'
+                        href={article.url}
+                        rel='noopener noreferrer'
+                        target='_blank'
+                      >
+                        {article.title}
+                      </a>
+                      <span className='ml-2 text-muted-foreground'>
+                        by {article.author}
+                      </span>
+                    </div>
+                  )
+                )}
               </div>
             ) : null}
-            {'note' in techNews && typeof techNews.note === 'string' && techNews.note && (
-              <p className="text-xs text-muted-foreground mt-2">{techNews.note as string}</p>
-            )}
+            {'note' in techNews &&
+              typeof techNews.note === 'string' &&
+              techNews.note && (
+                <p className='mt-2 text-xs text-muted-foreground'>
+                  {techNews.note as string}
+                </p>
+              )}
           </CardContent>
         </Card>
       )}

@@ -42,7 +42,10 @@ export interface CostMetrics {
 }
 
 class CostOptimizationService {
-  private supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+  private supabase = createClient(
+    env.supabase.url,
+    env.supabase.serviceRoleKey
+  );
 
   /**
    * Record cost
@@ -68,10 +71,14 @@ class CostOptimizationService {
         tenantId,
       });
     } catch (error) {
-      logger.error('Cost recording failed', error instanceof Error ? error : new Error(String(error)), {
-        cost,
-        tenantId,
-      });
+      logger.error(
+        'Cost recording failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          cost,
+          tenantId,
+        }
+      );
     }
   }
 
@@ -123,60 +130,114 @@ class CostOptimizationService {
     const { data: conversions } = await conversionQuery;
 
     // Calculate totals
-    const totalCost = costs?.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0) || 0;
+    const totalCost =
+      costs?.reduce(
+        (sum: number, c: { amount: number }) => sum + c.amount,
+        0
+      ) || 0;
     const totalLeads = leads?.length || 0;
     const totalConversions = conversions?.length || 0;
-    const totalRevenue = conversions?.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0) || 0;
+    const totalRevenue =
+      conversions?.reduce(
+        (sum: number, c: { value?: number }) => sum + (c.value || 0),
+        0
+      ) || 0;
 
     const costPerLead = totalLeads > 0 ? totalCost / totalLeads : 0;
-    const costPerConversion = totalConversions > 0 ? totalCost / totalConversions : 0;
-    const roi = totalCost > 0 ? ((totalRevenue - totalCost) / totalCost) * 100 : 0;
+    const costPerConversion =
+      totalConversions > 0 ? totalCost / totalConversions : 0;
+    const roi =
+      totalCost > 0 ? ((totalRevenue - totalCost) / totalCost) * 100 : 0;
     const roas = totalCost > 0 ? totalRevenue / totalCost : 0;
 
     // Calculate by source
     const bySource: Record<string, CostMetrics> = {};
-    const sources = new Set<string>(costs?.map((c: { source: string }) => c.source).filter((s: string | undefined): s is string => !!s) || []);
-    
+    const sources = new Set<string>(
+      costs
+        ?.map((c: { source: string }) => c.source)
+        .filter((s: string | undefined): s is string => !!s) || []
+    );
+
     for (const source of sources) {
-      const sourceCosts = costs?.filter((c: { source: string }) => c.source === source) || [];
-      const sourceLeads = leads?.filter((l: { source?: string }) => l.source === source) || [];
-      const sourceConversions = conversions?.filter(
-        (c: { attribution?: { source?: string }; value?: number }) => c.attribution?.source === source
-      ) || [];
-      const sourceRevenue = sourceConversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
-      const sourceCost = sourceCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
+      const sourceCosts =
+        costs?.filter((c: { source: string }) => c.source === source) || [];
+      const sourceLeads =
+        leads?.filter((l: { source?: string }) => l.source === source) || [];
+      const sourceConversions =
+        conversions?.filter(
+          (c: { attribution?: { source?: string }; value?: number }) =>
+            c.attribution?.source === source
+        ) || [];
+      const sourceRevenue = sourceConversions.reduce(
+        (sum: number, c: { value?: number }) => sum + (c.value || 0),
+        0
+      );
+      const sourceCost = sourceCosts.reduce(
+        (sum: number, c: { amount: number }) => sum + c.amount,
+        0
+      );
 
       bySource[source] = {
         cost: sourceCost,
         leads: sourceLeads.length,
         conversions: sourceConversions.length,
-        costPerLead: sourceLeads.length > 0 ? sourceCost / sourceLeads.length : 0,
-        costPerConversion: sourceConversions.length > 0 ? sourceCost / sourceConversions.length : 0,
-        roi: sourceCost > 0 ? ((sourceRevenue - sourceCost) / sourceCost) * 100 : 0,
+        costPerLead:
+          sourceLeads.length > 0 ? sourceCost / sourceLeads.length : 0,
+        costPerConversion:
+          sourceConversions.length > 0
+            ? sourceCost / sourceConversions.length
+            : 0,
+        roi:
+          sourceCost > 0
+            ? ((sourceRevenue - sourceCost) / sourceCost) * 100
+            : 0,
         roas: sourceCost > 0 ? sourceRevenue / sourceCost : 0,
       };
     }
 
     // Calculate by campaign
     const byCampaign: Record<string, CostMetrics> = {};
-    const campaigns = new Set<string>(costs?.map((c: { campaign?: string }) => c.campaign).filter((c: string | undefined): c is string => !!c) || []);
-    
+    const campaigns = new Set<string>(
+      costs
+        ?.map((c: { campaign?: string }) => c.campaign)
+        .filter((c: string | undefined): c is string => !!c) || []
+    );
+
     for (const campaign of campaigns) {
-      const campaignCosts = costs?.filter((c: { campaign?: string }) => c.campaign === campaign) || [];
-      const campaignLeads = leads?.filter((l: { campaign?: string }) => l.campaign === campaign) || [];
-      const campaignConversions = conversions?.filter(
-        (c: { attribution?: { campaign?: string }; value?: number }) => c.attribution?.campaign === campaign
-      ) || [];
-      const campaignRevenue = campaignConversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
-      const campaignCost = campaignCosts.reduce((sum: number, c: { amount: number }) => sum + c.amount, 0);
+      const campaignCosts =
+        costs?.filter((c: { campaign?: string }) => c.campaign === campaign) ||
+        [];
+      const campaignLeads =
+        leads?.filter((l: { campaign?: string }) => l.campaign === campaign) ||
+        [];
+      const campaignConversions =
+        conversions?.filter(
+          (c: { attribution?: { campaign?: string }; value?: number }) =>
+            c.attribution?.campaign === campaign
+        ) || [];
+      const campaignRevenue = campaignConversions.reduce(
+        (sum: number, c: { value?: number }) => sum + (c.value || 0),
+        0
+      );
+      const campaignCost = campaignCosts.reduce(
+        (sum: number, c: { amount: number }) => sum + c.amount,
+        0
+      );
 
       byCampaign[campaign] = {
         cost: campaignCost,
         leads: campaignLeads.length,
         conversions: campaignConversions.length,
-        costPerLead: campaignLeads.length > 0 ? campaignCost / campaignLeads.length : 0,
-        costPerConversion: campaignConversions.length > 0 ? campaignCost / campaignConversions.length : 0,
-        roi: campaignCost > 0 ? ((campaignRevenue - campaignCost) / campaignCost) * 100 : 0,
+        costPerLead:
+          campaignLeads.length > 0 ? campaignCost / campaignLeads.length : 0,
+        costPerConversion:
+          campaignConversions.length > 0
+            ? campaignCost / campaignConversions.length
+            : 0,
+        roi:
+          campaignCost > 0
+            ? ((campaignRevenue - campaignCost) / campaignCost) * 100
+            : 0,
         roas: campaignCost > 0 ? campaignRevenue / campaignCost : 0,
       };
     }
@@ -219,32 +280,44 @@ class CostOptimizationService {
     // Analyze sources
     for (const [source, metrics] of Object.entries(bySource)) {
       if (metrics.costPerLead > avgCostPerLead * 1.5) {
-        recommendations.push(`Consider reducing spend on ${source} - CPL is ${metrics.costPerLead.toFixed(2)} vs average ${avgCostPerLead.toFixed(2)}`);
+        recommendations.push(
+          `Consider reducing spend on ${source} - CPL is ${metrics.costPerLead.toFixed(2)} vs average ${avgCostPerLead.toFixed(2)}`
+        );
       }
 
       if (metrics.roi < 0) {
-        recommendations.push(`Stop spending on ${source} - negative ROI of ${metrics.roi.toFixed(2)}%`);
+        recommendations.push(
+          `Stop spending on ${source} - negative ROI of ${metrics.roi.toFixed(2)}%`
+        );
       }
 
       if (metrics.roas > avgROI / 100 && metrics.roas > 3) {
-        recommendations.push(`Increase budget for ${source} - strong ROAS of ${metrics.roas.toFixed(2)}`);
+        recommendations.push(
+          `Increase budget for ${source} - strong ROAS of ${metrics.roas.toFixed(2)}`
+        );
       }
     }
 
     // Analyze campaigns
     for (const [campaign, metrics] of Object.entries(byCampaign)) {
       if (metrics.costPerConversion > avgCostPerConversion * 2) {
-        recommendations.push(`Optimize ${campaign} campaign - high cost per conversion`);
+        recommendations.push(
+          `Optimize ${campaign} campaign - high cost per conversion`
+        );
       }
     }
 
     // General recommendations
     if (avgCostPerLead > 100) {
-      recommendations.push('Overall CPL is high - consider optimizing targeting and messaging');
+      recommendations.push(
+        'Overall CPL is high - consider optimizing targeting and messaging'
+      );
     }
 
     if (avgROI < 0) {
-      recommendations.push('Overall ROI is negative - review and optimize marketing strategy');
+      recommendations.push(
+        'Overall ROI is negative - review and optimize marketing strategy'
+      );
     }
 
     return recommendations;
@@ -256,7 +329,9 @@ class CostOptimizationService {
   async getCostTrends(
     days: number,
     tenantId?: string
-  ): Promise<Array<{ date: string; cost: number; leads: number; conversions: number }>> {
+  ): Promise<
+    Array<{ date: string; cost: number; leads: number; conversions: number }>
+  > {
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
@@ -283,7 +358,10 @@ class CostOptimizationService {
       .eq('tenant_id', tenantId || '');
 
     // Group by date
-    const trends: Record<string, { cost: number; leads: number; conversions: number }> = {};
+    const trends: Record<
+      string,
+      { cost: number; leads: number; conversions: number }
+    > = {};
 
     costs?.forEach((cost: { date: string; amount: number }) => {
       const date = cost.date.split('T')[0];

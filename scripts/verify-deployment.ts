@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Post-Deployment Verification Script
- * 
+ *
  * Verifies that a Vercel deployment is healthy and functioning correctly.
  * Checks for common issues like missing routes, JSON parsing errors, etc.
  */
@@ -16,7 +16,10 @@ interface VerificationResult {
 /**
  * Check if a URL is accessible
  */
-async function checkUrl(url: string, timeout: number = 10000): Promise<{ success: boolean; status?: number; error?: string }> {
+async function checkUrl(
+  url: string,
+  timeout: number = 10000
+): Promise<{ success: boolean; status?: number; error?: string }> {
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -38,7 +41,9 @@ async function checkUrl(url: string, timeout: number = 10000): Promise<{ success
 /**
  * Verify deployment URL
  */
-async function verifyDeployment(deploymentUrl: string): Promise<VerificationResult> {
+async function verifyDeployment(
+  deploymentUrl: string
+): Promise<VerificationResult> {
   const result: VerificationResult = {
     success: true,
     errors: [],
@@ -53,7 +58,9 @@ async function verifyDeployment(deploymentUrl: string): Promise<VerificationResu
   }
 
   // Ensure URL has protocol
-  const url = deploymentUrl.startsWith('http') ? deploymentUrl : `https://${deploymentUrl}`;
+  const url = deploymentUrl.startsWith('http')
+    ? deploymentUrl
+    : `https://${deploymentUrl}`;
 
   console.log(`\n🔍 Verifying deployment: ${url}\n`);
 
@@ -62,8 +69,8 @@ async function verifyDeployment(deploymentUrl: string): Promise<VerificationResu
   result.checks.push({
     name: 'Root URL accessible',
     passed: rootCheck.success,
-    message: rootCheck.success 
-      ? `Status: ${rootCheck.status}` 
+    message: rootCheck.success
+      ? `Status: ${rootCheck.status}`
       : `Error: ${rootCheck.error}`,
   });
   if (!rootCheck.success) {
@@ -77,12 +84,14 @@ async function verifyDeployment(deploymentUrl: string): Promise<VerificationResu
   result.checks.push({
     name: 'Health check endpoint',
     passed: healthCheck.success,
-    message: healthCheck.success 
-      ? `Status: ${healthCheck.status}` 
+    message: healthCheck.success
+      ? `Status: ${healthCheck.status}`
       : `Error: ${healthCheck.error}`,
   });
   if (!healthCheck.success) {
-    result.warnings.push(`Health check endpoint not accessible: ${healthCheck.error}`);
+    result.warnings.push(
+      `Health check endpoint not accessible: ${healthCheck.error}`
+    );
   }
 
   // Check 3: API routes (if applicable)
@@ -106,7 +115,9 @@ async function verifyDeployment(deploymentUrl: string): Promise<VerificationResu
   result.checks.push({
     name: 'Static assets',
     passed: faviconCheck.success,
-    message: faviconCheck.success ? 'Favicon accessible' : 'Favicon not found (may be optional)',
+    message: faviconCheck.success
+      ? 'Favicon accessible'
+      : 'Favicon not found (may be optional)',
   });
 
   // Check 5: JSON responses are valid (if health endpoint exists)
@@ -137,11 +148,17 @@ async function verifyDeployment(deploymentUrl: string): Promise<VerificationResu
  * Main function
  */
 async function main() {
-  const deploymentUrl = process.env.DEPLOYMENT_URL || process.env.VERCEL_URL || process.env.PREVIEW_URL || process.env.PRODUCTION_URL;
+  const deploymentUrl =
+    process.env.DEPLOYMENT_URL ||
+    process.env.VERCEL_URL ||
+    process.env.PREVIEW_URL ||
+    process.env.PRODUCTION_URL;
 
   if (!deploymentUrl) {
     console.error('❌ No deployment URL provided');
-    console.error('Set DEPLOYMENT_URL, VERCEL_URL, PREVIEW_URL, or PRODUCTION_URL environment variable');
+    console.error(
+      'Set DEPLOYMENT_URL, VERCEL_URL, PREVIEW_URL, or PRODUCTION_URL environment variable'
+    );
     process.exit(1);
   }
 
@@ -155,7 +172,9 @@ async function main() {
 
   result.checks.forEach(check => {
     const icon = check.passed ? '✅' : '❌';
-    console.log(`${icon} ${check.name}: ${check.message || (check.passed ? 'Passed' : 'Failed')}`);
+    console.log(
+      `${icon} ${check.name}: ${check.message || (check.passed ? 'Passed' : 'Failed')}`
+    );
   });
 
   if (result.warnings.length > 0) {

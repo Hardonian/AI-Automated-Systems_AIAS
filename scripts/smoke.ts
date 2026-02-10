@@ -5,37 +5,42 @@
  * Tests: DB write/read, RLS, health endpoint
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-import { env, validateEnv } from "../lib/env";
+import { env, validateEnv } from '../lib/env';
 
 // Load environment variables dynamically
 const supabaseUrl = env.supabase.url;
 const supabaseAnonKey = env.supabase.anonKey;
 const supabaseServiceKey = env.supabase.serviceRoleKey;
 const databaseUrl = env.database.url;
-const healthUrl = process.env.HEALTH_URL || "http://localhost:3000/api/healthz";
+const healthUrl = process.env.HEALTH_URL || 'http://localhost:3000/api/healthz';
 
 // Validate required environment variables
 const validation = validateEnv();
 if (!validation.valid) {
-  console.error("❌ Missing required environment variables:");
+  console.error('❌ Missing required environment variables:');
   validation.errors.forEach(err => console.error(`  - ${err}`));
   process.exit(1);
 }
 
 async function smokeTest() {
-  console.log("🧪 Running smoke tests...\n");
+  console.log('🧪 Running smoke tests...\n');
   let passed = 0;
   let failed = 0;
 
   // Test 1: Database connection
   try {
-    console.log("1. Testing database connection...");
+    console.log('1. Testing database connection...');
     const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
-    const { error } = await supabaseService.from("app_events").select("count").limit(1);
-    if (error) {throw error;}
-    console.log("   ✓ Database connection OK");
+    const { error } = await supabaseService
+      .from('app_events')
+      .select('count')
+      .limit(1);
+    if (error) {
+      throw error;
+    }
+    console.log('   ✓ Database connection OK');
     passed++;
   } catch (e: any) {
     console.error(`   ✗ Database connection failed: ${e.message}`);
@@ -44,42 +49,44 @@ async function smokeTest() {
 
   // Test 2: Insert row as service role
   try {
-    console.log("2. Testing insert as service role...");
+    console.log('2. Testing insert as service role...');
     const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
     const { data, error } = await supabaseService
-      .from("api_logs")
+      .from('api_logs')
       .insert({
-        method: "GET",
-        path: "/smoke-test",
+        method: 'GET',
+        path: '/smoke-test',
         status_code: 200,
         response_time_ms: 1,
       })
       .select()
       .single();
 
-    if (error) {throw error;}
+    if (error) {
+      throw error;
+    }
     console.log(`   ✓ Inserted test row (id: ${data.id})`);
     passed++;
 
     // Test 3: Read as anon (should fail if RLS is on)
-    console.log("3. Testing RLS (anon read should fail)...");
+    console.log('3. Testing RLS (anon read should fail)...');
     const supabaseAnon = createClient(supabaseUrl, supabaseAnonKey);
     const { data: readData, error: readError } = await supabaseAnon
-      .from("api_logs")
-      .select("*")
-      .eq("id", data.id)
+      .from('api_logs')
+      .select('*')
+      .eq('id', data.id)
       .single();
 
     if (readError) {
-      console.log("   ✓ RLS working: anon cannot read (expected)");
+      console.log('   ✓ RLS working: anon cannot read (expected)');
       passed++;
     } else {
-      console.log("   ⚠ RLS may not be enforced: anon can read");
+      console.log('   ⚠ RLS may not be enforced: anon can read');
       passed++; // Don't fail, but warn
     }
 
     // Cleanup
-    await supabaseService.from("api_logs").delete().eq("id", data.id);
+    await supabaseService.from('api_logs').delete().eq('id', data.id);
   } catch (e: any) {
     console.error(`   ✗ Insert test failed: ${e.message}`);
     failed++;
@@ -87,26 +94,26 @@ async function smokeTest() {
 
   // Test 4: Health endpoint
   try {
-    console.log("4. Testing /api/healthz endpoint...");
+    console.log('4. Testing /api/healthz endpoint...');
     const response = await fetch(healthUrl, {
       signal: AbortSignal.timeout(5000), // 5 second timeout
     });
-    
+
     if (!response.ok) {
       throw new Error(`Health endpoint returned ${response.status}`);
     }
-    
+
     const json = await response.json();
 
     if (json.ok && json.db?.ok && json.auth?.ok) {
-      console.log("   ✓ Health endpoint OK");
+      console.log('   ✓ Health endpoint OK');
       passed++;
     } else {
       console.error(`   ✗ Health endpoint failed: ${JSON.stringify(json)}`);
       failed++;
     }
   } catch (e: any) {
-    if (e.name === "AbortError") {
+    if (e.name === 'AbortError') {
       console.error(`   ✗ Health endpoint timeout after 5s`);
     } else {
       console.error(`   ✗ Health endpoint unreachable: ${e.message}`);
@@ -115,15 +122,12 @@ async function smokeTest() {
   }
 
   // Test 5: Critical API routes (no 500s)
-  const criticalRoutes = [
-    "/api/health",
-    "/api/status",
-  ];
+  const criticalRoutes = ['/api/health', '/api/status'];
 
   for (const route of criticalRoutes) {
     try {
       console.log(`5. Testing ${route}...`);
-      const url = healthUrl.replace("/api/healthz", route);
+      const url = healthUrl.replace('/api/healthz', route);
       const response = await fetch(url, {
         signal: AbortSignal.timeout(5000),
       });
@@ -135,7 +139,7 @@ async function smokeTest() {
       console.log(`   ✓ ${route} OK (${response.status})`);
       passed++;
     } catch (e: any) {
-      if (e.name === "AbortError") {
+      if (e.name === 'AbortError') {
         console.error(`   ✗ ${route} timeout`);
       } else {
         console.error(`   ✗ ${route} failed: ${e.message}`);
@@ -148,15 +152,15 @@ async function smokeTest() {
   console.log(`\n📊 Results: ${passed} passed, ${failed} failed`);
 
   if (failed === 0) {
-    console.log("✅ All smoke tests passed!\n");
+    console.log('✅ All smoke tests passed!\n');
     process.exit(0);
   } else {
-    console.log("❌ Some smoke tests failed.\n");
+    console.log('❌ Some smoke tests failed.\n');
     process.exit(1);
   }
 }
 
-smokeTest().catch((e) => {
-  console.error("Fatal error:", e);
+smokeTest().catch(e => {
+  console.error('Fatal error:', e);
   process.exit(1);
 });

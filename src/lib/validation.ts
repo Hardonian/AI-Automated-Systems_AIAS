@@ -6,23 +6,35 @@
 import { z } from 'zod';
 
 // Common validation patterns
-const emailSchema = z.string().email('Invalid email address').min(1, 'Email is required');
-const passwordSchema = z.string()
+const emailSchema = z
+  .string()
+  .email('Invalid email address')
+  .min(1, 'Email is required');
+const passwordSchema = z
+  .string()
   .min(8, 'Password must be at least 8 characters')
   .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
   .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
   .regex(/[0-9]/, 'Password must contain at least one number')
-  .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character');
+  .regex(
+    /[^A-Za-z0-9]/,
+    'Password must contain at least one special character'
+  );
 
-const phoneSchema = z.string()
+const phoneSchema = z
+  .string()
   .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format')
   .optional();
 
 const urlSchema = z.string().url('Invalid URL format');
-const _cuidSchema = z.string().refine((val) => {
+const _cuidSchema = z.string().refine(val => {
   // Accept both UUID (v4) and CUID (v1/v2) during migration
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val) || /^c[a-z0-9]{24}$/.test(val);
-}, "Invalid ID format");
+  return (
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      val
+    ) || /^c[a-z0-9]{24}$/.test(val)
+  );
+}, 'Invalid ID format');
 
 // User validation schemas
 export const userSchemas = {
@@ -35,7 +47,11 @@ export const userSchemas = {
   }),
 
   update: z.object({
-    name: z.string().min(1, 'Name is required').max(100, 'Name too long').optional(),
+    name: z
+      .string()
+      .min(1, 'Name is required')
+      .max(100, 'Name too long')
+      .optional(),
     phone: phoneSchema,
     avatar: urlSchema.optional(),
   }),
@@ -45,27 +61,36 @@ export const userSchemas = {
     password: z.string().min(1, 'Password is required'),
   }),
 
-  changePassword: z.object({
-    currentPassword: z.string().min(1, 'Current password is required'),
-    newPassword: passwordSchema,
-    confirmPassword: z.string().min(1, 'Password confirmation is required'),
-  }).refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  }),
+  changePassword: z
+    .object({
+      currentPassword: z.string().min(1, 'Current password is required'),
+      newPassword: passwordSchema,
+      confirmPassword: z.string().min(1, 'Password confirmation is required'),
+    })
+    .refine(data => data.newPassword === data.confirmPassword, {
+      message: 'Passwords do not match',
+      path: ['confirmPassword'],
+    }),
 };
 
 // Organization validation schemas
 export const organizationSchemas = {
   create: z.object({
-    name: z.string().min(1, 'Organization name is required').max(100, 'Name too long'),
+    name: z
+      .string()
+      .min(1, 'Organization name is required')
+      .max(100, 'Name too long'),
     description: z.string().max(500, 'Description too long').optional(),
     website: urlSchema.optional(),
     logo: urlSchema.optional(),
   }),
 
   update: z.object({
-    name: z.string().min(1, 'Organization name is required').max(100, 'Name too long').optional(),
+    name: z
+      .string()
+      .min(1, 'Organization name is required')
+      .max(100, 'Name too long')
+      .optional(),
     description: z.string().max(500, 'Description too long').optional(),
     website: urlSchema.optional(),
     logo: urlSchema.optional(),
@@ -82,13 +107,20 @@ export const organizationSchemas = {
 // Project validation schemas
 export const projectSchemas = {
   create: z.object({
-    name: z.string().min(1, 'Project name is required').max(100, 'Name too long'),
+    name: z
+      .string()
+      .min(1, 'Project name is required')
+      .max(100, 'Name too long'),
     description: z.string().max(1000, 'Description too long').optional(),
     metadata: z.record(z.any()).optional(),
   }),
 
   update: z.object({
-    name: z.string().min(1, 'Project name is required').max(100, 'Name too long').optional(),
+    name: z
+      .string()
+      .min(1, 'Project name is required')
+      .max(100, 'Name too long')
+      .optional(),
     description: z.string().max(1000, 'Description too long').optional(),
     status: z.enum(['ACTIVE', 'ARCHIVED', 'COMPLETED']).optional(),
     metadata: z.record(z.any()).optional(),
@@ -98,12 +130,19 @@ export const projectSchemas = {
 // API Key validation schemas
 export const apiKeySchemas = {
   create: z.object({
-    name: z.string().min(1, 'API key name is required').max(50, 'Name too long'),
+    name: z
+      .string()
+      .min(1, 'API key name is required')
+      .max(50, 'Name too long'),
     expiresAt: z.date().optional(),
   }),
 
   update: z.object({
-    name: z.string().min(1, 'API key name is required').max(50, 'Name too long').optional(),
+    name: z
+      .string()
+      .min(1, 'API key name is required')
+      .max(50, 'Name too long')
+      .optional(),
     expiresAt: z.date().optional(),
   }),
 };
@@ -124,14 +163,28 @@ export const subscriptionSchemas = {
 // Data source validation schemas
 export const dataSourceSchemas = {
   create: z.object({
-    name: z.string().min(1, 'Source name is required').max(100, 'Name too long'),
-    type: z.enum(['SHOPIFY_JSON', 'GOOGLE_TRENDS_CSV', 'TIKTOK_BUSINESS_JSON', 'ALIEXPRESS_CSV', 'GENERIC_CSV', 'GENERIC_JSON']),
+    name: z
+      .string()
+      .min(1, 'Source name is required')
+      .max(100, 'Name too long'),
+    type: z.enum([
+      'SHOPIFY_JSON',
+      'GOOGLE_TRENDS_CSV',
+      'TIKTOK_BUSINESS_JSON',
+      'ALIEXPRESS_CSV',
+      'GENERIC_CSV',
+      'GENERIC_JSON',
+    ]),
     config: z.record(z.any()),
     isActive: z.boolean().optional(),
   }),
 
   update: z.object({
-    name: z.string().min(1, 'Source name is required').max(100, 'Name too long').optional(),
+    name: z
+      .string()
+      .min(1, 'Source name is required')
+      .max(100, 'Name too long')
+      .optional(),
     config: z.record(z.any()).optional(),
     isActive: z.boolean().optional(),
   }),
@@ -140,7 +193,13 @@ export const dataSourceSchemas = {
 // AI Run validation schemas
 export const aiRunSchemas = {
   create: z.object({
-    kind: z.enum(['CHAT', 'AUDIT', 'ESTIMATE', 'CONTENT_GENERATION', 'WORKFLOW_GENERATION']),
+    kind: z.enum([
+      'CHAT',
+      'AUDIT',
+      'ESTIMATE',
+      'CONTENT_GENERATION',
+      'WORKFLOW_GENERATION',
+    ]),
     provider: z.string().min(1, 'Provider is required'),
     model: z.string().min(1, 'Model is required'),
     maxTokens: z.number().positive().optional(),
@@ -152,14 +211,21 @@ export const aiRunSchemas = {
 // Report validation schemas
 export const reportSchemas = {
   create: z.object({
-    title: z.string().min(1, 'Report title is required').max(200, 'Title too long'),
+    title: z
+      .string()
+      .min(1, 'Report title is required')
+      .max(200, 'Title too long'),
     type: z.enum(['AUDIT', 'ESTIMATE', 'CONTENT_PLAN', 'WORKFLOW']),
     content: z.record(z.any()),
     metadata: z.record(z.any()).optional(),
   }),
 
   update: z.object({
-    title: z.string().min(1, 'Report title is required').max(200, 'Title too long').optional(),
+    title: z
+      .string()
+      .min(1, 'Report title is required')
+      .max(200, 'Title too long')
+      .optional(),
     content: z.record(z.any()).optional(),
     metadata: z.record(z.any()).optional(),
   }),
@@ -176,7 +242,10 @@ export const webhookSchemas = {
 
   update: z.object({
     url: urlSchema.optional(),
-    events: z.array(z.string()).min(1, 'At least one event is required').optional(),
+    events: z
+      .array(z.string())
+      .min(1, 'At least one event is required')
+      .optional(),
     secret: z.string().min(1, 'Webhook secret is required').optional(),
     isActive: z.boolean().optional(),
   }),
@@ -185,15 +254,25 @@ export const webhookSchemas = {
 // Feature flag validation schemas
 export const featureFlagSchemas = {
   create: z.object({
-    key: z.string().min(1, 'Feature flag key is required').max(50, 'Key too long'),
-    name: z.string().min(1, 'Feature flag name is required').max(100, 'Name too long'),
+    key: z
+      .string()
+      .min(1, 'Feature flag key is required')
+      .max(50, 'Key too long'),
+    name: z
+      .string()
+      .min(1, 'Feature flag name is required')
+      .max(100, 'Name too long'),
     description: z.string().max(500, 'Description too long').optional(),
     enabled: z.boolean().optional(),
     config: z.record(z.any()).optional(),
   }),
 
   update: z.object({
-    name: z.string().min(1, 'Feature flag name is required').max(100, 'Name too long').optional(),
+    name: z
+      .string()
+      .min(1, 'Feature flag name is required')
+      .max(100, 'Name too long')
+      .optional(),
     description: z.string().max(500, 'Description too long').optional(),
     enabled: z.boolean().optional(),
     config: z.record(z.any()).optional(),
@@ -224,14 +303,24 @@ export const querySchemas = {
 export const fileSchemas = {
   image: z.object({
     file: z.instanceof(File),
-    maxSize: z.number().positive().default(5 * 1024 * 1024), // 5MB
-    allowedTypes: z.array(z.string()).default(['image/jpeg', 'image/png', 'image/webp']),
+    maxSize: z
+      .number()
+      .positive()
+      .default(5 * 1024 * 1024), // 5MB
+    allowedTypes: z
+      .array(z.string())
+      .default(['image/jpeg', 'image/png', 'image/webp']),
   }),
 
   document: z.object({
     file: z.instanceof(File),
-    maxSize: z.number().positive().default(10 * 1024 * 1024), // 10MB
-    allowedTypes: z.array(z.string()).default(['application/pdf', 'text/csv', 'application/json']),
+    maxSize: z
+      .number()
+      .positive()
+      .default(10 * 1024 * 1024), // 10MB
+    allowedTypes: z
+      .array(z.string())
+      .default(['application/pdf', 'text/csv', 'application/json']),
   }),
 };
 
@@ -249,10 +338,7 @@ export const sanitizers = {
 
   // SQL injection prevention
   sql: (input: string): string => {
-    return input
-      .replace(/'/g, "''")
-      .replace(/--/g, '')
-      .replace(/;/, '');
+    return input.replace(/'/g, "''").replace(/--/g, '').replace(/;/, '');
   },
 
   // XSS prevention
@@ -276,14 +362,16 @@ export const sanitizers = {
 };
 
 // Validation error formatter
-export const formatValidationError = (error: z.ZodError): Record<string, string> => {
+export const formatValidationError = (
+  error: z.ZodError
+): Record<string, string> => {
   const formatted: Record<string, string> = {};
-  
-  error.errors.forEach((err) => {
+
+  error.errors.forEach(err => {
     const path = err.path.join('.');
     formatted[path] = err.message;
   });
-  
+
   return formatted;
 };
 
@@ -291,7 +379,9 @@ export const formatValidationError = (error: z.ZodError): Record<string, string>
 export const validateInput = <T>(
   schema: z.ZodSchema<T>,
   input: unknown
-): { success: true; data: T } | { success: false; errors: Record<string, string> } => {
+):
+  | { success: true; data: T }
+  | { success: false; errors: Record<string, string> } => {
   try {
     const data = schema.parse(input);
     return { success: true, data };

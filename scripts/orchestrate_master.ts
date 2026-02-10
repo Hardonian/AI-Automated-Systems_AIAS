@@ -27,11 +27,11 @@ const results: PhaseResult[] = [];
 async function runCommand(command: string, phase: string): Promise<boolean> {
   const startTime = Date.now();
   info(`Starting phase: ${phase}`);
-  
+
   try {
     const { stdout, stderr } = await execAsync(command);
     const duration = Date.now() - startTime;
-    
+
     if (stderr && !stderr.includes('info') && !stderr.includes('warn')) {
       results.push({
         phase,
@@ -42,7 +42,7 @@ async function runCommand(command: string, phase: string): Promise<boolean> {
       error(`Phase failed: ${phase}`, { stderr });
       return false;
     }
-    
+
     results.push({
       phase,
       status: 'pass',
@@ -80,7 +80,10 @@ async function orchestrateMaster(): Promise<void> {
   }
 
   // Phase 2: System Health Audit (stub reports)
-  await runCommand('tsx scripts/agents/system_health.ts', 'System Health Audit');
+  await runCommand(
+    'tsx scripts/agents/system_health.ts',
+    'System Health Audit'
+  );
 
   // Phase 3: Generate Delta Migration
   const deltaOk = await runCommand(
@@ -101,7 +104,7 @@ async function orchestrateMaster(): Promise<void> {
       info('Supabase CLI failed, attempting psql fallback');
       const migrationFiles = fs
         .readdirSync(path.join(process.cwd(), 'supabase', 'migrations'))
-        .filter((f) => f.endsWith('.sql'))
+        .filter(f => f.endsWith('.sql'))
         .sort()
         .slice(-1);
 
@@ -145,7 +148,10 @@ async function orchestrateMaster(): Promise<void> {
   // Phase 7: Compute Metrics (if backfill enabled)
   const runBackfill = process.env.RUN_BACKFILL === 'true';
   if (runBackfill) {
-    await runCommand('tsx scripts/etl/compute_metrics.ts', 'Metrics Computation');
+    await runCommand(
+      'tsx scripts/etl/compute_metrics.ts',
+      'Metrics Computation'
+    );
   } else {
     // Default: compute for yesterday
     const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000)
@@ -153,7 +159,10 @@ async function orchestrateMaster(): Promise<void> {
       .split('T')[0];
     process.env.BACKFILL_START = yesterday;
     process.env.BACKFILL_END = yesterday;
-    await runCommand('tsx scripts/etl/compute_metrics.ts', 'Metrics Computation (Yesterday)');
+    await runCommand(
+      'tsx scripts/etl/compute_metrics.ts',
+      'Metrics Computation (Yesterday)'
+    );
   }
 
   // Phase 8: Data Quality Checks
@@ -172,13 +181,13 @@ async function orchestrateMaster(): Promise<void> {
   await generateSummary();
 
   // Notify
-  const failures = results.filter((r) => r.status === 'fail');
+  const failures = results.filter(r => r.status === 'fail');
   if (failures.length > 0) {
     await notify({
       title: 'Master Orchestration: Failures Detected',
       message: `${failures.length} phase(s) failed. Check summary report.`,
       level: 'error',
-      metadata: { failures: failures.map((f) => f.phase) },
+      metadata: { failures: failures.map(f => f.phase) },
     });
   } else {
     await notify({
@@ -198,9 +207,9 @@ async function generateSummary(): Promise<void> {
     `run_summary_${timestamp}.md`
   );
 
-  const passCount = results.filter((r) => r.status === 'pass').length;
-  const failCount = results.filter((r) => r.status === 'fail').length;
-  const skipCount = results.filter((r) => r.status === 'skip').length;
+  const passCount = results.filter(r => r.status === 'pass').length;
+  const failCount = results.filter(r => r.status === 'fail').length;
+  const skipCount = results.filter(r => r.status === 'skip').length;
 
   const summaryContent = `# Master Orchestration Run Summary
 
@@ -216,8 +225,8 @@ async function generateSummary(): Promise<void> {
 ## Phase Results
 
 ${results
-  .map((r) => {
-    const {status} = r;
+  .map(r => {
+    const { status } = r;
     const icon = status === 'pass' ? '✅' : status === 'fail' ? '❌' : '⏭️';
     return `### ${icon} ${r.phase}
 
@@ -230,19 +239,25 @@ ${results
 
 ## Created Files
 
-${getCreatedFiles().map((f) => `- \`${f}\``).join('\n')}
+${getCreatedFiles()
+  .map(f => `- \`${f}\``)
+  .join('\n')}
 
 ## Next Best Actions
 
-${getNextActions().map((a) => `- ${a}`).join('\n')}
+${getNextActions()
+  .map(a => `- ${a}`)
+  .join('\n')}
 
 ## Failures
 
-${failCount > 0
-  ? failures
-      .map((f) => `- **${f.phase}**: ${f.message.substring(0, 100)}`)
-      .join('\n')
-  : 'None'}
+${
+  failCount > 0
+    ? failures
+        .map(f => `- **${f.phase}**: ${f.message.substring(0, 100)}`)
+        .join('\n')
+    : 'None'
+}
 
 ## Links
 
@@ -264,21 +279,23 @@ ${failCount > 0
 
 function getCreatedFiles(): string[] {
   const files: string[] = [];
-  
+
   // Check for migration files
   const migrationDir = path.join(process.cwd(), 'supabase', 'migrations');
   if (fs.existsSync(migrationDir)) {
-    const migrations = fs.readdirSync(migrationDir).filter((f) => f.endsWith('.sql'));
-    files.push(...migrations.map((f) => `supabase/migrations/${f}`));
+    const migrations = fs
+      .readdirSync(migrationDir)
+      .filter(f => f.endsWith('.sql'));
+    files.push(...migrations.map(f => `supabase/migrations/${f}`));
   }
 
   // Check for reports
   const reportsDir = path.join(process.cwd(), 'reports');
   if (fs.existsSync(reportsDir)) {
-    const reports = fs.readdirSync(reportsDir, { recursive: true }).filter((f): f is string =>
-      typeof f === 'string' && f.endsWith('.md')
-    );
-    files.push(...reports.map((f) => `reports/${f}`));
+    const reports = fs
+      .readdirSync(reportsDir, { recursive: true })
+      .filter((f): f is string => typeof f === 'string' && f.endsWith('.md'));
+    files.push(...reports.map(f => `reports/${f}`));
   }
 
   return files.slice(0, 20); // Limit to 20 files
@@ -286,7 +303,7 @@ function getCreatedFiles(): string[] {
 
 function getNextActions(): string[] {
   const actions: string[] = [];
-  const failures = results.filter((r) => r.status === 'fail');
+  const failures = results.filter(r => r.status === 'fail');
 
   if (failures.length > 0) {
     actions.push('Review failed phases and fix issues');
@@ -300,7 +317,7 @@ function getNextActions(): string[] {
   return actions;
 }
 
-const failures = results.filter((r) => r.status === 'fail');
+const failures = results.filter(r => r.status === 'fail');
 
 async function main() {
   try {

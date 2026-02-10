@@ -1,9 +1,25 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar, LineChart, Line } from 'recharts';
+import { useEffect, useState } from 'react';
+import {
+  ResponsiveContainer,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Bar,
+  LineChart,
+  Line,
+} from 'recharts';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 interface FunnelData {
   period: string;
   stages: {
@@ -40,13 +56,13 @@ export default function FunnelPage() {
   async function fetchFunnelData() {
     try {
       setLoading(true);
-      const response = await fetch("/api/analytics/funnel");
+      const response = await fetch('/api/analytics/funnel');
       if (response.ok) {
         const data = await response.json();
         setFunnelData(data);
       }
     } catch (error) {
-      console.error("Failed to fetch funnel data", error);
+      console.error('Failed to fetch funnel data', error);
     } finally {
       setLoading(false);
     }
@@ -54,104 +70,144 @@ export default function FunnelPage() {
 
   if (loading) {
     return (
-      <div className="container py-16">
-        <div className="text-center">Loading funnel data...</div>
+      <div className='container py-16'>
+        <div className='text-center'>Loading funnel data...</div>
       </div>
     );
   }
 
   if (!funnelData) {
     return (
-      <div className="container py-16">
-        <div className="text-center">No funnel data available</div>
+      <div className='container py-16'>
+        <div className='text-center'>No funnel data available</div>
       </div>
     );
   }
 
   // Prepare data for charts
   const funnelChartData = [
-    { stage: "Signup", count: funnelData.stages.signup, conversion: 100 },
-    { stage: "Onboarding Start", count: funnelData.stages.onboarding_start, conversion: funnelData.conversionRates.signupToOnboarding },
-    { stage: "Integration Connect", count: funnelData.stages.integration_connect, conversion: funnelData.conversionRates.onboardingToIntegration },
-    { stage: "Workflow Create", count: funnelData.stages.workflow_create, conversion: funnelData.conversionRates.integrationToWorkflow },
-    { stage: "Workflow Execute", count: funnelData.stages.workflow_execute, conversion: funnelData.conversionRates.workflowToExecute },
-    { stage: "Activated", count: funnelData.stages.activated, conversion: funnelData.conversionRates.overallActivation },
+    { stage: 'Signup', count: funnelData.stages.signup, conversion: 100 },
+    {
+      stage: 'Onboarding Start',
+      count: funnelData.stages.onboarding_start,
+      conversion: funnelData.conversionRates.signupToOnboarding,
+    },
+    {
+      stage: 'Integration Connect',
+      count: funnelData.stages.integration_connect,
+      conversion: funnelData.conversionRates.onboardingToIntegration,
+    },
+    {
+      stage: 'Workflow Create',
+      count: funnelData.stages.workflow_create,
+      conversion: funnelData.conversionRates.integrationToWorkflow,
+    },
+    {
+      stage: 'Workflow Execute',
+      count: funnelData.stages.workflow_execute,
+      conversion: funnelData.conversionRates.workflowToExecute,
+    },
+    {
+      stage: 'Activated',
+      count: funnelData.stages.activated,
+      conversion: funnelData.conversionRates.overallActivation,
+    },
   ];
 
   return (
-    <div className="container py-16">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Activation Funnel</h1>
-        <p className="text-muted-foreground">
+    <div className='container py-16'>
+      <div className='mb-8'>
+        <h1 className='mb-2 text-4xl font-bold'>Activation Funnel</h1>
+        <p className='text-muted-foreground'>
           Track user progression from signup to activation
         </p>
       </div>
 
       {/* Overall Activation Rate */}
-      <Card className="mb-6">
+      <Card className='mb-6'>
         <CardHeader>
           <CardTitle>Overall Activation Rate</CardTitle>
-          <CardDescription>Percentage of users who complete all activation steps</CardDescription>
+          <CardDescription>
+            Percentage of users who complete all activation steps
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-4xl font-bold mb-2">
+          <div className='mb-2 text-4xl font-bold'>
             {funnelData.conversionRates.overallActivation.toFixed(1)}%
           </div>
-          <p className="text-sm text-muted-foreground">
-            {funnelData.stages.activated} of {funnelData.stages.signup} users activated
+          <p className='text-sm text-muted-foreground'>
+            {funnelData.stages.activated} of {funnelData.stages.signup} users
+            activated
           </p>
         </CardContent>
       </Card>
 
       {/* Funnel Visualization */}
-      <Card className="mb-6">
+      <Card className='mb-6'>
         <CardHeader>
           <CardTitle>Funnel Stages</CardTitle>
-          <CardDescription>User progression through activation stages</CardDescription>
+          <CardDescription>
+            User progression through activation stages
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer height={400} width="100%">
+          <ResponsiveContainer height={400} width='100%'>
             <BarChart data={funnelChartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis angle={-45} dataKey="stage" height={100} textAnchor="end" />
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis
+                angle={-45}
+                dataKey='stage'
+                height={100}
+                textAnchor='end'
+              />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="count" fill="#4F46E5" />
+              <Bar dataKey='count' fill='#4F46E5' />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>
 
       {/* Conversion Rates */}
-      <Card className="mb-6">
+      <Card className='mb-6'>
         <CardHeader>
           <CardTitle>Conversion Rates</CardTitle>
           <CardDescription>Conversion rate between each stage</CardDescription>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer height={300} width="100%">
+          <ResponsiveContainer height={300} width='100%'>
             <LineChart data={funnelChartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis angle={-45} dataKey="stage" height={100} textAnchor="end" />
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis
+                angle={-45}
+                dataKey='stage'
+                height={100}
+                textAnchor='end'
+              />
               <YAxis domain={[0, 100]} />
               <Tooltip formatter={(value: number) => `${value.toFixed(1)}%`} />
-              <Line dataKey="conversion" stroke="#22c55e" strokeWidth={2} type="monotone" />
+              <Line
+                dataKey='conversion'
+                stroke='#22c55e'
+                strokeWidth={2}
+                type='monotone'
+              />
             </LineChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>
 
       {/* Stage Details */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Signup → Onboarding</CardTitle>
+            <CardTitle className='text-lg'>Signup → Onboarding</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold mb-2">
+            <div className='mb-2 text-2xl font-bold'>
               {funnelData.conversionRates.signupToOnboarding.toFixed(1)}%
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className='text-sm text-muted-foreground'>
               {funnelData.dropOffPoints.signupToOnboarding} users dropped off
             </p>
           </CardContent>
@@ -159,27 +215,28 @@ export default function FunnelPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Onboarding → Integration</CardTitle>
+            <CardTitle className='text-lg'>Onboarding → Integration</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold mb-2">
+            <div className='mb-2 text-2xl font-bold'>
               {funnelData.conversionRates.onboardingToIntegration.toFixed(1)}%
             </div>
-            <p className="text-sm text-muted-foreground">
-              {funnelData.dropOffPoints.onboardingToIntegration} users dropped off
+            <p className='text-sm text-muted-foreground'>
+              {funnelData.dropOffPoints.onboardingToIntegration} users dropped
+              off
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Integration → Workflow</CardTitle>
+            <CardTitle className='text-lg'>Integration → Workflow</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold mb-2">
+            <div className='mb-2 text-2xl font-bold'>
               {funnelData.conversionRates.integrationToWorkflow.toFixed(1)}%
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className='text-sm text-muted-foreground'>
               {funnelData.dropOffPoints.integrationToWorkflow} users dropped off
             </p>
           </CardContent>
@@ -187,13 +244,13 @@ export default function FunnelPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Workflow → Execute</CardTitle>
+            <CardTitle className='text-lg'>Workflow → Execute</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold mb-2">
+            <div className='mb-2 text-2xl font-bold'>
               {funnelData.conversionRates.workflowToExecute.toFixed(1)}%
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className='text-sm text-muted-foreground'>
               {funnelData.dropOffPoints.workflowToExecute} users dropped off
             </p>
           </CardContent>

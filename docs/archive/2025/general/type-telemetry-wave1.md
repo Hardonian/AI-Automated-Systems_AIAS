@@ -95,6 +95,7 @@
 ### Analysis
 
 **Total Exports Found:**
+
 - `lib/`: 136 exports across 34 files
 - `src/lib/`: 138 exports across 16 files
 - **Total:** ~274 exports
@@ -125,6 +126,7 @@
 ### Unused Export Detection
 
 **Command to Run:**
+
 ```bash
 pnpm run prune:exports
 pnpm run scan:usage
@@ -133,6 +135,7 @@ pnpm run scan:usage
 **Expected Output:** `reports/ts-prune.txt`, `reports/knip.json`
 
 **Action Items:**
+
 1. Run unused export detection
 2. Review reports
 3. Remove unused exports in batches
@@ -147,12 +150,18 @@ pnpm run scan:usage
    - **File:** `app/api/telemetry/ingest/route.ts:11`
    - **Status:** ❌ No performance tracking
    - **Fix:** Add performance beacon
+
    ```typescript
    const startTime = Date.now();
    // ... existing code ...
    const duration = Date.now() - startTime;
-   telemetry.trackPerformance({ name: 'telemetry_ingest', value: duration, unit: 'ms' });
+   telemetry.trackPerformance({
+     name: 'telemetry_ingest',
+     value: duration,
+     unit: 'ms',
+   });
    ```
+
    - **PR Title:** `obs: instrument telemetry ingest endpoint`
    - **Label:** `auto/ops`
 
@@ -160,12 +169,18 @@ pnpm run scan:usage
    - **File:** `app/api/metrics/route.ts:39`
    - **Status:** ❌ No performance tracking
    - **Fix:** Add performance tracking
+
    ```typescript
    const startTime = Date.now();
    // ... existing code ...
    const duration = Date.now() - startTime;
-   telemetry.trackPerformance({ name: 'metrics_api', value: duration, unit: 'ms' });
+   telemetry.trackPerformance({
+     name: 'metrics_api',
+     value: duration,
+     unit: 'ms',
+   });
    ```
+
    - **PR Title:** `obs: instrument metrics API endpoint`
    - **Label:** `auto/ops`
 
@@ -190,6 +205,7 @@ pnpm run scan:usage
    - **File:** `app/admin/metrics/page.tsx`
    - **Status:** ❌ No RUM tracking
    - **Fix:** Add Web Vitals tracking
+
    ```typescript
    useEffect(() => {
      import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
@@ -201,6 +217,7 @@ pnpm run scan:usage
      });
    }, []);
    ```
+
    - **PR Title:** `obs: add RUM to admin metrics page`
    - **Label:** `auto/ops`
 
@@ -216,6 +233,7 @@ pnpm run scan:usage
 ### Synthetic Monitoring Gaps
 
 **Missing Synthetic Checks:**
+
 1. **Health Check Monitoring**
    - **Endpoint:** `/api/healthz`
    - **Status:** ❌ No synthetic monitoring
@@ -237,6 +255,7 @@ pnpm run scan:usage
 **Target:** ≤30 explicit type fixes across top 10 files
 
 **Files:**
+
 1. `app/api/metrics/route.ts` — Define `MetricsResponse`, `SourceGroup`, `TrendData`
 2. `app/api/healthz/route.ts` — Type health check results
 3. `ai/orchestrator.ts` — Type orchestrator state
@@ -257,6 +276,7 @@ pnpm run scan:usage
 **Target:** Add minimal beacons/metrics on key endpoints
 
 **Endpoints:**
+
 1. `/api/telemetry/ingest` — Add performance tracking
 2. `/api/metrics` — Add performance tracking
 3. `/api/healthz` — Add synthetic monitoring
@@ -269,16 +289,20 @@ pnpm run scan:usage
 ### Scripts to Add
 
 1. **`scripts/typecheck`** (already exists in package.json)
+
    ```json
    "typecheck": "tsc --noEmit"
    ```
 
 2. **`scripts/type:coverage`** (add)
+
    ```bash
    # Count type coverage
    npx type-coverage --detail
    ```
+
    **Add to package.json:**
+
    ```json
    "type:coverage": "npx type-coverage --detail"
    ```
@@ -298,21 +322,25 @@ pnpm run scan:usage
 ## Summary
 
 **Type Issues:**
+
 - Files with >5 implicit `any`: 30 files
 - Total implicit `any` count: ~410
 - Top 10 files identified
 
 **Unused Exports:**
+
 - Total exports: ~274
 - Files with high export count: 5 files
 - Action: Run `ts-prune` and `knip` to identify unused
 
 **Missing Telemetry:**
+
 - API endpoints missing telemetry: 5 endpoints
 - Pages missing RUM: 1+ pages
 - Synthetic monitoring gaps: 2+ checks
 
 **Estimated Effort:**
+
 - Type strengthening: 8-16 hours
 - Telemetry instrumentation: 4-8 hours
 - Scripts: 2-4 hours

@@ -1,11 +1,11 @@
 /**
  * Edge Config Setup and Migration Script
- * 
+ *
  * This script helps you:
  * 1. Migrate feature flags from featureflags/flags.json to Edge Config
  * 2. Validate Edge Config connection
  * 3. List current Edge Config values
- * 
+ *
  * Usage:
  *   pnpm tsx scripts/setup-edge-config.ts migrate    # Migrate flags from file
  *   pnpm tsx scripts/setup-edge-config.ts validate    # Test connection
@@ -23,16 +23,20 @@ if (!EDGE_CONFIG_URL) {
   console.error('❌ EDGE_CONFIG environment variable is not set');
   console.error('');
   console.error('To set up Edge Config:');
-  console.error('1. Go to Vercel Dashboard → Your Project → Storage → Edge Config');
+  console.error(
+    '1. Go to Vercel Dashboard → Your Project → Storage → Edge Config'
+  );
   console.error('2. Create a new Edge Config');
   console.error('3. Copy the connection string');
-  console.error('4. Add it to your .env.local and Vercel environment variables as EDGE_CONFIG');
+  console.error(
+    '4. Add it to your .env.local and Vercel environment variables as EDGE_CONFIG'
+  );
   process.exit(1);
 }
 
 async function validateConnection() {
   console.log('🔍 Validating Edge Config connection...');
-  
+
   try {
     // Try to read a test key (this will fail if connection is invalid)
     await get('__test__');
@@ -42,7 +46,9 @@ async function validateConnection() {
     if (error instanceof Error) {
       if (error.message.includes('EDGE_CONFIG')) {
         console.error('❌ Edge Config connection failed');
-        console.error('   Make sure EDGE_CONFIG environment variable is set correctly');
+        console.error(
+          '   Make sure EDGE_CONFIG environment variable is set correctly'
+        );
       } else {
         console.error('❌ Error:', error.message);
       }
@@ -54,11 +60,15 @@ async function validateConnection() {
 async function listValues() {
   console.log('📋 Listing Edge Config values...');
   console.log('');
-  console.log('Note: Edge Config API doesn\'t support listing all keys directly.');
+  console.log(
+    "Note: Edge Config API doesn't support listing all keys directly."
+  );
   console.log('You can view all values in the Vercel Dashboard:');
-  console.log('https://vercel.com/dashboard → Your Project → Storage → Edge Config');
+  console.log(
+    'https://vercel.com/dashboard → Your Project → Storage → Edge Config'
+  );
   console.log('');
-  
+
   // Try to get some common keys
   const commonKeys = [
     'feature:trust_audit_enabled',
@@ -81,9 +91,9 @@ async function listValues() {
 
 async function migrateFlags() {
   console.log('🔄 Migrating feature flags from file to Edge Config...');
-  
+
   const flagsPath = join(process.cwd(), 'featureflags', 'flags.json');
-  
+
   if (!existsSync(flagsPath)) {
     console.error('❌ Feature flags file not found at:', flagsPath);
     console.error('   Create featureflags/flags.json with your flags first');
@@ -92,7 +102,7 @@ async function migrateFlags() {
 
   const flagsContent = readFileSync(flagsPath, 'utf-8');
   let flags: Record<string, unknown>;
-  
+
   try {
     flags = JSON.parse(flagsContent);
   } catch (error) {
@@ -112,13 +122,17 @@ async function migrateFlags() {
   }
   console.log('');
 
-  console.log('⚠️  IMPORTANT: Edge Config values must be set manually in the Vercel Dashboard.');
+  console.log(
+    '⚠️  IMPORTANT: Edge Config values must be set manually in the Vercel Dashboard.'
+  );
   console.log('');
   console.log('To complete the migration:');
-  console.log('1. Go to: https://vercel.com/dashboard → Your Project → Storage → Edge Config');
+  console.log(
+    '1. Go to: https://vercel.com/dashboard → Your Project → Storage → Edge Config'
+  );
   console.log('2. Add the following key-value pairs:');
   console.log('');
-  
+
   for (const [key, value] of Object.entries(flags)) {
     console.log(`   Key: feature:${key}`);
     console.log(`   Value: ${JSON.stringify(value)}`);
@@ -137,17 +151,17 @@ async function main() {
     case 'validate':
       await validateConnection();
       break;
-    
+
     case 'list':
       await validateConnection();
       await listValues();
       break;
-    
+
     case 'migrate':
       await validateConnection();
       await migrateFlags();
       break;
-    
+
     case 'help':
     default:
       console.log('Edge Config Setup Script');
@@ -164,7 +178,7 @@ async function main() {
   }
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('❌ Error:', error);
   process.exit(1);
 });

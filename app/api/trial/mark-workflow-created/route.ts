@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { logger } from "@/lib/logging/structured-logger";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { markWorkflowCreated } from "@/lib/trial/user-plan";
+import { logger } from '@/lib/logging/structured-logger';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { markWorkflowCreated } from '@/lib/trial/user-plan';
 /**
  * POST /api/trial/mark-workflow-created
  * Mark user's first workflow as created
@@ -10,14 +10,14 @@ import { markWorkflowCreated } from "@/lib/trial/user-plan";
 export async function POST(_request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
-    
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
     if (authError || !user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     await markWorkflowCreated(user.id);
@@ -25,11 +25,11 @@ export async function POST(_request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     logger.error(
-      "Error marking workflow created",
+      'Error marking workflow created',
       error instanceof Error ? error : new Error(String(error))
     );
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

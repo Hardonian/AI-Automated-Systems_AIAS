@@ -3,9 +3,9 @@
  * Comprehensive validation and security checks for API routes
  */
 
-import { z } from "zod";
-import { NextRequest } from "next/server";
-import { logger } from "@/lib/logging/structured-logger";
+import { z } from 'zod';
+import { NextRequest } from 'next/server';
+import { logger } from '@/lib/logging/structured-logger';
 
 /**
  * Enhanced input validation with detailed error messages
@@ -21,7 +21,10 @@ export function validateInputEnhanced<T extends z.ZodSchema>(
     }
     return { success: false, error: result.error };
   } catch (error) {
-    logger.error("Validation error", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Validation error',
+      error instanceof Error ? error : new Error(String(error))
+    );
     throw error;
   }
 }
@@ -31,7 +34,7 @@ export function validateInputEnhanced<T extends z.ZodSchema>(
  */
 export function sanitizeString(input: string): string {
   return input
-    .replace(/[<>]/g, "") // Remove angle brackets
+    .replace(/[<>]/g, '') // Remove angle brackets
     .trim()
     .slice(0, 10000); // Limit length
 }
@@ -48,16 +51,22 @@ export function validateEmail(email: string): boolean {
  * Validate UUID format
  */
 export function validateUUID(uuid: string): boolean {
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const uuidRegex =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   return uuidRegex.test(uuid);
 }
 
 /**
  * Check request origin for CORS
  */
-export function isValidOrigin(origin: string | null, allowedOrigins: string[]): boolean {
+export function isValidOrigin(
+  origin: string | null,
+  allowedOrigins: string[]
+): boolean {
   if (!origin) return false;
-  return allowedOrigins.some((allowed) => origin === allowed || origin.endsWith(allowed));
+  return allowedOrigins.some(
+    allowed => origin === allowed || origin.endsWith(allowed)
+  );
 }
 
 /**
@@ -80,15 +89,17 @@ export function validateRequestSize(body: string, maxSize: number): boolean {
 /**
  * Extract and validate user ID from request
  */
-export async function extractUserId(request: NextRequest): Promise<string | null> {
-  const authHeader = request.headers.get("authorization");
-  if (!authHeader?.startsWith("Bearer ")) {
+export async function extractUserId(
+  request: NextRequest
+): Promise<string | null> {
+  const authHeader = request.headers.get('authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
     return null;
   }
 
   // In production, verify JWT token here
   // For now, extract from header
-  const userId = request.headers.get("x-user-id");
+  const userId = request.headers.get('x-user-id');
   if (userId && validateUUID(userId)) {
     return userId;
   }

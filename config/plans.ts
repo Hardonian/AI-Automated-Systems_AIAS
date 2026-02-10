@@ -3,38 +3,38 @@
  * Defines feature flags, limits, and access levels for free, trial, and paid plans
  */
 
-export type PlanTier = "free" | "trial" | "starter" | "pro" | "enterprise";
+export type PlanTier = 'free' | 'trial' | 'starter' | 'pro' | 'enterprise';
 
 export interface PlanFeatures {
   // News Feed
   newsFeedPersonalized: boolean;
   newsFeedArticlesPerDay: number;
-  
+
   // Email Analysis
   emailAnalysisCampaignsPerMonth: number;
   emailAnalysisAdvanced: boolean;
   emailAnalysisDiagnostics: boolean;
-  
+
   // Workflows
   workflowsMax: number | null; // null = unlimited
   automationsPerMonth: number | null; // null = unlimited
-  templatesAccess: "basic" | "all";
-  integrationsAccess: "basic" | "all";
-  
+  templatesAccess: 'basic' | 'all';
+  integrationsAccess: 'basic' | 'all';
+
   // AI Agents
   aiAgentsMax: number;
   aiAgentsCustom: boolean;
-  
+
   // Consulting
   consultingTimeMinutes: number;
-  
+
   // Support
-  supportLevel: "community" | "email" | "priority";
+  supportLevel: 'community' | 'email' | 'priority';
   supportResponseTime: string;
-  
+
   // Analytics
-  analyticsLevel: "basic" | "advanced";
-  
+  analyticsLevel: 'basic' | 'advanced';
+
   // Content Access
   caseStudiesFull: boolean;
   frameworksFull: boolean;
@@ -50,14 +50,14 @@ export const plans: Record<PlanTier, PlanFeatures> = {
     emailAnalysisDiagnostics: false,
     workflowsMax: 3,
     automationsPerMonth: 100,
-    templatesAccess: "basic",
-    integrationsAccess: "basic",
+    templatesAccess: 'basic',
+    integrationsAccess: 'basic',
     aiAgentsMax: 3,
     aiAgentsCustom: false,
     consultingTimeMinutes: 0,
-    supportLevel: "community",
-    supportResponseTime: "Community forums",
-    analyticsLevel: "basic",
+    supportLevel: 'community',
+    supportResponseTime: 'Community forums',
+    analyticsLevel: 'basic',
     caseStudiesFull: false,
     frameworksFull: false,
     playbooksFull: false,
@@ -71,14 +71,14 @@ export const plans: Record<PlanTier, PlanFeatures> = {
     emailAnalysisDiagnostics: false,
     workflowsMax: 3,
     automationsPerMonth: 100,
-    templatesAccess: "basic",
-    integrationsAccess: "basic",
+    templatesAccess: 'basic',
+    integrationsAccess: 'basic',
     aiAgentsMax: 3,
     aiAgentsCustom: false,
     consultingTimeMinutes: 0,
-    supportLevel: "community",
-    supportResponseTime: "Community forums",
-    analyticsLevel: "basic",
+    supportLevel: 'community',
+    supportResponseTime: 'Community forums',
+    analyticsLevel: 'basic',
     caseStudiesFull: false,
     frameworksFull: false,
     playbooksFull: false,
@@ -91,14 +91,14 @@ export const plans: Record<PlanTier, PlanFeatures> = {
     emailAnalysisDiagnostics: true,
     workflowsMax: -1, // unlimited
     automationsPerMonth: null, // unlimited
-    templatesAccess: "all",
-    integrationsAccess: "all",
+    templatesAccess: 'all',
+    integrationsAccess: 'all',
     aiAgentsMax: 10,
     aiAgentsCustom: true,
     consultingTimeMinutes: 30,
-    supportLevel: "email",
-    supportResponseTime: "24-48 hours",
-    analyticsLevel: "advanced",
+    supportLevel: 'email',
+    supportResponseTime: '24-48 hours',
+    analyticsLevel: 'advanced',
     caseStudiesFull: true,
     frameworksFull: true,
     playbooksFull: true,
@@ -111,14 +111,14 @@ export const plans: Record<PlanTier, PlanFeatures> = {
     emailAnalysisDiagnostics: true,
     workflowsMax: -1, // unlimited
     automationsPerMonth: null, // unlimited
-    templatesAccess: "all",
-    integrationsAccess: "all",
+    templatesAccess: 'all',
+    integrationsAccess: 'all',
     aiAgentsMax: 50,
     aiAgentsCustom: true,
     consultingTimeMinutes: 60,
-    supportLevel: "priority",
-    supportResponseTime: "24 hours",
-    analyticsLevel: "advanced",
+    supportLevel: 'priority',
+    supportResponseTime: '24 hours',
+    analyticsLevel: 'advanced',
     caseStudiesFull: true,
     frameworksFull: true,
     playbooksFull: true,
@@ -131,14 +131,14 @@ export const plans: Record<PlanTier, PlanFeatures> = {
     emailAnalysisDiagnostics: true,
     workflowsMax: -1, // unlimited
     automationsPerMonth: null, // unlimited
-    templatesAccess: "all",
-    integrationsAccess: "all",
+    templatesAccess: 'all',
+    integrationsAccess: 'all',
     aiAgentsMax: -1, // unlimited
     aiAgentsCustom: true,
     consultingTimeMinutes: 120,
-    supportLevel: "priority",
-    supportResponseTime: "4 hours",
-    analyticsLevel: "advanced",
+    supportLevel: 'priority',
+    supportResponseTime: '4 hours',
+    analyticsLevel: 'advanced',
     caseStudiesFull: true,
     frameworksFull: true,
     playbooksFull: true,
@@ -152,9 +152,13 @@ export function hasFeatureAccess(
   userPlan: PlanTier,
   feature: keyof PlanFeatures
 ): boolean {
-  return plans[userPlan][feature] === true || 
-         (typeof plans[userPlan][feature] === "number" && plans[userPlan][feature] > 0) ||
-         (typeof plans[userPlan][feature] === "string" && plans[userPlan][feature] !== "basic");
+  return (
+    plans[userPlan][feature] === true ||
+    (typeof plans[userPlan][feature] === 'number' &&
+      plans[userPlan][feature] > 0) ||
+    (typeof plans[userPlan][feature] === 'string' &&
+      plans[userPlan][feature] !== 'basic')
+  );
 }
 
 /**
@@ -165,7 +169,7 @@ export function getFeatureLimit(
   feature: keyof PlanFeatures
 ): number | null {
   const value = plans[userPlan][feature];
-  if (typeof value === "number") {
+  if (typeof value === 'number') {
     return value;
   }
   return null;
@@ -175,12 +179,12 @@ export function getFeatureLimit(
  * Check if user is on free/trial plan
  */
 export function isFreeOrTrial(plan: PlanTier): boolean {
-  return plan === "free" || plan === "trial";
+  return plan === 'free' || plan === 'trial';
 }
 
 /**
  * Check if user is on paid plan
  */
 export function isPaid(plan: PlanTier): boolean {
-  return plan === "starter" || plan === "pro" || plan === "enterprise";
+  return plan === 'starter' || plan === 'pro' || plan === 'enterprise';
 }

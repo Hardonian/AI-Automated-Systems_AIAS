@@ -10,7 +10,7 @@ import { join } from 'path';
 import { Pool } from 'pg';
 // import { execSync } from 'child_process';
 
-const {SUPABASE_DB_URL} = process.env;
+const { SUPABASE_DB_URL } = process.env;
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');
 
 interface MigrationFile {
@@ -50,7 +50,9 @@ async function getAppliedMigrations(dbUrl: string): Promise<string[]> {
     `);
 
     if (!tableCheck.rows[0].exists) {
-      console.log('⚠️  Migration tracking table not found. Will apply all migrations.');
+      console.log(
+        '⚠️  Migration tracking table not found. Will apply all migrations.'
+      );
       return [];
     }
 
@@ -61,8 +63,13 @@ async function getAppliedMigrations(dbUrl: string): Promise<string[]> {
 
     return result.rows.map((row: any) => row.version);
   } catch (error: any) {
-    if (error.message.includes('does not exist') || error.message.includes('relation')) {
-      console.log('⚠️  Migration tracking table not found. Will apply all migrations.');
+    if (
+      error.message.includes('does not exist') ||
+      error.message.includes('relation')
+    ) {
+      console.log(
+        '⚠️  Migration tracking table not found. Will apply all migrations.'
+      );
       return [];
     }
     throw error;
@@ -77,46 +84,55 @@ function extractMigrationVersion(filename: string): string {
   return filename.replace('.sql', '');
 }
 
-async function applyMigration(dbUrl: string, migrationPath: string, migrationName: string): Promise<boolean> {
+async function applyMigration(
+  dbUrl: string,
+  migrationPath: string,
+  migrationName: string
+): Promise<boolean> {
   const pool = new Pool({ connectionString: dbUrl });
-  
+
   try {
     console.log(`\n📝 Applying: ${migrationName}`);
     const migrationContent = readFileSync(migrationPath, 'utf-8');
-    
+
     // Apply migration in a transaction
     await pool.query('BEGIN');
     await pool.query(migrationContent);
-    
+
     // Record migration in tracking table
     const version = extractMigrationVersion(migrationName);
     try {
-      await pool.query(`
+      await pool.query(
+        `
         INSERT INTO supabase_migrations.schema_migrations (version, name)
         VALUES ($1, $2)
         ON CONFLICT (version) DO NOTHING;
-      `, [version, migrationName]);
+      `,
+        [version, migrationName]
+      );
     } catch (error: any) {
       // If tracking table doesn't exist, that's okay - migration still applied
       if (!error.message.includes('does not exist')) {
         throw error;
       }
     }
-    
+
     await pool.query('COMMIT');
     console.log(`✅ Applied: ${migrationName}`);
     return true;
   } catch (error: any) {
     await pool.query('ROLLBACK').catch(() => {});
-    
+
     // Check if error is because migration was already applied
-    if (error.message.includes('already exists') || 
-        error.message.includes('duplicate key') ||
-        error.message.includes('relation already exists')) {
+    if (
+      error.message.includes('already exists') ||
+      error.message.includes('duplicate key') ||
+      error.message.includes('relation already exists')
+    ) {
       console.log(`⏭️  Skipped (already applied): ${migrationName}`);
       return true;
     }
-    
+
     console.error(`❌ Failed: ${migrationName}`);
     console.error(`   Error: ${error.message}`);
     return false;
@@ -127,12 +143,14 @@ async function applyMigration(dbUrl: string, migrationPath: string, migrationNam
 
 async function main() {
   console.log('\n🚀 Applying Supabase Migrations Directly\n');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
 
   if (!SUPABASE_DB_URL) {
     console.error('❌ SUPABASE_DB_URL environment variable is required');
     console.log('\nTo set it up:');
-    console.log('  export SUPABASE_DB_URL="postgresql://postgres:[password]@[host]:5432/postgres"');
+    console.log(
+      '  export SUPABASE_DB_URL="postgresql://postgres:[password]@[host]:5432/postgres"'
+    );
     process.exit(1);
   }
 
@@ -144,7 +162,9 @@ async function main() {
   let appliedMigrations: string[] = [];
   try {
     appliedMigrations = await getAppliedMigrations(SUPABASE_DB_URL);
-    console.log(`✅ Found ${appliedMigrations.length} already applied migrations\n`);
+    console.log(
+      `✅ Found ${appliedMigrations.length} already applied migrations\n`
+    );
   } catch (error: any) {
     console.log(`⚠️  Could not check applied migrations: ${error.message}`);
     console.log('   Will attempt to apply all migrations\n');
@@ -170,17 +190,23 @@ async function main() {
   let failCount = 0;
 
   for (const migration of pendingMigrations) {
-    const success = await applyMigration(SUPABASE_DB_URL, migration.path, migration.name);
+    const success = await applyMigration(
+      SUPABASE_DB_URL,
+      migration.path,
+      migration.name
+    );
     if (success) {
       successCount++;
     } else {
       failCount++;
-      console.error(`\n❌ Stopping due to migration failure: ${migration.name}`);
+      console.error(
+        `\n❌ Stopping due to migration failure: ${migration.name}`
+      );
       process.exit(1);
     }
   }
 
-  console.log(`\n${  '=' .repeat(60)}`);
+  console.log(`\n${'='.repeat(60)}`);
   console.log(`✅ Successfully applied ${successCount} migrations`);
   if (failCount > 0) {
     console.log(`❌ Failed to apply ${failCount} migrations`);

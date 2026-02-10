@@ -15,174 +15,188 @@ import { getTenantIsolation } from '@/lib/security/tenant-isolation';
 const createWorkflowSchema = z.object({
   name: z.string().min(1).max(100),
   description: z.string().max(500).optional(),
-  steps: z.array(z.object({
-    type: z.string(),
-    config: z.record(z.any()),
-  })).min(1),
+  steps: z
+    .array(
+      z.object({
+        type: z.string(),
+        config: z.record(z.any()),
+      })
+    )
+    .min(1),
 });
 
 /**
  * GET /api/example-secure
  * Example secure GET endpoint with caching
  */
-export const GET = createGETHandler(async (context) => {
-  const { tenantId, userId } = context;
-  
-  if (!tenantId || !userId) {
-    return NextResponse.json(
-      { error: 'Tenant and user required' },
-      { status: 400 }
+export const GET = createGETHandler(
+  async context => {
+    const { tenantId, userId } = context;
+
+    if (!tenantId || !userId) {
+      return NextResponse.json(
+        { error: 'Tenant and user required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate tenant access
+    const access = await getTenantIsolation().validateAccess(tenantId, userId);
+    if (!access.allowed) {
+      securityMonitor.logEvent({
+        type: 'unauthorized_access',
+        severity: 'medium',
+        userId,
+        ip: context.request.headers.get('x-forwarded-for') || 'unknown',
+        path: '/api/example-secure',
+        ipAddress: context.request.headers.get('x-forwarded-for') || 'unknown',
+        endpoint: '/api/example-secure',
+        method: 'GET',
+      });
+
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Check resource limits
+    const limits = await getTenantIsolation().checkLimits(
+      tenantId,
+      'workflows'
     );
-  }
-  
-  // Validate tenant access
-  const access = await getTenantIsolation().validateAccess(tenantId, userId);
-  if (!access.allowed) {
-    securityMonitor.logEvent({
-      type: 'unauthorized_access',
-      severity: 'medium',
-      userId,
-      ip: context.request.headers.get('x-forwarded-for') || 'unknown',
-      path: '/api/example-secure',
-      ipAddress: context.request.headers.get('x-forwarded-for') || 'unknown',
-      endpoint: '/api/example-secure',
-      method: 'GET',
+    if (!limits.allowed) {
+      return NextResponse.json(
+        {
+          error: 'Resource limit exceeded',
+          limit: limits.limit,
+          remaining: limits.remaining,
+        },
+        { status: 429 }
+      );
+    }
+
+    // Use optimized query with caching
+    const workflows = await queryOptimizer.select('workflows', {
+      cache: true,
+      cacheTTL: 300, // 5 minutes
+      tenantId,
+      limit: 20,
     });
-    
-    return NextResponse.json(
-      { error: 'Forbidden' },
-      { status: 403 }
-    );
-  }
-  
-  // Check resource limits
-  const limits = await getTenantIsolation().checkLimits(tenantId, 'workflows');
-  if (!limits.allowed) {
-    return NextResponse.json(
-      {
-        error: 'Resource limit exceeded',
+
+    return NextResponse.json({
+      data: workflows,
+      limits: {
         limit: limits.limit,
         remaining: limits.remaining,
       },
-      { status: 429 }
-    );
-  }
-  
-  // Use optimized query with caching
-  const workflows = await queryOptimizer.select('workflows', {
-    cache: true,
-    cacheTTL: 300, // 5 minutes
-    tenantId,
-    limit: 20,
-  });
-  
-  return NextResponse.json({
-    data: workflows,
-    limits: {
-      limit: limits.limit,
-      remaining: limits.remaining,
-    },
-  });
-}, {
-  requireAuth: true,
-  requireTenant: true,
-  cache: {
-    enabled: true,
-    ttl: 300,
-    tags: ['workflows'],
+    });
   },
-});
+  {
+    requireAuth: true,
+    requireTenant: true,
+    cache: {
+      enabled: true,
+      ttl: 300,
+      tags: ['workflows'],
+    },
+  }
+);
 
 /**
  * POST /api/example-secure
  * Example secure POST endpoint with validation
  */
-export const POST = createPOSTHandler(async (context) => {
-  const { tenantId, userId, request } = context;
-  
-  if (!tenantId || !userId) {
-    return NextResponse.json(
-      { error: 'Tenant and user required' },
-      { status: 400 }
-    );
-  }
-  
-  // Validate tenant access with permission
-  const access = await getTenantIsolation().validateAccess(
-    tenantId,
-    userId,
-    'workflow:create'
-  );
-  
-  if (!access.allowed) {
-    securityMonitor.logEvent({
-      type: 'unauthorized_access',
-      severity: 'medium',
+export const POST = createPOSTHandler(
+  async context => {
+    const { tenantId, userId, request } = context;
+
+    if (!tenantId || !userId) {
+      return NextResponse.json(
+        { error: 'Tenant and user required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate tenant access with permission
+    const access = await getTenantIsolation().validateAccess(
+      tenantId,
       userId,
-      ip: request.headers.get('x-forwarded-for') || 'unknown',
-      path: '/api/example-secure',
-      ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
-      endpoint: '/api/example-secure',
-      method: 'POST',
-      details: { reason: 'Missing permission: workflow:create' },
-    });
-    
-    return NextResponse.json(
-      { error: 'Forbidden: Missing required permission' },
-      { status: 403 }
+      'workflow:create'
     );
-  }
-  
-  // Check resource limits
-  const limits = await getTenantIsolation().checkLimits(tenantId, 'workflows', 1);
-  if (!limits.allowed) {
-    securityMonitor.logEvent({
-      type: 'rate_limit',
-      severity: 'low',
-      userId,
-      ip: request.headers.get('x-forwarded-for') || 'unknown',
-      path: '/api/example-secure',
-      ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
-      endpoint: '/api/example-secure',
-      method: 'POST',
-      details: {
-        resource: 'workflows',
-        limit: limits.limit,
-        remaining: limits.remaining,
-      },
-    });
-    
-    return NextResponse.json(
-      {
-        error: 'Resource limit exceeded',
-        limit: limits.limit,
-        remaining: limits.remaining,
-      },
-      { status: 429 }
+
+    if (!access.allowed) {
+      securityMonitor.logEvent({
+        type: 'unauthorized_access',
+        severity: 'medium',
+        userId,
+        ip: request.headers.get('x-forwarded-for') || 'unknown',
+        path: '/api/example-secure',
+        ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
+        endpoint: '/api/example-secure',
+        method: 'POST',
+        details: { reason: 'Missing permission: workflow:create' },
+      });
+
+      return NextResponse.json(
+        { error: 'Forbidden: Missing required permission' },
+        { status: 403 }
+      );
+    }
+
+    // Check resource limits
+    const limits = await getTenantIsolation().checkLimits(
+      tenantId,
+      'workflows',
+      1
     );
+    if (!limits.allowed) {
+      securityMonitor.logEvent({
+        type: 'rate_limit',
+        severity: 'low',
+        userId,
+        ip: request.headers.get('x-forwarded-for') || 'unknown',
+        path: '/api/example-secure',
+        ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
+        endpoint: '/api/example-secure',
+        method: 'POST',
+        details: {
+          resource: 'workflows',
+          limit: limits.limit,
+          remaining: limits.remaining,
+        },
+      });
+
+      return NextResponse.json(
+        {
+          error: 'Resource limit exceeded',
+          limit: limits.limit,
+          remaining: limits.remaining,
+        },
+        { status: 429 }
+      );
+    }
+
+    // Parse and validate body (already validated by route handler)
+    // const body = await request.json(); // Will be used for workflow creation
+
+    // Create workflow (example - would use actual Supabase client)
+    // const workflow = await createWorkflow(tenantId, body);
+
+    // Record usage
+    await getTenantIsolation().recordUsage(tenantId, 'workflows', 1);
+
+    // Invalidate cache
+    await queryOptimizer.invalidateTableCache('workflows', tenantId);
+
+    return NextResponse.json({
+      success: true,
+      message: 'Workflow created successfully',
+      // workflow,
+    });
+  },
+  {
+    requireAuth: true,
+    requireTenant: true,
+    requiredPermission: 'workflow:create',
+    validateBody: createWorkflowSchema,
+    maxBodySize: 1024 * 1024, // 1MB
   }
-  
-  // Parse and validate body (already validated by route handler)
-  // const body = await request.json(); // Will be used for workflow creation
-  
-  // Create workflow (example - would use actual Supabase client)
-  // const workflow = await createWorkflow(tenantId, body);
-  
-  // Record usage
-  await getTenantIsolation().recordUsage(tenantId, 'workflows', 1);
-  
-  // Invalidate cache
-  await queryOptimizer.invalidateTableCache('workflows', tenantId);
-  
-  return NextResponse.json({
-    success: true,
-    message: 'Workflow created successfully',
-    // workflow,
-  });
-}, {
-  requireAuth: true,
-  requireTenant: true,
-  requiredPermission: 'workflow:create',
-  validateBody: createWorkflowSchema,
-  maxBodySize: 1024 * 1024, // 1MB
-});
+);

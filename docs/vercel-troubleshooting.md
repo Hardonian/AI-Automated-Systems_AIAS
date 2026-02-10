@@ -14,6 +14,7 @@ pnpm run deploy:doctor
 ```
 
 This will check:
+
 - Node version consistency
 - Package manager consistency
 - Lockfile consistency
@@ -43,6 +44,7 @@ This will check:
 ### Issue 1: No Preview Deployment Appears for PRs
 
 **Symptoms:**
+
 - PR opened but no preview deployment
 - GitHub Actions workflow doesn't run
 - No preview URL in PR comments
@@ -50,11 +52,12 @@ This will check:
 **Diagnosis:**
 
 1. **Check Workflow Triggers**
+
    ```yaml
    # Should be in frontend-deploy.yml
    on:
      pull_request:
-       branches: ['**']  # Should trigger on all PRs
+       branches: ['**'] # Should trigger on all PRs
    ```
 
 2. **Check Workflow is Enabled**
@@ -82,6 +85,7 @@ This will check:
 ### Issue 2: No Production Deploy on Push to Main
 
 **Symptoms:**
+
 - Push to `main` but no production deployment
 - GitHub Actions workflow doesn't run
 - No deployment in Vercel dashboard
@@ -89,14 +93,16 @@ This will check:
 **Diagnosis:**
 
 1. **Check Workflow Triggers**
+
    ```yaml
    # Should be in frontend-deploy.yml
    on:
      push:
-       branches: [main]  # Should trigger on main push
+       branches: [main] # Should trigger on main push
    ```
 
 2. **Check Workflow Condition**
+
    ```yaml
    # Deploy job should have:
    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -117,6 +123,7 @@ This will check:
 ### Issue 3: Workflow Runs But Deploy Step is Skipped
 
 **Symptoms:**
+
 - Build/test jobs pass
 - Deploy job is skipped (grayed out)
 - No deployment occurs
@@ -124,6 +131,7 @@ This will check:
 **Diagnosis:**
 
 1. **Check Job Condition**
+
    ```yaml
    # Deploy job should have:
    if: |
@@ -132,6 +140,7 @@ This will check:
    ```
 
 2. **Check Job Dependencies**
+
    ```yaml
    # Deploy job should depend on build-and-test:
    needs: build-and-test
@@ -152,6 +161,7 @@ This will check:
 ### Issue 4: Workflow Runs But Fails During Deploy
 
 **Symptoms:**
+
 - Build/test jobs pass
 - Deploy job starts but fails
 - Error messages in GitHub Actions logs
@@ -161,11 +171,13 @@ This will check:
 #### "Missing required secrets"
 
 **Error:**
+
 ```
 ❌ Missing required secrets: VERCEL_TOKEN, VERCEL_ORG_ID
 ```
 
 **Solution:**
+
 1. Go to GitHub → Settings → Secrets → Actions
 2. Add missing secrets:
    - `VERCEL_TOKEN` - Get from Vercel Dashboard → Settings → Tokens
@@ -175,11 +187,13 @@ This will check:
 #### "Failed to extract deployment URL"
 
 **Error:**
+
 ```
 ❌ Failed to extract deployment URL from Vercel output
 ```
 
 **Solution:**
+
 1. Check Vercel token is valid
 2. Check Vercel project ID is correct
 3. Check Vercel org ID is correct
@@ -188,11 +202,13 @@ This will check:
 #### "Vercel build failed"
 
 **Error:**
+
 ```
 Error: Build failed
 ```
 
 **Solution:**
+
 1. Check build logs in Vercel dashboard
 2. Verify environment variables are set in Vercel
 3. Test build locally: `pnpm run build`
@@ -203,6 +219,7 @@ Error: Build failed
 ### Issue 5: Double Deployments
 
 **Symptoms:**
+
 - Two deployments appear for same commit
 - One from GitHub Actions, one from Vercel
 - Confusion about which is "real"
@@ -212,18 +229,19 @@ Error: Build failed
 **Diagnosis:**
 
 1. **Check `vercel.json`**
+
    ```json
    {
      "git": {
        "deploymentEnabled": {
-         "main": false,  // Should be false
-         "preview": false  // Should be false
+         "main": false, // Should be false
+         "preview": false // Should be false
        }
      },
      "github": {
        "deploymentEnabled": {
-         "main": false,  // Should be false
-         "preview": false  // Should be false
+         "main": false, // Should be false
+         "preview": false // Should be false
        }
      }
    }
@@ -246,6 +264,7 @@ Error: Build failed
 ### Issue 6: Wrong Environment Variables Used
 
 **Symptoms:**
+
 - Preview uses production env vars
 - Production uses preview env vars
 - Build fails due to missing env vars
@@ -255,10 +274,11 @@ Error: Build failed
 **Diagnosis:**
 
 1. **Check Workflow Pull Command**
+
    ```yaml
    # For preview (PRs):
    vercel pull --yes --environment=preview
-   
+
    # For production (main):
    vercel pull --yes --environment=production
    ```
@@ -280,6 +300,7 @@ Error: Build failed
 ### Issue 7: Build Fails Due to Missing Prisma Client
 
 **Symptoms:**
+
 ```
 Error: Cannot find module '@prisma/client'
 ```
@@ -289,6 +310,7 @@ Error: Cannot find module '@prisma/client'
 **Solution:**
 
 1. **Ensure Prisma Generation Step**
+
    ```yaml
    - name: Generate Prisma Client
      run: pnpm run db:generate
@@ -304,6 +326,7 @@ Error: Cannot find module '@prisma/client'
 ### Issue 8: Node Version Mismatch
 
 **Symptoms:**
+
 ```
 Error: The engine "node" is incompatible with this module
 ```
@@ -313,11 +336,12 @@ Error: The engine "node" is incompatible with this module
 **Solution:**
 
 1. **Check Workflow Node Version**
+
    ```yaml
    - name: Setup Node.js
      uses: actions/setup-node@v4
      with:
-       node-version: '20'  # Should match package.json engines
+       node-version: '20' # Should match package.json engines
    ```
 
 2. **Check package.json**
@@ -334,6 +358,7 @@ Error: The engine "node" is incompatible with this module
 ### Issue 9: Package Manager Mismatch
 
 **Symptoms:**
+
 ```
 Error: Lockfile mismatch
 Error: Cannot find module
@@ -344,12 +369,13 @@ Error: Cannot find module
 **Solution:**
 
 1. **Check Workflow Package Manager**
+
    ```yaml
    - name: Setup pnpm
      uses: pnpm/action-setup@v2
      with:
        version: 8.15.0
-   
+
    - name: Install dependencies
      run: pnpm install --frozen-lockfile
    ```
@@ -405,6 +431,7 @@ vercel build
 ### 4. Create Issue
 
 If issue persists:
+
 1. Document the issue
 2. Include error messages
 3. Include deploy doctor output
@@ -435,6 +462,7 @@ If issue persists:
 ## Conclusion
 
 **Key Takeaways:**
+
 - Run deploy doctor first: `pnpm run deploy:doctor`
 - Check GitHub Actions logs for errors
 - Verify secrets and environment variables
@@ -442,6 +470,7 @@ If issue persists:
 - Test locally before deploying
 
 **If All Else Fails:**
+
 1. Review `docs/deploy-strategy.md`
 2. Review `docs/deploy-reliability-plan.md`
 3. Create GitHub issue with full details

@@ -8,6 +8,6 @@ datasources:
     isDefault: true
     editable: true
     jsonData:
-      timeInterval: "5s"
-      queryTimeout: "60s"
-      httpMethod: "POST"
+      timeInterval: '5s'
+      queryTimeout: '60s'
+      httpMethod: 'POST'

@@ -37,7 +37,10 @@ class EnhancedTelemetry {
   constructor() {
     // Initialize session ID
     if (typeof window !== 'undefined' && !sessionStorage.getItem('sessionId')) {
-      sessionStorage.setItem('sessionId', `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
+      sessionStorage.setItem(
+        'sessionId',
+        `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      );
     }
   }
 
@@ -62,7 +65,13 @@ class EnhancedTelemetry {
 
   trackPerformance(metric: PerformanceMetric): void {
     this.performanceMetrics.push(metric);
-    this.sendToBackend({ name: 'performance', category: 'performance', properties: metric, timestamp: Date.now(), sessionId: this.getSessionId() });
+    this.sendToBackend({
+      name: 'performance',
+      category: 'performance',
+      properties: metric,
+      timestamp: Date.now(),
+      sessionId: this.getSessionId(),
+    });
   }
 
   trackPageView(path: string, properties?: Record<string, any>): void {
@@ -73,7 +82,11 @@ class EnhancedTelemetry {
     });
   }
 
-  trackInteraction(element: string, action: string, properties?: Record<string, any>): void {
+  trackInteraction(
+    element: string,
+    action: string,
+    properties?: Record<string, any>
+  ): void {
     this.track({
       name: 'interaction',
       category: 'user',
@@ -81,7 +94,11 @@ class EnhancedTelemetry {
     });
   }
 
-  trackConversion(funnel: string, step: string, properties?: Record<string, any>): void {
+  trackConversion(
+    funnel: string,
+    step: string,
+    properties?: Record<string, any>
+  ): void {
     this.track({
       name: 'conversion',
       category: 'business',
@@ -101,7 +118,11 @@ class EnhancedTelemetry {
     });
   }
 
-  trackSecurityEvent(event: string, severity: 'low' | 'medium' | 'high' | 'critical', details?: Record<string, any>): void {
+  trackSecurityEvent(
+    event: string,
+    severity: 'low' | 'medium' | 'high' | 'critical',
+    details?: Record<string, any>
+  ): void {
     this.track({
       name: 'security_event',
       category: 'security',
@@ -168,17 +189,20 @@ class EnhancedTelemetry {
   }
 }
 
-export const telemetry = typeof window !== 'undefined' ? new EnhancedTelemetry() : {
-  track: () => {},
-  trackPerformance: () => {},
-  trackPageView: () => {},
-  trackInteraction: () => {},
-  trackConversion: () => {},
-  trackError: () => {},
-  trackSecurityEvent: () => {},
-  getEngagement: () => undefined,
-  getPerformanceMetrics: () => [],
-} as unknown as EnhancedTelemetry;
+export const telemetry =
+  typeof window !== 'undefined'
+    ? new EnhancedTelemetry()
+    : ({
+        track: () => {},
+        trackPerformance: () => {},
+        trackPageView: () => {},
+        trackInteraction: () => {},
+        trackConversion: () => {},
+        trackError: () => {},
+        trackSecurityEvent: () => {},
+        getEngagement: () => undefined,
+        getPerformanceMetrics: () => [],
+      } as unknown as EnhancedTelemetry);
 
 export function useTelemetry() {
   return {

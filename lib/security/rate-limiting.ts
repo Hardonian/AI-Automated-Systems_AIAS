@@ -102,7 +102,7 @@ class RedisRateLimiter {
       pipeline.expire(windowKey, Math.ceil(windowMs / 1000));
       const results = await pipeline.exec();
 
-      const count = results?.[1]?.[1] as number || 0;
+      const count = (results?.[1]?.[1] as number) || 0;
 
       if (count >= maxRequests) {
         const oldest = await this.redis.zrange(windowKey, 0, 0, 'WITHSCORES');
@@ -149,7 +149,8 @@ async function getRateLimiter(): Promise<MemoryRateLimiter | RedisRateLimiter> {
 
   try {
     const Redis = (await import('ioredis')).default;
-    const redisUrl = process.env.REDIS_URL || process.env.UPSTASH_REDIS_REST_URL;
+    const redisUrl =
+      process.env.REDIS_URL || process.env.UPSTASH_REDIS_REST_URL;
     if (!redisUrl) {
       throw new Error('Redis URL not configured');
     }
@@ -171,9 +172,12 @@ export async function rateLimit(
   const {
     windowMs = 60000, // 1 minute default
     maxRequests = 100,
-    keyGenerator = (req) => {
+    keyGenerator = req => {
       // Default: IP address + path
-      const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+      const ip =
+        req.headers.get('x-forwarded-for') ||
+        req.headers.get('x-real-ip') ||
+        'unknown';
       const path = req.nextUrl.pathname;
       return `${ip}:${path}`;
     },
@@ -188,7 +192,9 @@ export async function rateLimit(
 /**
  * Create rate limit headers for response
  */
-export function createRateLimitHeaders(result: RateLimitResult): Record<string, string> {
+export function createRateLimitHeaders(
+  result: RateLimitResult
+): Record<string, string> {
   return {
     'X-RateLimit-Limit': result.limit.toString(),
     'X-RateLimit-Remaining': result.remaining.toString(),

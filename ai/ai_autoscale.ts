@@ -39,12 +39,13 @@ class AIAutoScale {
   private projectRef: string;
 
   constructor() {
-    this.projectRef = process.env.SUPABASE_PROJECT_REF || 'ghqyxhbyyirveptgwoqm';
+    this.projectRef =
+      process.env.SUPABASE_PROJECT_REF || 'ghqyxhbyyirveptgwoqm';
     this.supabase = createClient(
       process.env.SUPABASE_URL || `https://${this.projectRef}.supabase.co`,
       process.env.SUPABASE_ANON_KEY || ''
     );
-    
+
     this.octokit = new Octokit({
       auth: process.env.GITHUB_TOKEN,
     });
@@ -56,11 +57,15 @@ class AIAutoScale {
   async collectUsageMetrics(): Promise<UsageMetrics[]> {
     try {
       // Get metrics from Supabase
-      const { data: supabaseMetrics, error: supabaseError } = await this.supabase
-        .from('ai_health_metrics')
-        .select('*')
-        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
-        .order('created_at', { ascending: true });
+      const { data: supabaseMetrics, error: supabaseError } =
+        await this.supabase
+          .from('ai_health_metrics')
+          .select('*')
+          .gte(
+            'created_at',
+            new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+          )
+          .order('created_at', { ascending: true });
 
       if (supabaseError) throw supabaseError;
 
@@ -68,7 +73,10 @@ class AIAutoScale {
       const vercelMetrics = await this.getVercelMetrics();
 
       // Combine and process metrics
-      const combinedMetrics = this.processMetrics(supabaseMetrics || [], vercelMetrics);
+      const combinedMetrics = this.processMetrics(
+        supabaseMetrics || [],
+        vercelMetrics
+      );
 
       return combinedMetrics;
     } catch (error) {
@@ -89,7 +97,10 @@ class AIAutoScale {
   /**
    * Process and normalize metrics
    */
-  private processMetrics(supabaseMetrics: any[], _vercelMetrics: any[]): UsageMetrics[] {
+  private processMetrics(
+    supabaseMetrics: any[],
+    _vercelMetrics: any[]
+  ): UsageMetrics[] {
     const processed: UsageMetrics[] = [];
 
     // Process Supabase metrics
@@ -102,7 +113,7 @@ class AIAutoScale {
         response_time_avg: metric.metrics.response_time_avg || 0,
         error_rate: metric.metrics.error_rate || 0,
         cost_current: this.calculateCurrentCost(metric),
-        cost_projected: this.calculateProjectedCost(metric)
+        cost_projected: this.calculateProjectedCost(metric),
       });
     });
 
@@ -128,7 +139,7 @@ class AIAutoScale {
   private calculateProjectedCost(metric: any): number {
     const currentCost = this.calculateCurrentCost(metric);
     const growthRate = this.calculateGrowthRate(metric);
-    
+
     return currentCost * (1 + growthRate);
   }
 
@@ -139,35 +150,40 @@ class AIAutoScale {
     // Simple linear growth calculation
     const throughput = metric.metrics.throughput || 0;
     const memoryUsage = metric.metrics.memory_usage || 0;
-    
+
     // Assume 5% monthly growth if usage is high
     if (throughput > 1000 || memoryUsage > 70) {
       return 0.05;
     }
-    
+
     return 0.02; // 2% default growth
   }
 
   /**
    * Predict cost trajectory using linear regression
    */
-  async predictCostTrajectory(metrics: UsageMetrics[]): Promise<CostPrediction> {
+  async predictCostTrajectory(
+    metrics: UsageMetrics[]
+  ): Promise<CostPrediction> {
     if (metrics.length < 2) {
       return {
         current_monthly: 0,
         projected_monthly: 0,
         deviation_percent: 0,
         trend: 'stable',
-        confidence: 0
+        confidence: 0,
       };
     }
 
     // Simple linear regression
     const costs = metrics.map(m => m.cost_current);
     const timestamps = metrics.map((_m, i) => i);
-    
-    const { slope, intercept, rSquared } = this.linearRegression(timestamps, costs);
-    
+
+    const { slope, intercept, rSquared } = this.linearRegression(
+      timestamps,
+      costs
+    );
+
     const currentCost = costs[costs.length - 1];
     if (currentCost === undefined || currentCost === 0) {
       return {
@@ -175,14 +191,14 @@ class AIAutoScale {
         projected_monthly: 0,
         deviation_percent: 0,
         trend: 'stable',
-        confidence: 0
+        confidence: 0,
       };
     }
-    
+
     const projectedCost = slope * (timestamps.length + 30) + intercept; // 30 days ahead
-    
+
     const deviation = ((projectedCost - currentCost) / currentCost) * 100;
-    
+
     let trend: 'increasing' | 'decreasing' | 'stable' = 'stable';
     if (slope > 0.1) trend = 'increasing';
     else if (slope < -0.1) trend = 'decreasing';
@@ -192,23 +208,26 @@ class AIAutoScale {
       projected_monthly: Math.max(0, projectedCost),
       deviation_percent: deviation,
       trend,
-      confidence: rSquared
+      confidence: rSquared,
     };
   }
 
   /**
    * Simple linear regression implementation
    */
-  private linearRegression(x: number[], y: number[]): { slope: number; intercept: number; rSquared: number } {
+  private linearRegression(
+    x: number[],
+    y: number[]
+  ): { slope: number; intercept: number; rSquared: number } {
     const n = Math.min(x.length, y.length);
     if (n === 0) {
       return { slope: 0, intercept: 0, rSquared: 0 };
     }
-    
+
     // Ensure arrays are aligned
     const xValues = x.slice(0, n);
     const yValues = y.slice(0, n);
-    
+
     const sumX = xValues.reduce((a, b) => a + b, 0);
     const sumY = yValues.reduce((a, b) => a + b, 0);
     const sumXY = xValues.reduce((sum, xi, i) => sum + xi * yValues[i]!, 0);
@@ -225,7 +244,7 @@ class AIAutoScale {
       return sum + Math.pow(yi - predicted, 2);
     }, 0);
     const ssTot = yValues.reduce((sum, yi) => sum + Math.pow(yi - yMean, 2), 0);
-    const rSquared = 1 - (ssRes / ssTot);
+    const rSquared = 1 - ssRes / ssTot;
 
     return { slope, intercept, rSquared: Math.max(0, rSquared) };
   }
@@ -233,7 +252,10 @@ class AIAutoScale {
   /**
    * Generate scaling recommendations
    */
-  generateScalingRecommendations(metrics: UsageMetrics[], prediction: CostPrediction): ScalingRecommendation[] {
+  generateScalingRecommendations(
+    metrics: UsageMetrics[],
+    prediction: CostPrediction
+  ): ScalingRecommendation[] {
     const recommendations: ScalingRecommendation[] = [];
     const latestMetrics = metrics[metrics.length - 1];
 
@@ -245,7 +267,7 @@ class AIAutoScale {
         action: 'scale_up',
         reason: `High error rate detected: ${latestMetrics.error_rate.toFixed(2)}%`,
         priority: 'high',
-        estimated_cost_impact: 20
+        estimated_cost_impact: 20,
       });
     }
 
@@ -255,7 +277,7 @@ class AIAutoScale {
         action: 'scale_up',
         reason: `High memory usage: ${latestMetrics.memory_usage.toFixed(2)}%`,
         priority: 'medium',
-        estimated_cost_impact: 15
+        estimated_cost_impact: 15,
       });
     }
 
@@ -265,7 +287,7 @@ class AIAutoScale {
         action: 'scale_up',
         reason: `High CPU usage: ${latestMetrics.cpu_usage.toFixed(2)}%`,
         priority: 'medium',
-        estimated_cost_impact: 15
+        estimated_cost_impact: 15,
       });
     }
 
@@ -275,7 +297,7 @@ class AIAutoScale {
         action: 'scale_up',
         reason: `High response time: ${latestMetrics.response_time_avg.toFixed(2)}ms`,
         priority: 'medium',
-        estimated_cost_impact: 10
+        estimated_cost_impact: 10,
       });
     }
 
@@ -285,7 +307,7 @@ class AIAutoScale {
         action: 'scale_down',
         reason: 'Low resource utilization detected',
         priority: 'low',
-        estimated_cost_impact: -20
+        estimated_cost_impact: -20,
       });
     }
 
@@ -295,7 +317,7 @@ class AIAutoScale {
         action: 'scale_down',
         reason: `High cost projection: ${prediction.deviation_percent.toFixed(2)}% increase`,
         priority: 'high',
-        estimated_cost_impact: -30
+        estimated_cost_impact: -30,
       });
     }
 
@@ -305,17 +327,25 @@ class AIAutoScale {
   /**
    * Check if GitHub discussion should be created
    */
-  private shouldCreateDiscussion(prediction: CostPrediction, recommendations: ScalingRecommendation[]): boolean {
+  private shouldCreateDiscussion(
+    prediction: CostPrediction,
+    recommendations: ScalingRecommendation[]
+  ): boolean {
     return (
       prediction.deviation_percent > 20 ||
-      recommendations.some(r => r.priority === 'high' || r.priority === 'critical')
+      recommendations.some(
+        r => r.priority === 'high' || r.priority === 'critical'
+      )
     );
   }
 
   /**
    * Create GitHub discussion for cost alerts
    */
-  async createCostAlertDiscussion(prediction: CostPrediction, recommendations: ScalingRecommendation[]): Promise<void> {
+  async createCostAlertDiscussion(
+    prediction: CostPrediction,
+    recommendations: ScalingRecommendation[]
+  ): Promise<void> {
     if (!this.shouldCreateDiscussion(prediction, recommendations)) {
       return;
     }
@@ -324,16 +354,18 @@ class AIAutoScale {
       const discussion = {
         title: `💰 Cost Alert: ${prediction.deviation_percent.toFixed(1)}% Budget Deviation`,
         body: this.generateDiscussionBody(prediction, recommendations),
-        category: 'general'
+        category: 'general',
       };
 
       // discussions API may not be available in all Octokit versions
-      const { data, status } = await (this.octokit.rest as any).discussions?.create({
+      const { data, status } = await (
+        this.octokit.rest as any
+      ).discussions?.create({
         owner: process.env.GITHUB_OWNER || 'your-org',
         repo: process.env.GITHUB_REPO || 'aias-platform',
         title: discussion.title,
         body: discussion.body,
-        category: discussion.category
+        category: discussion.category,
       });
 
       if (status === 201) {
@@ -347,12 +379,15 @@ class AIAutoScale {
   /**
    * Generate discussion body
    */
-  private generateDiscussionBody(prediction: CostPrediction, recommendations: ScalingRecommendation[]): string {
+  private generateDiscussionBody(
+    prediction: CostPrediction,
+    recommendations: ScalingRecommendation[]
+  ): string {
     const priorityEmoji = {
       low: '🟢',
       medium: '🟡',
       high: '🔴',
-      critical: '🚨'
+      critical: '🚨',
     };
 
     return `
@@ -365,17 +400,22 @@ class AIAutoScale {
 **Confidence:** ${(prediction.confidence * 100).toFixed(1)}%
 
 ### 📊 Cost Analysis
-${prediction.deviation_percent > 0 
-  ? `⚠️ **Cost is increasing** by ${prediction.deviation_percent.toFixed(2)}%`
-  : `✅ **Cost is decreasing** by ${Math.abs(prediction.deviation_percent).toFixed(2)}%`
+${
+  prediction.deviation_percent > 0
+    ? `⚠️ **Cost is increasing** by ${prediction.deviation_percent.toFixed(2)}%`
+    : `✅ **Cost is decreasing** by ${Math.abs(prediction.deviation_percent).toFixed(2)}%`
 }
 
 ### 🎯 Scaling Recommendations
-${recommendations.length > 0 
-  ? recommendations.map(rec => 
-      `- **${priorityEmoji[rec.priority]} ${rec.priority.toUpperCase()}:** ${rec.reason} (Cost impact: ${rec.estimated_cost_impact > 0 ? '+' : ''}$${rec.estimated_cost_impact})`
-    ).join('\n')
-  : '- No immediate scaling recommendations'
+${
+  recommendations.length > 0
+    ? recommendations
+        .map(
+          rec =>
+            `- **${priorityEmoji[rec.priority]} ${rec.priority.toUpperCase()}:** ${rec.reason} (Cost impact: ${rec.estimated_cost_impact > 0 ? '+' : ''}$${rec.estimated_cost_impact})`
+        )
+        .join('\n')
+    : '- No immediate scaling recommendations'
 }
 
 ### 📈 Cost Projection Graph
@@ -399,18 +439,21 @@ Projected: $${prediction.projected_monthly.toFixed(2)}
   /**
    * Store scaling data in database
    */
-  async storeScalingData(prediction: CostPrediction, recommendations: ScalingRecommendation[]): Promise<void> {
+  async storeScalingData(
+    prediction: CostPrediction,
+    recommendations: ScalingRecommendation[]
+  ): Promise<void> {
     try {
-      const { error } = await this.supabase
-        .from('ai_scaling_data')
-        .insert([{
+      const { error } = await this.supabase.from('ai_scaling_data').insert([
+        {
           prediction,
           recommendations,
-          created_at: new Date().toISOString()
-        }]);
+          created_at: new Date().toISOString(),
+        },
+      ]);
 
       if (error) throw error;
-      
+
       console.log('Scaling data stored successfully');
     } catch (error) {
       console.error('Error storing scaling data:', error);
@@ -423,7 +466,7 @@ Projected: $${prediction.projected_monthly.toFixed(2)}
   async run(): Promise<void> {
     try {
       console.log('Starting AI auto-scale analysis...');
-      
+
       const metrics = await this.collectUsageMetrics();
       if (metrics.length === 0) {
         console.log('No metrics available for analysis');
@@ -431,7 +474,10 @@ Projected: $${prediction.projected_monthly.toFixed(2)}
       }
 
       const prediction = await this.predictCostTrajectory(metrics);
-      const recommendations = this.generateScalingRecommendations(metrics, prediction);
+      const recommendations = this.generateScalingRecommendations(
+        metrics,
+        prediction
+      );
 
       await this.storeScalingData(prediction, recommendations);
 
@@ -440,7 +486,9 @@ Projected: $${prediction.projected_monthly.toFixed(2)}
       }
 
       console.log('AI auto-scale analysis completed');
-      console.log(`Cost prediction: $${prediction.projected_monthly.toFixed(2)} (${prediction.deviation_percent.toFixed(2)}% deviation)`);
+      console.log(
+        `Cost prediction: $${prediction.projected_monthly.toFixed(2)} (${prediction.deviation_percent.toFixed(2)}% deviation)`
+      );
       console.log(`Recommendations: ${recommendations.length}`);
     } catch (error) {
       console.error('AI auto-scale analysis failed:', error);
@@ -450,7 +498,12 @@ Projected: $${prediction.projected_monthly.toFixed(2)}
 }
 
 // Export for use in other modules
-export { AIAutoScale, type UsageMetrics, type CostPrediction, type ScalingRecommendation };
+export {
+  AIAutoScale,
+  type UsageMetrics,
+  type CostPrediction,
+  type ScalingRecommendation,
+};
 
 // CLI execution
 if (require.main === module) {

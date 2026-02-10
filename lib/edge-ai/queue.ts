@@ -7,15 +7,20 @@ import { createClient } from '@supabase/supabase-js';
 import { Queue, Worker, Job } from 'bullmq';
 import IORedis from 'ioredis';
 
-import { processOptimizationJob, processBenchmarkJob } from './optimization-engine';
+import {
+  processOptimizationJob,
+  processBenchmarkJob,
+} from './optimization-engine';
 
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logging/structured-logger';
 
-
 // Redis connection (use existing or create new)
 const getRedisConnection = () => {
-  const redisUrl = process.env.REDIS_URL || process.env.UPSTASH_REDIS_REST_URL || 'redis://localhost:6379';
+  const redisUrl =
+    process.env.REDIS_URL ||
+    process.env.UPSTASH_REDIS_REST_URL ||
+    'redis://localhost:6379';
   return new IORedis(redisUrl, {
     maxRetriesPerRequest: null,
   });
@@ -24,8 +29,12 @@ const getRedisConnection = () => {
 const connection = getRedisConnection();
 
 // Queue definitions
-export const edgeAIOptimizationQueue = new Queue('edge-ai:optimization', { connection });
-export const edgeAIBenchmarkQueue = new Queue('edge-ai:benchmark', { connection });
+export const edgeAIOptimizationQueue = new Queue('edge-ai:optimization', {
+  connection,
+});
+export const edgeAIBenchmarkQueue = new Queue('edge-ai:benchmark', {
+  connection,
+});
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -56,27 +65,25 @@ export interface EdgeAIBenchmarkJobData {
 /**
  * Add optimization job to queue
  */
-export async function queueOptimizationJob(data: EdgeAIOptimizationJobData): Promise<void> {
+export async function queueOptimizationJob(
+  data: EdgeAIOptimizationJobData
+): Promise<void> {
   try {
-    await edgeAIOptimizationQueue.add(
-      'optimize-model',
-      data,
-      {
-        jobId: data.jobId,
-        attempts: 3,
-        backoff: {
-          type: 'exponential',
-          delay: 5000,
-        },
-        removeOnComplete: {
-          age: 24 * 3600, // Keep for 24 hours
-          count: 1000, // Keep last 1000 jobs
-        },
-        removeOnFail: {
-          age: 7 * 24 * 3600, // Keep failed jobs for 7 days
-        },
-      }
-    );
+    await edgeAIOptimizationQueue.add('optimize-model', data, {
+      jobId: data.jobId,
+      attempts: 3,
+      backoff: {
+        type: 'exponential',
+        delay: 5000,
+      },
+      removeOnComplete: {
+        age: 24 * 3600, // Keep for 24 hours
+        count: 1000, // Keep last 1000 jobs
+      },
+      removeOnFail: {
+        age: 7 * 24 * 3600, // Keep failed jobs for 7 days
+      },
+    });
 
     logger.info('Optimization job queued', {
       jobId: data.jobId,
@@ -84,9 +91,13 @@ export async function queueOptimizationJob(data: EdgeAIOptimizationJobData): Pro
       modelId: data.modelId,
     });
   } catch (error) {
-    logger.error('Failed to queue optimization job', error instanceof Error ? error : new Error(String(error)), {
-      jobId: data.jobId,
-    });
+    logger.error(
+      'Failed to queue optimization job',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        jobId: data.jobId,
+      }
+    );
     throw error;
   }
 }
@@ -94,36 +105,38 @@ export async function queueOptimizationJob(data: EdgeAIOptimizationJobData): Pro
 /**
  * Add benchmark job to queue
  */
-export async function queueBenchmarkJob(data: EdgeAIBenchmarkJobData): Promise<void> {
+export async function queueBenchmarkJob(
+  data: EdgeAIBenchmarkJobData
+): Promise<void> {
   try {
-    await edgeAIBenchmarkQueue.add(
-      'benchmark-model',
-      data,
-      {
-        jobId: data.benchmarkId,
-        attempts: 3,
-        backoff: {
-          type: 'exponential',
-          delay: 5000,
-        },
-        removeOnComplete: {
-          age: 24 * 3600,
-          count: 1000,
-        },
-        removeOnFail: {
-          age: 7 * 24 * 3600,
-        },
-      }
-    );
+    await edgeAIBenchmarkQueue.add('benchmark-model', data, {
+      jobId: data.benchmarkId,
+      attempts: 3,
+      backoff: {
+        type: 'exponential',
+        delay: 5000,
+      },
+      removeOnComplete: {
+        age: 24 * 3600,
+        count: 1000,
+      },
+      removeOnFail: {
+        age: 7 * 24 * 3600,
+      },
+    });
 
     logger.info('Benchmark job queued', {
       benchmarkId: data.benchmarkId,
       userId: data.userId,
     });
   } catch (error) {
-    logger.error('Failed to queue benchmark job', error instanceof Error ? error : new Error(String(error)), {
-      benchmarkId: data.benchmarkId,
-    });
+    logger.error(
+      'Failed to queue benchmark job',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        benchmarkId: data.benchmarkId,
+      }
+    );
     throw error;
   }
 }
@@ -131,7 +144,9 @@ export async function queueBenchmarkJob(data: EdgeAIBenchmarkJobData): Promise<v
 /**
  * Process optimization job
  */
-async function processOptimizationJobWorker(job: Job<EdgeAIOptimizationJobData>): Promise<void> {
+async function processOptimizationJobWorker(
+  job: Job<EdgeAIOptimizationJobData>
+): Promise<void> {
   const { jobId, userId } = job.data;
 
   try {
@@ -156,7 +171,9 @@ async function processOptimizationJobWorker(job: Job<EdgeAIOptimizationJobData>)
         status: 'completed',
         progress: 100,
         completed_at: new Date().toISOString(),
-        duration_seconds: Math.floor((Date.now() - new Date(job.timestamp).getTime()) / 1000),
+        duration_seconds: Math.floor(
+          (Date.now() - new Date(job.timestamp).getTime()) / 1000
+        ),
         optimized_model_path: result.optimizedModelPath,
         optimized_size_bytes: result.optimizedSizeBytes,
         compression_ratio: result.compressionRatio,
@@ -172,10 +189,14 @@ async function processOptimizationJobWorker(job: Job<EdgeAIOptimizationJobData>)
 
     // TODO: Send webhook notification if configured
   } catch (error) {
-    logger.error('Optimization job failed', error instanceof Error ? error : new Error(String(error)), {
-      jobId,
-      userId,
-    });
+    logger.error(
+      'Optimization job failed',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        jobId,
+        userId,
+      }
+    );
 
     // Update job with error
     await supabase
@@ -198,7 +219,9 @@ async function processOptimizationJobWorker(job: Job<EdgeAIOptimizationJobData>)
 /**
  * Process benchmark job
  */
-async function processBenchmarkJobWorker(job: Job<EdgeAIBenchmarkJobData>): Promise<void> {
+async function processBenchmarkJobWorker(
+  job: Job<EdgeAIBenchmarkJobData>
+): Promise<void> {
   const { benchmarkId, userId } = job.data;
 
   try {
@@ -221,7 +244,9 @@ async function processBenchmarkJobWorker(job: Job<EdgeAIBenchmarkJobData>): Prom
       .update({
         status: 'completed',
         completed_at: new Date().toISOString(),
-        duration_seconds: Math.floor((Date.now() - new Date(job.timestamp).getTime()) / 1000),
+        duration_seconds: Math.floor(
+          (Date.now() - new Date(job.timestamp).getTime()) / 1000
+        ),
         latency_ms: result.latencyMs,
         throughput_ops_per_sec: result.throughputOpsPerSec,
         memory_usage_mb: result.memoryUsageMb,
@@ -242,10 +267,14 @@ async function processBenchmarkJobWorker(job: Job<EdgeAIBenchmarkJobData>): Prom
 
     // TODO: Send webhook notification if configured
   } catch (error) {
-    logger.error('Benchmark job failed', error instanceof Error ? error : new Error(String(error)), {
-      benchmarkId,
-      userId,
-    });
+    logger.error(
+      'Benchmark job failed',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        benchmarkId,
+        userId,
+      }
+    );
 
     // Update benchmark with error
     await supabase
@@ -283,13 +312,19 @@ export function startEdgeAIWorkers(): void {
 /**
  * Get job status
  */
-export async function getJobStatus(jobId: string, queueName: 'optimization' | 'benchmark'): Promise<{
+export async function getJobStatus(
+  jobId: string,
+  queueName: 'optimization' | 'benchmark'
+): Promise<{
   status: string;
   progress: number;
   error?: string;
 } | null> {
   try {
-    const queue = queueName === 'optimization' ? edgeAIOptimizationQueue : edgeAIBenchmarkQueue;
+    const queue =
+      queueName === 'optimization'
+        ? edgeAIOptimizationQueue
+        : edgeAIBenchmarkQueue;
     const job = await queue.getJob(jobId);
 
     if (!job) {
@@ -305,7 +340,11 @@ export async function getJobStatus(jobId: string, queueName: 'optimization' | 'b
       error: job.failedReason || undefined,
     };
   } catch (error) {
-    logger.error('Error getting job status', error instanceof Error ? error : new Error(String(error)), { jobId });
+    logger.error(
+      'Error getting job status',
+      error instanceof Error ? error : new Error(String(error)),
+      { jobId }
+    );
     return null;
   }
 }

@@ -3,20 +3,20 @@
  * Sends trial emails based on day and user actions
  */
 
-import { getEmailTemplate, renderEmailTemplate } from "./templates";
-import { day1EmailTemplate } from "./templates-day1";
-import { day3EmailTemplate } from "./templates-day3";
-import { day7EmailTemplate } from "./templates-day7";
-import { 
-  trialExpiration3DaysTemplate, 
-  trialExpiration1DayTemplate, 
-  trialExpiredTemplate 
-} from "./templates-trial-expiration";
+import { getEmailTemplate, renderEmailTemplate } from './templates';
+import { day1EmailTemplate } from './templates-day1';
+import { day3EmailTemplate } from './templates-day3';
+import { day7EmailTemplate } from './templates-day7';
+import {
+  trialExpiration3DaysTemplate,
+  trialExpiration1DayTemplate,
+  trialExpiredTemplate,
+} from './templates-trial-expiration';
 
-import { emailService } from "@/lib/email/email-service";
-import { logger } from "@/lib/logging/structured-logger";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { getUserPlanData } from "@/lib/trial/user-plan";
+import { emailService } from '@/lib/email/email-service';
+import { logger } from '@/lib/logging/structured-logger';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { getUserPlanData } from '@/lib/trial/user-plan';
 
 /**
  * Send trial email for specific day
@@ -39,8 +39,8 @@ export async function sendTrialEmail(
       to: userEmail,
       subject: template.subject,
       html,
-      text: template.content.body.join("\n\n"),
-      tags: ["trial-email", `day-${day}`],
+      text: template.content.body.join('\n\n'),
+      tags: ['trial-email', `day-${day}`],
       metadata: {
         userId,
         day: day.toString(),
@@ -49,7 +49,7 @@ export async function sendTrialEmail(
     });
 
     if (result.success) {
-      logger.info("Trial email sent", {
+      logger.info('Trial email sent', {
         userId,
         day,
         messageId: result.messageId,
@@ -58,10 +58,14 @@ export async function sendTrialEmail(
 
     return result;
   } catch (error) {
-    logger.error("Failed to send trial email", error instanceof Error ? error : new Error(String(error)), {
-      userId,
-      day,
-    });
+    logger.error(
+      'Failed to send trial email',
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        userId,
+        day,
+      }
+    );
     return {
       success: false,
       error: error instanceof Error ? error.message : String(error),
@@ -75,8 +79,8 @@ export async function sendTrialEmail(
 export async function processTrialEmailsForUser(userId: string): Promise<void> {
   try {
     const userData = await getUserPlanData(userId);
-    
-    if (userData.plan !== "trial" || !userData.trialStartDate) {
+
+    if (userData.plan !== 'trial' || !userData.trialStartDate) {
       return; // Not on trial
     }
 
@@ -90,20 +94,23 @@ export async function processTrialEmailsForUser(userId: string): Promise<void> {
 
     // Get user email from profile
     const supabase = await createServerSupabaseClient();
-    const { data: profile } = await (supabase
-      .from("profiles") as any)
-      .select("email, full_name")
-      .eq("id", userId)
+    const { data: profile } = await (supabase.from('profiles') as any)
+      .select('email, full_name')
+      .eq('id', userId)
       .single();
 
-    const profileData = profile as { email?: string; full_name?: string } | null;
+    const profileData = profile as {
+      email?: string;
+      full_name?: string;
+    } | null;
     if (!profileData?.email) {
-      logger.warn("User email not found", { userId });
+      logger.warn('User email not found', { userId });
       return;
     }
 
-    const userName = profileData.full_name || "there";
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://aiautomatedsystems.ca";
+    const userName = profileData.full_name || 'there';
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL || 'https://aiautomatedsystems.ca';
 
     // Determine which email to send
     let emailTemplate: typeof day1EmailTemplate | null = null;
@@ -130,7 +137,7 @@ export async function processTrialEmailsForUser(userId: string): Promise<void> {
       emailTemplate = trialExpiration1DayTemplate;
     }
     // Trial expired
-    else if (daysRemaining === 0 && userData.plan === "trial") {
+    else if (daysRemaining === 0 && userData.plan === 'trial') {
       emailTemplate = trialExpiredTemplate;
     }
     // Fallback to legacy template system
@@ -145,7 +152,7 @@ export async function processTrialEmailsForUser(userId: string): Promise<void> {
         );
 
         if (result.success) {
-          await (supabase.from("trial_emails_sent") as any).insert({
+          await (supabase.from('trial_emails_sent') as any).insert({
             user_id: userId,
             day: daysSinceStart,
             sent_at: new Date().toISOString(),
@@ -160,10 +167,10 @@ export async function processTrialEmailsForUser(userId: string): Promise<void> {
     if (emailTemplate) {
       // Check if already sent
       const { data: sentEmails } = await supabase
-        .from("trial_emails_sent")
-        .select("day")
-        .eq("user_id", userId)
-        .eq("day", emailDay);
+        .from('trial_emails_sent')
+        .select('day')
+        .eq('user_id', userId)
+        .eq('day', emailDay);
 
       if (sentEmails && sentEmails.length > 0) {
         return; // Already sent
@@ -179,7 +186,7 @@ export async function processTrialEmailsForUser(userId: string): Promise<void> {
         pricingUrl: `${baseUrl}/pricing`,
         helpUrl: `${baseUrl}/help`,
         setupCallUrl: `${baseUrl}/demo`,
-        trialEndDate: userData.trialEndDate?.toLocaleDateString() || "soon",
+        trialEndDate: userData.trialEndDate?.toLocaleDateString() || 'soon',
       };
 
       // Build HTML from template
@@ -192,14 +199,17 @@ export async function processTrialEmailsForUser(userId: string): Promise<void> {
         </head>
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
-            <h1 style="color: white; margin: 0;">${emailTemplate.content.header.replace("{{userName}}", userName)}</h1>
+            <h1 style="color: white; margin: 0;">${emailTemplate.content.header.replace('{{userName}}', userName)}</h1>
           </div>
           <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px;">
             ${emailTemplate.content.body
-              .map((paragraph) => {
+              .map(paragraph => {
                 let rendered = paragraph
                   .replace(/\{\{userName\}\}/g, userName)
-                  .replace(/\{\{integrationsUrl\}\}/g, variables.integrationsUrl)
+                  .replace(
+                    /\{\{integrationsUrl\}\}/g,
+                    variables.integrationsUrl
+                  )
                   .replace(/\{\{workflowsUrl\}\}/g, variables.workflowsUrl)
                   .replace(/\{\{templatesUrl\}\}/g, variables.templatesUrl)
                   .replace(/\{\{caseStudiesUrl\}\}/g, variables.caseStudiesUrl)
@@ -207,21 +217,24 @@ export async function processTrialEmailsForUser(userId: string): Promise<void> {
                   .replace(/\{\{helpUrl\}\}/g, variables.helpUrl)
                   .replace(/\{\{setupCallUrl\}\}/g, variables.setupCallUrl)
                   .replace(/\{\{trialEndDate\}\}/g, variables.trialEndDate);
-                
+
                 // Convert markdown-style links to HTML
                 rendered = rendered.replace(
                   /\[([^\]]+)\]\(([^)]+)\)/g,
                   '<a href="$2" style="color: #4F46E5; text-decoration: underline;">$1</a>'
                 );
-                
+
                 // Convert **bold** to <strong>
-                rendered = rendered.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-                
-                return `<p style="margin: 0 0 15px 0;">${rendered || "<br>"}</p>`;
+                rendered = rendered.replace(
+                  /\*\*([^*]+)\*\*/g,
+                  '<strong>$1</strong>'
+                );
+
+                return `<p style="margin: 0 0 15px 0;">${rendered || '<br>'}</p>`;
               })
-              .join("")}
+              .join('')}
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${emailTemplate.cta.url.replace(/\{\{(\w+)\}\}/g, (_, key) => variables[key as keyof typeof variables] || "")}" 
+              <a href="${emailTemplate.cta.url.replace(/\{\{(\w+)\}\}/g, (_, key) => variables[key as keyof typeof variables] || '')}" 
                  style="display: inline-block; background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
                 ${emailTemplate.cta.text}
               </a>
@@ -235,8 +248,8 @@ export async function processTrialEmailsForUser(userId: string): Promise<void> {
         to: profileData.email!,
         subject: emailTemplate.subject,
         html,
-        text: emailTemplate.content.body.join("\n\n"),
-        tags: ["trial-email", `day-${emailDay}`],
+        text: emailTemplate.content.body.join('\n\n'),
+        tags: ['trial-email', `day-${emailDay}`],
         metadata: {
           userId,
           day: emailDay.toString(),
@@ -245,18 +258,22 @@ export async function processTrialEmailsForUser(userId: string): Promise<void> {
       });
 
       if (result.success) {
-        await (supabase.from("trial_emails_sent") as any).insert({
+        await (supabase.from('trial_emails_sent') as any).insert({
           user_id: userId,
           day: emailDay,
           sent_at: new Date().toISOString(),
           template_id: `trial-day-${emailDay}`,
         });
-        logger.info("Trial email sent", { userId, day: emailDay, email: profileData.email });
+        logger.info('Trial email sent', {
+          userId,
+          day: emailDay,
+          email: profileData.email,
+        });
       }
     }
   } catch (error) {
     logger.error(
-      "Failed to process trial emails",
+      'Failed to process trial emails',
       error instanceof Error ? error : new Error(String(error)),
       { userId }
     );
@@ -270,11 +287,10 @@ export async function processAllTrialEmails(): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
   // Get all users on trial
-  const { data: trialUsers } = await (supabase
-    .from("profiles") as any)
-    .select("id")
-    .eq("subscription_tier", "trial")
-    .not("trial_started_at", "is", null);
+  const { data: trialUsers } = await (supabase.from('profiles') as any)
+    .select('id')
+    .eq('subscription_tier', 'trial')
+    .not('trial_started_at', 'is', null);
 
   if (!trialUsers) {
     return;
@@ -284,6 +300,6 @@ export async function processAllTrialEmails(): Promise<void> {
   for (const user of trialUsers as { id: string }[]) {
     await processTrialEmailsForUser(user.id);
     // Small delay to avoid rate limits
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
   }
 }

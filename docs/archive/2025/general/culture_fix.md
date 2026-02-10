@@ -12,6 +12,7 @@
 **Solution:** Create enterprise landing page, SOC 2 marketing, case studies
 
 **Implementation:**
+
 1. Create `/enterprise` landing page
 2. Add SOC 2 badge to website
 3. Write enterprise case studies (3 examples)
@@ -30,6 +31,7 @@
 **Solution:** Redesign homepage to lead with AI, add AI demos, AI-focused content
 
 **Implementation:**
+
 1. Redesign homepage (AI-first messaging)
 2. Add interactive AI demo
 3. Create AI-focused blog content
@@ -48,6 +50,7 @@
 **Solution:** Create SDKs for Python, Node.js, Ruby
 
 **Implementation:**
+
 1. Generate SDKs from OpenAPI spec
 2. Add SDK documentation
 3. Create SDK examples/tutorials
@@ -66,6 +69,7 @@
 **Solution:** Add pricing calculator, usage estimator, clear limits
 
 **Implementation:**
+
 1. Create pricing calculator (estimate costs)
 2. Add usage estimator (based on current usage)
 3. Display clear limits on pricing page
@@ -84,6 +88,7 @@
 **Solution:** Add Discord, template sharing, agent marketplace
 
 **Implementation:**
+
 1. Set up Discord server
 2. Add template sharing feature
 3. Launch agent marketplace (see `/backlog/READY_agent_marketplace.md`)

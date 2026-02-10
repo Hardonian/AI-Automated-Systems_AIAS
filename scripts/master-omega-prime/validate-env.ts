@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * MASTER OMEGA PRIME — Environment Variable Validation
- * 
+ *
  * Validates all required environment variables based on detected features
  */
 
@@ -50,7 +50,7 @@ const ENV_REQUIREMENTS: EnvRequirement[] = [
     feature: 'core',
     severity: 'critical',
   },
-  
+
   // Vercel
   {
     name: 'VERCEL_TOKEN',
@@ -66,7 +66,7 @@ const ENV_REQUIREMENTS: EnvRequirement[] = [
     feature: 'vercel',
     severity: 'warning',
   },
-  
+
   // Expo
   {
     name: 'APPLE_ID',
@@ -82,7 +82,7 @@ const ENV_REQUIREMENTS: EnvRequirement[] = [
     feature: 'expo',
     severity: 'info',
   },
-  
+
   // Shopify
   {
     name: 'SHOPIFY_API_KEY',
@@ -105,7 +105,7 @@ const ENV_REQUIREMENTS: EnvRequirement[] = [
     feature: 'shopify',
     severity: 'warning',
   },
-  
+
   // TikTok
   {
     name: 'TIKTOK_ACCESS_TOKEN',
@@ -121,7 +121,7 @@ const ENV_REQUIREMENTS: EnvRequirement[] = [
     feature: 'tiktok',
     severity: 'warning',
   },
-  
+
   // Meta Ads
   {
     name: 'META_ACCESS_TOKEN',
@@ -137,7 +137,7 @@ const ENV_REQUIREMENTS: EnvRequirement[] = [
     feature: 'meta-ads',
     severity: 'warning',
   },
-  
+
   // Stripe
   {
     name: 'STRIPE_SECRET_KEY',
@@ -153,7 +153,7 @@ const ENV_REQUIREMENTS: EnvRequirement[] = [
     feature: 'payments',
     severity: 'warning',
   },
-  
+
   // AI Services
   {
     name: 'OPENAI_API_KEY',
@@ -162,7 +162,7 @@ const ENV_REQUIREMENTS: EnvRequirement[] = [
     feature: 'ai',
     severity: 'info',
   },
-  
+
   // GitHub
   {
     name: 'GITHUB_TOKEN',
@@ -190,22 +190,30 @@ function validateEnv(): {
     warnings: number;
   };
 } {
-  const results: ValidationResult[] = ENV_REQUIREMENTS.map((req) => {
+  const results: ValidationResult[] = ENV_REQUIREMENTS.map(req => {
     const value = process.env[req.name];
     return {
       name: req.name,
       present: !!value,
       requirement: req,
-      value: value ? (value.length > 20 ? `${value.substring(0, 20)}...` : value) : undefined,
+      value: value
+        ? value.length > 20
+          ? `${value.substring(0, 20)}...`
+          : value
+        : undefined,
     };
   });
 
   const summary = {
     total: results.length,
-    present: results.filter((r) => r.present).length,
-    missing: results.filter((r) => !r.present).length,
-    critical: results.filter((r) => !r.present && r.requirement.severity === 'critical').length,
-    warnings: results.filter((r) => !r.present && r.requirement.severity === 'warning').length,
+    present: results.filter(r => r.present).length,
+    missing: results.filter(r => !r.present).length,
+    critical: results.filter(
+      r => !r.present && r.requirement.severity === 'critical'
+    ).length,
+    warnings: results.filter(
+      r => !r.present && r.requirement.severity === 'warning'
+    ).length,
   };
 
   return { results, summary };
@@ -225,19 +233,28 @@ function printReport() {
   console.log();
 
   // Group by feature
-  const byFeature = results.reduce((acc, result) => {
-    const {feature} = result.requirement;
-    if (!acc[feature]) {acc[feature] = [];}
-    acc[feature].push(result);
-    return acc;
-  }, {} as Record<string, ValidationResult[]>);
+  const byFeature = results.reduce(
+    (acc, result) => {
+      const { feature } = result.requirement;
+      if (!acc[feature]) {
+        acc[feature] = [];
+      }
+      acc[feature].push(result);
+      return acc;
+    },
+    {} as Record<string, ValidationResult[]>
+  );
 
   Object.entries(byFeature).forEach(([feature, featureResults]) => {
     console.log(`\n📦 ${feature.toUpperCase()}`);
     console.log('-'.repeat(70));
-    
-    featureResults.forEach((result) => {
-      const icon = result.present ? '✅' : result.requirement.severity === 'critical' ? '🚨' : '⚠️';
+
+    featureResults.forEach(result => {
+      const icon = result.present
+        ? '✅'
+        : result.requirement.severity === 'critical'
+          ? '🚨'
+          : '⚠️';
       const status = result.present ? 'PRESENT' : 'MISSING';
       console.log(
         `${icon} ${result.name.padEnd(35)} ${status.padEnd(10)} ${result.requirement.description}`
@@ -245,14 +262,16 @@ function printReport() {
     });
   });
 
-  console.log(`\n${  '='.repeat(70)}`);
-  
+  console.log(`\n${'='.repeat(70)}`);
+
   if (summary.critical > 0) {
     console.log('\n🚨 CRITICAL: Missing required environment variables!');
     console.log('   These must be set for the application to function.\n');
     process.exit(1);
   } else if (summary.warnings > 0) {
-    console.log('\n⚠️  WARNING: Some optional environment variables are missing.');
+    console.log(
+      '\n⚠️  WARNING: Some optional environment variables are missing.'
+    );
     console.log('   Features may not work correctly without these.\n');
     process.exit(0);
   } else {

@@ -1,11 +1,13 @@
 > Archived on 2025-11-12. Superseded by: (see docs/final index)
 
 ---
+
 name: Feature request
 about: Suggest an idea for this project
 title: '[FEATURE] '
 labels: enhancement
 assignees: ''
+
 ---
 
 **Is your feature request related to a problem? Please describe.**

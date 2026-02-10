@@ -3,10 +3,10 @@
  * Analyzes telemetry data to detect usage patterns and generate insights
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -14,7 +14,7 @@ export interface UsagePattern {
   feature: string;
   usageCount: number;
   uniqueUsers: number;
-  trend: "increasing" | "decreasing" | "stable";
+  trend: 'increasing' | 'decreasing' | 'stable';
   adoptionRate: number;
   averageFrequency: number;
 }
@@ -48,37 +48,49 @@ export async function analyzeUsagePatterns(
 
     // Get all events in the period
     const { data: events, error } = await supabase
-      .from("app_events")
-      .select("event_type, user_id, created_at, meta")
-      .gte("created_at", cutoffDate.toISOString());
+      .from('app_events')
+      .select('event_type, user_id, created_at, meta')
+      .gte('created_at', cutoffDate.toISOString());
 
     if (error) {
-      logger.error("Failed to get events for pattern analysis", error instanceof Error ? error : new Error(String(error)));
+      logger.error(
+        'Failed to get events for pattern analysis',
+        error instanceof Error ? error : new Error(String(error))
+      );
       return [];
     }
 
     // Group by feature/event type
-    const featureUsage: Record<string, {
-      count: number;
-      users: Set<string>;
-      timestamps: Date[];
-    }> = {};
+    const featureUsage: Record<
+      string,
+      {
+        count: number;
+        users: Set<string>;
+        timestamps: Date[];
+      }
+    > = {};
 
-    events?.forEach((event: { event_type?: string; created_at: string; user_id?: string }) => {
-      const feature = event.event_type || "unknown";
-      if (!featureUsage[feature]) {
-        featureUsage[feature] = {
-          count: 0,
-          users: new Set(),
-          timestamps: [],
-        };
+    events?.forEach(
+      (event: {
+        event_type?: string;
+        created_at: string;
+        user_id?: string;
+      }) => {
+        const feature = event.event_type || 'unknown';
+        if (!featureUsage[feature]) {
+          featureUsage[feature] = {
+            count: 0,
+            users: new Set(),
+            timestamps: [],
+          };
+        }
+        featureUsage[feature].count++;
+        if (event.user_id) {
+          featureUsage[feature].users.add(event.user_id);
+        }
+        featureUsage[feature].timestamps.push(new Date(event.created_at));
       }
-      featureUsage[feature].count++;
-      if (event.user_id) {
-        featureUsage[feature].users.add(event.user_id);
-      }
-      featureUsage[feature].timestamps.push(new Date(event.created_at));
-    });
+    );
 
     // Calculate patterns
     const patterns: UsagePattern[] = [];
@@ -88,21 +100,23 @@ export async function analyzeUsagePatterns(
       const midPoint = Math.floor(data.timestamps.length / 2);
       const firstHalf = data.timestamps.slice(0, midPoint).length;
       const secondHalf = data.timestamps.slice(midPoint).length;
-      
-      let trend: "increasing" | "decreasing" | "stable" = "stable";
+
+      let trend: 'increasing' | 'decreasing' | 'stable' = 'stable';
       if (secondHalf > firstHalf * 1.1) {
-        trend = "increasing";
+        trend = 'increasing';
       } else if (firstHalf > secondHalf * 1.1) {
-        trend = "decreasing";
+        trend = 'decreasing';
       }
 
       // Calculate adoption rate (users who used this feature / total active users)
       const { count: totalActiveUsers } = await supabase
-        .from("app_events")
-        .select("user_id", { count: "exact", head: true })
-        .gte("created_at", cutoffDate.toISOString());
+        .from('app_events')
+        .select('user_id', { count: 'exact', head: true })
+        .gte('created_at', cutoffDate.toISOString());
 
-      const adoptionRate = totalActiveUsers ? (data.users.size / totalActiveUsers) * 100 : 0;
+      const adoptionRate = totalActiveUsers
+        ? (data.users.size / totalActiveUsers) * 100
+        : 0;
       const averageFrequency = data.count / data.users.size || 0;
 
       patterns.push({
@@ -118,7 +132,10 @@ export async function analyzeUsagePatterns(
     // Sort by usage count
     return patterns.sort((a, b) => b.usageCount - a.usageCount);
   } catch (error) {
-    logger.error("Failed to analyze usage patterns", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Failed to analyze usage patterns',
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -126,18 +143,18 @@ export async function analyzeUsagePatterns(
 /**
  * Detect incomplete workflows
  */
-export async function detectIncompleteWorkflows(): Promise<Array<{
-  workflowId: string;
-  userId: string;
-  issue: string;
-  recommendation: string;
-}>> {
+export async function detectIncompleteWorkflows(): Promise<
+  Array<{
+    workflowId: string;
+    userId: string;
+    issue: string;
+    recommendation: string;
+  }>
+> {
   try {
     // Get workflows with execution counts in a single query to avoid N+1
     // Using a subquery to count executions per workflow
-    const { data: workflows } = await supabase
-      .from("workflows")
-      .select(`
+    const { data: workflows } = await supabase.from('workflows').select(`
         id,
         user_id,
         name,
@@ -159,21 +176,25 @@ export async function detectIncompleteWorkflows(): Promise<Array<{
 
     for (const workflow of workflows) {
       // Get execution count from the joined data
-      const executionCount = (workflow.workflow_executions as unknown as Array<unknown>)?.length || 0;
+      const executionCount =
+        (workflow.workflow_executions as unknown as Array<unknown>)?.length ||
+        0;
 
       if (executionCount === 0) {
         const daysSinceCreation = Math.floor(
-          (Date.now() - new Date(workflow.created_at).getTime()) / (1000 * 60 * 60 * 24)
+          (Date.now() - new Date(workflow.created_at).getTime()) /
+            (1000 * 60 * 60 * 24)
         );
 
         if (daysSinceCreation >= 7) {
           incomplete.push({
             workflowId: workflow.id,
             userId: workflow.user_id,
-            issue: "Workflow created but never executed",
-            recommendation: daysSinceCreation >= 30
-              ? "Consider archiving or deleting this workflow"
-              : "Test the workflow or check if it needs configuration",
+            issue: 'Workflow created but never executed',
+            recommendation:
+              daysSinceCreation >= 30
+                ? 'Consider archiving or deleting this workflow'
+                : 'Test the workflow or check if it needs configuration',
           });
         }
       }
@@ -181,15 +202,16 @@ export async function detectIncompleteWorkflows(): Promise<Array<{
       // Check if workflow is disabled
       if (!workflow.enabled) {
         const daysSinceCreation = Math.floor(
-          (Date.now() - new Date(workflow.created_at).getTime()) / (1000 * 60 * 60 * 24)
+          (Date.now() - new Date(workflow.created_at).getTime()) /
+            (1000 * 60 * 60 * 24)
         );
 
         if (daysSinceCreation >= 14) {
           incomplete.push({
             workflowId: workflow.id,
             userId: workflow.user_id,
-            issue: "Workflow has been disabled for extended period",
-            recommendation: "Re-enable or delete this workflow",
+            issue: 'Workflow has been disabled for extended period',
+            recommendation: 'Re-enable or delete this workflow',
           });
         }
       }
@@ -197,7 +219,10 @@ export async function detectIncompleteWorkflows(): Promise<Array<{
 
     return incomplete;
   } catch (error) {
-    logger.error("Failed to detect incomplete workflows", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Failed to detect incomplete workflows',
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -209,53 +234,77 @@ export async function detectFrictionPoints(): Promise<FrictionPoint[]> {
   try {
     // Get onboarding events
     const { data: onboardingEvents } = await supabase
-      .from("app_events")
-      .select("event_type, user_id, created_at, meta")
-      .in("event_type", ["onboarding_started", "onboarding_step_completed", "onboarding_completed"])
-      .order("created_at", { ascending: true });
+      .from('app_events')
+      .select('event_type, user_id, created_at, meta')
+      .in('event_type', [
+        'onboarding_started',
+        'onboarding_step_completed',
+        'onboarding_completed',
+      ])
+      .order('created_at', { ascending: true });
 
     if (!onboardingEvents) {
       return [];
     }
 
     // Group by user and track progression
-    const userProgress: Record<string, {
-      started: Date | null;
-      steps: string[];
-      completed: boolean;
-    }> = {};
-
-    onboardingEvents.forEach((event: { user_id?: string; event_type?: string; created_at: string; meta?: Record<string, unknown> }) => {
-      const userId = event.user_id || "unknown";
-      if (!userProgress[userId]) {
-        userProgress[userId] = {
-          started: null,
-          steps: [],
-          completed: false,
-        };
+    const userProgress: Record<
+      string,
+      {
+        started: Date | null;
+        steps: string[];
+        completed: boolean;
       }
+    > = {};
 
-      if (event.event_type === "onboarding_started") {
-        userProgress[userId].started = new Date(event.created_at);
-      } else if (event.event_type === "onboarding_step_completed") {
-        const stepId = (event.meta as Record<string, unknown>)?.step_id as string;
-        if (stepId) {
-          userProgress[userId].steps.push(stepId);
+    onboardingEvents.forEach(
+      (event: {
+        user_id?: string;
+        event_type?: string;
+        created_at: string;
+        meta?: Record<string, unknown>;
+      }) => {
+        const userId = event.user_id || 'unknown';
+        if (!userProgress[userId]) {
+          userProgress[userId] = {
+            started: null,
+            steps: [],
+            completed: false,
+          };
         }
-      } else if (event.event_type === "onboarding_completed") {
-        userProgress[userId].completed = true;
+
+        if (event.event_type === 'onboarding_started') {
+          userProgress[userId].started = new Date(event.created_at);
+        } else if (event.event_type === 'onboarding_step_completed') {
+          const stepId = (event.meta as Record<string, unknown>)
+            ?.step_id as string;
+          if (stepId) {
+            userProgress[userId].steps.push(stepId);
+          }
+        } else if (event.event_type === 'onboarding_completed') {
+          userProgress[userId].completed = true;
+        }
       }
-    });
+    );
 
     // Calculate drop-off rates by step
-    const stepStats: Record<string, {
-      reached: number;
-      completed: number;
-      averageTime: number;
-      errors: string[];
-    }> = {};
+    const stepStats: Record<
+      string,
+      {
+        reached: number;
+        completed: number;
+        averageTime: number;
+        errors: string[];
+      }
+    > = {};
 
-    const allSteps = ["welcome", "choose-integration", "create-workflow", "test-workflow", "complete"];
+    const allSteps = [
+      'welcome',
+      'choose-integration',
+      'create-workflow',
+      'test-workflow',
+      'complete',
+    ];
 
     allSteps.forEach((step, index) => {
       stepStats[step] = {
@@ -265,7 +314,7 @@ export async function detectFrictionPoints(): Promise<FrictionPoint[]> {
         errors: [],
       };
 
-      Object.values(userProgress).forEach((progress) => {
+      Object.values(userProgress).forEach(progress => {
         if (progress && progress.steps && progress.steps.length >= index) {
           stepStats[step]!.reached++;
         }
@@ -280,9 +329,11 @@ export async function detectFrictionPoints(): Promise<FrictionPoint[]> {
 
     for (const [step, stats] of Object.entries(stepStats)) {
       const dropOffCount = stats.reached - stats.completed;
-      const dropOffRate = stats.reached > 0 ? (dropOffCount / stats.reached) * 100 : 0;
+      const dropOffRate =
+        stats.reached > 0 ? (dropOffCount / stats.reached) * 100 : 0;
 
-      if (dropOffRate > 20) { // Only report significant drop-offs
+      if (dropOffRate > 20) {
+        // Only report significant drop-offs
         frictionPoints.push({
           step,
           dropOffCount,
@@ -295,7 +346,10 @@ export async function detectFrictionPoints(): Promise<FrictionPoint[]> {
 
     return frictionPoints.sort((a, b) => b.dropOffRate - a.dropOffRate);
   } catch (error) {
-    logger.error("Failed to detect friction points", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Failed to detect friction points',
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -304,15 +358,23 @@ export async function detectFrictionPoints(): Promise<FrictionPoint[]> {
  * Correlate conversion signals
  */
 export async function analyzeConversionSignals(): Promise<{
-  activationSignals: Array<{ signal: string; correlation: number; impact: "high" | "medium" | "low" }>;
-  churnSignals: Array<{ signal: string; correlation: number; impact: "high" | "medium" | "low" }>;
+  activationSignals: Array<{
+    signal: string;
+    correlation: number;
+    impact: 'high' | 'medium' | 'low';
+  }>;
+  churnSignals: Array<{
+    signal: string;
+    correlation: number;
+    impact: 'high' | 'medium' | 'low';
+  }>;
 }> {
   try {
     // Get activated users (have integration + workflow + execution)
     const { data: activatedUsers } = await supabase
-      .from("app_events")
-      .select("user_id, meta")
-      .eq("event_type", "activated")
+      .from('app_events')
+      .select('user_id, meta')
+      .eq('event_type', 'activated')
       .limit(100);
 
     // Get churned users (inactive for 30+ days)
@@ -320,13 +382,13 @@ export async function analyzeConversionSignals(): Promise<{
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
     const { data: allUsers } = await supabase
-      .from("app_events")
-      .select("user_id, created_at")
-      .order("created_at", { ascending: false });
+      .from('app_events')
+      .select('user_id, created_at')
+      .order('created_at', { ascending: false });
 
     const userLastActivity: Record<string, Date> = {};
     allUsers?.forEach((event: { user_id?: string; created_at: string }) => {
-      const userId = event.user_id || "unknown";
+      const userId = event.user_id || 'unknown';
       const eventDate = new Date(event.created_at);
       if (!userLastActivity[userId] || eventDate > userLastActivity[userId]) {
         userLastActivity[userId] = eventDate;
@@ -334,20 +396,25 @@ export async function analyzeConversionSignals(): Promise<{
     });
 
     // Analyze signals for activated users
-    const activationSignals: Array<{ signal: string; correlation: number; impact: "high" | "medium" | "low" }> = [];
+    const activationSignals: Array<{
+      signal: string;
+      correlation: number;
+      impact: 'high' | 'medium' | 'low';
+    }> = [];
 
     // Signal 1: Onboarding completion speed
-    const fastOnboarders = activatedUsers?.filter((_user: { [key: string]: unknown }) => {
-      // Users who completed onboarding quickly (heuristic)
-      return true; // Simplified
-    }).length || 0;
+    const fastOnboarders =
+      activatedUsers?.filter((_user: { [key: string]: unknown }) => {
+        // Users who completed onboarding quickly (heuristic)
+        return true; // Simplified
+      }).length || 0;
 
     if (activatedUsers && activatedUsers.length > 0) {
       const correlation = (fastOnboarders / activatedUsers.length) * 100;
       activationSignals.push({
-        signal: "Fast onboarding completion (<5 minutes)",
+        signal: 'Fast onboarding completion (<5 minutes)',
         correlation: Math.round(correlation * 10) / 10,
-        impact: correlation > 70 ? "high" : correlation > 40 ? "medium" : "low",
+        impact: correlation > 70 ? 'high' : correlation > 40 ? 'medium' : 'low',
       });
     }
 
@@ -356,7 +423,11 @@ export async function analyzeConversionSignals(): Promise<{
     // Signal 4: First workflow execution
 
     // Analyze signals for churned users
-    const churnSignals: Array<{ signal: string; correlation: number; impact: "high" | "medium" | "low" }> = [];
+    const churnSignals: Array<{
+      signal: string;
+      correlation: number;
+      impact: 'high' | 'medium' | 'low';
+    }> = [];
 
     // Signal 1: Low usage
     // Signal 2: No workflows created
@@ -367,7 +438,10 @@ export async function analyzeConversionSignals(): Promise<{
       churnSignals,
     };
   } catch (error) {
-    logger.error("Failed to analyze conversion signals", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Failed to analyze conversion signals',
+      error instanceof Error ? error : new Error(String(error))
+    );
     return {
       activationSignals: [],
       churnSignals: [],

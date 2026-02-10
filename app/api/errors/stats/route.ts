@@ -12,7 +12,7 @@ export const GET = createGETHandler(
   async () => {
     const stats = errorTracker.getErrorStats();
     const grouped = errorTracker.getErrorsByFingerprint();
-    
+
     // Calculate top errors
     const topErrors = Object.entries(grouped)
       .map(([fingerprint, errors]) => ({
@@ -22,7 +22,7 @@ export const GET = createGETHandler(
       }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
-    
+
     return NextResponse.json({
       timestamp: new Date().toISOString(),
       summary: {

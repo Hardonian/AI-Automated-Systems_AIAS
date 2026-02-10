@@ -1,14 +1,19 @@
 // scripts/etl/pull_shopify_orders.ts
-import fetch from "node-fetch";
-import pg from "pg";
+import fetch from 'node-fetch';
+import pg from 'pg';
 
-const {SHOPIFY_API_KEY} = process.env;
-const {SHOPIFY_PASSWORD} = process.env;
-const {SHOPIFY_STORE} = process.env;
-const DATABASE_URL = process.env.DATABASE_URL || process.env.SUPABASE_DB_URL || process.env.SUPABASE_SERVICE_ROLE_KEY;
+const { SHOPIFY_API_KEY } = process.env;
+const { SHOPIFY_PASSWORD } = process.env;
+const { SHOPIFY_STORE } = process.env;
+const DATABASE_URL =
+  process.env.DATABASE_URL ||
+  process.env.SUPABASE_DB_URL ||
+  process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!SHOPIFY_API_KEY || !SHOPIFY_PASSWORD || !SHOPIFY_STORE || !DATABASE_URL) {
-  console.error("Missing required env vars: SHOPIFY_API_KEY, SHOPIFY_PASSWORD, SHOPIFY_STORE, DATABASE_URL");
+  console.error(
+    'Missing required env vars: SHOPIFY_API_KEY, SHOPIFY_PASSWORD, SHOPIFY_STORE, DATABASE_URL'
+  );
   process.exit(1);
 }
 
@@ -48,30 +53,36 @@ async function pullShopifyOrders() {
     let totalOrders = 0;
 
     while (hasNextPage) {
-      const url = `${SHOPIFY_URL}/orders.json?limit=250&created_at_min=${startDate.toISOString()}&created_at_max=${endDate.toISOString()}${pageInfo ? `&page_info=${pageInfo}` : ""}`;
+      const url = `${SHOPIFY_URL}/orders.json?limit=250&created_at_min=${startDate.toISOString()}&created_at_max=${endDate.toISOString()}${pageInfo ? `&page_info=${pageInfo}` : ''}`;
 
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Shopify API error: ${response.statusText}`);
       }
 
-      const data = await response.json() as { orders: ShopifyOrder[] };
-      const linkHeader = response.headers.get("link");
+      const data = (await response.json()) as { orders: ShopifyOrder[] };
+      const linkHeader = response.headers.get('link');
       pageInfo = extractPageInfo(linkHeader);
       hasNextPage = !!pageInfo && linkHeader?.includes('rel="next"');
 
       // Insert into orders table
       for (const order of data.orders) {
-        const items = order.line_items.map((item) => ({
+        const items = order.line_items.map(item => ({
           title: item.title,
           quantity: item.quantity,
           price: parseFloat(item.price),
         }));
 
-        const subtotalCents = Math.round(parseFloat(order.subtotal_price) * 100);
-        const shippingCents = Math.round(parseFloat(order.total_shipping_price_set.shop_money.amount) * 100);
+        const subtotalCents = Math.round(
+          parseFloat(order.subtotal_price) * 100
+        );
+        const shippingCents = Math.round(
+          parseFloat(order.total_shipping_price_set.shop_money.amount) * 100
+        );
         const taxCents = Math.round(parseFloat(order.total_tax) * 100);
-        const discountCents = Math.round(parseFloat(order.total_discounts || "0") * 100);
+        const discountCents = Math.round(
+          parseFloat(order.total_discounts || '0') * 100
+        );
         const totalCents = Math.round(parseFloat(order.total_price) * 100);
 
         await client.query(
@@ -106,7 +117,7 @@ async function pullShopifyOrders() {
 
     console.log(`✅ Pulled ${totalOrders} Shopify orders`);
   } catch (error) {
-    console.error("Error pulling Shopify orders:", error);
+    console.error('Error pulling Shopify orders:', error);
     throw error;
   } finally {
     client.release();
@@ -115,13 +126,15 @@ async function pullShopifyOrders() {
 }
 
 function extractPageInfo(linkHeader: string | null): string | null {
-  if (!linkHeader) {return null;}
+  if (!linkHeader) {
+    return null;
+  }
   const match = linkHeader.match(/page_info=([^&>]+)/);
   return match ? match[1] : null;
 }
 
 if (require.main === module) {
-  pullShopifyOrders().catch((e) => {
+  pullShopifyOrders().catch(e => {
     console.error(e);
     process.exit(1);
   });

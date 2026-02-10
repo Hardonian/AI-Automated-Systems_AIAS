@@ -22,10 +22,7 @@
   "copy": {
     "stickyCta": {
       "heading": "Ready to Transform Your Business?",
-      "items": [
-        "Schedule a free strategy call",
-        "See our builds"
-      ],
+      "items": ["Schedule a free strategy call", "See our builds"],
       "primaryCta": {
         "label": "Schedule Call",
         "href": "/demo"
@@ -36,4 +33,3 @@
     }
   }
 }
-

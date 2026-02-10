@@ -1,6 +1,6 @@
 /**
  * UX Event Tracker
- * 
+ *
  * Tracks UX interactions for measurement and optimization
  * Logs locally in dev, stubs for backend integration
  */
@@ -15,9 +15,9 @@ import type {
   ErrorEvent,
   RetryEvent,
   MilestoneEvent,
-} from "./types";
+} from './types';
 
-const isDev = process.env.NODE_ENV === "development";
+const isDev = process.env.NODE_ENV === 'development';
 
 /**
  * Event storage (in-memory for dev)
@@ -39,7 +39,7 @@ export function trackUXEvent(event: UXEvent): void {
 
   // Log in dev
   if (isDev) {
-    console.log("[UX Event]", eventWithTimestamp);
+    console.log('[UX Event]', eventWithTimestamp);
   }
 
   // TODO: Send to backend in production
@@ -61,7 +61,7 @@ export function trackStepViewed(
   metadata?: Record<string, unknown>
 ): void {
   const event: StepViewedEvent = {
-    type: "step_viewed",
+    type: 'step_viewed',
     flow,
     step,
     stepId,
@@ -82,7 +82,7 @@ export function trackStepCompleted(
   metadata?: Record<string, unknown>
 ): void {
   const event: StepCompletedEvent = {
-    type: "step_completed",
+    type: 'step_completed',
     flow,
     step,
     stepId,
@@ -101,7 +101,7 @@ export function trackFlowStarted(
   metadata?: Record<string, unknown>
 ): void {
   const event: FlowStartedEvent = {
-    type: "flow_started",
+    type: 'flow_started',
     flow,
     timestamp: new Date().toISOString(),
     metadata,
@@ -119,7 +119,7 @@ export function trackFlowCompleted(
   metadata?: Record<string, unknown>
 ): void {
   const event: FlowCompletedEvent = {
-    type: "flow_completed",
+    type: 'flow_completed',
     flow,
     duration,
     stepsCompleted,
@@ -138,7 +138,7 @@ export function trackSuccess(
   metadata?: Record<string, unknown>
 ): void {
   const event: SuccessEvent = {
-    type: "success",
+    type: 'success',
     flow,
     action,
     timestamp: new Date().toISOString(),
@@ -158,7 +158,7 @@ export function trackError(
   metadata?: Record<string, unknown>
 ): void {
   const event: ErrorEvent = {
-    type: "error",
+    type: 'error',
     flow,
     error,
     errorCode,
@@ -179,7 +179,7 @@ export function trackRetry(
   metadata?: Record<string, unknown>
 ): void {
   const event: RetryEvent = {
-    type: "retry",
+    type: 'retry',
     flow,
     step,
     attempt,
@@ -198,7 +198,7 @@ export function trackMilestone(
   metadata?: Record<string, unknown>
 ): void {
   const event: MilestoneEvent = {
-    type: "milestone_reached",
+    type: 'milestone_reached',
     flow,
     milestone,
     timestamp: new Date().toISOString(),

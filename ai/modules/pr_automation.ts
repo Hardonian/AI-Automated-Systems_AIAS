@@ -49,7 +49,7 @@ export class PRAutomation {
         title: options.title,
         head: branchName,
         base: baseBranch,
-        body: options.body
+        body: options.body,
       });
 
       // Add labels
@@ -58,7 +58,7 @@ export class PRAutomation {
           owner: this.config.githubOwner,
           repo: this.config.githubRepo,
           issue_number: pr.number,
-          labels: options.labels
+          labels: options.labels,
         });
       }
 
@@ -69,13 +69,16 @@ export class PRAutomation {
     }
   }
 
-  private async createBranch(branchName: string, baseBranch: string): Promise<void> {
+  private async createBranch(
+    branchName: string,
+    baseBranch: string
+  ): Promise<void> {
     try {
       // Get base branch SHA
       const { data: baseRef } = await this.octokit.rest.git.getRef({
         owner: this.config.githubOwner,
         repo: this.config.githubRepo,
-        ref: `heads/${baseBranch}`
+        ref: `heads/${baseBranch}`,
       });
 
       // Create new branch
@@ -83,7 +86,7 @@ export class PRAutomation {
         owner: this.config.githubOwner,
         repo: this.config.githubRepo,
         ref: `refs/heads/${branchName}`,
-        sha: baseRef.object.sha
+        sha: baseRef.object.sha,
       });
     } catch (error: any) {
       if (error.status === 422) {
@@ -92,7 +95,7 @@ export class PRAutomation {
           await this.octokit.rest.git.deleteRef({
             owner: this.config.githubOwner,
             repo: this.config.githubRepo,
-            ref: `heads/${branchName}`
+            ref: `heads/${branchName}`,
           });
           await this.createBranch(branchName, baseBranch);
         } catch (deleteError) {
@@ -104,21 +107,32 @@ export class PRAutomation {
     }
   }
 
-  private async applyChange(change: { path: string; content: string }): Promise<void> {
+  private async applyChange(change: {
+    path: string;
+    content: string;
+  }): Promise<void> {
     const filePath = join(process.cwd(), change.path);
     writeFileSync(filePath, change.content, 'utf-8');
   }
 
-  private async commitChanges(branchName: string, message: string): Promise<void> {
+  private async commitChanges(
+    branchName: string,
+    message: string
+  ): Promise<void> {
     try {
       execSync('git config user.name "Orchestrator Bot"', { stdio: 'pipe' });
-      execSync('git config user.email "orchestrator@hardonia.ai"', { stdio: 'pipe' });
+      execSync('git config user.email "orchestrator@hardonia.ai"', {
+        stdio: 'pipe',
+      });
       execSync(`git checkout ${branchName}`, { stdio: 'pipe' });
       execSync('git add -A', { stdio: 'pipe' });
       execSync(`git commit -m "${message}"`, { stdio: 'pipe' });
       execSync(`git push origin ${branchName}`, { stdio: 'pipe' });
     } catch (error: any) {
-      console.warn('Git operations failed (might be expected in CI):', error.message);
+      console.warn(
+        'Git operations failed (might be expected in CI):',
+        error.message
+      );
     }
   }
 
@@ -129,7 +143,7 @@ export class PRAutomation {
         repo: this.config.githubRepo,
         title,
         body,
-        labels: ['orchestrator', 'requires-review', 'breaking-change']
+        labels: ['orchestrator', 'requires-review', 'breaking-change'],
       });
     } catch (error) {
       console.error('Failed to create issue:', error);

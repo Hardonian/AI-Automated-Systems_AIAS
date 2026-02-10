@@ -1,9 +1,9 @@
 /**
  * Product Analytics Event Catalog
- * 
+ *
  * Typed event definitions and tracking helpers based on event taxonomy.
  * All events go through this catalog to ensure consistency and type safety.
- * 
+ *
  * Usage:
  *   import { trackEvent, trackCtaClick } from '@/lib/telemetry/events';
  *   trackEvent('project_created', { projectId: '123', projectName: 'My Project' });
@@ -249,7 +249,12 @@ export interface ExperimentAssignedPayload extends BaseEventPayload {
   experimentKey: string;
   variant: string;
   userId: string;
-  assignmentMethod?: 'stable_hash' | 'random' | 'override' | 'segment' | 'other';
+  assignmentMethod?:
+    | 'stable_hash'
+    | 'random'
+    | 'override'
+    | 'segment'
+    | 'other';
 }
 
 export interface ExperimentViewedPayload extends BaseEventPayload {
@@ -294,12 +299,16 @@ export interface IntegrationSyncedPayload extends BaseEventPayload {
  * Get current user ID (from session/auth)
  */
 function getUserId(): string | undefined {
-  if (typeof window === 'undefined') {return undefined;}
-  
+  if (typeof window === 'undefined') {
+    return undefined;
+  }
+
   // Try to get from session storage or auth context
   const sessionUserId = sessionStorage.getItem('user_id');
-  if (sessionUserId) {return sessionUserId;}
-  
+  if (sessionUserId) {
+    return sessionUserId;
+  }
+
   // Fallback to session ID if no user ID
   return sessionStorage.getItem('analytics_session_id') || undefined;
 }
@@ -308,11 +317,13 @@ function getUserId(): string | undefined {
  * Get current session ID
  */
 function getSessionId(): string {
-  if (typeof window === 'undefined') {return '';}
-  
+  if (typeof window === 'undefined') {
+    return '';
+  }
+
   let sessionId = sessionStorage.getItem('analytics_session_id');
   if (!sessionId) {
-    sessionId = `session_${  Math.random().toString(36).substr(2, 9)  }_${  Date.now()}`;
+    sessionId = `session_${Math.random().toString(36).substr(2, 9)}_${Date.now()}`;
     sessionStorage.setItem('analytics_session_id', sessionId);
   }
   return sessionId;
@@ -322,7 +333,9 @@ function getSessionId(): string {
  * Get current route
  */
 function getCurrentRoute(): string {
-  if (typeof window === 'undefined') {return '/';}
+  if (typeof window === 'undefined') {
+    return '/';
+  }
   return window.location.pathname;
 }
 
@@ -334,7 +347,7 @@ function enrichPayload<T extends BaseEventPayload>(payload: T): T {
   const sessionId = payload.sessionId || getSessionId();
   const route = payload.route || getCurrentRoute();
   const timestamp = payload.timestamp || new Date().toISOString();
-  
+
   return {
     ...payload,
     userId,
@@ -354,7 +367,7 @@ export async function trackEvent<T extends BaseEventPayload>(
   try {
     const enriched = enrichPayload(payload);
     const userId = enriched.userId || enriched.sessionId || 'anonymous';
-    
+
     await track(userId, {
       type: eventName,
       path: enriched.route,
@@ -382,11 +395,15 @@ export async function trackPageView(payload: PageViewPayload): Promise<void> {
   await trackEvent('page_view', payload);
 }
 
-export async function trackSessionStarted(payload: SessionStartedPayload): Promise<void> {
+export async function trackSessionStarted(
+  payload: SessionStartedPayload
+): Promise<void> {
   await trackEvent('session_started', payload);
 }
 
-export async function trackSessionEnded(payload: SessionEndedPayload): Promise<void> {
+export async function trackSessionEnded(
+  payload: SessionEndedPayload
+): Promise<void> {
   await trackEvent('session_ended', payload);
 }
 
@@ -394,19 +411,27 @@ export async function trackSessionEnded(payload: SessionEndedPayload): Promise<v
 // Onboarding Event Helpers
 // ============================================================================
 
-export async function trackOnboardingStarted(payload: OnboardingStartedPayload): Promise<void> {
+export async function trackOnboardingStarted(
+  payload: OnboardingStartedPayload
+): Promise<void> {
   await trackEvent('onboarding_started', payload);
 }
 
-export async function trackOnboardingStepCompleted(payload: OnboardingStepCompletedPayload): Promise<void> {
+export async function trackOnboardingStepCompleted(
+  payload: OnboardingStepCompletedPayload
+): Promise<void> {
   await trackEvent('onboarding_step_completed', payload);
 }
 
-export async function trackOnboardingCompleted(payload: OnboardingCompletedPayload): Promise<void> {
+export async function trackOnboardingCompleted(
+  payload: OnboardingCompletedPayload
+): Promise<void> {
   await trackEvent('onboarding_completed', payload);
 }
 
-export async function trackOnboardingAbandoned(payload: OnboardingAbandonedPayload): Promise<void> {
+export async function trackOnboardingAbandoned(
+  payload: OnboardingAbandonedPayload
+): Promise<void> {
   await trackEvent('onboarding_abandoned', payload);
 }
 
@@ -414,23 +439,33 @@ export async function trackOnboardingAbandoned(payload: OnboardingAbandonedPaylo
 // Product Action Helpers
 // ============================================================================
 
-export async function trackProjectCreated(payload: ProjectCreatedPayload): Promise<void> {
+export async function trackProjectCreated(
+  payload: ProjectCreatedPayload
+): Promise<void> {
   await trackEvent('project_created', payload);
 }
 
-export async function trackProjectUpdated(payload: ProjectUpdatedPayload): Promise<void> {
+export async function trackProjectUpdated(
+  payload: ProjectUpdatedPayload
+): Promise<void> {
   await trackEvent('project_updated', payload);
 }
 
-export async function trackProjectDeleted(payload: ProjectDeletedPayload): Promise<void> {
+export async function trackProjectDeleted(
+  payload: ProjectDeletedPayload
+): Promise<void> {
   await trackEvent('project_deleted', payload);
 }
 
-export async function trackWorkflowCreated(payload: WorkflowCreatedPayload): Promise<void> {
+export async function trackWorkflowCreated(
+  payload: WorkflowCreatedPayload
+): Promise<void> {
   await trackEvent('workflow_created', payload);
 }
 
-export async function trackWorkflowExecuted(payload: WorkflowExecutedPayload): Promise<void> {
+export async function trackWorkflowExecuted(
+  payload: WorkflowExecutedPayload
+): Promise<void> {
   await trackEvent('workflow_executed', payload);
 }
 
@@ -438,7 +473,9 @@ export async function trackItemAdded(payload: ItemAddedPayload): Promise<void> {
   await trackEvent('item_added', payload);
 }
 
-export async function trackItemPublished(payload: ItemPublishedPayload): Promise<void> {
+export async function trackItemPublished(
+  payload: ItemPublishedPayload
+): Promise<void> {
   await trackEvent('item_published', payload);
 }
 
@@ -446,27 +483,39 @@ export async function trackItemPublished(payload: ItemPublishedPayload): Promise
 // Conversion Event Helpers
 // ============================================================================
 
-export async function trackCheckoutStarted(payload: CheckoutStartedPayload): Promise<void> {
+export async function trackCheckoutStarted(
+  payload: CheckoutStartedPayload
+): Promise<void> {
   await trackEvent('checkout_started', payload);
 }
 
-export async function trackCheckoutStepCompleted(payload: CheckoutStepCompletedPayload): Promise<void> {
+export async function trackCheckoutStepCompleted(
+  payload: CheckoutStepCompletedPayload
+): Promise<void> {
   await trackEvent('checkout_step_completed', payload);
 }
 
-export async function trackCheckoutCompleted(payload: CheckoutCompletedPayload): Promise<void> {
+export async function trackCheckoutCompleted(
+  payload: CheckoutCompletedPayload
+): Promise<void> {
   await trackEvent('checkout_completed', payload);
 }
 
-export async function trackCheckoutAbandoned(payload: CheckoutAbandonedPayload): Promise<void> {
+export async function trackCheckoutAbandoned(
+  payload: CheckoutAbandonedPayload
+): Promise<void> {
   await trackEvent('checkout_abandoned', payload);
 }
 
-export async function trackSubscriptionStarted(payload: SubscriptionStartedPayload): Promise<void> {
+export async function trackSubscriptionStarted(
+  payload: SubscriptionStartedPayload
+): Promise<void> {
   await trackEvent('subscription_started', payload);
 }
 
-export async function trackSubscriptionCanceled(payload: SubscriptionCanceledPayload): Promise<void> {
+export async function trackSubscriptionCanceled(
+  payload: SubscriptionCanceledPayload
+): Promise<void> {
   await trackEvent('subscription_canceled', payload);
 }
 
@@ -495,23 +544,33 @@ export async function trackCtaClick(
   });
 }
 
-export async function trackFeatureUsed(payload: FeatureUsedPayload): Promise<void> {
+export async function trackFeatureUsed(
+  payload: FeatureUsedPayload
+): Promise<void> {
   await trackEvent('feature_used', payload);
 }
 
-export async function trackSearchPerformed(payload: SearchPerformedPayload): Promise<void> {
+export async function trackSearchPerformed(
+  payload: SearchPerformedPayload
+): Promise<void> {
   await trackEvent('search_performed', payload);
 }
 
-export async function trackFilterApplied(payload: FilterAppliedPayload): Promise<void> {
+export async function trackFilterApplied(
+  payload: FilterAppliedPayload
+): Promise<void> {
   await trackEvent('filter_applied', payload);
 }
 
-export async function trackDropdownOpened(payload: DropdownOpenedPayload): Promise<void> {
+export async function trackDropdownOpened(
+  payload: DropdownOpenedPayload
+): Promise<void> {
   await trackEvent('dropdown_opened', payload);
 }
 
-export async function trackTabChanged(payload: TabChangedPayload): Promise<void> {
+export async function trackTabChanged(
+  payload: TabChangedPayload
+): Promise<void> {
   await trackEvent('tab_changed', payload);
 }
 
@@ -519,19 +578,27 @@ export async function trackTabChanged(payload: TabChangedPayload): Promise<void>
 // Error Event Helpers
 // ============================================================================
 
-export async function trackFormValidationFailed(payload: FormValidationFailedPayload): Promise<void> {
+export async function trackFormValidationFailed(
+  payload: FormValidationFailedPayload
+): Promise<void> {
   await trackEvent('form_validation_failed', payload);
 }
 
-export async function trackApiErrorShown(payload: ApiErrorShownPayload): Promise<void> {
+export async function trackApiErrorShown(
+  payload: ApiErrorShownPayload
+): Promise<void> {
   await trackEvent('api_error_shown', payload);
 }
 
-export async function trackFeatureFlagFallbackTriggered(payload: FeatureFlagFallbackTriggeredPayload): Promise<void> {
+export async function trackFeatureFlagFallbackTriggered(
+  payload: FeatureFlagFallbackTriggeredPayload
+): Promise<void> {
   await trackEvent('feature_flag_fallback_triggered', payload);
 }
 
-export async function trackExperimentAssignmentFailed(payload: ExperimentAssignmentFailedPayload): Promise<void> {
+export async function trackExperimentAssignmentFailed(
+  payload: ExperimentAssignmentFailedPayload
+): Promise<void> {
   await trackEvent('experiment_assignment_failed', payload);
 }
 
@@ -539,15 +606,21 @@ export async function trackExperimentAssignmentFailed(payload: ExperimentAssignm
 // Experiment Event Helpers
 // ============================================================================
 
-export async function trackExperimentAssigned(payload: ExperimentAssignedPayload): Promise<void> {
+export async function trackExperimentAssigned(
+  payload: ExperimentAssignedPayload
+): Promise<void> {
   await trackEvent('experiment_assigned', payload);
 }
 
-export async function trackExperimentViewed(payload: ExperimentViewedPayload): Promise<void> {
+export async function trackExperimentViewed(
+  payload: ExperimentViewedPayload
+): Promise<void> {
   await trackEvent('experiment_viewed', payload);
 }
 
-export async function trackExperimentConverted(payload: ExperimentConvertedPayload): Promise<void> {
+export async function trackExperimentConverted(
+  payload: ExperimentConvertedPayload
+): Promise<void> {
   await trackEvent('experiment_converted', payload);
 }
 
@@ -555,14 +628,20 @@ export async function trackExperimentConverted(payload: ExperimentConvertedPaylo
 // Integration Event Helpers
 // ============================================================================
 
-export async function trackIntegrationConnected(payload: IntegrationConnectedPayload): Promise<void> {
+export async function trackIntegrationConnected(
+  payload: IntegrationConnectedPayload
+): Promise<void> {
   await trackEvent('integration_connected', payload);
 }
 
-export async function trackIntegrationDisconnected(payload: IntegrationDisconnectedPayload): Promise<void> {
+export async function trackIntegrationDisconnected(
+  payload: IntegrationDisconnectedPayload
+): Promise<void> {
   await trackEvent('integration_disconnected', payload);
 }
 
-export async function trackIntegrationSynced(payload: IntegrationSyncedPayload): Promise<void> {
+export async function trackIntegrationSynced(
+  payload: IntegrationSyncedPayload
+): Promise<void> {
   await trackEvent('integration_synced', payload);
 }

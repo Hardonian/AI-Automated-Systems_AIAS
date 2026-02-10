@@ -5,10 +5,30 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 const dockItems = [
-  { icon: MessageCircle, label: 'Chat', action: 'chat', color: 'from-primary to-primary-glow' },
-  { icon: Calendar, label: 'Schedule', href: '/#booking', color: 'from-accent to-yellow-400' },
-  { icon: PlayCircle, label: 'Demo', href: '/case-studies', color: 'from-purple-500 to-pink-500' },
-  { icon: FileText, label: 'Docs', href: '/#resources', color: 'from-green-500 to-emerald-400' },
+  {
+    icon: MessageCircle,
+    label: 'Chat',
+    action: 'chat',
+    color: 'from-primary to-primary-glow',
+  },
+  {
+    icon: Calendar,
+    label: 'Schedule',
+    href: '/#booking',
+    color: 'from-accent to-yellow-400',
+  },
+  {
+    icon: PlayCircle,
+    label: 'Demo',
+    href: '/case-studies',
+    color: 'from-purple-500 to-pink-500',
+  },
+  {
+    icon: FileText,
+    label: 'Docs',
+    href: '/#resources',
+    color: 'from-green-500 to-emerald-400',
+  },
 ];
 
 interface FloatingDockProps {
@@ -16,7 +36,7 @@ interface FloatingDockProps {
 }
 
 export const FloatingDock = ({ onChatOpen }: FloatingDockProps) => {
-  const handleItemClick = (item: typeof dockItems[0]) => {
+  const handleItemClick = (item: (typeof dockItems)[0]) => {
     if (item.action === 'chat' && onChatOpen) {
       onChatOpen();
     }
@@ -25,12 +45,12 @@ export const FloatingDock = ({ onChatOpen }: FloatingDockProps) => {
   return (
     <motion.div
       animate={{ y: 0, opacity: 1 }}
-      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 hidden md:block"
+      className='fixed bottom-8 left-1/2 z-50 hidden -translate-x-1/2 md:block'
       initial={{ y: 100, opacity: 0 }}
       transition={{ delay: 1, duration: 0.6, type: 'spring', stiffness: 100 }}
     >
-      <div className="bg-card/80 backdrop-blur-xl border border-border rounded-2xl px-4 py-3 shadow-glow">
-        <div className="flex items-center gap-2">
+      <div className='shadow-glow rounded-2xl border border-border bg-card/80 px-4 py-3 backdrop-blur-xl'>
+        <div className='flex items-center gap-2'>
           {dockItems.map((item, index) => {
             const content = (
               <motion.div
@@ -39,14 +59,16 @@ export const FloatingDock = ({ onChatOpen }: FloatingDockProps) => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Button
-                  className="relative h-12 w-12 rounded-xl group"
-                  size="icon"
-                  variant="ghost"
+                  className='group relative h-12 w-12 rounded-xl'
+                  size='icon'
+                  variant='ghost'
                   onClick={() => handleItemClick(item)}
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-20 rounded-xl transition-opacity`} />
-                  <item.icon className="w-5 h-5 text-foreground/80 group-hover:text-foreground transition-colors" />
-                  <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-medium bg-card px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${item.color} rounded-xl opacity-0 transition-opacity group-hover:opacity-20`}
+                  />
+                  <item.icon className='h-5 w-5 text-foreground/80 transition-colors group-hover:text-foreground' />
+                  <span className='absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-card px-2 py-1 text-xs font-medium opacity-0 transition-opacity group-hover:opacity-100'>
                     {item.label}
                   </span>
                 </Button>

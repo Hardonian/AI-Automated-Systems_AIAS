@@ -3,8 +3,8 @@
  * Handles all Shopify API interactions with proper error handling and retries
  */
 
-import { logger } from "@/lib/logging/structured-logger";
-import { retryWithBackoff } from "@/lib/utils/retry-enhanced";
+import { logger } from '@/lib/logging/structured-logger';
+import { retryWithBackoff } from '@/lib/utils/retry-enhanced';
 
 export interface ShopifyConfig {
   shop: string;
@@ -32,10 +32,10 @@ export class ShopifyClient {
   private shop: string;
   private accessToken: string;
   private baseUrl: string;
-  private apiVersion: string = "2024-01";
+  private apiVersion: string = '2024-01';
 
   constructor(config: ShopifyConfig) {
-    this.shop = config.shop.replace(/\.myshopify\.com$/, "");
+    this.shop = config.shop.replace(/\.myshopify\.com$/, '');
     this.accessToken = config.accessToken;
     this.baseUrl = `https://${this.shop}.myshopify.com/admin/api/${this.apiVersion}`;
   }
@@ -49,8 +49,8 @@ export class ShopifyClient {
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
     const headers = {
-      "X-Shopify-Access-Token": this.accessToken,
-      "Content-Type": "application/json",
+      'X-Shopify-Access-Token': this.accessToken,
+      'Content-Type': 'application/json',
       ...options.headers,
     };
 
@@ -72,7 +72,7 @@ export class ShopifyClient {
           if (!response.ok) {
             const errorText = await response.text();
             let errorMessage = `Shopify API error: ${response.status} ${response.statusText}`;
-            
+
             try {
               const errorData = JSON.parse(errorText);
               if (errorData.errors) {
@@ -89,7 +89,7 @@ export class ShopifyClient {
         } catch (error) {
           clearTimeout(timeoutId);
           if (error instanceof Error) {
-            logger.error("Shopify API request failed", error, {
+            logger.error('Shopify API request failed', error, {
               endpoint,
               shop: this.shop,
             });
@@ -102,7 +102,11 @@ export class ShopifyClient {
         maxAttempts: 3,
         initialDelayMs: 1000,
         onRetry: (attempt, error) => {
-          logger.warn("Retrying Shopify API request", { attempt, endpoint, error: error.message });
+          logger.warn('Retrying Shopify API request', {
+            attempt,
+            endpoint,
+            error: error.message,
+          });
         },
       }
     );
@@ -111,20 +115,29 @@ export class ShopifyClient {
   /**
    * Get orders
    */
-  async getOrders(options: {
-    status?: string;
-    created_at_min?: string;
-    limit?: number;
-  } = {}): Promise<ShopifyOrderResponse> {
+  async getOrders(
+    options: {
+      status?: string;
+      created_at_min?: string;
+      limit?: number;
+    } = {}
+  ): Promise<ShopifyOrderResponse> {
     const params = new URLSearchParams();
-    
-    if (options.status) {params.append("status", options.status);}
-    if (options.created_at_min) {params.append("created_at_min", options.created_at_min);}
-    if (options.limit) {params.append("limit", options.limit.toString());}
-    else {params.append("limit", "250");} // Shopify max
+
+    if (options.status) {
+      params.append('status', options.status);
+    }
+    if (options.created_at_min) {
+      params.append('created_at_min', options.created_at_min);
+    }
+    if (options.limit) {
+      params.append('limit', options.limit.toString());
+    } else {
+      params.append('limit', '250');
+    } // Shopify max
 
     const query = params.toString();
-    const endpoint = `/orders.json${query ? `?${query}` : ""}`;
+    const endpoint = `/orders.json${query ? `?${query}` : ''}`;
 
     return await this.request<ShopifyOrderResponse>(endpoint);
   }
@@ -133,7 +146,9 @@ export class ShopifyClient {
    * Get order by ID
    */
   async getOrder(orderId: number): Promise<{ order: ShopifyOrder }> {
-    return await this.request<{ order: ShopifyOrder }>(`/orders/${orderId}.json`);
+    return await this.request<{ order: ShopifyOrder }>(
+      `/orders/${orderId}.json`
+    );
   }
 
   /**
@@ -145,7 +160,7 @@ export class ShopifyClient {
     const createdAtMin = today.toISOString();
 
     return await this.getOrders({
-      status: "any",
+      status: 'any',
       created_at_min: createdAtMin,
     });
   }
@@ -153,11 +168,17 @@ export class ShopifyClient {
   /**
    * Update order
    */
-  async updateOrder(orderId: number, updates: Partial<ShopifyOrder>): Promise<{ order: ShopifyOrder }> {
-    return await this.request<{ order: ShopifyOrder }>(`/orders/${orderId}.json`, {
-      method: "PUT",
-      body: JSON.stringify({ order: updates }),
-    });
+  async updateOrder(
+    orderId: number,
+    updates: Partial<ShopifyOrder>
+  ): Promise<{ order: ShopifyOrder }> {
+    return await this.request<{ order: ShopifyOrder }>(
+      `/orders/${orderId}.json`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({ order: updates }),
+      }
+    );
   }
 
   /**
@@ -170,30 +191,41 @@ export class ShopifyClient {
       // Option 1: Update order to trigger notification (if configured)
       // Option 2: Use Shopify's notification API if available
       // For now, we'll return success as this requires Shopify Plus or custom app
-      logger.info("Order notification sent (via Shopify notification system)", {
+      logger.info('Order notification sent (via Shopify notification system)', {
         orderId,
         shop: this.shop,
       });
       return { success: true };
     } catch (error) {
-      logger.error("Failed to send order notification", error instanceof Error ? error : new Error(String(error)), {
-        orderId,
-        shop: this.shop,
-      });
-      throw new Error("Failed to send order notification via Shopify");
+      logger.error(
+        'Failed to send order notification',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          orderId,
+          shop: this.shop,
+        }
+      );
+      throw new Error('Failed to send order notification via Shopify');
     }
   }
 
   /**
    * Get products
    */
-  async getProducts(options: { limit?: number } = {}): Promise<{ products: unknown[] }> {
+  async getProducts(
+    options: { limit?: number } = {}
+  ): Promise<{ products: unknown[] }> {
     const params = new URLSearchParams();
-    if (options.limit) {params.append("limit", options.limit.toString());}
-    else {params.append("limit", "250");}
+    if (options.limit) {
+      params.append('limit', options.limit.toString());
+    } else {
+      params.append('limit', '250');
+    }
 
     const query = params.toString();
-    return await this.request<{ products: unknown[] }>(`/products.json${query ? `?${query}` : ""}`);
+    return await this.request<{ products: unknown[] }>(
+      `/products.json${query ? `?${query}` : ''}`
+    );
   }
 
   /**
@@ -201,7 +233,7 @@ export class ShopifyClient {
    */
   async verifyConnection(): Promise<boolean> {
     try {
-      await this.request("/shop.json");
+      await this.request('/shop.json');
       return true;
     } catch {
       return false;

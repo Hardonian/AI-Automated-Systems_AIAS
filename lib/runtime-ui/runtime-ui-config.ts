@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const RuntimeUiConfigSchema = z
   .object({
@@ -7,7 +7,7 @@ export const RuntimeUiConfigSchema = z
       .object({
         radiusRem: z.number().min(0).max(4),
         cardShadow: z.string().min(0).max(256),
-        density: z.enum(["comfortable", "compact"]),
+        density: z.enum(['comfortable', 'compact']),
       })
       .partial(),
     flags: z
@@ -20,7 +20,7 @@ export const RuntimeUiConfigSchema = z
         topBanner: z
           .object({
             enabled: z.boolean(),
-            tone: z.enum(["info", "success", "warning", "danger"]),
+            tone: z.enum(['info', 'success', 'warning', 'danger']),
             message: z.string().max(240),
             cta: z
               .object({
@@ -62,8 +62,8 @@ export const DEFAULT_RUNTIME_UI_CONFIG: RuntimeUiConfig = {
   version: 1,
   tokens: {
     radiusRem: 0.5,
-    cardShadow: "0 6px 24px rgba(0,0,0,0.08)",
-    density: "comfortable",
+    cardShadow: '0 6px 24px rgba(0,0,0,0.08)',
+    density: 'comfortable',
   },
   flags: {
     stickyCtaEnabled: true,
@@ -71,19 +71,19 @@ export const DEFAULT_RUNTIME_UI_CONFIG: RuntimeUiConfig = {
   notices: {
     topBanner: {
       enabled: false,
-      tone: "info",
-      message: "",
+      tone: 'info',
+      message: '',
       cta: {
-        label: "Learn more",
-        href: "/demo",
+        label: 'Learn more',
+        href: '/demo',
       },
     },
   },
   copy: {
     stickyCta: {
-      heading: "Ready to Transform Your Business?",
-      items: ["Schedule a free strategy call", "See our builds"],
-      primaryCta: { label: "Schedule Call", href: "/demo" },
+      heading: 'Ready to Transform Your Business?',
+      items: ['Schedule a free strategy call', 'See our builds'],
+      primaryCta: { label: 'Schedule Call', href: '/demo' },
       dismissible: true,
       showCountdown: true,
       showAfterScrollPx: 400,
@@ -92,10 +92,13 @@ export const DEFAULT_RUNTIME_UI_CONFIG: RuntimeUiConfig = {
 };
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return !!value && typeof value === "object" && !Array.isArray(value);
+  return !!value && typeof value === 'object' && !Array.isArray(value);
 }
 
-function deepMerge<T extends Record<string, any>>(base: T, patch: Record<string, any>): T {
+function deepMerge<T extends Record<string, any>>(
+  base: T,
+  patch: Record<string, any>
+): T {
   const out: Record<string, any> = { ...base };
   for (const [key, value] of Object.entries(patch)) {
     if (value === undefined) {
@@ -118,4 +121,3 @@ export function coerceRuntimeUiConfig(input: unknown): RuntimeUiConfig {
   // Merge over defaults so missing keys always have safe values.
   return deepMerge(DEFAULT_RUNTIME_UI_CONFIG, parsed.data as any);
 }
-

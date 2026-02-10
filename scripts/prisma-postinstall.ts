@@ -1,6 +1,6 @@
 /**
  * Prisma Postinstall Hook
- * 
+ *
  * Optimized Prisma client generation for Vercel builds.
  * Only runs prisma generate if necessary and guards against
  * running in incompatible environments.
@@ -39,7 +39,10 @@ const shouldRunPrisma = () => {
 // Check if Prisma client is already generated
 const isPrismaGenerated = () => {
   try {
-    const clientPath = join(process.cwd(), 'node_modules/.prisma/client/index.js');
+    const clientPath = join(
+      process.cwd(),
+      'node_modules/.prisma/client/index.js'
+    );
     return existsSync(clientPath);
   } catch {
     return false;
@@ -58,7 +61,7 @@ try {
   }
 
   console.log('🔄 Generating Prisma client...');
-  
+
   // Use NODE_OPTIONS to prevent memory issues
   const nodeOptions = process.env.NODE_OPTIONS || '--max-old-space-size=4096';
   process.env.NODE_OPTIONS = nodeOptions;
@@ -81,7 +84,7 @@ try {
       console.error('❌ Prisma generate failed in CI environment');
       process.exit(1);
     }
-    
+
     // In local development, warn but don't fail
     console.warn('⚠️  Prisma generate failed (non-blocking in local dev)');
     console.warn(error instanceof Error ? error.message : String(error));

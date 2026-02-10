@@ -1,22 +1,22 @@
 /**
  * CSP Violation Reporting Endpoint
- * 
+ *
  * Receives and logs Content Security Policy violations.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { logger } from "@/lib/utils/logger";
+import { logger } from '@/lib/utils/logger';
 
 export async function POST(request: NextRequest) {
   try {
     const report = await request.json();
 
     // Log CSP violation
-    logger.warn("CSP violation detected", undefined, {
-      "csp-report": report["csp-report"],
-      userAgent: request.headers.get("user-agent"),
-      ip: request.headers.get("x-forwarded-for") || "unknown",
+    logger.warn('CSP violation detected', undefined, {
+      'csp-report': report['csp-report'],
+      userAgent: request.headers.get('user-agent'),
+      ip: request.headers.get('x-forwarded-for') || 'unknown',
     });
 
     // In production, you might want to:
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    logger.error("Failed to process CSP report", error as Error);
+    logger.error('Failed to process CSP report', error as Error);
     return NextResponse.json({ success: false }, { status: 500 });
   }
 }

@@ -44,7 +44,9 @@ export class PerformanceMonitor {
   /**
    * Get metric statistics
    */
-  getStats(name: string): { avg: number; min: number; max: number; count: number } | null {
+  getStats(
+    name: string
+  ): { avg: number; min: number; max: number; count: number } | null {
     const values = this.metrics.get(name);
     if (!values || values.length === 0) return null;
 
@@ -71,11 +73,14 @@ export class PerformanceMonitor {
   }
 }
 
-export const performanceMonitor = typeof window !== 'undefined' ? new PerformanceMonitor() : {
-  measure: async <T>(_name: string, fn: () => Promise<T>) => fn(),
-  recordMetric: () => {},
-  getStats: () => null,
-  getAllMetrics: () => new Map(),
-  clear: () => {},
-  metrics: new Map(),
-} as unknown as PerformanceMonitor;
+export const performanceMonitor =
+  typeof window !== 'undefined'
+    ? new PerformanceMonitor()
+    : ({
+        measure: async <T>(_name: string, fn: () => Promise<T>) => fn(),
+        recordMetric: () => {},
+        getStats: () => null,
+        getAllMetrics: () => new Map(),
+        clear: () => {},
+        metrics: new Map(),
+      } as unknown as PerformanceMonitor);

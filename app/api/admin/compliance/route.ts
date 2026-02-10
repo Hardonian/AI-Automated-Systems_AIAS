@@ -20,13 +20,17 @@ export async function GET() {
     }
 
     // Fallback: get from latest security audit
-    const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    
+    const supabaseUrl =
+      process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey =
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.SUPABASE_ANON_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
     if (!supabaseUrl || !supabaseKey) {
       throw new Error('Missing required Supabase environment variables');
     }
-    
+
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const { data: latestAudit } = await supabase
@@ -37,18 +41,18 @@ export async function GET() {
       .single();
 
     if (latestAudit?.audit) {
-      const {audit} = latestAudit;
+      const { audit } = latestAudit;
       return NextResponse.json({
         timestamp: new Date().toISOString(),
         secrets: audit.secrets?.status || 'ok',
         licenses: {
           gpl: audit.licenses?.gpl || 0,
-          restricted: audit.licenses?.restricted || 0
+          restricted: audit.licenses?.restricted || 0,
         },
         tls: audit.tls?.status || 'enforced',
         rls: audit.rls?.status || 'enabled',
         gdpr: audit.gdpr?.status || 'pass',
-        issues: audit.issues?.length || 0
+        issues: audit.issues?.length || 0,
       });
     }
 
@@ -60,13 +64,11 @@ export async function GET() {
       tls: 'enforced',
       rls: 'enabled',
       gdpr: 'pass',
-      issues: 0
+      issues: 0,
     });
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    return NextResponse.json(
-      { error: errorMessage },
-      { status: 500 }
-    );
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

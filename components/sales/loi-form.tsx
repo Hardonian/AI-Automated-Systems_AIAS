@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { X, Plus, Sparkles } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { X, Plus, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import * as z from 'zod';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -25,29 +25,29 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { logger } from "@/lib/logging/structured-logger";
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { logger } from '@/lib/logging/structured-logger';
 
 const loiSchema = z.object({
-  companyName: z.string().min(1, "Company name is required"),
-  contactName: z.string().min(1, "Contact name is required"),
-  contactEmail: z.string().email("Invalid email address"),
-  industry: z.string().min(1, "Industry is required"),
-  companySize: z.string().min(1, "Company size is required"),
-  tier: z.enum(["Starter", "Pro", "Enterprise"]),
-  monthlyCommitment: z.number().min(0, "Monthly commitment must be positive"),
-  annualValue: z.number().min(0, "Annual value must be positive"),
-  timelineMonths: z.number().min(1, "Timeline must be at least 1 month"),
-  status: z.enum(["draft", "sent", "signed", "expired"]),
+  companyName: z.string().min(1, 'Company name is required'),
+  contactName: z.string().min(1, 'Contact name is required'),
+  contactEmail: z.string().email('Invalid email address'),
+  industry: z.string().min(1, 'Industry is required'),
+  companySize: z.string().min(1, 'Company size is required'),
+  tier: z.enum(['Starter', 'Pro', 'Enterprise']),
+  monthlyCommitment: z.number().min(0, 'Monthly commitment must be positive'),
+  annualValue: z.number().min(0, 'Annual value must be positive'),
+  timelineMonths: z.number().min(1, 'Timeline must be at least 1 month'),
+  status: z.enum(['draft', 'sent', 'signed', 'expired']),
   requirements: z.array(z.string()).default([]),
   notes: z.string().optional(),
 });
@@ -61,48 +61,50 @@ interface LOIFormProps {
 
 export function LOIForm({ loi, onSuccess }: LOIFormProps) {
   const [open, setOpen] = useState(false);
-  const [requirements, setRequirements] = useState<string[]>(loi?.requirements || []);
-  const [newRequirement, setNewRequirement] = useState("");
+  const [requirements, setRequirements] = useState<string[]>(
+    loi?.requirements || []
+  );
+  const [newRequirement, setNewRequirement] = useState('');
   const [loading, setLoading] = useState(false);
 
   const form = useForm<LOIFormValues>({
     resolver: zodResolver(loiSchema),
     defaultValues: loi || {
-      companyName: "",
-      contactName: "",
-      contactEmail: "",
-      industry: "",
-      companySize: "",
-      tier: "Pro",
+      companyName: '',
+      contactName: '',
+      contactEmail: '',
+      industry: '',
+      companySize: '',
+      tier: 'Pro',
       monthlyCommitment: 499,
       annualValue: 5988,
       timelineMonths: 3,
-      status: "draft",
+      status: 'draft',
       requirements: [],
-      notes: "",
+      notes: '',
     },
   });
 
   const addRequirement = () => {
     if (newRequirement.trim()) {
       setRequirements([...requirements, newRequirement.trim()]);
-      form.setValue("requirements", [...requirements, newRequirement.trim()]);
-      setNewRequirement("");
+      form.setValue('requirements', [...requirements, newRequirement.trim()]);
+      setNewRequirement('');
     }
   };
 
   const removeRequirement = (index: number) => {
     const updated = requirements.filter((_, i) => i !== index);
     setRequirements(updated);
-    form.setValue("requirements", updated);
+    form.setValue('requirements', updated);
   };
 
   const onSubmit = async (data: LOIFormValues) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/admin/lois", {
-        method: loi ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/admin/lois', {
+        method: loi ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...data,
           requirements,
@@ -110,19 +112,27 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
         }),
       });
 
-      if (!response.ok) {throw new Error("Failed to save LOI");}
+      if (!response.ok) {
+        throw new Error('Failed to save LOI');
+      }
 
-      toast.success(loi ? "LOI updated successfully" : "LOI created successfully");
+      toast.success(
+        loi ? 'LOI updated successfully' : 'LOI created successfully'
+      );
       setOpen(false);
       form.reset();
       setRequirements([]);
       onSuccess?.();
     } catch (error) {
-      toast.error("Failed to save LOI");
-      logger.error("Failed to save LOI", error instanceof Error ? error : new Error(String(error)), {
-        component: "LOIForm",
-        action: "onSubmit",
-      });
+      toast.error('Failed to save LOI');
+      logger.error(
+        'Failed to save LOI',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          component: 'LOIForm',
+          action: 'onSubmit',
+        }
+      );
     } finally {
       setLoading(false);
     }
@@ -131,35 +141,35 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg">
-          <Plus className="mr-2 h-4 w-4" />
-          {loi ? "Edit LOI" : "Create LOI"}
+        <Button className='bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:from-blue-700 hover:to-purple-700'>
+          <Plus className='mr-2 h-4 w-4' />
+          {loi ? 'Edit LOI' : 'Create LOI'}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className='max-h-[90vh] max-w-2xl overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-2xl">
-            <Sparkles className="h-6 w-6 text-purple-600" />
-            {loi ? "Edit Letter of Intent" : "Create Letter of Intent"}
+          <DialogTitle className='flex items-center gap-2 text-2xl'>
+            <Sparkles className='h-6 w-6 text-purple-600' />
+            {loi ? 'Edit Letter of Intent' : 'Create Letter of Intent'}
           </DialogTitle>
           <DialogDescription>
             {loi
-              ? "Update the LOI details below"
-              : "Create a new Letter of Intent for Seed Round fundraising"}
+              ? 'Update the LOI details below'
+              : 'Create a new Letter of Intent for Seed Round fundraising'}
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-2 gap-4">
+          <form className='space-y-6' onSubmit={form.handleSubmit(onSubmit)}>
+            <div className='grid grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
-                name="companyName"
+                name='companyName'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Company Name *</FormLabel>
                     <FormControl>
-                      <Input placeholder="Acme Corp" {...field} />
+                      <Input placeholder='Acme Corp' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -168,12 +178,12 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
 
               <FormField
                 control={form.control}
-                name="contactName"
+                name='contactName'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Contact Name *</FormLabel>
                     <FormControl>
-                      <Input placeholder="John Smith" {...field} />
+                      <Input placeholder='John Smith' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -183,37 +193,48 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
 
             <FormField
               control={form.control}
-              name="contactEmail"
+              name='contactEmail'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Contact Email *</FormLabel>
                   <FormControl>
-                    <Input placeholder="john@acme.com" type="email" {...field} />
+                    <Input
+                      placeholder='john@acme.com'
+                      type='email'
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
-                name="industry"
+                name='industry'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Industry *</FormLabel>
-                    <Select defaultValue={field.value} onValueChange={field.onChange}>
+                    <Select
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                    >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select industry" />
+                          <SelectValue placeholder='Select industry' />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="E-commerce">E-commerce</SelectItem>
-                        <SelectItem value="SaaS">SaaS</SelectItem>
-                        <SelectItem value="Professional Services">Professional Services</SelectItem>
-                        <SelectItem value="Marketing Agency">Marketing Agency</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
+                        <SelectItem value='E-commerce'>E-commerce</SelectItem>
+                        <SelectItem value='SaaS'>SaaS</SelectItem>
+                        <SelectItem value='Professional Services'>
+                          Professional Services
+                        </SelectItem>
+                        <SelectItem value='Marketing Agency'>
+                          Marketing Agency
+                        </SelectItem>
+                        <SelectItem value='Other'>Other</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -223,22 +244,27 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
 
               <FormField
                 control={form.control}
-                name="companySize"
+                name='companySize'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Company Size *</FormLabel>
-                    <Select defaultValue={field.value} onValueChange={field.onChange}>
+                    <Select
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                    >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select size" />
+                          <SelectValue placeholder='Select size' />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="1-10">1-10 employees</SelectItem>
-                        <SelectItem value="11-50">11-50 employees</SelectItem>
-                        <SelectItem value="51-200">51-200 employees</SelectItem>
-                        <SelectItem value="201-500">201-500 employees</SelectItem>
-                        <SelectItem value="500+">500+ employees</SelectItem>
+                        <SelectItem value='1-10'>1-10 employees</SelectItem>
+                        <SelectItem value='11-50'>11-50 employees</SelectItem>
+                        <SelectItem value='51-200'>51-200 employees</SelectItem>
+                        <SelectItem value='201-500'>
+                          201-500 employees
+                        </SelectItem>
+                        <SelectItem value='500+'>500+ employees</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -247,23 +273,26 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className='grid grid-cols-3 gap-4'>
               <FormField
                 control={form.control}
-                name="tier"
+                name='tier'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Tier *</FormLabel>
-                    <Select defaultValue={field.value} onValueChange={field.onChange}>
+                    <Select
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Starter">Starter</SelectItem>
-                        <SelectItem value="Pro">Pro</SelectItem>
-                        <SelectItem value="Enterprise">Enterprise</SelectItem>
+                        <SelectItem value='Starter'>Starter</SelectItem>
+                        <SelectItem value='Pro'>Pro</SelectItem>
+                        <SelectItem value='Enterprise'>Enterprise</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -273,15 +302,17 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
 
               <FormField
                 control={form.control}
-                name="monthlyCommitment"
+                name='monthlyCommitment'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Monthly ($) *</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
+                        type='number'
                         {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                        onChange={e =>
+                          field.onChange(parseFloat(e.target.value))
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -291,15 +322,17 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
 
               <FormField
                 control={form.control}
-                name="annualValue"
+                name='annualValue'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Annual Value ($) *</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
+                        type='number'
                         {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                        onChange={e =>
+                          field.onChange(parseFloat(e.target.value))
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -308,18 +341,18 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
-                name="timelineMonths"
+                name='timelineMonths'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Timeline (months) *</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
+                        type='number'
                         {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value))}
+                        onChange={e => field.onChange(parseInt(e.target.value))}
                       />
                     </FormControl>
                     <FormMessage />
@@ -329,21 +362,24 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
 
               <FormField
                 control={form.control}
-                name="status"
+                name='status'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Status *</FormLabel>
-                    <Select defaultValue={field.value} onValueChange={field.onChange}>
+                    <Select
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="draft">Draft</SelectItem>
-                        <SelectItem value="sent">Sent</SelectItem>
-                        <SelectItem value="signed">Signed</SelectItem>
-                        <SelectItem value="expired">Expired</SelectItem>
+                        <SelectItem value='draft'>Draft</SelectItem>
+                        <SelectItem value='sent'>Sent</SelectItem>
+                        <SelectItem value='signed'>Signed</SelectItem>
+                        <SelectItem value='expired'>Expired</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -354,33 +390,37 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
 
             <div>
               <FormLabel>Requirements</FormLabel>
-              <div className="flex gap-2 mt-2">
+              <div className='mt-2 flex gap-2'>
                 <Input
-                  placeholder="Add requirement (e.g., Shopify integration)"
+                  placeholder='Add requirement (e.g., Shopify integration)'
                   value={newRequirement}
-                  onChange={(e) => setNewRequirement(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
+                  onChange={e => setNewRequirement(e.target.value)}
+                  onKeyPress={e => {
+                    if (e.key === 'Enter') {
                       e.preventDefault();
                       addRequirement();
                     }
                   }}
                 />
-                <Button type="button" variant="outline" onClick={addRequirement}>
-                  <Plus className="h-4 w-4" />
+                <Button
+                  type='button'
+                  variant='outline'
+                  onClick={addRequirement}
+                >
+                  <Plus className='h-4 w-4' />
                 </Button>
               </div>
               {requirements.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
+                <div className='mt-2 flex flex-wrap gap-2'>
                   {requirements.map((req, idx) => (
-                    <Badge key={idx} className="gap-1" variant="secondary">
+                    <Badge key={idx} className='gap-1' variant='secondary'>
                       {req}
                       <button
-                        className="ml-1 hover:text-red-500"
-                        type="button"
+                        className='ml-1 hover:text-red-500'
+                        type='button'
                         onClick={() => removeRequirement(idx)}
                       >
-                        <X className="h-3 w-3" />
+                        <X className='h-3 w-3' />
                       </button>
                     </Badge>
                   ))}
@@ -390,14 +430,14 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
 
             <FormField
               control={form.control}
-              name="notes"
+              name='notes'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Notes</FormLabel>
                   <FormControl>
                     <Textarea
-                      className="min-h-[100px]"
-                      placeholder="Additional notes about this LOI..."
+                      className='min-h-[100px]'
+                      placeholder='Additional notes about this LOI...'
                       {...field}
                     />
                   </FormControl>
@@ -407,11 +447,19 @@ export function LOIForm({ loi, onSuccess }: LOIFormProps) {
             />
 
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={() => setOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button className="bg-gradient-to-r from-blue-600 to-purple-600" disabled={loading} type="submit">
-                {loading ? "Saving..." : loi ? "Update LOI" : "Create LOI"}
+              <Button
+                className='bg-gradient-to-r from-blue-600 to-purple-600'
+                disabled={loading}
+                type='submit'
+              >
+                {loading ? 'Saving...' : loi ? 'Update LOI' : 'Create LOI'}
               </Button>
             </DialogFooter>
           </form>

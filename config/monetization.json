@@ -8,8 +8,8 @@
         "description": "Affiliate marketing in blog articles and RSS news",
         "revenueShare": 0.15,
         "commissionRange": {
-          "min": 0.10,
-          "max": 0.30
+          "min": 0.1,
+          "max": 0.3
         }
       },
       "sponsoredContent": {
@@ -44,7 +44,11 @@
           "pro": {
             "price": 19,
             "currency": "USD",
-            "features": ["all_premium", "exclusive_frameworks", "priority_support"]
+            "features": [
+              "all_premium",
+              "exclusive_frameworks",
+              "priority_support"
+            ]
           }
         }
       },
@@ -112,12 +116,12 @@
     "affiliatePrograms": {
       "shopify": {
         "enabled": true,
-        "commissionRate": 0.20,
+        "commissionRate": 0.2,
         "cookieDays": 30
       },
       "stripe": {
         "enabled": true,
-        "commissionRate": 0.10,
+        "commissionRate": 0.1,
         "cookieDays": 90
       },
       "wave": {
@@ -127,12 +131,12 @@
       },
       "notion": {
         "enabled": true,
-        "commissionRate": 0.20,
+        "commissionRate": 0.2,
         "cookieDays": 30
       },
       "zapier": {
         "enabled": true,
-        "commissionRate": 0.20,
+        "commissionRate": 0.2,
         "cookieDays": 30
       },
       "make": {

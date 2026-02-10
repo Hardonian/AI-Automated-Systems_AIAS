@@ -3,15 +3,19 @@
  * Detects error spikes and sends alerts
  */
 
-import { createClient } from "@supabase/supabase-js";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { createClient } from '@supabase/supabase-js';
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
 export interface ErrorAlert {
-  type: "error_spike" | "integration_failure" | "performance_degradation" | "usage_limit";
-  severity: "low" | "medium" | "high" | "critical";
+  type:
+    | 'error_spike'
+    | 'integration_failure'
+    | 'performance_degradation'
+    | 'usage_limit';
+  severity: 'low' | 'medium' | 'high' | 'critical';
   message: string;
   details: Record<string, unknown>;
   timestamp: string;
@@ -28,13 +32,16 @@ export async function checkErrorSpikes(): Promise<ErrorAlert[]> {
   try {
     // Get error count in last hour
     const { count: errorCount, error } = await supabase
-      .from("app_events")
-      .select("id", { count: "exact", head: true })
-      .eq("event_type", "error")
-      .gte("created_at", oneHourAgo.toISOString());
+      .from('app_events')
+      .select('id', { count: 'exact', head: true })
+      .eq('event_type', 'error')
+      .gte('created_at', oneHourAgo.toISOString());
 
     if (error) {
-      logger.error("Failed to check error spikes", error instanceof Error ? error : new Error(String(error)));
+      logger.error(
+        'Failed to check error spikes',
+        error instanceof Error ? error : new Error(String(error))
+      );
       return alerts;
     }
 
@@ -43,19 +50,22 @@ export async function checkErrorSpikes(): Promise<ErrorAlert[]> {
 
     if (count > threshold) {
       alerts.push({
-        type: "error_spike",
-        severity: count > 500 ? "critical" : count > 200 ? "high" : "medium",
+        type: 'error_spike',
+        severity: count > 500 ? 'critical' : count > 200 ? 'high' : 'medium',
         message: `Error spike detected: ${count} errors in the last hour`,
         details: {
           errorCount: count,
           threshold,
-          timeWindow: "1 hour",
+          timeWindow: '1 hour',
         },
         timestamp: new Date().toISOString(),
       });
     }
   } catch (error) {
-    logger.error("Error checking error spikes", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Error checking error spikes',
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 
   return alerts;
@@ -72,23 +82,28 @@ export async function checkIntegrationFailures(): Promise<ErrorAlert[]> {
   try {
     // Check for integration-related errors
     const { data: integrationErrors, error } = await supabase
-      .from("app_events")
-      .select("meta")
-      .eq("event_type", "error")
-      .gte("created_at", oneHourAgo.toISOString())
-      .like("meta->>integration", "%");
+      .from('app_events')
+      .select('meta')
+      .eq('event_type', 'error')
+      .gte('created_at', oneHourAgo.toISOString())
+      .like('meta->>integration', '%');
 
     if (error) {
-      logger.error("Failed to check integration failures", error instanceof Error ? error : new Error(String(error)));
+      logger.error(
+        'Failed to check integration failures',
+        error instanceof Error ? error : new Error(String(error))
+      );
       return alerts;
     }
 
     // Group by integration
     const integrationCounts: Record<string, number> = {};
     integrationErrors?.forEach((event: { meta?: Record<string, unknown> }) => {
-      const integration = (event.meta as Record<string, unknown>)?.integration as string;
+      const integration = (event.meta as Record<string, unknown>)
+        ?.integration as string;
       if (integration) {
-        integrationCounts[integration] = (integrationCounts[integration] || 0) + 1;
+        integrationCounts[integration] =
+          (integrationCounts[integration] || 0) + 1;
       }
     });
 
@@ -96,20 +111,23 @@ export async function checkIntegrationFailures(): Promise<ErrorAlert[]> {
     for (const [integration, count] of Object.entries(integrationCounts)) {
       if (count > 10) {
         alerts.push({
-          type: "integration_failure",
-          severity: count > 50 ? "critical" : count > 20 ? "high" : "medium",
+          type: 'integration_failure',
+          severity: count > 50 ? 'critical' : count > 20 ? 'high' : 'medium',
           message: `Integration failure detected: ${integration} has ${count} errors in the last hour`,
           details: {
             integration,
             errorCount: count,
-            timeWindow: "1 hour",
+            timeWindow: '1 hour',
           },
           timestamp: new Date().toISOString(),
         });
       }
     }
   } catch (error) {
-    logger.error("Error checking integration failures", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Error checking integration failures',
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 
   return alerts;
@@ -121,7 +139,7 @@ export async function checkIntegrationFailures(): Promise<ErrorAlert[]> {
 export async function sendAlert(alert: ErrorAlert): Promise<void> {
   try {
     // Log alert
-    logger.warn("Alert triggered", {
+    logger.warn('Alert triggered', {
       type: alert.type,
       severity: alert.severity,
       message: alert.message,
@@ -130,13 +148,16 @@ export async function sendAlert(alert: ErrorAlert): Promise<void> {
 
     // In production, send email/Slack notification
     // For now, just log
-    if (alert.severity === "critical" || alert.severity === "high") {
+    if (alert.severity === 'critical' || alert.severity === 'high') {
       // TODO: Send email to admin
       // TODO: Send Slack notification
-      logger.error("CRITICAL ALERT", new Error(alert.message), alert.details);
+      logger.error('CRITICAL ALERT', new Error(alert.message), alert.details);
     }
   } catch (error) {
-    logger.error("Failed to send alert", error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Failed to send alert',
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -160,9 +181,9 @@ export async function runErrorChecks(): Promise<void> {
   }
 
   if (alerts.length > 0) {
-    logger.info("Error checks completed", {
+    logger.info('Error checks completed', {
       alertCount: alerts.length,
-      alerts: alerts.map((a) => ({ type: a.type, severity: a.severity })),
+      alerts: alerts.map(a => ({ type: a.type, severity: a.severity })),
     });
   }
 }

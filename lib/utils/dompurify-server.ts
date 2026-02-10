@@ -1,7 +1,7 @@
 /**
  * Server-only DOMPurify initialization
  * This file should only be imported on the server side
- * 
+ *
  * Using 'server-only' package would be ideal, but we'll use webpack config to exclude this
  */
 

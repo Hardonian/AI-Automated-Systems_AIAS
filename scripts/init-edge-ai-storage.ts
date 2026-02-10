@@ -13,7 +13,10 @@ async function main() {
     logger.info('Edge AI storage buckets initialized successfully');
     process.exit(0);
   } catch (error) {
-    logger.error('Failed to initialize Edge AI storage', error instanceof Error ? error : new Error(String(error)));
+    logger.error(
+      'Failed to initialize Edge AI storage',
+      error instanceof Error ? error : new Error(String(error))
+    );
     process.exit(1);
   }
 }

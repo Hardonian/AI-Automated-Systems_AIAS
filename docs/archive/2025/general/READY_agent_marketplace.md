@@ -18,6 +18,7 @@ Agent builder exists but no marketplace. Users can't discover or monetize agents
 ## Solution
 
 Launch agent marketplace:
+
 1. Agent listing/discovery UI
 2. Payment flow (Stripe Connect)
 3. Revenue share (70/30 split)
@@ -26,24 +27,28 @@ Launch agent marketplace:
 ## Implementation Plan
 
 ### Phase 1: Marketplace UI (Days 1-15)
+
 - Agent listing page
 - Search/filter functionality
 - Agent detail page
 - "Publish Agent" flow
 
 ### Phase 2: Payment & Revenue Share (Days 16-30)
+
 - Stripe Connect integration
 - Payment flow for agent purchases
 - Automated payouts (70/30 split)
 - Revenue dashboard for creators
 
 ### Phase 3: Discovery & Trust (Days 31-40)
+
 - Agent ratings/reviews
 - Featured agents
 - Category browsing
 - Agent analytics
 
 ### Phase 4: Launch & Iterate (Days 41-45)
+
 - Beta launch with 10 agents
 - Gather feedback
 - Iterate on UX

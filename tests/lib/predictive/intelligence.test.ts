@@ -34,13 +34,17 @@ describe('PredictiveIntelligenceService', () => {
 
   describe('detectAnomalies', () => {
     it('should detect anomalies', async () => {
-      const anomalies = await predictive.detectAnomalies('metric-1', {
-        start: new Date(Date.now() - 24 * 60 * 60 * 1000),
-        end: new Date(),
-      }, {
-        avg: 100,
-        stdDev: 10,
-      });
+      const anomalies = await predictive.detectAnomalies(
+        'metric-1',
+        {
+          start: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          end: new Date(),
+        },
+        {
+          avg: 100,
+          stdDev: 10,
+        }
+      );
 
       expect(Array.isArray(anomalies)).toBe(true);
     });
@@ -49,16 +53,22 @@ describe('PredictiveIntelligenceService', () => {
   describe('suggestRemediation', () => {
     it('should suggest remediation for anomaly', async () => {
       // First create an anomaly
-      const anomalies = await predictive.detectAnomalies('metric-1', {
-        start: new Date(Date.now() - 24 * 60 * 60 * 1000),
-        end: new Date(),
-      }, {
-        avg: 100,
-        stdDev: 10,
-      });
+      const anomalies = await predictive.detectAnomalies(
+        'metric-1',
+        {
+          start: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          end: new Date(),
+        },
+        {
+          avg: 100,
+          stdDev: 10,
+        }
+      );
 
       if (anomalies.length > 0 && anomalies[0]) {
-        const suggestions = await predictive.suggestRemediation(anomalies[0].id);
+        const suggestions = await predictive.suggestRemediation(
+          anomalies[0].id
+        );
         expect(Array.isArray(suggestions)).toBe(true);
       }
     });

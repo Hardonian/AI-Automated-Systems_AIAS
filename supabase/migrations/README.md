@@ -29,5 +29,6 @@ All previously applied migrations have been moved to `/supabase/migrations_archi
 ## Applying Migrations
 
 To apply these migrations, use one of the methods described in:
+
 - `docs/deployment/migration-guide.md`
 - `scripts/apply-all-migrations.ts`

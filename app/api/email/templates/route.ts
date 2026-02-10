@@ -7,22 +7,46 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
 import { createGETHandler } from '@/lib/api/route-handler';
-import { emailTemplates, getTemplateById, getTemplatesByStage, getTemplatesByCategory } from '@/lib/email-templates';
+import {
+  emailTemplates,
+  getTemplateById,
+  getTemplatesByStage,
+  getTemplatesByCategory,
+} from '@/lib/email-templates';
 
 const querySchema = z.object({
-  stage: z.enum(['awareness', 'consideration', 'decision', 'onboarding', 'retention', 'reengagement']).optional(),
+  stage: z
+    .enum([
+      'awareness',
+      'consideration',
+      'decision',
+      'onboarding',
+      'retention',
+      'reengagement',
+    ])
+    .optional(),
   category: z.string().optional(),
   id: z.string().optional(),
 });
 
-export const GET = createGETHandler(async (context) => {
-  const query = querySchema.parse(Object.fromEntries(context.request.url.split('?')[1]?.split('&').map(p => p.split('=')) || []));
+export const GET = createGETHandler(async context => {
+  const query = querySchema.parse(
+    Object.fromEntries(
+      context.request.url
+        .split('?')[1]
+        ?.split('&')
+        .map(p => p.split('=')) || []
+    )
+  );
 
   // Get by ID
   if (query.id) {
     const template = getTemplateById(query.id);
     if (!template) {
-      return NextResponse.json({ error: 'Template not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Template not found' },
+        { status: 404 }
+      );
     }
     return NextResponse.json({ template });
   }
@@ -43,7 +67,14 @@ export const GET = createGETHandler(async (context) => {
   return NextResponse.json({
     templates: emailTemplates,
     count: emailTemplates.length,
-    stages: ['awareness', 'consideration', 'decision', 'onboarding', 'retention', 'reengagement'],
+    stages: [
+      'awareness',
+      'consideration',
+      'decision',
+      'onboarding',
+      'retention',
+      'reengagement',
+    ],
     categories: Array.from(new Set(emailTemplates.map(t => t.category))),
   });
 });

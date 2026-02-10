@@ -1,6 +1,6 @@
 /**
  * EXAMPLE: Proper Middleware Pattern
- * 
+ *
  * This file demonstrates the strict production build safety rules:
  * 1. Edge runtime compatible (no Node.js APIs)
  * 2. Proper Supabase SSR cookie handling
@@ -13,7 +13,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 /**
  * Middleware runs on Edge Runtime
- * 
+ *
  * ✅ Follows all strict rules:
  * - No Node.js APIs (fs, path, etc.)
  * - Type-safe env var access
@@ -46,11 +46,17 @@ export async function middleware(request: NextRequest) {
       getAll() {
         return request.cookies.getAll();
       },
-      setAll(cookiesToSet: Array<{ name: string; value: string; options?: unknown }>) {
+      setAll(
+        cookiesToSet: Array<{ name: string; value: string; options?: unknown }>
+      ) {
         // CRITICAL: Set cookies on the specific response instance
         cookiesToSet.forEach(({ name, value, options }) => {
           if (options) {
-            response.cookies.set(name, value, options as { [key: string]: unknown });
+            response.cookies.set(
+              name,
+              value,
+              options as { [key: string]: unknown }
+            );
           } else {
             response.cookies.set(name, value);
           }

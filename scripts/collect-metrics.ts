@@ -5,9 +5,9 @@
  * Stores them in Supabase metrics_log table
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-import { env } from "../lib/env";
+import { env } from '../lib/env';
 
 interface MetricSource {
   source: string;
@@ -17,10 +17,10 @@ interface MetricSource {
 async function collectVercelMetrics(): Promise<MetricSource | null> {
   try {
     // Try to pull Vercel analytics (requires Vercel CLI)
-    const { execSync } = require("child_process");
-    
+    const { execSync } = require('child_process');
+
     if (!env.vercel.token) {
-      console.warn("⚠️  VERCEL_TOKEN not set, skipping Vercel metrics");
+      console.warn('⚠️  VERCEL_TOKEN not set, skipping Vercel metrics');
       return null;
     }
 
@@ -28,7 +28,7 @@ async function collectVercelMetrics(): Promise<MetricSource | null> {
     // For now, we'll simulate or use Vercel API
     const vercelProjectId = process.env.VERCEL_PROJECT_ID;
     if (!vercelProjectId) {
-      console.warn("⚠️  VERCEL_PROJECT_ID not set, skipping Vercel metrics");
+      console.warn('⚠️  VERCEL_PROJECT_ID not set, skipping Vercel metrics');
       return null;
     }
 
@@ -43,15 +43,17 @@ async function collectVercelMetrics(): Promise<MetricSource | null> {
     ).catch(() => null);
 
     if (!response || !response.ok) {
-      console.warn("⚠️  Could not fetch Vercel analytics");
+      console.warn('⚠️  Could not fetch Vercel analytics');
       return null;
     }
 
     const data = await response.json().catch(() => null);
-    if (!data) {return null;}
+    if (!data) {
+      return null;
+    }
 
     return {
-      source: "vercel",
+      source: 'vercel',
       metric: {
         LCP: data.lcp || null,
         CLS: data.cls || null,
@@ -63,7 +65,7 @@ async function collectVercelMetrics(): Promise<MetricSource | null> {
       },
     };
   } catch (error: any) {
-    console.error("Error collecting Vercel metrics:", error.message);
+    console.error('Error collecting Vercel metrics:', error.message);
     return null;
   }
 }
@@ -77,24 +79,21 @@ async function collectSupabaseMetrics(): Promise<MetricSource | null> {
 
     // Test query performance
     const startTime = Date.now();
-    const { error } = await supabase
-      .from("metrics_log")
-      .select("id")
-      .limit(1);
+    const { error } = await supabase.from('metrics_log').select('id').limit(1);
     const queryTime = Date.now() - startTime;
 
     if (error) {
-      console.warn("⚠️  Supabase query test failed:", error.message);
+      console.warn('⚠️  Supabase query test failed:', error.message);
       return null;
     }
 
     // Get table stats
     const { count } = await supabase
-      .from("metrics_log")
-      .select("*", { count: "exact", head: true });
+      .from('metrics_log')
+      .select('*', { count: 'exact', head: true });
 
     return {
-      source: "supabase",
+      source: 'supabase',
       metric: {
         avgLatencyMs: queryTime,
         queryTime,
@@ -103,7 +102,7 @@ async function collectSupabaseMetrics(): Promise<MetricSource | null> {
       },
     };
   } catch (error: any) {
-    console.error("Error collecting Supabase metrics:", error.message);
+    console.error('Error collecting Supabase metrics:', error.message);
     return null;
   }
 }
@@ -111,15 +110,15 @@ async function collectSupabaseMetrics(): Promise<MetricSource | null> {
 async function collectExpoMetrics(): Promise<MetricSource | null> {
   try {
     // Check if EAS CLI is available
-    const { execSync } = require("child_process");
-    
+    const { execSync } = require('child_process');
+
     try {
       // Try to get latest build info
-      const output = execSync("eas build:list --json --limit=1", {
-        encoding: "utf-8",
-        stdio: "pipe",
+      const output = execSync('eas build:list --json --limit=1', {
+        encoding: 'utf-8',
+        stdio: 'pipe',
       });
-      
+
       const builds = JSON.parse(output);
       if (!builds || builds.length === 0) {
         return null;
@@ -131,23 +130,23 @@ async function collectExpoMetrics(): Promise<MetricSource | null> {
         : null;
 
       return {
-        source: "expo",
+        source: 'expo',
         metric: {
           bundleMB: bundleSizeMB,
           duration: latestBuild.duration || null,
-          buildSuccess: latestBuild.status === "finished",
+          buildSuccess: latestBuild.status === 'finished',
           buildId: latestBuild.id,
         },
       };
     } catch (e: any) {
-      if (e.message.includes("eas: command not found")) {
-        console.warn("⚠️  EAS CLI not found, skipping Expo metrics");
+      if (e.message.includes('eas: command not found')) {
+        console.warn('⚠️  EAS CLI not found, skipping Expo metrics');
         return null;
       }
       throw e;
     }
   } catch (error: any) {
-    console.error("Error collecting Expo metrics:", error.message);
+    console.error('Error collecting Expo metrics:', error.message);
     return null;
   }
 }
@@ -155,10 +154,10 @@ async function collectExpoMetrics(): Promise<MetricSource | null> {
 async function collectCIMetrics(): Promise<MetricSource | null> {
   try {
     const githubToken = process.env.GITHUB_TOKEN;
-    const repo = process.env.GITHUB_REPOSITORY || "your-org/aias-platform";
+    const repo = process.env.GITHUB_REPOSITORY || 'your-org/aias-platform';
 
     if (!githubToken) {
-      console.warn("⚠️  GITHUB_TOKEN not set, skipping CI metrics");
+      console.warn('⚠️  GITHUB_TOKEN not set, skipping CI metrics');
       return null;
     }
 
@@ -168,13 +167,13 @@ async function collectCIMetrics(): Promise<MetricSource | null> {
       {
         headers: {
           Authorization: `Bearer ${githubToken}`,
-          Accept: "application/vnd.github.v3+json",
+          Accept: 'application/vnd.github.v3+json',
         },
       }
     );
 
     if (!response.ok) {
-      console.warn("⚠️  Could not fetch GitHub Actions runs");
+      console.warn('⚠️  Could not fetch GitHub Actions runs');
       return null;
     }
 
@@ -185,7 +184,7 @@ async function collectCIMetrics(): Promise<MetricSource | null> {
       return null;
     }
 
-    const successfulRuns = runs.filter((r: any) => r.conclusion === "success");
+    const successfulRuns = runs.filter((r: any) => r.conclusion === 'success');
     const successRate = (successfulRuns.length / runs.length) * 100;
 
     const durations = runs
@@ -198,15 +197,16 @@ async function collectCIMetrics(): Promise<MetricSource | null> {
 
     const avgBuildMin =
       durations.length > 0
-        ? durations.reduce((a: number, b: number) => a + b, 0) / durations.length
+        ? durations.reduce((a: number, b: number) => a + b, 0) /
+          durations.length
         : null;
 
     const pendingRuns = runs.filter(
-      (r: any) => r.status === "queued" || r.status === "in_progress"
+      (r: any) => r.status === 'queued' || r.status === 'in_progress'
     ).length;
 
     return {
-      source: "ci",
+      source: 'ci',
       metric: {
         avgBuildMin,
         successRate,
@@ -215,19 +215,16 @@ async function collectCIMetrics(): Promise<MetricSource | null> {
       },
     };
   } catch (error: any) {
-    console.error("Error collecting CI metrics:", error.message);
+    console.error('Error collecting CI metrics:', error.message);
     return null;
   }
 }
 
 async function storeMetrics(metrics: MetricSource[]) {
-  const supabase = createClient(
-    env.supabase.url,
-    env.supabase.serviceRoleKey
-  );
+  const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
   for (const metric of metrics) {
-    const { error } = await supabase.from("metrics_log").insert({
+    const { error } = await supabase.from('metrics_log').insert({
       source: metric.source,
       metric: metric.metric,
     });
@@ -241,7 +238,7 @@ async function storeMetrics(metrics: MetricSource[]) {
 }
 
 async function main() {
-  console.log("🔍 Collecting performance metrics...\n");
+  console.log('🔍 Collecting performance metrics...\n');
 
   const metrics: MetricSource[] = [];
 
@@ -253,13 +250,21 @@ async function main() {
     collectCIMetrics(),
   ]);
 
-  if (vercel) {metrics.push(vercel);}
-  if (supabase) {metrics.push(supabase);}
-  if (expo) {metrics.push(expo);}
-  if (ci) {metrics.push(ci);}
+  if (vercel) {
+    metrics.push(vercel);
+  }
+  if (supabase) {
+    metrics.push(supabase);
+  }
+  if (expo) {
+    metrics.push(expo);
+  }
+  if (ci) {
+    metrics.push(ci);
+  }
 
   if (metrics.length === 0) {
-    console.warn("⚠️  No metrics collected");
+    console.warn('⚠️  No metrics collected');
     process.exit(0);
   }
 
@@ -270,10 +275,15 @@ async function main() {
 }
 
 if (require.main === module) {
-  main().catch((error) => {
-    console.error("Fatal error:", error);
+  main().catch(error => {
+    console.error('Fatal error:', error);
     process.exit(1);
   });
 }
 
-export { collectVercelMetrics, collectSupabaseMetrics, collectExpoMetrics, collectCIMetrics };
+export {
+  collectVercelMetrics,
+  collectSupabaseMetrics,
+  collectExpoMetrics,
+  collectCIMetrics,
+};

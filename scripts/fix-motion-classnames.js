@@ -17,20 +17,31 @@ async function fixMotionClassNames() {
 
     // Pattern: motion.component({...className: "value"...})
     // Replace with: motion.component({...} as any) and spread className
-    const motionPattern = /(motion\.(?:div|span|section|article|header|footer|nav|main|p|h[1-6]|button|a|ul|ol|li|form|input|textarea|select|label|img|svg|path|g|circle|rect|line|polyline|polygon|ellipse))\s*\(\s*\{([^}]*className:\s*([^,}]+))([^}]*)\}\s*\)/g;
+    const motionPattern =
+      /(motion\.(?:div|span|section|article|header|footer|nav|main|p|h[1-6]|button|a|ul|ol|li|form|input|textarea|select|label|img|svg|path|g|circle|rect|line|polyline|polygon|ellipse))\s*\(\s*\{([^}]*className:\s*([^,}]+))([^}]*)\}\s*\)/g;
 
-    content = content.replace(motionPattern, (match, component, beforeClassName, classNameValue, afterClassName) => {
-      modified = true;
-      // Extract className value
-      const className = classNameValue.trim();
-      // Remove className from props
-      const restBefore = beforeClassName.replace(/className:\s*[^,}]+/, '').replace(/,\s*,/g, ',').trim();
-      const restAfter = afterClassName.trim();
-      const allProps = [restBefore, restAfter].filter(Boolean).join(',').replace(/^,|,$/g, '').trim();
-      
-      // Reconstruct with className spread
-      return `${component}({${allProps ? allProps + ',' : ''}...({className: ${className}} as any)})`;
-    });
+    content = content.replace(
+      motionPattern,
+      (match, component, beforeClassName, classNameValue, afterClassName) => {
+        modified = true;
+        // Extract className value
+        const className = classNameValue.trim();
+        // Remove className from props
+        const restBefore = beforeClassName
+          .replace(/className:\s*[^,}]+/, '')
+          .replace(/,\s*,/g, ',')
+          .trim();
+        const restAfter = afterClassName.trim();
+        const allProps = [restBefore, restAfter]
+          .filter(Boolean)
+          .join(',')
+          .replace(/^,|,$/g, '')
+          .trim();
+
+        // Reconstruct with className spread
+        return `${component}({${allProps ? allProps + ',' : ''}...({className: ${className}} as any)})`;
+      }
+    );
 
     if (modified) {
       fs.writeFileSync(file, content, 'utf-8');

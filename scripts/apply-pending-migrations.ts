@@ -10,9 +10,10 @@ import { join } from 'path';
 
 import { Pool } from 'pg';
 
-const SUPABASE_PROJECT_REF = process.env.SUPABASE_PROJECT_REF || process.env.VITE_SUPABASE_PROJECT_ID;
-const {SUPABASE_ACCESS_TOKEN} = process.env;
-const {SUPABASE_DB_URL} = process.env;
+const SUPABASE_PROJECT_REF =
+  process.env.SUPABASE_PROJECT_REF || process.env.VITE_SUPABASE_PROJECT_ID;
+const { SUPABASE_ACCESS_TOKEN } = process.env;
+const { SUPABASE_DB_URL } = process.env;
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');
 
 interface MigrationFile {
@@ -34,7 +35,9 @@ async function getAppliedMigrations(dbUrl: string): Promise<string[]> {
     `);
 
     if (!tableCheck.rows[0].exists) {
-      console.log('⚠️  Migration tracking table not found. Will apply all migrations.');
+      console.log(
+        '⚠️  Migration tracking table not found. Will apply all migrations.'
+      );
       return [];
     }
 
@@ -45,8 +48,13 @@ async function getAppliedMigrations(dbUrl: string): Promise<string[]> {
 
     return result.rows.map((row: any) => row.version);
   } catch (error: any) {
-    if (error.message.includes('does not exist') || error.message.includes('relation')) {
-      console.log('⚠️  Migration tracking table not found. Will apply all migrations.');
+    if (
+      error.message.includes('does not exist') ||
+      error.message.includes('relation')
+    ) {
+      console.log(
+        '⚠️  Migration tracking table not found. Will apply all migrations.'
+      );
       return [];
     }
     throw error;
@@ -74,20 +82,22 @@ function extractMigrationName(filename: string): string {
   return filename.replace('.sql', '');
 }
 
-async function applyMigrationViaSupabaseCLI(_migrationPath: string): Promise<boolean> {
+async function applyMigrationViaSupabaseCLI(
+  _migrationPath: string
+): Promise<boolean> {
   try {
     if (!SUPABASE_PROJECT_REF) {
       throw new Error('SUPABASE_PROJECT_REF not set');
     }
 
     let command = `npx supabase db push --include-all`;
-    
+
     if (SUPABASE_ACCESS_TOKEN) {
       command = `SUPABASE_ACCESS_TOKEN=${SUPABASE_ACCESS_TOKEN} ${command}`;
     }
 
     console.log(`📦 Applying migrations via Supabase CLI...`);
-    execSync(command, { 
+    execSync(command, {
       stdio: 'inherit',
       env: {
         ...process.env,
@@ -103,18 +113,23 @@ async function applyMigrationViaSupabaseCLI(_migrationPath: string): Promise<boo
   }
 }
 
-async function applyMigrationViaPsql(migrationPath: string, dbUrl: string): Promise<boolean> {
+async function applyMigrationViaPsql(
+  migrationPath: string,
+  dbUrl: string
+): Promise<boolean> {
   try {
     const migrationContent = readFileSync(migrationPath, 'utf-8');
     const pool = new Pool({ connectionString: dbUrl });
-    
+
     console.log(`📝 Applying migration: ${migrationPath}`);
     await pool.query(migrationContent);
     await pool.end();
-    
+
     return true;
   } catch (error: any) {
-    console.error(`❌ Failed to apply migration ${migrationPath}: ${error.message}`);
+    console.error(
+      `❌ Failed to apply migration ${migrationPath}: ${error.message}`
+    );
     return false;
   }
 }
@@ -157,7 +172,7 @@ async function main() {
   if (SUPABASE_PROJECT_REF) {
     console.log('🔄 Attempting to apply migrations via Supabase CLI...\n');
     const success = await applyMigrationViaSupabaseCLI('');
-    
+
     if (success) {
       console.log('\n✅ Migrations applied successfully via Supabase CLI!\n');
       return;
@@ -168,7 +183,10 @@ async function main() {
   if (SUPABASE_DB_URL) {
     console.log('🔄 Falling back to direct psql application...\n');
     for (const migration of pendingMigrations) {
-      const success = await applyMigrationViaPsql(migration.path, SUPABASE_DB_URL);
+      const success = await applyMigrationViaPsql(
+        migration.path,
+        SUPABASE_DB_URL
+      );
       if (!success) {
         console.error(`\n❌ Failed to apply migration: ${migration.name}`);
         process.exit(1);

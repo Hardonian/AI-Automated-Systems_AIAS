@@ -1,16 +1,16 @@
 /**
  * XState Conventions & Patterns
- * 
+ *
  * Standardized patterns for state machines across the application.
  * Ensures consistency, type safety, and maintainability.
  */
 
-import { EventObject, StateMachine, ActorRefFrom } from "xstate";
+import { EventObject, StateMachine, ActorRefFrom } from 'xstate';
 
 /**
  * Standard async state values for async operations
  */
-export type AsyncState = "idle" | "pending" | "success" | "error";
+export type AsyncState = 'idle' | 'pending' | 'success' | 'error';
 
 /**
  * Standard context shape for async operations
@@ -25,7 +25,7 @@ export interface AsyncContext<TData = unknown, TError = Error> {
  * Standard events for async operations
  */
 export interface AsyncEvents<TInput = unknown> {
-  type: "SUBMIT" | "RETRY" | "RESET" | "CANCEL";
+  type: 'SUBMIT' | 'RETRY' | 'RESET' | 'CANCEL';
   input?: TInput;
 }
 
@@ -33,7 +33,7 @@ export interface AsyncEvents<TInput = unknown> {
  * Standard events for step-based flows
  */
 export interface StepFlowEvents {
-  type: "NEXT" | "PREVIOUS" | "GO_TO_STEP" | "RESET" | "COMPLETE";
+  type: 'NEXT' | 'PREVIOUS' | 'GO_TO_STEP' | 'RESET' | 'COMPLETE';
   step?: number | string;
 }
 

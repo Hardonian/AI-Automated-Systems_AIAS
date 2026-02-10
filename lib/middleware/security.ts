@@ -1,14 +1,14 @@
 /**
  * Security Middleware
- * 
+ *
  * Comprehensive security middleware for API routes and pages.
  * Provides CSRF protection, input validation, security headers, and more.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { logger } from "@/lib/utils/logger";
-import { rateLimit, getClientIP } from "@/lib/utils/rate-limit";
+import { logger } from '@/lib/utils/logger';
+import { rateLimit, getClientIP } from '@/lib/utils/rate-limit';
 
 /**
  * Security configuration
@@ -37,15 +37,18 @@ const defaultConfig: SecurityConfig = {
 export function generateCSRFToken(): string {
   const array = new Uint8Array(32);
   crypto.getRandomValues(array);
-  return Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join("");
+  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
 /**
  * Validate CSRF token
  */
-export function validateCSRFToken(request: NextRequest, token: string): boolean {
-  const headerToken = request.headers.get("x-csrf-token");
-  const cookieToken = request.cookies.get("csrf-token")?.value;
+export function validateCSRFToken(
+  request: NextRequest,
+  token: string
+): boolean {
+  const headerToken = request.headers.get('x-csrf-token');
+  const cookieToken = request.cookies.get('csrf-token')?.value;
 
   // Check header or cookie token matches
   return headerToken === token || cookieToken === token;
@@ -71,19 +74,21 @@ export function securityMiddleware(
     );
 
     if (!limit.allowed) {
-      logger.warn("Rate limit exceeded", undefined, { ip, path });
+      logger.warn('Rate limit exceeded', undefined, { ip, path });
       return NextResponse.json(
         {
-          error: "Too many requests. Please try again later.",
+          error: 'Too many requests. Please try again later.',
           retryAfter: Math.ceil((limit.resetTime - Date.now()) / 1000),
         },
         {
           status: 429,
           headers: {
-            "Retry-After": String(Math.ceil((limit.resetTime - Date.now()) / 1000)),
-            "X-RateLimit-Limit": String(securityConfig.rateLimitMax),
-            "X-RateLimit-Remaining": "0",
-            "X-RateLimit-Reset": String(limit.resetTime),
+            'Retry-After': String(
+              Math.ceil((limit.resetTime - Date.now()) / 1000)
+            ),
+            'X-RateLimit-Limit': String(securityConfig.rateLimitMax),
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': String(limit.resetTime),
           },
         }
       );
@@ -92,19 +97,32 @@ export function securityMiddleware(
 
   // CORS validation
   if (securityConfig.enableCORS && securityConfig.allowedOrigins!.length > 0) {
-    const origin = request.headers.get("origin");
+    const origin = request.headers.get('origin');
     if (origin && !securityConfig.allowedOrigins!.includes(origin)) {
-      logger.warn("CORS violation", undefined, { origin, path });
-      return NextResponse.json({ error: "CORS policy violation" }, { status: 403 });
+      logger.warn('CORS violation', undefined, { origin, path });
+      return NextResponse.json(
+        { error: 'CORS policy violation' },
+        { status: 403 }
+      );
     }
   }
 
   // CSRF protection for state-changing methods
-  if (securityConfig.enableCSRF && ["POST", "PUT", "PATCH", "DELETE"].includes(request.method)) {
-    const csrfToken = request.headers.get("x-csrf-token");
+  if (
+    securityConfig.enableCSRF &&
+    ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)
+  ) {
+    const csrfToken = request.headers.get('x-csrf-token');
     if (!csrfToken) {
-      logger.warn("Missing CSRF token", undefined, { ip, path, method: request.method });
-      return NextResponse.json({ error: "CSRF token required" }, { status: 403 });
+      logger.warn('Missing CSRF token', undefined, {
+        ip,
+        path,
+        method: request.method,
+      });
+      return NextResponse.json(
+        { error: 'CSRF token required' },
+        { status: 403 }
+      );
     }
   }
 
@@ -117,16 +135,16 @@ export function securityMiddleware(
  */
 export function addSecurityHeaders(response: NextResponse): NextResponse {
   // Remove server information
-  response.headers.delete("x-powered-by");
+  response.headers.delete('x-powered-by');
 
   // Add security headers
-  response.headers.set("X-Content-Type-Options", "nosniff");
-  response.headers.set("X-Frame-Options", "SAMEORIGIN");
-  response.headers.set("X-XSS-Protection", "1; mode=block");
-  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('X-Frame-Options', 'SAMEORIGIN');
+  response.headers.set('X-XSS-Protection', '1; mode=block');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set(
-    "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    'Permissions-Policy',
+    'camera=(), microphone=(), geolocation=(), interest-cohort=()'
   );
 
   // Content Security Policy
@@ -144,16 +162,16 @@ export function addSecurityHeaders(response: NextResponse): NextResponse {
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'self'",
-    "upgrade-insecure-requests",
-  ].join("; ");
+    'upgrade-insecure-requests',
+  ].join('; ');
 
-  response.headers.set("Content-Security-Policy", csp);
+  response.headers.set('Content-Security-Policy', csp);
 
   // HSTS (only in production)
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === 'production') {
     response.headers.set(
-      "Strict-Transport-Security",
-      "max-age=31536000; includeSubDomains; preload"
+      'Strict-Transport-Security',
+      'max-age=31536000; includeSubDomains; preload'
     );
   }
 
@@ -164,29 +182,33 @@ export function addSecurityHeaders(response: NextResponse): NextResponse {
  * Sanitize request body to prevent injection attacks
  */
 export function sanitizeRequestBody(body: unknown): unknown {
-  if (typeof body !== "object" || body === null) {
+  if (typeof body !== 'object' || body === null) {
     return body;
   }
 
   if (Array.isArray(body)) {
-    return body.map((item) => sanitizeRequestBody(item));
+    return body.map(item => sanitizeRequestBody(item));
   }
 
   const sanitized: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(body)) {
     // Skip dangerous keys
-    if (key.startsWith("__") || key.includes("prototype") || key.includes("constructor")) {
+    if (
+      key.startsWith('__') ||
+      key.includes('prototype') ||
+      key.includes('constructor')
+    ) {
       continue;
     }
 
-    if (typeof value === "string") {
+    if (typeof value === 'string') {
       // Basic sanitization - remove script tags and dangerous patterns
       sanitized[key] = value
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-        .replace(/javascript:/gi, "")
-        .replace(/on\w+\s*=/gi, "");
-    } else if (typeof value === "object" && value !== null) {
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/javascript:/gi, '')
+        .replace(/on\w+\s*=/gi, '');
+    } else if (typeof value === 'object' && value !== null) {
       sanitized[key] = sanitizeRequestBody(value);
     } else {
       sanitized[key] = value;
@@ -199,8 +221,11 @@ export function sanitizeRequestBody(body: unknown): unknown {
 /**
  * Validate request size to prevent DoS
  */
-export function validateRequestSize(request: NextRequest, maxSize: number = 1024 * 1024): boolean {
-  const contentLength = request.headers.get("content-length");
+export function validateRequestSize(
+  request: NextRequest,
+  maxSize: number = 1024 * 1024
+): boolean {
+  const contentLength = request.headers.get('content-length');
   if (contentLength) {
     const size = parseInt(contentLength, 10);
     if (size > maxSize) {
@@ -217,7 +242,7 @@ export function detectSuspiciousActivity(request: NextRequest): {
   suspicious: boolean;
   reason?: string;
 } {
-  const userAgent = request.headers.get("user-agent") || "";
+  const userAgent = request.headers.get('user-agent') || '';
   const path = request.nextUrl.pathname;
   const query = request.nextUrl.search;
 
@@ -251,21 +276,21 @@ export function detectSuspiciousActivity(request: NextRequest): {
   // Check SQL injection
   for (const pattern of sqlPatterns) {
     if (pattern.test(fullQuery)) {
-      return { suspicious: true, reason: "SQL injection pattern detected" };
+      return { suspicious: true, reason: 'SQL injection pattern detected' };
     }
   }
 
   // Check XSS
   for (const pattern of xssPatterns) {
     if (pattern.test(fullQuery)) {
-      return { suspicious: true, reason: "XSS pattern detected" };
+      return { suspicious: true, reason: 'XSS pattern detected' };
     }
   }
 
   // Check user agent
   for (const pattern of suspiciousUserAgents) {
     if (pattern.test(userAgent)) {
-      return { suspicious: true, reason: "Suspicious user agent detected" };
+      return { suspicious: true, reason: 'Suspicious user agent detected' };
     }
   }
 

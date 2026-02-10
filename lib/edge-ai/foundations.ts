@@ -11,7 +11,13 @@ import { z } from 'zod';
 export const edgeModelSchema = z.object({
   id: z.string().uuid(),
   name: z.string(),
-  provider: z.enum(['webgpu', 'wasm', 'webnn', 'tensorflow-js', 'onnx-runtime']),
+  provider: z.enum([
+    'webgpu',
+    'wasm',
+    'webnn',
+    'tensorflow-js',
+    'onnx-runtime',
+  ]),
   modelUrl: z.string().url(),
   quantization: z.enum(['fp32', 'fp16', 'int8', 'int4']).default('int8'),
   maxTokens: z.number().int().min(1).max(4096).default(2048),
@@ -28,14 +34,24 @@ export const agentDefinitionSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(3).max(200),
   description: z.string().max(1000),
-  personality: z.enum(['professional', 'friendly', 'technical', 'casual', 'formal']),
+  personality: z.enum([
+    'professional',
+    'friendly',
+    'technical',
+    'casual',
+    'formal',
+  ]),
   instructions: z.string().min(10).max(10000),
-  tools: z.array(z.object({
-    id: z.string(),
-    name: z.string(),
-    description: z.string(),
-    parameters: z.record(z.unknown()),
-  })).max(20),
+  tools: z
+    .array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        description: z.string(),
+        parameters: z.record(z.unknown()),
+      })
+    )
+    .max(20),
   model: edgeModelSchema,
   enabled: z.boolean().default(true),
 });
@@ -49,12 +65,30 @@ export const workflowTemplateSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(3).max(200),
   description: z.string().max(1000),
-  category: z.enum(['automation', 'analysis', 'generation', 'integration', 'custom']),
-  steps: z.array(z.object({
-    id: z.string().uuid(),
-    type: z.enum(['api', 'database', 'ai', 'notification', 'condition', 'loop']),
-    config: z.record(z.unknown()),
-  })).min(1).max(50),
+  category: z.enum([
+    'automation',
+    'analysis',
+    'generation',
+    'integration',
+    'custom',
+  ]),
+  steps: z
+    .array(
+      z.object({
+        id: z.string().uuid(),
+        type: z.enum([
+          'api',
+          'database',
+          'ai',
+          'notification',
+          'condition',
+          'loop',
+        ]),
+        config: z.record(z.unknown()),
+      })
+    )
+    .min(1)
+    .max(50),
   tags: z.array(z.string().max(50)).max(10),
   popularity: z.number().int().min(0).default(0),
 });
@@ -70,10 +104,12 @@ export const executionContextSchema = z.object({
   input: z.record(z.unknown()),
   metadata: z.record(z.unknown()).optional(),
   timeout: z.number().int().min(1000).max(300000).default(60000),
-  retry: z.object({
-    maxAttempts: z.number().int().min(0).max(10).default(3),
-    backoff: z.enum(['linear', 'exponential']).default('exponential'),
-  }).optional(),
+  retry: z
+    .object({
+      maxAttempts: z.number().int().min(0).max(10).default(3),
+      backoff: z.enum(['linear', 'exponential']).default('exponential'),
+    })
+    .optional(),
 });
 
 export type ExecutionContext = z.infer<typeof executionContextSchema>;
@@ -85,12 +121,14 @@ export const toolInterfaceSchema = z.object({
   id: z.string(),
   name: z.string().min(1).max(100),
   description: z.string().max(500),
-  parameters: z.record(z.object({
-    type: z.enum(['string', 'number', 'boolean', 'object', 'array']),
-    required: z.boolean().default(false),
-    description: z.string().optional(),
-    default: z.unknown().optional(),
-  })),
+  parameters: z.record(
+    z.object({
+      type: z.enum(['string', 'number', 'boolean', 'object', 'array']),
+      required: z.boolean().default(false),
+      description: z.string().optional(),
+      default: z.unknown().optional(),
+    })
+  ),
   execute: z.function(), // Runtime function
 });
 
@@ -104,11 +142,14 @@ export interface EdgeAIProvider {
   name: string;
   initialize(): Promise<void>;
   loadModel(modelId: string): Promise<void>;
-  generate(prompt: string, options?: {
-    maxTokens?: number;
-    temperature?: number;
-    stopSequences?: string[];
-  }): Promise<string>;
+  generate(
+    prompt: string,
+    options?: {
+      maxTokens?: number;
+      temperature?: number;
+      stopSequences?: string[];
+    }
+  ): Promise<string>;
   isAvailable(): boolean;
   getCapabilities(): {
     maxTokens: number;
@@ -154,7 +195,10 @@ export class AgentMeshCoordinator {
       // Execute workflow steps
       let output = context.input;
       for (const step of workflow.steps) {
-        output = (await this.executeStep(step, output, context)) as Record<string, unknown>;
+        output = (await this.executeStep(step, output, context)) as Record<
+          string,
+          unknown
+        >;
       }
 
       return {
@@ -220,15 +264,23 @@ export class AgentMeshCoordinator {
  * Allows adding new agents, workflows, tools dynamically
  */
 export class ExtensionPointRegistry {
-  private agentFactories: Map<string, () => Promise<AgentDefinition>> = new Map();
-  private workflowFactories: Map<string, () => Promise<WorkflowTemplate>> = new Map();
+  private agentFactories: Map<string, () => Promise<AgentDefinition>> =
+    new Map();
+  private workflowFactories: Map<string, () => Promise<WorkflowTemplate>> =
+    new Map();
   private toolFactories: Map<string, () => Promise<ToolInterface>> = new Map();
 
-  registerAgentFactory(id: string, factory: () => Promise<AgentDefinition>): void {
+  registerAgentFactory(
+    id: string,
+    factory: () => Promise<AgentDefinition>
+  ): void {
     this.agentFactories.set(id, factory);
   }
 
-  registerWorkflowFactory(id: string, factory: () => Promise<WorkflowTemplate>): void {
+  registerWorkflowFactory(
+    id: string,
+    factory: () => Promise<WorkflowTemplate>
+  ): void {
     this.workflowFactories.set(id, factory);
   }
 

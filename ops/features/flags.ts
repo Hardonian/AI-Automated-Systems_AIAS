@@ -13,7 +13,10 @@ export interface FeatureFlag {
   orgId?: string;
 }
 
-export async function getFeatureFlag(key: string, orgId?: string): Promise<boolean> {
+export async function getFeatureFlag(
+  key: string,
+  orgId?: string
+): Promise<boolean> {
   const flag = await prisma.featureFlag.findFirst({
     where: {
       key,
@@ -24,12 +27,19 @@ export async function getFeatureFlag(key: string, orgId?: string): Promise<boole
   return flag?.enabled || false;
 }
 
-export async function getABVariant(_key: string, userId: string): Promise<string> {
-  const hash = userId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+export async function getABVariant(
+  _key: string,
+  userId: string
+): Promise<string> {
+  const hash = userId
+    .split('')
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
   return hash % 2 === 0 ? 'A' : 'B';
 }
 
-export async function getPricing(orgId: string): Promise<{ plan: string; price: number }> {
+export async function getPricing(
+  orgId: string
+): Promise<{ plan: string; price: number }> {
   const subscription = await prisma.subscription.findFirst({
     where: {
       org: {
@@ -55,6 +65,9 @@ export async function getPricing(orgId: string): Promise<{ plan: string; price: 
   };
 }
 
-export async function isOfferEnabled(offerId: string, orgId?: string): Promise<boolean> {
+export async function isOfferEnabled(
+  offerId: string,
+  orgId?: string
+): Promise<boolean> {
   return getFeatureFlag(`offer:${offerId}`, orgId);
 }

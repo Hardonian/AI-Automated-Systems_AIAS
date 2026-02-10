@@ -1,6 +1,6 @@
 /**
  * Autonomous Reliability, Financial, and Security Orchestrator
- * 
+ *
  * Default behavior: verify → analyze → forecast → harden → report
  * Never exposes secrets, breaks builds, or modifies user data
  * All fixes happen via safe PRs and logged commits
@@ -73,11 +73,14 @@ class Orchestrator {
   private prAutomation: PRAutomation;
 
   constructor(config?: Partial<OrchestratorConfig>) {
-    const projectRef = process.env.SUPABASE_PROJECT_REF || 'ghqyxhbyyirveptgwoqm';
-    
+    const projectRef =
+      process.env.SUPABASE_PROJECT_REF || 'ghqyxhbyyirveptgwoqm';
+
     this.config = {
       budget: parseFloat(process.env.ORCHESTRATOR_BUDGET || '75'),
-      reliabilityThreshold: parseFloat(process.env.ORCHESTRATOR_RELIABILITY_THRESHOLD || '99.9'),
+      reliabilityThreshold: parseFloat(
+        process.env.ORCHESTRATOR_RELIABILITY_THRESHOLD || '99.9'
+      ),
       securityAlertWebhook: process.env.RELIABILITY_ALERT_WEBHOOK,
       githubOwner: process.env.GITHUB_OWNER || 'your-org',
       githubRepo: process.env.GITHUB_REPO || 'aias-platform',
@@ -85,12 +88,14 @@ class Orchestrator {
       vercelProjectId: process.env.VERCEL_PROJECT_ID,
       enableAutoPR: process.env.ORCHESTRATOR_AUTO_PR === 'true',
       enableAutoFix: process.env.ORCHESTRATOR_AUTO_FIX === 'true',
-      ...config
+      ...config,
     };
 
     this.supabase = createClient(
       process.env.SUPABASE_URL || `https://${projectRef}.supabase.co`,
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || ''
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+        process.env.SUPABASE_ANON_KEY ||
+        ''
     );
 
     this.octokit = new Octokit({
@@ -98,7 +103,9 @@ class Orchestrator {
     });
 
     // Initialize audit directory
-    const today = new Date().toISOString().split('T')[0] || new Date().toISOString().substring(0, 10);
+    const today =
+      new Date().toISOString().split('T')[0] ||
+      new Date().toISOString().substring(0, 10);
     this.auditDir = join(process.cwd(), 'compliance', 'audits', today);
     if (!existsSync(this.auditDir)) {
       mkdirSync(this.auditDir, { recursive: true });
@@ -106,10 +113,17 @@ class Orchestrator {
 
     // Initialize modules
     this.dependencyHealth = new DependencyHealthChecker(this.supabase);
-    this.costForecaster = new CostForecaster(this.supabase, this.octokit, this.config);
+    this.costForecaster = new CostForecaster(
+      this.supabase,
+      this.octokit,
+      this.config
+    );
     this.securityAuditor = new SecurityAuditor(this.supabase);
     this.uptimeMonitor = new UptimeMonitor(this.supabase, this.config);
-    this.dashboardGenerator = new DashboardGenerator(this.supabase, this.config);
+    this.dashboardGenerator = new DashboardGenerator(
+      this.supabase,
+      this.config
+    );
     this.prAutomation = new PRAutomation(this.octokit, this.config);
   }
 
@@ -130,16 +144,16 @@ class Orchestrator {
         costForecast: { status: 'success', message: 'Not executed' },
         securityAudit: { status: 'success', message: 'Not executed' },
         uptimeCheck: { status: 'success', message: 'Not executed' },
-        dashboardGeneration: { status: 'success', message: 'Not executed' }
+        dashboardGeneration: { status: 'success', message: 'Not executed' },
       },
       summary: {
         vulnerabilities: 0,
         costDeviation: 0,
         securityIssues: 0,
         uptime: 100,
-        recommendations: []
+        recommendations: [],
       },
-      artifacts: []
+      artifacts: [],
     };
 
     try {
@@ -147,41 +161,51 @@ class Orchestrator {
       console.log('📦 [1/5] Verifying dependency health...');
       report.modules.dependencyHealth = await this.dependencyHealth.check();
       if (report.modules.dependencyHealth.data) {
-        report.summary.vulnerabilities = report.modules.dependencyHealth.data.vulnerabilities?.length || 0;
+        report.summary.vulnerabilities =
+          report.modules.dependencyHealth.data.vulnerabilities?.length || 0;
       }
 
       // 2. ANALYZE: Cost Forecasting & Performance Intelligence
       console.log('💰 [2/5] Analyzing cost forecasts...');
       report.modules.costForecast = await this.costForecaster.forecast();
       if (report.modules.costForecast.data) {
-        report.summary.costDeviation = report.modules.costForecast.data.deviation_percent || 0;
+        report.summary.costDeviation =
+          report.modules.costForecast.data.deviation_percent || 0;
       }
 
       // 3. FORECAST: Security & Compliance Audit
       console.log('🔒 [3/5] Auditing security & compliance...');
       report.modules.securityAudit = await this.securityAuditor.audit();
       if (report.modules.securityAudit.data) {
-        report.summary.securityIssues = report.modules.securityAudit.data.issues?.length || 0;
+        report.summary.securityIssues =
+          report.modules.securityAudit.data.issues?.length || 0;
       }
 
       // 4. HARDEN: Uptime Monitoring & Error Triage
       console.log('🏥 [4/5] Monitoring uptime & triaging errors...');
       report.modules.uptimeCheck = await this.uptimeMonitor.check();
       if (report.modules.uptimeCheck.data) {
-        report.summary.uptime = report.modules.uptimeCheck.data.uptime_percent || 100;
+        report.summary.uptime =
+          report.modules.uptimeCheck.data.uptime_percent || 100;
       }
 
       // 5. REPORT: Generate Dashboards & Reports
       console.log('📊 [5/5] Generating dashboards & reports...');
-      report.modules.dashboardGeneration = await this.dashboardGenerator.generate();
+      report.modules.dashboardGeneration =
+        await this.dashboardGenerator.generate();
       if (report.modules.dashboardGeneration.data) {
-        report.artifacts = report.modules.dashboardGeneration.data.artifacts || [];
+        report.artifacts =
+          report.modules.dashboardGeneration.data.artifacts || [];
       }
 
       // Determine overall status
-      const hasErrors = Object.values(report.modules).some(m => m.status === 'error');
-      const hasWarnings = Object.values(report.modules).some(m => m.status === 'warning');
-      
+      const hasErrors = Object.values(report.modules).some(
+        m => m.status === 'error'
+      );
+      const hasWarnings = Object.values(report.modules).some(
+        m => m.status === 'warning'
+      );
+
       if (hasErrors) {
         report.status = 'failed';
       } else if (hasWarnings) {
@@ -195,12 +219,19 @@ class Orchestrator {
       await this.storeReport(report);
 
       // Auto-PR for safe fixes
-      if (this.config.enableAutoPR && report.summary.recommendations.length > 0) {
+      if (
+        this.config.enableAutoPR &&
+        report.summary.recommendations.length > 0
+      ) {
         await this.handleAutoPR(report);
       }
 
-      console.log(`\n✅ Orchestrator Cycle #${this.cycle} completed: ${report.status.toUpperCase()}`);
-      console.log(`📊 Summary: ${report.summary.vulnerabilities} vulnerabilities, ${report.summary.costDeviation.toFixed(1)}% cost deviation, ${report.summary.securityIssues} security issues, ${report.summary.uptime.toFixed(2)}% uptime\n`);
+      console.log(
+        `\n✅ Orchestrator Cycle #${this.cycle} completed: ${report.status.toUpperCase()}`
+      );
+      console.log(
+        `📊 Summary: ${report.summary.vulnerabilities} vulnerabilities, ${report.summary.costDeviation.toFixed(1)}% cost deviation, ${report.summary.securityIssues} security issues, ${report.summary.uptime.toFixed(2)}% uptime\n`
+      );
 
       return report;
     } catch (error: any) {
@@ -209,7 +240,7 @@ class Orchestrator {
       report.modules.dashboardGeneration = {
         status: 'error',
         message: `Orchestrator error: ${error.message}`,
-        errors: [error.message]
+        errors: [error.message],
       };
       await this.storeReport(report);
       throw error;
@@ -224,7 +255,9 @@ class Orchestrator {
 
     // Dependency health recommendations
     if (report.modules.dependencyHealth.data?.recommendations) {
-      recommendations.push(...report.modules.dependencyHealth.data.recommendations);
+      recommendations.push(
+        ...report.modules.dependencyHealth.data.recommendations
+      );
     }
 
     // Cost forecast recommendations
@@ -234,7 +267,9 @@ class Orchestrator {
 
     // Security audit recommendations
     if (report.modules.securityAudit.data?.recommendations) {
-      recommendations.push(...report.modules.securityAudit.data.recommendations);
+      recommendations.push(
+        ...report.modules.securityAudit.data.recommendations
+      );
     }
 
     // Uptime recommendations
@@ -253,20 +288,25 @@ class Orchestrator {
       // Store in Supabase
       const { error } = await this.supabase
         .from('orchestrator_reports')
-        .insert([{
-          cycle: report.cycle,
-          timestamp: report.timestamp,
-          status: report.status,
-          report: report,
-          created_at: new Date().toISOString()
-        }]);
+        .insert([
+          {
+            cycle: report.cycle,
+            timestamp: report.timestamp,
+            status: report.status,
+            report: report,
+            created_at: new Date().toISOString(),
+          },
+        ]);
 
       if (error) {
         console.warn('Could not store report in Supabase:', error.message);
       }
 
       // Store locally
-      const reportPath = join(this.auditDir, `orchestrator_report_${this.cycle}.json`);
+      const reportPath = join(
+        this.auditDir,
+        `orchestrator_report_${this.cycle}.json`
+      );
       writeFileSync(reportPath, JSON.stringify(report, null, 2));
       report.artifacts.push(reportPath);
     } catch (error) {
@@ -278,17 +318,22 @@ class Orchestrator {
    * Handle auto-PR creation for safe fixes
    */
   private async handleAutoPR(report: OrchestratorReport): Promise<void> {
-    const safeFixes = report.summary.recommendations.filter(rec => 
-      rec.includes('patch') || rec.includes('minor') || rec.includes('dependency')
+    const safeFixes = report.summary.recommendations.filter(
+      rec =>
+        rec.includes('patch') ||
+        rec.includes('minor') ||
+        rec.includes('dependency')
     );
 
     if (safeFixes.length > 0) {
-      console.log(`\n🔧 Creating auto-PR for ${safeFixes.length} safe fixes...`);
+      console.log(
+        `\n🔧 Creating auto-PR for ${safeFixes.length} safe fixes...`
+      );
       await this.prAutomation.createAutoPR({
         title: `🔧 Automated Security & Dependency Updates (Cycle #${this.cycle})`,
         body: this.generatePRBody(report, safeFixes),
         changes: await this.prepareSafeChanges(report),
-        labels: ['security-auto', 'dependencies', 'automated']
+        labels: ['security-auto', 'dependencies', 'automated'],
       });
     }
   }
@@ -329,7 +374,9 @@ This PR contains automated fixes that passed safety checks. Please review before
   /**
    * Prepare safe changes for PR
    */
-  private async prepareSafeChanges(report: OrchestratorReport): Promise<Array<{ path: string; content: string }>> {
+  private async prepareSafeChanges(
+    report: OrchestratorReport
+  ): Promise<Array<{ path: string; content: string }>> {
     const changes: Array<{ path: string; content: string }> = [];
 
     // Add dependency updates if available
@@ -356,7 +403,12 @@ This PR contains automated fixes that passed safety checks. Please review before
 }
 
 // Export types and class
-export { Orchestrator, type OrchestratorConfig, type OrchestratorReport, type ModuleResult };
+export {
+  Orchestrator,
+  type OrchestratorConfig,
+  type OrchestratorReport,
+  type ModuleResult,
+};
 
 // CLI execution
 if (require.main === module) {

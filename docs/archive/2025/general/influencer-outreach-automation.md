@@ -13,17 +13,20 @@ Influencer partnerships can be powerful for growth, but manual outreach doesn't 
 ### Target Influencer Profiles
 
 **Micro-Influencers (1K-10K followers)**
+
 - Higher engagement rates
 - More affordable
 - Better for niche audiences
 - Easier to establish relationships
 
 **Mid-Tier Influencers (10K-100K followers)**
+
 - Good reach + engagement balance
 - More professional approach needed
 - Higher cost but better ROI potential
 
 **Macro-Influencers (100K+ followers)**
+
 - Maximum reach
 - High cost
 - Best for brand awareness campaigns
@@ -41,12 +44,14 @@ Influencer partnerships can be powerful for growth, but manual outreach doesn't 
 ### Tools & Platforms
 
 **Free Tools:**
+
 - Instagram search (hashtags, locations)
 - Twitter search (keywords, mentions)
 - LinkedIn (industry thought leaders)
 - YouTube (relevant channels)
 
 **Paid Tools:**
+
 - **Upfluence** ($99/month) - Comprehensive influencer database
 - **AspireIQ** ($200/month) - Creator marketplace
 - **BuzzStream** ($99/month) - Outreach + relationship management
@@ -54,17 +59,20 @@ Influencer partnerships can be powerful for growth, but manual outreach doesn't 
 ### Search Strategy
 
 **Keywords to Search:**
+
 - "[Your industry] tips"
 - "[Your product category] review"
 - "[Your problem] solution"
 - "[Your target audience] advice"
 
 **Hashtags:**
+
 - Industry-specific hashtags
 - Product-related hashtags
 - Community hashtags
 
 **Competitor Analysis:**
+
 - Who's promoting competitors?
 - What creators mention competitors?
 - Similar audience, different product
@@ -74,6 +82,7 @@ Influencer partnerships can be powerful for growth, but manual outreach doesn't 
 ### Initial Outreach (Cold Email/DM)
 
 **Template 1: Value-First Approach**
+
 ```
 Hi {{influencer_name}},
 
@@ -88,6 +97,7 @@ Best,
 ```
 
 **Template 2: Product Offer**
+
 ```
 Hi {{influencer_name}},
 
@@ -104,6 +114,7 @@ Best,
 ```
 
 **Template 3: Partnership Proposal**
+
 ```
 Hi {{influencer_name}},
 
@@ -124,6 +135,7 @@ Best,
 ### Follow-up Templates
 
 **First Follow-up (5-7 days):**
+
 ```
 Hi {{influencer_name}},
 
@@ -136,6 +148,7 @@ Best,
 ```
 
 **Final Follow-up (2 weeks):**
+
 ```
 Hi {{influencer_name}},
 
@@ -154,9 +167,11 @@ Best,
 **Create Influencer Database (Notion/Airtable):**
 
 **Properties:**
+
 - Name, Handle, Platform, Followers, Engagement Rate, Email, Status, Notes, Last Contacted, Next Follow-up, Offer Made, Response
 
 **Status Values:**
+
 - Researching
 - Outreach Sent
 - Follow-up Sent
@@ -171,6 +186,7 @@ Best,
 **Via Zapier/Make:**
 
 **Workflow:**
+
 1. Add influencer to CRM
 2. Send initial outreach email
 3. Schedule follow-up (5 days)
@@ -178,6 +194,7 @@ Best,
 5. Update status
 
 **Setup:**
+
 ```json
 {
   "trigger": "New row in Influencer CRM",
@@ -207,11 +224,13 @@ Best,
 ### Response Tracking
 
 **Automated:**
+
 - Monitor email replies
 - Update CRM status
 - Trigger next action based on response
 
 **Manual:**
+
 - Review responses weekly
 - Personalize follow-ups
 - Negotiate terms
@@ -221,16 +240,19 @@ Best,
 ### 1. Product Review
 
 **Offer:**
+
 - Free product access
 - No obligation to post
 - Option for affiliate link
 
 **Deliverables:**
+
 - Honest review (positive or negative)
 - Share on their platform
 - Tag your brand
 
 **Compensation:**
+
 - Free product
 - 10-20% affiliate commission
 - Additional fee for guaranteed post
@@ -238,49 +260,58 @@ Best,
 ### 2. Sponsored Post
 
 **Offer:**
+
 - $X CAD per post
 - Product access
 - Creative freedom (with guidelines)
 
 **Deliverables:**
+
 - 1-3 posts/stories
 - Brand mention + link
 - Usage rights for reposting
 
 **Compensation:**
+
 - $50-500 CAD per post (depending on follower count)
 - Higher for guaranteed engagement
 
 ### 3. Affiliate Partnership
 
 **Offer:**
+
 - Custom affiliate link
 - 15-30% commission
 - Marketing materials
 - Performance bonuses
 
 **Deliverables:**
+
 - Regular mentions/sharing
 - Authentic integration
 - Trackable conversions
 
 **Compensation:**
+
 - Commission-based
 - Bonus for top performers
 
 ### 4. Guest Content
 
 **Offer:**
+
 - Co-create content
 - Feature on your platform
 - Cross-promotion
 
 **Deliverables:**
+
 - Collaborative content piece
 - Shared promotion
 - Mutual audience exposure
 
 **Compensation:**
+
 - Exposure + backlink
 - Optional fee
 
@@ -289,21 +320,25 @@ Best,
 ### Metrics to Track
 
 **Reach:**
+
 - Impressions
 - Views
 - Shares
 
 **Engagement:**
+
 - Likes, comments, saves
 - Click-through rate
 - Sign-ups from link
 
 **Conversion:**
+
 - Leads generated
 - Sales attributed
 - Cost per acquisition
 
 **ROI:**
+
 - Revenue from partnership
 - Cost of partnership
 - ROI calculation
@@ -311,16 +346,19 @@ Best,
 ### Tracking Setup
 
 **UTM Parameters:**
+
 - Add UTM tags to all influencer links
 - Track in Google Analytics
 - Attribute conversions
 
 **Example:**
+
 ```
 https://yourdomain.com?utm_source=influencer&utm_medium=instagram&utm_campaign={{influencer_name}}
 ```
 
 **CRM Integration:**
+
 - Track influencer-attributed leads
 - Calculate conversion rates
 - Measure partnership ROI
@@ -339,6 +377,7 @@ https://yourdomain.com?utm_source=influencer&utm_medium=instagram&utm_campaign={
 ### FTC Requirements
 
 **Disclosure Requirements:**
+
 - Influencers must disclose sponsored content
 - Use hashtags: #ad, #sponsored, #partner
 - Clear and conspicuous disclosure
@@ -346,6 +385,7 @@ https://yourdomain.com?utm_source=influencer&utm_medium=instagram&utm_campaign={
 ### Contract Template
 
 **Include:**
+
 - Deliverables and timeline
 - Compensation and payment terms
 - Content usage rights
@@ -356,21 +396,25 @@ https://yourdomain.com?utm_source=influencer&utm_medium=instagram&utm_campaign={
 ## Monthly Workflow
 
 ### Week 1: Research & Outreach
+
 - Research 10-20 new influencers
 - Add to CRM
 - Send initial outreach
 
 ### Week 2: Follow-ups
+
 - Follow up with previous outreach
 - Review responses
 - Schedule calls with interested parties
 
 ### Week 3: Negotiations
+
 - Discuss partnership terms
 - Send contracts
 - Onboard new partners
 
 ### Week 4: Analysis & Optimization
+
 - Review partnership performance
 - Calculate ROI
 - Plan next month's outreach
@@ -378,16 +422,19 @@ https://yourdomain.com?utm_source=influencer&utm_medium=instagram&utm_campaign={
 ## Tools & Resources
 
 **Outreach Tools:**
+
 - Lemlist ($59/month) - Email outreach automation
 - Reply.io ($70/month) - Cold email campaigns
 - Mailshake ($58/month) - Simple email outreach
 
 **Relationship Management:**
+
 - Notion/Airtable CRM
 - Google Sheets (free alternative)
 - HubSpot CRM (free tier)
 
 **Analytics:**
+
 - Google Analytics (UTM tracking)
 - Your CRM (conversion tracking)
 - Social media insights

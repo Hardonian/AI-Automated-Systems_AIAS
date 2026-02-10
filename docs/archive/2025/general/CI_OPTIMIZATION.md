@@ -11,11 +11,13 @@ This guide explains the CI/CD optimizations implemented to reduce feedback time 
 ### Before vs After
 
 **Before:** Sequential execution
+
 ```
 Quality Gates (15min) → Unit Tests → E2E Tests → Build → Deploy
 ```
 
 **After:** Parallel execution
+
 ```
 Type Check ─┐
 Lint        ├─→ Unit Tests → Build → Deploy
@@ -46,6 +48,7 @@ All checks run in parallel for faster feedback.
 ### Auto-Comments
 
 Results are automatically commented on PRs:
+
 - ✅ All checks passed
 - ⚠️ Some checks failed (with details)
 
@@ -55,13 +58,13 @@ Results are automatically commented on PRs:
 
 ```yaml
 unit-tests:
-  needs: [type-check, lint]  # Only wait for critical checks
+  needs: [type-check, lint] # Only wait for critical checks
 
 e2e-tests:
-  needs: [type-check, lint]  # Parallel with unit tests
+  needs: [type-check, lint] # Parallel with unit tests
 
 build-analysis:
-  needs: [type-check, lint, unit-tests]  # Wait for tests
+  needs: [type-check, lint, unit-tests] # Wait for tests
 ```
 
 ### Benefits

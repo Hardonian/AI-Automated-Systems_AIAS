@@ -1,16 +1,16 @@
-"use server";
+'use server';
 
-import { createClient } from "@supabase/supabase-js";
-import { revalidatePath } from "next/cache";
+import { createClient } from '@supabase/supabase-js';
+import { revalidatePath } from 'next/cache';
 
-import type { Database } from "@/src/integrations/supabase/types";
+import type { Database } from '@/src/integrations/supabase/types';
 
 /**
  * Server Action: User Sign-Up
- * 
+ *
  * Data Flow:
  * User Sign-up (Vercel Form) → Next.js Server Action → Supabase profiles table (RLS Check) → activity_log entry → Profile Page Reload (Server Component Fetch)
- * 
+ *
  * This action:
  * 1. Creates a user in Supabase Auth
  * 2. Creates a profile entry in the profiles table
@@ -40,7 +40,7 @@ export async function signUpUser(
     if (!supabaseUrl || !supabaseServiceKey) {
       return {
         success: false,
-        error: "Server configuration error: Missing Supabase credentials",
+        error: 'Server configuration error: Missing Supabase credentials',
       };
     }
 
@@ -57,7 +57,7 @@ export async function signUpUser(
       password,
       options: {
         data: {
-          display_name: displayName || email.split("@")[0],
+          display_name: displayName || email.split('@')[0],
         },
       },
     });
@@ -65,30 +65,28 @@ export async function signUpUser(
     if (authError || !authData.user) {
       return {
         success: false,
-        error: authError?.message || "Failed to create user account",
+        error: authError?.message || 'Failed to create user account',
       };
     }
 
     const userId = authData.user.id;
 
     // Step 2: Create profile entry
-    const { error: profileError } = await supabase
-      .from("profiles")
-      .insert({
-        id: userId,
-        email,
-        display_name: displayName || email.split("@")[0],
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      });
+    const { error: profileError } = await supabase.from('profiles').insert({
+      id: userId,
+      email,
+      display_name: displayName || email.split('@')[0],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
 
     if (profileError) {
       // If profile creation fails, we should clean up the auth user
       // In production, you might want to handle this more gracefully
-      console.error("Profile creation error:", profileError);
+      console.error('Profile creation error:', profileError);
       return {
         success: false,
-        error: "Failed to create user profile",
+        error: 'Failed to create user profile',
       };
     }
 
@@ -98,28 +96,28 @@ export async function signUpUser(
 
     // Step 3: Log sign-up activity
     const { error: activityError } = await supabase
-      .from("activity_log")
+      .from('activity_log')
       .insert({
         user_id: userId,
-        activity_type: "sign_up",
-        entity_type: "user",
+        activity_type: 'sign_up',
+        entity_type: 'user',
         entity_id: userId,
         metadata: {
           email,
-          display_name: displayName || email.split("@")[0],
-          source: "server_action",
+          display_name: displayName || email.split('@')[0],
+          source: 'server_action',
         },
         created_at: new Date().toISOString(),
       });
 
     if (activityError) {
       // Log error but don't fail the sign-up
-      console.error("Activity log error:", activityError);
+      console.error('Activity log error:', activityError);
     }
 
     // Step 4: Revalidate relevant paths
-    revalidatePath("/");
-    revalidatePath("/account");
+    revalidatePath('/');
+    revalidatePath('/account');
 
     return {
       success: true,
@@ -129,10 +127,11 @@ export async function signUpUser(
       },
     };
   } catch (error) {
-    console.error("Sign-up error:", error);
+    console.error('Sign-up error:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "An unexpected error occurred",
+      error:
+        error instanceof Error ? error.message : 'An unexpected error occurred',
     };
   }
 }

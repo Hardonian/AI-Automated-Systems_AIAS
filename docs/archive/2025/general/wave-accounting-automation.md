@@ -22,6 +22,7 @@
 ### 1. Invoice Automation
 
 **What to Automate:**
+
 - Invoice generation
 - Invoice sending
 - Payment reminders
@@ -32,6 +33,7 @@
 ### 2. Expense Management
 
 **What to Automate:**
+
 - Expense categorization
 - Receipt processing
 - Bank reconciliation
@@ -42,6 +44,7 @@
 ### 3. Financial Reporting
 
 **What to Automate:**
+
 - Daily/weekly reports
 - Cash flow statements
 - Profit & loss reports
@@ -71,4 +74,4 @@
 
 ---
 
-*This article contains affiliate links to Wave Accounting. We may earn a commission if you make a purchase.*
+_This article contains affiliate links to Wave Accounting. We may earn a commission if you make a purchase._

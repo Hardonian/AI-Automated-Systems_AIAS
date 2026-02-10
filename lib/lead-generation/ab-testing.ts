@@ -41,7 +41,10 @@ export interface ABTestResult {
 }
 
 class ABTestingService {
-  private supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+  private supabase = createClient(
+    env.supabase.url,
+    env.supabase.serviceRoleKey
+  );
 
   /**
    * Assign visitor to test variation
@@ -74,7 +77,11 @@ class ABTestingService {
       }
 
       // Assign variation based on traffic split
-      const variation = this.selectVariation(test.variations, test.trafficSplit, visitorId);
+      const variation = this.selectVariation(
+        test.variations,
+        test.trafficSplit,
+        visitorId
+      );
 
       // Record assignment
       await this.supabase.from('ab_test_assignments').insert({
@@ -95,11 +102,15 @@ class ABTestingService {
 
       return variation.id;
     } catch (error) {
-      logger.error('AB test assignment failed', error instanceof Error ? error : new Error(String(error)), {
-        testId,
-        visitorId,
-        tenantId,
-      });
+      logger.error(
+        'AB test assignment failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          testId,
+          visitorId,
+          tenantId,
+        }
+      );
       return null;
     }
   }
@@ -142,18 +153,25 @@ class ABTestingService {
         tenantId,
       });
     } catch (error) {
-      logger.error('AB test conversion tracking failed', error instanceof Error ? error : new Error(String(error)), {
-        testId,
-        visitorId,
-        tenantId,
-      });
+      logger.error(
+        'AB test conversion tracking failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          testId,
+          visitorId,
+          tenantId,
+        }
+      );
     }
   }
 
   /**
    * Get test results
    */
-  async getTestResults(testId: string, tenantId?: string): Promise<ABTestResult | null> {
+  async getTestResults(
+    testId: string,
+    tenantId?: string
+  ): Promise<ABTestResult | null> {
     try {
       const test = await this.getTest(testId, tenantId);
       if (!test) {
@@ -185,21 +203,34 @@ class ABTestingService {
       const { data: conversions } = await conversionQuery;
 
       // Calculate results per variation
-      const variationResults = test.variations.map((variation: { id: string }) => {
-        const visitors = assignments?.filter((a: { variation_id: string }) => a.variation_id === variation.id).length || 0;
-        const variationConversions = conversions?.filter((c: { variation_id: string; value?: number }) => c.variation_id === variation.id) || [];
-        const conversionCount = variationConversions.length;
-        const conversionRate = visitors > 0 ? (conversionCount / visitors) * 100 : 0;
-        const revenue = variationConversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
+      const variationResults = test.variations.map(
+        (variation: { id: string }) => {
+          const visitors =
+            assignments?.filter(
+              (a: { variation_id: string }) => a.variation_id === variation.id
+            ).length || 0;
+          const variationConversions =
+            conversions?.filter(
+              (c: { variation_id: string; value?: number }) =>
+                c.variation_id === variation.id
+            ) || [];
+          const conversionCount = variationConversions.length;
+          const conversionRate =
+            visitors > 0 ? (conversionCount / visitors) * 100 : 0;
+          const revenue = variationConversions.reduce(
+            (sum: number, c: { value?: number }) => sum + (c.value || 0),
+            0
+          );
 
-        return {
-          variationId: variation.id,
-          visitors,
-          conversions: conversionCount,
-          conversionRate,
-          revenue,
-        };
-      });
+          return {
+            variationId: variation.id,
+            visitors,
+            conversions: conversionCount,
+            conversionRate,
+            revenue,
+          };
+        }
+      );
 
       // Determine winner
       const winner = this.determineWinner(variationResults);
@@ -216,10 +247,14 @@ class ABTestingService {
         significance,
       };
     } catch (error) {
-      logger.error('Failed to get test results', error instanceof Error ? error : new Error(String(error)), {
-        testId,
-        tenantId,
-      });
+      logger.error(
+        'Failed to get test results',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          testId,
+          tenantId,
+        }
+      );
       return null;
     }
   }
@@ -241,12 +276,16 @@ class ABTestingService {
       cumulative += trafficSplit[i] || 0;
       if (random < cumulative) {
         const variation = variations[i];
-        if (variation) {return variation;}
+        if (variation) {
+          return variation;
+        }
       }
     }
 
     const firstVariation = variations[0];
-    if (!firstVariation) {throw new Error('No variations available');}
+    if (!firstVariation) {
+      throw new Error('No variations available');
+    }
     return firstVariation;
   }
 
@@ -269,9 +308,13 @@ class ABTestingService {
   private determineWinner(
     results: Array<{ variationId: string; conversionRate: number }>
   ): string | undefined {
-    if (results.length < 2) {return undefined;}
+    if (results.length < 2) {
+      return undefined;
+    }
 
-    const sorted = [...results].sort((a, b) => b.conversionRate - a.conversionRate);
+    const sorted = [...results].sort(
+      (a, b) => b.conversionRate - a.conversionRate
+    );
     const winner = sorted[0];
     return winner?.variationId;
   }
@@ -282,7 +325,9 @@ class ABTestingService {
   private calculateSignificance(
     results: Array<{ visitors: number; conversions: number }>
   ): 'high' | 'medium' | 'low' {
-    if (results.length < 2) {return 'low';}
+    if (results.length < 2) {
+      return 'low';
+    }
 
     // Simple chi-square test approximation
     const totalVisitors = results.reduce((sum, r) => sum + r.visitors, 0);
@@ -314,11 +359,13 @@ class ABTestingService {
     const totalVisitors = results.reduce((sum, r) => sum + r.visitors, 0);
     const totalConversions = results.reduce((sum, r) => sum + r.conversions, 0);
 
-    if (totalVisitors === 0) {return 0;}
+    if (totalVisitors === 0) {
+      return 0;
+    }
 
     // Base confidence on sample size
     const baseConfidence = Math.min((totalVisitors / 1000) * 100, 95);
-    
+
     // Adjust based on conversion rate
     const conversionRate = (totalConversions / totalVisitors) * 100;
     const rateAdjustment = Math.min(conversionRate / 10, 5);
@@ -329,7 +376,10 @@ class ABTestingService {
   /**
    * Get test
    */
-  private async getTest(testId: string, tenantId?: string): Promise<ABTest | null> {
+  private async getTest(
+    testId: string,
+    tenantId?: string
+  ): Promise<ABTest | null> {
     let query = this.supabase.from('ab_tests').select('*').eq('id', testId);
 
     if (tenantId) {
@@ -365,7 +415,10 @@ class ABTestingService {
   /**
    * Track event
    */
-  private async trackEvent(event: string, properties: Record<string, unknown>): Promise<void> {
+  private async trackEvent(
+    event: string,
+    properties: Record<string, unknown>
+  ): Promise<void> {
     try {
       await fetch('/api/telemetry/ingest', {
         method: 'POST',

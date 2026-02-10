@@ -1,16 +1,16 @@
 /**
  * Database Schema Validator
- * 
+ *
  * Validates database schema consistency, migration health, and RLS policies
  */
 
-import { readFileSync, readdirSync, existsSync } from "fs";
-import { join } from "path";
+import { readFileSync, readdirSync, existsSync } from 'fs';
+import { join } from 'path';
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 interface SchemaValidationResult {
   valid: boolean;
@@ -42,29 +42,36 @@ export async function validateSchema(): Promise<SchemaValidationResult> {
   };
 
   try {
-    const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+    const supabase = createClient(
+      env.supabase.url,
+      env.supabase.serviceRoleKey
+    );
 
     // Check required tables
     const requiredTables = [
-      "users",
-      "tenants",
-      "tenant_members",
-      "user_settings",
-      "workflows",
-      "agents",
-      "app_events",
-      "api_logs",
-      "orchestrator_reports",
+      'users',
+      'tenants',
+      'tenant_members',
+      'user_settings',
+      'workflows',
+      'agents',
+      'app_events',
+      'api_logs',
+      'orchestrator_reports',
     ];
 
     // Get all tables from database
-    const { data: tables, error: tablesError } = await supabase.rpc("get_tables");
+    const { data: tables, error: tablesError } =
+      await supabase.rpc('get_tables');
 
     if (tablesError) {
       // Fallback: try to query information_schema
       for (const tableName of requiredTables) {
-        const { error } = await supabase.from(tableName).select("count").limit(1);
-        
+        const { error } = await supabase
+          .from(tableName)
+          .select('count')
+          .limit(1);
+
         result.tables.push({
           name: tableName,
           exists: !error,
@@ -72,8 +79,10 @@ export async function validateSchema(): Promise<SchemaValidationResult> {
           columns: [],
         });
 
-        if (error && error.code !== "PGRST116") {
-          result.errors.push(`Table ${tableName} does not exist or is not accessible`);
+        if (error && error.code !== 'PGRST116') {
+          result.errors.push(
+            `Table ${tableName} does not exist or is not accessible`
+          );
           result.valid = false;
         }
       }
@@ -98,27 +107,35 @@ export async function validateSchema(): Promise<SchemaValidationResult> {
     }
 
     // Validate migrations
-    const migrationsDir = join(process.cwd(), "supabase", "migrations");
+    const migrationsDir = join(process.cwd(), 'supabase', 'migrations');
     if (existsSync(migrationsDir)) {
       const migrationFiles = readdirSync(migrationsDir)
-        .filter((f) => f.endsWith(".sql"))
+        .filter(f => f.endsWith('.sql'))
         .sort();
 
       for (const filename of migrationFiles) {
         const migrationPath = join(migrationsDir, filename);
-        const migrationContent = readFileSync(migrationPath, "utf-8");
+        const migrationContent = readFileSync(migrationPath, 'utf-8');
 
         // Basic validation: check for common issues
         const migrationErrors: string[] = [];
 
         // Check for DROP TABLE without IF EXISTS
-        if (migrationContent.match(/DROP TABLE\s+\w+/i) && !migrationContent.match(/DROP TABLE IF EXISTS/i)) {
-          migrationErrors.push("DROP TABLE without IF EXISTS - may cause migration failures");
+        if (
+          migrationContent.match(/DROP TABLE\s+\w+/i) &&
+          !migrationContent.match(/DROP TABLE IF EXISTS/i)
+        ) {
+          migrationErrors.push(
+            'DROP TABLE without IF EXISTS - may cause migration failures'
+          );
         }
 
         // Check for missing transaction blocks
-        if (!migrationContent.includes("BEGIN") && migrationContent.length > 100) {
-          migrationErrors.push("Migration may benefit from transaction blocks");
+        if (
+          !migrationContent.includes('BEGIN') &&
+          migrationContent.length > 100
+        ) {
+          migrationErrors.push('Migration may benefit from transaction blocks');
         }
 
         result.migrations.push({
@@ -132,21 +149,23 @@ export async function validateSchema(): Promise<SchemaValidationResult> {
         }
       }
     } else {
-      result.warnings.push("Migrations directory not found");
+      result.warnings.push('Migrations directory not found');
     }
 
     // Check for RLS policies
     const { error: policiesError } = await supabase
-      .from("pg_policies")
-      .select("*")
+      .from('pg_policies')
+      .select('*')
       .limit(100);
 
     if (policiesError) {
       // RLS policies check is optional
-      result.warnings.push("Could not verify RLS policies (this is expected if using Supabase)");
+      result.warnings.push(
+        'Could not verify RLS policies (this is expected if using Supabase)'
+      );
     }
 
-    logger.info("Schema validation completed", {
+    logger.info('Schema validation completed', {
       valid: result.valid,
       errors: result.errors.length,
       warnings: result.warnings.length,
@@ -154,9 +173,14 @@ export async function validateSchema(): Promise<SchemaValidationResult> {
 
     return result;
   } catch (err) {
-    logger.error("Schema validation failed", err instanceof Error ? err : new Error(String(err)));
+    logger.error(
+      'Schema validation failed',
+      err instanceof Error ? err : new Error(String(err))
+    );
     result.valid = false;
-    result.errors.push(`Validation error: ${err instanceof Error ? err.message : String(err)}`);
+    result.errors.push(
+      `Validation error: ${err instanceof Error ? err.message : String(err)}`
+    );
     return result;
   }
 }
@@ -180,32 +204,36 @@ export async function validateMigrations(): Promise<{
   };
 
   try {
-    const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+    const supabase = createClient(
+      env.supabase.url,
+      env.supabase.serviceRoleKey
+    );
 
     // Get migration history (if migration tracking table exists)
     const { data: migrationHistory, error } = await supabase
-      .from("schema_migrations")
-      .select("version")
-      .order("version", { ascending: true });
+      .from('schema_migrations')
+      .select('version')
+      .order('version', { ascending: true });
 
-    if (error && error.code !== "PGRST116") {
+    if (error && error.code !== 'PGRST116') {
       result.errors.push(`Could not check migration history: ${error.message}`);
       result.valid = false;
       return result;
     }
 
-    const appliedMigrations = migrationHistory?.map((m: any) => m.version) || [];
+    const appliedMigrations =
+      migrationHistory?.map((m: any) => m.version) || [];
 
     // Get all migration files
-    const migrationsDir = join(process.cwd(), "supabase", "migrations");
+    const migrationsDir = join(process.cwd(), 'supabase', 'migrations');
     if (existsSync(migrationsDir)) {
       const migrationFiles = readdirSync(migrationsDir)
-        .filter((f) => f.endsWith(".sql"))
+        .filter(f => f.endsWith('.sql'))
         .sort();
 
       for (const filename of migrationFiles) {
         // Extract version/timestamp from filename
-        const version = filename.split("_")[0] || filename.replace(".sql", "");
+        const version = filename.split('_')[0] || filename.replace('.sql', '');
 
         if (appliedMigrations.includes(version)) {
           result.applied.push(filename);
@@ -222,7 +250,9 @@ export async function validateMigrations(): Promise<{
     return result;
   } catch (error) {
     result.valid = false;
-    result.errors.push(`Migration validation error: ${error instanceof Error ? error.message : String(error)}`);
+    result.errors.push(
+      `Migration validation error: ${error instanceof Error ? error.message : String(error)}`
+    );
     return result;
   }
 }
@@ -230,26 +260,26 @@ export async function validateMigrations(): Promise<{
 // CLI execution
 if (require.main === module) {
   validateSchema()
-    .then((result) => {
-      console.log("\n📊 Schema Validation Results:");
-      console.log(`Valid: ${result.valid ? "✅" : "❌"}`);
+    .then(result => {
+      console.log('\n📊 Schema Validation Results:');
+      console.log(`Valid: ${result.valid ? '✅' : '❌'}`);
       console.log(`Errors: ${result.errors.length}`);
       console.log(`Warnings: ${result.warnings.length}`);
-      
+
       if (result.errors.length > 0) {
-        console.log("\n❌ Errors:");
-        result.errors.forEach((err) => console.log(`  - ${err}`));
+        console.log('\n❌ Errors:');
+        result.errors.forEach(err => console.log(`  - ${err}`));
       }
-      
+
       if (result.warnings.length > 0) {
-        console.log("\n⚠️  Warnings:");
-        result.warnings.forEach((warn) => console.log(`  - ${warn}`));
+        console.log('\n⚠️  Warnings:');
+        result.warnings.forEach(warn => console.log(`  - ${warn}`));
       }
 
       process.exit(result.valid ? 0 : 1);
     })
-    .catch((error) => {
-      console.error("Validation failed:", error);
+    .catch(error => {
+      console.error('Validation failed:', error);
       process.exit(1);
     });
 }

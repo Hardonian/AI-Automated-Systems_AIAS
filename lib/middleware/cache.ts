@@ -1,11 +1,11 @@
 /**
  * Caching Middleware
- * 
+ *
  * Provides intelligent caching strategies for API routes and pages.
  * Supports ETags, Cache-Control headers, and in-memory caching.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 export interface CacheConfig {
   maxAge?: number; // seconds
@@ -20,7 +20,8 @@ export interface CacheConfig {
  * Generate ETag from content
  */
 export function generateETag(content: string | object): string {
-  const contentString = typeof content === "string" ? content : JSON.stringify(content);
+  const contentString =
+    typeof content === 'string' ? content : JSON.stringify(content);
   // Simple hash function (for production, use crypto.createHash)
   let hash = 0;
   for (let i = 0; i < contentString.length; i++) {
@@ -38,7 +39,7 @@ export function checkETag(
   request: NextRequest,
   etag: string
 ): { notModified: boolean; response?: NextResponse } {
-  const ifNoneMatch = request.headers.get("if-none-match");
+  const ifNoneMatch = request.headers.get('if-none-match');
   if (ifNoneMatch === etag) {
     return {
       notModified: true,
@@ -46,7 +47,7 @@ export function checkETag(
         status: 304,
         headers: {
           ETag: etag,
-          "Cache-Control": "public, max-age=3600",
+          'Cache-Control': 'public, max-age=3600',
         },
       }),
     };
@@ -62,21 +63,21 @@ export function addCacheHeaders(
   config: CacheConfig
 ): NextResponse {
   if (config.noStore) {
-    response.headers.set("Cache-Control", "no-store");
+    response.headers.set('Cache-Control', 'no-store');
     return response;
   }
 
   if (config.noCache) {
-    response.headers.set("Cache-Control", "no-cache, must-revalidate");
+    response.headers.set('Cache-Control', 'no-cache, must-revalidate');
     return response;
   }
 
   const directives: string[] = [];
 
   if (config.private) {
-    directives.push("private");
+    directives.push('private');
   } else {
-    directives.push("public");
+    directives.push('public');
   }
 
   if (config.maxAge !== undefined) {
@@ -88,10 +89,10 @@ export function addCacheHeaders(
   }
 
   if (config.mustRevalidate) {
-    directives.push("must-revalidate");
+    directives.push('must-revalidate');
   }
 
-  response.headers.set("Cache-Control", directives.join(", "));
+  response.headers.set('Cache-Control', directives.join(', '));
 
   return response;
 }
@@ -105,14 +106,19 @@ class MemoryCache {
 
   constructor() {
     // Clean up expired entries every 5 minutes
-    this._cleanupInterval = setInterval(() => {
-      this.cleanup();
-    }, 5 * 60 * 1000);
+    this._cleanupInterval = setInterval(
+      () => {
+        this.cleanup();
+      },
+      5 * 60 * 1000
+    );
   }
 
   get<T = unknown>(key: string): T | null {
     const entry = this.store.get(key);
-    if (!entry) {return null;}
+    if (!entry) {
+      return null;
+    }
 
     if (Date.now() > entry.expires) {
       this.store.delete(key);
@@ -156,9 +162,7 @@ export function generateCacheKey(
   path: string,
   query?: Record<string, string>
 ): string {
-  const queryString = query
-    ? `?${  new URLSearchParams(query).toString()}`
-    : "";
+  const queryString = query ? `?${new URLSearchParams(query).toString()}` : '';
   return `cache:${path}${queryString}`;
 }
 

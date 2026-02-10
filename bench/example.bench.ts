@@ -3,27 +3,29 @@
  * Demonstrates how to use the benchmark runner
  */
 
-import { benchmark, compare, formatResult } from "./runner";
+import { benchmark, compare, formatResult } from './runner';
 
 // Example function to benchmark
 function fibonacci(n: number): number {
-  if (n <= 1) {return n;}
+  if (n <= 1) {
+    return n;
+  }
   return fibonacci(n - 1) + fibonacci(n - 2);
 }
 
 // Example async function
 async function asyncOperation(): Promise<number> {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => resolve(42), 10);
   });
 }
 
 // Run benchmarks
 async function main() {
-  console.log("Example Benchmarks\n");
+  console.log('Example Benchmarks\n');
 
   // Single benchmark
-  const result1 = await benchmark("fibonacci(10)", () => fibonacci(10), {
+  const result1 = await benchmark('fibonacci(10)', () => fibonacci(10), {
     iterations: 1000,
   });
   console.log(formatResult(result1));
@@ -32,15 +34,15 @@ async function main() {
   const results = await compare(
     [
       {
-        name: "fibonacci(10)",
+        name: 'fibonacci(10)',
         fn: () => fibonacci(10),
       },
       {
-        name: "fibonacci(20)",
+        name: 'fibonacci(20)',
         fn: () => fibonacci(20),
       },
       {
-        name: "asyncOperation",
+        name: 'asyncOperation',
         fn: asyncOperation,
       },
     ],
@@ -49,7 +51,7 @@ async function main() {
     }
   );
 
-  console.log("\nComparison Results:");
+  console.log('\nComparison Results:');
   for (const result of results) {
     console.log(formatResult(result));
   }

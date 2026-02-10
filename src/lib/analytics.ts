@@ -52,26 +52,28 @@ export class AnalyticsService {
   }
 
   // Track custom events
-  async trackEvent(event: string, properties: Record<string, any> = {}, userId?: string) {
+  async trackEvent(
+    event: string,
+    properties: Record<string, any> = {},
+    userId?: string
+  ) {
     const eventData: EventData = {
       event,
       properties,
       userId,
       sessionId: this.getSessionId(),
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     try {
       // Store in database
-      await this.supabase
-        .from('analytics_events')
-        .insert({
-          event_name: event,
-          properties: eventData.properties,
-          user_id: userId,
-          session_id: eventData.sessionId,
-          timestamp: eventData.timestamp.toISOString()
-        });
+      await this.supabase.from('analytics_events').insert({
+        event_name: event,
+        properties: eventData.properties,
+        user_id: userId,
+        session_id: eventData.sessionId,
+        timestamp: eventData.timestamp.toISOString(),
+      });
 
       // Send to external analytics (if configured)
       if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -83,7 +85,7 @@ export class AnalyticsService {
         this.sentry.addBreadcrumb({
           message: event,
           category: 'analytics',
-          data: properties
+          data: properties,
         });
       }
     } catch (error) {
@@ -92,20 +94,29 @@ export class AnalyticsService {
   }
 
   // Track revenue events
-  async trackRevenue(event: string, amount: number, currency: string = 'USD', properties: Record<string, any> = {}) {
+  async trackRevenue(
+    event: string,
+    amount: number,
+    currency: string = 'USD',
+    properties: Record<string, any> = {}
+  ) {
     await this.trackEvent(event, {
       ...properties,
       revenue: amount,
-      currency
+      currency,
     });
   }
 
   // Track conversion events
-  async trackConversion(funnel: string, step: string, properties: Record<string, any> = {}) {
+  async trackConversion(
+    funnel: string,
+    step: string,
+    properties: Record<string, any> = {}
+  ) {
     await this.trackEvent('conversion', {
       funnel,
       step,
-      ...properties
+      ...properties,
     });
   }
 
@@ -113,37 +124,45 @@ export class AnalyticsService {
   async trackEngagement(action: string, properties: Record<string, any> = {}) {
     await this.trackEvent('engagement', {
       action,
-      ...properties
+      ...properties,
     });
   }
 
   // Get business metrics
-  async getBusinessMetrics(period: 'week' | 'month' | 'quarter' | 'year' = 'month'): Promise<BusinessMetrics> {
+  async getBusinessMetrics(
+    period: 'week' | 'month' | 'quarter' | 'year' = 'month'
+  ): Promise<BusinessMetrics> {
     const startDate = this.getPeriodStart(period);
     const endDate = new Date();
 
     try {
       // Revenue metrics
       const revenueData = await this.getRevenueMetrics(startDate, endDate);
-      
+
       // Customer metrics
       const customerData = await this.getCustomerMetrics(startDate, endDate);
-      
+
       // Usage metrics
       const usageData = await this.getUsageMetrics(startDate, endDate);
-      
+
       // Conversion metrics
-      const conversionData = await this.getConversionMetrics(startDate, endDate);
-      
+      const conversionData = await this.getConversionMetrics(
+        startDate,
+        endDate
+      );
+
       // Engagement metrics
-      const engagementData = await this.getEngagementMetrics(startDate, endDate);
+      const engagementData = await this.getEngagementMetrics(
+        startDate,
+        endDate
+      );
 
       return {
         revenue: revenueData,
         customers: customerData,
         usage: usageData,
         conversion: conversionData,
-        engagement: engagementData
+        engagement: engagementData,
       };
     } catch (error) {
       console.error('Failed to get business metrics:', error);
@@ -151,7 +170,10 @@ export class AnalyticsService {
     }
   }
 
-  private async getRevenueMetrics(startDate: Date, endDate: Date): Promise<{ mrr: number; arr: number; total: number; growth: number }> {
+  private async getRevenueMetrics(
+    startDate: Date,
+    endDate: Date
+  ): Promise<{ mrr: number; arr: number; total: number; growth: number }> {
     const { data: subscriptions } = await this.supabase
       .from('subscriptions')
       .select('amount, status, created_at')
@@ -165,22 +187,32 @@ export class AnalyticsService {
       .gte('created_at', startDate.toISOString())
       .lte('created_at', endDate.toISOString());
 
-    const activeSubscriptions = subscriptions?.filter((s: any) => s.status === 'active') || [];
-    const mrr = activeSubscriptions.reduce((sum: number, s: any) => sum + s.amount, 0);
-    const total = mrr + (oneTimePayments?.reduce((sum: number, p: any) => sum + p.amount, 0) || 0);
+    const activeSubscriptions =
+      subscriptions?.filter((s: any) => s.status === 'active') || [];
+    const mrr = activeSubscriptions.reduce(
+      (sum: number, s: any) => sum + s.amount,
+      0
+    );
+    const total =
+      mrr +
+      (oneTimePayments?.reduce((sum: number, p: any) => sum + p.amount, 0) ||
+        0);
 
     // Calculate growth (simplified)
     const previousPeriod = await this.getRevenueMetrics(
       new Date(startDate.getTime() - (endDate.getTime() - startDate.getTime())),
       startDate
     );
-    const growth = previousPeriod.mrr > 0 ? ((mrr - previousPeriod.mrr) / previousPeriod.mrr) * 100 : 0;
+    const growth =
+      previousPeriod.mrr > 0
+        ? ((mrr - previousPeriod.mrr) / previousPeriod.mrr) * 100
+        : 0;
 
     return {
       mrr,
       arr: mrr * 12,
       total,
-      growth
+      growth,
     };
   }
 
@@ -199,10 +231,11 @@ export class AnalyticsService {
       .lte('updated_at', endDate.toISOString());
 
     const total = customers?.length || 0;
-    const active = customers?.filter((c: any) => c.status === 'active').length || 0;
-    const newCustomers = customers?.filter((c: any) => 
-      new Date(c.created_at) >= startDate
-    ).length || 0;
+    const active =
+      customers?.filter((c: any) => c.status === 'active').length || 0;
+    const newCustomers =
+      customers?.filter((c: any) => new Date(c.created_at) >= startDate)
+        .length || 0;
     const churned = churnedCustomers?.length || 0;
     const churnRate = active > 0 ? (churned / active) * 100 : 0;
 
@@ -211,7 +244,7 @@ export class AnalyticsService {
       active,
       new: newCustomers,
       churned,
-      churnRate
+      churnRate,
     };
   }
 
@@ -244,7 +277,7 @@ export class AnalyticsService {
       totalWorkflows: workflows?.length || 0,
       totalExecutions: executions?.length || 0,
       activeUsers: new Set(users?.map((u: any) => u.user_id) || []).size,
-      apiCalls: apiCalls?.length || 0
+      apiCalls: apiCalls?.length || 0,
     };
   }
 
@@ -271,20 +304,26 @@ export class AnalyticsService {
       .gte('timestamp', startDate.toISOString())
       .lte('timestamp', endDate.toISOString());
 
-    const trialToPaid = trials?.length > 0 ? 
-      (paidSubscriptions?.length / trials.length) * 100 : 0;
-    
-    const uniqueVisitors = new Set(visitors?.map((v: any) => v.session_id) || []).size;
-    const visitorToTrial = uniqueVisitors > 0 ? 
-      (trials?.length / uniqueVisitors) * 100 : 0;
-    
-    const visitorToPaid = uniqueVisitors > 0 ? 
-      (paidSubscriptions?.length / uniqueVisitors) * 100 : 0;
+    const trialToPaid =
+      trials?.length > 0
+        ? (paidSubscriptions?.length / trials.length) * 100
+        : 0;
+
+    const uniqueVisitors = new Set(
+      visitors?.map((v: any) => v.session_id) || []
+    ).size;
+    const visitorToTrial =
+      uniqueVisitors > 0 ? (trials?.length / uniqueVisitors) * 100 : 0;
+
+    const visitorToPaid =
+      uniqueVisitors > 0
+        ? (paidSubscriptions?.length / uniqueVisitors) * 100
+        : 0;
 
     return {
       trialToPaid,
       visitorToTrial,
-      visitorToPaid
+      visitorToPaid,
     };
   }
 
@@ -303,22 +342,32 @@ export class AnalyticsService {
       .lte('timestamp', endDate.toISOString());
 
     const totalSessions = sessions?.length || 0;
-    const avgSessionDuration = totalSessions > 0 ? 
-      sessions.reduce((sum: number, s: any) => sum + (s.duration || 0), 0) / totalSessions : 0;
-    
-    const totalPageViews = sessions?.reduce((sum: number, s: any) => sum + (s.page_views || 0), 0) || 0;
-    
-    const bounceRate = totalSessions > 0 ? 
-      (sessions.filter((s: any) => s.is_bounce).length / totalSessions) * 100 : 0;
-    
-    const uniqueUsers = new Set(returnVisitors?.map((r: any) => r.user_id) || []).size;
+    const avgSessionDuration =
+      totalSessions > 0
+        ? sessions.reduce((sum: number, s: any) => sum + (s.duration || 0), 0) /
+          totalSessions
+        : 0;
+
+    const totalPageViews =
+      sessions?.reduce((sum: number, s: any) => sum + (s.page_views || 0), 0) ||
+      0;
+
+    const bounceRate =
+      totalSessions > 0
+        ? (sessions.filter((s: any) => s.is_bounce).length / totalSessions) *
+          100
+        : 0;
+
+    const uniqueUsers = new Set(
+      returnVisitors?.map((r: any) => r.user_id) || []
+    ).size;
     const returnVisitorsCount = returnVisitors?.length || 0;
 
     return {
       avgSessionDuration: avgSessionDuration / 60, // Convert to minutes
       pageViews: totalPageViews,
       bounceRate,
-      returnVisitors: returnVisitorsCount
+      returnVisitors: returnVisitorsCount,
     };
   }
 
@@ -340,11 +389,13 @@ export class AnalyticsService {
   }
 
   private getSessionId(): string {
-    if (typeof window === 'undefined') {return '';}
-    
+    if (typeof window === 'undefined') {
+      return '';
+    }
+
     let sessionId = sessionStorage.getItem('analytics_session_id');
     if (!sessionId) {
-      sessionId = `session_${  Math.random().toString(36).substr(2, 9)}`;
+      sessionId = `session_${Math.random().toString(36).substr(2, 9)}`;
       sessionStorage.setItem('analytics_session_id', sessionId);
     }
     return sessionId;
@@ -357,7 +408,7 @@ export const trackPageView = (page: string, title?: string) => {
     (window as any).gtag('config', 'GA_MEASUREMENT_ID', {
       page_title: title || page,
       page_location: window.location.href,
-      page_path: page
+      page_path: page,
     });
   }
 };
@@ -367,7 +418,7 @@ export const trackButtonClick = (buttonName: string, location: string) => {
     (window as any).gtag('event', 'click', {
       event_category: 'button',
       event_label: buttonName,
-      custom_parameter_location: location
+      custom_parameter_location: location,
     });
   }
 };
@@ -377,17 +428,21 @@ export const trackFormSubmit = (formName: string, success: boolean) => {
     (window as any).gtag('event', 'form_submit', {
       event_category: 'form',
       event_label: formName,
-      value: success ? 1 : 0
+      value: success ? 1 : 0,
     });
   }
 };
 
-export const trackPurchase = (transactionId: string, value: number, currency: string = 'USD') => {
+export const trackPurchase = (
+  transactionId: string,
+  value: number,
+  currency: string = 'USD'
+) => {
   if (typeof window !== 'undefined' && (window as any).gtag) {
     (window as any).gtag('event', 'purchase', {
       transaction_id: transactionId,
       value,
-      currency
+      currency,
     });
   }
 };

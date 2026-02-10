@@ -167,7 +167,11 @@ async function main() {
         category: 'Software',
         tags: ['AI', 'chatbot', 'customer-support'],
         metadata: {
-          features: ['Natural language processing', 'Multi-language support', 'Analytics dashboard'],
+          features: [
+            'Natural language processing',
+            'Multi-language support',
+            'Analytics dashboard',
+          ],
         },
       },
       {
@@ -195,7 +199,7 @@ async function main() {
         period: '2024-01',
         metadata: {
           competition: 'medium',
-          cpc: 2.50,
+          cpc: 2.5,
         },
       },
       {
@@ -206,7 +210,7 @@ async function main() {
         period: '2024-01',
         metadata: {
           competition: 'high',
-          cpc: 3.20,
+          cpc: 3.2,
         },
       },
     ],
@@ -243,7 +247,7 @@ async function main() {
 }
 
 main()
-  .catch((e) => {
+  .catch(e => {
     console.error('❌ Error seeding database:', e);
     process.exit(1);
   })

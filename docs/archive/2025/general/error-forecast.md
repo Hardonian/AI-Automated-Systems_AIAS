@@ -14,6 +14,7 @@ Analysis of error-prone modules based on code patterns, error handling implement
 ### Error Handling Patterns
 
 **Strong Error Handling:**
+
 1. **`lib/validation/runtime-validation.ts`**
    - ✅ Zod schema validation
    - ✅ Detailed error reporting
@@ -30,6 +31,7 @@ Analysis of error-prone modules based on code patterns, error handling implement
    - ✅ Logging integration
 
 **Areas Needing Improvement:**
+
 1. **API Routes** (`app/api/**/*.ts`)
    - ⚠️ Some routes lack error handling
    - ⚠️ Inconsistent error responses
@@ -168,16 +170,19 @@ Analysis of error-prone modules based on code patterns, error handling implement
 ### Implementation Plan
 
 **Phase 1: Error Taxonomy (Wave 1)**
+
 1. Create `src/lib/errors.ts` with error classes
 2. Define error taxonomy
 3. Add error formatting utilities
 
 **Phase 2: Input Validation (Wave 1)**
+
 1. Add Zod schemas for API inputs
 2. Add type guards for runtime validation
 3. Add validation middleware
 
 **Phase 3: Error Handling (Wave 2)**
+
 1. Add error handling to API routes
 2. Add retry logic for external calls
 3. Add circuit breaker pattern
@@ -185,22 +190,24 @@ Analysis of error-prone modules based on code patterns, error handling implement
 ## Files to Create/Modify
 
 **New Files:**
+
 1. `src/lib/errors.ts` — Error taxonomy and classes
 2. `lib/errors.ts` — Shared error utilities
 
 **Files to Enhance:**
+
 1. `app/api/**/*.ts` — Add error handling
 2. `lib/api/route-handler.ts` — Enhance error handling
 3. `lib/validation/runtime-validation.ts` — Add more validators
 
 ## Metrics
 
-| Metric | Current | Target | Status |
-|--------|---------|--------|--------|
-| Error Handling Coverage | ~70% | 100% | 🟡 |
-| Error Taxonomy | ❌ | ✅ | 🔴 |
-| Input Validation | ~60% | 100% | 🟡 |
-| Error Logging | ~80% | 100% | 🟡 |
+| Metric                  | Current | Target | Status |
+| ----------------------- | ------- | ------ | ------ |
+| Error Handling Coverage | ~70%    | 100%   | 🟡     |
+| Error Taxonomy          | ❌      | ✅     | 🔴     |
+| Input Validation        | ~60%    | 100%   | 🟡     |
+| Error Logging           | ~80%    | 100%   | 🟡     |
 
 ## Next Steps
 

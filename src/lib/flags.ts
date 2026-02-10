@@ -4,11 +4,11 @@
  * Used for canary releases and feature toggles
  */
 
-import flagsConfig from "@/config/flags.json";
+import flagsConfig from '@/config/flags.json';
 
 export interface FeatureFlag {
   enabled: boolean;
-  env?: "development" | "staging" | "production";
+  env?: 'development' | 'staging' | 'production';
   description?: string;
   created?: string;
 }
@@ -25,21 +25,31 @@ export interface FlagsConfig {
 /**
  * Get current environment
  */
-function getCurrentEnv(): "development" | "staging" | "production" {
-  if (typeof process !== "undefined") {
+function getCurrentEnv(): 'development' | 'staging' | 'production' {
+  if (typeof process !== 'undefined') {
     const appEnv = process.env.NEXT_PUBLIC_APP_ENV;
     const nodeEnv = process.env.NODE_ENV;
 
     // Check NEXT_PUBLIC_APP_ENV first (allows explicit staging/preview)
-    if (appEnv === "staging" || appEnv === "preview") {return "staging";}
-    if (appEnv === "development") {return "development";}
-    if (appEnv === "production") {return "production";}
+    if (appEnv === 'staging' || appEnv === 'preview') {
+      return 'staging';
+    }
+    if (appEnv === 'development') {
+      return 'development';
+    }
+    if (appEnv === 'production') {
+      return 'production';
+    }
 
     // Fall back to NODE_ENV
-    if (nodeEnv === "development") {return "development";}
-    if (nodeEnv === "test") {return "development";} // Treat test as development
+    if (nodeEnv === 'development') {
+      return 'development';
+    }
+    if (nodeEnv === 'test') {
+      return 'development';
+    } // Treat test as development
   }
-  return "production";
+  return 'production';
 }
 
 /**
@@ -48,14 +58,14 @@ function getCurrentEnv(): "development" | "staging" | "production" {
  */
 export function isFlagEnabled(flagKey: string): boolean {
   const flag = (flagsConfig as unknown as FlagsConfig).flags[flagKey];
-  
+
   if (!flag) {
     // Flag doesn't exist, return false
     return false;
   }
 
   const currentEnv = getCurrentEnv();
-  
+
   // Check if flag is restricted to specific environment
   if (flag.env && flag.env !== currentEnv) {
     // Flag is restricted to a different environment
@@ -79,14 +89,16 @@ export function getFlag(flagKey: string): FeatureFlag | null {
 export function getAllFlags(): Record<string, boolean> {
   const currentEnv = getCurrentEnv();
   const result: Record<string, boolean> = {};
-  
-  for (const [key, flag] of Object.entries((flagsConfig as unknown as FlagsConfig).flags)) {
+
+  for (const [key, flag] of Object.entries(
+    (flagsConfig as unknown as FlagsConfig).flags
+  )) {
     // Only include flags that are allowed in current environment
     if (!flag.env || flag.env === currentEnv) {
       result[key] = flag.enabled;
     }
   }
-  
+
   return result;
 }
 
@@ -94,14 +106,14 @@ export function getAllFlags(): Record<string, boolean> {
  * Check if canary flag is enabled (for agent use)
  * Used by agent to enable canary features in staging
  */
-export function isCanaryEnabled(flagKey: string = "canary_example"): boolean {
+export function isCanaryEnabled(flagKey: string = 'canary_example'): boolean {
   const currentEnv = getCurrentEnv();
-  
+
   // Canary flags only work in staging
-  if (currentEnv !== "staging") {
+  if (currentEnv !== 'staging') {
     return false;
   }
-  
+
   return isFlagEnabled(flagKey);
 }
 
@@ -115,13 +127,15 @@ export function getFlagMetadata(): {
 } {
   const currentEnv = getCurrentEnv();
   const enabledFlags: string[] = [];
-  
-  for (const [key, flag] of Object.entries((flagsConfig as unknown as FlagsConfig).flags)) {
+
+  for (const [key, flag] of Object.entries(
+    (flagsConfig as unknown as FlagsConfig).flags
+  )) {
     if (isFlagEnabled(key)) {
       enabledFlags.push(key);
     }
   }
-  
+
   return {
     currentEnv,
     flags: (flagsConfig as unknown as FlagsConfig).flags,

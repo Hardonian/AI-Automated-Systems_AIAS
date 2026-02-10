@@ -1,12 +1,11 @@
-"use client";
+'use client';
 
-import { Menu, X, Home, Workflow, Settings } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
+import { Menu, X, Home, Workflow, Settings } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { ReactNode, useEffect, useState } from 'react';
 
-import { Button } from "@/components/ui/button";
-
+import { Button } from '@/components/ui/button';
 
 interface MobileOptimizedLayoutProps {
   children: ReactNode;
@@ -16,7 +15,9 @@ interface MobileOptimizedLayoutProps {
  * Mobile-optimized layout component with secure navigation
  * Implements mobile-first design principles and security best practices
  */
-export function MobileOptimizedLayout({ children }: MobileOptimizedLayoutProps) {
+export function MobileOptimizedLayout({
+  children,
+}: MobileOptimizedLayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
@@ -25,10 +26,10 @@ export function MobileOptimizedLayout({ children }: MobileOptimizedLayoutProps) 
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // Close menu on route change
@@ -37,52 +38,52 @@ export function MobileOptimizedLayout({ children }: MobileOptimizedLayoutProps) 
   }, [pathname]);
 
   const navigation = [
-    { name: "Dashboard", href: "/dashboard", icon: Home },
-    { name: "Workflows", href: "/workflows", icon: Workflow },
-    { name: "Settings", href: "/settings", icon: Settings },
+    { name: 'Dashboard', href: '/dashboard', icon: Home },
+    { name: 'Workflows', href: '/workflows', icon: Workflow },
+    { name: 'Settings', href: '/settings', icon: Settings },
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className='min-h-screen bg-background'>
       {/* Mobile Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between px-4">
-          <Link className="flex items-center space-x-2" href="/">
-            <span className="font-bold text-xl">AIAS</span>
+      <header className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
+        <div className='container flex h-16 items-center justify-between px-4'>
+          <Link className='flex items-center space-x-2' href='/'>
+            <span className='text-xl font-bold'>AIAS</span>
           </Link>
-          
+
           {/* Mobile Menu Button */}
           <Button
             aria-expanded={isMenuOpen}
-            aria-label="Toggle menu"
-            className="md:hidden"
-            size="icon"
-            variant="ghost"
+            aria-label='Toggle menu'
+            className='md:hidden'
+            size='icon'
+            variant='ghost'
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? (
-              <X className="h-6 w-6" />
+              <X className='h-6 w-6' />
             ) : (
-              <Menu className="h-6 w-6" />
+              <Menu className='h-6 w-6' />
             )}
           </Button>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
-            {navigation.map((item) => {
+          <nav className='hidden items-center space-x-6 md:flex'>
+            {navigation.map(item => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.name}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                     isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:bg-accent hover:text-foreground'
                   }`}
                   href={item.href}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className='h-4 w-4' />
                   <span>{item.name}</span>
                 </Link>
               );
@@ -92,23 +93,23 @@ export function MobileOptimizedLayout({ children }: MobileOptimizedLayoutProps) 
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <nav className="md:hidden border-t bg-background">
-            <div className="container px-4 py-2 space-y-1">
-              {navigation.map((item) => {
+          <nav className='border-t bg-background md:hidden'>
+            <div className='container space-y-1 px-4 py-2'>
+              {navigation.map(item => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
                 return (
                   <Link
                     key={item.name}
-                    className={`flex items-center space-x-3 px-4 py-3 rounded-md text-base font-medium transition-colors ${
+                    className={`flex items-center space-x-3 rounded-md px-4 py-3 text-base font-medium transition-colors ${
                       isActive
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-muted-foreground hover:bg-accent hover:text-foreground'
                     }`}
                     href={item.href}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className='h-5 w-5' />
                     <span>{item.name}</span>
                   </Link>
                 );
@@ -119,31 +120,27 @@ export function MobileOptimizedLayout({ children }: MobileOptimizedLayoutProps) 
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-6 md:py-8">
-        <div className="max-w-7xl mx-auto">
-          {children}
-        </div>
+      <main className='container mx-auto px-4 py-6 md:py-8'>
+        <div className='mx-auto max-w-7xl'>{children}</div>
       </main>
 
       {/* Mobile Bottom Navigation (for PWA) */}
       {isMobile && (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background md:hidden">
-          <div className="grid grid-cols-3 h-16">
-            {navigation.map((item) => {
+        <nav className='fixed bottom-0 left-0 right-0 z-50 border-t bg-background md:hidden'>
+          <div className='grid h-16 grid-cols-3'>
+            {navigation.map(item => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.name}
                   className={`flex flex-col items-center justify-center space-y-1 text-xs transition-colors ${
-                    isActive
-                      ? "text-primary"
-                      : "text-muted-foreground"
+                    isActive ? 'text-primary' : 'text-muted-foreground'
                   }`}
                   href={item.href}
                 >
-                  <Icon className="h-5 w-5" />
-                  <span className="font-medium">{item.name}</span>
+                  <Icon className='h-5 w-5' />
+                  <span className='font-medium'>{item.name}</span>
                 </Link>
               );
             })}

@@ -1,5 +1,23 @@
 [
-  {"id": null, "occurred_at": "2025-10-01T12:00:00Z", "user_id": null, "event_name": "session_start", "props": {"ua":"android"}},
-  {"id": null, "occurred_at": "2025-10-01T12:05:00Z", "user_id": null, "event_name": "order_completed", "props": {"revenue_cents": 4599, "currency":"USD"}},
-  {"id": null, "occurred_at": "2025-10-02T09:10:00Z", "user_id": null, "event_name": "order_refunded", "props": {"refunds_cents": 1200}}
+  {
+    "id": null,
+    "occurred_at": "2025-10-01T12:00:00Z",
+    "user_id": null,
+    "event_name": "session_start",
+    "props": { "ua": "android" }
+  },
+  {
+    "id": null,
+    "occurred_at": "2025-10-01T12:05:00Z",
+    "user_id": null,
+    "event_name": "order_completed",
+    "props": { "revenue_cents": 4599, "currency": "USD" }
+  },
+  {
+    "id": null,
+    "occurred_at": "2025-10-02T09:10:00Z",
+    "user_id": null,
+    "event_name": "order_refunded",
+    "props": { "refunds_cents": 1200 }
+  }
 ]

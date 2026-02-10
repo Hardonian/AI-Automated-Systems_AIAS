@@ -38,6 +38,7 @@ Connect your Wave Accounting account to AIAS Platform and automate invoicing, pa
 ## Step 3: Select Business (If Multiple)
 
 If you have multiple businesses in Wave:
+
 1. Select which business to connect
 2. Click **Continue**
 3. You can connect multiple businesses later if needed
@@ -70,21 +71,25 @@ If you have multiple businesses in Wave:
 ## Available Wave Accounting Automations
 
 ### Invoicing
+
 - **Invoice Reminders:** Automatically remind customers about overdue invoices
 - **Invoice Creation:** Create invoices from other systems
 - **Payment Tracking:** Track invoice payments automatically
 
 ### Financial Reporting
+
 - **Daily Revenue Summary:** Get daily revenue reports
 - **Monthly Financial Reports:** Automatically generate monthly reports
 - **Expense Tracking:** Track and categorize expenses
 
 ### Payment Processing
+
 - **Payment Notifications:** Get notified when payments are received
 - **Payment Reconciliation:** Automatically reconcile payments
 - **Payment Reminders:** Send payment reminders to customers
 
 ### Data Sync
+
 - **Sync with E-commerce:** Sync orders from Shopify to Wave invoices
 - **Sync with Banking:** Sync bank transactions
 - **Multi-system Sync:** Keep data consistent across tools
@@ -98,6 +103,7 @@ If you have multiple businesses in Wave:
 **Problem:** "Failed to connect Wave Accounting"
 
 **Solutions:**
+
 1. Verify you're signed in to the correct Wave account
 2. Make sure you have admin access to the business
 3. Check if your Wave account is active
@@ -110,6 +116,7 @@ If you have multiple businesses in Wave:
 **Problem:** "Insufficient permissions"
 
 **Solutions:**
+
 1. Disconnect Wave Accounting integration
 2. Reconnect and ensure all permissions are granted
 3. Check your Wave app permissions in Wave settings
@@ -119,6 +126,7 @@ If you have multiple businesses in Wave:
 **Problem:** Workflow doesn't run when invoices are created/updated
 
 **Solutions:**
+
 1. Verify the workflow is activated
 2. Check workflow configuration (correct business selected)
 3. Review execution logs for errors
@@ -130,6 +138,7 @@ If you have multiple businesses in Wave:
 **Problem:** "Invoice not found" error
 
 **Solutions:**
+
 1. Verify the invoice exists in Wave
 2. Check if you have access to the invoice
 3. Ensure the invoice ID is correct
@@ -167,6 +176,7 @@ For real-time automation, webhooks are automatically configured when you connect
 ### Custom Workflows
 
 Create custom workflows using Wave triggers:
+
 - Invoice created
 - Invoice updated
 - Payment received
@@ -176,6 +186,7 @@ Create custom workflows using Wave triggers:
 ### Multi-Business Setup
 
 If you have multiple Wave businesses:
+
 1. Connect each business separately
 2. Create workflows for each business
 3. Use business selection in workflow configuration

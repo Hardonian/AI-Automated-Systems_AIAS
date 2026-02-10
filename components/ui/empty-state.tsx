@@ -3,14 +3,20 @@
  * Displays helpful empty states with retry functionality
  */
 
-"use client";
+'use client';
 
-import { AlertCircle, RefreshCw, Home } from "lucide-react";
-import Link from "next/link";
+import { AlertCircle, RefreshCw, Home } from 'lucide-react';
+import Link from 'next/link';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface EmptyStateProps {
   title?: string;
@@ -24,49 +30,54 @@ interface EmptyStateProps {
     label: string;
     href: string;
   };
-  variant?: "default" | "error" | "loading";
+  variant?: 'default' | 'error' | 'loading';
   children?: React.ReactNode;
   className?: string;
 }
 
 export function EmptyState({
-  title = "No data available",
+  title = 'No data available',
   description = "There's nothing here yet. Try again or check back later.",
   icon,
   action,
   secondaryAction,
-  variant = "default",
+  variant = 'default',
   children,
   className,
 }: EmptyStateProps) {
   const defaultIcon =
-    variant === "error" ? (
-      <AlertCircle className="h-12 w-12 text-destructive" />
+    variant === 'error' ? (
+      <AlertCircle className='h-12 w-12 text-destructive' />
     ) : (
-      <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
-        <AlertCircle className="h-6 w-6 text-muted-foreground" />
+      <div className='flex h-12 w-12 items-center justify-center rounded-full bg-muted'>
+        <AlertCircle className='h-6 w-6 text-muted-foreground' />
       </div>
     );
 
   return (
-    <Card className={cn("border-dashed", className)}>
-      <CardHeader className="text-center">
-        <div className="flex justify-center mb-4">{icon || defaultIcon}</div>
+    <Card className={cn('border-dashed', className)}>
+      <CardHeader className='text-center'>
+        <div className='mb-4 flex justify-center'>{icon || defaultIcon}</div>
         <CardTitle>{title}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
       {(action || secondaryAction) && (
-        <CardContent className="flex flex-col sm:flex-row gap-2 justify-center">
+        <CardContent className='flex flex-col justify-center gap-2 sm:flex-row'>
           {action && (
-            <Button onClick={action.onClick} variant={variant === "error" ? "default" : "outline"}>
-              {variant === "error" && <RefreshCw className="mr-2 h-4 w-4" />}
+            <Button
+              onClick={action.onClick}
+              variant={variant === 'error' ? 'default' : 'outline'}
+            >
+              {variant === 'error' && <RefreshCw className='mr-2 h-4 w-4' />}
               {action.label}
             </Button>
           )}
           {secondaryAction && (
-            <Button asChild variant="outline">
+            <Button asChild variant='outline'>
               <Link href={secondaryAction.href}>
-                {secondaryAction.label === "Go home" && <Home className="mr-2 h-4 w-4" />}
+                {secondaryAction.label === 'Go home' && (
+                  <Home className='mr-2 h-4 w-4' />
+                )}
                 {secondaryAction.label}
               </Link>
             </Button>
@@ -91,11 +102,11 @@ interface ErrorStateProps {
 }
 
 export function ErrorState({
-  title = "Something went wrong",
-  description = "We encountered an error. Please try again.",
+  title = 'Something went wrong',
+  description = 'We encountered an error. Please try again.',
   error,
   onRetry,
-  showDetails = process.env.NODE_ENV === "development",
+  showDetails = process.env.NODE_ENV === 'development',
 }: ErrorStateProps) {
   const errorMessage = error instanceof Error ? error.message : error;
 
@@ -103,25 +114,27 @@ export function ErrorState({
     <EmptyState
       title={title}
       description={description}
-      variant="error"
+      variant='error'
       action={
         onRetry
           ? {
-              label: "Try again",
+              label: 'Try again',
               onClick: onRetry,
             }
           : undefined
       }
       secondaryAction={{
-        label: "Go home",
-        href: "/",
+        label: 'Go home',
+        href: '/',
       }}
     >
       {showDetails && errorMessage && (
-        <CardContent className="mt-4">
-          <details className="text-sm">
-            <summary className="cursor-pointer text-muted-foreground">Error details</summary>
-            <pre className="mt-2 text-xs bg-muted p-2 rounded overflow-auto">
+        <CardContent className='mt-4'>
+          <details className='text-sm'>
+            <summary className='cursor-pointer text-muted-foreground'>
+              Error details
+            </summary>
+            <pre className='mt-2 overflow-auto rounded bg-muted p-2 text-xs'>
               {errorMessage}
             </pre>
           </details>
@@ -139,11 +152,11 @@ interface LoadingStateProps {
   message?: string;
 }
 
-export function LoadingState({ message = "Loading..." }: LoadingStateProps) {
+export function LoadingState({ message = 'Loading...' }: LoadingStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[200px] space-y-4">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      <p className="text-sm text-muted-foreground">{message}</p>
+    <div className='flex min-h-[200px] flex-col items-center justify-center space-y-4'>
+      <div className='h-8 w-8 animate-spin rounded-full border-b-2 border-primary'></div>
+      <p className='text-sm text-muted-foreground'>{message}</p>
     </div>
   );
 }

@@ -68,9 +68,11 @@
 ### Action Items
 
 1. **Regenerate Supabase Types** (Priority: High)
+
    ```bash
    npx supabase gen types typescript --project-id $SUPABASE_PROJECT_REF > src/integrations/supabase/types.ts
    ```
+
    **File:** `src/integrations/supabase/types.ts`  
    **PR Title:** `fix: regenerate Supabase types to match schema`  
    **Label:** `auto/refactor`
@@ -78,9 +80,9 @@
 2. **Add Missing Table References** (Priority: Medium)
    - Update `app/api/stripe/webhook/route.ts` to use typed tables
    - Add type guards for subscription_tiers
-   **File:** `app/api/stripe/webhook/route.ts:151`  
-   **PR Title:** `fix: add type safety for subscription_tiers table`  
-   **Label:** `auto/refactor`
+     **File:** `app/api/stripe/webhook/route.ts:151`  
+     **PR Title:** `fix: add type safety for subscription_tiers table`  
+     **Label:** `auto/refactor`
 
 ---
 
@@ -89,6 +91,7 @@
 ### Bundle Analysis
 
 **Largest JS Bundles (Estimated):**
+
 - Framework chunk: ~150KB (React, React-DOM)
 - Next.js runtime: ~80KB
 - Supabase client: ~45KB
@@ -96,6 +99,7 @@
 - Radix UI components: ~120KB (distributed across chunks)
 
 **Bundle Optimization Opportunities:**
+
 1. **Dynamic Imports Missing**
    - `app/admin/metrics/page.tsx` — Admin dashboard could be code-split
    - `components/monitoring/analytics-dashboard.tsx` — Heavy component not lazy-loaded
@@ -141,25 +145,32 @@
 ### Action Items
 
 1. **Parallelize Health Checks** (Priority: High)
+
    ```typescript
    // app/api/healthz/route.ts:80-183
    const [db, rest, auth, storage] = await Promise.all([
      checkDatabase(),
      checkRestApi(),
      checkAuth(),
-     checkStorage()
+     checkStorage(),
    ]);
    ```
+
    **File:** `app/api/healthz/route.ts:80`  
    **PR Title:** `perf: parallelize health check endpoints`  
    **Label:** `auto/perf`  
    **Expected Impact:** p95: 400ms → 200ms
 
 2. **Code Split Admin Dashboard** (Priority: Medium)
+
    ```typescript
    // app/admin/metrics/page.tsx
-   const AnalyticsDashboard = dynamic(() => import('@/components/monitoring/analytics-dashboard'), { ssr: false });
+   const AnalyticsDashboard = dynamic(
+     () => import('@/components/monitoring/analytics-dashboard'),
+     { ssr: false }
+   );
    ```
+
    **File:** `app/admin/metrics/page.tsx:1`  
    **PR Title:** `perf: code-split admin dashboard`  
    **Label:** `auto/perf`
@@ -167,9 +178,9 @@
 3. **Add Performance Monitoring** (Priority: Medium)
    - Add telemetry to `/api/telemetry/ingest`
    - Add telemetry to `/api/metrics`
-   **Files:** `app/api/telemetry/ingest/route.ts`, `app/api/metrics/route.ts`  
-   **PR Title:** `obs: instrument missing telemetry endpoints`  
-   **Label:** `auto/ops`
+     **Files:** `app/api/telemetry/ingest/route.ts`, `app/api/metrics/route.ts`  
+     **PR Title:** `obs: instrument missing telemetry endpoints`  
+     **Label:** `auto/ops`
 
 ---
 
@@ -178,6 +189,7 @@
 ### Vercel Configuration
 
 **Current Setup:**
+
 - **Framework:** Next.js (detected in `vercel.json:5`)
 - **Region:** `iad1` (US East)
 - **Headers:** Security headers configured (`vercel.json:11-39`)
@@ -191,7 +203,7 @@
    - **Fix:** Add Vercel preview protection via dashboard or `vercel.json`
    - **File:** `vercel.json:1`
    - **PR Title:** `security: add preview protection to Vercel config`  
-   **Label:** `auto/ops`
+     **Label:** `auto/ops`
 
 2. **Environment Variables**
    - **Status:** Unknown (secrets not visible)
@@ -204,6 +216,7 @@
 ### Dangling Environment Variable Names
 
 **Found in Code:**
+
 - `SUPABASE_URL` — Used in `app/api/healthz/route.ts:9`
 - `SUPABASE_ANON_KEY` — Used in `app/api/healthz/route.ts:10`
 - `SUPABASE_SERVICE_ROLE_KEY` — Used in `app/api/healthz/route.ts:11`
@@ -216,6 +229,7 @@
 ### Security Headers
 
 **Status:** ✅ Configured
+
 - CSP: `next.config.ts:127-141`
 - Security headers: `vercel.json:11-39`
 - HSTS: Configured
@@ -228,13 +242,13 @@
    - Configure Vercel preview protection
    - **File:** `vercel.json:1`
    - **PR Title:** `security: add preview protection`  
-   **Label:** `auto/ops`
+     **Label:** `auto/ops`
 
 2. **Audit Environment Variables** (Priority: Low)
    - Document required env vars
    - **File:** `.env.example`
    - **PR Title:** `docs: document required environment variables`  
-   **Label:** `auto/docs`
+     **Label:** `auto/docs`
 
 ---
 
@@ -247,12 +261,13 @@
 **Recommendation:** Implement automated backups
 
 **Action Items:**
+
 1. **Set Up Supabase Backups**
    - Configure daily backups in Supabase dashboard
    - Document backup retention policy
    - **File:** `ops/backups.md` (create)
    - **PR Title:** `ops: document backup strategy`  
-   **Label:** `auto/ops`
+     **Label:** `auto/ops`
 
 ### Restore Drill Evidence
 
@@ -260,10 +275,11 @@
 **Recommendation:** Perform quarterly restore drills
 
 **Action Items:**
+
 1. **Create Restore Drill Script**
    - **File:** `scripts/restore-drill.ts` (create)
    - **PR Title:** `ops: add restore drill script`  
-   **Label:** `auto/ops`
+     **Label:** `auto/ops`
 
 ### Rollback Path Presence
 
@@ -291,12 +307,12 @@
 1. **Document Rollback Procedures** (Priority: High)
    - **File:** `ops/rollback.md` (create)
    - **PR Title:** `ops: document rollback procedures`  
-   **Label:** `auto/ops`
+     **Label:** `auto/ops`
 
 2. **Add Database Rollback Scripts** (Priority: Medium)
    - **File:** `scripts/rollback-migration.ts` (create)
    - **PR Title:** `ops: add database rollback script`  
-   **Label:** `auto/ops`
+     **Label:** `auto/ops`
 
 ---
 
@@ -376,6 +392,7 @@
 **Low:** 2
 
 **Estimated Fix Time:**
+
 - Critical: 2-4 hours
 - High: 4-8 hours
 - Medium: 8-16 hours

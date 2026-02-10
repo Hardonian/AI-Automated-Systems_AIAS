@@ -1,18 +1,18 @@
 /**
  * Settings Hooks
- * 
+ *
  * React Query hooks for user settings.
  */
 
-"use client";
+'use client';
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { queryKeys } from "@/lib/data/queryKeys";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/data/queryKeys';
 import {
   getCurrentUserSettings,
   updateUserSettings,
   // type UserSettings,
-} from "@/lib/data/api/settings";
+} from '@/lib/data/api/settings';
 
 /**
  * Hook to get current user's settings
@@ -33,7 +33,7 @@ export function useUpdateSettings() {
 
   return useMutation({
     mutationFn: updateUserSettings,
-    onSuccess: (data) => {
+    onSuccess: data => {
       // Update cache optimistically
       queryClient.setQueryData(queryKeys.settings.current(), data);
     },

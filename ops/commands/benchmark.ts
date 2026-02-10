@@ -21,7 +21,12 @@ export async function benchmark(options: { output?: string }) {
     execSync('pnpm build:analyze', { stdio: 'inherit' });
 
     // Generate benchmark report
-    const reportPath = path.join(process.cwd(), 'ops', 'reports', 'benchmark.html');
+    const reportPath = path.join(
+      process.cwd(),
+      'ops',
+      'reports',
+      'benchmark.html'
+    );
     const reportDir = path.dirname(reportPath);
     if (!fs.existsSync(reportDir)) {
       fs.mkdirSync(reportDir, { recursive: true });

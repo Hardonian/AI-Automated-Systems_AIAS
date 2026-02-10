@@ -18,6 +18,7 @@ These variables are available in GitHub repository secrets and should be set in 
 ## Build Configuration
 
 The build process will automatically use environment variables from:
+
 - GitHub Actions: Repository secrets
 - Vercel: Environment variables in dashboard
 - Local: `.env.local` file
@@ -38,6 +39,7 @@ echo $DATABASE_URL
 ## GitHub Actions Setup
 
 In your GitHub repository:
+
 1. Go to Settings → Secrets and variables → Actions
 2. Add the following secrets:
    - `NEXT_PUBLIC_SUPABASE_URL`

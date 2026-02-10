@@ -30,7 +30,13 @@ export interface DataSubject {
   email: string;
   consentId: string;
   dataCategories: string[];
-  processingBasis: 'consent' | 'contract' | 'legal_obligation' | 'vital_interests' | 'public_task' | 'legitimate_interests';
+  processingBasis:
+    | 'consent'
+    | 'contract'
+    | 'legal_obligation'
+    | 'vital_interests'
+    | 'public_task'
+    | 'legitimate_interests';
   createdAt: string;
   lastUpdated: string;
 }
@@ -69,17 +75,17 @@ export class PrivacyManager {
       settings,
       jurisdiction: metadata.jurisdiction,
       dataProcessingPurposes: this.getDataProcessingPurposes(settings),
-      retentionPeriod: this.calculateRetentionPeriod(settings)
+      retentionPeriod: this.calculateRetentionPeriod(settings),
     };
 
     this.consentData.set(consentId, consentData);
-    
+
     // Log audit event
     await this.logAuditEvent('consent_recorded', {
       userId,
       consentId,
       settings,
-      jurisdiction: metadata.jurisdiction
+      jurisdiction: metadata.jurisdiction,
     });
 
     return consentData;
@@ -90,10 +96,14 @@ export class PrivacyManager {
    */
   hasValidConsent(userId: string, purpose: keyof PrivacySettings): boolean {
     const dataSubject = this.dataSubjects.get(userId);
-    if (!dataSubject) {return false;}
+    if (!dataSubject) {
+      return false;
+    }
 
     const consent = this.consentData.get(dataSubject.consentId);
-    if (!consent) {return false;}
+    if (!consent) {
+      return false;
+    }
 
     // Check if consent is still valid (not expired)
     const consentAge = Date.now() - new Date(consent.timestamp).getTime();
@@ -107,8 +117,18 @@ export class PrivacyManager {
    */
   async handleDataSubjectRequest(
     userId: string,
-    requestType: 'access' | 'rectification' | 'erasure' | 'portability' | 'restriction' | 'objection'
-  ): Promise<{ success: boolean; message: string; data?: Record<string, unknown> }> {
+    requestType:
+      | 'access'
+      | 'rectification'
+      | 'erasure'
+      | 'portability'
+      | 'restriction'
+      | 'objection'
+  ): Promise<{
+    success: boolean;
+    message: string;
+    data?: Record<string, unknown>;
+  }> {
     const dataSubject = this.dataSubjects.get(userId);
     if (!dataSubject) {
       throw new Error('Data subject not found');
@@ -117,7 +137,7 @@ export class PrivacyManager {
     await this.logAuditEvent('data_subject_request', {
       userId,
       requestType,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     switch (requestType) {
@@ -135,33 +155,41 @@ export class PrivacyManager {
   /**
    * Generate comprehensive data portability report
    */
-  private async generateDataPortabilityReport(userId: string): Promise<{ report: Record<string, unknown>; format: string }> {
+  private async generateDataPortabilityReport(
+    userId: string
+  ): Promise<{ report: Record<string, unknown>; format: string }> {
     const dataSubject = this.dataSubjects.get(userId);
-    const consent = dataSubject ? this.consentData.get(dataSubject.consentId) : null;
+    const consent = dataSubject
+      ? this.consentData.get(dataSubject.consentId)
+      : null;
 
     return {
       personalData: {
         id: dataSubject?.id,
         email: dataSubject?.email,
         dataCategories: dataSubject?.dataCategories || [],
-        processingBasis: dataSubject?.processingBasis
+        processingBasis: dataSubject?.processingBasis,
       },
-      consent: consent ? {
-        timestamp: consent.timestamp,
-        settings: consent.settings,
-        jurisdiction: consent.jurisdiction,
-        version: consent.consentVersion
-      } : null,
+      consent: consent
+        ? {
+            timestamp: consent.timestamp,
+            settings: consent.settings,
+            jurisdiction: consent.jurisdiction,
+            version: consent.consentVersion,
+          }
+        : null,
       dataProcessingPurposes: consent?.dataProcessingPurposes || [],
       retentionPeriod: consent?.retentionPeriod || 0,
-      generatedAt: new Date().toISOString()
+      generatedAt: new Date().toISOString(),
     };
   }
 
   /**
    * Process data erasure request (Right to be forgotten)
    */
-  private async processDataErasure(userId: string): Promise<{ success: boolean; erasedData: string[] }> {
+  private async processDataErasure(
+    userId: string
+  ): Promise<{ success: boolean; erasedData: string[] }> {
     // Mark data for erasure
     const dataSubject = this.dataSubjects.get(userId);
     if (dataSubject) {
@@ -170,18 +198,23 @@ export class PrivacyManager {
     }
 
     // Schedule actual deletion after verification period
-    setTimeout(() => {
-      this.dataSubjects.delete(userId);
-      // Delete associated consent data
-      if (dataSubject) {
-        this.consentData.delete(dataSubject.consentId);
-      }
-    }, 30 * 24 * 60 * 60 * 1000); // 30 days verification period
+    setTimeout(
+      () => {
+        this.dataSubjects.delete(userId);
+        // Delete associated consent data
+        if (dataSubject) {
+          this.consentData.delete(dataSubject.consentId);
+        }
+      },
+      30 * 24 * 60 * 60 * 1000
+    ); // 30 days verification period
 
     return {
       status: 'erasure_scheduled',
       verificationPeriod: '30 days',
-      scheduledFor: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+      scheduledFor: new Date(
+        Date.now() + 30 * 24 * 60 * 60 * 1000
+      ).toISOString(),
     };
   }
 
@@ -190,14 +223,28 @@ export class PrivacyManager {
    */
   private getDataProcessingPurposes(settings: PrivacySettings): string[] {
     const purposes: string[] = [];
-    
-    if (settings.analytics) {purposes.push('analytics', 'performance_measurement');}
-    if (settings.marketing) {purposes.push('marketing', 'advertising', 'personalization');}
-    if (settings.functional) {purposes.push('functionality', 'user_experience');}
-    if (settings.necessary) {purposes.push('security', 'authentication', 'legal_compliance');}
-    if (settings.preferences) {purposes.push('preference_storage', 'customization');}
-    if (settings.performance) {purposes.push('performance_optimization', 'caching');}
-    if (settings.social) {purposes.push('social_sharing', 'social_features');}
+
+    if (settings.analytics) {
+      purposes.push('analytics', 'performance_measurement');
+    }
+    if (settings.marketing) {
+      purposes.push('marketing', 'advertising', 'personalization');
+    }
+    if (settings.functional) {
+      purposes.push('functionality', 'user_experience');
+    }
+    if (settings.necessary) {
+      purposes.push('security', 'authentication', 'legal_compliance');
+    }
+    if (settings.preferences) {
+      purposes.push('preference_storage', 'customization');
+    }
+    if (settings.performance) {
+      purposes.push('performance_optimization', 'caching');
+    }
+    if (settings.social) {
+      purposes.push('social_sharing', 'social_features');
+    }
 
     return purposes;
   }
@@ -210,9 +257,15 @@ export class PrivacyManager {
     let retention = 365; // 1 year default
 
     // Adjust based on consent types
-    if (settings.marketing) {retention = Math.max(retention, 1095);} // 3 years for marketing
-    if (settings.analytics) {retention = Math.max(retention, 730);} // 2 years for analytics
-    if (settings.social) {retention = Math.max(retention, 1825);} // 5 years for social data
+    if (settings.marketing) {
+      retention = Math.max(retention, 1095);
+    } // 3 years for marketing
+    if (settings.analytics) {
+      retention = Math.max(retention, 730);
+    } // 2 years for analytics
+    if (settings.social) {
+      retention = Math.max(retention, 1825);
+    } // 5 years for social data
 
     return retention;
   }
@@ -229,7 +282,10 @@ export class PrivacyManager {
   /**
    * Log audit events for compliance
    */
-  private async logAuditEvent(action: string, metadata: Record<string, unknown>): Promise<void> {
+  private async logAuditEvent(
+    action: string,
+    metadata: Record<string, unknown>
+  ): Promise<void> {
     // This would integrate with your audit logging system
     console.log(`[AUDIT] ${action}:`, metadata);
   }
@@ -239,10 +295,10 @@ export class PrivacyManager {
    */
   getPrivacyPolicy(jurisdiction: string): string {
     const policies = {
-      'EU': 'GDPR-compliant privacy policy with full data subject rights...',
-      'CA': 'CCPA-compliant privacy policy with California consumer rights...',
-      'US': 'US privacy policy with state-specific provisions...',
-      'default': 'Comprehensive privacy policy with international compliance...'
+      EU: 'GDPR-compliant privacy policy with full data subject rights...',
+      CA: 'CCPA-compliant privacy policy with California consumer rights...',
+      US: 'US privacy policy with state-specific provisions...',
+      default: 'Comprehensive privacy policy with international compliance...',
     };
 
     return policies[jurisdiction as keyof typeof policies] || policies.default;
@@ -253,13 +309,17 @@ export class PrivacyManager {
    */
   needsConsentRenewal(userId: string): boolean {
     const dataSubject = this.dataSubjects.get(userId);
-    if (!dataSubject) {return true;}
+    if (!dataSubject) {
+      return true;
+    }
 
     const consent = this.consentData.get(dataSubject.consentId);
-    if (!consent) {return true;}
+    if (!consent) {
+      return true;
+    }
 
     // Check if consent is older than 1 year
-    const oneYearAgo = Date.now() - (365 * 24 * 60 * 60 * 1000);
+    const oneYearAgo = Date.now() - 365 * 24 * 60 * 60 * 1000;
     return new Date(consent.timestamp).getTime() < oneYearAgo;
   }
 }

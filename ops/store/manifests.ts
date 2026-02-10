@@ -24,10 +24,7 @@ export function generateAppStoreManifest(): AppStoreManifest {
     privacyPolicyUrl: 'https://aias-platform.com/privacy',
     supportUrl: 'https://aias-platform.com/support',
     icon: '/assets/app-icon.png',
-    screenshots: [
-      '/assets/screenshot1.png',
-      '/assets/screenshot2.png',
-    ],
+    screenshots: ['/assets/screenshot1.png', '/assets/screenshot2.png'],
     categories: ['Business', 'Productivity'],
     ageRating: '4+',
   };

@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Daily Article Publishing Script
- * 
+ *
  * Publishes one article per day according to schedule
  * Integrates with GenAI Content Engine for content generation
  * Updates RSS feed with new articles
@@ -11,12 +11,12 @@
 // import { getLatestArticles } from "@/lib/blog/articles";
 
 async function publishDailyArticle() {
-  console.log("📰 Daily Article Publishing System");
-  console.log("===================================");
-  
+  console.log('📰 Daily Article Publishing System');
+  console.log('===================================');
+
   const today = new Date().toISOString().split('T')[0];
   const scheduled = getNextScheduledArticle();
-  
+
   if (!scheduled || scheduled.date !== today) {
     console.log(`No article scheduled for today (${today})`);
     return;
@@ -34,7 +34,7 @@ async function publishDailyArticle() {
   // 5. Update RSS feed
   // 6. Send notifications
 
-  console.log("✅ Article published successfully");
+  console.log('✅ Article published successfully');
 }
 
 // Run if called directly

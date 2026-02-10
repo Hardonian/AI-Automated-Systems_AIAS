@@ -5,7 +5,7 @@ declare module 'canvas-confetti' {
     origin?: { x?: number; y?: number };
     [key: string]: any;
   }
-  
+
   function confetti(options?: ConfettiOptions): void;
   export default confetti;
 }

@@ -3,9 +3,9 @@
  * Serves interactive API documentation
  */
 
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 const swaggerHtml = `
 <!DOCTYPE html>
@@ -58,7 +58,7 @@ const swaggerHtml = `
 export async function GET() {
   return new NextResponse(swaggerHtml, {
     headers: {
-      "Content-Type": "text/html",
+      'Content-Type': 'text/html',
     },
   });
 }

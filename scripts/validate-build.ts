@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Build Validation Script
- * 
+ *
  * Validates Next.js build output to ensure Vercel deployment will succeed.
  * Checks for common issues like missing index files, JSON parsing errors, etc.
  */
@@ -19,7 +19,7 @@ interface ValidationResult {
 function findBuildDir(): string {
   const rootNext = join(process.cwd(), '.next');
   const webNext = join(process.cwd(), 'apps', 'web', '.next');
-  
+
   if (existsSync(webNext)) {
     return webNext;
   }
@@ -32,10 +32,7 @@ function findBuildDir(): string {
 
 const BUILD_DIR = findBuildDir();
 const REQUIRED_DIRS = ['static', 'server'];
-const REQUIRED_FILES = [
-  'BUILD_ID',
-  'package.json',
-];
+const REQUIRED_FILES = ['BUILD_ID', 'package.json'];
 
 /**
  * Validate build directory exists
@@ -134,7 +131,9 @@ function validatePackageJson(): ValidationResult {
   const packageJsonPath = join(BUILD_DIR, 'package.json');
 
   if (!existsSync(packageJsonPath)) {
-    result.warnings.push('package.json not found in build output (may be optional)');
+    result.warnings.push(
+      'package.json not found in build output (may be optional)'
+    );
     return result;
   }
 
@@ -188,7 +187,10 @@ function validateServerDirectory(): ValidationResult {
   }
 
   // Check for required server files
-  const requiredServerFiles = ['pages-manifest.json', 'app-paths-manifest.json'];
+  const requiredServerFiles = [
+    'pages-manifest.json',
+    'app-paths-manifest.json',
+  ];
   for (const file of requiredServerFiles) {
     const filePath = join(serverDir, file);
     if (!existsSync(filePath)) {
@@ -215,7 +217,9 @@ function validateJsonFiles(): ValidationResult {
   const result: ValidationResult = { success: true, errors: [], warnings: [] };
 
   function checkDirectory(dirPath: string, depth: number = 0) {
-    if (depth > 5) {return;} // Prevent infinite recursion
+    if (depth > 5) {
+      return;
+    } // Prevent infinite recursion
 
     try {
       const entries = readdirSync(dirPath);
@@ -231,7 +235,9 @@ function validateJsonFiles(): ValidationResult {
             JSON.parse(content);
           } catch (error: any) {
             result.success = false;
-            result.errors.push(`Invalid JSON file: ${entryPath} - ${error.message}`);
+            result.errors.push(
+              `Invalid JSON file: ${entryPath} - ${error.message}`
+            );
           }
         }
       }
@@ -257,8 +263,8 @@ function validateIndexFiles(): ValidationResult {
   // Check for app directory index
   const appDir = join(BUILD_DIR, 'server', 'app');
   if (existsSync(appDir)) {
-    const hasIndex = readdirSync(appDir).some(entry => 
-      entry.includes('index') || entry.includes('page')
+    const hasIndex = readdirSync(appDir).some(
+      entry => entry.includes('index') || entry.includes('page')
     );
     if (!hasIndex) {
       result.warnings.push('No index/page files found in app directory');
@@ -268,7 +274,7 @@ function validateIndexFiles(): ValidationResult {
   // Check for pages directory index
   const pagesDir = join(BUILD_DIR, 'server', 'pages');
   if (existsSync(pagesDir)) {
-    const hasIndex = readdirSync(pagesDir).some(entry => 
+    const hasIndex = readdirSync(pagesDir).some(entry =>
       entry.includes('index')
     );
     if (!hasIndex) {

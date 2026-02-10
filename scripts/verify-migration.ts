@@ -1,25 +1,25 @@
 #!/usr/bin/env tsx
 /**
  * Verify Living System Migration
- * 
+ *
  * Verifies that all migration objects (tables, views, functions) exist.
- * 
+ *
  * Usage:
  *   tsx scripts/verify-migration.ts
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
 async function verifyMigration() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !supabaseServiceKey) {
-    console.error("❌ Missing required environment variables");
+    console.error('❌ Missing required environment variables');
     process.exit(1);
   }
 
-  console.log("🔍 Verifying Living System Migration...\n");
+  console.log('🔍 Verifying Living System Migration...\n');
 
   const supabase = createClient(supabaseUrl, supabaseServiceKey, {
     auth: {
@@ -30,51 +30,51 @@ async function verifyMigration() {
 
   const checks = [
     {
-      name: "activity_log table",
+      name: 'activity_log table',
       test: async () => {
         const { data, error } = await supabase
-          .from("activity_log")
-          .select("id")
+          .from('activity_log')
+          .select('id')
           .limit(1);
         return !error;
       },
     },
     {
-      name: "positioning_feedback table",
+      name: 'positioning_feedback table',
       test: async () => {
         const { data, error } = await supabase
-          .from("positioning_feedback")
-          .select("id")
+          .from('positioning_feedback')
+          .select('id')
           .limit(1);
         return !error;
       },
     },
     {
-      name: "kpi_new_users_week view",
+      name: 'kpi_new_users_week view',
       test: async () => {
         const { data, error } = await supabase
-          .from("kpi_new_users_week")
-          .select("*")
+          .from('kpi_new_users_week')
+          .select('*')
           .single();
         return !error;
       },
     },
     {
-      name: "kpi_avg_post_views view",
+      name: 'kpi_avg_post_views view',
       test: async () => {
         const { data, error } = await supabase
-          .from("kpi_avg_post_views")
-          .select("*")
+          .from('kpi_avg_post_views')
+          .select('*')
           .single();
         return !error;
       },
     },
     {
-      name: "kpi_actions_last_hour view",
+      name: 'kpi_actions_last_hour view',
       test: async () => {
         const { data, error } = await supabase
-          .from("kpi_actions_last_hour")
-          .select("*")
+          .from('kpi_actions_last_hour')
+          .select('*')
           .single();
         return !error;
       },
@@ -98,16 +98,16 @@ async function verifyMigration() {
     }
   }
 
-  console.log(`\n${  "=".repeat(50)}`);
+  console.log(`\n${'='.repeat(50)}`);
   if (allPassed) {
-    console.log("✅ All migration objects verified successfully!");
-    console.log("\n🎉 Your Living System is ready to use!");
+    console.log('✅ All migration objects verified successfully!');
+    console.log('\n🎉 Your Living System is ready to use!');
   } else {
-    console.log("❌ Some migration objects are missing.");
-    console.log("   Please apply the migration first:");
-    console.log("   tsx scripts/apply-living-system-migration.ts");
+    console.log('❌ Some migration objects are missing.');
+    console.log('   Please apply the migration first:');
+    console.log('   tsx scripts/apply-living-system-migration.ts');
   }
-  console.log(`${"=".repeat(50)  }\n`);
+  console.log(`${'='.repeat(50)}\n`);
 
   process.exit(allPassed ? 0 : 1);
 }

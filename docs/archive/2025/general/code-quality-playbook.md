@@ -7,6 +7,7 @@ This document outlines our code quality standards, tooling, and processes for ma
 ## Purpose
 
 This playbook helps developers:
+
 - Understand what tools we use for code quality
 - Know how to triage false positives
 - Learn how to quarantine code safely
@@ -20,15 +21,18 @@ This playbook helps developers:
 **Purpose**: Type checking and unused variable detection
 
 **Configuration**: `tsconfig.json`
+
 - `noUnusedLocals: true` - Flags unused local variables
 - `noUnusedParameters: true` - Flags unused function parameters
 
 **How to run**:
+
 ```bash
 pnpm typecheck
 ```
 
 **Common false positives**:
+
 - Parameters prefixed with `_` are ignored (e.g., `_unusedParam`)
 - Variables prefixed with `_` are ignored
 
@@ -37,6 +41,7 @@ pnpm typecheck
 **Purpose**: Finds unused exports across the codebase
 
 **How to run**:
+
 ```bash
 pnpm prune:exports
 ```
@@ -44,10 +49,12 @@ pnpm prune:exports
 **Output**: `reports/ts-prune.txt`
 
 **Understanding output**:
+
 - `file.ts:42 - exportName` - Unused export
 - `file.ts:42 - exportName (used in module)` - Used within the same file, safe to ignore
 
 **False positives**:
+
 - Next.js page exports (`default`, `metadata`, `generateMetadata`) are used by the framework
 - Config file exports are used by build tools
 - Middleware exports are used by Next.js
@@ -58,6 +65,7 @@ pnpm prune:exports
 **Purpose**: Finds unused files, dependencies, and exports
 
 **How to run**:
+
 ```bash
 pnpm scan:usage
 ```
@@ -65,12 +73,14 @@ pnpm scan:usage
 **Output**: `reports/knip.json`
 
 **What it finds**:
+
 - Unused files
 - Unused dependencies
 - Unused exports
 - Unresolved imports
 
 **False positives**:
+
 - Files imported via string (e.g., `import('./dynamic')`)
 - Files used in configuration (e.g., `tailwind.config.ts`)
 - Entry points may be flagged as unused
@@ -80,6 +90,7 @@ pnpm scan:usage
 **Purpose**: Finds missing and unused dependencies
 
 **How to run**:
+
 ```bash
 pnpm audit:deps
 ```
@@ -87,10 +98,12 @@ pnpm audit:deps
 **Output**: `reports/depcheck.json`
 
 **What it finds**:
+
 - Dependencies used but not declared in `package.json`
 - Dependencies declared but never used
 
 **Common issues**:
+
 - Missing peer dependencies
 - Dev dependencies used in production code
 - Type-only imports may be flagged
@@ -100,12 +113,14 @@ pnpm audit:deps
 **Purpose**: Code quality, unused imports, and best practices
 
 **How to run**:
+
 ```bash
 pnpm lint
 pnpm lint:unused  # Check unused ESLint disable directives
 ```
 
 **Key rules**:
+
 - `unused-imports/no-unused-imports` - Removes unused imports
 - `@typescript-eslint/no-unused-vars` - Flags unused variables
 - `import/no-extraneous-dependencies` - Flags dependencies in wrong section
@@ -165,6 +180,7 @@ mv suspicious-file.ts archive/$(date +%Y%m%d)/
 ### 2. Add to Quarantine List
 
 Update `reports/dead-code-plan.md` with:
+
 - File path
 - Reason for quarantine
 - Date quarantined
@@ -173,6 +189,7 @@ Update `reports/dead-code-plan.md` with:
 ### 3. Create Issue
 
 Create a GitHub issue with:
+
 - Title: `[Quarantine] Review: file.ts`
 - Labels: `code-quality`, `quarantine`
 - Description: Why it was quarantined and when to review
@@ -186,6 +203,7 @@ Set a calendar reminder to review quarantined code after the review period.
 ### Safe to Delete
 
 ✅ **High confidence** (delete immediately):
+
 - Backup files (`.bak`, `.old`, `.backup`)
 - Files with 0 test coverage and no imports
 - Unused exports confirmed by multiple tools
@@ -194,6 +212,7 @@ Set a calendar reminder to review quarantined code after the review period.
 ### Requires Review
 
 ⚠️ **Medium confidence** (review before deletion):
+
 - Exports flagged by one tool only
 - Files used in tests but not production
 - Files imported dynamically
@@ -202,6 +221,7 @@ Set a calendar reminder to review quarantined code after the review period.
 ### Never Delete
 
 ❌ **Never delete** without explicit approval:
+
 - Public API exports (entry points)
 - Files referenced in documentation
 - Migration files
@@ -256,6 +276,7 @@ import { formatDate } from '@/lib/utils';
 ```
 
 **Configuration**: `tsconfig.json`
+
 ```json
 {
   "compilerOptions": {
@@ -272,11 +293,13 @@ import { formatDate } from '@/lib/utils';
 ### Do
 
 ✅ **Use barrel files** for:
+
 - Public API exports
 - Component libraries
 - Utility modules
 
 Example:
+
 ```typescript
 // lib/utils/index.ts
 export { formatDate } from './date';
@@ -287,6 +310,7 @@ export { validateEmail } from './validation';
 ### Don't
 
 ❌ **Avoid barrel files** for:
+
 - Internal modules (use direct imports)
 - Large modules (causes bundle bloat)
 - Wildcard re-exports (`export * from './module'`)
@@ -330,11 +354,21 @@ tests/
 
 ```json
 {
-  "import/order": ["warn", {
-    "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
-    "newlines-between": "always",
-    "alphabetize": { "order": "asc" }
-  }]
+  "import/order": [
+    "warn",
+    {
+      "groups": [
+        "builtin",
+        "external",
+        "internal",
+        "parent",
+        "sibling",
+        "index"
+      ],
+      "newlines-between": "always",
+      "alphabetize": { "order": "asc" }
+    }
+  ]
 }
 ```
 
@@ -359,6 +393,7 @@ pnpm hygiene
 ```
 
 This runs:
+
 1. Type checking
 2. Linting
 3. ts-prune

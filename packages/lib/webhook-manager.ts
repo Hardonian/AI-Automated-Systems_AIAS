@@ -62,7 +62,7 @@ export class WebhookManager {
         headers?: Record<string, string>;
         body?: unknown;
       };
-      
+
       // Store the webhook event
       const webhookEvent = await prisma.webhookEvent.create({
         data: {
@@ -76,19 +76,27 @@ export class WebhookManager {
       // Process based on source
       switch (typedEvent.source || 'unknown') {
         case 'stripe':
-          await this.processStripeWebhook(typedEvent as { headers?: Record<string, string>; body?: unknown });
+          await this.processStripeWebhook(
+            typedEvent as { headers?: Record<string, string>; body?: unknown }
+          );
           break;
         case 'paypal':
-          await this.processPayPalWebhook(typedEvent as { headers?: Record<string, string>; body?: unknown });
+          await this.processPayPalWebhook(
+            typedEvent as { headers?: Record<string, string>; body?: unknown }
+          );
           break;
         case 'github':
-          await this.processGitHubWebhook(typedEvent as { headers?: Record<string, string>; body?: unknown });
+          await this.processGitHubWebhook(
+            typedEvent as { headers?: Record<string, string>; body?: unknown }
+          );
           break;
         case 'slack':
           await this.processSlackWebhook(typedEvent as { body?: unknown });
           break;
         default:
-          await this.processGenericWebhook(typedEvent as { source?: string; type?: string; orgId?: string });
+          await this.processGenericWebhook(
+            typedEvent as { source?: string; type?: string; orgId?: string }
+          );
       }
 
       // Mark as processed
@@ -96,23 +104,28 @@ export class WebhookManager {
         where: { id: webhookEvent.id },
         data: { processed: true },
       });
-
     } catch (error) {
       logger.error({ err: error, webhookId }, 'Webhook processing failed');
-      
+
       // Schedule retry
       await this.scheduleRetry(webhookId, error);
     }
   }
 
-  private async processStripeWebhook(event: { headers?: Record<string, string>; body?: unknown }): Promise<void> {
+  private async processStripeWebhook(event: {
+    headers?: Record<string, string>;
+    body?: unknown;
+  }): Promise<void> {
     try {
       // Verify webhook signature
       const signature = event.headers?.['stripe-signature'];
       const payload = JSON.stringify(event.body);
-      
+
       if (signature) {
-        const verifiedEvent = await PaymentService.verifyWebhookSignature(payload, signature);
+        const verifiedEvent = await PaymentService.verifyWebhookSignature(
+          payload,
+          signature
+        );
         await PaymentService.handleWebhookEvent(verifiedEvent);
       }
     } catch (error) {
@@ -121,27 +134,35 @@ export class WebhookManager {
     }
   }
 
-  private async processPayPalWebhook(event: { headers?: Record<string, string>; body?: unknown }): Promise<void> {
+  private async processPayPalWebhook(event: {
+    headers?: Record<string, string>;
+    body?: unknown;
+  }): Promise<void> {
     try {
       // Verify webhook signature
       const signature = event.headers?.['paypal-transmission-sig'];
       const payload = JSON.stringify(event.body);
-      
+
       if (signature) {
-        const isValid = await paypalService.verifyWebhookSignature(payload, signature);
+        const isValid = await paypalService.verifyWebhookSignature(
+          payload,
+          signature
+        );
         if (isValid && event.body) {
-          await paypalService.handleWebhookEvent(event.body as {
-            event_type: string;
-            resource: {
-              id: string;
-              custom_id?: string;
-              supplementary_data?: {
-                related_ids?: {
-                  order_id?: string;
+          await paypalService.handleWebhookEvent(
+            event.body as {
+              event_type: string;
+              resource: {
+                id: string;
+                custom_id?: string;
+                supplementary_data?: {
+                  related_ids?: {
+                    order_id?: string;
+                  };
                 };
               };
-            };
-          });
+            }
+          );
         }
       }
     } catch (error) {
@@ -150,7 +171,10 @@ export class WebhookManager {
     }
   }
 
-  private async processGitHubWebhook(event: { headers?: Record<string, string>; body?: unknown }): Promise<void> {
+  private async processGitHubWebhook(event: {
+    headers?: Record<string, string>;
+    body?: unknown;
+  }): Promise<void> {
     try {
       // Process GitHub webhook events
       const githubEvent = event.headers?.['x-github-event'];
@@ -167,7 +191,10 @@ export class WebhookManager {
           await this.handleGitHubIssue(payload);
           break;
         default:
-          logger.info({ event: githubEvent }, `Unhandled GitHub event: ${githubEvent}`);
+          logger.info(
+            { event: githubEvent },
+            `Unhandled GitHub event: ${githubEvent}`
+          );
       }
     } catch (error) {
       logger.error({ err: error }, 'GitHub webhook processing failed');
@@ -178,8 +205,10 @@ export class WebhookManager {
   private async processSlackWebhook(event: { body?: unknown }): Promise<void> {
     try {
       // Process Slack webhook events
-      const slackEvent = event.body as { type?: string; event?: unknown; challenge?: string } | undefined;
-      
+      const slackEvent = event.body as
+        | { type?: string; event?: unknown; challenge?: string }
+        | undefined;
+
       if (slackEvent?.type === 'event_callback' && slackEvent.event) {
         await this.handleSlackEvent(slackEvent.event);
       } else if (slackEvent?.type === 'url_verification') {
@@ -192,11 +221,15 @@ export class WebhookManager {
     }
   }
 
-  private async processGenericWebhook(event: { source?: string; type?: string; orgId?: string }): Promise<void> {
+  private async processGenericWebhook(event: {
+    source?: string;
+    type?: string;
+    orgId?: string;
+  }): Promise<void> {
     try {
       // Process generic webhook events
       logger.info({ event }, 'Processing generic webhook');
-      
+
       // Store in database for later processing
       await prisma.webhookEvent.create({
         data: {
@@ -215,7 +248,7 @@ export class WebhookManager {
   private async handleGitHubPush(payload: unknown): Promise<void> {
     const p = payload as { repository?: { full_name?: string } };
     logger.info({ repository: p.repository?.full_name }, 'GitHub push event');
-    
+
     // Store push event
     await prisma.webhookEvent.create({
       data: {
@@ -230,7 +263,7 @@ export class WebhookManager {
   private async handleGitHubPullRequest(payload: unknown): Promise<void> {
     const p = payload as { pull_request?: { title?: string } };
     logger.info({ title: p.pull_request?.title }, 'GitHub pull request event');
-    
+
     // Store PR event
     await prisma.webhookEvent.create({
       data: {
@@ -245,7 +278,7 @@ export class WebhookManager {
   private async handleGitHubIssue(payload: unknown): Promise<void> {
     const p = payload as { issue?: { title?: string } };
     logger.info({ title: p.issue?.title }, 'GitHub issue event');
-    
+
     // Store issue event
     await prisma.webhookEvent.create({
       data: {
@@ -260,7 +293,7 @@ export class WebhookManager {
   private async handleSlackEvent(event: unknown): Promise<void> {
     const e = event as { type?: string };
     logger.info({ eventType: e.type }, 'Slack event');
-    
+
     // Store Slack event
     await prisma.webhookEvent.create({
       data: {
@@ -277,15 +310,24 @@ export class WebhookManager {
       where: { id: webhookId },
     });
 
-    if (!webhookEvent) {return;}
+    if (!webhookEvent) {
+      return;
+    }
 
-    const payload = webhookEvent.payload && typeof webhookEvent.payload === 'object' && !Array.isArray(webhookEvent.payload)
-      ? webhookEvent.payload as Record<string, unknown>
-      : {};
-    const retryCount = typeof payload.retryCount === 'number' ? payload.retryCount : 0;
-    
+    const payload =
+      webhookEvent.payload &&
+      typeof webhookEvent.payload === 'object' &&
+      !Array.isArray(webhookEvent.payload)
+        ? (webhookEvent.payload as Record<string, unknown>)
+        : {};
+    const retryCount =
+      typeof payload.retryCount === 'number' ? payload.retryCount : 0;
+
     if (retryCount >= this.maxRetries) {
-      logger.error({ webhookId, retryCount }, `Webhook ${webhookId} exceeded max retries`);
+      logger.error(
+        { webhookId, retryCount },
+        `Webhook ${webhookId} exceeded max retries`
+      );
       return;
     }
 
@@ -293,19 +335,24 @@ export class WebhookManager {
     const nextRetry = new Date(Date.now() + delay);
 
     // Update webhook event with retry info (stored in payload)
-    const currentPayload = webhookEvent.payload && typeof webhookEvent.payload === 'object' && !Array.isArray(webhookEvent.payload)
-      ? webhookEvent.payload as Record<string, unknown>
-      : {};
+    const currentPayload =
+      webhookEvent.payload &&
+      typeof webhookEvent.payload === 'object' &&
+      !Array.isArray(webhookEvent.payload)
+        ? (webhookEvent.payload as Record<string, unknown>)
+        : {};
     await prisma.webhookEvent.update({
       where: { id: webhookId },
       data: {
-        payload: JSON.parse(JSON.stringify({
-          ...currentPayload,
-          retryCount: retryCount + 1,
-          lastAttempt: new Date().toISOString(),
-          nextRetry: nextRetry.toISOString(),
-          error: error.message,
-        })),
+        payload: JSON.parse(
+          JSON.stringify({
+            ...currentPayload,
+            retryCount: retryCount + 1,
+            lastAttempt: new Date().toISOString(),
+            nextRetry: nextRetry.toISOString(),
+            error: error.message,
+          })
+        ),
       },
     });
 
@@ -314,14 +361,21 @@ export class WebhookManager {
       try {
         await this.processWebhook(webhookId, webhookEvent.payload);
       } catch (retryError) {
-        logger.error({ err: retryError, webhookId }, `Webhook retry failed for ${webhookId}`);
+        logger.error(
+          { err: retryError, webhookId },
+          `Webhook retry failed for ${webhookId}`
+        );
       }
     }, delay);
 
     this.retryQueue.set(webhookId, timeout);
   }
 
-  async getWebhookEvents(orgId: string, limit = 50, offset = 0): Promise<WebhookEvent[]> {
+  async getWebhookEvents(
+    orgId: string,
+    limit = 50,
+    offset = 0
+  ): Promise<WebhookEvent[]> {
     const events = await prisma.webhookEvent.findMany({
       where: { orgId },
       orderBy: { createdAt: 'desc' },
@@ -330,18 +384,28 @@ export class WebhookManager {
     });
 
     return events.map((event: any) => {
-      const payload = event.payload && typeof event.payload === 'object' && !Array.isArray(event.payload)
-        ? event.payload as Record<string, unknown>
-        : {};
+      const payload =
+        event.payload &&
+        typeof event.payload === 'object' &&
+        !Array.isArray(event.payload)
+          ? (event.payload as Record<string, unknown>)
+          : {};
       return {
         id: event.id,
         source: event.source,
         event: event.event,
         payload: event.payload,
         processed: event.processed,
-        retryCount: typeof payload.retryCount === 'number' ? payload.retryCount : 0,
-        lastAttempt: typeof payload.lastAttempt === 'string' ? new Date(payload.lastAttempt) : undefined,
-        nextRetry: typeof payload.nextRetry === 'string' ? new Date(payload.nextRetry) : undefined,
+        retryCount:
+          typeof payload.retryCount === 'number' ? payload.retryCount : 0,
+        lastAttempt:
+          typeof payload.lastAttempt === 'string'
+            ? new Date(payload.lastAttempt)
+            : undefined,
+        nextRetry:
+          typeof payload.nextRetry === 'string'
+            ? new Date(payload.nextRetry)
+            : undefined,
         error: typeof payload.error === 'string' ? payload.error : undefined,
         createdAt: event.createdAt,
       };
@@ -358,8 +422,8 @@ export class WebhookManager {
     });
 
     const failed = await prisma.webhookEvent.count({
-      where: { 
-        orgId, 
+      where: {
+        orgId,
         processed: false,
         // retryCount is stored in payload JSON, cannot query directly
       },
@@ -368,8 +432,8 @@ export class WebhookManager {
     // Note: retryCount is stored in payload JSON, so we can't query it directly
     // Count all unprocessed events as pending (some may have exceeded retries but we can't filter)
     const pending = await prisma.webhookEvent.count({
-      where: { 
-        orgId, 
+      where: {
+        orgId,
         processed: false,
       },
     });
@@ -406,22 +470,29 @@ export class WebhookManager {
       where: { id: webhookId },
     });
 
-    if (!webhookEvent) {return;}
+    if (!webhookEvent) {
+      return;
+    }
 
-    const currentPayload = webhookEvent.payload && typeof webhookEvent.payload === 'object' && !Array.isArray(webhookEvent.payload)
-      ? webhookEvent.payload as Record<string, unknown>
-      : {};
+    const currentPayload =
+      webhookEvent.payload &&
+      typeof webhookEvent.payload === 'object' &&
+      !Array.isArray(webhookEvent.payload)
+        ? (webhookEvent.payload as Record<string, unknown>)
+        : {};
 
     await prisma.webhookEvent.update({
       where: { id: webhookId },
       data: {
         // Mark as failed by storing maxRetries in payload
-        payload: JSON.parse(JSON.stringify({
-          ...currentPayload,
-          retryCount: this.maxRetries,
-          failed: true,
-          error: 'Cancelled by user',
-        })),
+        payload: JSON.parse(
+          JSON.stringify({
+            ...currentPayload,
+            retryCount: this.maxRetries,
+            failed: true,
+            error: 'Cancelled by user',
+          })
+        ),
       },
     });
   }

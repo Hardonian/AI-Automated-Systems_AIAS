@@ -17,26 +17,29 @@ class DevSetup {
     try {
       // Check Node.js version
       this.checkNodeVersion();
-      
+
       // Check pnpm installation
       this.checkPnpm();
-      
+
       // Install dependencies
       this.installDependencies();
-      
+
       // Setup environment variables
       this.setupEnvironment();
-      
+
       // Run type checking
       this.runTypeCheck();
-      
+
       logger.info('✅ Developer setup complete!');
       logger.info('Next steps:');
       logger.info('1. Review .env.local and update with your values');
       logger.info('2. Run: pnpm dev');
       logger.info('3. Open: http://localhost:3000');
     } catch (error) {
-      logger.error('Setup failed', error instanceof Error ? error : new Error(String(error)));
+      logger.error(
+        'Setup failed',
+        error instanceof Error ? error : new Error(String(error))
+      );
       process.exit(1);
     }
   }
@@ -44,19 +47,23 @@ class DevSetup {
   private checkNodeVersion(): void {
     const nodeVersion = process.version;
     const versionStr = nodeVersion.slice(1);
-    if (!versionStr) {return;}
+    if (!versionStr) {
+      return;
+    }
     const majorVersion = parseInt(versionStr.split('.')[0] || '0');
-    
+
     if (majorVersion < 18) {
       throw new Error(`Node.js 18+ required. Current: ${nodeVersion}`);
     }
-    
+
     logger.info(`✅ Node.js version: ${nodeVersion}`);
   }
 
   private checkPnpm(): void {
     try {
-      const pnpmVersion = execSync('pnpm --version', { encoding: 'utf-8' }).trim();
+      const pnpmVersion = execSync('pnpm --version', {
+        encoding: 'utf-8',
+      }).trim();
       logger.info(`✅ pnpm version: ${pnpmVersion}`);
     } catch {
       logger.warn('pnpm not found. Installing...');
@@ -73,7 +80,7 @@ class DevSetup {
   private setupEnvironment(): void {
     const envExamplePath = path.join(process.cwd(), '.env.example');
     const envLocalPath = path.join(process.cwd(), '.env.local');
-    
+
     if (!fs.existsSync(envLocalPath) && fs.existsSync(envExamplePath)) {
       logger.info('Creating .env.local from .env.example...');
       fs.copyFileSync(envExamplePath, envLocalPath);
@@ -98,8 +105,11 @@ class DevSetup {
 // Run setup if executed directly
 if (require.main === module) {
   const setup = new DevSetup();
-  setup.run().catch((error) => {
-    logger.fatal('Setup failed', error instanceof Error ? error : new Error(String(error)));
+  setup.run().catch(error => {
+    logger.fatal(
+      'Setup failed',
+      error instanceof Error ? error : new Error(String(error))
+    );
     process.exit(1);
   });
 }

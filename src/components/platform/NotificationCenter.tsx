@@ -3,13 +3,13 @@
  * Live notification components with WebSocket integration
  */
 
-import { 
-  Bell, 
-  Settings, 
-  Check, 
-  AlertTriangle, 
-  Info, 
-  CheckCircle, 
+import {
+  Bell,
+  Settings,
+  Check,
+  AlertTriangle,
+  Info,
+  CheckCircle,
   AlertCircle,
   Filter,
   Search,
@@ -17,7 +17,7 @@ import {
   MarkAsRead,
   Volume2,
   Wifi,
-  WifiOff
+  WifiOff,
 } from 'lucide-react';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 
@@ -57,7 +57,7 @@ interface WebSocketConnection {
 export const NotificationCenter: React.FC<NotificationCenterProps> = ({
   userId,
   tenantId,
-  onNotificationAction
+  onNotificationAction,
 }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [channels, setChannels] = useState<CommunicationChannel[]>([]);
@@ -69,38 +69,46 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
     webhook: false,
     sound: true,
     frequency: 'instant',
-    categories: ['general', 'alerts', 'workflows', 'billing']
+    categories: ['general', 'alerts', 'workflows', 'billing'],
   });
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [wsConnection, setWsConnection] = useState<WebSocketConnection>({
     connected: false,
     reconnecting: false,
-    lastPing: null
+    lastPing: null,
   });
-  
+
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // WebSocket connection management
   const connectWebSocket = useCallback(() => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {return;}
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      return;
+    }
 
     try {
       // Get WebSocket URL from environment variables dynamically
-      const wsBaseUrl = process.env.NEXT_PUBLIC_WS_URL || 
-                       process.env.REACT_APP_WS_URL || 
-                       (typeof window !== 'undefined' ? 
-                         (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host : 
-                         'ws://localhost:8080');
+      const wsBaseUrl =
+        process.env.NEXT_PUBLIC_WS_URL ||
+        process.env.REACT_APP_WS_URL ||
+        (typeof window !== 'undefined'
+          ? (window.location.protocol === 'https:' ? 'wss://' : 'ws://') +
+            window.location.host
+          : 'ws://localhost:8080');
       const wsUrl = `${wsBaseUrl}/notifications?userId=${userId}&tenantId=${tenantId || ''}`;
       wsRef.current = new WebSocket(wsUrl);
 
       wsRef.current.onopen = () => {
         console.log('WebSocket connected');
-        setWsConnection(prev => ({ ...prev, connected: true, reconnecting: false }));
-        
+        setWsConnection(prev => ({
+          ...prev,
+          connected: true,
+          reconnecting: false,
+        }));
+
         // Start ping interval
         pingIntervalRef.current = setInterval(() => {
           if (wsRef.current?.readyState === WebSocket.OPEN) {
@@ -110,7 +118,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
         }, 30000);
       };
 
-      wsRef.current.onmessage = (event) => {
+      wsRef.current.onmessage = event => {
         try {
           const data = JSON.parse(event.data);
           handleWebSocketMessage(data);
@@ -122,7 +130,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
       wsRef.current.onclose = () => {
         console.log('WebSocket disconnected');
         setWsConnection(prev => ({ ...prev, connected: false }));
-        
+
         // Clear ping interval
         if (pingIntervalRef.current) {
           clearInterval(pingIntervalRef.current);
@@ -138,7 +146,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
         }
       };
 
-      wsRef.current.onerror = (error) => {
+      wsRef.current.onerror = error => {
         console.error('WebSocket error:', error);
         setWsConnection(prev => ({ ...prev, connected: false }));
       };
@@ -154,12 +162,14 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
         showDesktopNotification(data.notification);
         break;
       case 'notification_update':
-        setNotifications(prev => 
-          prev.map(n => n.id === data.notification.id ? data.notification : n)
+        setNotifications(prev =>
+          prev.map(n => (n.id === data.notification.id ? data.notification : n))
         );
         break;
       case 'notification_delete':
-        setNotifications(prev => prev.filter(n => n.id !== data.notificationId));
+        setNotifications(prev =>
+          prev.filter(n => n.id !== data.notificationId)
+        );
         break;
       case 'pong':
         setWsConnection(prev => ({ ...prev, lastPing: new Date() }));
@@ -169,31 +179,39 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
     }
   }, []);
 
-  const showDesktopNotification = useCallback((notification: Notification) => {
-    if (!settings.desktop || !('Notification' in window)) {return;}
-
-    if (Notification.permission === 'granted') {
-      const notif = new Notification(notification.title, {
-        body: notification.message,
-        icon: '/favicon.ico',
-        tag: notification.id,
-        requireInteraction: notification.priority === 'urgent'
-      });
-
-      notif.onclick = () => {
-        window.focus();
-        notif.close();
-        if (notification.action) {
-          onNotificationAction?.(notification.id, notification.action.method || 'click');
-        }
-      };
-
-      // Auto-close after 5 seconds unless urgent
-      if (notification.priority !== 'urgent') {
-        setTimeout(() => notif.close(), 5000);
+  const showDesktopNotification = useCallback(
+    (notification: Notification) => {
+      if (!settings.desktop || !('Notification' in window)) {
+        return;
       }
-    }
-  }, [settings.desktop, onNotificationAction]);
+
+      if (Notification.permission === 'granted') {
+        const notif = new Notification(notification.title, {
+          body: notification.message,
+          icon: '/favicon.ico',
+          tag: notification.id,
+          requireInteraction: notification.priority === 'urgent',
+        });
+
+        notif.onclick = () => {
+          window.focus();
+          notif.close();
+          if (notification.action) {
+            onNotificationAction?.(
+              notification.id,
+              notification.action.method || 'click'
+            );
+          }
+        };
+
+        // Auto-close after 5 seconds unless urgent
+        if (notification.priority !== 'urgent') {
+          setTimeout(() => notif.close(), 5000);
+        }
+      }
+    },
+    [settings.desktop, onNotificationAction]
+  );
 
   // Load initial data
   useEffect(() => {
@@ -205,7 +223,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
   // WebSocket connection
   useEffect(() => {
     connectWebSocket();
-    
+
     return () => {
       if (wsRef.current) {
         wsRef.current.close();
@@ -233,12 +251,12 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
           action: {
             label: 'View Details',
             url: '/workflows/123',
-            method: 'GET'
+            method: 'GET',
           },
           read: false,
           priority: 'medium',
           channels: ['email', 'in_app'],
-          createdAt: new Date(Date.now() - 1000 * 60 * 5) // 5 minutes ago
+          createdAt: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
         },
         {
           id: '2',
@@ -246,16 +264,16 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
           tenantId,
           type: 'warning',
           title: 'Usage Limit Warning',
-          message: 'You\'ve used 80% of your monthly API calls',
+          message: "You've used 80% of your monthly API calls",
           action: {
             label: 'View Usage',
             url: '/billing/usage',
-            method: 'GET'
+            method: 'GET',
           },
           read: false,
           priority: 'high',
           channels: ['email', 'in_app', 'push'],
-          createdAt: new Date(Date.now() - 1000 * 60 * 30) // 30 minutes ago
+          createdAt: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
         },
         {
           id: '3',
@@ -267,12 +285,12 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
           action: {
             label: 'Learn More',
             url: '/features/ai-suggestions',
-            method: 'GET'
+            method: 'GET',
           },
           read: true,
           priority: 'low',
           channels: ['email', 'in_app'],
-          createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2) // 2 hours ago
+          createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
         },
         {
           id: '4',
@@ -284,13 +302,13 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
           action: {
             label: 'Fix Integration',
             url: '/integrations/slack',
-            method: 'GET'
+            method: 'GET',
           },
           read: true,
           priority: 'high',
           channels: ['email', 'in_app', 'webhook'],
-          createdAt: new Date(Date.now() - 1000 * 60 * 60 * 4) // 4 hours ago
-        }
+          createdAt: new Date(Date.now() - 1000 * 60 * 60 * 4), // 4 hours ago
+        },
       ];
 
       setNotifications(mockNotifications);
@@ -310,7 +328,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
           configuration: { email: 'notifications@company.com' },
           active: true,
           tenantId: tenantId || '',
-          createdAt: new Date()
+          createdAt: new Date(),
         },
         {
           id: '2',
@@ -319,8 +337,8 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
           configuration: { webhook: 'https://hooks.slack.com/...' },
           active: true,
           tenantId: tenantId || '',
-          createdAt: new Date()
-        }
+          createdAt: new Date(),
+        },
       ];
 
       setChannels(mockChannels);
@@ -338,8 +356,8 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
   const markAsRead = async (notificationId: string) => {
     try {
       // API call to mark as read
-      setNotifications(prev => 
-        prev.map(n => n.id === notificationId ? { ...n, read: true } : n)
+      setNotifications(prev =>
+        prev.map(n => (n.id === notificationId ? { ...n, read: true } : n))
       );
     } catch (error) {
       console.error('Failed to mark notification as read:', error);
@@ -375,39 +393,56 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
 
   const getNotificationIcon = (type: string, priority: string) => {
     const iconClass = `h-5 w-5 ${
-      priority === 'urgent' ? 'text-red-600' :
-      priority === 'high' ? 'text-orange-600' :
-      priority === 'medium' ? 'text-blue-600' :
-      'text-gray-600'
+      priority === 'urgent'
+        ? 'text-red-600'
+        : priority === 'high'
+          ? 'text-orange-600'
+          : priority === 'medium'
+            ? 'text-blue-600'
+            : 'text-gray-600'
     }`;
 
     switch (type) {
-      case 'success': return <CheckCircle className={iconClass} />;
-      case 'warning': return <AlertTriangle className={iconClass} />;
-      case 'error': return <AlertCircle className={iconClass} />;
-      case 'info': return <Info className={iconClass} />;
-      default: return <Bell className={iconClass} />;
+      case 'success':
+        return <CheckCircle className={iconClass} />;
+      case 'warning':
+        return <AlertTriangle className={iconClass} />;
+      case 'error':
+        return <AlertCircle className={iconClass} />;
+      case 'info':
+        return <Info className={iconClass} />;
+      default:
+        return <Bell className={iconClass} />;
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'urgent': return 'bg-red-100 text-red-800 border-red-200';
-      case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'medium': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'low': return 'bg-gray-100 text-gray-800 border-gray-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'urgent':
+        return 'bg-red-100 text-red-800 border-red-200';
+      case 'high':
+        return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'medium':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'low':
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
   const filteredNotifications = notifications.filter(notification => {
-    const matchesTab = activeTab === 'all' || 
+    const matchesTab =
+      activeTab === 'all' ||
       (activeTab === 'unread' && !notification.read) ||
       (activeTab === 'urgent' && notification.priority === 'urgent') ||
-      (activeTab === 'workflows' && notification.title.toLowerCase().includes('workflow')) ||
-      (activeTab === 'billing' && notification.title.toLowerCase().includes('billing'));
-    
-    const matchesSearch = !searchQuery || 
+      (activeTab === 'workflows' &&
+        notification.title.toLowerCase().includes('workflow')) ||
+      (activeTab === 'billing' &&
+        notification.title.toLowerCase().includes('billing'));
+
+    const matchesSearch =
+      !searchQuery ||
       notification.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       notification.message.toLowerCase().includes(searchQuery.toLowerCase());
 
@@ -415,170 +450,200 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
   });
 
   const unreadCount = notifications.filter(n => !n.read).length;
-  const urgentCount = notifications.filter(n => n.priority === 'urgent' && !n.read).length;
+  const urgentCount = notifications.filter(
+    n => n.priority === 'urgent' && !n.read
+  ).length;
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6">
+    <div className='mx-auto w-full max-w-4xl p-6'>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <Bell className="h-8 w-8 text-blue-600" />
+      <div className='mb-6 flex items-center justify-between'>
+        <div className='flex items-center gap-3'>
+          <div className='relative'>
+            <Bell className='h-8 w-8 text-blue-600' />
             {unreadCount > 0 && (
-              <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+              <Badge className='absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center p-0 text-xs'>
                 {unreadCount}
               </Badge>
             )}
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
-            <p className="text-gray-600">Stay updated with real-time alerts</p>
+            <h1 className='text-2xl font-bold text-gray-900'>Notifications</h1>
+            <p className='text-gray-600'>Stay updated with real-time alerts</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className='flex items-center gap-2'>
           {/* Connection Status */}
-          <div className="flex items-center gap-2 text-sm">
+          <div className='flex items-center gap-2 text-sm'>
             {wsConnection.connected ? (
-              <div className="flex items-center gap-1 text-green-600">
-                <Wifi className="h-4 w-4" />
+              <div className='flex items-center gap-1 text-green-600'>
+                <Wifi className='h-4 w-4' />
                 <span>Connected</span>
               </div>
             ) : (
-              <div className="flex items-center gap-1 text-red-600">
-                <WifiOff className="h-4 w-4" />
-                <span>{wsConnection.reconnecting ? 'Reconnecting...' : 'Disconnected'}</span>
+              <div className='flex items-center gap-1 text-red-600'>
+                <WifiOff className='h-4 w-4' />
+                <span>
+                  {wsConnection.reconnecting
+                    ? 'Reconnecting...'
+                    : 'Disconnected'}
+                </span>
               </div>
             )}
           </div>
 
-          <Button size="sm" variant="outline" onClick={markAllAsRead}>
-            <MarkAsRead className="h-4 w-4 mr-2" />
+          <Button size='sm' variant='outline' onClick={markAllAsRead}>
+            <MarkAsRead className='mr-2 h-4 w-4' />
             Mark All Read
           </Button>
         </div>
       </div>
 
-      <Tabs className="w-full" value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="all">
+      <Tabs className='w-full' value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className='grid w-full grid-cols-6'>
+          <TabsTrigger value='all'>
             All {unreadCount > 0 && `(${unreadCount})`}
           </TabsTrigger>
-          <TabsTrigger value="unread">
+          <TabsTrigger value='unread'>
             Unread {unreadCount > 0 && `(${unreadCount})`}
           </TabsTrigger>
-          <TabsTrigger value="urgent">
+          <TabsTrigger value='urgent'>
             Urgent {urgentCount > 0 && `(${urgentCount})`}
           </TabsTrigger>
-          <TabsTrigger value="workflows">Workflows</TabsTrigger>
-          <TabsTrigger value="billing">Billing</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsTrigger value='workflows'>Workflows</TabsTrigger>
+          <TabsTrigger value='billing'>Billing</TabsTrigger>
+          <TabsTrigger value='settings'>Settings</TabsTrigger>
         </TabsList>
 
         {/* Notifications List */}
-        <TabsContent className="space-y-4" value={activeTab}>
+        <TabsContent className='space-y-4' value={activeTab}>
           {activeTab !== 'settings' && (
             <>
               {/* Search and Filters */}
-              <div className="flex items-center gap-4">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <div className='flex items-center gap-4'>
+                <div className='relative flex-1'>
+                  <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400' />
                   <Input
-                    className="pl-10"
-                    placeholder="Search notifications..."
+                    className='pl-10'
+                    placeholder='Search notifications...'
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={e => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <Button size="sm" variant="outline">
-                  <Filter className="h-4 w-4 mr-2" />
+                <Button size='sm' variant='outline'>
+                  <Filter className='mr-2 h-4 w-4' />
                   Filter
                 </Button>
               </div>
 
               {/* Notifications */}
-              <ScrollArea className="h-96">
-                <div className="space-y-3">
+              <ScrollArea className='h-96'>
+                <div className='space-y-3'>
                   {filteredNotifications.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500">
-                      <Bell className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                    <div className='py-8 text-center text-gray-500'>
+                      <Bell className='mx-auto mb-4 h-12 w-12 text-gray-300' />
                       <p>No notifications found</p>
                     </div>
                   ) : (
                     filteredNotifications.map(notification => (
-                      <Card 
-                        key={notification.id} 
+                      <Card
+                        key={notification.id}
                         className={`transition-all hover:shadow-md ${
-                          !notification.read ? 'border-l-4 border-l-blue-500 bg-blue-50' : ''
+                          !notification.read
+                            ? 'border-l-4 border-l-blue-500 bg-blue-50'
+                            : ''
                         }`}
                       >
-                        <CardContent className="p-4">
-                          <div className="flex items-start gap-3">
-                            <div className="flex-shrink-0 mt-1">
-                              {getNotificationIcon(notification.type, notification.priority)}
+                        <CardContent className='p-4'>
+                          <div className='flex items-start gap-3'>
+                            <div className='mt-1 flex-shrink-0'>
+                              {getNotificationIcon(
+                                notification.type,
+                                notification.priority
+                              )}
                             </div>
-                            
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <h3 className="font-semibold text-gray-900">
+
+                            <div className='min-w-0 flex-1'>
+                              <div className='flex items-start justify-between'>
+                                <div className='flex-1'>
+                                  <div className='mb-1 flex items-center gap-2'>
+                                    <h3 className='font-semibold text-gray-900'>
                                       {notification.title}
                                     </h3>
-                                    <Badge 
-                                      className={getPriorityColor(notification.priority)} 
-                                      variant="outline"
+                                    <Badge
+                                      className={getPriorityColor(
+                                        notification.priority
+                                      )}
+                                      variant='outline'
                                     >
                                       {notification.priority}
                                     </Badge>
                                     {!notification.read && (
-                                      <div className="w-2 h-2 bg-blue-600 rounded-full" />
+                                      <div className='h-2 w-2 rounded-full bg-blue-600' />
                                     )}
                                   </div>
-                                  <p className="text-gray-600 text-sm mb-2">
+                                  <p className='mb-2 text-sm text-gray-600'>
                                     {notification.message}
                                   </p>
-                                  <div className="flex items-center gap-4 text-xs text-gray-500">
+                                  <div className='flex items-center gap-4 text-xs text-gray-500'>
                                     <span>
-                                      {new Date(notification.createdAt).toLocaleString()}
+                                      {new Date(
+                                        notification.createdAt
+                                      ).toLocaleString()}
                                     </span>
-                                    <div className="flex items-center gap-1">
-                                      {notification.channels.map((channel: string) => (
-                                        <Badge key={channel} className="text-xs" variant="secondary">
-                                          {channel}
-                                        </Badge>
-                                      ))}
+                                    <div className='flex items-center gap-1'>
+                                      {notification.channels.map(
+                                        (channel: string) => (
+                                          <Badge
+                                            key={channel}
+                                            className='text-xs'
+                                            variant='secondary'
+                                          >
+                                            {channel}
+                                          </Badge>
+                                        )
+                                      )}
                                     </div>
                                   </div>
                                 </div>
 
-                                <div className="flex items-center gap-1">
+                                <div className='flex items-center gap-1'>
                                   {notification.action && (
                                     <Button
-                                      size="sm"
-                                      variant="outline"
-                                      onClick={() => onNotificationAction?.(notification.id, notification.action!.method || 'click')}
+                                      size='sm'
+                                      variant='outline'
+                                      onClick={() =>
+                                        onNotificationAction?.(
+                                          notification.id,
+                                          notification.action!.method || 'click'
+                                        )
+                                      }
                                     >
                                       {notification.action.label}
                                     </Button>
                                   )}
-                                  
+
                                   {!notification.read && (
                                     <Button
-                                      size="sm"
-                                      variant="ghost"
-                                      onClick={() => markAsRead(notification.id)}
+                                      size='sm'
+                                      variant='ghost'
+                                      onClick={() =>
+                                        markAsRead(notification.id)
+                                      }
                                     >
-                                      <Check className="h-4 w-4" />
+                                      <Check className='h-4 w-4' />
                                     </Button>
                                   )}
-                                  
+
                                   <Button
-                                    size="sm"
-                                    variant="ghost"
-                                    onClick={() => deleteNotification(notification.id)}
+                                    size='sm'
+                                    variant='ghost'
+                                    onClick={() =>
+                                      deleteNotification(notification.id)
+                                    }
                                   >
-                                    <Trash2 className="h-4 w-4" />
+                                    <Trash2 className='h-4 w-4' />
                                   </Button>
                                 </div>
                               </div>
@@ -595,100 +660,128 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
 
           {/* Settings Tab */}
           {activeTab === 'settings' && (
-            <div className="space-y-6">
+            <div className='space-y-6'>
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Settings className="h-5 w-5" />
+                  <CardTitle className='flex items-center gap-2'>
+                    <Settings className='h-5 w-5' />
                     Notification Preferences
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className='space-y-6'>
                   {/* Delivery Methods */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">Delivery Methods</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Bell className="h-4 w-4" />
+                  <div className='space-y-4'>
+                    <h3 className='text-lg font-semibold'>Delivery Methods</h3>
+                    <div className='grid grid-cols-2 gap-4'>
+                      <div className='flex items-center justify-between'>
+                        <div className='flex items-center gap-2'>
+                          <Bell className='h-4 w-4' />
                           <span>Desktop Notifications</span>
                         </div>
                         <Switch
                           checked={settings.desktop}
-                          onCheckedChange={(checked) => updateSettings({ desktop: checked })}
+                          onCheckedChange={checked =>
+                            updateSettings({ desktop: checked })
+                          }
                         />
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Volume2 className="h-4 w-4" />
+                      <div className='flex items-center justify-between'>
+                        <div className='flex items-center gap-2'>
+                          <Volume2 className='h-4 w-4' />
                           <span>Sound</span>
                         </div>
                         <Switch
                           checked={settings.sound}
-                          onCheckedChange={(checked) => updateSettings({ sound: checked })}
+                          onCheckedChange={checked =>
+                            updateSettings({ sound: checked })
+                          }
                         />
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Bell className="h-4 w-4" />
+                      <div className='flex items-center justify-between'>
+                        <div className='flex items-center gap-2'>
+                          <Bell className='h-4 w-4' />
                           <span>Email</span>
                         </div>
                         <Switch
                           checked={settings.email}
-                          onCheckedChange={(checked) => updateSettings({ email: checked })}
+                          onCheckedChange={checked =>
+                            updateSettings({ email: checked })
+                          }
                         />
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Bell className="h-4 w-4" />
+                      <div className='flex items-center justify-between'>
+                        <div className='flex items-center gap-2'>
+                          <Bell className='h-4 w-4' />
                           <span>Push Notifications</span>
                         </div>
                         <Switch
                           checked={settings.push}
-                          onCheckedChange={(checked) => updateSettings({ push: checked })}
+                          onCheckedChange={checked =>
+                            updateSettings({ push: checked })
+                          }
                         />
                       </div>
                     </div>
                   </div>
 
                   {/* Frequency */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">Notification Frequency</h3>
-                    <div className="space-y-2">
-                      <Label htmlFor="frequency">How often should we send notifications?</Label>
+                  <div className='space-y-4'>
+                    <h3 className='text-lg font-semibold'>
+                      Notification Frequency
+                    </h3>
+                    <div className='space-y-2'>
+                      <Label htmlFor='frequency'>
+                        How often should we send notifications?
+                      </Label>
                       <Select
                         value={settings.frequency}
-                        onValueChange={(value: string) => updateSettings({ frequency: value })}
+                        onValueChange={(value: string) =>
+                          updateSettings({ frequency: value })
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="instant">Instant</SelectItem>
-                          <SelectItem value="hourly">Hourly Digest</SelectItem>
-                          <SelectItem value="daily">Daily Digest</SelectItem>
+                          <SelectItem value='instant'>Instant</SelectItem>
+                          <SelectItem value='hourly'>Hourly Digest</SelectItem>
+                          <SelectItem value='daily'>Daily Digest</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
 
                   {/* Categories */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">Notification Categories</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      {['general', 'alerts', 'workflows', 'billing', 'integrations', 'security'].map(category => (
-                        <div key={category} className="flex items-center space-x-2">
+                  <div className='space-y-4'>
+                    <h3 className='text-lg font-semibold'>
+                      Notification Categories
+                    </h3>
+                    <div className='grid grid-cols-2 gap-4'>
+                      {[
+                        'general',
+                        'alerts',
+                        'workflows',
+                        'billing',
+                        'integrations',
+                        'security',
+                      ].map(category => (
+                        <div
+                          key={category}
+                          className='flex items-center space-x-2'
+                        >
                           <Checkbox
                             checked={settings.categories.includes(category)}
                             id={category}
                             onCheckedChange={(checked: boolean) => {
                               const newCategories = checked
                                 ? [...settings.categories, category]
-                                : settings.categories.filter(c => c !== category);
+                                : settings.categories.filter(
+                                    c => c !== category
+                                  );
                               updateSettings({ categories: newCategories });
                             }}
                           />
-                          <Label className="capitalize" htmlFor={category}>
+                          <Label className='capitalize' htmlFor={category}>
                             {category}
                           </Label>
                         </div>
@@ -701,40 +794,48 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
               {/* Communication Channels */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Bell className="h-5 w-5" />
+                  <CardTitle className='flex items-center gap-2'>
+                    <Bell className='h-5 w-5' />
                     Communication Channels
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  <div className='space-y-4'>
                     {channels.map(channel => (
-                      <div key={channel.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div
+                        key={channel.id}
+                        className='flex items-center justify-between rounded-lg border p-3'
+                      >
                         <div>
-                          <h4 className="font-semibold">{channel.name}</h4>
-                          <p className="text-sm text-gray-600">
-                            {channel.type} • {channel.active ? 'Active' : 'Inactive'}
+                          <h4 className='font-semibold'>{channel.name}</h4>
+                          <p className='text-sm text-gray-600'>
+                            {channel.type} •{' '}
+                            {channel.active ? 'Active' : 'Inactive'}
                           </p>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className='flex items-center gap-2'>
                           <Switch
                             checked={channel.active}
-                            onCheckedChange={(checked) => {
+                            onCheckedChange={checked => {
                               // Update channel status
-                              setChannels(prev => 
-                                prev.map(c => c.id === channel.id ? { ...c, active: checked } : c)
+                              setChannels(prev =>
+                                prev.map(c =>
+                                  c.id === channel.id
+                                    ? { ...c, active: checked }
+                                    : c
+                                )
                               );
                             }}
                           />
-                          <Button size="sm" variant="outline">
-                            <Settings className="h-4 w-4" />
+                          <Button size='sm' variant='outline'>
+                            <Settings className='h-4 w-4' />
                           </Button>
                         </div>
                       </div>
                     ))}
-                    
-                    <Button className="w-full" variant="outline">
-                      <Bell className="h-4 w-4 mr-2" />
+
+                    <Button className='w-full' variant='outline'>
+                      <Bell className='mr-2 h-4 w-4' />
                       Add New Channel
                     </Button>
                   </div>

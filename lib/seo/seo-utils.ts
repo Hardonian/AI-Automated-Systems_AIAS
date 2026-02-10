@@ -23,7 +23,9 @@ export function generateMetaTags(data: SEOData): string {
   tags.push(`<meta name="title" content="${escapeHtml(data.title)}" />`);
 
   // Description
-  tags.push(`<meta name="description" content="${escapeHtml(data.description)}" />`);
+  tags.push(
+    `<meta name="description" content="${escapeHtml(data.description)}" />`
+  );
 
   // Keywords
   if (data.keywords && data.keywords.length > 0) {
@@ -32,7 +34,9 @@ export function generateMetaTags(data: SEOData): string {
 
   // Open Graph
   tags.push(`<meta property="og:title" content="${escapeHtml(data.title)}" />`);
-  tags.push(`<meta property="og:description" content="${escapeHtml(data.description)}" />`);
+  tags.push(
+    `<meta property="og:description" content="${escapeHtml(data.description)}" />`
+  );
   if (data.ogImage) {
     tags.push(`<meta property="og:image" content="${data.ogImage}" />`);
   }
@@ -58,7 +62,14 @@ export function generateMetaTags(data: SEOData): string {
 export function generateSitemapEntry(
   url: string,
   lastmod?: string,
-  changefreq: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never' = 'weekly',
+  changefreq:
+    | 'always'
+    | 'hourly'
+    | 'daily'
+    | 'weekly'
+    | 'monthly'
+    | 'yearly'
+    | 'never' = 'weekly',
   priority: number = 0.5
 ): string {
   return `
@@ -81,11 +92,11 @@ export function generateRobotsTxt(
 ): string {
   const lines: string[] = [];
 
-  allowPaths.forEach((path) => {
+  allowPaths.forEach(path => {
     lines.push(`Allow: ${path}`);
   });
 
-  disallowPaths.forEach((path) => {
+  disallowPaths.forEach(path => {
     lines.push(`Disallow: ${path}`);
   });
 
@@ -104,7 +115,7 @@ function escapeHtml(text: string): string {
     '"': '&quot;',
     "'": '&#039;',
   };
-  return text.replace(/[&<>"']/g, (m) => map[m as keyof typeof map] ?? m);
+  return text.replace(/[&<>"']/g, m => map[m as keyof typeof map] ?? m);
 }
 
 function escapeXml(text: string): string {

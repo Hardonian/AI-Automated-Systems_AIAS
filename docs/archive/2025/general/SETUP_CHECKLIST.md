@@ -61,6 +61,7 @@
 ### Data Source Configuration
 
 **Marketing Analytics:**
+
 - [ ] Choose data source (Supabase, API, CSV export)
 - [ ] Uncomment relevant section in `scripts/analytics-marketing.js`
 - [ ] Add API keys/credentials to environment variables
@@ -68,6 +69,7 @@
 - [ ] Verify report generated in `ops/dashboards/reports/`
 
 **Finance Analytics:**
+
 - [ ] Choose data source (Stripe, Supabase, CSV export)
 - [ ] Uncomment relevant section in `scripts/analytics-finance.js`
 - [ ] Add Stripe/Supabase credentials
@@ -76,6 +78,7 @@
 - [ ] Verify report generated
 
 **KPI Analytics:**
+
 - [ ] Choose data source (Supabase, APIs)
 - [ ] Uncomment relevant section in `scripts/analytics-kpi.js`
 - [ ] Configure data fetching queries
@@ -99,6 +102,7 @@
 ### Data Source Integration
 
 **Marketing Dashboard:**
+
 - [ ] Set up Zapier/Make workflow to append social posts
 - [ ] OR configure Google Apps Script for API integration
 - [ ] Add formulas for calculations (see `ops/dashboards/DASHBOARD_SETUP.md`)
@@ -106,6 +110,7 @@
 - [ ] Test data flow
 
 **Finance Dashboard:**
+
 - [ ] Connect to Stripe (via Zapier/Make or API)
 - [ ] Configure GST/HST formulas
 - [ ] Add summary formulas (MRR, monthly totals)
@@ -113,6 +118,7 @@
 - [ ] Test transaction import
 
 **KPI Tracker:**
+
 - [ ] Connect to data sources (users, revenue, support)
 - [ ] Add growth rate formulas
 - [ ] Add churn rate calculation
@@ -351,16 +357,19 @@
 ## Quick Reference
 
 **Daily:**
+
 - Review `ops/daily-routine.md` checklist
 - Check GitHub Actions status
 - Review dashboard updates
 
 **Weekly:**
+
 - Review automation logs
 - Check for errors
 - Update dashboards if needed
 
 **Monthly:**
+
 - Review all workflows
 - Analyze metrics
 - Optimize automation
@@ -371,6 +380,7 @@
 ## Troubleshooting
 
 **Issues?** Check:
+
 - `ops/automation-blueprints/GITHUB_ACTIONS_SETUP.md`
 - `ops/automation-blueprints/ZAPIER_MAKE_SETUP.md`
 - `ops/dashboards/DASHBOARD_SETUP.md`

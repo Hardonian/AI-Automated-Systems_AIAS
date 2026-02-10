@@ -3,26 +3,29 @@
  * Admin-only endpoint to reconcile subscription status
  */
 
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { createPOSTHandler } from "@/lib/api/route-handler";
-import { reconcileUserSubscription, reconcileAllSubscriptions } from "@/lib/billing/reconciliation";
-import { ValidationError, AuthorizationError, formatError } from "@/lib/errors";
-import { logger } from "@/lib/logging/structured-logger";
-import { adminGuard } from "@/lib/middleware/admin-guard";
+import { createPOSTHandler } from '@/lib/api/route-handler';
+import {
+  reconcileUserSubscription,
+  reconcileAllSubscriptions,
+} from '@/lib/billing/reconciliation';
+import { ValidationError, AuthorizationError, formatError } from '@/lib/errors';
+import { logger } from '@/lib/logging/structured-logger';
+import { adminGuard } from '@/lib/middleware/admin-guard';
 
 /**
  * POST /api/billing/reconcile
  * Reconcile subscription status for a user or all users (admin only)
  */
 export const POST = createPOSTHandler(
-  async (context) => {
+  async context => {
     const { request } = context;
-    
+
     // Check admin access
     const adminCheck = await adminGuard(request);
     if (adminCheck) {
-      const error = new AuthorizationError("Admin access required");
+      const error = new AuthorizationError('Admin access required');
       const formatted = formatError(error);
       return NextResponse.json(
         { error: formatted.message },
@@ -31,13 +34,16 @@ export const POST = createPOSTHandler(
     }
 
     const body = await request.json();
-    const { userId, reconcileAll } = body as { userId?: string; reconcileAll?: boolean };
+    const { userId, reconcileAll } = body as {
+      userId?: string;
+      reconcileAll?: boolean;
+    };
 
     if (reconcileAll) {
       // Reconcile all subscriptions
-      logger.info("Bulk reconciliation requested");
+      logger.info('Bulk reconciliation requested');
       const result = await reconcileAllSubscriptions();
-      
+
       return NextResponse.json({
         success: result.success,
         processed: result.processed,
@@ -47,7 +53,9 @@ export const POST = createPOSTHandler(
     }
 
     if (!userId) {
-      const error = new ValidationError("userId is required when reconcileAll is false");
+      const error = new ValidationError(
+        'userId is required when reconcileAll is false'
+      );
       const formatted = formatError(error);
       return NextResponse.json(
         { error: formatted.message },
@@ -56,11 +64,13 @@ export const POST = createPOSTHandler(
     }
 
     // Reconcile single user
-    logger.info("Reconciliation requested", { userId });
+    logger.info('Reconciliation requested', { userId });
     const result = await reconcileUserSubscription(userId);
 
     if (!result.success) {
-      const error = new ValidationError(result.error || "Reconciliation failed");
+      const error = new ValidationError(
+        result.error || 'Reconciliation failed'
+      );
       const formatted = formatError(error);
       return NextResponse.json(
         { error: formatted.message },

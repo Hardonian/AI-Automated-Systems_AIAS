@@ -13,7 +13,7 @@ jobs:
   analytics:
     name: Generate Analytics Reports
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -37,30 +37,30 @@ jobs:
       - name: Run analytics scripts
         run: |
           mkdir -p ops/dashboards/reports
-          
+
           # Generate marketing analytics
           node scripts/analytics-marketing.js > ops/dashboards/reports/marketing-$(date +%Y%m%d).csv || echo "Marketing analytics script not found, skipping"
-          
+
           # Generate finance analytics
           node scripts/analytics-finance.js > ops/dashboards/reports/finance-$(date +%Y%m%d).csv || echo "Finance analytics script not found, skipping"
-          
+
           # Generate KPI summary
           node scripts/analytics-kpi.js > ops/dashboards/reports/kpi-$(date +%Y%m%d).json || echo "KPI analytics script not found, skipping"
-          
+
           # Generate markdown summary
           cat > ops/dashboards/reports/daily-summary-$(date +%Y%m%d).md << EOF
           # Daily Analytics Summary
           Date: $(date +%Y-%m-%d)
-          
+
           ## Marketing Metrics
           - See: marketing-$(date +%Y%m%d).csv
-          
+
           ## Finance Metrics (CAD)
           - See: finance-$(date +%Y%m%d).csv
-          
+
           ## KPI Summary
           - See: kpi-$(date +%Y%m%d).json
-          
+
           Generated automatically by GitHub Actions
           EOF
         env:

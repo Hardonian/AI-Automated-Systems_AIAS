@@ -3,7 +3,10 @@
  * Handles email sending with multiple provider support
  */
 
-import { getTemplateById, replaceTemplateVariables } from '@/lib/email-templates';
+import {
+  getTemplateById,
+  replaceTemplateVariables,
+} from '@/lib/email-templates';
 import { renderTemplate } from '@/lib/email-templates/template-engine';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logging/structured-logger';
@@ -59,9 +62,14 @@ class EmailService {
     // Try legacy template system first
     const legacyTemplate = getTemplateById(templateId);
     if (legacyTemplate) {
-      const subject = replaceTemplateVariables(legacyTemplate.subject, variables);
+      const subject = replaceTemplateVariables(
+        legacyTemplate.subject,
+        variables
+      );
       const html = replaceTemplateVariables(legacyTemplate.body, variables);
-      const text = legacyTemplate.textBody ? replaceTemplateVariables(legacyTemplate.textBody, variables) : undefined;
+      const text = legacyTemplate.textBody
+        ? replaceTemplateVariables(legacyTemplate.textBody, variables)
+        : undefined;
 
       return this.send({
         to,
@@ -77,15 +85,22 @@ class EmailService {
       // In production, this would load from file system or database
       // For now, we'll use the enhanced template engine with the template content
       // This assumes templates are loaded elsewhere and passed in
-      logger.warn('Template not found in legacy system, attempting enhanced engine', { templateId });
-      
+      logger.warn(
+        'Template not found in legacy system, attempting enhanced engine',
+        { templateId }
+      );
+
       // Fallback: return error
       return {
         success: false,
         error: `Template ${templateId} not found. Use sendTemplateWithContent() for HTML templates.`,
       };
     } catch (error) {
-      logger.error('Failed to load template', error instanceof Error ? error : new Error(String(error)), { templateId });
+      logger.error(
+        'Failed to load template',
+        error instanceof Error ? error : new Error(String(error)),
+        { templateId }
+      );
       return {
         success: false,
         error: `Template ${templateId} not found`,
@@ -116,10 +131,14 @@ class EmailService {
         ...options,
       });
     } catch (error) {
-      logger.error('Failed to render template', error instanceof Error ? error : new Error(String(error)), {
-        to,
-        subject,
-      });
+      logger.error(
+        'Failed to render template',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          to,
+          subject,
+        }
+      );
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -143,11 +162,15 @@ class EmailService {
           throw new Error('No email provider configured');
       }
     } catch (error) {
-      logger.error('Failed to send email', error instanceof Error ? error : new Error(String(error)), {
-        to: options.to,
-        subject: options.subject,
-        provider: this.provider,
-      });
+      logger.error(
+        'Failed to send email',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          to: options.to,
+          subject: options.subject,
+          provider: this.provider,
+        }
+      );
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -166,7 +189,7 @@ class EmailService {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${env.resend.apiKey}`,
+        Authorization: `Bearer ${env.resend.apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -188,7 +211,10 @@ class EmailService {
     }
 
     const data = await response.json();
-    logger.info('Email sent via Resend', { messageId: data.id, to: options.to });
+    logger.info('Email sent via Resend', {
+      messageId: data.id,
+      to: options.to,
+    });
 
     return {
       success: true,
@@ -207,7 +233,7 @@ class EmailService {
     const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${env.sendgrid.apiKey}`,
+        Authorization: `Bearer ${env.sendgrid.apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -228,7 +254,9 @@ class EmailService {
             type: 'text/html',
             value: options.html || '',
           },
-          ...(options.text ? [{ type: 'text/plain', value: options.text }] : []),
+          ...(options.text
+            ? [{ type: 'text/plain', value: options.text }]
+            : []),
         ],
         reply_to: options.replyTo ? { email: options.replyTo } : undefined,
         categories: options.tags,
@@ -287,7 +315,12 @@ class EmailService {
       const batch = recipients.slice(i, i + batchSize);
       const batchResults = await Promise.all(
         batch.map(recipient =>
-          this.sendTemplate(templateId, recipient.email, recipient.variables, options)
+          this.sendTemplate(
+            templateId,
+            recipient.email,
+            recipient.variables,
+            options
+          )
         )
       );
       results.push(...batchResults);

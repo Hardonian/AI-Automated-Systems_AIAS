@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import { CheckCircle2 } from "lucide-react";
-import { Reveal, AnimatedCard } from "@/components/motion";
-import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import React, { useEffect } from 'react';
+import { CheckCircle2 } from 'lucide-react';
+import { Reveal, AnimatedCard } from '@/components/motion';
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 export interface SuccessToastProps {
   /**
@@ -41,7 +41,7 @@ export interface SuccessToastProps {
 
 /**
  * SuccessToast - Success feedback component
- * 
+ *
  * Displays success message with animation
  * Respects reduced motion
  */
@@ -65,23 +65,28 @@ export function SuccessToast({
   }, [autoDismiss, onDismiss]);
 
   return (
-    <Reveal variant="fadeInUp">
-      <AnimatedCard variant={celebrate ? "fadeInUp" : "fadeInUp"}>
-        <Card className={cn("border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/20", className)}>
-          <CardContent className="pt-6">
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-              <div className="flex-1">
+    <Reveal variant='fadeInUp'>
+      <AnimatedCard variant={celebrate ? 'fadeInUp' : 'fadeInUp'}>
+        <Card
+          className={cn(
+            'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/20',
+            className
+          )}
+        >
+          <CardContent className='pt-6'>
+            <div className='flex items-start gap-3'>
+              <CheckCircle2 className='mt-0.5 h-5 w-5 flex-shrink-0 text-green-600 dark:text-green-400' />
+              <div className='flex-1'>
                 {title && (
-                  <h3 className="font-semibold text-green-900 dark:text-green-100 mb-1">
+                  <h3 className='mb-1 font-semibold text-green-900 dark:text-green-100'>
                     {title}
                   </h3>
                 )}
-                <p className="text-sm text-green-800 dark:text-green-200">
+                <p className='text-sm text-green-800 dark:text-green-200'>
                   {message}
                 </p>
                 {details && (
-                  <p className="text-xs text-green-700 dark:text-green-300 mt-1">
+                  <p className='mt-1 text-xs text-green-700 dark:text-green-300'>
                     {details}
                   </p>
                 )}

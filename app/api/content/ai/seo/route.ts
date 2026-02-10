@@ -1,9 +1,9 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
+import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
+import OpenAI from 'openai';
 
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 /**
  * POST /api/content/ai/seo
@@ -12,18 +12,15 @@ import { logger } from "@/lib/logging/structured-logger";
 export async function POST(request: NextRequest) {
   try {
     // Check authentication - support both admin token and legacy env token
-    const authHeader = request.headers.get("authorization");
-    const providedToken = authHeader?.replace("Bearer ", "");
-    
+    const authHeader = request.headers.get('authorization');
+    const providedToken = authHeader?.replace('Bearer ', '');
+
     if (!providedToken) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     let isAuthorized = false;
-    
+
     try {
       const supabaseAdmin = createClient(
         env.supabase.url,
@@ -31,17 +28,17 @@ export async function POST(request: NextRequest) {
       );
 
       const { data: profile } = await supabaseAdmin
-        .from("profiles")
-        .select("id")
-        .eq("content_studio_token", providedToken)
+        .from('profiles')
+        .select('id')
+        .eq('content_studio_token', providedToken)
         .single();
 
       if (profile) {
         const { data: roleData } = await supabaseAdmin
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", profile.id)
-          .eq("role", "admin")
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', profile.id)
+          .eq('role', 'admin')
           .single();
 
         if (roleData) {
@@ -60,10 +57,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!isAuthorized) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -71,7 +65,7 @@ export async function POST(request: NextRequest) {
 
     if (!content) {
       return NextResponse.json(
-        { error: "Content is required" },
+        { error: 'Content is required' },
         { status: 400 }
       );
     }
@@ -79,7 +73,7 @@ export async function POST(request: NextRequest) {
     const openaiKey = process.env.OPENAI_API_KEY;
     if (!openaiKey) {
       return NextResponse.json(
-        { error: "OpenAI API key not configured" },
+        { error: 'OpenAI API key not configured' },
         { status: 500 }
       );
     }
@@ -98,19 +92,19 @@ export async function POST(request: NextRequest) {
 
 Provide suggestions in a structured format with specific recommendations.`;
 
-    const userPrompt = `Analyze this ${type || "content"} for SEO optimization:\n\n${content}\n\nProvide specific, actionable suggestions.`;
+    const userPrompt = `Analyze this ${type || 'content'} for SEO optimization:\n\n${content}\n\nProvide specific, actionable suggestions.`;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: 'gpt-4o-mini',
       messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
       ],
       temperature: 0.3,
       max_tokens: 800,
     });
 
-    const suggestions = completion.choices[0]?.message?.content || "";
+    const suggestions = completion.choices[0]?.message?.content || '';
 
     return NextResponse.json({
       success: true,
@@ -118,9 +112,13 @@ Provide suggestions in a structured format with specific recommendations.`;
     });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.error("SEO analysis error:", error instanceof Error ? error : new Error(String(error)), { component: "route", action: "unknown" });
+    logger.error(
+      'SEO analysis error:',
+      error instanceof Error ? error : new Error(String(error)),
+      { component: 'route', action: 'unknown' }
+    );
     return NextResponse.json(
-      { error: errorMessage || "Failed to analyze SEO" },
+      { error: errorMessage || 'Failed to analyze SEO' },
       { status: 500 }
     );
   }

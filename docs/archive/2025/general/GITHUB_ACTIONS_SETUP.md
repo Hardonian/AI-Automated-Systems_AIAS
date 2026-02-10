@@ -20,8 +20,9 @@ Your GitHub Actions workflows require the following secrets to be configured in 
 #### Vercel Deployment (`auto-deploy-vercel.yml`)
 
 **VERCEL_TOKEN**
+
 - **Description:** Vercel API token for deployments
-- **How to get:** 
+- **How to get:**
   1. Go to https://vercel.com/account/tokens
   2. Click **Create Token**
   3. Name it "GitHub Actions"
@@ -29,6 +30,7 @@ Your GitHub Actions workflows require the following secrets to be configured in 
 - **Example:** `vercel_xxxxxxxxxxxxxxxxxxxxx`
 
 **VERCEL_ORG_ID**
+
 - **Description:** Your Vercel organization ID
 - **How to get:**
   1. Go to https://vercel.com/account
@@ -37,6 +39,7 @@ Your GitHub Actions workflows require the following secrets to be configured in 
 - **Example:** `team_xxxxxxxxxxxxxxxxxxxxx`
 
 **VERCEL_PROJECT_ID**
+
 - **Description:** Your Vercel project ID
 - **How to get:**
   1. Go to your Vercel project settings
@@ -44,12 +47,14 @@ Your GitHub Actions workflows require the following secrets to be configured in 
 - **Example:** `prj_xxxxxxxxxxxxxxxxxxxxx`
 
 **VERCEL_PRODUCTION_URL** (Optional)
+
 - **Description:** Production URL for E2E tests
 - **Example:** `https://yourdomain.com`
 
 #### Supabase (`supabase-weekly-maintenance.yml`)
 
 **SUPABASE_ACCESS_TOKEN**
+
 - **Description:** Supabase access token for CLI
 - **How to get:**
   1. Go to https://supabase.com/dashboard/account/tokens
@@ -58,6 +63,7 @@ Your GitHub Actions workflows require the following secrets to be configured in 
 - **Example:** `sbp_xxxxxxxxxxxxxxxxxxxxx`
 
 **SUPABASE_PROJECT_REF**
+
 - **Description:** Your Supabase project reference ID
 - **How to get:**
   1. Go to your Supabase project settings
@@ -68,28 +74,33 @@ Your GitHub Actions workflows require the following secrets to be configured in 
 #### Analytics (`daily-analytics.yml`)
 
 **SUPABASE_URL**
+
 - **Description:** Supabase project URL
 - **How to get:** Supabase project settings → API
 - **Example:** `https://xxxxxxxxxxxxx.supabase.co`
 
 **SUPABASE_KEY** or **SUPABASE_SERVICE_ROLE_KEY**
+
 - **Description:** Supabase service role key (for server-side access)
 - **How to get:** Supabase project settings → API → Service Role Key
 - **Warning:** Keep this secret! Never expose in client-side code
 - **Example:** `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
 
 **STRIPE_SECRET_KEY** (Optional, for finance analytics)
+
 - **Description:** Stripe secret key for transaction data
 - **How to get:** Stripe Dashboard → Developers → API keys
 - **Example:** `sk_live_xxxxxxxxxxxxxxxxxxxxx` or `sk_test_xxxxxxxxxxxxxxxxxxxxx`
 
 **GITHUB_TOKEN** (Automatically provided)
+
 - **Description:** GitHub token for committing reports
 - **Note:** Already provided by GitHub Actions, no setup needed
 
 #### Notifications (Optional)
 
 **SLACK_WEBHOOK_URL** (Optional)
+
 - **Description:** Slack webhook URL for notifications
 - **How to get:**
   1. Go to https://api.slack.com/apps
@@ -111,6 +122,7 @@ The workflows are already in `.github/workflows/`. They will run automatically w
 ### 2. Test Workflows
 
 **Test Auto-Deploy:**
+
 ```bash
 # Push to main branch
 git push origin main
@@ -118,12 +130,14 @@ git push origin main
 ```
 
 **Test Daily Analytics (Manual):**
+
 ```bash
 # Go to Actions tab → daily-analytics → Run workflow
 # Or trigger via GitHub API
 ```
 
 **Test Supabase Maintenance (Manual):**
+
 ```bash
 # Go to Actions tab → supabase-weekly-maintenance → Run workflow
 ```
@@ -131,12 +145,14 @@ git push origin main
 ### 3. Verify Secrets
 
 **Check if secrets are set:**
+
 ```bash
 # In GitHub repository settings → Secrets and variables → Actions
 # All required secrets should be listed
 ```
 
 **Test secret access (in workflow):**
+
 ```yaml
 # Add this step temporarily to test
 - name: Test secrets
@@ -151,22 +167,25 @@ git push origin main
 ### Change Schedule Times
 
 **Daily Analytics** (`daily-analytics.yml`):
+
 ```yaml
 schedule:
-  - cron: '0 14 * * *'  # 9 AM EST = 14:00 UTC
+  - cron: '0 14 * * *' # 9 AM EST = 14:00 UTC
   # Change to your preferred time (UTC)
 ```
 
 **Supabase Maintenance** (`supabase-weekly-maintenance.yml`):
+
 ```yaml
 schedule:
-  - cron: '0 7 * * 0'  # Sunday 2 AM EST = 7:00 UTC
+  - cron: '0 7 * * 0' # Sunday 2 AM EST = 7:00 UTC
   # Change to your preferred time (UTC)
 ```
 
 ### Disable Workflows Temporarily
 
 **Option 1:** Comment out trigger in workflow file
+
 ```yaml
 # on:
 #   schedule:
@@ -174,6 +193,7 @@ schedule:
 ```
 
 **Option 2:** Disable in GitHub Settings
+
 - Go to Actions → Workflows → [Workflow Name] → Disable workflow
 
 ## Troubleshooting
@@ -181,6 +201,7 @@ schedule:
 ### Workflow Fails: "Secret not found"
 
 **Solution:**
+
 1. Check repository settings → Secrets
 2. Verify secret name matches exactly (case-sensitive)
 3. Ensure you're checking the correct repository
@@ -189,6 +210,7 @@ schedule:
 ### Workflow Fails: "Vercel authentication error"
 
 **Solution:**
+
 1. Verify `VERCEL_TOKEN` is correct
 2. Check token hasn't expired
 3. Ensure token has correct permissions
@@ -197,6 +219,7 @@ schedule:
 ### Workflow Fails: "Supabase project not found"
 
 **Solution:**
+
 1. Verify `SUPABASE_PROJECT_REF` is correct
 2. Check `SUPABASE_ACCESS_TOKEN` is valid
 3. Ensure token has access to the project
@@ -205,6 +228,7 @@ schedule:
 ### Reports Not Committing
 
 **Solution:**
+
 1. Check `GITHUB_TOKEN` permissions (should be automatic)
 2. Verify workflow has write permissions
 3. Check repository settings → Actions → Workflow permissions
@@ -213,6 +237,7 @@ schedule:
 ### Analytics Scripts Not Running
 
 **Solution:**
+
 1. Check if scripts exist: `scripts/analytics-*.js`
 2. Verify Node.js version (should be 18+)
 3. Check script permissions: `chmod +x scripts/analytics-*.js`
@@ -229,11 +254,13 @@ schedule:
 ## Monitoring
 
 **Check Workflow Status:**
+
 - GitHub Actions tab → See recent runs
 - Set up email notifications for failures
 - Use Slack webhook for real-time alerts
 
 **Review Generated Reports:**
+
 - Check `ops/dashboards/reports/` directory
 - Reports committed daily/weekly
 - Download artifacts from Actions runs

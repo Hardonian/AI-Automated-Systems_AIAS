@@ -1,3 +1,11 @@
 [
-  {"campaign_id":"X9","adset_id":"Y2","date":"2025-10-01","spend_cents":1900,"clicks":90,"impressions":12000,"conv":2}
+  {
+    "campaign_id": "X9",
+    "adset_id": "Y2",
+    "date": "2025-10-01",
+    "spend_cents": 1900,
+    "clicks": 90,
+    "impressions": 12000,
+    "conv": 2
+  }
 ]

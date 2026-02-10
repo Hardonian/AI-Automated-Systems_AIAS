@@ -6,11 +6,12 @@ Speed Insights is already fully integrated and enabled in your application!
 
 ✅ **Installed**: `@vercel/speed-insights@1.3.1`  
 ✅ **Integrated**: Added to `app/layout.tsx`  
-✅ **Active**: Automatically collecting performance data  
+✅ **Active**: Automatically collecting performance data
 
 ## What It Does
 
 Speed Insights automatically tracks:
+
 - **LCP (Largest Contentful Paint)** - Loading performance
 - **FID (First Input Delay)** - Interactivity
 - **CLS (Cumulative Layout Shift)** - Visual stability
@@ -27,6 +28,7 @@ Speed Insights automatically tracks:
 ## How It Works
 
 Speed Insights is a lightweight client-side script that:
+
 - Runs asynchronously (no performance impact)
 - Collects Web Vitals automatically
 - Sends data to Vercel's analytics platform
@@ -37,10 +39,10 @@ Speed Insights is a lightweight client-side script that:
 **Location**: `app/layout.tsx`
 
 ```tsx
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 // In your layout component
-<SpeedInsights />
+<SpeedInsights />;
 ```
 
 ## Benefits
@@ -49,23 +51,27 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 ✅ **Zero configuration** - Works automatically  
 ✅ **Real-time data** - See performance issues immediately  
 ✅ **Actionable insights** - Identifies which pages need optimization  
-✅ **No code changes needed** - Already integrated  
+✅ **No code changes needed** - Already integrated
 
 ## What You Get
 
 ### Performance Dashboard
+
 - Real-time Core Web Vitals
 - Page-by-page breakdown
 - Historical trends
 - Performance scores
 
 ### Alerts
+
 - Automatic notifications for performance regressions
 - Threshold-based alerts
 - Email notifications (configurable)
 
 ### Integration with Analytics
+
 Speed Insights works seamlessly with `@vercel/analytics`:
+
 - Combined dashboard view
 - Cross-reference performance with user behavior
 - Identify performance impact on conversions
@@ -73,6 +79,7 @@ Speed Insights works seamlessly with `@vercel/analytics`:
 ## No Action Required
 
 Speed Insights is **already enabled and working**. You don't need to:
+
 - ❌ Set up environment variables
 - ❌ Configure anything
 - ❌ Write additional code
@@ -107,6 +114,7 @@ To verify Speed Insights is working:
 ### Performance impact?
 
 Speed Insights is designed to have zero performance impact:
+
 - Runs asynchronously
 - Non-blocking
 - Minimal bundle size (~2KB)

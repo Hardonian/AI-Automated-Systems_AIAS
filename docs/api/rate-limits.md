@@ -4,11 +4,11 @@ Rate limits are enforced to ensure fair usage and system stability.
 
 ## Plan Limits
 
-| Plan | Requests/Hour | Requests/Day | Monthly Automations |
-|------|---------------|--------------|---------------------|
-| Free | 100 | 1,000 | 100 |
-| Starter | 1,000 | 10,000 | 10,000 |
-| Pro | 5,000 | 50,000 | 50,000 |
+| Plan    | Requests/Hour | Requests/Day | Monthly Automations |
+| ------- | ------------- | ------------ | ------------------- |
+| Free    | 100           | 1,000        | 100                 |
+| Starter | 1,000         | 10,000       | 10,000              |
+| Pro     | 5,000         | 50,000       | 50,000              |
 
 ## Rate Limit Headers
 
@@ -50,18 +50,18 @@ The `retryAfter` field indicates seconds to wait before retrying.
 ```javascript
 async function makeRequest(url, options = {}) {
   const response = await fetch(url, options);
-  
+
   if (response.status === 429) {
     const data = await response.json();
     const retryAfter = data.retryAfter || 60;
-    
+
     // Wait before retrying
     await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
-    
+
     // Retry request
     return makeRequest(url, options);
   }
-  
+
   return response;
 }
 ```

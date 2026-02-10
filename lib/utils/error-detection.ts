@@ -37,7 +37,11 @@ const DEFAULT_CONFIG: Required<ErrorDetectionConfig> = {
 };
 
 class ErrorDetector {
-  private errors: Array<{ timestamp: Date; error: Error; context: Record<string, unknown> }> = [];
+  private errors: Array<{
+    timestamp: Date;
+    error: Error;
+    context: Record<string, unknown>;
+  }> = [];
   private alerts: ErrorAlert[] = [];
   private config: Required<ErrorDetectionConfig>;
 
@@ -63,7 +67,10 @@ class ErrorDetector {
   /**
    * Check if error thresholds are exceeded
    */
-  private checkThresholds(error: Error, context: Record<string, unknown>): void {
+  private checkThresholds(
+    error: Error,
+    context: Record<string, unknown>
+  ): void {
     const now = new Date();
     const oneMinuteAgo = new Date(now.getTime() - 60 * 1000);
 
@@ -146,7 +153,11 @@ class ErrorDetector {
   /**
    * Get recent errors
    */
-  getRecentErrors(minutes: number = 5): Array<{ timestamp: Date; error: Error; context: Record<string, unknown> }> {
+  getRecentErrors(minutes: number = 5): Array<{
+    timestamp: Date;
+    error: Error;
+    context: Record<string, unknown>;
+  }> {
     const cutoff = new Date(Date.now() - minutes * 60 * 1000);
     return this.errors.filter(e => e.timestamp > cutoff);
   }
@@ -165,7 +176,7 @@ class ErrorDetector {
   private async sendToMonitoringService(alert: ErrorAlert): Promise<void> {
     // Integration with monitoring services
     // Supports Sentry, Datadog, or custom webhook
-    
+
     const monitoringConfig = {
       sentry: process.env.SENTRY_DSN,
       datadog: process.env.DATADOG_API_KEY,
@@ -186,7 +197,11 @@ class ErrorDetector {
     };
 
     // Send to Sentry if configured
-    if (monitoringConfig.sentry && typeof window !== 'undefined' && (window as any).Sentry) {
+    if (
+      monitoringConfig.sentry &&
+      typeof window !== 'undefined' &&
+      (window as any).Sentry
+    ) {
       try {
         (window as any).Sentry.captureException(alert.error, {
           level: alert.severity === 'critical' ? 'error' : 'warning',
@@ -204,13 +219,13 @@ class ErrorDetector {
         // Datadog integration would go here
         // Example: fetch('https://api.datadoghq.com/api/v1/events', { ... })
         // Datadog alert prepared (use logger in production)
-        if (process.env.NODE_ENV === "development") {
-          const { logger } = require("@/lib/utils/logger");
-          logger.debug("Datadog alert", { payload: alertPayload });
+        if (process.env.NODE_ENV === 'development') {
+          const { logger } = require('@/lib/utils/logger');
+          logger.debug('Datadog alert', { payload: alertPayload });
         }
       } catch (e) {
-        const { logger } = require("@/lib/utils/logger");
-        logger.warn("Failed to send to Datadog", e as Error);
+        const { logger } = require('@/lib/utils/logger');
+        logger.warn('Failed to send to Datadog', e as Error);
       }
     }
 
@@ -258,6 +273,9 @@ export const errorDetector = new ErrorDetector();
 /**
  * Record error with automatic detection
  */
-export function recordError(error: Error, context: Record<string, unknown> = {}): void {
+export function recordError(
+  error: Error,
+  context: Record<string, unknown> = {}
+): void {
   errorDetector.recordError(error, context);
 }

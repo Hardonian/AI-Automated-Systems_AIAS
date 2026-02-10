@@ -7,18 +7,21 @@
 ## Morning Routine (15 minutes)
 
 ### 1. System Health Check (5 min)
+
 - [ ] Check GitHub Actions status: https://github.com/YOUR_ORG/YOUR_REPO/actions
 - [ ] Review Supabase dashboard for errors/warnings
 - [ ] Check Vercel deployment status
 - [ ] Review automated reports in `/ops/dashboards/reports/` (if generated)
 
 ### 2. Analytics Overview (5 min)
+
 - [ ] Check marketing dashboard for new leads
 - [ ] Review finance dashboard for yesterday's revenue (CAD)
 - [ ] Scan KPI tracker for anomalies
 - [ ] Check automated email/slack notifications for critical alerts
 
 ### 3. Quick Actions (5 min)
+
 - [ ] Address any urgent support tickets (if any)
 - [ ] Review automated social posts scheduled for today
 - [ ] Check for pending grant/investor application deadlines
@@ -27,6 +30,7 @@
 ## What Runs Automatically
 
 ### Daily (Automated)
+
 - ✅ Analytics scripts run → commit reports to `/ops/dashboards/reports/`
 - ✅ Supabase billing snapshot → updates finance dashboard
 - ✅ Form submissions → Notion CRM + Gmail follow-up
@@ -35,12 +39,14 @@
 - ✅ Database backups → Supabase scheduled backups
 
 ### Weekly (Automated)
+
 - ✅ Supabase migration + backup weekly (Sunday 2 AM EST)
 - ✅ Weekly analytics summary report generation
 - ✅ Automated investor CRM updates (if configured)
 - ✅ Community engagement posts (if scheduled)
 
 ### Monthly (Automated)
+
 - ✅ Finance dashboard export for tax prep (CAD)
 - ✅ Grant application deadline reminders
 - ✅ Vendor contract renewal reminders
@@ -50,12 +56,14 @@
 If automation fails:
 
 1. **Analytics Reports Not Generated**
+
    ```bash
    npm run ops snapshot
    # Manually run analytics scripts if needed
    ```
 
 2. **Supabase Backup Failed**
+
    ```bash
    supabase db dump -f backup-$(date +%Y%m%d).sql
    ```
@@ -73,6 +81,7 @@ If automation fails:
 ## Offline Mode
 
 If internet connection is unavailable:
+
 - Reports export to `/ops/logs/offline-YYYYMMDD.csv`
 - Sync to Supabase when connection restored
 - Audit logs maintained locally in `/ops/logs/`
@@ -99,6 +108,7 @@ node scripts/sync-marketing.js
 ## Success Metrics
 
 Daily targets:
+
 - ✅ 0 critical errors in logs
 - ✅ All automated workflows showing "success" status
 - ✅ < 5 minutes manual intervention needed

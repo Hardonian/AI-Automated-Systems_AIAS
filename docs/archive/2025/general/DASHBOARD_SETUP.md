@@ -7,6 +7,7 @@
 ## Overview
 
 Three dashboard templates are provided:
+
 1. **Marketing Dashboard** - Social media & lead tracking
 2. **Finance Dashboard** - Revenue & expenses (CAD)
 3. **KPI Tracker** - Key performance indicators
@@ -39,11 +40,13 @@ Three dashboard templates are provided:
 ### Setup Steps
 
 **1. Import Template**
+
 - Copy `ops/dashboards/marketing-dashboard-template.csv`
 - Import to Google Sheets/Excel
 - Rename sheet: "Marketing Dashboard"
 
 **2. Add Columns** (if needed)
+
 - Campaign Name
 - Budget
 - Cost per Lead
@@ -53,6 +56,7 @@ Three dashboard templates are provided:
 **3. Set Up Data Sources**
 
 **From Social Media APIs:**
+
 ```javascript
 // Example: LinkedIn API integration
 // Use Zapier/Make to auto-populate
@@ -60,12 +64,14 @@ Three dashboard templates are provided:
 ```
 
 **From Analytics:**
+
 ```javascript
 // Google Analytics → Export → Import to Sheet
 // Or use Google Analytics API
 ```
 
 **From CRM:**
+
 ```javascript
 // Notion/Airtable → Export → Import
 // Or use API integration
@@ -74,21 +80,25 @@ Three dashboard templates are provided:
 **4. Add Formulas**
 
 **Total Engagement:**
+
 ```excel
 =SUM(E2:E1000)
 ```
 
 **Average CTR:**
+
 ```excel
 =AVERAGE(G2:G1000)
 ```
 
 **Total Leads Generated:**
+
 ```excel
 =SUM(I2:I1000)
 ```
 
 **ROI Calculation:**
+
 ```excel
 =IF(J2>0, (I2*50-J2)/J2, 0)
 // Assumes $50 average lead value
@@ -103,11 +113,13 @@ Three dashboard templates are provided:
 **6. Set Up Automation**
 
 **Via Zapier/Make:**
+
 - Trigger: New social post published
 - Action: Append row to Google Sheet
 - Map fields from social platform
 
 **Via Google Apps Script:**
+
 ```javascript
 // Example script to fetch from API
 function updateMarketingDashboard() {
@@ -122,6 +134,7 @@ function updateMarketingDashboard() {
 ### Setup Steps
 
 **1. Import Template**
+
 - Copy `ops/dashboards/finance-dashboard-template.csv`
 - Import to Google Sheets/Excel
 - Rename sheet: "Finance Dashboard"
@@ -129,11 +142,13 @@ function updateMarketingDashboard() {
 **2. Connect to Stripe**
 
 **Option A: Stripe Export**
+
 1. Stripe Dashboard → Reports → Export
 2. Import CSV to sheet
 3. Set up daily/weekly export
 
 **Option B: Stripe API**
+
 ```javascript
 // Via Zapier/Make:
 // Trigger: Payment Succeeded
@@ -141,23 +156,26 @@ function updateMarketingDashboard() {
 
 // Via Apps Script:
 const stripe = require('stripe')(STRIPE_SECRET_KEY);
-const charges = await stripe.charges.list({limit: 100});
+const charges = await stripe.charges.list({ limit: 100 });
 // Import to sheet
 ```
 
 **3. Add GST/HST Calculation**
 
 **GST (5%) Calculation:**
+
 ```excel
 =IF(OR(LEFT(A2,2)="AB", LEFT(A2,2)="BC", LEFT(A2,2)="MB", LEFT(A2,2)="NT", LEFT(A2,2)="NU", LEFT(A2,2)="QC", LEFT(A2,2)="SK", LEFT(A2,2)="YT"), E2*0.05, E2*0.13)
 ```
 
 **HST (13%) Calculation:**
+
 ```excel
 =IF(OR(LEFT(A2,2)="ON", LEFT(A2,2)="NB", LEFT(A2,2)="NL", LEFT(A2,2)="NS", LEFT(A2,2)="PE"), E2*0.13, E2*0.05)
 ```
 
 **Total with Tax:**
+
 ```excel
 =E2+F2
 ```
@@ -165,21 +183,25 @@ const charges = await stripe.charges.list({limit: 100});
 **4. Add Summary Formulas**
 
 **Total Revenue (This Month):**
+
 ```excel
 =SUMIF(A:A, ">="&EOMONTH(TODAY(),-1)+1, E:E)
 ```
 
 **Total Revenue (This Year):**
+
 ```excel
 =SUMIF(YEAR(A:A), YEAR(TODAY()), E:E)
 ```
 
 **Average Transaction Value:**
+
 ```excel
 =AVERAGE(E:E)
 ```
 
 **MRR (Monthly Recurring Revenue):**
+
 ```excel
 =SUMIFS(E:E, F:F, "Monthly subscription", A:A, ">="&EOMONTH(TODAY(),-1)+1)
 ```
@@ -187,6 +209,7 @@ const charges = await stripe.charges.list({limit: 100});
 **5. Create Financial Reports**
 
 **Monthly Summary Sheet:**
+
 ```excel
 Month: January 2025
 Total Revenue: $X,XXX CAD
@@ -199,6 +222,7 @@ HST Collected: $XX CAD
 **6. Set Up Automation**
 
 **Via Stripe Webhook:**
+
 ```yaml
 # Zapier/Make workflow:
 # Trigger: Stripe Payment Succeeded
@@ -207,6 +231,7 @@ HST Collected: $XX CAD
 ```
 
 **Via Supabase Function:**
+
 ```sql
 -- Create function to sync Stripe → Supabase → Sheet
 CREATE OR REPLACE FUNCTION sync_stripe_transaction()
@@ -224,6 +249,7 @@ $$ LANGUAGE plpgsql;
 ### Setup Steps
 
 **1. Import Template**
+
 - Copy `ops/dashboards/kpi-tracker-template.csv`
 - Import to Google Sheets/Excel
 - Rename sheet: "KPI Tracker"
@@ -231,59 +257,66 @@ $$ LANGUAGE plpgsql;
 **2. Connect Data Sources**
 
 **User Metrics (Supabase):**
+
 ```sql
 -- Active users (last 30 days)
-SELECT COUNT(DISTINCT user_id) 
-FROM users 
+SELECT COUNT(DISTINCT user_id)
+FROM users
 WHERE last_active_at > NOW() - INTERVAL '30 days';
 
 -- New signups (today)
-SELECT COUNT(*) 
-FROM users 
+SELECT COUNT(*)
+FROM users
 WHERE created_at::date = CURRENT_DATE;
 ```
 
 **Revenue Metrics (Stripe/Supabase):**
+
 ```sql
 -- MRR
-SELECT SUM(amount) 
-FROM subscriptions 
-WHERE status = 'active' 
+SELECT SUM(amount)
+FROM subscriptions
+WHERE status = 'active'
 AND billing_period = 'month';
 ```
 
 **Support Metrics (Helpdesk):**
+
 ```sql
 -- Open tickets
-SELECT COUNT(*) 
-FROM support_tickets 
+SELECT COUNT(*)
+FROM support_tickets
 WHERE status = 'open';
 
 -- Average response time
-SELECT AVG(response_time_hours) 
-FROM support_tickets 
+SELECT AVG(response_time_hours)
+FROM support_tickets
 WHERE resolved_at IS NOT NULL;
 ```
 
 **3. Add Formulas**
 
 **Growth Rate (MoM):**
+
 ```excel
 =(B3-B2)/B2*100
 ```
 
 **Churn Rate:**
+
 ```excel
 =IF(B2>0, (B2-B3)/B2*100, 0)
 ```
 
 **Customer LTV:**
+
 ```excel
 =B4/B6*12
 // MRR / Churn Rate * 12 months
 ```
 
 **Conversion Rate:**
+
 ```excel
 =IF(B2>0, B2/B1*100, 0)
 // Signups / Visitors * 100
@@ -298,6 +331,7 @@ WHERE resolved_at IS NOT NULL;
 **5. Set Up Daily Updates**
 
 **Via Analytics Script:**
+
 ```bash
 # Run daily via GitHub Actions
 node scripts/analytics-kpi.js
@@ -306,6 +340,7 @@ node scripts/analytics-kpi.js
 ```
 
 **Via Zapier/Make:**
+
 ```yaml
 # Daily workflow:
 # Trigger: Schedule (daily 9 AM)
@@ -319,6 +354,7 @@ node scripts/analytics-kpi.js
 ### Option 1: Google Sheets + Apps Script
 
 **Set up refresh trigger:**
+
 ```javascript
 function refreshDashboard() {
   // Fetch data from APIs
@@ -333,6 +369,7 @@ function refreshDashboard() {
 ### Option 2: Airtable + Automations
 
 **Set up automation:**
+
 1. Create automation
 2. Trigger: Schedule (hourly)
 3. Actions: Update records from API
@@ -341,6 +378,7 @@ function refreshDashboard() {
 ### Option 3: Supabase + Google Sheets
 
 **Use Supabase webhooks:**
+
 ```sql
 -- Create webhook function
 CREATE OR REPLACE FUNCTION update_google_sheet()
@@ -358,6 +396,7 @@ $$ LANGUAGE plpgsql;
 ### Stripe Integration
 
 **Get Transactions:**
+
 ```javascript
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
@@ -365,16 +404,16 @@ async function getTransactions() {
   const charges = await stripe.charges.list({
     limit: 100,
     created: {
-      gte: Math.floor(Date.now() / 1000) - 86400 // Last 24 hours
-    }
+      gte: Math.floor(Date.now() / 1000) - 86400, // Last 24 hours
+    },
   });
-  
+
   return charges.data.map(charge => ({
     date: new Date(charge.created * 1000).toISOString().split('T')[0],
     transaction_id: charge.id,
     customer_email: charge.billing_details.email,
     amount_cad: charge.amount / 100, // Convert from cents
-    status: charge.status
+    status: charge.status,
   }));
 }
 ```
@@ -382,6 +421,7 @@ async function getTransactions() {
 ### Supabase Integration
 
 **Get User Metrics:**
+
 ```javascript
 const { createClient } = require('@supabase/supabase-js');
 
@@ -394,13 +434,16 @@ async function getUserMetrics() {
   const { data: users } = await supabase
     .from('users')
     .select('id, created_at, last_active_at')
-    .gte('last_active_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
-  
+    .gte(
+      'last_active_at',
+      new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+    );
+
   return {
     active_users: users.length,
-    new_signups: users.filter(u => 
-      new Date(u.created_at) > new Date(Date.now() - 24 * 60 * 60 * 1000)
-    ).length
+    new_signups: users.filter(
+      u => new Date(u.created_at) > new Date(Date.now() - 24 * 60 * 60 * 1000)
+    ).length,
   };
 }
 ```
@@ -408,6 +451,7 @@ async function getUserMetrics() {
 ### Google Analytics Integration
 
 **Get Analytics Data:**
+
 ```javascript
 // Using Google Analytics API
 const { google } = require('googleapis');
@@ -415,13 +459,13 @@ const { google } = require('googleapis');
 async function getAnalyticsData() {
   const analytics = google.analytics('v3');
   const response = await analytics.data.ga.get({
-    'auth': auth,
-    'ids': 'ga:' + profileId,
+    auth: auth,
+    ids: 'ga:' + profileId,
     'start-date': '30daysAgo',
     'end-date': 'today',
-    'metrics': 'ga:sessions,ga:users,ga:pageviews'
+    metrics: 'ga:sessions,ga:users,ga:pageviews',
   });
-  
+
   return response.data;
 }
 ```
@@ -431,6 +475,7 @@ async function getAnalyticsData() {
 ### Data Not Updating
 
 **Check:**
+
 - API keys are correct
 - Permissions are set correctly
 - Automation is running
@@ -439,12 +484,14 @@ async function getAnalyticsData() {
 ### Formulas Not Working
 
 **Common Issues:**
+
 - Cell format (text vs. number)
 - Date format inconsistencies
 - Missing data causing errors
 - Circular references
 
 **Solutions:**
+
 - Format cells as numbers/dates
 - Use IFERROR() to handle errors
 - Check for null/empty values
@@ -452,6 +499,7 @@ async function getAnalyticsData() {
 ### Automation Failing
 
 **Check:**
+
 - Zapier/Make execution logs
 - API rate limits
 - Authentication tokens

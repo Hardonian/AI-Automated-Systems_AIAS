@@ -1,5 +1,5 @@
-"use client";
-import { useEffect, useState } from "react";
+'use client';
+import { useEffect, useState } from 'react';
 export default function LiveVisitors() {
   const [count, setCount] = useState(0);
   useEffect(() => {
@@ -9,5 +9,9 @@ export default function LiveVisitors() {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
-  return <div className="text-sm text-muted-foreground">👥 {count || "—"} online</div>;
+  return (
+    <div className='text-sm text-muted-foreground'>
+      👥 {count || '—'} online
+    </div>
+  );
 }

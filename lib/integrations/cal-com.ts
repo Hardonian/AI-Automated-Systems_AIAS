@@ -44,7 +44,7 @@ export async function createCalComBooking(
     const response = await fetch('https://api.cal.com/v1/bookings', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${calComApiKey}`,
+        Authorization: `Bearer ${calComApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -66,11 +66,13 @@ export async function createCalComBooking(
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(`Cal.com API error: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`);
+      throw new Error(
+        `Cal.com API error: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`
+      );
     }
 
     const event = await response.json();
-    
+
     logger.info('Cal.com booking created', {
       bookingId: event.id,
       email: booking.email,
@@ -86,7 +88,10 @@ export async function createCalComBooking(
       description: event.description,
     };
   } catch (error) {
-    const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+    const errorObj: Error =
+      (error as any) instanceof Error
+        ? (error as Error)
+        : new Error(String(error));
     logger.error('Failed to create Cal.com booking', errorObj, {
       booking: booking.email,
     });
@@ -103,12 +108,14 @@ export async function getCalComEventTypes(
   try {
     const response = await fetch('https://api.cal.com/v1/event-types', {
       headers: {
-        'Authorization': `Bearer ${calComApiKey}`,
+        Authorization: `Bearer ${calComApiKey}`,
       },
     });
 
     if (!response.ok) {
-      throw new Error(`Cal.com API error: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Cal.com API error: ${response.status} ${response.statusText}`
+      );
     }
 
     const data = await response.json();
@@ -118,7 +125,10 @@ export async function getCalComEventTypes(
       length: eventType.length,
     }));
   } catch (error) {
-    const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+    const errorObj: Error =
+      (error as any) instanceof Error
+        ? (error as Error)
+        : new Error(String(error));
     logger.error('Failed to fetch Cal.com event types', errorObj);
     throw error;
   }

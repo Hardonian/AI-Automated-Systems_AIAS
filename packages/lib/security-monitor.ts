@@ -87,8 +87,12 @@ export enum AlertStatus {
 
 export class SecurityMonitor {
   private threatRules: Map<string, ThreatDetectionRule> = new Map();
-  private rateLimiters: Map<string, { count: number; resetTime: number }> = new Map();
-  private userSessions: Map<string, { lastActivity: Date; ipAddress: string; userAgent: string }> = new Map();
+  private rateLimiters: Map<string, { count: number; resetTime: number }> =
+    new Map();
+  private userSessions: Map<
+    string,
+    { lastActivity: Date; ipAddress: string; userAgent: string }
+  > = new Map();
 
   constructor() {
     this.initializeDefaultRules();
@@ -147,23 +151,27 @@ export class SecurityMonitor {
     });
   }
 
-  async logSecurityEvent(event: Omit<SecurityEvent, 'id' | 'timestamp' | 'resolved'>): Promise<SecurityEvent> {
+  async logSecurityEvent(
+    event: Omit<SecurityEvent, 'id' | 'timestamp' | 'resolved'>
+  ): Promise<SecurityEvent> {
     const securityEvent = await prisma.webhookEvent.create({
       data: {
         source: 'security-monitor',
         event: event.type,
-        payload: JSON.parse(JSON.stringify({
-          type: event.type,
-          severity: event.severity,
-          source: event.source,
-          description: event.description,
-          metadata: event.metadata || {},
-          userId: event.userId,
-          orgId: event.orgId,
-          ipAddress: event.ipAddress,
-          userAgent: event.userAgent,
-          timestamp: new Date(),
-        })),
+        payload: JSON.parse(
+          JSON.stringify({
+            type: event.type,
+            severity: event.severity,
+            source: event.source,
+            description: event.description,
+            metadata: event.metadata || {},
+            userId: event.userId,
+            orgId: event.orgId,
+            ipAddress: event.ipAddress,
+            userAgent: event.userAgent,
+            timestamp: new Date(),
+          })
+        ),
         orgId: event.orgId || 'security',
       },
     });
@@ -192,7 +200,9 @@ export class SecurityMonitor {
 
   private async checkThreatRules(event: SecurityEvent): Promise<void> {
     for (const rule of this.threatRules.values()) {
-      if (!rule.enabled) {continue;}
+      if (!rule.enabled) {
+        continue;
+      }
 
       if (await this.matchesRule(event, rule)) {
         await this.executeRuleActions(event, rule);
@@ -200,7 +210,10 @@ export class SecurityMonitor {
     }
   }
 
-  private async matchesRule(event: SecurityEvent, rule: ThreatDetectionRule): Promise<boolean> {
+  private async matchesRule(
+    event: SecurityEvent,
+    rule: ThreatDetectionRule
+  ): Promise<boolean> {
     const [patternType, ...params] = rule.pattern.split(':');
 
     switch (patternType) {
@@ -217,11 +230,16 @@ export class SecurityMonitor {
     }
   }
 
-  private async checkLoginFailurePattern(event: SecurityEvent, params: string[]): Promise<boolean> {
-    if (event.type !== SecurityEventType.LOGIN_FAILURE) {return false;}
+  private async checkLoginFailurePattern(
+    event: SecurityEvent,
+    params: string[]
+  ): Promise<boolean> {
+    if (event.type !== SecurityEventType.LOGIN_FAILURE) {
+      return false;
+    }
 
-    const maxFailures = parseInt(params[0] || "0");
-    const timeWindow = parseInt(params[1] || "0") * 1000; // Convert to milliseconds
+    const maxFailures = parseInt(params[0] || '0');
+    const timeWindow = parseInt(params[1] || '0') * 1000; // Convert to milliseconds
     const now = Date.now();
 
     // Get recent login failures for this IP
@@ -248,7 +266,9 @@ export class SecurityMonitor {
   }
 
   private async checkGeographicAnomaly(event: SecurityEvent): Promise<boolean> {
-    if (!event.metadata.country || !event.metadata.previousCountries) {return false;}
+    if (!event.metadata.country || !event.metadata.previousCountries) {
+      return false;
+    }
 
     const currentCountry = event.metadata.country as string;
     const previousCountries = event.metadata.previousCountries as string[];
@@ -257,9 +277,12 @@ export class SecurityMonitor {
     return !previousCountries.includes(currentCountry);
   }
 
-  private async checkApiRateLimit(event: SecurityEvent, params: string[]): Promise<boolean> {
-    const maxCalls = parseInt(params[0] || "0");
-    const timeWindow = parseInt(params[1] || "0") * 1000; // Convert to milliseconds
+  private async checkApiRateLimit(
+    event: SecurityEvent,
+    params: string[]
+  ): Promise<boolean> {
+    const maxCalls = parseInt(params[0] || '0');
+    const timeWindow = parseInt(params[1] || '0') * 1000; // Convert to milliseconds
     const now = Date.now();
 
     const key = `${event.userId || event.ipAddress}:api_calls`;
@@ -291,11 +314,17 @@ export class SecurityMonitor {
     return maliciousPatterns.some(pattern => pattern.test(requestData));
   }
 
-  private async executeRuleActions(event: SecurityEvent, rule: ThreatDetectionRule): Promise<void> {
+  private async executeRuleActions(
+    event: SecurityEvent,
+    rule: ThreatDetectionRule
+  ): Promise<void> {
     for (const action of rule.actions) {
       switch (action) {
         case SecurityAction.LOG:
-          logger.info({ eventType: event.type, description: event.description }, 'Security event logged');
+          logger.info(
+            { eventType: event.type, description: event.description },
+            'Security event logged'
+          );
           break;
 
         case SecurityAction.ALERT:
@@ -329,7 +358,10 @@ export class SecurityMonitor {
     }
   }
 
-  private async createSecurityAlert(event: SecurityEvent, rule: ThreatDetectionRule): Promise<void> {
+  private async createSecurityAlert(
+    event: SecurityEvent,
+    rule: ThreatDetectionRule
+  ): Promise<void> {
     const alert = await prisma.webhookEvent.create({
       data: {
         source: 'security-alert',
@@ -379,33 +411,47 @@ export class SecurityMonitor {
     });
   }
 
-  private async notifyAdmin(event: SecurityEvent, rule: ThreatDetectionRule): Promise<void> {
+  private async notifyAdmin(
+    event: SecurityEvent,
+    rule: ThreatDetectionRule
+  ): Promise<void> {
     // Send notification to admin users
-    logger.info({ ruleName: rule.name, description: event.description }, 'Admin notification sent');
-    
+    logger.info(
+      { ruleName: rule.name, description: event.description },
+      'Admin notification sent'
+    );
+
     // In a real implementation, this would send emails, Slack messages, etc.
   }
 
   private async suspendUser(userId: string): Promise<void> {
     // Suspend user account
     logger.warn({ userId }, 'User suspended due to security threat');
-    
+
     // In a real implementation, this would update the user's status in the database
   }
 
   private async require2FA(userId: string): Promise<void> {
     // Require 2FA for next login
     logger.info({ userId }, '2FA required for user');
-    
+
     // In a real implementation, this would set a flag in the user's record
   }
 
-  private async sendRealTimeAlert(alertId: string, _event: SecurityEvent, _rule: ThreatDetectionRule): Promise<void> {
+  private async sendRealTimeAlert(
+    alertId: string,
+    _event: SecurityEvent,
+    _rule: ThreatDetectionRule
+  ): Promise<void> {
     // Send real-time alert via WebSocket or similar
     logger.info({ alertId }, 'Real-time alert sent');
   }
 
-  async getSecurityEvents(orgId: string, limit = 50, offset = 0): Promise<SecurityEvent[]> {
+  async getSecurityEvents(
+    orgId: string,
+    limit = 50,
+    offset = 0
+  ): Promise<SecurityEvent[]> {
     const events = await prisma.webhookEvent.findMany({
       where: {
         source: 'security-monitor',
@@ -416,35 +462,73 @@ export class SecurityMonitor {
       skip: offset,
     });
 
-    return events.map((event: { id: string; event: unknown; payload: unknown; orgId: string; createdAt: Date }) => {
-      const payload = event.payload && typeof event.payload === 'object' && !Array.isArray(event.payload)
-        ? event.payload as Record<string, unknown>
-        : {};
-      const severityValue = typeof payload.severity === 'string' && Object.values(SecuritySeverity).includes(payload.severity as SecuritySeverity)
-        ? payload.severity as SecuritySeverity
-        : SecuritySeverity.LOW;
-      return {
-        id: event.id,
-        type: (typeof event.event === 'string' ? event.event : 'SUSPICIOUS_ACTIVITY') as SecurityEventType,
-        severity: severityValue,
-        source: typeof payload.source === 'string' ? payload.source : 'unknown',
-        description: typeof payload.description === 'string' ? payload.description : '',
-        metadata: (payload.metadata && typeof payload.metadata === 'object' && !Array.isArray(payload.metadata)
-          ? payload.metadata as Record<string, unknown>
-          : {}) || {},
-        userId: typeof payload.userId === 'string' ? payload.userId : undefined,
-        orgId: event.orgId,
-        ipAddress: typeof payload.ipAddress === 'string' ? payload.ipAddress : undefined,
-        userAgent: typeof payload.userAgent === 'string' ? payload.userAgent : undefined,
-        timestamp: event.createdAt,
-        resolved: typeof payload.resolved === 'boolean' ? payload.resolved : false,
-        resolvedAt: payload.resolvedAt ? new Date(String(payload.resolvedAt)) : undefined,
-        resolvedBy: typeof payload.resolvedBy === 'string' ? payload.resolvedBy : undefined,
-      };
-    });
+    return events.map(
+      (event: {
+        id: string;
+        event: unknown;
+        payload: unknown;
+        orgId: string;
+        createdAt: Date;
+      }) => {
+        const payload =
+          event.payload &&
+          typeof event.payload === 'object' &&
+          !Array.isArray(event.payload)
+            ? (event.payload as Record<string, unknown>)
+            : {};
+        const severityValue =
+          typeof payload.severity === 'string' &&
+          Object.values(SecuritySeverity).includes(
+            payload.severity as SecuritySeverity
+          )
+            ? (payload.severity as SecuritySeverity)
+            : SecuritySeverity.LOW;
+        return {
+          id: event.id,
+          type: (typeof event.event === 'string'
+            ? event.event
+            : 'SUSPICIOUS_ACTIVITY') as SecurityEventType,
+          severity: severityValue,
+          source:
+            typeof payload.source === 'string' ? payload.source : 'unknown',
+          description:
+            typeof payload.description === 'string' ? payload.description : '',
+          metadata:
+            (payload.metadata &&
+            typeof payload.metadata === 'object' &&
+            !Array.isArray(payload.metadata)
+              ? (payload.metadata as Record<string, unknown>)
+              : {}) || {},
+          userId:
+            typeof payload.userId === 'string' ? payload.userId : undefined,
+          orgId: event.orgId,
+          ipAddress:
+            typeof payload.ipAddress === 'string'
+              ? payload.ipAddress
+              : undefined,
+          userAgent:
+            typeof payload.userAgent === 'string'
+              ? payload.userAgent
+              : undefined,
+          timestamp: event.createdAt,
+          resolved:
+            typeof payload.resolved === 'boolean' ? payload.resolved : false,
+          resolvedAt: payload.resolvedAt
+            ? new Date(String(payload.resolvedAt))
+            : undefined,
+          resolvedBy:
+            typeof payload.resolvedBy === 'string'
+              ? payload.resolvedBy
+              : undefined,
+        };
+      }
+    );
   }
 
-  async getSecurityStats(orgId: string, days = 30): Promise<{
+  async getSecurityStats(
+    orgId: string,
+    days = 30
+  ): Promise<{
     totalEvents: number;
     criticalEvents: number;
     highEvents: number;
@@ -498,11 +582,14 @@ export class SecurityMonitor {
       resolvedEvents,
       unresolvedEvents: totalEvents - resolvedEvents,
       criticalRate: totalEvents > 0 ? (criticalEvents / totalEvents) * 100 : 0,
-      resolutionRate: totalEvents > 0 ? (resolvedEvents / totalEvents) * 100 : 0,
+      resolutionRate:
+        totalEvents > 0 ? (resolvedEvents / totalEvents) * 100 : 0,
     };
   }
 
-  async addThreatRule(rule: Omit<ThreatDetectionRule, 'id' | 'createdAt' | 'updatedAt'>): Promise<ThreatDetectionRule> {
+  async addThreatRule(
+    rule: Omit<ThreatDetectionRule, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<ThreatDetectionRule> {
     const newRule: ThreatDetectionRule = {
       ...rule,
       id: `rule_${Date.now()}`,
@@ -514,9 +601,14 @@ export class SecurityMonitor {
     return newRule;
   }
 
-  async updateThreatRule(id: string, updates: Partial<ThreatDetectionRule>): Promise<ThreatDetectionRule | null> {
+  async updateThreatRule(
+    id: string,
+    updates: Partial<ThreatDetectionRule>
+  ): Promise<ThreatDetectionRule | null> {
     const rule = this.threatRules.get(id);
-    if (!rule) {return null;}
+    if (!rule) {
+      return null;
+    }
 
     const updatedRule = {
       ...rule,
@@ -561,7 +653,9 @@ export class SecurityMonitor {
 
   async isRateLimited(key: string): Promise<boolean> {
     const rateLimit = this.rateLimiters.get(key);
-    if (!rateLimit) {return false;}
+    if (!rateLimit) {
+      return false;
+    }
 
     return Date.now() < rateLimit.resetTime;
   }

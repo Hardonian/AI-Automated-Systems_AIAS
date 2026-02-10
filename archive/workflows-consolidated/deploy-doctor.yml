@@ -45,16 +45,16 @@ jobs:
           script: |
             const fs = require('fs');
             const { execSync } = require('child_process');
-            
+
             let output = '';
             try {
               output = execSync('pnpm run deploy:doctor', { encoding: 'utf-8' });
             } catch (error) {
               output = error.stdout || error.message;
             }
-            
+
             const body = `## 🔍 Deploy Doctor Results\n\n\`\`\`\n${output}\n\`\`\`\n\nRun \`pnpm run deploy:doctor\` locally to see full diagnostics.`;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,

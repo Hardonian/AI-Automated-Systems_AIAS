@@ -32,13 +32,13 @@ export const validationSchemas = {
 export function sanitizeInput(input: string): string {
   // Remove null bytes
   let sanitized = input.replace(/\0/g, '');
-  
+
   // Trim whitespace
   sanitized = sanitized.trim();
-  
+
   // Remove control characters except newlines and tabs
   sanitized = sanitized.replace(/[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]/g, '');
-  
+
   return sanitized;
 }
 
@@ -54,26 +54,49 @@ export function sanitizeHTML(html: string): string {
     .replace(/javascript:/gi, '')
     .replace(/<link[^>]*>/gi, '')
     .replace(/<meta[^>]*>/gi, '');
-  
+
   // Allow only safe tags
-  const allowedTags = ['p', 'br', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+  const allowedTags = [
+    'p',
+    'br',
+    'strong',
+    'em',
+    'u',
+    'a',
+    'ul',
+    'ol',
+    'li',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+  ];
   const tagPattern = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
   sanitized = sanitized.replace(tagPattern, (match, tag) => {
     if (allowedTags.includes(tag.toLowerCase())) {
       // Only allow href attribute on anchor tags
       if (tag.toLowerCase() === 'a') {
-        return match.replace(/href\s*=\s*["']([^"']*)["']/gi, (hrefMatch, url) => {
-          if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) {
-            return hrefMatch;
+        return match.replace(
+          /href\s*=\s*["']([^"']*)["']/gi,
+          (hrefMatch, url) => {
+            if (
+              url.startsWith('http://') ||
+              url.startsWith('https://') ||
+              url.startsWith('/')
+            ) {
+              return hrefMatch;
+            }
+            return '';
           }
-          return '';
-        });
+        );
       }
       return match;
     }
     return '';
   });
-  
+
   return sanitized;
 }
 
@@ -86,14 +109,16 @@ export function validateInput<T>(
 ): { success: true; data: T } | { success: false; error: string } {
   try {
     const result = schema.safeParse(input);
-    
+
     if (result.success) {
       return { success: true, data: result.data };
     }
-    
+
     return {
       success: false,
-      error: result.error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', '),
+      error: result.error.errors
+        .map(e => `${e.path.join('.')}: ${e.message}`)
+        .join(', '),
     };
   } catch (error) {
     return {
@@ -114,7 +139,7 @@ export function detectSQLInjection(input: string): boolean {
     /(\b(UNION|JOIN)\b)/i,
     /('|"|;|--)/,
   ];
-  
+
   return sqlPatterns.some(pattern => pattern.test(input));
 }
 
@@ -132,7 +157,7 @@ export function detectXSS(input: string): boolean {
     /<link[^>]*>/gi,
     /<meta[^>]*>/gi,
   ];
-  
+
   return xssPatterns.some(pattern => pattern.test(input));
 }
 
@@ -144,11 +169,11 @@ export function validateRequestBody<T>(
   body: unknown
 ): T {
   const result = validateInput(schema, body);
-  
+
   if (!result.success) {
     throw new Error(`Invalid request body: ${result.error}`);
   }
-  
+
   return result.data;
 }
 
@@ -159,11 +184,11 @@ export function sanitizeObject<T>(obj: T): T {
   if (typeof obj === 'string') {
     return sanitizeInput(obj) as T;
   }
-  
+
   if (Array.isArray(obj)) {
     return obj.map(item => sanitizeObject(item)) as T;
   }
-  
+
   if (obj && typeof obj === 'object') {
     const sanitized = {} as T;
     for (const [key, value] of Object.entries(obj)) {
@@ -171,18 +196,22 @@ export function sanitizeObject<T>(obj: T): T {
     }
     return sanitized;
   }
-  
+
   return obj;
 }
 
 /**
  * Check request size limits
  */
-export function checkRequestSize(body: string | object, maxSize: number = 1024 * 1024): boolean {
-  const size = typeof body === 'string' 
-    ? Buffer.byteLength(body, 'utf8')
-    : Buffer.byteLength(JSON.stringify(body), 'utf8');
-  
+export function checkRequestSize(
+  body: string | object,
+  maxSize: number = 1024 * 1024
+): boolean {
+  const size =
+    typeof body === 'string'
+      ? Buffer.byteLength(body, 'utf8')
+      : Buffer.byteLength(JSON.stringify(body), 'utf8');
+
   return size <= maxSize;
 }
 
@@ -218,9 +247,10 @@ export const securityHeaders = {
  */
 export function validateAPIKey(apiKey: string): boolean {
   // API keys should be UUIDs or base64-encoded strings
-  const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const uuidPattern =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   const base64Pattern = /^[A-Za-z0-9+/]{32,}={0,2}$/;
-  
+
   return uuidPattern.test(apiKey) || base64Pattern.test(apiKey);
 }
 
@@ -229,7 +259,10 @@ export function validateAPIKey(apiKey: string): boolean {
  */
 export function maskSensitiveData(data: string): string {
   return data
-    .replace(/(password|pwd|secret|token|api[_-]?key|auth[_-]?token)=[^&\s]+/gi, '$1=***')
+    .replace(
+      /(password|pwd|secret|token|api[_-]?key|auth[_-]?token)=[^&\s]+/gi,
+      '$1=***'
+    )
     .replace(/(\d{4}[-\s]?){3}\d{4}/g, '****-****-****-****') // Credit card
     .replace(/\b\d{3}-\d{2}-\d{4}\b/g, '***-**-****'); // SSN
 }

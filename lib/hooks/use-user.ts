@@ -1,35 +1,35 @@
 /**
  * User Hook with React Query
- * 
+ *
  * Provides user authentication state and user data using React Query.
  * Replaces the manual useState/useEffect pattern with proper caching.
  */
 
-"use client";
+'use client';
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 import {
   getCurrentUser,
   onAuthStateChange,
   getUserProfile,
   type UserProfile,
-} from "@/lib/data/api/user";
-import { queryKeys } from "@/lib/data/queryKeys";
+} from '@/lib/data/api/user';
+import { queryKeys } from '@/lib/data/queryKeys';
 
 /**
  * Hook to get current authenticated user
- * 
+ *
  * @returns User data with loading/error states
- * 
+ *
  * @example
  * ```tsx
  * const { data: user, isLoading, isError } = useUser();
- * 
+ *
  * if (isLoading) return <LoadingState />;
  * if (isError || !user) return <SignInPrompt />;
- * 
+ *
  * return <div>Welcome, {user.name}!</div>;
  * ```
  */
@@ -65,15 +65,17 @@ export function useUser() {
 
 /**
  * Hook to get user profile by ID
- * 
+ *
  * @param userId - User ID to fetch
  * @returns User profile with loading/error states
  */
 export function useUserProfile(userId: string | null) {
   return useQuery({
-    queryKey: queryKeys.user.byId(userId ?? ""),
+    queryKey: queryKeys.user.byId(userId ?? ''),
     queryFn: () => {
-      if (!userId) {throw new Error("User ID is required");}
+      if (!userId) {
+        throw new Error('User ID is required');
+      }
       return getUserProfile(userId);
     },
     enabled: !!userId,

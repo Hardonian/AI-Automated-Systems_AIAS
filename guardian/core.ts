@@ -9,7 +9,14 @@ import { join } from 'path';
 
 export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
 export type DataScope = 'user' | 'app' | 'api' | 'external';
-export type DataClass = 'telemetry' | 'location' | 'audio' | 'biometrics' | 'content' | 'credentials' | 'other';
+export type DataClass =
+  | 'telemetry'
+  | 'location'
+  | 'audio'
+  | 'biometrics'
+  | 'content'
+  | 'credentials'
+  | 'other';
 export type ResponseAction = 'allow' | 'mask' | 'redact' | 'block' | 'alert';
 
 export interface GuardianEvent {
@@ -94,7 +101,10 @@ export class GuardianService {
    * Initialize ledger with first entry
    */
   private initializeLedger(): void {
-    if (!existsSync(this.ledgerPath) || readFileSync(this.ledgerPath, 'utf-8').trim() === '') {
+    if (
+      !existsSync(this.ledgerPath) ||
+      readFileSync(this.ledgerPath, 'utf-8').trim() === ''
+    ) {
       const genesisHash = this.computeHash('genesis');
       this.lastHash = genesisHash;
       const genesisEntry: TrustLedgerEntry = {
@@ -172,7 +182,7 @@ export class GuardianService {
    */
   private appendToLedger(entry: TrustLedgerEntry): void {
     const entryString = JSON.stringify(entry);
-    appendFileSync(this.ledgerPath, `${entryString  }\n`, 'utf-8');
+    appendFileSync(this.ledgerPath, `${entryString}\n`, 'utf-8');
   }
 
   /**
@@ -198,7 +208,7 @@ export class GuardianService {
 
     // Calculate risk score
     let score = 0.0;
-    
+
     // Impact factor based on data class
     const impactMap: Record<DataClass, number> = {
       telemetry: 0.2,
@@ -211,18 +221,23 @@ export class GuardianService {
     };
 
     const impact = impactMap[dataClass] || 0.3;
-    
+
     // Likelihood factor
     const likelihood = metadata.external === true ? 1.0 : 0.5;
-    
+
     score = impact * likelihood;
 
     // Determine risk level
     let level: RiskLevel = 'low';
-    if (score >= policy.thresholds.critical) {level = 'critical';}
-    else if (score >= policy.thresholds.high) {level = 'high';}
-    else if (score >= policy.thresholds.medium) {level = 'medium';}
-    else {level = 'low';}
+    if (score >= policy.thresholds.critical) {
+      level = 'critical';
+    } else if (score >= policy.thresholds.high) {
+      level = 'high';
+    } else if (score >= policy.thresholds.medium) {
+      level = 'medium';
+    } else {
+      level = 'low';
+    }
 
     return { score, level };
   }
@@ -230,7 +245,9 @@ export class GuardianService {
   /**
    * Generate event fingerprint
    */
-  private generateFingerprint(event: Omit<GuardianEvent, 'fingerprint' | 'event_id'>): string {
+  private generateFingerprint(
+    event: Omit<GuardianEvent, 'fingerprint' | 'event_id'>
+  ): string {
     const fingerprintData = {
       timestamp: event.timestamp,
       type: event.type,
@@ -271,7 +288,7 @@ export class GuardianService {
     // Assess risk
     const { score, level } = this.assessRisk(scope, dataClass, metadata);
     const policy = this.policies.get('default')!;
-    
+
     // Determine action
     const actions = policy.response_actions[level];
     const action = actions[0] || 'allow';
@@ -308,7 +325,9 @@ export class GuardianService {
       scope,
       user_decision: fullEvent.user_decision || 'pending',
       guardian_action: action,
-      sha256: this.computeHash(JSON.stringify(fullEvent) + (this.lastHash || '')),
+      sha256: this.computeHash(
+        JSON.stringify(fullEvent) + (this.lastHash || '')
+      ),
       previous_hash: this.lastHash,
     };
 
@@ -316,8 +335,11 @@ export class GuardianService {
     this.appendToLedger(ledgerEntry);
 
     // Also write full event to JSONL log
-    const logPath = join(this.logsPath, `events_${new Date().toISOString().split('T')[0]}.jsonl`);
-    appendFileSync(logPath, `${JSON.stringify(fullEvent)  }\n`, 'utf-8');
+    const logPath = join(
+      this.logsPath,
+      `events_${new Date().toISOString().split('T')[0]}.jsonl`
+    );
+    appendFileSync(logPath, `${JSON.stringify(fullEvent)}\n`, 'utf-8');
 
     return fullEvent;
   }
@@ -328,13 +350,17 @@ export class GuardianService {
   private applyAction(action: ResponseAction, event: GuardianEvent): void {
     switch (action) {
       case 'block':
-        console.warn(`[GUARDIAN] BLOCKED: ${event.type} - ${event.description}`);
+        console.warn(
+          `[GUARDIAN] BLOCKED: ${event.type} - ${event.description}`
+        );
         break;
       case 'mask':
         console.warn(`[GUARDIAN] MASKED: ${event.type} - ${event.description}`);
         break;
       case 'redact':
-        console.warn(`[GUARDIAN] REDACTED: ${event.type} - ${event.description}`);
+        console.warn(
+          `[GUARDIAN] REDACTED: ${event.type} - ${event.description}`
+        );
         break;
       case 'alert':
         console.warn(`[GUARDIAN] ALERT: ${event.type} - ${event.description}`);
@@ -349,7 +375,9 @@ export class GuardianService {
   /**
    * Sanitize metadata before storing
    */
-  private sanitizeMetadata(metadata: Record<string, unknown>): Record<string, unknown> {
+  private sanitizeMetadata(
+    metadata: Record<string, unknown>
+  ): Record<string, unknown> {
     // Return metadata as-is without PII redaction
     return metadata;
   }
@@ -393,28 +421,36 @@ export class GuardianService {
    */
   async emergencyLockdown(): Promise<void> {
     this.enablePrivateMode();
-    
+
     // Clear local telemetry cache
     // This would integrate with your telemetry service
     console.log('[GUARDIAN] Emergency lockdown activated');
-    
-    this.recordEvent('guardian', 'user', 'telemetry', 'Emergency lockdown activated', {
-      action: 'emergency_lockdown',
-    });
+
+    this.recordEvent(
+      'guardian',
+      'user',
+      'telemetry',
+      'Emergency lockdown activated',
+      {
+        action: 'emergency_lockdown',
+      }
+    );
   }
 
   /**
    * Get events from ledger
    */
   getLedgerEvents(limit: number = 100): TrustLedgerEntry[] {
-    if (!existsSync(this.ledgerPath)) {return [];}
-    
+    if (!existsSync(this.ledgerPath)) {
+      return [];
+    }
+
     const lines = readFileSync(this.ledgerPath, 'utf-8').trim().split('\n');
     const entries = lines
       .filter(line => line.trim())
       .map(line => JSON.parse(line) as TrustLedgerEntry)
       .slice(-limit);
-    
+
     return entries.reverse(); // Most recent first
   }
 
@@ -423,26 +459,30 @@ export class GuardianService {
    */
   verifyLedgerIntegrity(): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
-    
+
     if (!existsSync(this.ledgerPath)) {
       return { valid: false, errors: ['Ledger file does not exist'] };
     }
 
     const lines = readFileSync(this.ledgerPath, 'utf-8').trim().split('\n');
     let previousHash = '';
-    
+
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i]?.trim();
-      if (!line) {continue;}
-      
+      if (!line) {
+        continue;
+      }
+
       try {
         const entry = JSON.parse(line) as TrustLedgerEntry;
-        
+
         // Verify hash chain
         if (i > 0 && entry.previous_hash !== previousHash) {
-          errors.push(`Hash chain broken at entry ${i}: expected ${previousHash}, got ${entry.previous_hash}`);
+          errors.push(
+            `Hash chain broken at entry ${i}: expected ${previousHash}, got ${entry.previous_hash}`
+          );
         }
-        
+
         // Verify entry hash
         const expectedHash = this.computeHash(
           JSON.stringify({
@@ -455,17 +495,19 @@ export class GuardianService {
             previous_hash: entry.previous_hash || '',
           })
         );
-        
+
         if (entry.sha256 !== expectedHash) {
-          errors.push(`Invalid hash for entry ${i}: event_id ${entry.event_id}`);
+          errors.push(
+            `Invalid hash for entry ${i}: event_id ${entry.event_id}`
+          );
         }
-        
+
         previousHash = entry.sha256;
       } catch (error) {
         errors.push(`Invalid JSON at line ${i}: ${error}`);
       }
     }
-    
+
     return {
       valid: errors.length === 0,
       errors,

@@ -14,7 +14,14 @@ export interface AutomationWorkflow {
   updatedAt: string;
   createdBy: string;
   tags: string[];
-  category: 'lead_generation' | 'appointment_booking' | 'conferencing' | 'note_taking' | 'sketching' | 'admin' | 'integration';
+  category:
+    | 'lead_generation'
+    | 'appointment_booking'
+    | 'conferencing'
+    | 'note_taking'
+    | 'sketching'
+    | 'admin'
+    | 'integration';
 }
 
 export interface WebhookConfig {
@@ -43,7 +50,11 @@ export interface AIDetectionConfig {
   inputField: string;
 }
 
-export type TriggerConfig = WebhookConfig | ScheduleConfig | EventConfig | AIDetectionConfig;
+export type TriggerConfig =
+  | WebhookConfig
+  | ScheduleConfig
+  | EventConfig
+  | AIDetectionConfig;
 
 export interface WorkflowTrigger {
   type: 'webhook' | 'schedule' | 'event' | 'manual' | 'ai_detection';
@@ -114,11 +125,27 @@ export interface IntegrationConfig {
   credentials: Record<string, string>;
 }
 
-export type StepConfig = AIAnalysisConfig | DataExtractionConfig | NotificationConfig | APICallConfig | DatabaseUpdateConfig | AIGenerationConfig | SchedulingConfig | IntegrationConfig;
+export type StepConfig =
+  | AIAnalysisConfig
+  | DataExtractionConfig
+  | NotificationConfig
+  | APICallConfig
+  | DatabaseUpdateConfig
+  | AIGenerationConfig
+  | SchedulingConfig
+  | IntegrationConfig;
 
 export interface WorkflowStep {
   id: string;
-  type: 'ai_analysis' | 'data_extraction' | 'notification' | 'api_call' | 'database_update' | 'ai_generation' | 'scheduling' | 'integration';
+  type:
+    | 'ai_analysis'
+    | 'data_extraction'
+    | 'notification'
+    | 'api_call'
+    | 'database_update'
+    | 'ai_generation'
+    | 'scheduling'
+    | 'integration';
   config: StepConfig;
   dependencies: string[];
   timeout: number;
@@ -171,7 +198,10 @@ export interface AppointmentBookingConfig {
   calendarIntegration: string[];
   timezoneHandling: 'user' | 'business' | 'auto';
   bufferTime: number; // in minutes
-  conflictResolution: 'auto_reschedule' | 'suggest_alternatives' | 'manual_review';
+  conflictResolution:
+    | 'auto_reschedule'
+    | 'suggest_alternatives'
+    | 'manual_review';
   reminderSequence: ReminderStep[];
   aiScheduling: boolean;
   resourceBooking: boolean;
@@ -232,24 +262,32 @@ export class AutomationManager {
   /**
    * Create a new automation workflow
    */
-  async createWorkflow(workflow: Omit<AutomationWorkflow, 'id' | 'createdAt' | 'updatedAt'>): Promise<AutomationWorkflow> {
+  async createWorkflow(
+    workflow: Omit<AutomationWorkflow, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<AutomationWorkflow> {
     const newWorkflow: AutomationWorkflow = {
       ...workflow,
       id: this.generateWorkflowId(),
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     this.workflows.set(newWorkflow.id, newWorkflow);
-    await this.logAutomationEvent('workflow_created', { workflowId: newWorkflow.id, name: newWorkflow.name });
-    
+    await this.logAutomationEvent('workflow_created', {
+      workflowId: newWorkflow.id,
+      name: newWorkflow.name,
+    });
+
     return newWorkflow;
   }
 
   /**
    * Execute a workflow
    */
-  async executeWorkflow(workflowId: string, triggerData?: Record<string, unknown>): Promise<WorkflowExecution> {
+  async executeWorkflow(
+    workflowId: string,
+    triggerData?: Record<string, unknown>
+  ): Promise<WorkflowExecution> {
     const workflow = this.workflows.get(workflowId);
     if (!workflow) {
       throw new Error('Workflow not found');
@@ -262,7 +300,7 @@ export class AutomationManager {
       startTime: new Date().toISOString(),
       steps: [],
       triggerData,
-      context: {}
+      context: {},
     };
 
     this.activeExecutions.set(execution.id, execution);
@@ -286,7 +324,7 @@ export class AutomationManager {
     await this.logAutomationEvent('workflow_executed', {
       workflowId,
       executionId: execution.id,
-      status: execution.status
+      status: execution.status,
     });
 
     return execution;
@@ -295,41 +333,68 @@ export class AutomationManager {
   /**
    * Execute a single workflow step
    */
-  private async executeStep(step: WorkflowStep, execution: WorkflowExecution): Promise<StepExecution> {
+  private async executeStep(
+    step: WorkflowStep,
+    execution: WorkflowExecution
+  ): Promise<StepExecution> {
     const stepExecution: StepExecution = {
       id: this.generateStepId(),
       stepId: step.id,
       status: 'running',
       startTime: new Date().toISOString(),
       input: execution.context,
-      output: {}
+      output: {},
     };
 
     try {
       switch (step.type) {
         case 'ai_analysis':
-          stepExecution.output = await this.executeAIAnalysis(step.config as AIAnalysisConfig, execution.context);
+          stepExecution.output = await this.executeAIAnalysis(
+            step.config as AIAnalysisConfig,
+            execution.context
+          );
           break;
         case 'data_extraction':
-          stepExecution.output = await this.executeDataExtraction(step.config as DataExtractionConfig, execution.context);
+          stepExecution.output = await this.executeDataExtraction(
+            step.config as DataExtractionConfig,
+            execution.context
+          );
           break;
         case 'notification':
-          stepExecution.output = await this.executeNotification(step.config as NotificationConfig, execution.context);
+          stepExecution.output = await this.executeNotification(
+            step.config as NotificationConfig,
+            execution.context
+          );
           break;
         case 'api_call':
-          stepExecution.output = await this.executeAPICall(step.config as APICallConfig, execution.context);
+          stepExecution.output = await this.executeAPICall(
+            step.config as APICallConfig,
+            execution.context
+          );
           break;
         case 'database_update':
-          stepExecution.output = await this.executeDatabaseUpdate(step.config as DatabaseUpdateConfig, execution.context);
+          stepExecution.output = await this.executeDatabaseUpdate(
+            step.config as DatabaseUpdateConfig,
+            execution.context
+          );
           break;
         case 'ai_generation':
-          stepExecution.output = await this.executeAIGeneration(step.config as AIGenerationConfig, execution.context);
+          stepExecution.output = await this.executeAIGeneration(
+            step.config as AIGenerationConfig,
+            execution.context
+          );
           break;
         case 'scheduling':
-          stepExecution.output = await this.executeScheduling(step.config as SchedulingConfig, execution.context);
+          stepExecution.output = await this.executeScheduling(
+            step.config as SchedulingConfig,
+            execution.context
+          );
           break;
         case 'integration':
-          stepExecution.output = await this.executeIntegration(step.config as IntegrationConfig, execution.context);
+          stepExecution.output = await this.executeIntegration(
+            step.config as IntegrationConfig,
+            execution.context
+          );
           break;
         default:
           throw new Error(`Unknown step type: ${step.type}`);
@@ -348,13 +413,16 @@ export class AutomationManager {
   /**
    * Lead Generation Automation
    */
-  async setupLeadGeneration(config: LeadGenerationConfig): Promise<AutomationWorkflow> {
+  async setupLeadGeneration(
+    config: LeadGenerationConfig
+  ): Promise<AutomationWorkflow> {
     const workflow = await this.createWorkflow({
       name: 'Intelligent Lead Generation',
-      description: 'Automated lead capture, qualification, and nurturing system',
+      description:
+        'Automated lead capture, qualification, and nurturing system',
       trigger: {
         type: 'webhook',
-        config: { endpoint: '/api/leads/webhook' }
+        config: { endpoint: '/api/leads/webhook' },
       },
       steps: [
         {
@@ -363,22 +431,30 @@ export class AutomationManager {
           config: {
             model: 'lead_qualification',
             criteria: config.qualificationCriteria,
-            scoringRules: config.scoringRules
+            scoringRules: config.scoringRules,
           },
           dependencies: [],
           timeout: 30000,
-          retryPolicy: { maxAttempts: 3, backoffStrategy: 'exponential', delay: 1000 }
+          retryPolicy: {
+            maxAttempts: 3,
+            backoffStrategy: 'exponential',
+            delay: 1000,
+          },
         },
         {
           id: 'enrich_data',
           type: 'api_call',
           config: {
             service: 'data_enrichment',
-            fields: ['company_info', 'social_profiles', 'contact_details']
+            fields: ['company_info', 'social_profiles', 'contact_details'],
           },
           dependencies: ['qualify_lead'],
           timeout: 60000,
-          retryPolicy: { maxAttempts: 2, backoffStrategy: 'linear', delay: 2000 }
+          retryPolicy: {
+            maxAttempts: 2,
+            backoffStrategy: 'linear',
+            delay: 2000,
+          },
         },
         {
           id: 'assign_lead',
@@ -387,15 +463,19 @@ export class AutomationManager {
             table: 'leads',
             operation: 'update',
             conditions: { id: '{{lead_id}}' },
-            data: { 
+            data: {
               score: '{{qualification_score}}',
               status: 'qualified',
-              assigned_to: '{{auto_assignment}}'
-            }
+              assigned_to: '{{auto_assignment}}',
+            },
           },
           dependencies: ['qualify_lead', 'enrich_data'],
           timeout: 10000,
-          retryPolicy: { maxAttempts: 3, backoffStrategy: 'fixed', delay: 1000 }
+          retryPolicy: {
+            maxAttempts: 3,
+            backoffStrategy: 'fixed',
+            delay: 1000,
+          },
         },
         {
           id: 'trigger_followup',
@@ -403,17 +483,21 @@ export class AutomationManager {
           config: {
             action: 'schedule_followup',
             sequence: config.followUpSequence,
-            leadId: '{{lead_id}}'
+            leadId: '{{lead_id}}',
           },
           dependencies: ['assign_lead'],
           timeout: 5000,
-          retryPolicy: { maxAttempts: 2, backoffStrategy: 'fixed', delay: 1000 }
-        }
+          retryPolicy: {
+            maxAttempts: 2,
+            backoffStrategy: 'fixed',
+            delay: 1000,
+          },
+        },
       ],
       status: 'active',
       createdBy: 'system',
       tags: ['lead-generation', 'ai-powered', 'automation'],
-      category: 'lead_generation'
+      category: 'lead_generation',
     });
 
     return workflow;
@@ -422,13 +506,16 @@ export class AutomationManager {
   /**
    * Appointment Booking Automation
    */
-  async setupAppointmentBooking(config: AppointmentBookingConfig): Promise<AutomationWorkflow> {
+  async setupAppointmentBooking(
+    config: AppointmentBookingConfig
+  ): Promise<AutomationWorkflow> {
     const workflow = await this.createWorkflow({
       name: 'Smart Appointment Booking',
-      description: 'Intelligent scheduling with conflict resolution and AI assistance',
+      description:
+        'Intelligent scheduling with conflict resolution and AI assistance',
       trigger: {
         type: 'webhook',
-        config: { endpoint: '/api/appointments/book' }
+        config: { endpoint: '/api/appointments/book' },
       },
       steps: [
         {
@@ -436,11 +523,20 @@ export class AutomationManager {
           type: 'ai_analysis',
           config: {
             model: 'appointment_analysis',
-            extractInfo: ['preferred_times', 'meeting_type', 'participants', 'requirements']
+            extractInfo: [
+              'preferred_times',
+              'meeting_type',
+              'participants',
+              'requirements',
+            ],
           },
           dependencies: [],
           timeout: 15000,
-          retryPolicy: { maxAttempts: 2, backoffStrategy: 'exponential', delay: 1000 }
+          retryPolicy: {
+            maxAttempts: 2,
+            backoffStrategy: 'exponential',
+            delay: 1000,
+          },
         },
         {
           id: 'find_availability',
@@ -450,11 +546,15 @@ export class AutomationManager {
             action: 'find_slots',
             calendars: config.calendarIntegration,
             timezone: config.timezoneHandling,
-            bufferTime: config.bufferTime
+            bufferTime: config.bufferTime,
           },
           dependencies: ['analyze_request'],
           timeout: 30000,
-          retryPolicy: { maxAttempts: 3, backoffStrategy: 'exponential', delay: 2000 }
+          retryPolicy: {
+            maxAttempts: 3,
+            backoffStrategy: 'exponential',
+            delay: 2000,
+          },
         },
         {
           id: 'resolve_conflicts',
@@ -462,11 +562,15 @@ export class AutomationManager {
           config: {
             model: 'conflict_resolution',
             strategy: config.conflictResolution,
-            suggestAlternatives: true
+            suggestAlternatives: true,
           },
           dependencies: ['find_availability'],
           timeout: 20000,
-          retryPolicy: { maxAttempts: 2, backoffStrategy: 'linear', delay: 1000 }
+          retryPolicy: {
+            maxAttempts: 2,
+            backoffStrategy: 'linear',
+            delay: 1000,
+          },
         },
         {
           id: 'book_appointment',
@@ -480,12 +584,16 @@ export class AutomationManager {
               duration: '{{meeting_duration}}',
               participants: '{{participants}}',
               meeting_type: '{{meeting_type}}',
-              ai_generated: true
-            }
+              ai_generated: true,
+            },
           },
           dependencies: ['resolve_conflicts'],
           timeout: 10000,
-          retryPolicy: { maxAttempts: 3, backoffStrategy: 'fixed', delay: 1000 }
+          retryPolicy: {
+            maxAttempts: 3,
+            backoffStrategy: 'fixed',
+            delay: 1000,
+          },
         },
         {
           id: 'schedule_reminders',
@@ -493,17 +601,21 @@ export class AutomationManager {
           config: {
             action: 'schedule_reminders',
             reminders: config.reminderSequence,
-            appointmentId: '{{appointment_id}}'
+            appointmentId: '{{appointment_id}}',
           },
           dependencies: ['book_appointment'],
           timeout: 5000,
-          retryPolicy: { maxAttempts: 2, backoffStrategy: 'fixed', delay: 1000 }
-        }
+          retryPolicy: {
+            maxAttempts: 2,
+            backoffStrategy: 'fixed',
+            delay: 1000,
+          },
+        },
       ],
       status: 'active',
       createdBy: 'system',
       tags: ['appointment-booking', 'ai-scheduling', 'calendar-integration'],
-      category: 'appointment_booking'
+      category: 'appointment_booking',
     });
 
     return workflow;
@@ -515,10 +627,11 @@ export class AutomationManager {
   async setupNoteTaking(config: NoteTakingConfig): Promise<AutomationWorkflow> {
     const workflow = await this.createWorkflow({
       name: 'Intelligent Note Taking',
-      description: 'AI-powered transcription, analysis, and action item extraction',
+      description:
+        'AI-powered transcription, analysis, and action item extraction',
       trigger: {
         type: 'event',
-        config: { event: 'meeting_started' }
+        config: { event: 'meeting_started' },
       },
       steps: [
         {
@@ -528,11 +641,11 @@ export class AutomationManager {
             model: 'real_time_transcription',
             languageDetection: config.languageDetection,
             speakerIdentification: config.speakerIdentification,
-            realTimeProcessing: config.realTimeProcessing
+            realTimeProcessing: config.realTimeProcessing,
           },
           dependencies: [],
           timeout: 0, // Continuous processing
-          retryPolicy: { maxAttempts: 1, backoffStrategy: 'fixed', delay: 0 }
+          retryPolicy: { maxAttempts: 1, backoffStrategy: 'fixed', delay: 0 },
         },
         {
           id: 'extract_insights',
@@ -542,11 +655,15 @@ export class AutomationManager {
             extractActionItems: config.actionItemExtraction,
             generateSummary: config.summaryGeneration,
             identifyDecisions: true,
-            trackTopics: true
+            trackTopics: true,
           },
           dependencies: ['start_transcription'],
           timeout: 30000,
-          retryPolicy: { maxAttempts: 2, backoffStrategy: 'exponential', delay: 2000 }
+          retryPolicy: {
+            maxAttempts: 2,
+            backoffStrategy: 'exponential',
+            delay: 2000,
+          },
         },
         {
           id: 'store_notes',
@@ -561,12 +678,16 @@ export class AutomationManager {
               action_items: '{{action_items}}',
               summary: '{{summary}}',
               format: config.storageFormat,
-              ai_enhanced: true
-            }
+              ai_enhanced: true,
+            },
           },
           dependencies: ['extract_insights'],
           timeout: 10000,
-          retryPolicy: { maxAttempts: 3, backoffStrategy: 'fixed', delay: 1000 }
+          retryPolicy: {
+            maxAttempts: 3,
+            backoffStrategy: 'fixed',
+            delay: 1000,
+          },
         },
         {
           id: 'distribute_notes',
@@ -575,17 +696,21 @@ export class AutomationManager {
             channels: config.integrationChannels,
             template: 'meeting_notes_ready',
             includeAttachments: true,
-            aiPersonalization: true
+            aiPersonalization: true,
           },
           dependencies: ['store_notes'],
           timeout: 15000,
-          retryPolicy: { maxAttempts: 2, backoffStrategy: 'linear', delay: 2000 }
-        }
+          retryPolicy: {
+            maxAttempts: 2,
+            backoffStrategy: 'linear',
+            delay: 2000,
+          },
+        },
       ],
       status: 'active',
       createdBy: 'system',
       tags: ['note-taking', 'ai-transcription', 'meeting-insights'],
-      category: 'note_taking'
+      category: 'note_taking',
     });
 
     return workflow;
@@ -600,7 +725,7 @@ export class AutomationManager {
       description: 'Intelligent design assistance with real-time collaboration',
       trigger: {
         type: 'manual',
-        config: { trigger: 'user_initiated' }
+        config: { trigger: 'user_initiated' },
       },
       steps: [
         {
@@ -610,11 +735,15 @@ export class AutomationManager {
             model: 'design_analysis',
             extractRequirements: true,
             suggestApproach: true,
-            identifyConstraints: true
+            identifyConstraints: true,
           },
           dependencies: [],
           timeout: 20000,
-          retryPolicy: { maxAttempts: 2, backoffStrategy: 'exponential', delay: 1000 }
+          retryPolicy: {
+            maxAttempts: 2,
+            backoffStrategy: 'exponential',
+            delay: 1000,
+          },
         },
         {
           id: 'generate_initial_design',
@@ -623,11 +752,15 @@ export class AutomationManager {
             model: 'design_generation',
             style: '{{design_style}}',
             requirements: '{{requirements}}',
-            templateLibrary: config.templateLibrary
+            templateLibrary: config.templateLibrary,
           },
           dependencies: ['analyze_requirements'],
           timeout: 60000,
-          retryPolicy: { maxAttempts: 3, backoffStrategy: 'exponential', delay: 2000 }
+          retryPolicy: {
+            maxAttempts: 3,
+            backoffStrategy: 'exponential',
+            delay: 2000,
+          },
         },
         {
           id: 'enable_collaboration',
@@ -635,11 +768,15 @@ export class AutomationManager {
           config: {
             service: 'real_time_collaboration',
             features: ['live_editing', 'version_control', 'comment_system'],
-            participants: '{{participants}}'
+            participants: '{{participants}}',
           },
           dependencies: ['generate_initial_design'],
           timeout: 10000,
-          retryPolicy: { maxAttempts: 2, backoffStrategy: 'fixed', delay: 1000 }
+          retryPolicy: {
+            maxAttempts: 2,
+            backoffStrategy: 'fixed',
+            delay: 1000,
+          },
         },
         {
           id: 'ai_enhancement',
@@ -648,11 +785,15 @@ export class AutomationManager {
             model: 'design_enhancement',
             suggestions: true,
             optimization: true,
-            qualityCheck: true
+            qualityCheck: true,
           },
           dependencies: ['enable_collaboration'],
           timeout: 30000,
-          retryPolicy: { maxAttempts: 2, backoffStrategy: 'exponential', delay: 2000 }
+          retryPolicy: {
+            maxAttempts: 2,
+            backoffStrategy: 'exponential',
+            delay: 2000,
+          },
         },
         {
           id: 'export_designs',
@@ -661,113 +802,144 @@ export class AutomationManager {
             service: 'design_export',
             formats: config.exportFormats,
             tools: config.integrationTools,
-            aiEnhancement: config.aiEnhancement
+            aiEnhancement: config.aiEnhancement,
           },
           dependencies: ['ai_enhancement'],
           timeout: 45000,
-          retryPolicy: { maxAttempts: 3, backoffStrategy: 'linear', delay: 2000 }
-        }
+          retryPolicy: {
+            maxAttempts: 3,
+            backoffStrategy: 'linear',
+            delay: 2000,
+          },
+        },
       ],
       status: 'active',
       createdBy: 'system',
       tags: ['sketching', 'ai-design', 'collaboration', 'design-automation'],
-      category: 'sketching'
+      category: 'sketching',
     });
 
     return workflow;
   }
 
   // Private helper methods
-  private async executeAIAnalysis(_config: AIAnalysisConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeAIAnalysis(
+    _config: AIAnalysisConfig,
+    _context: Record<string, unknown>
+  ): Promise<Record<string, unknown>> {
     // Simulate AI analysis
     return {
       analysis: 'AI analysis completed',
       confidence: 0.95,
       insights: ['Key insight 1', 'Key insight 2'],
-      recommendations: ['Recommendation 1', 'Recommendation 2']
+      recommendations: ['Recommendation 1', 'Recommendation 2'],
     };
   }
 
-  private async executeDataExtraction(_config: DataExtractionConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeDataExtraction(
+    _config: DataExtractionConfig,
+    _context: Record<string, unknown>
+  ): Promise<Record<string, unknown>> {
     // Simulate data extraction
     return {
       extractedData: { field1: 'value1', field2: 'value2' },
       confidence: 0.88,
-      source: 'web_scraping'
+      source: 'web_scraping',
     };
   }
 
-  private async executeNotification(_config: NotificationConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeNotification(
+    _config: NotificationConfig,
+    _context: Record<string, unknown>
+  ): Promise<Record<string, unknown>> {
     // Simulate notification sending
     return {
       sent: true,
       type: config.type,
       recipients: config.recipients,
-      messageId: `msg_${  Date.now()}`
+      messageId: `msg_${Date.now()}`,
     };
   }
 
-  private async executeAPICall(_config: APICallConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeAPICall(
+    _config: APICallConfig,
+    _context: Record<string, unknown>
+  ): Promise<Record<string, unknown>> {
     // Simulate API call
     return {
       success: true,
       statusCode: 200,
       data: { result: 'API call successful' },
-      responseTime: 150
+      responseTime: 150,
     };
   }
 
-  private async executeDatabaseUpdate(_config: DatabaseUpdateConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeDatabaseUpdate(
+    _config: DatabaseUpdateConfig,
+    _context: Record<string, unknown>
+  ): Promise<Record<string, unknown>> {
     // Simulate database update
     return {
       success: true,
       affectedRows: 1,
-      recordId: `rec_${  Date.now()}`
+      recordId: `rec_${Date.now()}`,
     };
   }
 
-  private async executeAIGeneration(_config: AIGenerationConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeAIGeneration(
+    _config: AIGenerationConfig,
+    _context: Record<string, unknown>
+  ): Promise<Record<string, unknown>> {
     // Simulate AI generation
     return {
       generated: true,
       content: 'AI-generated content',
       quality: 0.92,
-      tokens: 150
+      tokens: 150,
     };
   }
 
-  private async executeScheduling(_config: SchedulingConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeScheduling(
+    _config: SchedulingConfig,
+    _context: Record<string, unknown>
+  ): Promise<Record<string, unknown>> {
     // Simulate scheduling
     return {
       scheduled: true,
-      scheduleId: `sched_${  Date.now()}`,
-      nextRun: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+      scheduleId: `sched_${Date.now()}`,
+      nextRun: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     };
   }
 
-  private async executeIntegration(_config: IntegrationConfig, _context: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async executeIntegration(
+    _config: IntegrationConfig,
+    _context: Record<string, unknown>
+  ): Promise<Record<string, unknown>> {
     // Simulate integration
     return {
       integrated: true,
       service: config.service,
       status: 'active',
-      connectionId: `conn_${  Date.now()}`
+      connectionId: `conn_${Date.now()}`,
     };
   }
 
   private generateWorkflowId(): string {
-    return `wf_${  Date.now()  }_${  Math.random().toString(36).substring(2)}`;
+    return `wf_${Date.now()}_${Math.random().toString(36).substring(2)}`;
   }
 
   private generateExecutionId(): string {
-    return `exec_${  Date.now()  }_${  Math.random().toString(36).substring(2)}`;
+    return `exec_${Date.now()}_${Math.random().toString(36).substring(2)}`;
   }
 
   private generateStepId(): string {
-    return `step_${  Date.now()  }_${  Math.random().toString(36).substring(2)}`;
+    return `step_${Date.now()}_${Math.random().toString(36).substring(2)}`;
   }
 
-  private async logAutomationEvent(action: string, metadata: Record<string, unknown>): Promise<void> {
+  private async logAutomationEvent(
+    action: string,
+    metadata: Record<string, unknown>
+  ): Promise<void> {
     console.log(`[AUTOMATION] ${action}:`, metadata);
   }
 }

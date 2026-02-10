@@ -16,6 +16,7 @@ curl -X POST https://aias-platform.com/api/auth/login \
 ```
 
 Response:
+
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -119,14 +120,14 @@ const ACCESS_TOKEN = 'your-access-token';
 async function listWorkflows() {
   const response = await fetch(`${API_BASE}/v1/workflows`, {
     headers: {
-      'Authorization': `Bearer ${ACCESS_TOKEN}`,
+      Authorization: `Bearer ${ACCESS_TOKEN}`,
     },
   });
-  
+
   if (!response.ok) {
     throw new Error('Failed to fetch workflows');
   }
-  
+
   const data = await response.json();
   return data.workflows;
 }
@@ -136,17 +137,17 @@ async function createWorkflow(workflowData) {
   const response = await fetch(`${API_BASE}/v1/workflows`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${ACCESS_TOKEN}`,
+      Authorization: `Bearer ${ACCESS_TOKEN}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(workflowData),
   });
-  
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.error || 'Failed to create workflow');
   }
-  
+
   return await response.json();
 }
 
@@ -155,7 +156,7 @@ async function executeWorkflow(workflowId) {
   const response = await fetch(`${API_BASE}/workflows/execute`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${ACCESS_TOKEN}`,
+      Authorization: `Bearer ${ACCESS_TOKEN}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -163,7 +164,7 @@ async function executeWorkflow(workflowId) {
       trigger: { type: 'manual' },
     }),
   });
-  
+
   return await response.json();
 }
 ```
@@ -246,15 +247,15 @@ async function safeApiCall(url, options = {}) {
     const response = await fetch(url, {
       ...options,
       headers: {
-        'Authorization': `Bearer ${ACCESS_TOKEN}`,
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
         'Content-Type': 'application/json',
         ...options.headers,
       },
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
-      
+
       // Handle specific errors
       switch (error.code) {
         case 'UNAUTHORIZED':
@@ -270,7 +271,7 @@ async function safeApiCall(url, options = {}) {
           throw new Error(error.error || 'API request failed');
       }
     }
-    
+
     return await response.json();
   } catch (error) {
     console.error('API call failed:', error);
@@ -282,6 +283,7 @@ async function safeApiCall(url, options = {}) {
 ---
 
 **See Also:**
+
 - [API Overview](./overview.md)
 - [Authentication](./authentication.md)
 - [Endpoints Reference](./endpoints.md)

@@ -3,6 +3,7 @@
 # Incident Runbook: Database Restore
 
 ## Overview
+
 This runbook provides steps for database restoration procedures. **No PII or sensitive data is included**—only procedural steps and metadata checks.
 
 ## Pre-Restore Checklist
@@ -16,6 +17,7 @@ This runbook provides steps for database restoration procedures. **No PII or sen
 ## Backup Evidence Check
 
 ### Metadata Verification
+
 ```bash
 # Check backup metadata (no PII)
 # This should be automated by the agent and reported in SECURITY_COMPLIANCE_REPORT.md
@@ -53,17 +55,18 @@ This runbook provides steps for database restoration procedures. **No PII or sen
    - Verify completion
 
 5. **Post-Restore Verification**
+
    ```sql
    -- Verify table counts (metadata only)
-   SELECT 
+   SELECT
      schemaname,
      tablename,
      n_live_tup AS row_count
    FROM pg_stat_user_tables
    ORDER BY tablename;
-   
+
    -- Verify recent data exists
-   SELECT COUNT(*) FROM <table_name> 
+   SELECT COUNT(*) FROM <table_name>
    WHERE created_at >= '<restore_timestamp>';
    ```
 
@@ -72,6 +75,7 @@ This runbook provides steps for database restoration procedures. **No PII or sen
 **Use Case:** Restore structure without data (testing, development)
 
 1. **Export Schema**
+
    ```bash
    # Using Supabase CLI
    supabase db dump --schema-only > schema-backup.sql
@@ -89,6 +93,7 @@ This runbook provides steps for database restoration procedures. **No PII or sen
 **Use Case:** Restore specific table from backup
 
 1. **Export Table Data**
+
    ```bash
    # Using pg_dump
    pg_dump -h <host> -U <user> -d <database> -t <table_name> > table-backup.sql
@@ -146,16 +151,19 @@ This runbook provides steps for database restoration procedures. **No PII or sen
 ## Safety Rails
 
 ### Migration Canary Flag
+
 - **Before Restore:** Verify `MIGRATION_CANARY` flag status
 - **During Restore:** Ensure no migrations run concurrently
 - **After Restore:** Re-enable migrations if needed
 
 ### Read-Only Mode
+
 - **Recommendation:** Enable read-only mode during restore
 - **Implementation:** Application-level flag or database-level setting
 - **Duration:** Until restore verification complete
 
 ### Backup Verification
+
 - **Pre-Restore:** Verify backup exists and is valid
 - **Post-Restore:** Verify restore completed successfully
 - **Documentation:** Update `SECURITY_COMPLIANCE_REPORT.md`
@@ -163,16 +171,19 @@ This runbook provides steps for database restoration procedures. **No PII or sen
 ## Prevention
 
 ### Regular Backups
+
 - **Automated:** Supabase automatic backups (daily)
 - **Manual:** Export critical tables before major changes
 - **Verification:** Agent checks backup evidence weekly
 
 ### Backup Testing
+
 - **Schedule:** Quarterly restore tests
 - **Scope:** Non-production environment
 - **Documentation:** Update runbook with findings
 
 ### Monitoring
+
 - **Backup Status:** Checked in compliance report
 - **Backup Age:** Alert if backup > 7 days old
 - **Backup Size:** Monitor for anomalies
@@ -180,12 +191,14 @@ This runbook provides steps for database restoration procedures. **No PII or sen
 ## Escalation
 
 **Escalate if:**
+
 - Backup not available
 - Restore fails
 - Data corruption detected
 - Production data at risk
 
 **Escalation Contacts:**
+
 - Database admin (Supabase support)
 - On-call engineer
 - Infrastructure lead

@@ -1,18 +1,30 @@
-"use client";
+'use client';
 
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import { toast } from "sonner";
+import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 // import { Button } from "@/components/ui/button"; // Will be used for save actions
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { logger } from "@/lib/logging/structured-logger";
-import { createClient } from "@/lib/supabase/client";
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { logger } from '@/lib/logging/structured-logger';
+import { createClient } from '@/lib/supabase/client';
 interface UserSettings {
   id: string;
   user_id: string;
@@ -20,12 +32,12 @@ interface UserSettings {
   push_notifications_enabled: boolean;
   sms_notifications_enabled: boolean;
   notification_types: Record<string, boolean>;
-  theme: "light" | "dark" | "system";
+  theme: 'light' | 'dark' | 'system';
   language: string;
   timezone: string;
   date_format: string;
-  time_format: "12h" | "24h";
-  profile_visibility: "public" | "private" | "friends";
+  time_format: '12h' | '24h';
+  profile_visibility: 'public' | 'private' | 'friends';
   analytics_opt_in: boolean;
   data_sharing_enabled: boolean;
   beta_features_enabled: boolean;
@@ -42,31 +54,37 @@ export default function SettingsPage() {
   const loadSettings = useCallback(async () => {
     try {
       const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
       if (!session) {
-        router.push("/");
+        router.push('/');
         return;
       }
 
-      const response = await fetch("/api/settings", {
+      const response = await fetch('/api/settings', {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error("Failed to load settings");
+        throw new Error('Failed to load settings');
       }
 
       const data = await response.json();
       setSettings(data.settings || {});
     } catch (error) {
-      logger.error("Error loading settings", error instanceof Error ? error : new Error(String(error)), {
-        component: "SettingsPage",
-        action: "loadSettings",
-      });
-      toast.error("Failed to load settings");
+      logger.error(
+        'Error loading settings',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          component: 'SettingsPage',
+          action: 'loadSettings',
+        }
+      );
+      toast.error('Failed to load settings');
     } finally {
       setLoading(false);
     }
@@ -80,35 +98,41 @@ export default function SettingsPage() {
     setSaving(true);
     try {
       const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
       if (!session) {
-        router.push("/");
+        router.push('/');
         return;
       }
 
-      const response = await fetch("/api/settings", {
-        method: "PUT",
+      const response = await fetch('/api/settings', {
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify(updates),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save settings");
+        throw new Error('Failed to save settings');
       }
 
       const data = await response.json();
       setSettings(data.settings || {});
-      toast.success("Settings saved successfully");
+      toast.success('Settings saved successfully');
     } catch (error) {
-      logger.error("Error saving settings", error instanceof Error ? error : new Error(String(error)), {
-        component: "SettingsPage",
-        action: "saveSettings",
-      });
-      toast.error("Failed to save settings");
+      logger.error(
+        'Error saving settings',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          component: 'SettingsPage',
+          action: 'saveSettings',
+        }
+      );
+      toast.error('Failed to save settings');
     } finally {
       setSaving(false);
     }
@@ -125,111 +149,129 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="container py-8 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className='container flex items-center justify-center py-8'>
+        <Loader2 className='h-8 w-8 animate-spin' />
       </div>
     );
   }
 
   return (
-    <div className="container py-8 md:py-12 max-w-4xl px-4">
-      <div className="mb-8 md:mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold mb-3">Settings</h1>
-        <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
+    <div className='container max-w-4xl px-4 py-8 md:py-12'>
+      <div className='mb-8 md:mb-10'>
+        <h1 className='mb-3 text-3xl font-bold md:text-4xl'>Settings</h1>
+        <p className='text-base leading-relaxed text-muted-foreground md:text-lg'>
           Manage your account preferences and notification settings
         </p>
       </div>
 
-      <Tabs className="space-y-6" defaultValue="notifications">
+      <Tabs className='space-y-6' defaultValue='notifications'>
         <TabsList>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="appearance">Appearance</TabsTrigger>
-          <TabsTrigger value="privacy">Privacy</TabsTrigger>
-          <TabsTrigger value="features">Features</TabsTrigger>
+          <TabsTrigger value='notifications'>Notifications</TabsTrigger>
+          <TabsTrigger value='appearance'>Appearance</TabsTrigger>
+          <TabsTrigger value='privacy'>Privacy</TabsTrigger>
+          <TabsTrigger value='features'>Features</TabsTrigger>
         </TabsList>
 
         {/* Notifications Tab */}
-        <TabsContent className="space-y-6" value="notifications">
+        <TabsContent className='space-y-6' value='notifications'>
           <Card>
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl mb-2">Notification Preferences</CardTitle>
-              <CardDescription className="text-base">
+            <CardHeader className='pb-4'>
+              <CardTitle className='mb-2 text-xl'>
+                Notification Preferences
+              </CardTitle>
+              <CardDescription className='text-base'>
                 Choose how you want to receive notifications
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6 pt-6">
-              <div className="flex items-center justify-between py-2">
-                <div className="space-y-1">
-                  <Label className="text-base" htmlFor="email-notifications">Email Notifications</Label>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+            <CardContent className='space-y-6 pt-6'>
+              <div className='flex items-center justify-between py-2'>
+                <div className='space-y-1'>
+                  <Label className='text-base' htmlFor='email-notifications'>
+                    Email Notifications
+                  </Label>
+                  <p className='text-sm leading-relaxed text-muted-foreground'>
                     Receive notifications via email
                   </p>
                 </div>
                 <Switch
                   checked={settings.email_notifications_enabled ?? true}
                   disabled={saving}
-                  id="email-notifications"
-                  onCheckedChange={(checked) =>
-                    updateSetting("email_notifications_enabled", checked)
+                  id='email-notifications'
+                  onCheckedChange={checked =>
+                    updateSetting('email_notifications_enabled', checked)
                   }
                 />
               </div>
 
-              <div className="flex items-center justify-between py-2">
-                <div className="space-y-1">
-                  <Label className="text-base" htmlFor="push-notifications">Push Notifications</Label>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+              <div className='flex items-center justify-between py-2'>
+                <div className='space-y-1'>
+                  <Label className='text-base' htmlFor='push-notifications'>
+                    Push Notifications
+                  </Label>
+                  <p className='text-sm leading-relaxed text-muted-foreground'>
                     Receive push notifications in your browser
                   </p>
                 </div>
                 <Switch
                   checked={settings.push_notifications_enabled ?? true}
                   disabled={saving}
-                  id="push-notifications"
-                  onCheckedChange={(checked) =>
-                    updateSetting("push_notifications_enabled", checked)
+                  id='push-notifications'
+                  onCheckedChange={checked =>
+                    updateSetting('push_notifications_enabled', checked)
                   }
                 />
               </div>
 
-              <div className="flex items-center justify-between py-2">
-                <div className="space-y-1">
-                  <Label className="text-base" htmlFor="sms-notifications">SMS Notifications</Label>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+              <div className='flex items-center justify-between py-2'>
+                <div className='space-y-1'>
+                  <Label className='text-base' htmlFor='sms-notifications'>
+                    SMS Notifications
+                  </Label>
+                  <p className='text-sm leading-relaxed text-muted-foreground'>
                     Receive notifications via SMS (requires phone number)
                   </p>
                 </div>
                 <Switch
                   checked={settings.sms_notifications_enabled ?? false}
                   disabled={saving}
-                  id="sms-notifications"
-                  onCheckedChange={(checked) =>
-                    updateSetting("sms_notifications_enabled", checked)
+                  id='sms-notifications'
+                  onCheckedChange={checked =>
+                    updateSetting('sms_notifications_enabled', checked)
                   }
                 />
               </div>
 
-              <div className="pt-6 border-t">
-                <Label className="mb-4 block text-base">Notification Types</Label>
-                <div className="space-y-4">
-                  {Object.entries(settings.notification_types || {}).map(([type, enabled]) => (
-                    <div key={type} className="flex items-center justify-between py-2">
-                      <Label className="capitalize text-base" htmlFor={`notification-${type}`}>
-                        {type.replace(/_/g, " ")}
-                      </Label>
-                      <Switch
-                        checked={enabled}
-                        disabled={saving}
-                        id={`notification-${type}`}
-                        onCheckedChange={(checked) => {
-                          updateSetting("notification_types", {
-                            ...settings.notification_types,
-                            [type]: checked,
-                          });
-                        }}
-                      />
-                    </div>
-                  ))}
+              <div className='border-t pt-6'>
+                <Label className='mb-4 block text-base'>
+                  Notification Types
+                </Label>
+                <div className='space-y-4'>
+                  {Object.entries(settings.notification_types || {}).map(
+                    ([type, enabled]) => (
+                      <div
+                        key={type}
+                        className='flex items-center justify-between py-2'
+                      >
+                        <Label
+                          className='text-base capitalize'
+                          htmlFor={`notification-${type}`}
+                        >
+                          {type.replace(/_/g, ' ')}
+                        </Label>
+                        <Switch
+                          checked={enabled}
+                          disabled={saving}
+                          id={`notification-${type}`}
+                          onCheckedChange={checked => {
+                            updateSetting('notification_types', {
+                              ...settings.notification_types,
+                              [type]: checked,
+                            });
+                          }}
+                        />
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -237,87 +279,99 @@ export default function SettingsPage() {
         </TabsContent>
 
         {/* Appearance Tab */}
-        <TabsContent className="space-y-6" value="appearance">
+        <TabsContent className='space-y-6' value='appearance'>
           <Card>
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl mb-2">Appearance</CardTitle>
-              <CardDescription className="text-base">
+            <CardHeader className='pb-4'>
+              <CardTitle className='mb-2 text-xl'>Appearance</CardTitle>
+              <CardDescription className='text-base'>
                 Customize the look and feel of the application
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6 pt-6">
-              <div className="space-y-2">
-                <Label className="text-base" htmlFor="theme">Theme</Label>
+            <CardContent className='space-y-6 pt-6'>
+              <div className='space-y-2'>
+                <Label className='text-base' htmlFor='theme'>
+                  Theme
+                </Label>
                 <Select
                   disabled={saving}
-                  value={settings.theme || "system"}
-                  onValueChange={(value) =>
-                    updateSetting("theme", value as "light" | "dark" | "system")
+                  value={settings.theme || 'system'}
+                  onValueChange={value =>
+                    updateSetting('theme', value as 'light' | 'dark' | 'system')
                   }
                 >
-                  <SelectTrigger id="theme">
+                  <SelectTrigger id='theme'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="light">Light</SelectItem>
-                    <SelectItem value="dark">Dark</SelectItem>
-                    <SelectItem value="system">System</SelectItem>
+                    <SelectItem value='light'>Light</SelectItem>
+                    <SelectItem value='dark'>Dark</SelectItem>
+                    <SelectItem value='system'>System</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-base" htmlFor="language">Language</Label>
+              <div className='space-y-2'>
+                <Label className='text-base' htmlFor='language'>
+                  Language
+                </Label>
                 <Select
                   disabled={saving}
-                  value={settings.language || "en"}
-                  onValueChange={(value) => updateSetting("language", value)}
+                  value={settings.language || 'en'}
+                  onValueChange={value => updateSetting('language', value)}
                 >
-                  <SelectTrigger id="language">
+                  <SelectTrigger id='language'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="en">English</SelectItem>
-                    <SelectItem value="fr">Français</SelectItem>
-                    <SelectItem value="es">Español</SelectItem>
+                    <SelectItem value='en'>English</SelectItem>
+                    <SelectItem value='fr'>Français</SelectItem>
+                    <SelectItem value='es'>Español</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-base" htmlFor="timezone">Timezone</Label>
+              <div className='space-y-2'>
+                <Label className='text-base' htmlFor='timezone'>
+                  Timezone
+                </Label>
                 <Select
                   disabled={saving}
-                  value={settings.timezone || "UTC"}
-                  onValueChange={(value) => updateSetting("timezone", value)}
+                  value={settings.timezone || 'UTC'}
+                  onValueChange={value => updateSetting('timezone', value)}
                 >
-                  <SelectTrigger id="timezone">
+                  <SelectTrigger id='timezone'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="UTC">UTC</SelectItem>
-                    <SelectItem value="America/Toronto">Eastern Time (ET)</SelectItem>
-                    <SelectItem value="America/Vancouver">Pacific Time (PT)</SelectItem>
-                    <SelectItem value="Europe/London">London (GMT)</SelectItem>
+                    <SelectItem value='UTC'>UTC</SelectItem>
+                    <SelectItem value='America/Toronto'>
+                      Eastern Time (ET)
+                    </SelectItem>
+                    <SelectItem value='America/Vancouver'>
+                      Pacific Time (PT)
+                    </SelectItem>
+                    <SelectItem value='Europe/London'>London (GMT)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-base" htmlFor="time-format">Time Format</Label>
+              <div className='space-y-2'>
+                <Label className='text-base' htmlFor='time-format'>
+                  Time Format
+                </Label>
                 <Select
                   disabled={saving}
-                  value={settings.time_format || "24h"}
-                  onValueChange={(value) =>
-                    updateSetting("time_format", value as "12h" | "24h")
+                  value={settings.time_format || '24h'}
+                  onValueChange={value =>
+                    updateSetting('time_format', value as '12h' | '24h')
                   }
                 >
-                  <SelectTrigger id="time-format">
+                  <SelectTrigger id='time-format'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="12h">12-hour</SelectItem>
-                    <SelectItem value="24h">24-hour</SelectItem>
+                    <SelectItem value='12h'>12-hour</SelectItem>
+                    <SelectItem value='24h'>24-hour</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -326,65 +380,74 @@ export default function SettingsPage() {
         </TabsContent>
 
         {/* Privacy Tab */}
-        <TabsContent className="space-y-6" value="privacy">
+        <TabsContent className='space-y-6' value='privacy'>
           <Card>
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl mb-2">Privacy Settings</CardTitle>
-              <CardDescription className="text-base">
+            <CardHeader className='pb-4'>
+              <CardTitle className='mb-2 text-xl'>Privacy Settings</CardTitle>
+              <CardDescription className='text-base'>
                 Control your privacy and data sharing preferences
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6 pt-6">
-              <div className="space-y-2">
-                <Label className="text-base" htmlFor="profile-visibility">Profile Visibility</Label>
+            <CardContent className='space-y-6 pt-6'>
+              <div className='space-y-2'>
+                <Label className='text-base' htmlFor='profile-visibility'>
+                  Profile Visibility
+                </Label>
                 <Select
                   disabled={saving}
-                  value={settings.profile_visibility || "private"}
-                  onValueChange={(value) =>
-                    updateSetting("profile_visibility", value as "public" | "private" | "friends")
+                  value={settings.profile_visibility || 'private'}
+                  onValueChange={value =>
+                    updateSetting(
+                      'profile_visibility',
+                      value as 'public' | 'private' | 'friends'
+                    )
                   }
                 >
-                  <SelectTrigger id="profile-visibility">
+                  <SelectTrigger id='profile-visibility'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="public">Public</SelectItem>
-                    <SelectItem value="friends">Friends Only</SelectItem>
-                    <SelectItem value="private">Private</SelectItem>
+                    <SelectItem value='public'>Public</SelectItem>
+                    <SelectItem value='friends'>Friends Only</SelectItem>
+                    <SelectItem value='private'>Private</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="flex items-center justify-between py-2">
-                <div className="space-y-1">
-                  <Label className="text-base" htmlFor="analytics-opt-in">Analytics</Label>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+              <div className='flex items-center justify-between py-2'>
+                <div className='space-y-1'>
+                  <Label className='text-base' htmlFor='analytics-opt-in'>
+                    Analytics
+                  </Label>
+                  <p className='text-sm leading-relaxed text-muted-foreground'>
                     Help us improve by sharing anonymous usage data
                   </p>
                 </div>
                 <Switch
                   checked={settings.analytics_opt_in ?? true}
                   disabled={saving}
-                  id="analytics-opt-in"
-                  onCheckedChange={(checked) =>
-                    updateSetting("analytics_opt_in", checked)
+                  id='analytics-opt-in'
+                  onCheckedChange={checked =>
+                    updateSetting('analytics_opt_in', checked)
                   }
                 />
               </div>
 
-              <div className="flex items-center justify-between py-2">
-                <div className="space-y-1">
-                  <Label className="text-base" htmlFor="data-sharing">Data Sharing</Label>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+              <div className='flex items-center justify-between py-2'>
+                <div className='space-y-1'>
+                  <Label className='text-base' htmlFor='data-sharing'>
+                    Data Sharing
+                  </Label>
+                  <p className='text-sm leading-relaxed text-muted-foreground'>
                     Allow sharing of anonymized data with partners
                   </p>
                 </div>
                 <Switch
                   checked={settings.data_sharing_enabled ?? false}
                   disabled={saving}
-                  id="data-sharing"
-                  onCheckedChange={(checked) =>
-                    updateSetting("data_sharing_enabled", checked)
+                  id='data-sharing'
+                  onCheckedChange={checked =>
+                    updateSetting('data_sharing_enabled', checked)
                   }
                 />
               </div>
@@ -393,45 +456,51 @@ export default function SettingsPage() {
         </TabsContent>
 
         {/* Features Tab */}
-        <TabsContent className="space-y-6" value="features">
+        <TabsContent className='space-y-6' value='features'>
           <Card>
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl mb-2">Feature Preferences</CardTitle>
-              <CardDescription className="text-base">
+            <CardHeader className='pb-4'>
+              <CardTitle className='mb-2 text-xl'>
+                Feature Preferences
+              </CardTitle>
+              <CardDescription className='text-base'>
                 Enable experimental and beta features
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6 pt-6">
-              <div className="flex items-center justify-between py-2">
-                <div className="space-y-1">
-                  <Label className="text-base" htmlFor="beta-features">Beta Features</Label>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+            <CardContent className='space-y-6 pt-6'>
+              <div className='flex items-center justify-between py-2'>
+                <div className='space-y-1'>
+                  <Label className='text-base' htmlFor='beta-features'>
+                    Beta Features
+                  </Label>
+                  <p className='text-sm leading-relaxed text-muted-foreground'>
                     Enable access to beta features
                   </p>
                 </div>
                 <Switch
                   checked={settings.beta_features_enabled ?? false}
                   disabled={saving}
-                  id="beta-features"
-                  onCheckedChange={(checked) =>
-                    updateSetting("beta_features_enabled", checked)
+                  id='beta-features'
+                  onCheckedChange={checked =>
+                    updateSetting('beta_features_enabled', checked)
                   }
                 />
               </div>
 
-              <div className="flex items-center justify-between py-2">
-                <div className="space-y-1">
-                  <Label className="text-base" htmlFor="experimental-features">Experimental Features</Label>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+              <div className='flex items-center justify-between py-2'>
+                <div className='space-y-1'>
+                  <Label className='text-base' htmlFor='experimental-features'>
+                    Experimental Features
+                  </Label>
+                  <p className='text-sm leading-relaxed text-muted-foreground'>
                     Enable experimental features (may be unstable)
                   </p>
                 </div>
                 <Switch
                   checked={settings.experimental_features_enabled ?? false}
                   disabled={saving}
-                  id="experimental-features"
-                  onCheckedChange={(checked) =>
-                    updateSetting("experimental_features_enabled", checked)
+                  id='experimental-features'
+                  onCheckedChange={checked =>
+                    updateSetting('experimental_features_enabled', checked)
                   }
                 />
               </div>

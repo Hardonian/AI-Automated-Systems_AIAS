@@ -1,13 +1,13 @@
-"use server";
+'use server';
 
-import { createClient } from "@supabase/supabase-js";
-import { revalidatePath } from "next/cache";
+import { createClient } from '@supabase/supabase-js';
+import { revalidatePath } from 'next/cache';
 
-import type { Database, Json } from "@/src/integrations/supabase/types";
+import type { Database, Json } from '@/src/integrations/supabase/types';
 
 /**
  * Server Action: Submit Positioning Feedback
- * 
+ *
  * This action:
  * 1. Inserts feedback into positioning_feedback table
  * 2. Impact score is automatically calculated by database trigger
@@ -27,7 +27,14 @@ type PositioningFeedbackResponse = {
 
 export async function submitPositioningFeedback(
   userId: string,
-  feedbackType: "value_proposition" | "target_persona" | "pain_point" | "solution_clarity" | "messaging" | "feature_request" | "general",
+  feedbackType:
+    | 'value_proposition'
+    | 'target_persona'
+    | 'pain_point'
+    | 'solution_clarity'
+    | 'messaging'
+    | 'feature_request'
+    | 'general',
   feedbackText: string,
   metadata?: Record<string, unknown>
 ): Promise<PositioningFeedbackResponse> {
@@ -38,7 +45,7 @@ export async function submitPositioningFeedback(
     if (!supabaseUrl || !supabaseServiceKey) {
       return {
         success: false,
-        error: "Server configuration error: Missing Supabase credentials",
+        error: 'Server configuration error: Missing Supabase credentials',
       };
     }
 
@@ -51,7 +58,7 @@ export async function submitPositioningFeedback(
 
     // Step 1: Insert feedback (impact score calculated by trigger)
     const { data: feedbackData, error: feedbackError } = await supabase
-      .from("positioning_feedback")
+      .from('positioning_feedback')
       .insert({
         user_id: userId,
         feedback_type: feedbackType,
@@ -60,23 +67,23 @@ export async function submitPositioningFeedback(
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
-      .select("id, impact_score")
+      .select('id, impact_score')
       .single();
 
     if (feedbackError || !feedbackData) {
       return {
         success: false,
-        error: feedbackError?.message || "Failed to submit feedback",
+        error: feedbackError?.message || 'Failed to submit feedback',
       };
     }
 
     // Step 2: Log feedback submission activity
     const { error: activityError } = await supabase
-      .from("activity_log")
+      .from('activity_log')
       .insert({
         user_id: userId,
-        activity_type: "form_submit",
-        entity_type: "positioning_feedback",
+        activity_type: 'form_submit',
+        entity_type: 'positioning_feedback',
         entity_id: feedbackData.id.toString(),
         metadata: {
           feedback_type: feedbackType,
@@ -86,22 +93,23 @@ export async function submitPositioningFeedback(
       });
 
     if (activityError) {
-      console.error("Activity log error:", activityError);
+      console.error('Activity log error:', activityError);
     }
 
     // Step 3: Revalidate dashboard to show updated metrics
-    revalidatePath("/");
-    revalidatePath("/dashboard");
+    revalidatePath('/');
+    revalidatePath('/dashboard');
 
     // Generate personalized message based on impact score
-    let message = "Thank you for your feedback!";
+    let message = 'Thank you for your feedback!';
     const impactScore = feedbackData.impact_score ?? 0;
     if (impactScore >= 70) {
-      message = "🎉 Excellent feedback! Your input has high impact on our positioning clarity.";
+      message =
+        '🎉 Excellent feedback! Your input has high impact on our positioning clarity.';
     } else if (impactScore >= 40) {
-      message = "✨ Great feedback! Your contribution helps us improve.";
+      message = '✨ Great feedback! Your contribution helps us improve.';
     } else {
-      message = "Thank you for your feedback! Every contribution matters.";
+      message = 'Thank you for your feedback! Every contribution matters.';
     }
 
     return {
@@ -113,17 +121,18 @@ export async function submitPositioningFeedback(
       },
     };
   } catch (error) {
-    console.error("Positioning feedback error:", error);
+    console.error('Positioning feedback error:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "An unexpected error occurred",
+      error:
+        error instanceof Error ? error.message : 'An unexpected error occurred',
     };
   }
 }
 
 /**
  * Server Action: Log User Activity
- * 
+ *
  * Logs any user engagement (clicks, scrolls, views, etc.)
  * Can be called from client components for tracking
  */
@@ -140,12 +149,12 @@ export async function logActivity(
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceKey) {
-      return { success: false, error: "Server configuration error" };
+      return { success: false, error: 'Server configuration error' };
     }
 
     const supabase = createClient<Database>(supabaseUrl, supabaseServiceKey);
 
-    const { error } = await supabase.from("activity_log").insert({
+    const { error } = await supabase.from('activity_log').insert({
       user_id: userId || null,
       session_id: sessionId || null,
       activity_type: activityType,
@@ -156,16 +165,17 @@ export async function logActivity(
     });
 
     if (error) {
-      console.error("Activity log error:", error);
+      console.error('Activity log error:', error);
       return { success: false, error: error.message };
     }
 
     return { success: true };
   } catch (error) {
-    console.error("Log activity error:", error);
+    console.error('Log activity error:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "An unexpected error occurred",
+      error:
+        error instanceof Error ? error.message : 'An unexpected error occurred',
     };
   }
 }

@@ -55,9 +55,9 @@ export function checkResourceLimit(
   };
   const limit: ResourceLimit = { ...defaultLimit, ...customLimit };
   const now = Date.now();
-  
+
   let usage = resourceTrackers.get(resourceType);
-  
+
   if (!usage || now > usage.resetAt) {
     usage = {
       count: 0,
@@ -66,7 +66,7 @@ export function checkResourceLimit(
     };
     resourceTrackers.set(resourceType, usage);
   }
-  
+
   // Check count limit
   if (usage.count >= limit.maxCount) {
     return {
@@ -75,7 +75,7 @@ export function checkResourceLimit(
       resetAt: usage.resetAt,
     };
   }
-  
+
   // Check size limit
   if (limit.maxSize > 0 && usage.totalSize + size > limit.maxSize) {
     return {
@@ -84,11 +84,11 @@ export function checkResourceLimit(
       resetAt: usage.resetAt,
     };
   }
-  
+
   // Update usage
   usage.count++;
   usage.totalSize += size;
-  
+
   return {
     allowed: true,
     remaining: limit.maxCount - usage.count,

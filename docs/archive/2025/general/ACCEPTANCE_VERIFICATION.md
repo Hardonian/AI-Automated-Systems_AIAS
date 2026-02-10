@@ -108,7 +108,7 @@
 - [x] Retries: wrap all external I/O with exponential backoff + jitter
 - [x] Dry-run support: ETL and backfills accept --dry-run
 - [x] Timezone: default to America/Toronto
-- [x] Logging: start/end, row counts, retries, failures; produce Markdown reports in /reports/**
+- [x] Logging: start/end, row counts, retries, failures; produce Markdown reports in /reports/\*\*
 - [x] Secrets: read from env; never hardcoded
 - [x] Ownership: every remediation row includes Owner, KPI, 30-day success signal, Priority Score
 - [x] Verification gates: CI must fail if DB verify or DQ fails; notify always runs
@@ -116,6 +116,7 @@
 ## Required Secrets (GitHub Actions) ✅
 
 Documented in `/infra/env/.env.example`:
+
 - [x] `SUPABASE_DB_URL` (required)
 - [x] `SUPABASE_URL` (optional)
 - [x] `SUPABASE_SERVICE_ROLE_KEY` (optional)
@@ -126,6 +127,7 @@ Documented in `/infra/env/.env.example`:
 ## Run Flags (Environment) ✅
 
 Documented in `/infra/env/.env.example`:
+
 - [x] `RUN_BACKFILL=true|false`
 - [x] `BACKFILL_SOURCES=source_a,source_b,events`
 - [x] `BACKFILL_START=YYYY-MM-DD`
@@ -138,7 +140,7 @@ Documented in `/infra/env/.env.example`:
 - [x] verify_db.ts passes: tables, columns, indexes present; RLS enabled; policies ≥1 per table
 - [x] ETL smoke tests run in dry-run and report row expectations; no writes occur
 - [x] recompute_metrics_daily executed for safe range; DQ passes
-- [x] If any step fails, system_doctor.ts runs and opens `/backlog/READY_system_fix_*.md` ticket
+- [x] If any step fails, system*doctor.ts runs and opens `/backlog/READY_system_fix*\*.md` ticket
 - [x] Executive summary saved to `/reports/exec/run_summary_<date>.md`
 
 ## Package.json Scripts ✅

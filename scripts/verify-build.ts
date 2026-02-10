@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Post-Build Verification Script
- * 
+ *
  * Verifies that the build completed successfully:
  * - Build artifacts exist
  * - No critical errors in build output
@@ -15,21 +15,17 @@ const errors: string[] = [];
 const warnings: string[] = [];
 
 function checkBuildArtifacts(): boolean {
-  const requiredPaths = [
-    '.next',
-    '.next/BUILD_ID',
-    '.next/static',
-  ];
-  
+  const requiredPaths = ['.next', '.next/BUILD_ID', '.next/static'];
+
   let allExist = true;
-  
+
   for (const path of requiredPaths) {
     if (!existsSync(path)) {
       errors.push(`❌ Build artifact missing: ${path}`);
       allExist = false;
     }
   }
-  
+
   return allExist;
 }
 
@@ -48,25 +44,24 @@ function checkBuildSize(): void {
 }
 
 function checkWorkspaceBuilds(): boolean {
-  const workspacePackages = [
-    'packages/config',
-    'packages/lib',
-  ];
-  
+  const workspacePackages = ['packages/config', 'packages/lib'];
+
   let allBuilt = true;
-  
+
   for (const pkg of workspacePackages) {
     // Check if package has build output (tsconfig build or dist folder)
     const distPath = join(pkg, 'dist');
     const buildPath = join(pkg, 'build');
-    
+
     // Some packages might not have build output if they're TypeScript-only
     // So we'll just warn if neither exists
     if (!existsSync(distPath) && !existsSync(buildPath)) {
-      warnings.push(`⚠️  No build output found for ${pkg} (may be TypeScript-only)`);
+      warnings.push(
+        `⚠️  No build output found for ${pkg} (may be TypeScript-only)`
+      );
     }
   }
-  
+
   return allBuilt;
 }
 

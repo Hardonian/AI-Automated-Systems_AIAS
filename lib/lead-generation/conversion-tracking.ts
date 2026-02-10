@@ -32,7 +32,10 @@ export interface AttributionData {
 }
 
 class ConversionTrackingService {
-  private supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+  private supabase = createClient(
+    env.supabase.url,
+    env.supabase.serviceRoleKey
+  );
 
   /**
    * Track conversion
@@ -62,7 +65,12 @@ class ConversionTrackingService {
 
       // Calculate ROI if value provided
       if (event.value) {
-        await this.calculateROI(event.leadId, event.value, attribution, tenantId);
+        await this.calculateROI(
+          event.leadId,
+          event.value,
+          attribution,
+          tenantId
+        );
       }
 
       // Track event
@@ -81,17 +89,24 @@ class ConversionTrackingService {
         tenantId,
       });
     } catch (error) {
-      logger.error('Conversion tracking failed', error instanceof Error ? error : new Error(String(error)), {
-        leadId: event.leadId,
-        tenantId,
-      });
+      logger.error(
+        'Conversion tracking failed',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          leadId: event.leadId,
+          tenantId,
+        }
+      );
     }
   }
 
   /**
    * Get attribution data for lead
    */
-  private async getAttribution(leadId: string, _tenantId?: string): Promise<AttributionData> {
+  private async getAttribution(
+    leadId: string,
+    _tenantId?: string
+  ): Promise<AttributionData> {
     // Get lead
     const { data: lead } = await this.supabase
       .from('leads')
@@ -115,11 +130,13 @@ class ConversionTrackingService {
       campaign: lead.campaign,
       firstTouch: touchpoints?.[0]?.source || lead.source,
       lastTouch: touchpoints?.[touchpoints.length - 1]?.source || lead.source,
-      touchpoints: touchpoints?.map((tp: { created_at: string; source: string; type: string }) => ({
-        timestamp: tp.created_at,
-        source: tp.source,
-        type: tp.type,
-      })),
+      touchpoints: touchpoints?.map(
+        (tp: { created_at: string; source: string; type: string }) => ({
+          timestamp: tp.created_at,
+          source: tp.source,
+          type: tp.type,
+        })
+      ),
     };
 
     return attribution;
@@ -135,10 +152,14 @@ class ConversionTrackingService {
     tenantId?: string
   ): Promise<void> {
     // Get campaign costs
-    const campaignCost = await this.getCampaignCost(attribution.campaign, tenantId);
+    const campaignCost = await this.getCampaignCost(
+      attribution.campaign,
+      tenantId
+    );
 
     // Calculate ROI
-    const roi = campaignCost > 0 ? ((revenue - campaignCost) / campaignCost) * 100 : 0;
+    const roi =
+      campaignCost > 0 ? ((revenue - campaignCost) / campaignCost) * 100 : 0;
     const roas = campaignCost > 0 ? revenue / campaignCost : 0;
 
     // Store ROI data
@@ -167,8 +188,13 @@ class ConversionTrackingService {
   /**
    * Get campaign cost
    */
-  private async getCampaignCost(campaign?: string, tenantId?: string): Promise<number> {
-    if (!campaign) {return 0;}
+  private async getCampaignCost(
+    campaign?: string,
+    tenantId?: string
+  ): Promise<number> {
+    if (!campaign) {
+      return 0;
+    }
 
     const { data } = await this.supabase
       .from('campaign_costs')
@@ -200,7 +226,10 @@ class ConversionTrackingService {
   /**
    * Track event
    */
-  private async trackEvent(event: string, properties: Record<string, unknown>): Promise<void> {
+  private async trackEvent(
+    event: string,
+    properties: Record<string, unknown>
+  ): Promise<void> {
     try {
       await fetch('/api/telemetry/ingest', {
         method: 'POST',
@@ -254,7 +283,10 @@ class ConversionTrackingService {
       };
     }
 
-    const totalRevenue = conversions.reduce((sum: number, c: { value?: number }) => sum + (c.value || 0), 0);
+    const totalRevenue = conversions.reduce(
+      (sum: number, c: { value?: number }) => sum + (c.value || 0),
+      0
+    );
     const averageValue = totalRevenue / conversions.length;
 
     const byType: Record<string, number> = {};
@@ -278,7 +310,9 @@ class ConversionTrackingService {
     }
 
     const { count: totalLeads } = await leadQuery;
-    const conversionRate = totalLeads ? (conversions.length / totalLeads) * 100 : 0;
+    const conversionRate = totalLeads
+      ? (conversions.length / totalLeads) * 100
+      : 0;
 
     return {
       totalConversions: conversions.length,

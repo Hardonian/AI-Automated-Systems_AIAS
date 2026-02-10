@@ -17,7 +17,10 @@ export const commonSchemas = {
   url: z.string().url('Invalid URL format'),
   nonEmptyString: z.string().min(1, 'String cannot be empty'),
   positiveInteger: z.number().int().positive('Must be a positive integer'),
-  nonNegativeInteger: z.number().int().nonnegative('Must be a non-negative integer'),
+  nonNegativeInteger: z
+    .number()
+    .int()
+    .nonnegative('Must be a non-negative integer'),
   dateString: z.string().datetime('Invalid date format'),
   pagination: z.object({
     page: z.number().int().positive().optional().default(1),
@@ -149,16 +152,19 @@ export async function validateRequest<TBody, TQuery, TParams>(options: {
   query?: z.ZodSchema<TQuery>;
   params?: unknown;
   paramsSchema?: z.ZodSchema<TParams>;
-}): Promise<{
-  success: true;
-  body?: TBody;
-  query?: TQuery;
-  params?: TParams;
-} | {
-  success: false;
-  error: z.ZodError;
-  source: 'body' | 'query' | 'params';
-}> {
+}): Promise<
+  | {
+      success: true;
+      body?: TBody;
+      query?: TQuery;
+      params?: TParams;
+    }
+  | {
+      success: false;
+      error: z.ZodError;
+      source: 'body' | 'query' | 'params';
+    }
+> {
   // Validate body
   if (options.body) {
     const bodyResult = await parseRequestBody(options.request, options.body);

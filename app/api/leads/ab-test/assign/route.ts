@@ -14,16 +14,16 @@ const assignVariationSchema = z.object({
 });
 
 export const POST = createPOSTHandler(
-  async (context) => {
+  async context => {
     const body = assignVariationSchema.parse(await context.request.json());
     const tenantId = context.tenantId || undefined;
-    
+
     const variationId = await abTestingService.assignVariation(
       body.testId,
       body.visitorId,
       tenantId
     );
-    
+
     return NextResponse.json({ variationId });
   },
   {

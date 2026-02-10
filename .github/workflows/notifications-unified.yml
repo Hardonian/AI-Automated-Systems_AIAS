@@ -2,7 +2,12 @@ name: Unified Notifications
 
 on:
   workflow_run:
-    workflows: ["Unified CI Pipeline", "Unified Deployment", "Unified Database Migrations"]
+    workflows:
+      [
+        'Unified CI Pipeline',
+        'Unified Deployment',
+        'Unified Database Migrations',
+      ]
     types:
       - completed
   workflow_dispatch:
@@ -36,7 +41,7 @@ jobs:
           WORKFLOW_URL="${{ github.event.workflow_run.html_url }}"
           COMMIT_SHA="${{ github.event.workflow_run.head_sha }}"
           BRANCH="${{ github.event.workflow_run.head_branch }}"
-          
+
           case "$WORKFLOW_CONCLUSION" in
             "success")
               EMOJI="✅"
@@ -59,7 +64,7 @@ jobs:
               COLOR="#36a64f"
               ;;
           esac
-          
+
           echo "emoji=$EMOJI" >> $GITHUB_OUTPUT
           echo "status_text=$STATUS_TEXT" >> $GITHUB_OUTPUT
           echo "color=$COLOR" >> $GITHUB_OUTPUT

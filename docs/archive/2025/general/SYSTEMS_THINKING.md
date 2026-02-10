@@ -11,6 +11,7 @@ This document explains the systems thinking artifacts and how to use them for op
 **Location:** `systems/vsm.md`
 
 The VSM maps the flow from commit to customer impact:
+
 - Lead time: 26h (target: <12h)
 - Cycle time: 42min (target: <30min)
 - Rework rate: 18% (target: <10%)
@@ -26,6 +27,7 @@ The VSM maps the flow from commit to customer impact:
 **Location:** `systems/dependency-graph.mmd`
 
 Visual representation of system dependencies:
+
 - Frontend components
 - Backend services
 - AI agents
@@ -37,6 +39,7 @@ Visual representation of system dependencies:
 **Location:** `systems/flows.mmd`
 
 Shows reinforcing and balancing loops:
+
 - Feature throughput loops
 - Error response loops
 - Performance monitoring loops
@@ -47,6 +50,7 @@ Shows reinforcing and balancing loops:
 **Location:** `systems/metrics-tree.md`
 
 Hierarchy of objectives → outcomes → proxy metrics:
+
 - System reliability
 - Feature delivery velocity
 - Code quality
@@ -57,6 +61,7 @@ Hierarchy of objectives → outcomes → proxy metrics:
 **Location:** `reports/leverage-points.md`
 
 Top 5 optimization opportunities:
+
 1. Review queue optimization (P0)
 2. CI pipeline parallelization (P1)
 3. Automated error detection (P1)
@@ -68,6 +73,7 @@ Top 5 optimization opportunities:
 **Location:** `systems/okrs.yaml`
 
 Quarterly objectives aligned with SLOs:
+
 - Reliability & Performance
 - Feature Delivery Velocity
 - Code Quality & Developer Experience
@@ -77,6 +83,7 @@ Quarterly objectives aligned with SLOs:
 **Location:** `systems/decision-log.md`
 
 Architecture Decision Records (ADRs):
+
 - Error taxonomy implementation
 - Design token consolidation
 - Benchmark harness
@@ -88,6 +95,7 @@ Architecture Decision Records (ADRs):
 **Location:** `systems/raci.md`
 
 Roles and responsibilities for:
+
 - Deployments
 - Incidents
 - Schema changes
@@ -99,6 +107,7 @@ Roles and responsibilities for:
 **Location:** `ops/experiments.csv`
 
 Low-risk experiments with:
+
 - Hypotheses
 - Metrics
 - Guardrails
@@ -109,6 +118,7 @@ Low-risk experiments with:
 **Location:** `systems/scorecard.md`
 
 Weekly metrics snapshot:
+
 - Lead/cycle time
 - Failure rates
 - Queue lengths

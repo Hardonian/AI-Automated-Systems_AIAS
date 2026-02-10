@@ -40,7 +40,7 @@ jobs:
       - name: Check bundle size delta
         run: |
           echo "Bundle size check: Max delta = 0 KB"
-          
+
           # Extract bundle sizes from build output
           if [ -f .next/analyze/client.json ]; then
             # Use Next.js bundle analyzer output if available
@@ -53,7 +53,7 @@ jobs:
           else
             echo "⚠️  Bundle analysis not available"
           fi
-          
+
           # Compare with baseline (main branch) if on PR
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             echo "Comparing with main branch..."
@@ -61,13 +61,13 @@ jobs:
             # For now, just warn
             echo "⚠️  Bundle size comparison with baseline not implemented"
           fi
-          
+
           # Fail if bundle size increase detected (placeholder)
           # if [ "$BUNDLE_DELTA" -gt 0 ]; then
           #   echo "❌ Error: Bundle size increased by ${BUNDLE_DELTA} KB"
           #   exit 1
           # fi
-          
+
           echo "✅ Bundle size check passed (manual review recommended)"
 
       - name: Upload bundle analysis
@@ -105,20 +105,20 @@ jobs:
       - name: Check type coverage
         run: |
           echo "Type coverage check: Min coverage = 95%"
-          
+
           # Install type-coverage if not available
           if ! command -v type-coverage &> /dev/null; then
             echo "Installing type-coverage..."
             npm install -g type-coverage || pnpm add -D type-coverage
           fi
-          
+
           # Run type coverage check
           TYPE_COVERAGE_OUTPUT=$(npx type-coverage --detail --at-least 95 2>&1 || true)
           echo "$TYPE_COVERAGE_OUTPUT"
-          
+
           # Extract coverage percentage
           TYPE_COVERAGE=$(echo "$TYPE_COVERAGE_OUTPUT" | grep -oP '\d+\.\d+%' | head -1 | sed 's/%//' || echo "0")
-          
+
           if [ -z "$TYPE_COVERAGE" ] || [ "$TYPE_COVERAGE" = "0" ]; then
             echo "⚠️  Could not determine type coverage percentage"
             echo "⚠️  Continuing with warning (check output above)"
@@ -177,7 +177,7 @@ jobs:
           echo "| Bundle Size | ${{ needs.bundle-size-check.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Type Coverage | ${{ needs.type-coverage-check.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Tests | ${{ needs.test-check.result }} |" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ "${{ needs.bundle-size-check.result }}" != "success" ] || \
              [ "${{ needs.type-coverage-check.result }}" != "success" ] || \
              [ "${{ needs.test-check.result }}" != "success" ]; then

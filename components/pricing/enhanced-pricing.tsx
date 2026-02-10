@@ -7,7 +7,13 @@
 
 import React, { useState } from 'react';
 import { pricingTiers, SubscriptionTier } from '@/lib/pricing/tiers';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Check, Zap, Shield } from 'lucide-react';
@@ -15,21 +21,26 @@ import Link from 'next/link';
 import { trackCTAClick } from '@/lib/cro/optimization';
 
 export function EnhancedPricing() {
-  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('yearly');
+  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>(
+    'yearly'
+  );
   const [hoveredTier, setHoveredTier] = useState<SubscriptionTier | null>(null);
 
-  const handleCTAClick = (tier: SubscriptionTier, type: 'primary' | 'secondary') => {
+  const handleCTAClick = (
+    tier: SubscriptionTier,
+    type: 'primary' | 'secondary'
+  ) => {
     trackCTAClick(`pricing-${tier}-${type}`, 'pricing-page', 'high');
   };
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className='container mx-auto px-4 py-16'>
       {/* Billing Toggle */}
-      <div className="flex justify-center mb-12">
-        <div className="inline-flex items-center gap-2 p-1 bg-muted rounded-lg">
+      <div className='mb-12 flex justify-center'>
+        <div className='inline-flex items-center gap-2 rounded-lg bg-muted p-1'>
           <button
             onClick={() => setBillingPeriod('monthly')}
-            className={`px-4 py-2 rounded-md transition-all ${
+            className={`rounded-md px-4 py-2 transition-all ${
               billingPeriod === 'monthly'
                 ? 'bg-background text-foreground shadow-sm'
                 : 'text-muted-foreground hover:text-foreground'
@@ -39,22 +50,25 @@ export function EnhancedPricing() {
           </button>
           <button
             onClick={() => setBillingPeriod('yearly')}
-            className={`px-4 py-2 rounded-md transition-all relative ${
+            className={`relative rounded-md px-4 py-2 transition-all ${
               billingPeriod === 'yearly'
                 ? 'bg-background text-foreground shadow-sm'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             Yearly
-            <Badge className="ml-2 text-xs">Save 17%</Badge>
+            <Badge className='ml-2 text-xs'>Save 17%</Badge>
           </button>
         </div>
       </div>
 
       {/* Pricing Cards */}
-      <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        {pricingTiers.map((tier) => {
-          const price = billingPeriod === 'monthly' ? tier.price.monthly : tier.price.yearly / 12;
+      <div className='mx-auto grid max-w-6xl gap-8 md:grid-cols-3'>
+        {pricingTiers.map(tier => {
+          const price =
+            billingPeriod === 'monthly'
+              ? tier.price.monthly
+              : tier.price.yearly / 12;
           const isPopular = tier.id === 'pro';
           // const _isEnterprise = tier.id === 'enterprise';
 
@@ -63,37 +77,41 @@ export function EnhancedPricing() {
               key={tier.id}
               className={`relative transition-all duration-300 ${
                 isPopular
-                  ? 'border-primary shadow-lg scale-105'
+                  ? 'scale-105 border-primary shadow-lg'
                   : hoveredTier === tier.id
-                  ? 'shadow-xl scale-102'
-                  : ''
+                    ? 'scale-102 shadow-xl'
+                    : ''
               }`}
               onMouseEnter={() => setHoveredTier(tier.id)}
               onMouseLeave={() => setHoveredTier(null)}
             >
               {isPopular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <Badge className="bg-primary text-primary-foreground">
+                <div className='absolute -top-4 left-1/2 -translate-x-1/2'>
+                  <Badge className='bg-primary text-primary-foreground'>
                     Most Popular
                   </Badge>
                 </div>
               )}
 
               <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-2xl">{tier.name}</CardTitle>
-                  {tier.id === 'enterprise' && <Shield className="h-5 w-5 text-muted-foreground" />}
+                <div className='mb-2 flex items-center justify-between'>
+                  <CardTitle className='text-2xl'>{tier.name}</CardTitle>
+                  {tier.id === 'enterprise' && (
+                    <Shield className='h-5 w-5 text-muted-foreground' />
+                  )}
                 </div>
                 <CardDescription>{tier.description}</CardDescription>
-                <div className="mt-4">
+                <div className='mt-4'>
                   {tier.price.monthly === 0 ? (
-                    <div className="text-3xl font-bold">Custom</div>
+                    <div className='text-3xl font-bold'>Custom</div>
                   ) : (
                     <>
-                      <span className="text-3xl font-bold">${price}</span>
-                      <span className="text-muted-foreground">/{billingPeriod === 'monthly' ? 'month' : 'month'}</span>
+                      <span className='text-3xl font-bold'>${price}</span>
+                      <span className='text-muted-foreground'>
+                        /{billingPeriod === 'monthly' ? 'month' : 'month'}
+                      </span>
                       {billingPeriod === 'yearly' && (
-                        <div className="text-sm text-muted-foreground mt-1">
+                        <div className='mt-1 text-sm text-muted-foreground'>
                           Billed annually (${tier.price.yearly}/year)
                         </div>
                       )}
@@ -103,34 +121,43 @@ export function EnhancedPricing() {
               </CardHeader>
 
               <CardContent>
-                <ul className="space-y-3 mb-6">
-                  {tier.features.map((feature) => (
-                    <li key={feature.id} className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">
+                <ul className='mb-6 space-y-3'>
+                  {tier.features.map(feature => (
+                    <li key={feature.id} className='flex items-start gap-2'>
+                      <Check className='mt-0.5 h-5 w-5 flex-shrink-0 text-primary' />
+                      <span className='text-sm'>
                         {feature.name}
                         {feature.limit && (
-                          <span className="text-muted-foreground"> ({feature.limit})</span>
+                          <span className='text-muted-foreground'>
+                            {' '}
+                            ({feature.limit})
+                          </span>
                         )}
                       </span>
                     </li>
                   ))}
                 </ul>
 
-                <div className="space-y-2">
+                <div className='space-y-2'>
                   <Button
                     asChild
-                    className="w-full"
-                    size="lg"
+                    className='w-full'
+                    size='lg'
                     variant={isPopular ? 'default' : 'outline'}
                     onClick={() => handleCTAClick(tier.id, 'primary')}
                   >
-                    <Link href={tier.id === 'enterprise' ? '/contact' : `/signup?plan=${tier.id}`}>
+                    <Link
+                      href={
+                        tier.id === 'enterprise'
+                          ? '/contact'
+                          : `/signup?plan=${tier.id}`
+                      }
+                    >
                       {tier.cta.primary}
                     </Link>
                   </Button>
                   {tier.cta.secondary && (
-                    <p className="text-xs text-center text-muted-foreground">
+                    <p className='text-center text-xs text-muted-foreground'>
                       {tier.cta.secondary}
                     </p>
                   )}
@@ -138,9 +165,9 @@ export function EnhancedPricing() {
 
                 {/* Urgency Indicators */}
                 {isPopular && (
-                  <div className="mt-4 pt-4 border-t">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Zap className="h-4 w-4" />
+                  <div className='mt-4 border-t pt-4'>
+                    <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+                      <Zap className='h-4 w-4' />
                       <span>Join 500+ businesses using Pro</span>
                     </div>
                   </div>
@@ -152,49 +179,58 @@ export function EnhancedPricing() {
       </div>
 
       {/* Social Proof */}
-      <div className="mt-16 text-center">
-        <p className="text-sm text-muted-foreground mb-4">
+      <div className='mt-16 text-center'>
+        <p className='mb-4 text-sm text-muted-foreground'>
           Trusted by businesses across Canada
         </p>
-        <div className="flex items-center justify-center gap-8 opacity-60">
+        <div className='flex items-center justify-center gap-8 opacity-60'>
           {/* Add logos here */}
-          <div className="text-2xl font-bold">Company 1</div>
-          <div className="text-2xl font-bold">Company 2</div>
-          <div className="text-2xl font-bold">Company 3</div>
+          <div className='text-2xl font-bold'>Company 1</div>
+          <div className='text-2xl font-bold'>Company 2</div>
+          <div className='text-2xl font-bold'>Company 3</div>
         </div>
       </div>
 
       {/* FAQ Section */}
-      <div className="mt-16 max-w-3xl mx-auto">
-        <h2 className="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h2>
-        <div className="space-y-4">
+      <div className='mx-auto mt-16 max-w-3xl'>
+        <h2 className='mb-8 text-center text-2xl font-bold'>
+          Frequently Asked Questions
+        </h2>
+        <div className='space-y-4'>
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Can I change plans later?</CardTitle>
+              <CardTitle className='text-lg'>
+                Can I change plans later?
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">
-                Yes! You can upgrade, downgrade, or cancel your plan at any time. Changes take effect immediately.
+              <p className='text-muted-foreground'>
+                Yes! You can upgrade, downgrade, or cancel your plan at any
+                time. Changes take effect immediately.
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Is there a free trial?</CardTitle>
+              <CardTitle className='text-lg'>Is there a free trial?</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">
-                Yes! Pro plan includes a 14-day free trial. No credit card required to start.
+              <p className='text-muted-foreground'>
+                Yes! Pro plan includes a 14-day free trial. No credit card
+                required to start.
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">What payment methods do you accept?</CardTitle>
+              <CardTitle className='text-lg'>
+                What payment methods do you accept?
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">
-                We accept all major credit cards, debit cards, and bank transfers for Enterprise plans.
+              <p className='text-muted-foreground'>
+                We accept all major credit cards, debit cards, and bank
+                transfers for Enterprise plans.
               </p>
             </CardContent>
           </Card>

@@ -35,12 +35,14 @@ vercel rollback
 ### Vercel Rollback
 
 **Method 1: Via Dashboard**
+
 1. Go to Vercel Dashboard → Your Project → Deployments
 2. Find the deployment to rollback to
 3. Click "..." menu → "Promote to Production"
 4. Confirm rollback
 
 **Method 2: Via CLI**
+
 ```bash
 # List recent deployments
 vercel ls
@@ -53,6 +55,7 @@ vercel rollback --prod
 ```
 
 **Method 3: Via Git**
+
 ```bash
 # Revert the commit that caused issues
 git revert <commit-hash>
@@ -84,6 +87,7 @@ docker-compose up -d
 **⚠️ Warning:** Database rollbacks can cause data loss. Always backup first.
 
 **Method 1: Revert Migration**
+
 ```bash
 # List migrations
 supabase migration list
@@ -99,6 +103,7 @@ supabase db push
 ```
 
 **Method 2: Manual SQL Rollback**
+
 ```sql
 -- Connect to Supabase SQL Editor
 -- Run reverse SQL commands manually
@@ -114,6 +119,7 @@ ALTER TABLE table_name DROP CONSTRAINT IF EXISTS constraint_name;
 ```
 
 **Method 3: Restore from Backup**
+
 ```bash
 # Restore from Supabase backup (if available)
 # Go to: Supabase Dashboard → Database → Backups
@@ -151,6 +157,7 @@ await updateFlag('canary_checkout', { enabled: false, percentage: 0 });
 ### Git Rollback
 
 **Safe Rollback (Creates Revert Commit)**
+
 ```bash
 # Revert specific commit
 git revert <commit-hash>
@@ -163,6 +170,7 @@ git push origin main
 ```
 
 **Destructive Rollback (Rewrites History)**
+
 ```bash
 # ⚠️ Only use on feature branches, never on main
 git reset --hard <commit-hash>
@@ -232,6 +240,7 @@ Is the issue in production?
 ## Rollback Checklist
 
 ### Pre-Rollback
+
 - [ ] Identify the problematic commit/deployment
 - [ ] Verify rollback target is stable
 - [ ] Notify team of rollback plan
@@ -239,6 +248,7 @@ Is the issue in production?
 - [ ] Document the issue
 
 ### During Rollback
+
 - [ ] Execute rollback command
 - [ ] Verify rollback succeeded
 - [ ] Check application health
@@ -246,6 +256,7 @@ Is the issue in production?
 - [ ] Verify critical features work
 
 ### Post-Rollback
+
 - [ ] Confirm issue is resolved
 - [ ] Document rollback in incident log
 - [ ] Create follow-up ticket for fix

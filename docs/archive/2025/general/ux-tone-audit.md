@@ -30,13 +30,15 @@
 #### 1. Ban Phrases Detected
 
 **File:** `lib/blog/comments.ts:31`
+
 - **Original:** `keywords: ["buy now", "click here", "free money", "guaranteed"]`
 - **Context:** Spam detection keywords (acceptable for filtering, not user-facing)
 - **Status:** ✅ Acceptable (not user-facing)
 - **Action:** None required
 
 **File:** `copy/tone-profile.json:97-98`
-- **Original:** 
+
+- **Original:**
   - `"Click here to get started!"`
   - `"Please note that systems thinking is important."`
 - **Context:** Examples in tone profile (showing what to avoid)
@@ -44,6 +46,7 @@
 - **Action:** None required
 
 **File:** `reports/ux-tone-findings.md:20`
+
 - **Original:** `keywords: ["buy now", "click here", "free money", "guaranteed"]`
 - **Context:** Report documentation
 - **Status:** ✅ Acceptable (documentation)
@@ -113,6 +116,7 @@
 **All user-facing strings are compliant with tone profile.**
 
 **Rationale:**
+
 - No ban phrases found in user-facing content
 - CTAs use action verbs and are clear
 - Tone is calm, authoritative, and minimal
@@ -155,6 +159,7 @@ The following files were not fully audited and should be reviewed:
 **Target:** Review remaining ~25 files with user-facing content
 
 **Files to Review:**
+
 - All page components (`app/*/page.tsx`)
 - All home components (`components/home/*.tsx`)
 - All UI components with user-facing text (`components/ui/*.tsx`)

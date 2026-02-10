@@ -1,14 +1,14 @@
-import path from "path";
+import path from 'path';
 
-import react from "@vitejs/plugin-react-swc";
+import react from '@vitejs/plugin-react-swc';
 import { visualizer } from 'rollup-plugin-visualizer';
-import { defineConfig } from "vite";
+import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: { mode: string }) => ({
   server: {
-    host: "::",
+    host: '::',
     port: 8080,
   },
   plugins: [
@@ -25,13 +25,17 @@ export default defineConfig(({ mode }: { mode: string }) => ({
               cacheName: 'google-fonts-cache',
               expiration: {
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
               },
               // @ts-expect-error - cacheKeyWillBeUsed may not be in type definition but is valid for workbox
-              cacheKeyWillBeUsed: async ({ request }: { request: { url: string } }) => {
+              cacheKeyWillBeUsed: async ({
+                request,
+              }: {
+                request: { url: string };
+              }) => {
                 return `${request.url}?v=1`;
-              }
-            }
+              },
+            },
           },
           {
             urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
@@ -40,17 +44,18 @@ export default defineConfig(({ mode }: { mode: string }) => ({
               cacheName: 'gstatic-fonts-cache',
               expiration: {
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-              }
-            }
-          }
-        ]
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              },
+            },
+          },
+        ],
       },
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
         name: 'AIAS - AI Agent Solutions',
         short_name: 'AIAS',
-        description: 'Enterprise-grade AI consultancy platform showcasing custom AI agents, workflow automation, and intelligent business solutions.',
+        description:
+          'Enterprise-grade AI consultancy platform showcasing custom AI agents, workflow automation, and intelligent business solutions.',
         theme_color: '#1e40af',
         background_color: '#ffffff',
         display: 'standalone',
@@ -61,32 +66,33 @@ export default defineConfig(({ mode }: { mode: string }) => ({
           {
             src: 'pwa-192x192.png',
             sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
           },
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
-          }
-        ]
-      }
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable',
+          },
+        ],
+      },
     }),
-    mode === 'analyze' && visualizer({
-      filename: 'dist/stats.html',
-      open: true,
-      gzipSize: true,
-      brotliSize: true,
-    })
+    mode === 'analyze' &&
+      visualizer({
+        filename: 'dist/stats.html',
+        open: true,
+        gzipSize: true,
+        brotliSize: true,
+      }),
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(__dirname, './src'),
     },
   },
   build: {
@@ -97,14 +103,18 @@ export default defineConfig(({ mode }: { mode: string }) => ({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-tabs'],
+          ui: [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-tabs',
+          ],
           charts: ['recharts'],
           animations: ['framer-motion'],
           ai: ['openai', '@anthropic-ai/sdk', '@google/generative-ai'],
           payments: ['stripe'],
-          utils: ['date-fns', 'clsx', 'tailwind-merge']
-        }
-      }
+          utils: ['date-fns', 'clsx', 'tailwind-merge'],
+        },
+      },
     },
     terserOptions: {
       compress: {
@@ -125,7 +135,7 @@ export default defineConfig(({ mode }: { mode: string }) => ({
       'recharts',
       'date-fns',
       'clsx',
-      'tailwind-merge'
-    ]
-  }
+      'tailwind-merge',
+    ],
+  },
 }));

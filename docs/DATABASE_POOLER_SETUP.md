@@ -5,6 +5,7 @@ This document explains how the database pooler connection is configured and used
 ## Overview
 
 The system uses a **Supabase Pooler connection** for database operations, which provides:
+
 - Better connection management
 - Improved performance under load
 - Connection pooling for serverless environments
@@ -41,6 +42,7 @@ The system uses the following priority order for database URLs:
 3. `DATABASE_URL` (legacy fallback)
 
 For direct URLs:
+
 1. `DATABASE_POOLER_DIRECT_URL`
 2. `UPSTASH_POSTGRES_DIRECT_URL`
 3. `DIRECT_URL`
@@ -51,6 +53,7 @@ For direct URLs:
 ### Secret Masking
 
 All database URLs are automatically masked in GitHub Actions logs using:
+
 ```bash
 echo "::add-mask::$DATABASE_URL"
 echo "::add-mask::$DIRECT_URL"
@@ -99,6 +102,7 @@ gh secret set DATABASE_POOLER_DIRECT_URL --body "postgresql://postgres.{project_
 ### 2. Verify Secret Configuration
 
 Check that secrets are set:
+
 ```bash
 gh secret list
 ```
@@ -106,6 +110,7 @@ gh secret list
 ### 3. Test Migration Workflow
 
 Trigger a test migration:
+
 ```bash
 gh workflow run migrations-unified.yml
 ```
@@ -115,6 +120,7 @@ gh workflow run migrations-unified.yml
 ### Migrations Not Running
 
 1. **Check Secret Exists**
+
    ```bash
    gh secret list | grep DATABASE_POOLER
    ```
@@ -140,6 +146,7 @@ gh workflow run migrations-unified.yml
 ### Fallback Behavior
 
 If `DATABASE_POOLER_URL` is not set, the system will:
+
 1. Try `UPSTASH_POSTGRES_URL`
 2. Fall back to `DATABASE_URL`
 3. Skip migrations if none are available (non-blocking)

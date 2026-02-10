@@ -1,6 +1,7 @@
 > Archived on 2025-11-12. Superseded by: (see docs/final index)
 
 # Process Mapping Template
+
 ## Document Current Processes for Automation Analysis
 
 **Purpose:** Map current processes to identify automation opportunities  
@@ -11,96 +12,106 @@
 
 ## 📋 PROCESS INFORMATION
 
-**Process Name:** _______________________  
-**Process Owner:** _______________________  
-**Department:** _______________________  
-**Date Documented:** _______________________  
-**Documented By:** _______________________  
+**Process Name:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Process Owner:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Department:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Date Documented:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Documented By:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***
 
 **Process Description:**
-_________________________________________________________________
-_________________________________________________________________
+
+---
+
+---
 
 **Trigger:** [What starts this process?]
-_________________________________________________________________
+
+---
 
 **Output:** [What is the end result?]
-_________________________________________________________________
+
+---
 
 ---
 
 ## 🔄 CURRENT PROCESS STEPS
 
 ### Step 1: [Step Name]
-**Description:**
-_________________________________________________________________
 
-**Who:** _______________________  
-**Time:** _____ minutes  
-**Tools Used:** _______________________  
-**Data Input:** _______________________  
-**Data Output:** _______________________  
-**Errors/Issues:** _______________________
+**Description:**
+
+---
+
+**Who:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Time:** **\_** minutes  
+**Tools Used:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Data Input:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Data Output:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Errors/Issues:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***
 
 ---
 
 ### Step 2: [Step Name]
-**Description:**
-_________________________________________________________________
 
-**Who:** _______________________  
-**Time:** _____ minutes  
-**Tools Used:** _______________________  
-**Data Input:** _______________________  
-**Data Output:** _______________________  
-**Errors/Issues:** _______________________
+**Description:**
+
+---
+
+**Who:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Time:** **\_** minutes  
+**Tools Used:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Data Input:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Data Output:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Errors/Issues:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***
 
 ---
 
 ### Step 3: [Step Name]
-**Description:**
-_________________________________________________________________
 
-**Who:** _______________________  
-**Time:** _____ minutes  
-**Tools Used:** _______________________  
-**Data Input:** _______________________  
-**Data Output:** _______________________  
-**Errors/Issues:** _______________________
+**Description:**
 
 ---
 
-*[Continue for all steps...]*
+**Who:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Time:** **\_** minutes  
+**Tools Used:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Data Input:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Data Output:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***  
+**Errors/Issues:** \***\*\*\*\*\***\_\_\_\***\*\*\*\*\***
+
+---
+
+_[Continue for all steps...]_
 
 ---
 
 ## 📊 PROCESS METRICS
 
-**Total Time:** _____ hours/minutes  
-**Total Steps:** _____  
-**People Involved:** _____  
-**Systems/Tools:** _____  
-**Error Rate:** _____%  
+**Total Time:** **\_** hours/minutes  
+**Total Steps:** **\_**  
+**People Involved:** **\_**  
+**Systems/Tools:** **\_**  
+**Error Rate:** **\_**%  
 **Frequency:** [ ] Daily [ ] Weekly [ ] Monthly [ ] As needed  
-**Volume:** _____ per [time period]
+**Volume:** **\_** per [time period]
 
 ---
 
 ## ⚠️ PAIN POINTS
 
 | Pain Point | Impact | Frequency | Current Workaround |
-|------------|--------|----------|-------------------|
-| | | | |
-| | | | |
+| ---------- | ------ | --------- | ------------------ |
+|            |        |           |                    |
+|            |        |           |                    |
 
 ---
 
 ## 💡 AUTOMATION OPPORTUNITIES
 
 | Step | Automation Opportunity | Estimated Time Savings | Priority |
-|------|------------------------|----------------------|----------|
-| | | | |
-| | | | |
+| ---- | ---------------------- | ---------------------- | -------- |
+|      |                        |                        |          |
+|      |                        |                        |          |
 
 ---
 
@@ -115,18 +126,21 @@ _________________________________________________________________
 5. **Output:** [Automated delivery]
 
 **Expected Improvements:**
-- Time: _____ hours/minutes saved
-- Errors: _____% reduction
-- Cost: $_____ saved
+
+- Time: **\_** hours/minutes saved
+- Errors: **\_**% reduction
+- Cost: $**\_** saved
 - Scalability: [Description]
 
 ---
 
 ## 📝 NOTES
 
-_________________________________________________________________
-_________________________________________________________________
-_________________________________________________________________
+---
+
+---
+
+---
 
 ---
 

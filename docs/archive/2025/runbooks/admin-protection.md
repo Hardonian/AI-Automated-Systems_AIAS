@@ -26,6 +26,7 @@ Admin dashboards (`/admin/*`) are protected to prevent unauthorized access to se
 **Method:** Basic Authentication via `ADMIN_BASIC_AUTH` secret
 
 1. **Set Secret:**
+
    ```bash
    # Format: "username:password" (base64 encoded)
    # Example: "admin:secure-password-here"
@@ -50,7 +51,7 @@ Protection is implemented in `middleware.ts`:
 // Admin dashboard protection
 if (pathname.startsWith('/admin/')) {
   const hasAdminAccess = checkAdminAccess(request);
-  
+
   if (!hasAdminAccess) {
     return new NextResponse('Unauthorized', {
       status: 401,

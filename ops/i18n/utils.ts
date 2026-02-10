@@ -21,14 +21,19 @@ export class I18n {
     }
   }
 
-  t(key: string, locale: string = 'en', params?: Record<string, string>): string {
-    const localeMap = this.translations.get(locale) || this.translations.get('en');
+  t(
+    key: string,
+    locale: string = 'en',
+    params?: Record<string, string>
+  ): string {
+    const localeMap =
+      this.translations.get(locale) || this.translations.get('en');
     if (!localeMap) {
       return key;
     }
 
     let translation = localeMap.get(key) || key;
-    
+
     if (params) {
       for (const [paramKey, paramValue] of Object.entries(params)) {
         translation = translation.replace(`{{${paramKey}}}`, paramValue);
@@ -62,13 +67,13 @@ export class I18n {
       }
     }
 
-    const rows: string[] = [`key,${  locales.join(',')}`];
+    const rows: string[] = [`key,${locales.join(',')}`];
     for (const key of allKeys) {
-      const values = locales.map((locale) => {
+      const values = locales.map(locale => {
         const localeMap = this.translations.get(locale);
         return localeMap?.get(key) || '';
       });
-      rows.push(`"${key}",${values.map((v) => `"${v}"`).join(',')}`);
+      rows.push(`"${key}",${values.map(v => `"${v}"`).join(',')}`);
     }
 
     return rows.join('\n');
@@ -77,7 +82,7 @@ export class I18n {
   validateKeys(locale: string): { missing: string[] } {
     const baseLocale = this.translations.get('en');
     const targetLocale = this.translations.get(locale);
-    
+
     if (!baseLocale || !targetLocale) {
       return { missing: [] };
     }

@@ -49,6 +49,7 @@ All pull requests must pass the following checks:
 Please report bugs via [GitHub Issues](https://github.com/shardie-github/aias/issues) or email: **support@aiautomatedsystems.ca**
 
 Include:
+
 - Description of the bug
 - Steps to reproduce
 - Expected behavior
@@ -59,6 +60,7 @@ Include:
 ### Feature Requests
 
 For feature requests, please:
+
 1. Check if the feature already exists or is planned
 2. Open a GitHub issue with a clear description
 3. Or email: **inquiries@aiautomatedsystems.ca**
@@ -70,6 +72,7 @@ For feature requests, please:
 Instead, report security issues to: **security@aiautomatedsystems.ca**
 
 We will:
+
 - Acknowledge receipt within 48 hours
 - Work with you to resolve the issue
 - Credit you for responsible disclosure (with your permission)

@@ -52,7 +52,9 @@ function redactSensitiveData(data: any): any {
     for (const key in obj) {
       if (typeof obj[key] === 'object' && obj[key] !== null) {
         redact(obj[key]);
-      } else if (sensitiveFields.some((field) => key.toLowerCase().includes(field))) {
+      } else if (
+        sensitiveFields.some(field => key.toLowerCase().includes(field))
+      ) {
         obj[key] = '[REDACTED]';
       }
     }
@@ -71,7 +73,7 @@ export function redactLog(log: string): string {
 
   let redacted = log;
   for (const pattern of patterns) {
-    redacted = redacted.replace(pattern, (match) => {
+    redacted = redacted.replace(pattern, match => {
       const [key] = match.split('=');
       return `${key}=[REDACTED]`;
     });

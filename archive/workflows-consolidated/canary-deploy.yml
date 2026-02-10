@@ -39,7 +39,7 @@ jobs:
             echo "Error: Percentage must be between 0 and 100"
             exit 1
           fi
-          
+
           MODULE=${{ github.event.inputs.module }}
           if [ -z "$MODULE" ]; then
             echo "Error: Module is required"

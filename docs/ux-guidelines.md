@@ -122,22 +122,23 @@ relaxed: 1.75 - Long-form content, descriptions
 ### Grid Patterns
 
 #### Two-Column Layout
+
 ```tsx
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-  {/* Content */}
-</div>
+<div className='grid grid-cols-1 gap-6 md:grid-cols-2'>{/* Content */}</div>
 ```
 
 #### Three-Column Layout
+
 ```tsx
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
   {/* Content */}
 </div>
 ```
 
 #### Card Grid
+
 ```tsx
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
   {/* Cards */}
 </div>
 ```
@@ -223,6 +224,7 @@ xl:  shadow-xl    - High elevation, dropdowns
 All interactive elements must have consistent states:
 
 #### Buttons
+
 - **Default:** Base style
 - **Hover:** Scale 1.02-1.05, shadow increase, color shift
 - **Active:** Scale 0.95-0.98, pressed appearance
@@ -230,12 +232,14 @@ All interactive elements must have consistent states:
 - **Disabled:** Opacity 0.5, no pointer events, no hover
 
 #### Links
+
 - **Default:** Primary color
 - **Hover:** Underline or color shift
 - **Focus:** 2px solid outline
 - **Visited:** Slightly muted color
 
 #### Form Inputs
+
 - **Default:** Border, background
 - **Focus:** Ring 2px, border color change
 - **Error:** Red border, red ring
@@ -243,6 +247,7 @@ All interactive elements must have consistent states:
 - **Disabled:** Opacity 0.5, muted appearance
 
 #### Cards
+
 - **Default:** Subtle shadow
 - **Hover:** Shadow increase, slight lift (-2px translateY)
 - **Focus:** Ring outline (if interactive)
@@ -271,41 +276,48 @@ className="transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
 ### Cards
 
 **Standard Card:**
+
 - Padding: `p-6` (24px)
 - Border radius: `rounded-xl` (14px)
 - Shadow: `shadow-sm` default, `shadow-lg` hover
 - Border: `border border-border`
 
 **Card Spacing:**
+
 - Between cards: `gap-6` (24px)
 - Card content: `space-y-4` (16px) vertical
 
 ### Buttons
 
 **Sizes:**
+
 - `sm`: `h-9 px-4` (36px height)
 - `md`: `h-10 px-5` (40px height) - default
 - `lg`: `h-12 px-8` (48px height)
 - `xl`: `h-14 px-10` (56px height)
 
 **Touch Targets:**
+
 - Minimum: 44×44px (WCAG 2.2 AA)
 - Spacing between: 8px minimum
 
 ### Forms
 
 **Field Spacing:**
+
 - Between fields: `space-y-4` (16px)
 - Label to input: `mb-2` (8px)
 - Error message: `mt-2` (8px) below input
 
 **Input Heights:**
+
 - Standard: `h-11` (44px) - meets touch target minimum
 - Large: `h-12` (48px)
 
 ### Navigation
 
 **Link Spacing:**
+
 - Horizontal nav: `px-3 py-2` (12px horizontal, 8px vertical)
 - Vertical nav: `py-2 px-4` (8px vertical, 16px horizontal)
 - Touch target: Minimum 44×44px
@@ -317,24 +329,25 @@ className="transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
 ### Standard Template
 
 ```tsx
-<div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+<div className='flex flex-col items-center justify-center px-4 py-12 text-center'>
   {/* Icon (optional) */}
-  <Icon className="mb-6 text-muted-foreground" />
-  
+  <Icon className='mb-6 text-muted-foreground' />
+
   {/* Headline */}
-  <h3 className="text-xl font-semibold mb-3">No items yet</h3>
-  
+  <h3 className='mb-3 text-xl font-semibold'>No items yet</h3>
+
   {/* Description */}
-  <p className="text-sm text-muted-foreground mb-8 max-w-md">
+  <p className='mb-8 max-w-md text-sm text-muted-foreground'>
     Description text explaining the empty state.
   </p>
-  
+
   {/* CTA (optional) */}
   <Button>Create First Item</Button>
 </div>
 ```
 
 ### Spacing
+
 - Vertical padding: `py-12` (48px)
 - Icon margin: `mb-6` (24px)
 - Headline margin: `mb-3` (12px)
@@ -347,15 +360,15 @@ className="transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
 ### Standard Template
 
 ```tsx
-<div className="rounded-xl border border-destructive bg-destructive/10 p-6">
-  <div className="flex items-center gap-3 mb-2">
-    <AlertCircle className="h-5 w-5 text-destructive" />
-    <h3 className="text-lg font-semibold text-destructive">Error Title</h3>
+<div className='rounded-xl border border-destructive bg-destructive/10 p-6'>
+  <div className='mb-2 flex items-center gap-3'>
+    <AlertCircle className='h-5 w-5 text-destructive' />
+    <h3 className='text-lg font-semibold text-destructive'>Error Title</h3>
   </div>
-  <p className="text-sm text-muted-foreground mb-4">
+  <p className='mb-4 text-sm text-muted-foreground'>
     Error description with actionable guidance.
   </p>
-  <Button variant="outline" onClick={onRetry}>
+  <Button variant='outline' onClick={onRetry}>
     Try Again
   </Button>
 </div>
@@ -399,16 +412,16 @@ className="transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
 
 ```tsx
 // Responsive grid
-className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
 
 // Responsive text
-className="text-2xl md:text-3xl lg:text-4xl"
+className = 'text-2xl md:text-3xl lg:text-4xl';
 
 // Responsive spacing
-className="py-8 md:py-12 lg:py-16"
+className = 'py-8 md:py-12 lg:py-16';
 
 // Responsive visibility
-className="hidden md:block"
+className = 'hidden md:block';
 ```
 
 ---
@@ -447,25 +460,17 @@ className="hidden md:block"
 ### Colors (from CSS variables)
 
 ```css
---bg: Background color
---fg: Foreground/text color
---muted: Muted background/text
---card: Card background
---primary: Primary brand color
---secondary: Secondary color
---accent: Accent color
---destructive: Error/danger color
---border: Border color
---ring: Focus ring color
+--bg: Background color --fg: Foreground/text color --muted: Muted
+  background/text --card: Card background --primary: Primary brand color
+  --secondary: Secondary color --accent: Accent color
+  --destructive: Error/danger color --border: Border color --ring: Focus ring
+  color;
 ```
 
 ### Border Radius
 
 ```css
---radius: 14px (base)
-lg: 14px
-xl: 18px
-2xl: 22px
+--radius: 14px (base) lg: 14px xl: 18px 2xl: 22px;
 ```
 
 ### Shadows

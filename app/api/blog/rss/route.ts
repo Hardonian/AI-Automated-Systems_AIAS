@@ -1,7 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { rssFeeds, analyzeRSSItemWithSystemsThinking, type RSSFeedItem } from "@/lib/blog/rss-feed";
-import { logger } from "@/lib/logging/structured-logger";
+import {
+  rssFeeds,
+  analyzeRSSItemWithSystemsThinking,
+  type RSSFeedItem,
+} from '@/lib/blog/rss-feed';
+import { logger } from '@/lib/logging/structured-logger';
 
 // RSS Feed Endpoint
 // Fetches and analyzes AI/Tech news with systems thinking perspective
@@ -9,8 +13,8 @@ import { logger } from "@/lib/logging/structured-logger";
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const feed = searchParams.get("feed");
-    const category = searchParams.get("category");
+    const feed = searchParams.get('feed');
+    const category = searchParams.get('category');
 
     // Filter feeds
     let feeds = rssFeeds.filter(f => f.enabled);
@@ -32,11 +36,11 @@ export async function GET(request: NextRequest) {
     const errors: Array<{ feed: string; error: string }> = [];
 
     // Fetch all feeds in parallel with error handling
-    const feedPromises = feeds.map(async (feed) => {
+    const feedPromises = feeds.map(async feed => {
       try {
         const feedData = await parser.parseURL(feed.url);
         if (feedData.items) {
-          feedData.items.forEach((item) => {
+          feedData.items.forEach(item => {
             items.push({
               title: item.title || '',
               description: item.contentSnippet || item.content || '',
@@ -51,11 +55,15 @@ export async function GET(request: NextRequest) {
           feed: feed.name,
           error: error instanceof Error ? error.message : String(error),
         });
-        logger.error(`Failed to fetch feed ${feed.name}`, error instanceof Error ? error : new Error(String(error)), {
-          component: "RSSAPI",
-          action: "fetchFeed",
-          feedName: feed.name,
-        });
+        logger.error(
+          `Failed to fetch feed ${feed.name}`,
+          error instanceof Error ? error : new Error(String(error)),
+          {
+            component: 'RSSAPI',
+            action: 'fetchFeed',
+            feedName: feed.name,
+          }
+        );
       }
     });
 
@@ -81,7 +89,7 @@ export async function GET(request: NextRequest) {
     });
   } catch {
     return NextResponse.json(
-      { error: "Failed to fetch RSS feeds" },
+      { error: 'Failed to fetch RSS feeds' },
       { status: 500 }
     );
   }
@@ -95,7 +103,7 @@ export async function POST(request: NextRequest) {
 
     const analysis = analyzeRSSItemWithSystemsThinking({
       title,
-      description: description || "",
+      description: description || '',
       link,
       source,
       pubDate: new Date().toISOString(),
@@ -107,7 +115,7 @@ export async function POST(request: NextRequest) {
     });
   } catch {
     return NextResponse.json(
-      { error: "Failed to analyze RSS item" },
+      { error: 'Failed to analyze RSS item' },
       { status: 500 }
     );
   }

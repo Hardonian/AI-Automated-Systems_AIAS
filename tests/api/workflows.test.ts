@@ -2,10 +2,10 @@
  * Workflows API Tests
  */
 
-import { NextRequest } from "next/server";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { NextRequest } from 'next/server';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-import { POST } from "@/app/api/workflows/execute/route";
+import { POST } from '@/app/api/workflows/execute/route';
 
 const mockSupabaseClient = {
   auth: {
@@ -13,50 +13,50 @@ const mockSupabaseClient = {
   },
 };
 
-vi.mock("@supabase/supabase-js", () => ({
+vi.mock('@supabase/supabase-js', () => ({
   createClient: vi.fn(() => mockSupabaseClient),
 }));
 
-vi.mock("@/lib/env", () => ({
+vi.mock('@/lib/env', () => ({
   env: {
     supabase: {
-      url: "https://test.supabase.co",
-      serviceRoleKey: "test-key",
+      url: 'https://test.supabase.co',
+      serviceRoleKey: 'test-key',
     },
   },
 }));
 
-vi.mock("@/lib/workflows/executor", () => ({
+vi.mock('@/lib/workflows/executor', () => ({
   executeWorkflow: vi.fn(),
 }));
 
-describe("POST /api/workflows/execute", () => {
+describe('POST /api/workflows/execute', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("should execute workflow successfully", async () => {
+  it('should execute workflow successfully', async () => {
     mockSupabaseClient.auth.getUser.mockResolvedValue({
-      data: { user: { id: "user-123" } },
+      data: { user: { id: 'user-123' } },
       error: null,
     });
 
-    const { workflowExecutor } = await import("@/lib/workflows/executor");
+    const { workflowExecutor } = await import('@/lib/workflows/executor');
     vi.spyOn(workflowExecutor, 'execute').mockResolvedValue({
-      id: "exec-123",
-      workflow_id: "workflow-123",
-      status: "completed",
+      id: 'exec-123',
+      workflow_id: 'workflow-123',
+      status: 'completed',
     } as any);
 
-    const request = new NextRequest("http://localhost/api/workflows/execute", {
-      method: "POST",
+    const request = new NextRequest('http://localhost/api/workflows/execute', {
+      method: 'POST',
       headers: {
-        authorization: "Bearer test-token",
+        authorization: 'Bearer test-token',
       },
       body: JSON.stringify({
-        workflowId: "workflow-123",
+        workflowId: 'workflow-123',
         trigger: {
-          type: "manual",
+          type: 'manual',
         },
       }),
     });
@@ -66,14 +66,14 @@ describe("POST /api/workflows/execute", () => {
 
     expect(response.status).toBe(200);
     expect(data.execution).toBeDefined();
-    expect(data.message).toContain("successfully");
+    expect(data.message).toContain('successfully');
   });
 
-  it("should require authentication", async () => {
-    const request = new NextRequest("http://localhost/api/workflows/execute", {
-      method: "POST",
+  it('should require authentication', async () => {
+    const request = new NextRequest('http://localhost/api/workflows/execute', {
+      method: 'POST',
       body: JSON.stringify({
-        workflowId: "workflow-123",
+        workflowId: 'workflow-123',
       }),
     });
 
@@ -81,22 +81,22 @@ describe("POST /api/workflows/execute", () => {
     const data = await response.json();
 
     expect(response.status).toBe(401);
-    expect(data.error).toBe("Unauthorized");
+    expect(data.error).toBe('Unauthorized');
   });
 
-  it("should validate workflowId format", async () => {
+  it('should validate workflowId format', async () => {
     mockSupabaseClient.auth.getUser.mockResolvedValue({
-      data: { user: { id: "user-123" } },
+      data: { user: { id: 'user-123' } },
       error: null,
     });
 
-    const request = new NextRequest("http://localhost/api/workflows/execute", {
-      method: "POST",
+    const request = new NextRequest('http://localhost/api/workflows/execute', {
+      method: 'POST',
       headers: {
-        authorization: "Bearer test-token",
+        authorization: 'Bearer test-token',
       },
       body: JSON.stringify({
-        workflowId: "invalid-uuid",
+        workflowId: 'invalid-uuid',
       }),
     });
 

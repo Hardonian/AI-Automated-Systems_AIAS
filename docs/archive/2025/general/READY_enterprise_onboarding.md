@@ -18,6 +18,7 @@ Enterprise capability exists but onboarding is incomplete. Missing enterprise-sp
 ## Solution
 
 Build enterprise onboarding:
+
 1. Enterprise signup flow
 2. SOC 2 compliance badge/marketing
 3. Dedicated support channel
@@ -26,24 +27,28 @@ Build enterprise onboarding:
 ## Implementation Plan
 
 ### Phase 1: Enterprise Signup (Days 1-7)
+
 - Enterprise signup form
 - Company info collection
 - Admin user setup
 - Team invitation flow
 
 ### Phase 2: SOC 2 Marketing (Days 8-12)
+
 - SOC 2 badge on website
 - Enterprise landing page
 - Compliance documentation
 - Security whitepaper
 
 ### Phase 3: Onboarding Wizard (Days 13-18)
+
 - Custom domain setup
 - SSO configuration
 - Team member invitations
 - Initial workflow setup
 
 ### Phase 4: Support & Launch (Days 19-21)
+
 - Dedicated support channel
 - Enterprise success manager intro
 - Launch to beta enterprises

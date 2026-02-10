@@ -63,8 +63,8 @@ export async function doctor(options: { verbose?: boolean }): Promise<number> {
 
   // Print results
   console.log('\n📊 Health Check Results:\n');
-  results.forEach((result) => {
-    const {status} = result;
+  results.forEach(result => {
+    const { status } = result;
     const icon = status === 'pass' ? '✅' : status === 'warn' ? '⚠️' : '❌';
     console.log(`${icon} ${result.name}: ${result.message}`);
     if (options.verbose && result.details) {
@@ -75,7 +75,9 @@ export async function doctor(options: { verbose?: boolean }): Promise<number> {
     }
   });
 
-  console.log(`\n${exitCode === 0 ? '✅ All checks passed!' : '❌ Some checks failed'}\n`);
+  console.log(
+    `\n${exitCode === 0 ? '✅ All checks passed!' : '❌ Some checks failed'}\n`
+  );
 
   return exitCode;
 }
@@ -294,7 +296,12 @@ async function checkSecurity(): Promise<CheckResult> {
 
 async function checkSecretsRotation(): Promise<CheckResult> {
   try {
-    const secretsPath = path.join(process.cwd(), 'ops', 'secrets', 'rotation.json');
+    const secretsPath = path.join(
+      process.cwd(),
+      'ops',
+      'secrets',
+      'rotation.json'
+    );
     if (!fs.existsSync(secretsPath)) {
       return {
         name: 'Secrets Rotation',
@@ -304,7 +311,9 @@ async function checkSecretsRotation(): Promise<CheckResult> {
     }
     const rotation = JSON.parse(fs.readFileSync(secretsPath, 'utf-8'));
     const expired = Object.entries(rotation).filter(([_, v]: [string, any]) => {
-      const daysSince = (Date.now() - new Date(v.lastRotated).getTime()) / (1000 * 60 * 60 * 24);
+      const daysSince =
+        (Date.now() - new Date(v.lastRotated).getTime()) /
+        (1000 * 60 * 60 * 24);
       return daysSince > 20;
     });
 
@@ -333,7 +342,12 @@ async function checkSecretsRotation(): Promise<CheckResult> {
 async function checkRLSPolicies(): Promise<CheckResult> {
   try {
     // Check if RLS audit exists
-    const auditPath = path.join(process.cwd(), 'ops', 'reports', 'rls-audit.md');
+    const auditPath = path.join(
+      process.cwd(),
+      'ops',
+      'reports',
+      'rls-audit.md'
+    );
     if (!fs.existsSync(auditPath)) {
       return {
         name: 'RLS Policies',

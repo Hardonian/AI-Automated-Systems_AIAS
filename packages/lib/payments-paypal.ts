@@ -36,26 +36,28 @@ export class PayPalService {
 
   constructor() {
     // PayPal config is not in the main config type, so we access it safely
-    const paypalConfig = (config as typeof config & { paypal?: PayPalConfig }).paypal;
+    const paypalConfig = (config as typeof config & { paypal?: PayPalConfig })
+      .paypal;
     this.config = {
       clientId: paypalConfig?.clientId || '',
       clientSecret: paypalConfig?.clientSecret || '',
       environment: paypalConfig?.environment || 'sandbox',
       webhookId: paypalConfig?.webhookId,
     };
-    
-    this.baseUrl = this.config.environment === 'production' 
-      ? 'https://api-m.paypal.com'
-      : 'https://api-m.sandbox.paypal.com';
+
+    this.baseUrl =
+      this.config.environment === 'production'
+        ? 'https://api-m.paypal.com'
+        : 'https://api-m.sandbox.paypal.com';
   }
 
   private async getAccessToken(): Promise<string> {
     const response = await fetch(`${this.baseUrl}/v1/oauth2/token`, {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Accept-Language': 'en_US',
-        'Authorization': `Basic ${Buffer.from(`${this.config.clientId}:${this.config.clientSecret}`).toString('base64')}`,
+        Authorization: `Basic ${Buffer.from(`${this.config.clientId}:${this.config.clientSecret}`).toString('base64')}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: 'grant_type=client_credentials',
@@ -65,11 +67,13 @@ export class PayPalService {
       throw new Error(`PayPal authentication failed: ${response.statusText}`);
     }
 
-    const data = await response.json() as { access_token: string };
+    const data = (await response.json()) as { access_token: string };
     return data.access_token;
   }
 
-  async createOrder(params: CreatePayPalOrderParams): Promise<PayPalOrderResponse> {
+  async createOrder(
+    params: CreatePayPalOrderParams
+  ): Promise<PayPalOrderResponse> {
     const accessToken = await this.getAccessToken();
 
     const orderData = {
@@ -98,36 +102,43 @@ export class PayPalService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
         'PayPal-Request-Id': `order-${Date.now()}`,
       },
       body: JSON.stringify(orderData),
     });
 
     if (!response.ok) {
-      const error = await response.json() as { message?: string };
-      throw new Error(`PayPal order creation failed: ${error.message || response.statusText}`);
+      const error = (await response.json()) as { message?: string };
+      throw new Error(
+        `PayPal order creation failed: ${error.message || response.statusText}`
+      );
     }
 
-    const result = await response.json() as PayPalOrderResponse;
+    const result = (await response.json()) as PayPalOrderResponse;
     return result;
   }
 
   async captureOrder(orderId: string): Promise<any> {
     const accessToken = await this.getAccessToken();
 
-    const response = await fetch(`${this.baseUrl}/v2/checkout/orders/${orderId}/capture`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-        'PayPal-Request-Id': `capture-${Date.now()}`,
-      },
-    });
+    const response = await fetch(
+      `${this.baseUrl}/v2/checkout/orders/${orderId}/capture`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+          'PayPal-Request-Id': `capture-${Date.now()}`,
+        },
+      }
+    );
 
     if (!response.ok) {
-      const error = await response.json() as { message?: string };
-      throw new Error(`PayPal order capture failed: ${error.message || response.statusText}`);
+      const error = (await response.json()) as { message?: string };
+      throw new Error(
+        `PayPal order capture failed: ${error.message || response.statusText}`
+      );
     }
 
     return response.json() as unknown;
@@ -136,13 +147,16 @@ export class PayPalService {
   async getOrder(orderId: string): Promise<any> {
     const accessToken = await this.getAccessToken();
 
-    const response = await fetch(`${this.baseUrl}/v2/checkout/orders/${orderId}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(
+      `${this.baseUrl}/v2/checkout/orders/${orderId}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`PayPal order retrieval failed: ${response.statusText}`);
@@ -187,15 +201,17 @@ export class PayPalService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
         'PayPal-Request-Id': `subscription-${Date.now()}`,
       },
       body: JSON.stringify(subscriptionData),
     });
 
     if (!response.ok) {
-      const error = await response.json() as { message?: string };
-      throw new Error(`PayPal subscription creation failed: ${error.message || response.statusText}`);
+      const error = (await response.json()) as { message?: string };
+      throw new Error(
+        `PayPal subscription creation failed: ${error.message || response.statusText}`
+      );
     }
 
     return response.json() as unknown;
@@ -204,44 +220,61 @@ export class PayPalService {
   async getSubscription(subscriptionId: string): Promise<any> {
     const accessToken = await this.getAccessToken();
 
-    const response = await fetch(`${this.baseUrl}/v1/billing/subscriptions/${subscriptionId}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(
+      `${this.baseUrl}/v1/billing/subscriptions/${subscriptionId}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
     if (!response.ok) {
-      throw new Error(`PayPal subscription retrieval failed: ${response.statusText}`);
+      throw new Error(
+        `PayPal subscription retrieval failed: ${response.statusText}`
+      );
     }
 
     return response.json();
   }
 
-  async cancelSubscription(subscriptionId: string, reason: string = 'Customer requested cancellation'): Promise<any> {
+  async cancelSubscription(
+    subscriptionId: string,
+    reason: string = 'Customer requested cancellation'
+  ): Promise<any> {
     const accessToken = await this.getAccessToken();
 
-    const response = await fetch(`${this.baseUrl}/v1/billing/subscriptions/${subscriptionId}/cancel`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({
-        reason,
-      }),
-    });
+    const response = await fetch(
+      `${this.baseUrl}/v1/billing/subscriptions/${subscriptionId}/cancel`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          reason,
+        }),
+      }
+    );
 
     if (!response.ok) {
-      const error = await response.json() as { message?: string };
-      throw new Error(`PayPal subscription cancellation failed: ${error.message || response.statusText}`);
+      const error = (await response.json()) as { message?: string };
+      throw new Error(
+        `PayPal subscription cancellation failed: ${error.message || response.statusText}`
+      );
     }
 
     return response.json() as unknown;
   }
 
-  async verifyWebhookSignature(payload: string, signature: string, webhookId?: string): Promise<boolean> {
+  async verifyWebhookSignature(
+    payload: string,
+    signature: string,
+    webhookId?: string
+  ): Promise<boolean> {
     const accessToken = await this.getAccessToken();
     const id = webhookId || this.config.webhookId;
 
@@ -249,33 +282,46 @@ export class PayPalService {
       throw new Error('PayPal webhook ID not configured');
     }
 
-    const response = await fetch(`${this.baseUrl}/v1/notifications/verify-webhook-signature`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({
-        auth_algo: 'SHA256withRSA',
-        cert_id: 'webhook-cert-id', // This would need to be retrieved from PayPal
-        transmission_id: 'webhook-transmission-id', // This would need to be extracted from headers
-        transmission_sig: signature,
-        transmission_time: new Date().toISOString(),
-        webhook_id: id,
-        webhook_event: JSON.parse(payload),
-      }),
-    });
+    const response = await fetch(
+      `${this.baseUrl}/v1/notifications/verify-webhook-signature`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          auth_algo: 'SHA256withRSA',
+          cert_id: 'webhook-cert-id', // This would need to be retrieved from PayPal
+          transmission_id: 'webhook-transmission-id', // This would need to be extracted from headers
+          transmission_sig: signature,
+          transmission_time: new Date().toISOString(),
+          webhook_id: id,
+          webhook_event: JSON.parse(payload),
+        }),
+      }
+    );
 
     if (!response.ok) {
-      logger.error({ status: response.statusText }, 'PayPal webhook verification failed');
+      logger.error(
+        { status: response.statusText },
+        'PayPal webhook verification failed'
+      );
       return false;
     }
 
-    const result = await response.json() as { verification_status?: string };
+    const result = (await response.json()) as { verification_status?: string };
     return result.verification_status === 'SUCCESS';
   }
 
-  async handleWebhookEvent(event: { event_type: string; resource: { id: string; custom_id?: string; supplementary_data?: { related_ids?: { order_id?: string } } } }): Promise<void> {
+  async handleWebhookEvent(event: {
+    event_type: string;
+    resource: {
+      id: string;
+      custom_id?: string;
+      supplementary_data?: { related_ids?: { order_id?: string } };
+    };
+  }): Promise<void> {
     switch (event.event_type) {
       case 'CHECKOUT.ORDER.APPROVED':
         await this.handleOrderApproved(event);
@@ -299,14 +345,19 @@ export class PayPalService {
         await this.handleSubscriptionSuspended(event);
         break;
       default:
-        logger.info({ eventType: event.event_type }, `Unhandled PayPal event type: ${event.event_type}`);
+        logger.info(
+          { eventType: event.event_type },
+          `Unhandled PayPal event type: ${event.event_type}`
+        );
     }
   }
 
-  private async handleOrderApproved(event: { resource: { id: string; custom_id?: string } }): Promise<void> {
+  private async handleOrderApproved(event: {
+    resource: { id: string; custom_id?: string };
+  }): Promise<void> {
     const orderId = event.resource.id;
     logger.info({ orderId }, 'PayPal order approved');
-    
+
     // Store the order approval event
     await prisma.webhookEvent.create({
       data: {
@@ -318,16 +369,21 @@ export class PayPalService {
     });
   }
 
-  private async handlePaymentCompleted(event: { resource: { id: string; supplementary_data?: { related_ids?: { order_id?: string } } } }): Promise<void> {
+  private async handlePaymentCompleted(event: {
+    resource: {
+      id: string;
+      supplementary_data?: { related_ids?: { order_id?: string } };
+    };
+  }): Promise<void> {
     const paymentId = event.resource.id;
     const orderId = event.resource.supplementary_data?.related_ids?.order_id;
-    
+
     logger.info({ paymentId, orderId }, 'PayPal payment completed');
-    
+
     // Update subscription status in database
     if (orderId) {
       await prisma.subscription.updateMany({
-        where: { 
+        where: {
           stripeSubscriptionId: orderId, // Using this field to store PayPal order ID
         },
         data: {
@@ -337,10 +393,12 @@ export class PayPalService {
     }
   }
 
-  private async handlePaymentDenied(event: { resource: { id: string } }): Promise<void> {
+  private async handlePaymentDenied(event: {
+    resource: { id: string };
+  }): Promise<void> {
     const paymentId = event.resource.id;
     logger.warn({ paymentId }, 'PayPal payment denied');
-    
+
     // Handle payment failure
     await prisma.webhookEvent.create({
       data: {
@@ -352,10 +410,12 @@ export class PayPalService {
     });
   }
 
-  private async handleSubscriptionCreated(event: { resource: { id: string } }): Promise<void> {
+  private async handleSubscriptionCreated(event: {
+    resource: { id: string };
+  }): Promise<void> {
     const subscriptionId = event.resource.id;
     logger.info({ subscriptionId }, 'PayPal subscription created');
-    
+
     // Store subscription creation event
     await prisma.webhookEvent.create({
       data: {
@@ -367,13 +427,15 @@ export class PayPalService {
     });
   }
 
-  private async handleSubscriptionActivated(event: { resource: { id: string } }): Promise<void> {
+  private async handleSubscriptionActivated(event: {
+    resource: { id: string };
+  }): Promise<void> {
     const subscriptionId = event.resource.id;
     logger.info({ subscriptionId }, 'PayPal subscription activated');
-    
+
     // Update subscription status
     await prisma.subscription.updateMany({
-      where: { 
+      where: {
         stripeSubscriptionId: subscriptionId, // Using this field to store PayPal subscription ID
       },
       data: {
@@ -382,13 +444,15 @@ export class PayPalService {
     });
   }
 
-  private async handleSubscriptionCancelled(event: { resource: { id: string } }): Promise<void> {
+  private async handleSubscriptionCancelled(event: {
+    resource: { id: string };
+  }): Promise<void> {
     const subscriptionId = event.resource.id;
     logger.info({ subscriptionId }, 'PayPal subscription cancelled');
-    
+
     // Update subscription status
     await prisma.subscription.updateMany({
-      where: { 
+      where: {
         stripeSubscriptionId: subscriptionId, // Using this field to store PayPal subscription ID
       },
       data: {
@@ -397,13 +461,15 @@ export class PayPalService {
     });
   }
 
-  private async handleSubscriptionSuspended(event: { resource: { id: string } }): Promise<void> {
+  private async handleSubscriptionSuspended(event: {
+    resource: { id: string };
+  }): Promise<void> {
     const subscriptionId = event.resource.id;
     logger.warn({ subscriptionId }, 'PayPal subscription suspended');
-    
+
     // Update subscription status
     await prisma.subscription.updateMany({
-      where: { 
+      where: {
         stripeSubscriptionId: subscriptionId, // Using this field to store PayPal subscription ID
       },
       data: {

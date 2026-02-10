@@ -34,11 +34,7 @@ interface ErrorPattern {
 }
 
 export class UptimeMonitor {
-  private healthEndpoints = [
-    '/api/health',
-    '/api/healthz',
-    '/api/metrics'
-  ];
+  private healthEndpoints = ['/api/health', '/api/healthz', '/api/metrics'];
 
   private supabaseFunctions = [
     // Add Supabase function endpoints to monitor
@@ -56,7 +52,7 @@ export class UptimeMonitor {
         endpoints: [],
         uptime_percent: 100,
         downtime_minutes: 0,
-        recommendations: []
+        recommendations: [],
       };
 
       // Check all health endpoints
@@ -79,7 +75,10 @@ export class UptimeMonitor {
       const errorPatterns = await this.analyzeErrorPatterns();
 
       // Generate recommendations
-      check.recommendations = this.generateRecommendations(check, errorPatterns);
+      check.recommendations = this.generateRecommendations(
+        check,
+        errorPatterns
+      );
 
       // Store metrics
       await this.storeMetrics(check);
@@ -97,19 +96,24 @@ export class UptimeMonitor {
       return {
         status,
         message: `Uptime: ${check.uptime_percent.toFixed(2)}%, ${check.endpoints.filter(e => e.status === 'down').length} endpoints down`,
-        data: check
+        data: check,
       };
     } catch (error: any) {
       return {
         status: 'error',
         message: `Uptime check failed: ${error.message}`,
-        errors: [error.message]
+        errors: [error.message],
       };
     }
   }
 
-  private async checkEndpoint(endpoint: string): Promise<UptimeCheck['endpoints'][0]> {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+  private async checkEndpoint(
+    endpoint: string
+  ): Promise<UptimeCheck['endpoints'][0]> {
+    const baseUrl =
+      process.env.NEXT_PUBLIC_APP_URL ||
+      process.env.VERCEL_URL ||
+      'http://localhost:3000';
     const url = `${baseUrl}${endpoint}`;
     const startTime = Date.now();
 
@@ -117,19 +121,23 @@ export class UptimeMonitor {
       const response = await fetch(url, {
         method: 'GET',
         headers: {
-          'User-Agent': 'Orchestrator-UptimeMonitor/1.0'
+          'User-Agent': 'Orchestrator-UptimeMonitor/1.0',
         },
-        signal: AbortSignal.timeout(10000) // 10 second timeout
+        signal: AbortSignal.timeout(10000), // 10 second timeout
       });
 
       const latency = Date.now() - startTime;
-      const status = response.ok ? 'up' : response.status >= 500 ? 'down' : 'degraded';
+      const status = response.ok
+        ? 'up'
+        : response.status >= 500
+          ? 'down'
+          : 'degraded';
 
       return {
         url: endpoint,
         status,
         latency_ms: latency,
-        status_code: response.status
+        status_code: response.status,
       };
     } catch (error: any) {
       const latency = Date.now() - startTime;
@@ -137,17 +145,19 @@ export class UptimeMonitor {
         url: endpoint,
         status: 'down',
         latency_ms: latency,
-        error: error.message
+        error: error.message,
       };
     }
   }
 
-  private async checkSupabaseFunction(functionName: string): Promise<UptimeCheck['endpoints'][0]> {
+  private async checkSupabaseFunction(
+    functionName: string
+  ): Promise<UptimeCheck['endpoints'][0]> {
     // Placeholder - would invoke Supabase function
     return {
       url: `supabase:${functionName}`,
       status: 'up',
-      latency_ms: 0
+      latency_ms: 0,
     };
   }
 
@@ -171,7 +181,10 @@ export class UptimeMonitor {
         .from('logs')
         .select('*')
         .eq('level', 'error')
-        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+        .gte(
+          'created_at',
+          new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+        )
         .order('created_at', { ascending: false });
 
       if (!errors || errors.length === 0) {
@@ -191,7 +204,7 @@ export class UptimeMonitor {
             count: 0,
             first_seen: error.created_at,
             last_seen: error.created_at,
-            occurrences: []
+            occurrences: [],
           });
         }
 
@@ -206,7 +219,7 @@ export class UptimeMonitor {
         pattern.occurrences.push({
           timestamp: error.created_at,
           deployment_id: error.deployment_id || 'unknown',
-          context: error.context || {}
+          context: error.context || {},
         });
       });
 
@@ -227,20 +240,29 @@ export class UptimeMonitor {
       .trim();
   }
 
-  private generateRecommendations(check: UptimeCheck, errorPatterns: ErrorPattern[]): string[] {
+  private generateRecommendations(
+    check: UptimeCheck,
+    errorPatterns: ErrorPattern[]
+  ): string[] {
     const recommendations: string[] = [];
 
     if (check.uptime_percent < 99.9) {
-      recommendations.push(`⚠️ Uptime below target (${check.uptime_percent.toFixed(2)}% < 99.9%)`);
+      recommendations.push(
+        `⚠️ Uptime below target (${check.uptime_percent.toFixed(2)}% < 99.9%)`
+      );
     }
 
     const slowEndpoints = check.endpoints.filter(e => e.latency_ms > 2000);
     if (slowEndpoints.length > 0) {
-      recommendations.push(`🐌 ${slowEndpoints.length} endpoints have latency > 2s`);
+      recommendations.push(
+        `🐌 ${slowEndpoints.length} endpoints have latency > 2s`
+      );
     }
 
     if (errorPatterns.length > 0) {
-      recommendations.push(`🚨 ${errorPatterns.length} recurring error patterns detected`);
+      recommendations.push(
+        `🚨 ${errorPatterns.length} recurring error patterns detected`
+      );
     }
 
     return recommendations;
@@ -249,18 +271,21 @@ export class UptimeMonitor {
   private async storeMetrics(check: UptimeCheck): Promise<void> {
     try {
       // Store in metrics_log
-      await this.supabase
-        .from('metrics_log')
-        .insert([{
+      await this.supabase.from('metrics_log').insert([
+        {
           source: 'orchestrator',
           metric: {
             uptime_percent: check.uptime_percent,
             endpoints_checked: check.endpoints.length,
-            endpoints_down: check.endpoints.filter(e => e.status === 'down').length,
-            avg_latency: check.endpoints.reduce((sum, e) => sum + e.latency_ms, 0) / check.endpoints.length
+            endpoints_down: check.endpoints.filter(e => e.status === 'down')
+              .length,
+            avg_latency:
+              check.endpoints.reduce((sum, e) => sum + e.latency_ms, 0) /
+              check.endpoints.length,
           },
-          ts: new Date().toISOString()
-        }]);
+          ts: new Date().toISOString(),
+        },
+      ]);
     } catch (error) {
       console.warn('Could not store uptime metrics:', error);
     }
@@ -273,15 +298,15 @@ export class UptimeMonitor {
 
     try {
       const downEndpoints = check.endpoints.filter(e => e.status === 'down');
-      
+
       await fetch(this.config.securityAlertWebhook, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text: `🚨 Downtime Alert: ${downEndpoints.length} endpoints down for > 2 minutes`,
           endpoints: downEndpoints.map(e => e.url),
-          downtime_minutes: check.downtime_minutes
-        })
+          downtime_minutes: check.downtime_minutes,
+        }),
       });
     } catch (error) {
       console.warn('Could not send downtime alert:', error);
@@ -304,10 +329,10 @@ export class UptimeMonitor {
           owner: this.config.githubOwner,
           repo: this.config.githubRepo,
           state: 'open',
-          labels: 'recurring-error'
+          labels: 'recurring-error',
         });
 
-        const existingIssue = issues?.find((i: any) => 
+        const existingIssue = issues?.find((i: any) =>
           i.title.includes(pattern.error.substring(0, 50))
         );
 
@@ -317,7 +342,7 @@ export class UptimeMonitor {
             repo: this.config.githubRepo,
             title: `🚨 Recurring Failure: ${pattern.error.substring(0, 100)}`,
             body: this.generateErrorIssueBody(pattern),
-            labels: ['recurring-error', 'automated', 'high']
+            labels: ['recurring-error', 'automated', 'high'],
           });
         }
       } catch (error) {
@@ -336,9 +361,14 @@ export class UptimeMonitor {
 **Last Seen:** ${pattern.last_seen}
 
 ### Occurrences
-${pattern.occurrences.slice(0, 10).map(occ => `
+${pattern.occurrences
+  .slice(0, 10)
+  .map(
+    occ => `
 - **${occ.timestamp}** (Deployment: ${occ.deployment_id})
-`).join('')}
+`
+  )
+  .join('')}
 
 ### Next Steps
 1. Investigate root cause

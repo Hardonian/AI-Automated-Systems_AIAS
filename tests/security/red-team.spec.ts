@@ -24,9 +24,9 @@ test.describe('Red Team - Security Tests', () => {
       request.get('/api/endpoint')
     );
     const responses = await Promise.all(promises);
-    
+
     // Should have rate limit errors
-    const rateLimited = responses.filter((r) => r.status() === 429);
+    const rateLimited = responses.filter(r => r.status() === 429);
     expect(rateLimited.length).toBeGreaterThan(0);
   });
 
@@ -35,7 +35,7 @@ test.describe('Red Team - Security Tests', () => {
     const response = await request.post('/api/search', {
       data: { query: maliciousInput },
     });
-    
+
     // Should sanitize input
     expect(response.status()).toBeLessThan(500);
   });
@@ -45,7 +45,7 @@ test.describe('Red Team - Security Tests', () => {
     const response = await request.post('/api/comment', {
       data: { content: xssPayload },
     });
-    
+
     // Should sanitize output
     const body = await response.json();
     expect(body.content).not.toContain('<script>');

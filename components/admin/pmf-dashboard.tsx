@@ -1,10 +1,23 @@
-"use client";
-import { TrendingUp, TrendingDown, Users, Clock, Target, Heart } from "lucide-react";
-import { useEffect, useState } from "react";
+'use client';
+import {
+  TrendingUp,
+  TrendingDown,
+  Users,
+  Clock,
+  Target,
+  Heart,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { pmfTracker, pmfThresholds } from "@/lib/analytics/pmf-metrics";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { pmfTracker, pmfThresholds } from '@/lib/analytics/pmf-metrics';
 
 interface PMFMetrics {
   activationRate: number;
@@ -34,16 +47,16 @@ export function PMFDashboard() {
   }, []);
 
   if (loading || !metrics || !pmfScore) {
-    return <div className="text-center py-12">Loading PMF metrics...</div>;
+    return <div className='py-12 text-center'>Loading PMF metrics...</div>;
   }
 
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       {/* Overall PMF Score */}
-      <Card className="border-primary/20">
+      <Card className='border-primary/20'>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5" />
+          <CardTitle className='flex items-center gap-2'>
+            <Target className='h-5 w-5' />
             Overall PMF Score
           </CardTitle>
           <CardDescription>
@@ -51,48 +64,66 @@ export function PMFDashboard() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-6">
-            <div className="text-6xl font-bold text-primary">{pmfScore.score}</div>
-            <div className="flex-1">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">PMF Score</span>
-                <span className={`text-sm font-semibold ${
-                  pmfScore.status === "great" ? "text-green-600" :
-                  pmfScore.status === "good" ? "text-yellow-600" :
-                  "text-red-600"
-                }`}>
+          <div className='flex items-center gap-6'>
+            <div className='text-6xl font-bold text-primary'>
+              {pmfScore.score}
+            </div>
+            <div className='flex-1'>
+              <div className='mb-2 flex items-center justify-between'>
+                <span className='text-sm font-medium'>PMF Score</span>
+                <span
+                  className={`text-sm font-semibold ${
+                    pmfScore.status === 'great'
+                      ? 'text-green-600'
+                      : pmfScore.status === 'good'
+                        ? 'text-yellow-600'
+                        : 'text-red-600'
+                  }`}
+                >
                   {pmfScore.status.toUpperCase()}
                 </span>
               </div>
-              <Progress className="h-3" value={pmfScore.score} />
-              <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
+              <Progress className='h-3' value={pmfScore.score} />
+              <div className='mt-4 grid grid-cols-3 gap-4 text-sm'>
                 <div>
-                  <div className="text-muted-foreground">Activation</div>
-                  <div className={`font-semibold ${
-                    pmfScore.breakdown.activation.status === "great" ? "text-green-600" :
-                    pmfScore.breakdown.activation.status === "good" ? "text-yellow-600" :
-                    "text-red-600"
-                  }`}>
+                  <div className='text-muted-foreground'>Activation</div>
+                  <div
+                    className={`font-semibold ${
+                      pmfScore.breakdown.activation.status === 'great'
+                        ? 'text-green-600'
+                        : pmfScore.breakdown.activation.status === 'good'
+                          ? 'text-yellow-600'
+                          : 'text-red-600'
+                    }`}
+                  >
                     {pmfScore.breakdown.activation.score}%
                   </div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground">Retention</div>
-                  <div className={`font-semibold ${
-                    pmfScore.breakdown.retention.status === "great" ? "text-green-600" :
-                    pmfScore.breakdown.retention.status === "good" ? "text-yellow-600" :
-                    "text-red-600"
-                  }`}>
+                  <div className='text-muted-foreground'>Retention</div>
+                  <div
+                    className={`font-semibold ${
+                      pmfScore.breakdown.retention.status === 'great'
+                        ? 'text-green-600'
+                        : pmfScore.breakdown.retention.status === 'good'
+                          ? 'text-yellow-600'
+                          : 'text-red-600'
+                    }`}
+                  >
                     {pmfScore.breakdown.retention.score}%
                   </div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground">NPS</div>
-                  <div className={`font-semibold ${
-                    pmfScore.breakdown.nps.status === "great" ? "text-green-600" :
-                    pmfScore.breakdown.nps.status === "good" ? "text-yellow-600" :
-                    "text-red-600"
-                  }`}>
+                  <div className='text-muted-foreground'>NPS</div>
+                  <div
+                    className={`font-semibold ${
+                      pmfScore.breakdown.nps.status === 'great'
+                        ? 'text-green-600'
+                        : pmfScore.breakdown.nps.status === 'good'
+                          ? 'text-yellow-600'
+                          : 'text-red-600'
+                    }`}
+                  >
                     {pmfScore.breakdown.nps.score}
                   </div>
                 </div>
@@ -103,116 +134,121 @@ export function PMFDashboard() {
       </Card>
 
       {/* Key Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'>
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+          <CardHeader className='pb-3'>
+            <CardTitle className='text-sm font-medium text-muted-foreground'>
               Activation Rate
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold mb-2">{metrics.activationRate}%</div>
-            <div className="flex items-center gap-2 text-sm">
+            <div className='mb-2 text-3xl font-bold'>
+              {metrics.activationRate}%
+            </div>
+            <div className='flex items-center gap-2 text-sm'>
               {metrics.activationRate >= pmfThresholds.activationRate.great ? (
-                <TrendingUp className="h-4 w-4 text-green-600" />
+                <TrendingUp className='h-4 w-4 text-green-600' />
               ) : (
-                <TrendingDown className="h-4 w-4 text-yellow-600" />
+                <TrendingDown className='h-4 w-4 text-yellow-600' />
               )}
-              <span className="text-muted-foreground">
+              <span className='text-muted-foreground'>
                 Target: {pmfThresholds.activationRate.great}%
               </span>
             </div>
-            <Progress 
-              className="mt-2 h-2" 
-              value={metrics.activationRate}
-            />
+            <Progress className='mt-2 h-2' value={metrics.activationRate} />
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+          <CardHeader className='pb-3'>
+            <CardTitle className='text-sm font-medium text-muted-foreground'>
               7-Day Retention
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold mb-2">{metrics.sevenDayRetention}%</div>
-            <div className="flex items-center gap-2 text-sm">
+            <div className='mb-2 text-3xl font-bold'>
+              {metrics.sevenDayRetention}%
+            </div>
+            <div className='flex items-center gap-2 text-sm'>
               {metrics.sevenDayRetention >= pmfThresholds.retention.great ? (
-                <TrendingUp className="h-4 w-4 text-green-600" />
+                <TrendingUp className='h-4 w-4 text-green-600' />
               ) : (
-                <TrendingDown className="h-4 w-4 text-yellow-600" />
+                <TrendingDown className='h-4 w-4 text-yellow-600' />
               )}
-              <span className="text-muted-foreground">
+              <span className='text-muted-foreground'>
                 Target: {pmfThresholds.retention.great}%
               </span>
             </div>
-            <Progress 
-              className="mt-2 h-2" 
-              value={metrics.sevenDayRetention}
-            />
+            <Progress className='mt-2 h-2' value={metrics.sevenDayRetention} />
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+          <CardHeader className='pb-3'>
+            <CardTitle className='text-sm font-medium text-muted-foreground'>
               Net Promoter Score
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold mb-2">{metrics.nps}</div>
-            <div className="flex items-center gap-2 text-sm">
+            <div className='mb-2 text-3xl font-bold'>{metrics.nps}</div>
+            <div className='flex items-center gap-2 text-sm'>
               {metrics.nps >= pmfThresholds.nps.great ? (
-                <TrendingUp className="h-4 w-4 text-green-600" />
+                <TrendingUp className='h-4 w-4 text-green-600' />
               ) : (
-                <TrendingDown className="h-4 w-4 text-yellow-600" />
+                <TrendingDown className='h-4 w-4 text-yellow-600' />
               )}
-              <span className="text-muted-foreground">
+              <span className='text-muted-foreground'>
                 Target: {pmfThresholds.nps.great}
               </span>
             </div>
-            <Progress 
-              className="mt-2 h-2" 
-              value={(metrics.nps + 100) / 2}
-            />
+            <Progress className='mt-2 h-2' value={(metrics.nps + 100) / 2} />
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+          <CardHeader className='pb-3'>
+            <CardTitle className='text-sm font-medium text-muted-foreground'>
               Time to Activation
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold mb-2">{metrics.timeToActivation}h</div>
-            <div className="flex items-center gap-2 text-sm">
-              <Clock className="h-4 w-4 text-muted-foreground" />
-              <span className="text-muted-foreground">Average</span>
+            <div className='mb-2 text-3xl font-bold'>
+              {metrics.timeToActivation}h
+            </div>
+            <div className='flex items-center gap-2 text-sm'>
+              <Clock className='h-4 w-4 text-muted-foreground' />
+              <span className='text-muted-foreground'>Average</span>
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* User Activity */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
+            <CardTitle className='flex items-center gap-2'>
+              <Users className='h-5 w-5' />
               Active Users
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className='space-y-4'>
               <div>
-                <div className="text-sm text-muted-foreground mb-1">Monthly Active Users</div>
-                <div className="text-2xl font-bold">{metrics.monthlyActiveUsers.toLocaleString()}</div>
+                <div className='mb-1 text-sm text-muted-foreground'>
+                  Monthly Active Users
+                </div>
+                <div className='text-2xl font-bold'>
+                  {metrics.monthlyActiveUsers.toLocaleString()}
+                </div>
               </div>
               <div>
-                <div className="text-sm text-muted-foreground mb-1">Weekly Active Users</div>
-                <div className="text-2xl font-bold">{metrics.weeklyActiveUsers.toLocaleString()}</div>
+                <div className='mb-1 text-sm text-muted-foreground'>
+                  Weekly Active Users
+                </div>
+                <div className='text-2xl font-bold'>
+                  {metrics.weeklyActiveUsers.toLocaleString()}
+                </div>
               </div>
             </div>
           </CardContent>
@@ -220,20 +256,28 @@ export function PMFDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Heart className="h-5 w-5" />
+            <CardTitle className='flex items-center gap-2'>
+              <Heart className='h-5 w-5' />
               Engagement
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className='space-y-4'>
               <div>
-                <div className="text-sm text-muted-foreground mb-1">Workflows per User</div>
-                <div className="text-2xl font-bold">{metrics.workflowsPerUser}</div>
+                <div className='mb-1 text-sm text-muted-foreground'>
+                  Workflows per User
+                </div>
+                <div className='text-2xl font-bold'>
+                  {metrics.workflowsPerUser}
+                </div>
               </div>
               <div>
-                <div className="text-sm text-muted-foreground mb-1">30-Day Retention</div>
-                <div className="text-2xl font-bold">{metrics.thirtyDayRetention}%</div>
+                <div className='mb-1 text-sm text-muted-foreground'>
+                  30-Day Retention
+                </div>
+                <div className='text-2xl font-bold'>
+                  {metrics.thirtyDayRetention}%
+                </div>
               </div>
             </div>
           </CardContent>

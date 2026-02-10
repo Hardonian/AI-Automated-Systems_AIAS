@@ -1,17 +1,18 @@
 /**
  * Client-side logging utility
- * 
+ *
  * Provides environment-aware logging that:
  * - Only logs to console in development
  * - Sends errors to telemetry in production
  * - Prevents console pollution in production builds
  */
 
-import { telemetry } from "@/lib/monitoring/enhanced-telemetry";
+import { telemetry } from '@/lib/monitoring/enhanced-telemetry';
 
-const isDevelopment = typeof window !== 'undefined' 
-  ? process.env.NODE_ENV === 'development' 
-  : process.env.NODE_ENV === 'development';
+const isDevelopment =
+  typeof window !== 'undefined'
+    ? process.env.NODE_ENV === 'development'
+    : process.env.NODE_ENV === 'development';
 
 /**
  * Log levels
@@ -57,7 +58,11 @@ class Logger {
   /**
    * Log warning messages (always logged, sent to telemetry in production)
    */
-  warn(message: string, error?: Error | unknown, context?: Record<string, any>): void {
+  warn(
+    message: string,
+    error?: Error | unknown,
+    context?: Record<string, any>
+  ): void {
     if (this.shouldLogToConsole(LogLevel.WARN)) {
       console.warn(`[WARN] ${message}`, error, context);
     }
@@ -84,7 +89,11 @@ class Logger {
   /**
    * Log error messages (always logged, sent to telemetry in production)
    */
-  error(message: string, error?: Error | unknown, context?: Record<string, any>): void {
+  error(
+    message: string,
+    error?: Error | unknown,
+    context?: Record<string, any>
+  ): void {
     if (this.shouldLogToConsole(LogLevel.ERROR)) {
       console.error(`[ERROR] ${message}`, error, context);
     }
@@ -137,13 +146,21 @@ class ServerLogger {
     }
   }
 
-  warn(message: string, error?: Error | unknown, context?: Record<string, any>): void {
+  warn(
+    message: string,
+    error?: Error | unknown,
+    context?: Record<string, any>
+  ): void {
     if (this.shouldLogToConsole(LogLevel.WARN)) {
       console.warn(`[SERVER WARN] ${message}`, error, context);
     }
   }
 
-  error(message: string, error?: Error | unknown, context?: Record<string, any>): void {
+  error(
+    message: string,
+    error?: Error | unknown,
+    context?: Record<string, any>
+  ): void {
     if (this.shouldLogToConsole(LogLevel.ERROR)) {
       console.error(`[SERVER ERROR] ${message}`, error, context);
     }
@@ -151,7 +168,8 @@ class ServerLogger {
 }
 
 // Export singleton instances
-export const logger = typeof window !== 'undefined' ? new Logger() : new ServerLogger();
+export const logger =
+  typeof window !== 'undefined' ? new Logger() : new ServerLogger();
 export const serverLogger = new ServerLogger();
 
 // Default export for convenience

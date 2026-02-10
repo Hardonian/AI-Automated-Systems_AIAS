@@ -1,16 +1,16 @@
 /**
  * Server-Side Entitlement Gates
  * Enforces paid tier limits on the server (not just UI)
- * 
+ *
  * These functions MUST be called server-side before allowing operations.
  * Client-side checks are for UX only.
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-import { env } from "@/lib/env";
-import { SystemError } from "@/lib/errors";
-import { logger } from "@/lib/logging/structured-logger";
+import { env } from '@/lib/env';
+import { SystemError } from '@/lib/errors';
+import { logger } from '@/lib/logging/structured-logger';
 
 const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
 
@@ -70,11 +70,11 @@ export async function getTenantPlan(tenantId: string): Promise<string> {
   try {
     // Check subscriptions table
     const { data: subscription } = await supabase
-      .from("subscriptions")
-      .select("tier, status")
-      .eq("tenant_id", tenantId)
-      .eq("status", "active")
-      .order("created_at", { ascending: false })
+      .from('subscriptions')
+      .select('tier, status')
+      .eq('tenant_id', tenantId)
+      .eq('status', 'active')
+      .order('created_at', { ascending: false })
       .limit(1)
       .single();
 
@@ -84,18 +84,18 @@ export async function getTenantPlan(tenantId: string): Promise<string> {
 
     // Fallback: check subscription_tiers table (legacy)
     const { data: member } = await supabase
-      .from("tenant_members")
-      .select("user_id")
-      .eq("tenant_id", tenantId)
-      .eq("status", "active")
+      .from('tenant_members')
+      .select('user_id')
+      .eq('tenant_id', tenantId)
+      .eq('status', 'active')
       .limit(1)
       .single();
 
     if (member?.user_id) {
       const { data: userTier } = await supabase
-        .from("subscription_tiers")
-        .select("tier")
-        .eq("user_id", member.user_id)
+        .from('subscription_tiers')
+        .select('tier')
+        .eq('user_id', member.user_id)
         .single();
 
       if (userTier?.tier) {
@@ -104,20 +104,22 @@ export async function getTenantPlan(tenantId: string): Promise<string> {
     }
 
     // Default to free
-    return "free";
+    return 'free';
   } catch (error) {
-    logger.warn("Failed to get tenant plan, defaulting to free", {
+    logger.warn('Failed to get tenant plan, defaulting to free', {
       tenantId,
       error: error instanceof Error ? error.message : String(error),
     });
-    return "free";
+    return 'free';
   }
 }
 
 /**
  * Get tenant's entitlement limits
  */
-export async function getTenantLimits(tenantId: string): Promise<EntitlementLimits> {
+export async function getTenantLimits(
+  tenantId: string
+): Promise<EntitlementLimits> {
   const plan = await getTenantPlan(tenantId);
   const limits = PLAN_LIMITS[plan as keyof PlanLimits] || PLAN_LIMITS.free;
   return limits;
@@ -126,7 +128,9 @@ export async function getTenantLimits(tenantId: string): Promise<EntitlementLimi
 /**
  * Check if tenant can create a new system
  */
-export async function canCreateSystem(tenantId: string): Promise<{ allowed: boolean; reason?: string }> {
+export async function canCreateSystem(
+  tenantId: string
+): Promise<{ allowed: boolean; reason?: string }> {
   const limits = await getTenantLimits(tenantId);
 
   // Unlimited
@@ -136,15 +140,17 @@ export async function canCreateSystem(tenantId: string): Promise<{ allowed: bool
 
   // Count existing systems
   const { count, error } = await supabase
-    .from("workflows")
-    .select("*", { count: "exact", head: true })
-    .eq("tenant_id", tenantId)
-    .eq("enabled", true);
+    .from('workflows')
+    .select('*', { count: 'exact', head: true })
+    .eq('tenant_id', tenantId)
+    .eq('enabled', true);
 
   if (error) {
-    logger.error("Failed to count systems", new Error(error.message), { tenantId });
+    logger.error('Failed to count systems', new Error(error.message), {
+      tenantId,
+    });
     // Fail closed - don't allow if we can't verify
-    return { allowed: false, reason: "Unable to verify system limit" };
+    return { allowed: false, reason: 'Unable to verify system limit' };
   }
 
   if ((count || 0) >= limits.maxSystems) {
@@ -160,7 +166,9 @@ export async function canCreateSystem(tenantId: string): Promise<{ allowed: bool
 /**
  * Check if tenant can create a new webhook endpoint
  */
-export async function canCreateWebhook(tenantId: string): Promise<{ allowed: boolean; reason?: string }> {
+export async function canCreateWebhook(
+  tenantId: string
+): Promise<{ allowed: boolean; reason?: string }> {
   const limits = await getTenantLimits(tenantId);
 
   // Unlimited
@@ -170,14 +178,16 @@ export async function canCreateWebhook(tenantId: string): Promise<{ allowed: boo
 
   // Count existing webhooks
   const { count, error } = await supabase
-    .from("webhook_endpoints")
-    .select("*", { count: "exact", head: true })
-    .eq("tenant_id", tenantId)
-    .eq("enabled", true);
+    .from('webhook_endpoints')
+    .select('*', { count: 'exact', head: true })
+    .eq('tenant_id', tenantId)
+    .eq('enabled', true);
 
   if (error) {
-    logger.error("Failed to count webhooks", new Error(error.message), { tenantId });
-    return { allowed: false, reason: "Unable to verify webhook limit" };
+    logger.error('Failed to count webhooks', new Error(error.message), {
+      tenantId,
+    });
+    return { allowed: false, reason: 'Unable to verify webhook limit' };
   }
 
   if ((count || 0) >= limits.maxWebhooks) {
@@ -193,7 +203,9 @@ export async function canCreateWebhook(tenantId: string): Promise<{ allowed: boo
 /**
  * Check if tenant can execute a run (monthly limit)
  */
-export async function canExecuteRun(tenantId: string): Promise<{ allowed: boolean; reason?: string; remaining?: number }> {
+export async function canExecuteRun(
+  tenantId: string
+): Promise<{ allowed: boolean; reason?: string; remaining?: number }> {
   const limits = await getTenantLimits(tenantId);
 
   // Unlimited
@@ -207,15 +219,17 @@ export async function canExecuteRun(tenantId: string): Promise<{ allowed: boolea
   const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
   const { count, error } = await supabase
-    .from("workflow_executions")
-    .select("*", { count: "exact", head: true })
-    .eq("tenant_id", tenantId)
-    .gte("started_at", monthStart.toISOString())
-    .lte("started_at", monthEnd.toISOString());
+    .from('workflow_executions')
+    .select('*', { count: 'exact', head: true })
+    .eq('tenant_id', tenantId)
+    .gte('started_at', monthStart.toISOString())
+    .lte('started_at', monthEnd.toISOString());
 
   if (error) {
-    logger.error("Failed to count runs", new Error(error.message), { tenantId });
-    return { allowed: false, reason: "Unable to verify run limit" };
+    logger.error('Failed to count runs', new Error(error.message), {
+      tenantId,
+    });
+    return { allowed: false, reason: 'Unable to verify run limit' };
   }
 
   const used = count || 0;
@@ -235,13 +249,16 @@ export async function canExecuteRun(tenantId: string): Promise<{ allowed: boolea
 /**
  * Check if tenant can use scheduled execution
  */
-export async function canUseScheduledExecution(tenantId: string): Promise<{ allowed: boolean; reason?: string }> {
+export async function canUseScheduledExecution(
+  tenantId: string
+): Promise<{ allowed: boolean; reason?: string }> {
   const limits = await getTenantLimits(tenantId);
 
   if (!limits.scheduledExecution) {
     return {
       allowed: false,
-      reason: "Scheduled execution is not available on your plan. Upgrade to Starter or higher.",
+      reason:
+        'Scheduled execution is not available on your plan. Upgrade to Starter or higher.',
     };
   }
 
@@ -251,13 +268,16 @@ export async function canUseScheduledExecution(tenantId: string): Promise<{ allo
 /**
  * Check if tenant can use AI augmentation
  */
-export async function canUseAIAugmentation(tenantId: string): Promise<{ allowed: boolean; reason?: string }> {
+export async function canUseAIAugmentation(
+  tenantId: string
+): Promise<{ allowed: boolean; reason?: string }> {
   const limits = await getTenantLimits(tenantId);
 
   if (!limits.aiAugmentation) {
     return {
       allowed: false,
-      reason: "AI augmentation is not available on your plan. Upgrade to Pro or higher.",
+      reason:
+        'AI augmentation is not available on your plan. Upgrade to Pro or higher.',
     };
   }
 
@@ -270,7 +290,7 @@ export async function canUseAIAugmentation(tenantId: string): Promise<{ allowed:
 export async function assertCanCreateSystem(tenantId: string): Promise<void> {
   const check = await canCreateSystem(tenantId);
   if (!check.allowed) {
-    throw new SystemError(check.reason || "Cannot create system");
+    throw new SystemError(check.reason || 'Cannot create system');
   }
 }
 
@@ -280,7 +300,7 @@ export async function assertCanCreateSystem(tenantId: string): Promise<void> {
 export async function assertCanCreateWebhook(tenantId: string): Promise<void> {
   const check = await canCreateWebhook(tenantId);
   if (!check.allowed) {
-    throw new SystemError(check.reason || "Cannot create webhook");
+    throw new SystemError(check.reason || 'Cannot create webhook');
   }
 }
 
@@ -290,6 +310,6 @@ export async function assertCanCreateWebhook(tenantId: string): Promise<void> {
 export async function assertCanExecuteRun(tenantId: string): Promise<void> {
   const check = await canExecuteRun(tenantId);
   if (!check.allowed) {
-    throw new SystemError(check.reason || "Cannot execute run");
+    throw new SystemError(check.reason || 'Cannot execute run');
   }
 }

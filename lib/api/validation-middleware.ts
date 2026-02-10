@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
-import { validateRequestBody } from "../validation/runtime-validation";
+import { validateRequestBody } from '../validation/runtime-validation';
 
 export function createValidatedRoute<T>(
   schema: z.ZodSchema<T>,
@@ -15,8 +15,8 @@ export function createValidatedRoute<T>(
     } catch (error) {
       return NextResponse.json(
         {
-          error: "Validation failed",
-          message: error instanceof Error ? error.message : "Invalid request",
+          error: 'Validation failed',
+          message: error instanceof Error ? error.message : 'Invalid request',
         },
         { status: 400 }
       );

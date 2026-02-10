@@ -33,7 +33,12 @@ export interface SecurityConfig {
 export interface SecurityEvent {
   id: string;
   timestamp: string;
-  type: 'authentication' | 'authorization' | 'data_access' | 'security_violation' | 'system_event';
+  type:
+    | 'authentication'
+    | 'authorization'
+    | 'data_access'
+    | 'security_violation'
+    | 'system_event';
   severity: 'low' | 'medium' | 'high' | 'critical';
   userId?: string;
   ipAddress: string;
@@ -54,7 +59,8 @@ export interface ThreatDetection {
 export class SecurityManager {
   private static instance: SecurityManager;
   private securityEvents: Map<string, SecurityEvent> = new Map();
-  private failedAttempts: Map<string, { count: number; lastAttempt: number }> = new Map();
+  private failedAttempts: Map<string, { count: number; lastAttempt: number }> =
+    new Map();
   private _threatPatterns: Map<string, Record<string, unknown>> = new Map();
   private config: SecurityConfig;
 
@@ -63,25 +69,26 @@ export class SecurityManager {
       encryption: {
         algorithm: 'aes-256-gcm',
         keyLength: 32,
-        ivLength: 16
+        ivLength: 16,
       },
       authentication: {
-        jwtSecret: process.env.JWT_SECRET || 'fallback-secret-change-in-production',
+        jwtSecret:
+          process.env.JWT_SECRET || 'fallback-secret-change-in-production',
         tokenExpiry: 15 * 60 * 1000, // 15 minutes
         refreshTokenExpiry: 7 * 24 * 60 * 60 * 1000, // 7 days
         maxLoginAttempts: 5,
-        lockoutDuration: 15 * 60 * 1000 // 15 minutes
+        lockoutDuration: 15 * 60 * 1000, // 15 minutes
       },
       rateLimiting: {
         windowMs: 15 * 60 * 1000, // 15 minutes
         maxRequests: 100,
-        skipSuccessfulRequests: false
+        skipSuccessfulRequests: false,
       },
       audit: {
         logLevel: 'comprehensive',
         retentionDays: 2555, // 7 years
-        realTimeAlerts: true
-      }
+        realTimeAlerts: true,
+      },
     };
   }
 
@@ -95,63 +102,85 @@ export class SecurityManager {
   /**
    * Encrypt sensitive data with AES-256-GCM
    */
-  encryptData(data: string, key?: string): { encrypted: string; iv: string; tag: string } {
-    const encryptionKey = key ? Buffer.from(key, 'hex') : randomBytes(this.config.encryption.keyLength);
+  encryptData(
+    data: string,
+    key?: string
+  ): { encrypted: string; iv: string; tag: string } {
+    const encryptionKey = key
+      ? Buffer.from(key, 'hex')
+      : randomBytes(this.config.encryption.keyLength);
     const iv = randomBytes(this.config.encryption.ivLength);
-    
-    const cipher = createCipher(this.config.encryption.algorithm, encryptionKey);
+
+    const cipher = createCipher(
+      this.config.encryption.algorithm,
+      encryptionKey
+    );
     cipher.setAAD(Buffer.from('enterprise-security', 'utf8'));
-    
+
     let encrypted = cipher.update(data, 'utf8', 'hex');
     encrypted += cipher.final('hex');
-    
+
     const tag = cipher.getAuthTag();
-    
+
     return {
       encrypted,
       iv: iv.toString('hex'),
-      tag: tag.toString('hex')
+      tag: tag.toString('hex'),
     };
   }
 
   /**
    * Decrypt sensitive data
    */
-  decryptData(encryptedData: { encrypted: string; iv: string; tag: string }, key?: string): string {
-    const _encryptionKey = key ? Buffer.from(key, 'hex') : randomBytes(this.config.encryption.keyLength);
+  decryptData(
+    encryptedData: { encrypted: string; iv: string; tag: string },
+    key?: string
+  ): string {
+    const _encryptionKey = key
+      ? Buffer.from(key, 'hex')
+      : randomBytes(this.config.encryption.keyLength);
     const iv = Buffer.from(encryptedData.iv, 'hex');
     const tag = Buffer.from(encryptedData.tag, 'hex');
-    
-    const decipher = createDecipher(this.config.encryption.algorithm, encryptionKey);
+
+    const decipher = createDecipher(
+      this.config.encryption.algorithm,
+      encryptionKey
+    );
     decipher.setAAD(Buffer.from('enterprise-security', 'utf8'));
     decipher.setAuthTag(tag);
-    
+
     let decrypted = decipher.update(encryptedData.encrypted, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
-    
+
     return decrypted;
   }
 
   /**
    * Hash password with salt using PBKDF2
    */
-  async hashPassword(password: string): Promise<{ hash: string; salt: string }> {
+  async hashPassword(
+    password: string
+  ): Promise<{ hash: string; salt: string }> {
     const salt = randomBytes(32).toString('hex');
     const hash = createHash('sha256')
       .update(password + salt)
       .digest('hex');
-    
+
     return { hash, salt };
   }
 
   /**
    * Verify password against hash
    */
-  async verifyPassword(password: string, hash: string, salt: string): Promise<boolean> {
+  async verifyPassword(
+    password: string,
+    hash: string,
+    salt: string
+  ): Promise<boolean> {
     const testHash = createHash('sha256')
       .update(password + salt)
       .digest('hex');
-    
+
     return testHash === hash;
   }
 
@@ -161,23 +190,29 @@ export class SecurityManager {
   generateJWT(payload: Record<string, unknown>): string {
     const header = {
       alg: 'HS256',
-      typ: 'JWT'
+      typ: 'JWT',
     };
 
     const now = Math.floor(Date.now() / 1000);
     const tokenPayload = {
       ...payload,
       iat: now,
-      exp: now + (this.config.authentication.tokenExpiry / 1000),
-      iss: 'enterprise-security-system'
+      exp: now + this.config.authentication.tokenExpiry / 1000,
+      iss: 'enterprise-security-system',
     };
 
     // In production, use a proper JWT library
-    const encodedHeader = Buffer.from(JSON.stringify(header)).toString('base64url');
-    const encodedPayload = Buffer.from(JSON.stringify(tokenPayload)).toString('base64url');
-    
+    const encodedHeader = Buffer.from(JSON.stringify(header)).toString(
+      'base64url'
+    );
+    const encodedPayload = Buffer.from(JSON.stringify(tokenPayload)).toString(
+      'base64url'
+    );
+
     const signature = createHash('sha256')
-      .update(`${encodedHeader}.${encodedPayload}.${this.config.authentication.jwtSecret}`)
+      .update(
+        `${encodedHeader}.${encodedPayload}.${this.config.authentication.jwtSecret}`
+      )
       .digest('base64url');
 
     return `${encodedHeader}.${encodedPayload}.${signature}`;
@@ -186,10 +221,14 @@ export class SecurityManager {
   /**
    * Verify JWT token
    */
-  verifyJWT(token: string): { valid: boolean; payload?: Record<string, unknown>; error?: string } {
+  verifyJWT(token: string): {
+    valid: boolean;
+    payload?: Record<string, unknown>;
+    error?: string;
+  } {
     try {
       const [header, payload, signature] = token.split('.');
-      
+
       const expectedSignature = createHash('sha256')
         .update(`${header}.${payload}.${this.config.authentication.jwtSecret}`)
         .digest('base64url');
@@ -198,8 +237,10 @@ export class SecurityManager {
         throw new Error('Invalid signature');
       }
 
-      const decodedPayload = JSON.parse(Buffer.from(payload, 'base64url').toString());
-      
+      const decodedPayload = JSON.parse(
+        Buffer.from(payload, 'base64url').toString()
+      );
+
       if (decodedPayload.exp < Math.floor(Date.now() / 1000)) {
         throw new Error('Token expired');
       }
@@ -213,14 +254,19 @@ export class SecurityManager {
   /**
    * Check for suspicious activity and potential threats
    */
-  async detectThreats(userId: string, ipAddress: string, userAgent: string, activity: string): Promise<ThreatDetection> {
+  async detectThreats(
+    userId: string,
+    ipAddress: string,
+    userAgent: string,
+    activity: string
+  ): Promise<ThreatDetection> {
     const threats: ThreatDetection = {
       suspiciousActivity: false,
       bruteForceAttempts: 0,
       unusualLocation: false,
       dataExfiltration: false,
       privilegeEscalation: false,
-      riskScore: 0
+      riskScore: 0,
     };
 
     // Check for brute force attempts
@@ -260,7 +306,7 @@ export class SecurityManager {
         userId,
         ipAddress,
         userAgent,
-        details: { threats, activity }
+        details: { threats, activity },
       });
     }
 
@@ -270,12 +316,14 @@ export class SecurityManager {
   /**
    * Log security events for audit and monitoring
    */
-  async logSecurityEvent(event: Omit<SecurityEvent, 'id' | 'timestamp' | 'resolved'>): Promise<void> {
+  async logSecurityEvent(
+    event: Omit<SecurityEvent, 'id' | 'timestamp' | 'resolved'>
+  ): Promise<void> {
     const securityEvent: SecurityEvent = {
       id: this.generateEventId(),
       timestamp: new Date().toISOString(),
       resolved: false,
-      ...event
+      ...event,
     };
 
     this.securityEvents.set(securityEvent.id, securityEvent);
@@ -295,11 +343,17 @@ export class SecurityManager {
   isUserLockedOut(userId: string, ipAddress: string): boolean {
     const attemptKey = `${userId}_${ipAddress}`;
     const attempts = this.failedAttempts.get(attemptKey);
-    
-    if (!attempts) {return false;}
-    
-    const lockoutExpiry = attempts.lastAttempt + this.config.authentication.lockoutDuration;
-    return Date.now() < lockoutExpiry && attempts.count >= this.config.authentication.maxLoginAttempts;
+
+    if (!attempts) {
+      return false;
+    }
+
+    const lockoutExpiry =
+      attempts.lastAttempt + this.config.authentication.lockoutDuration;
+    return (
+      Date.now() < lockoutExpiry &&
+      attempts.count >= this.config.authentication.maxLoginAttempts
+    );
   }
 
   /**
@@ -307,11 +361,14 @@ export class SecurityManager {
    */
   recordFailedAttempt(userId: string, ipAddress: string): void {
     const attemptKey = `${userId}_${ipAddress}`;
-    const attempts = this.failedAttempts.get(attemptKey) || { count: 0, lastAttempt: 0 };
-    
+    const attempts = this.failedAttempts.get(attemptKey) || {
+      count: 0,
+      lastAttempt: 0,
+    };
+
     attempts.count++;
     attempts.lastAttempt = Date.now();
-    
+
     this.failedAttempts.set(attemptKey, attempts);
   }
 
@@ -326,12 +383,14 @@ export class SecurityManager {
   /**
    * Generate security report for compliance
    */
-  generateSecurityReport(startDate: Date, endDate: Date): { report: Record<string, unknown>; summary: Record<string, unknown> } {
-    const events = Array.from(this.securityEvents.values())
-      .filter(event => {
-        const eventDate = new Date(event.timestamp);
-        return eventDate >= startDate && eventDate <= endDate;
-      });
+  generateSecurityReport(
+    startDate: Date,
+    endDate: Date
+  ): { report: Record<string, unknown>; summary: Record<string, unknown> } {
+    const events = Array.from(this.securityEvents.values()).filter(event => {
+      const eventDate = new Date(event.timestamp);
+      return eventDate >= startDate && eventDate <= endDate;
+    });
 
     const report = {
       period: { startDate, endDate },
@@ -340,7 +399,7 @@ export class SecurityManager {
       eventsBySeverity: this.groupEventsBySeverity(events),
       topThreats: this.getTopThreats(events),
       complianceMetrics: this.calculateComplianceMetrics(events),
-      recommendations: this.generateSecurityRecommendations(events)
+      recommendations: this.generateSecurityRecommendations(events),
     };
 
     return report;
@@ -356,7 +415,7 @@ export class SecurityManager {
       /union/i,
       /select.*from/i,
       /<script/i,
-      /javascript:/i
+      /javascript:/i,
     ];
 
     return suspiciousPatterns.some(pattern => pattern.test(activity));
@@ -367,7 +426,7 @@ export class SecurityManager {
       /bulk.*download/i,
       /export.*all/i,
       /mass.*copy/i,
-      /batch.*extract/i
+      /batch.*extract/i,
     ];
 
     return exfiltrationPatterns.some(pattern => pattern.test(activity));
@@ -378,7 +437,7 @@ export class SecurityManager {
       /role.*admin/i,
       /permission.*grant/i,
       /access.*elevate/i,
-      /privilege.*escalate/i
+      /privilege.*escalate/i,
     ];
 
     return escalationPatterns.some(pattern => pattern.test(activity));
@@ -387,7 +446,10 @@ export class SecurityManager {
   private async sendSecurityAlert(event: SecurityEvent): Promise<void> {
     // In production, integrate with alerting system
     if (process.env.NODE_ENV === 'development') {
-      console.warn(`[SECURITY ALERT] ${event.severity.toUpperCase()}: ${event.type}`, event);
+      console.warn(
+        `[SECURITY ALERT] ${event.severity.toUpperCase()}: ${event.type}`,
+        event
+      );
     }
     // TODO: Integrate with actual alerting system (Slack, email, etc.)
   }
@@ -397,8 +459,9 @@ export class SecurityManager {
   }
 
   private cleanupOldEvents(): void {
-    const cutoffDate = Date.now() - (this.config.audit.retentionDays * 24 * 60 * 60 * 1000);
-    
+    const cutoffDate =
+      Date.now() - this.config.audit.retentionDays * 24 * 60 * 60 * 1000;
+
     for (const [id, event] of this.securityEvents.entries()) {
       if (new Date(event.timestamp).getTime() < cutoffDate) {
         this.securityEvents.delete(id);
@@ -407,36 +470,54 @@ export class SecurityManager {
   }
 
   private groupEventsByType(events: SecurityEvent[]): Record<string, number> {
-    return events.reduce((acc, event) => {
-      acc[event.type] = (acc[event.type] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    return events.reduce(
+      (acc, event) => {
+        acc[event.type] = (acc[event.type] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
   }
 
-  private groupEventsBySeverity(events: SecurityEvent[]): Record<string, number> {
-    return events.reduce((acc, event) => {
-      acc[event.severity] = (acc[event.severity] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+  private groupEventsBySeverity(
+    events: SecurityEvent[]
+  ): Record<string, number> {
+    return events.reduce(
+      (acc, event) => {
+        acc[event.severity] = (acc[event.severity] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
   }
 
-  private getTopThreats(events: SecurityEvent[]): Array<{ type: string; count: number; severity: string }> {
+  private getTopThreats(
+    events: SecurityEvent[]
+  ): Array<{ type: string; count: number; severity: string }> {
     const threatCounts = new Map<string, number>();
-    
-    events.forEach((event: { type: string; details?: { threats?: { type?: string } } }) => {
-      if (event.type === 'security_violation') {
-        const threat = (event.details?.threats as { type?: string })?.type || 'unknown';
-        threatCounts.set(threat, (threatCounts.get(threat) || 0) + 1);
+
+    events.forEach(
+      (event: { type: string; details?: { threats?: { type?: string } } }) => {
+        if (event.type === 'security_violation') {
+          const threat =
+            (event.details?.threats as { type?: string })?.type || 'unknown';
+          threatCounts.set(threat, (threatCounts.get(threat) || 0) + 1);
+        }
       }
-    });
+    );
 
     return Array.from(threatCounts.entries())
-      .sort(([,a], [,b]) => b - a)
+      .sort(([, a], [, b]) => b - a)
       .slice(0, 5)
       .map(([threat, count]) => ({ threat, count }));
   }
 
-  private calculateComplianceMetrics(events: SecurityEvent[]): { totalEvents: number; criticalEvents: number; resolutionRate: number; averageResolutionTime: number } {
+  private calculateComplianceMetrics(events: SecurityEvent[]): {
+    totalEvents: number;
+    criticalEvents: number;
+    resolutionRate: number;
+    averageResolutionTime: number;
+  } {
     const totalEvents = events.length;
     const criticalEvents = events.filter(e => e.severity === 'critical').length;
     const resolvedEvents = events.filter(e => e.resolved).length;
@@ -444,9 +525,10 @@ export class SecurityManager {
     return {
       totalEvents,
       criticalEvents,
-      resolutionRate: totalEvents > 0 ? (resolvedEvents / totalEvents) * 100 : 100,
+      resolutionRate:
+        totalEvents > 0 ? (resolvedEvents / totalEvents) * 100 : 100,
       averageResolutionTime: this.calculateAverageResolutionTime(events),
-      complianceScore: this.calculateComplianceScore(events)
+      complianceScore: this.calculateComplianceScore(events),
     };
   }
 
@@ -458,29 +540,39 @@ export class SecurityManager {
   private calculateComplianceScore(events: SecurityEvent[]): number {
     const criticalEvents = events.filter(e => e.severity === 'critical').length;
     const totalEvents = events.length;
-    
-    if (totalEvents === 0) {return 100;}
-    
+
+    if (totalEvents === 0) {
+      return 100;
+    }
+
     const criticalRatio = criticalEvents / totalEvents;
-    return Math.max(0, 100 - (criticalRatio * 50));
+    return Math.max(0, 100 - criticalRatio * 50);
   }
 
   private generateSecurityRecommendations(events: SecurityEvent[]): string[] {
     const recommendations: string[] = [];
-    
+
     const criticalEvents = events.filter(e => e.severity === 'critical');
     if (criticalEvents.length > 0) {
-      recommendations.push('Review and address all critical security events immediately');
+      recommendations.push(
+        'Review and address all critical security events immediately'
+      );
     }
 
-    const bruteForceEvents = events.filter(e => e.type === 'authentication' && e.details?.bruteForce);
+    const bruteForceEvents = events.filter(
+      e => e.type === 'authentication' && e.details?.bruteForce
+    );
     if (bruteForceEvents.length > 0) {
-      recommendations.push('Implement additional rate limiting and account lockout policies');
+      recommendations.push(
+        'Implement additional rate limiting and account lockout policies'
+      );
     }
 
     const dataAccessEvents = events.filter(e => e.type === 'data_access');
     if (dataAccessEvents.length > 100) {
-      recommendations.push('Review data access patterns and implement additional monitoring');
+      recommendations.push(
+        'Review data access patterns and implement additional monitoring'
+      );
     }
 
     return recommendations;

@@ -38,11 +38,11 @@ describe('CacheService', () => {
   it('should set and get value from cache', async () => {
     const testKey = 'test-key';
     const testValue = { data: 'test' };
-    
+
     await cacheService.set(testKey, testValue, { ttlSeconds: 60 });
-    
+
     const result = await cacheService.get(testKey);
-    
+
     // In-memory cache should work
     expect(result.hit).toBe(true);
     expect(result.value).toEqual(testValue);
@@ -56,10 +56,10 @@ describe('CacheService', () => {
   it('should delete cached value', async () => {
     const testKey = 'test-key';
     const testValue = { data: 'test' };
-    
+
     await cacheService.set(testKey, testValue, { ttlSeconds: 60 });
     await cacheService.delete(testKey);
-    
+
     const result = await cacheService.get(testKey);
     expect(result.hit).toBe(false);
   });

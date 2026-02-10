@@ -1,16 +1,16 @@
-"use client";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+'use client';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import Confetti from "@/components/gamification/Confetti";
-import { LoadingState, ErrorState } from "@/components/ui/empty-state";
-import { RetryButton } from "@/components/ui/retry-button";
-import { supabase } from "@/lib/supabase/client";
+import Confetti from '@/components/gamification/Confetti';
+import { LoadingState, ErrorState } from '@/components/ui/empty-state';
+import { RetryButton } from '@/components/ui/retry-button';
+import { supabase } from '@/lib/supabase/client';
 
 export default function BillingSuccessPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const sessionId = searchParams.get("session_id");
+  const sessionId = searchParams.get('session_id');
   const [loading, setLoading] = useState(true);
   const [celebrating, setCelebrating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,9 +29,12 @@ export default function BillingSuccessPage() {
 
     try {
       // Get current user
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
       if (authError || !user) {
-        setError("Please sign in to verify your subscription");
+        setError('Please sign in to verify your subscription');
         setLoading(false);
         return;
       }
@@ -44,10 +47,10 @@ export default function BillingSuccessPage() {
 
       const checkSubscription = async (): Promise<boolean> => {
         const { data: tier } = await supabase
-          .from("subscription_tiers")
-          .select("*")
-          .eq("user_id", user.id)
-          .gte("expires_at", new Date().toISOString())
+          .from('subscription_tiers')
+          .select('*')
+          .eq('user_id', user.id)
+          .gte('expires_at', new Date().toISOString())
           .single();
 
         if (tier) {
@@ -63,7 +66,7 @@ export default function BillingSuccessPage() {
         setLoading(false);
         setCelebrating(true);
         setTimeout(() => {
-          router.push("/dashboard");
+          router.push('/dashboard');
         }, 3000);
         return;
       }
@@ -79,7 +82,7 @@ export default function BillingSuccessPage() {
           setLoading(false);
           setCelebrating(true);
           setTimeout(() => {
-            router.push("/dashboard");
+            router.push('/dashboard');
           }, 3000);
         } else if (attempts >= maxAttempts) {
           if (pollIntervalRef.current) {
@@ -91,27 +94,31 @@ export default function BillingSuccessPage() {
           setLoading(false);
           setCelebrating(true);
           setTimeout(() => {
-            router.push("/dashboard");
+            router.push('/dashboard');
           }, 3000);
         }
       }, pollIntervalMs);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to verify subscription");
+      setError(
+        err instanceof Error ? err.message : 'Failed to verify subscription'
+      );
       setLoading(false);
     }
   }, [router]);
 
   useEffect(() => {
     if (sessionId) {
-      void verifySubscription().catch((err) => {
-        setError(err instanceof Error ? err.message : "Failed to verify subscription");
+      void verifySubscription().catch(err => {
+        setError(
+          err instanceof Error ? err.message : 'Failed to verify subscription'
+        );
         setLoading(false);
       });
     } else {
-      setError("Missing session ID");
+      setError('Missing session ID');
       setLoading(false);
     }
-    
+
     return () => {
       if (pollIntervalRef.current) {
         clearInterval(pollIntervalRef.current);
@@ -122,18 +129,18 @@ export default function BillingSuccessPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <LoadingState message="Verifying your subscription..." />
+      <div className='flex min-h-[60vh] items-center justify-center'>
+        <LoadingState message='Verifying your subscription...' />
       </div>
     );
   }
 
   if (error && !celebrating) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="max-w-md w-full">
+      <div className='flex min-h-[60vh] items-center justify-center'>
+        <div className='w-full max-w-md'>
           <ErrorState
-            title="Verification Failed"
+            title='Verification Failed'
             description={error}
             onRetry={verifySubscription}
           />
@@ -143,22 +150,25 @@ export default function BillingSuccessPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="text-center space-y-4">
-        <div className="text-6xl">🎉</div>
-        <div className="text-2xl font-bold">Subscription Activated!</div>
-        <div className="text-muted-foreground">
+    <div className='flex min-h-[60vh] items-center justify-center'>
+      <div className='space-y-4 text-center'>
+        <div className='text-6xl'>🎉</div>
+        <div className='text-2xl font-bold'>Subscription Activated!</div>
+        <div className='text-muted-foreground'>
           {verified
-            ? "Your account has been upgraded. Redirecting to dashboard..."
-            : "Your payment was successful. Your subscription is being processed and will be active shortly."}
+            ? 'Your account has been upgraded. Redirecting to dashboard...'
+            : 'Your payment was successful. Your subscription is being processed and will be active shortly.'}
         </div>
         {!verified && (
-          <div className="text-sm text-muted-foreground mt-4">
-            <p>If your subscription doesn't appear within a few minutes, please contact support.</p>
+          <div className='mt-4 text-sm text-muted-foreground'>
+            <p>
+              If your subscription doesn't appear within a few minutes, please
+              contact support.
+            </p>
             <RetryButton
               onRetry={verifySubscription}
-              label="Check again"
-              variant="outline"
+              label='Check again'
+              variant='outline'
             />
           </div>
         )}

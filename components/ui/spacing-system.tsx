@@ -25,13 +25,13 @@ import { cn } from '@/lib/utils';
  */
 
 export const spacing = {
-  xs: '0.5rem',    // 8px
-  sm: '1rem',      // 16px
-  md: '1.5rem',    // 24px
-  lg: '2rem',      // 32px
-  xl: '3rem',      // 48px
-  '2xl': '4rem',   // 64px
-  '3xl': '6rem',   // 96px
+  xs: '0.5rem', // 8px
+  sm: '1rem', // 16px
+  md: '1.5rem', // 24px
+  lg: '2rem', // 32px
+  xl: '3rem', // 48px
+  '2xl': '4rem', // 64px
+  '3xl': '6rem', // 96px
 };
 
 /**
@@ -105,7 +105,12 @@ export function VerticalRhythm({
   className?: string;
 }) {
   return (
-    <div className={cn(`space-y-${gap === 'md' ? '6' : gap === 'lg' ? '8' : '4'}`, className)}>
+    <div
+      className={cn(
+        `space-y-${gap === 'md' ? '6' : gap === 'lg' ? '8' : '4'}`,
+        className
+      )}
+    >
       {children}
     </div>
   );

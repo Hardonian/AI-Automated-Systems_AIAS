@@ -29,35 +29,46 @@ export class HubSpotCRM {
 
   async createContact(contact: CRMContact): Promise<string> {
     try {
-      const response = await fetch('https://api.hubapi.com/crm/v3/objects/contacts', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          properties: {
-            firstname: contact.firstName,
-            lastname: contact.lastName,
-            email: contact.email,
-            phone: contact.phone || '',
-            company: contact.company || '',
-            notes: contact.notes || '',
-            hs_lead_status: contact.source || 'WEB',
+      const response = await fetch(
+        'https://api.hubapi.com/crm/v3/objects/contacts',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${this.apiKey}`,
+            'Content-Type': 'application/json',
           },
-        }),
-      });
+          body: JSON.stringify({
+            properties: {
+              firstname: contact.firstName,
+              lastname: contact.lastName,
+              email: contact.email,
+              phone: contact.phone || '',
+              company: contact.company || '',
+              notes: contact.notes || '',
+              hs_lead_status: contact.source || 'WEB',
+            },
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(`HubSpot API error: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`);
+        throw new Error(
+          `HubSpot API error: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`
+        );
       }
 
       const data = await response.json();
-      logger.info('HubSpot contact created', { contactId: data.id, email: contact.email });
+      logger.info('HubSpot contact created', {
+        contactId: data.id,
+        email: contact.email,
+      });
       return data.id;
     } catch (error) {
-      const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+      const errorObj: Error =
+        (error as any) instanceof Error
+          ? (error as Error)
+          : new Error(String(error));
       logger.error('Failed to create HubSpot contact', errorObj, {
         email: contact.email,
       });
@@ -72,27 +83,35 @@ export class HubSpotCRM {
 
       // Create deal/lead if needed
       if (lead.leadScore || lead.status) {
-        const response = await fetch('https://api.hubapi.com/crm/v3/objects/deals', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${this.apiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            properties: {
-              dealname: `${lead.firstName} ${lead.lastName} - ${lead.company || 'Lead'}`,
-              dealstage: lead.status || 'appointmentscheduled',
-              amount: lead.leadScore ? lead.leadScore * 100 : undefined,
-              pipeline: 'default',
+        const response = await fetch(
+          'https://api.hubapi.com/crm/v3/objects/deals',
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${this.apiKey}`,
+              'Content-Type': 'application/json',
             },
-            associations: [
-              {
-                to: { id: contactId },
-                types: [{ associationCategory: 'HUBSPOT_DEFINED', associationTypeId: 3 }],
+            body: JSON.stringify({
+              properties: {
+                dealname: `${lead.firstName} ${lead.lastName} - ${lead.company || 'Lead'}`,
+                dealstage: lead.status || 'appointmentscheduled',
+                amount: lead.leadScore ? lead.leadScore * 100 : undefined,
+                pipeline: 'default',
               },
-            ],
-          }),
-        });
+              associations: [
+                {
+                  to: { id: contactId },
+                  types: [
+                    {
+                      associationCategory: 'HUBSPOT_DEFINED',
+                      associationTypeId: 3,
+                    },
+                  ],
+                },
+              ],
+            }),
+          }
+        );
 
         if (response.ok) {
           const deal = await response.json();
@@ -103,7 +122,10 @@ export class HubSpotCRM {
 
       return contactId;
     } catch (error) {
-      const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+      const errorObj: Error =
+        (error as any) instanceof Error
+          ? (error as Error)
+          : new Error(String(error));
       logger.error('Failed to create HubSpot lead', errorObj, {
         email: lead.email,
       });
@@ -127,19 +149,22 @@ export class SalesforceCRM {
 
   private async getAccessToken(): Promise<string> {
     try {
-      const response = await fetch('https://login.salesforce.com/services/oauth2/token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          grant_type: 'password',
-          client_id: this.clientId,
-          client_secret: this.clientSecret,
-          username: this.username,
-          password: `${this.password}${this.securityToken}`,
-        }),
-      });
+      const response = await fetch(
+        'https://login.salesforce.com/services/oauth2/token',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            grant_type: 'password',
+            client_id: this.clientId,
+            client_secret: this.clientSecret,
+            username: this.username,
+            password: `${this.password}${this.securityToken}`,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Salesforce auth error: ${response.status}`);
@@ -148,7 +173,10 @@ export class SalesforceCRM {
       const data = await response.json();
       return data.access_token;
     } catch (error) {
-      const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+      const errorObj: Error =
+        (error as any) instanceof Error
+          ? (error as Error)
+          : new Error(String(error));
       logger.error('Failed to get Salesforce access token', errorObj);
       throw error;
     }
@@ -159,33 +187,44 @@ export class SalesforceCRM {
       const accessToken = await this.getAccessToken();
       const baseUrl = this.instanceUrl || 'https://yourinstance.salesforce.com';
 
-      const response = await fetch(`${baseUrl}/services/data/v57.0/sobjects/Contact`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          FirstName: contact.firstName,
-          LastName: contact.lastName,
-          Email: contact.email,
-          Phone: contact.phone || '',
-          Company__c: contact.company || '',
-          Description: contact.notes || '',
-          LeadSource: contact.source || 'Web',
-        }),
-      });
+      const response = await fetch(
+        `${baseUrl}/services/data/v57.0/sobjects/Contact`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            FirstName: contact.firstName,
+            LastName: contact.lastName,
+            Email: contact.email,
+            Phone: contact.phone || '',
+            Company__c: contact.company || '',
+            Description: contact.notes || '',
+            LeadSource: contact.source || 'Web',
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.text();
-        throw new Error(`Salesforce API error: ${response.status} ${response.statusText} - ${errorData}`);
+        throw new Error(
+          `Salesforce API error: ${response.status} ${response.statusText} - ${errorData}`
+        );
       }
 
       const data = await response.json();
-      logger.info('Salesforce contact created', { contactId: data.id, email: contact.email });
+      logger.info('Salesforce contact created', {
+        contactId: data.id,
+        email: contact.email,
+      });
       return data.id;
     } catch (error) {
-      const errorObj: Error = (error as any) instanceof Error ? (error as Error) : new Error(String(error));
+      const errorObj: Error =
+        (error as any) instanceof Error
+          ? (error as Error)
+          : new Error(String(error));
       logger.error('Failed to create Salesforce contact', errorObj, {
         email: contact.email,
       });
@@ -197,17 +236,27 @@ export class SalesforceCRM {
 /**
  * Factory function to create CRM client based on provider
  */
-export function createCRMClient(provider: 'hubspot' | 'salesforce', config: Record<string, string>) {
+export function createCRMClient(
+  provider: 'hubspot' | 'salesforce',
+  config: Record<string, string>
+) {
   switch (provider) {
     case 'hubspot':
       if (!config.apiKey) throw new Error('HubSpot API key is required');
       return new HubSpotCRM(config.apiKey);
     case 'salesforce':
-      if (!config.clientId || !config.clientSecret || !config.username || !config.password) {
+      if (
+        !config.clientId ||
+        !config.clientSecret ||
+        !config.username ||
+        !config.password
+      ) {
         throw new Error('Salesforce credentials are required');
       }
       if (!config.securityToken || !config.instanceUrl) {
-        throw new Error('Salesforce security token and instance URL are required');
+        throw new Error(
+          'Salesforce security token and instance URL are required'
+        );
       }
       return new SalesforceCRM(
         config.clientId,

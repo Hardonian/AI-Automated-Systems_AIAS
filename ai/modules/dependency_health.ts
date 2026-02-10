@@ -41,9 +41,7 @@ interface DependencyReport {
 }
 
 export class DependencyHealthChecker {
-  constructor(
-    private supabase: any
-  ) {}
+  constructor(private supabase: any) {}
 
   async check(): Promise<ModuleResult> {
     try {
@@ -52,7 +50,7 @@ export class DependencyHealthChecker {
         vulnerabilities: [],
         lockfileIssues: [],
         safeUpdates: [],
-        recommendations: []
+        recommendations: [],
       };
 
       // Check root package.json
@@ -81,25 +79,31 @@ export class DependencyHealthChecker {
       // Store report
       await this.storeReport(report);
 
-      const status = report.vulnerabilities.some(v => v.severity === 'critical' || v.severity === 'high')
+      const status = report.vulnerabilities.some(
+        v => v.severity === 'critical' || v.severity === 'high'
+      )
         ? 'warning'
         : 'success';
 
       return {
         status,
         message: `Found ${report.outdated.length} outdated packages, ${report.vulnerabilities.length} vulnerabilities`,
-        data: report
+        data: report,
       };
     } catch (error: any) {
       return {
         status: 'error',
         message: `Dependency health check failed: ${error.message}`,
-        errors: [error.message]
+        errors: [error.message],
       };
     }
   }
 
-  private async checkPackageJson(dir: string, service: string, report: DependencyReport): Promise<void> {
+  private async checkPackageJson(
+    dir: string,
+    service: string,
+    report: DependencyReport
+  ): Promise<void> {
     const packageJsonPath = join(dir, 'package.json');
     if (!existsSync(packageJsonPath)) return;
 
@@ -109,20 +113,24 @@ export class DependencyHealthChecker {
         const _outdatedOutput = execSync('pnpm outdated --json', {
           cwd: dir,
           encoding: 'utf-8',
-          stdio: 'pipe'
+          stdio: 'pipe',
         });
 
         const outdated = JSON.parse(_outdatedOutput);
         Object.entries(outdated).forEach(([name, info]: [string, any]) => {
           if (info.wanted && info.latest) {
-            const type = this.getUpdateType(info.current, info.wanted, info.latest);
+            const type = this.getUpdateType(
+              info.current,
+              info.wanted,
+              info.latest
+            );
             report.outdated.push({
               name,
               current: info.current || 'unknown',
               wanted: info.wanted,
               latest: info.latest,
               type,
-              service
+              service,
             });
           }
         });
@@ -132,20 +140,24 @@ export class DependencyHealthChecker {
           const outdatedOutput = execSync('npm outdated --json', {
             cwd: dir,
             encoding: 'utf-8',
-            stdio: 'pipe'
+            stdio: 'pipe',
           });
           // npm outdated format is different, parse accordingly
           const outdated = JSON.parse(outdatedOutput);
           Object.entries(outdated).forEach(([name, info]: [string, any]) => {
             if (info.current && info.wanted && info.latest) {
-              const type = this.getUpdateType(info.current, info.wanted, info.latest);
+              const type = this.getUpdateType(
+                info.current,
+                info.wanted,
+                info.latest
+              );
               report.outdated.push({
                 name,
                 current: info.current,
                 wanted: info.wanted,
                 latest: info.latest,
                 type,
-                service
+                service,
               });
             }
           });
@@ -158,7 +170,10 @@ export class DependencyHealthChecker {
     }
   }
 
-  private async checkWorkspace(_workspaceDir: string, _report: DependencyReport): Promise<void> {
+  private async checkWorkspace(
+    _workspaceDir: string,
+    _report: DependencyReport
+  ): Promise<void> {
     // Implementation would scan each workspace package
   }
 
@@ -166,21 +181,23 @@ export class DependencyHealthChecker {
     try {
       const auditOutput = execSync('npm audit --json', {
         encoding: 'utf-8',
-        stdio: 'pipe'
+        stdio: 'pipe',
       });
 
       const audit = JSON.parse(auditOutput);
-      
+
       if (audit.vulnerabilities) {
-        Object.entries(audit.vulnerabilities).forEach(([name, vuln]: [string, any]) => {
-          report.vulnerabilities.push({
-            name,
-            severity: this.mapSeverity(vuln.severity),
-            title: vuln.title || name,
-            url: vuln.url || '',
-            service: 'root'
-          });
-        });
+        Object.entries(audit.vulnerabilities).forEach(
+          ([name, vuln]: [string, any]) => {
+            report.vulnerabilities.push({
+              name,
+              severity: this.mapSeverity(vuln.severity),
+              title: vuln.title || name,
+              url: vuln.url || '',
+              service: 'root',
+            });
+          }
+        );
       }
     } catch (error: any) {
       // npm audit exits with non-zero on vulnerabilities, but we still get JSON
@@ -188,15 +205,17 @@ export class DependencyHealthChecker {
         try {
           const audit = JSON.parse(error.stdout);
           if (audit.vulnerabilities) {
-            Object.entries(audit.vulnerabilities).forEach(([name, vuln]: [string, any]) => {
-              report.vulnerabilities.push({
-                name,
-                severity: this.mapSeverity(vuln.severity),
-                title: vuln.title || name,
-                url: vuln.url || '',
-                service: 'root'
-              });
-            });
+            Object.entries(audit.vulnerabilities).forEach(
+              ([name, vuln]: [string, any]) => {
+                report.vulnerabilities.push({
+                  name,
+                  severity: this.mapSeverity(vuln.severity),
+                  title: vuln.title || name,
+                  url: vuln.url || '',
+                  service: 'root',
+                });
+              }
+            );
           }
         } catch (e) {
           console.warn('Could not parse npm audit output:', e);
@@ -209,7 +228,7 @@ export class DependencyHealthChecker {
     const lockfiles = [
       { path: 'pnpm-lock.yaml', type: 'pnpm' },
       { path: 'package-lock.json', type: 'npm' },
-      { path: 'yarn.lock', type: 'yarn' }
+      { path: 'yarn.lock', type: 'yarn' },
     ];
 
     lockfiles.forEach(lockfile => {
@@ -218,7 +237,7 @@ export class DependencyHealthChecker {
         report.lockfileIssues.push({
           type: 'missing',
           service: 'root',
-          message: `${lockfile.type} lockfile not found`
+          message: `${lockfile.type} lockfile not found`,
         });
       }
     });
@@ -227,17 +246,33 @@ export class DependencyHealthChecker {
     // This would require parsing both files and comparing
   }
 
-  private getUpdateType(current: string, wanted: string, latest: string): 'patch' | 'minor' | 'major' {
+  private getUpdateType(
+    current: string,
+    wanted: string,
+    latest: string
+  ): 'patch' | 'minor' | 'major' {
     const [currMajor, currMinor, _currPatch] = current.split('.').map(Number);
     const [_wantMajor, _wantMinor, _wantPatch] = wanted.split('.').map(Number);
     const [latMajor, latMinor] = latest.split('.').map(Number);
 
-    if (latMajor !== undefined && currMajor !== undefined && latMajor > currMajor) return 'major';
-    if (latMinor !== undefined && currMinor !== undefined && latMinor > currMinor) return 'minor';
+    if (
+      latMajor !== undefined &&
+      currMajor !== undefined &&
+      latMajor > currMajor
+    )
+      return 'major';
+    if (
+      latMinor !== undefined &&
+      currMinor !== undefined &&
+      latMinor > currMinor
+    )
+      return 'minor';
     return 'patch';
   }
 
-  private mapSeverity(severity: string): 'low' | 'moderate' | 'high' | 'critical' {
+  private mapSeverity(
+    severity: string
+  ): 'low' | 'moderate' | 'high' | 'critical' {
     const normalized = severity.toLowerCase();
     if (normalized === 'critical') return 'critical';
     if (normalized === 'high') return 'high';
@@ -245,37 +280,55 @@ export class DependencyHealthChecker {
     return 'low';
   }
 
-  private identifySafeUpdates(report: DependencyReport): Array<{ name: string; from: string; to: string; type: 'patch' | 'minor' }> {
+  private identifySafeUpdates(report: DependencyReport): Array<{
+    name: string;
+    from: string;
+    to: string;
+    type: 'patch' | 'minor';
+  }> {
     return report.outdated
-      .filter((pkg): pkg is typeof pkg & { type: 'patch' | 'minor' } => pkg.type === 'patch' || pkg.type === 'minor')
+      .filter(
+        (pkg): pkg is typeof pkg & { type: 'patch' | 'minor' } =>
+          pkg.type === 'patch' || pkg.type === 'minor'
+      )
       .map(pkg => ({
         name: pkg.name,
         from: pkg.current,
         to: pkg.type === 'patch' ? pkg.wanted : pkg.latest,
-        type: pkg.type as 'patch' | 'minor'
+        type: pkg.type as 'patch' | 'minor',
       }));
   }
 
   private generateRecommendations(report: DependencyReport): string[] {
     const recommendations: string[] = [];
 
-    const criticalVulns = report.vulnerabilities.filter(v => v.severity === 'critical');
+    const criticalVulns = report.vulnerabilities.filter(
+      v => v.severity === 'critical'
+    );
     const highVulns = report.vulnerabilities.filter(v => v.severity === 'high');
 
     if (criticalVulns.length > 0) {
-      recommendations.push(`🚨 ${criticalVulns.length} critical vulnerabilities require immediate attention`);
+      recommendations.push(
+        `🚨 ${criticalVulns.length} critical vulnerabilities require immediate attention`
+      );
     }
 
     if (highVulns.length > 0) {
-      recommendations.push(`⚠️ ${highVulns.length} high-severity vulnerabilities should be addressed within 48 hours`);
+      recommendations.push(
+        `⚠️ ${highVulns.length} high-severity vulnerabilities should be addressed within 48 hours`
+      );
     }
 
     if (report.safeUpdates.length > 0) {
-      recommendations.push(`✅ ${report.safeUpdates.length} safe patch/minor updates available for auto-upgrade`);
+      recommendations.push(
+        `✅ ${report.safeUpdates.length} safe patch/minor updates available for auto-upgrade`
+      );
     }
 
     if (report.lockfileIssues.length > 0) {
-      recommendations.push(`📦 ${report.lockfileIssues.length} lockfile consistency issues detected`);
+      recommendations.push(
+        `📦 ${report.lockfileIssues.length} lockfile consistency issues detected`
+      );
     }
 
     return recommendations;
@@ -283,12 +336,12 @@ export class DependencyHealthChecker {
 
   private async storeReport(report: DependencyReport): Promise<void> {
     try {
-      await this.supabase
-        .from('dependency_reports')
-        .insert([{
+      await this.supabase.from('dependency_reports').insert([
+        {
           report,
-          created_at: new Date().toISOString()
-        }]);
+          created_at: new Date().toISOString(),
+        },
+      ]);
     } catch (error) {
       console.warn('Could not store dependency report:', error);
     }

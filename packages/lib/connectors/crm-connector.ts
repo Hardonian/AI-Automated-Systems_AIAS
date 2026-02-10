@@ -44,13 +44,24 @@ export abstract class CRMConnector {
   abstract getContacts(limit?: number, offset?: number): Promise<CRMContact[]>;
   abstract getContact(id: string): Promise<CRMContact | null>;
   abstract createContact(contact: Partial<CRMContact>): Promise<CRMContact>;
-  abstract updateContact(id: string, contact: Partial<CRMContact>): Promise<CRMContact>;
+  abstract updateContact(
+    id: string,
+    contact: Partial<CRMContact>
+  ): Promise<CRMContact>;
   abstract deleteContact(id: string): Promise<boolean>;
 
-  abstract getOpportunities(limit?: number, offset?: number): Promise<CRMOpportunity[]>;
+  abstract getOpportunities(
+    limit?: number,
+    offset?: number
+  ): Promise<CRMOpportunity[]>;
   abstract getOpportunity(id: string): Promise<CRMOpportunity | null>;
-  abstract createOpportunity(opportunity: Partial<CRMOpportunity>): Promise<CRMOpportunity>;
-  abstract updateOpportunity(id: string, opportunity: Partial<CRMOpportunity>): Promise<CRMOpportunity>;
+  abstract createOpportunity(
+    opportunity: Partial<CRMOpportunity>
+  ): Promise<CRMOpportunity>;
+  abstract updateOpportunity(
+    id: string,
+    opportunity: Partial<CRMOpportunity>
+  ): Promise<CRMOpportunity>;
   abstract deleteOpportunity(id: string): Promise<boolean>;
 
   abstract searchContacts(query: string): Promise<CRMContact[]>;
@@ -65,11 +76,14 @@ export class HubSpotConnector extends CRMConnector {
     this.baseUrl = `${config.baseUrl}/crm/v3`;
   }
 
-  private async makeRequest(endpoint: string, options: RequestInit = {}): Promise<any> {
+  private async makeRequest(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<any> {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       ...options,
       headers: {
-        'Authorization': `Bearer ${this.config.apiKey}`,
+        Authorization: `Bearer ${this.config.apiKey}`,
         'Content-Type': 'application/json',
         ...options.headers,
       },
@@ -83,8 +97,10 @@ export class HubSpotConnector extends CRMConnector {
   }
 
   async getContacts(limit = 100, offset = 0): Promise<CRMContact[]> {
-    const response = await this.makeRequest(`/objects/contacts?limit=${limit}&offset=${offset}`);
-    
+    const response = await this.makeRequest(
+      `/objects/contacts?limit=${limit}&offset=${offset}`
+    );
+
     return response.results.map((contact: any) => ({
       id: contact.id,
       email: contact.properties.email,
@@ -93,7 +109,9 @@ export class HubSpotConnector extends CRMConnector {
       phone: contact.properties.phone,
       company: contact.properties.company,
       title: contact.properties.jobtitle,
-      tags: contact.properties.tags?.split(',').map((tag: string) => tag.trim()) || [],
+      tags:
+        contact.properties.tags?.split(',').map((tag: string) => tag.trim()) ||
+        [],
       customFields: contact.properties,
       createdAt: new Date(contact.createdAt),
       updatedAt: new Date(contact.updatedAt),
@@ -103,7 +121,7 @@ export class HubSpotConnector extends CRMConnector {
   async getContact(id: string): Promise<CRMContact | null> {
     try {
       const contact = await this.makeRequest(`/objects/contacts/${id}`);
-      
+
       return {
         id: contact.id,
         email: contact.properties.email,
@@ -112,7 +130,10 @@ export class HubSpotConnector extends CRMConnector {
         phone: contact.properties.phone,
         company: contact.properties.company,
         title: contact.properties.jobtitle,
-        tags: contact.properties.tags?.split(',').map((tag: string) => tag.trim()) || [],
+        tags:
+          contact.properties.tags
+            ?.split(',')
+            .map((tag: string) => tag.trim()) || [],
         customFields: contact.properties,
         createdAt: new Date(contact.createdAt),
         updatedAt: new Date(contact.updatedAt),
@@ -150,14 +171,19 @@ export class HubSpotConnector extends CRMConnector {
       phone: response.properties.phone,
       company: response.properties.company,
       title: response.properties.jobtitle,
-      tags: response.properties.tags?.split(',').map((tag: string) => tag.trim()) || [],
+      tags:
+        response.properties.tags?.split(',').map((tag: string) => tag.trim()) ||
+        [],
       customFields: response.properties,
       createdAt: new Date(response.createdAt),
       updatedAt: new Date(response.updatedAt),
     };
   }
 
-  async updateContact(id: string, contact: Partial<CRMContact>): Promise<CRMContact> {
+  async updateContact(
+    id: string,
+    contact: Partial<CRMContact>
+  ): Promise<CRMContact> {
     const properties = {
       email: contact.email,
       firstname: contact.firstName,
@@ -182,7 +208,9 @@ export class HubSpotConnector extends CRMConnector {
       phone: response.properties.phone,
       company: response.properties.company,
       title: response.properties.jobtitle,
-      tags: response.properties.tags?.split(',').map((tag: string) => tag.trim()) || [],
+      tags:
+        response.properties.tags?.split(',').map((tag: string) => tag.trim()) ||
+        [],
       customFields: response.properties,
       createdAt: new Date(response.createdAt),
       updatedAt: new Date(response.updatedAt),
@@ -204,8 +232,10 @@ export class HubSpotConnector extends CRMConnector {
   }
 
   async getOpportunities(limit = 100, offset = 0): Promise<CRMOpportunity[]> {
-    const response = await this.makeRequest(`/objects/deals?limit=${limit}&offset=${offset}`);
-    
+    const response = await this.makeRequest(
+      `/objects/deals?limit=${limit}&offset=${offset}`
+    );
+
     return response.results.map((deal: any) => ({
       id: deal.id,
       name: deal.properties.dealname,
@@ -224,7 +254,7 @@ export class HubSpotConnector extends CRMConnector {
   async getOpportunity(id: string): Promise<CRMOpportunity | null> {
     try {
       const deal = await this.makeRequest(`/objects/deals/${id}`);
-      
+
       return {
         id: deal.id,
         name: deal.properties.dealname,
@@ -246,7 +276,9 @@ export class HubSpotConnector extends CRMConnector {
     }
   }
 
-  async createOpportunity(opportunity: Partial<CRMOpportunity>): Promise<CRMOpportunity> {
+  async createOpportunity(
+    opportunity: Partial<CRMOpportunity>
+  ): Promise<CRMOpportunity> {
     const properties = {
       dealname: opportunity.name,
       amount: opportunity.amount?.toString(),
@@ -269,7 +301,9 @@ export class HubSpotConnector extends CRMConnector {
       amount: parseFloat(response.properties.amount || '0'),
       currency: response.properties.currency || 'USD',
       stage: response.properties.dealstage,
-      probability: parseInt(response.properties.hs_deal_stage_probability || '0'),
+      probability: parseInt(
+        response.properties.hs_deal_stage_probability || '0'
+      ),
       closeDate: new Date(response.properties.closedate),
       contactId: response.properties.associated_contact_id,
       customFields: response.properties,
@@ -278,7 +312,10 @@ export class HubSpotConnector extends CRMConnector {
     };
   }
 
-  async updateOpportunity(id: string, opportunity: Partial<CRMOpportunity>): Promise<CRMOpportunity> {
+  async updateOpportunity(
+    id: string,
+    opportunity: Partial<CRMOpportunity>
+  ): Promise<CRMOpportunity> {
     const properties = {
       dealname: opportunity.name,
       amount: opportunity.amount?.toString(),
@@ -301,7 +338,9 @@ export class HubSpotConnector extends CRMConnector {
       amount: parseFloat(response.properties.amount || '0'),
       currency: response.properties.currency || 'USD',
       stage: response.properties.dealstage,
-      probability: parseInt(response.properties.hs_deal_stage_probability || '0'),
+      probability: parseInt(
+        response.properties.hs_deal_stage_probability || '0'
+      ),
       closeDate: new Date(response.properties.closedate),
       contactId: response.properties.associated_contact_id,
       customFields: response.properties,
@@ -341,7 +380,9 @@ export class HubSpotConnector extends CRMConnector {
       phone: contact.properties.phone,
       company: contact.properties.company,
       title: contact.properties.jobtitle,
-      tags: contact.properties.tags?.split(',').map((tag: string) => tag.trim()) || [],
+      tags:
+        contact.properties.tags?.split(',').map((tag: string) => tag.trim()) ||
+        [],
       customFields: contact.properties,
       createdAt: new Date(contact.createdAt),
       updatedAt: new Date(contact.updatedAt),
@@ -381,11 +422,14 @@ export class SalesforceConnector extends CRMConnector {
     this.baseUrl = `${config.baseUrl}/services/data/v${config.version || '58.0'}`;
   }
 
-  private async makeRequest(endpoint: string, options: RequestInit = {}): Promise<any> {
+  private async makeRequest(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<any> {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       ...options,
       headers: {
-        'Authorization': `Bearer ${this.config.apiKey}`,
+        Authorization: `Bearer ${this.config.apiKey}`,
         'Content-Type': 'application/json',
         ...options.headers,
       },
@@ -399,8 +443,10 @@ export class SalesforceConnector extends CRMConnector {
   }
 
   async getContacts(limit = 200, offset = 0): Promise<CRMContact[]> {
-    const response = await this.makeRequest(`/query/?q=SELECT Id, Email, FirstName, LastName, Phone, Company, Title FROM Contact LIMIT ${limit} OFFSET ${offset}`);
-    
+    const response = await this.makeRequest(
+      `/query/?q=SELECT Id, Email, FirstName, LastName, Phone, Company, Title FROM Contact LIMIT ${limit} OFFSET ${offset}`
+    );
+
     return response.records.map((contact: any) => ({
       id: contact.Id,
       email: contact.Email,
@@ -419,7 +465,7 @@ export class SalesforceConnector extends CRMConnector {
   async getContact(id: string): Promise<CRMContact | null> {
     try {
       const response = await this.makeRequest(`/sobjects/Contact/${id}`);
-      
+
       return {
         id: response.Id,
         email: response.Email,
@@ -456,11 +502,16 @@ export class SalesforceConnector extends CRMConnector {
     });
 
     const contact = await this.getContact(response.id);
-    if (!contact) {throw new Error('Failed to create contact');}
+    if (!contact) {
+      throw new Error('Failed to create contact');
+    }
     return contact;
   }
 
-  async updateContact(id: string, contactData: Partial<CRMContact>): Promise<CRMContact> {
+  async updateContact(
+    id: string,
+    contactData: Partial<CRMContact>
+  ): Promise<CRMContact> {
     await this.makeRequest(`/sobjects/Contact/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({
@@ -475,7 +526,9 @@ export class SalesforceConnector extends CRMConnector {
     });
 
     const contact = await this.getContact(id);
-    if (!contact) {throw new Error('Contact not found');}
+    if (!contact) {
+      throw new Error('Contact not found');
+    }
     return contact;
   }
 
@@ -494,8 +547,10 @@ export class SalesforceConnector extends CRMConnector {
   }
 
   async getOpportunities(limit = 200, offset = 0): Promise<CRMOpportunity[]> {
-    const response = await this.makeRequest(`/query/?q=SELECT Id, Name, Amount, CurrencyIsoCode, StageName, Probability, CloseDate, ContactId FROM Opportunity LIMIT ${limit} OFFSET ${offset}`);
-    
+    const response = await this.makeRequest(
+      `/query/?q=SELECT Id, Name, Amount, CurrencyIsoCode, StageName, Probability, CloseDate, ContactId FROM Opportunity LIMIT ${limit} OFFSET ${offset}`
+    );
+
     return response.records.map((opp: any) => ({
       id: opp.Id,
       name: opp.Name,
@@ -514,7 +569,7 @@ export class SalesforceConnector extends CRMConnector {
   async getOpportunity(id: string): Promise<CRMOpportunity | null> {
     try {
       const response = await this.makeRequest(`/sobjects/Opportunity/${id}`);
-      
+
       return {
         id: response.Id,
         name: response.Name,
@@ -536,7 +591,9 @@ export class SalesforceConnector extends CRMConnector {
     }
   }
 
-  async createOpportunity(opportunityData: Partial<CRMOpportunity>): Promise<CRMOpportunity> {
+  async createOpportunity(
+    opportunityData: Partial<CRMOpportunity>
+  ): Promise<CRMOpportunity> {
     const response = await this.makeRequest('/sobjects/Opportunity', {
       method: 'POST',
       body: JSON.stringify({
@@ -552,11 +609,16 @@ export class SalesforceConnector extends CRMConnector {
     });
 
     const opportunity = await this.getOpportunity(response.id);
-    if (!opportunity) {throw new Error('Failed to create opportunity');}
+    if (!opportunity) {
+      throw new Error('Failed to create opportunity');
+    }
     return opportunity;
   }
 
-  async updateOpportunity(id: string, opportunityData: Partial<CRMOpportunity>): Promise<CRMOpportunity> {
+  async updateOpportunity(
+    id: string,
+    opportunityData: Partial<CRMOpportunity>
+  ): Promise<CRMOpportunity> {
     await this.makeRequest(`/sobjects/Opportunity/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({
@@ -572,7 +634,9 @@ export class SalesforceConnector extends CRMConnector {
     });
 
     const opportunity = await this.getOpportunity(id);
-    if (!opportunity) {throw new Error('Opportunity not found');}
+    if (!opportunity) {
+      throw new Error('Opportunity not found');
+    }
     return opportunity;
   }
 
@@ -591,8 +655,10 @@ export class SalesforceConnector extends CRMConnector {
   }
 
   async searchContacts(query: string): Promise<CRMContact[]> {
-    const response = await this.makeRequest(`/query/?q=SELECT Id, Email, FirstName, LastName, Phone, Company, Title FROM Contact WHERE Name LIKE '%${query}%' OR Email LIKE '%${query}%'`);
-    
+    const response = await this.makeRequest(
+      `/query/?q=SELECT Id, Email, FirstName, LastName, Phone, Company, Title FROM Contact WHERE Name LIKE '%${query}%' OR Email LIKE '%${query}%'`
+    );
+
     return response.records.map((contact: any) => ({
       id: contact.Id,
       email: contact.Email,
@@ -609,8 +675,10 @@ export class SalesforceConnector extends CRMConnector {
   }
 
   async searchOpportunities(query: string): Promise<CRMOpportunity[]> {
-    const response = await this.makeRequest(`/query/?q=SELECT Id, Name, Amount, CurrencyIsoCode, StageName, Probability, CloseDate, ContactId FROM Opportunity WHERE Name LIKE '%${query}%'`);
-    
+    const response = await this.makeRequest(
+      `/query/?q=SELECT Id, Name, Amount, CurrencyIsoCode, StageName, Probability, CloseDate, ContactId FROM Opportunity WHERE Name LIKE '%${query}%'`
+    );
+
     return response.records.map((opp: any) => ({
       id: opp.Id,
       name: opp.Name,
@@ -628,7 +696,10 @@ export class SalesforceConnector extends CRMConnector {
 }
 
 export class CRMConnectorFactory {
-  static createConnector(type: 'hubspot' | 'salesforce', config: CRMConfig): CRMConnector {
+  static createConnector(
+    type: 'hubspot' | 'salesforce',
+    config: CRMConfig
+  ): CRMConnector {
     switch (type) {
       case 'hubspot':
         return new HubSpotConnector(config);

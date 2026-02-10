@@ -20,21 +20,24 @@ const leadCaptureSchema = z.object({
 });
 
 export const POST = createPOSTHandler(
-  async (context) => {
+  async context => {
     const body = await context.request.json();
     const validated = leadCaptureSchema.parse(body);
-    
-    const tenantId = context.tenantId || context.request.headers.get('x-tenant-id') || undefined;
-    
+
+    const tenantId =
+      context.tenantId ||
+      context.request.headers.get('x-tenant-id') ||
+      undefined;
+
     const result = await leadCaptureService.captureLead(validated, tenantId);
-    
+
     if (!result.success) {
       return NextResponse.json(
         { error: result.error || 'Failed to capture lead' },
         { status: 400 }
       );
     }
-    
+
     return NextResponse.json({
       success: true,
       leadId: result.leadId,

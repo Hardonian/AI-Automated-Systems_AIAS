@@ -4,24 +4,24 @@
  * Run: tsx scripts/replace-console-logs.ts
  */
 
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from 'fs';
 
-import { glob } from "glob";
+import { glob } from 'glob';
 // import { join } from "path";
 
 const files = [
-  ...glob.sync("app/**/*.{ts,tsx}"),
-  ...glob.sync("components/**/*.{ts,tsx}"),
-].filter((f) => !f.includes("node_modules"));
+  ...glob.sync('app/**/*.{ts,tsx}'),
+  ...glob.sync('components/**/*.{ts,tsx}'),
+].filter(f => !f.includes('node_modules'));
 
 let replaced = 0;
 
 for (const file of files) {
-  let content = readFileSync(file, "utf-8");
+  let content = readFileSync(file, 'utf-8');
   const originalContent = content;
-  
+
   // Skip if already has logger import
-  if (content.includes("from \"@/lib/logging/structured-logger\"")) {
+  if (content.includes('from "@/lib/logging/structured-logger"')) {
     continue;
   }
 
@@ -29,18 +29,21 @@ for (const file of files) {
   if (content.match(/console\.(log|error|warn|info|debug)/)) {
     // Determine if it's a client or server component
     const _isClient = content.includes('"use client"');
-    const _isServer = content.includes('"use server"') || file.includes("/api/");
-    
+    const _isServer =
+      content.includes('"use server"') || file.includes('/api/');
+
     // Add import after other imports
     const importMatch = content.match(/(import .+ from .+;\n)+/);
     if (importMatch) {
-      const lastImport = importMatch[0].split("\n").filter(Boolean).pop();
+      const lastImport = importMatch[0].split('\n').filter(Boolean).pop();
       if (lastImport) {
         const importIndex = content.indexOf(lastImport) + lastImport.length;
-        content = 
-          `${content.slice(0, importIndex) 
-          }\nimport { logger } from "@/lib/logging/structured-logger";${ 
-          content.slice(importIndex)}`;
+        content = `${content.slice(
+          0,
+          importIndex
+        )}\nimport { logger } from "@/lib/logging/structured-logger";${content.slice(
+          importIndex
+        )}`;
       }
     }
 
@@ -48,7 +51,12 @@ for (const file of files) {
     content = content.replace(
       /console\.error\((["'`])([^"'`]+)\1\s*,\s*(error|err)\)/g,
       (_match, quote, message, errorVar) => {
-        return `logger.error(${quote}${message}${quote}, ${errorVar} instanceof Error ? ${errorVar} : new Error(String(${errorVar})), { component: "${file.split("/").pop()?.replace(/\.(ts|tsx)$/, "") || "Unknown"}", action: "unknown" })`;
+        return `logger.error(${quote}${message}${quote}, ${errorVar} instanceof Error ? ${errorVar} : new Error(String(${errorVar})), { component: "${
+          file
+            .split('/')
+            .pop()
+            ?.replace(/\.(ts|tsx)$/, '') || 'Unknown'
+        }", action: "unknown" })`;
       }
     );
 
@@ -56,7 +64,12 @@ for (const file of files) {
     content = content.replace(
       /console\.error\((["'`])([^"'`]+)\1\)/g,
       (_match, quote, message) => {
-        return `logger.error(${quote}${message}${quote}, undefined, { component: "${file.split("/").pop()?.replace(/\.(ts|tsx)$/, "") || "Unknown"}", action: "unknown" })`;
+        return `logger.error(${quote}${message}${quote}, undefined, { component: "${
+          file
+            .split('/')
+            .pop()
+            ?.replace(/\.(ts|tsx)$/, '') || 'Unknown'
+        }", action: "unknown" })`;
       }
     );
 
@@ -64,14 +77,24 @@ for (const file of files) {
     content = content.replace(
       /console\.warn\((["'`])([^"'`]+)\1\s*,\s*(.+?)\)/g,
       (_match, quote, message, context) => {
-        return `logger.warn(${quote}${message}${quote}, { component: "${file.split("/").pop()?.replace(/\.(ts|tsx)$/, "") || "Unknown"}", ...${context} })`;
+        return `logger.warn(${quote}${message}${quote}, { component: "${
+          file
+            .split('/')
+            .pop()
+            ?.replace(/\.(ts|tsx)$/, '') || 'Unknown'
+        }", ...${context} })`;
       }
     );
 
     content = content.replace(
       /console\.warn\((["'`])([^"'`]+)\1\)/g,
       (_match, quote, message) => {
-        return `logger.warn(${quote}${message}${quote}, { component: "${file.split("/").pop()?.replace(/\.(ts|tsx)$/, "") || "Unknown"}" })`;
+        return `logger.warn(${quote}${message}${quote}, { component: "${
+          file
+            .split('/')
+            .pop()
+            ?.replace(/\.(ts|tsx)$/, '') || 'Unknown'
+        }" })`;
       }
     );
 
@@ -79,17 +102,27 @@ for (const file of files) {
     content = content.replace(
       /console\.log\((["'`])([^"'`]+)\1\s*,\s*(.+?)\)/g,
       (_match, quote, message, context) => {
-        return `logger.info(${quote}${message}${quote}, { component: "${file.split("/").pop()?.replace(/\.(ts|tsx)$/, "") || "Unknown"}", ...${context} })`;
+        return `logger.info(${quote}${message}${quote}, { component: "${
+          file
+            .split('/')
+            .pop()
+            ?.replace(/\.(ts|tsx)$/, '') || 'Unknown'
+        }", ...${context} })`;
       }
     );
 
     // Replace .catch(console.error)
-    content = content.replace(/\.catch\(console\.error\)/g, (_match) => {
-      return `.catch((err) => logger.error("Unhandled error", err instanceof Error ? err : new Error(String(err)), { component: "${file.split("/").pop()?.replace(/\.(ts|tsx)$/, "") || "Unknown"}" }))`;
+    content = content.replace(/\.catch\(console\.error\)/g, _match => {
+      return `.catch((err) => logger.error("Unhandled error", err instanceof Error ? err : new Error(String(err)), { component: "${
+        file
+          .split('/')
+          .pop()
+          ?.replace(/\.(ts|tsx)$/, '') || 'Unknown'
+      }" }))`;
     });
 
     if (content !== originalContent) {
-      writeFileSync(file, content, "utf-8");
+      writeFileSync(file, content, 'utf-8');
       replaced++;
       console.log(`Updated: ${file}`);
     }

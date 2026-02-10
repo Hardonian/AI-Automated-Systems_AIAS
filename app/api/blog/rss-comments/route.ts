@@ -1,8 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { moderateComment, generateSystemsThinkingInsight, type Comment } from "@/lib/blog/comments";
-import { env } from "@/lib/env";
-import { logger } from "@/lib/logging/structured-logger";
+import {
+  moderateComment,
+  generateSystemsThinkingInsight,
+  type Comment,
+} from '@/lib/blog/comments';
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logging/structured-logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,19 +14,19 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const itemId = searchParams.get("itemId");
+    const itemId = searchParams.get('itemId');
 
     if (!itemId) {
-      return NextResponse.json(
-        { error: "Item ID required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Item ID required' }, { status: 400 });
     }
 
     // Fetch from database
     // CTO Mode: Use centralized env module - never destructure process.env
     const { createClient } = await import('@supabase/supabase-js');
-    const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+    const supabase = createClient(
+      env.supabase.url,
+      env.supabase.serviceRoleKey
+    );
 
     const { data: comments, error } = await supabase
       .from('blog_comments')
@@ -32,12 +36,16 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: true });
 
     if (error) {
-      logger.error('Failed to fetch comments', error instanceof Error ? error : new Error(String(error)), {
-        component: "RSSCommentsAPI",
-        action: "GET",
-      });
+      logger.error(
+        'Failed to fetch comments',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          component: 'RSSCommentsAPI',
+          action: 'GET',
+        }
+      );
       return NextResponse.json(
-        { error: "Failed to fetch comments" },
+        { error: 'Failed to fetch comments' },
         { status: 500 }
       );
     }
@@ -48,7 +56,7 @@ export async function GET(request: NextRequest) {
     });
   } catch {
     return NextResponse.json(
-      { error: "Failed to fetch comments" },
+      { error: 'Failed to fetch comments' },
       { status: 500 }
     );
   }
@@ -62,7 +70,7 @@ export async function POST(request: NextRequest) {
 
     if (!itemId || !author || !email || !content) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: 'Missing required fields' },
         { status: 400 }
       );
     }
@@ -75,23 +83,29 @@ export async function POST(request: NextRequest) {
       email,
       content,
       timestamp: new Date().toISOString(),
-      status: "pending",
+      status: 'pending',
       parentId,
     };
 
     // AI Moderation
     const moderation = moderateComment(comment);
     comment.moderationScore = moderation.score;
-    comment.status = moderation.approved ? "approved" : "pending";
+    comment.status = moderation.approved ? 'approved' : 'pending';
 
     // Generate systems thinking insight
-    const insight = generateSystemsThinkingInsight(comment, { slug: `rss-${itemId}`, title: itemTitle });
+    const insight = generateSystemsThinkingInsight(comment, {
+      slug: `rss-${itemId}`,
+      title: itemTitle,
+    });
     comment.systemsThinkingInsight = insight;
 
     // Save to database
     // CTO Mode: Use centralized env module - never destructure process.env
     const { createClient } = await import('@supabase/supabase-js');
-    const supabase = createClient(env.supabase.url, env.supabase.serviceRoleKey);
+    const supabase = createClient(
+      env.supabase.url,
+      env.supabase.serviceRoleKey
+    );
 
     const { data: _savedComment, error: saveError } = await supabase
       .from('blog_comments')
@@ -111,12 +125,16 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (saveError) {
-      logger.error('Failed to save comment', saveError instanceof Error ? saveError : new Error(String(saveError)), {
-        component: "RSSCommentsAPI",
-        action: "POST",
-      });
+      logger.error(
+        'Failed to save comment',
+        saveError instanceof Error ? saveError : new Error(String(saveError)),
+        {
+          component: 'RSSCommentsAPI',
+          action: 'POST',
+        }
+      );
       return NextResponse.json(
-        { error: "Failed to save comment" },
+        { error: 'Failed to save comment' },
         { status: 500 }
       );
     }
@@ -136,7 +154,7 @@ export async function POST(request: NextRequest) {
     });
   } catch {
     return NextResponse.json(
-      { error: "Failed to post comment" },
+      { error: 'Failed to post comment' },
       { status: 500 }
     );
   }

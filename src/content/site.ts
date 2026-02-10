@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export interface SiteConfig {
   brand: {
     name: string;
@@ -136,7 +138,7 @@ export interface SiteConfig {
   };
 }
 
-export const siteContent: SiteConfig = {
+const rawSiteContent: SiteConfig = {
   brand: {
     name: 'AIAS Platform',
     tagline: 'Enterprise-Grade AI Automation. Built in Canada.',
@@ -420,7 +422,7 @@ export const siteContent: SiteConfig = {
       company: "Logistics Co.",
     },
     {
-      quote: "Finally, an AI consultancy that understands engineering rigor. No halluncinations, just results.",
+      quote: "Finally, an AI consultancy that understands engineering rigor. No hallucinations, just results.",
       author: "Michael T.",
       role: "CTO",
       company: "FinTech Corp.",
@@ -527,4 +529,57 @@ export const siteContent: SiteConfig = {
       ],
     },
   },
+};
+
+const siteContentSchema = z.object({
+  brand: z.object({
+    name: z.string().min(1),
+    tagline: z.string().min(1),
+    description: z.string().min(1),
+  }),
+  positioning: z.object({
+    subheading: z.string().min(1),
+    primaryCTA: z.object({
+      label: z.string().min(1),
+      href: z.string().min(1),
+    }),
+    secondaryCTA: z.object({
+      label: z.string().min(1),
+      href: z.string().min(1),
+    }),
+  }),
+  contact: z.object({
+    email: z.string().email(),
+    responseTime: z.string().min(1),
+  }),
+  navigation: z.object({
+    primary: z.array(z.object({ label: z.string().min(1), href: z.string().min(1) })).min(1),
+    resources: z.array(z.object({ label: z.string().min(1), href: z.string().min(1) })).min(1),
+  }),
+});
+
+const parsedSiteContent = siteContentSchema.safeParse(rawSiteContent);
+
+if (!parsedSiteContent.success && process.env.NODE_ENV !== 'production') {
+  console.warn('Invalid site content configuration detected.', parsedSiteContent.error.flatten());
+}
+
+export const siteContent: SiteConfig = parsedSiteContent.success
+  ? rawSiteContent
+  : {
+      ...rawSiteContent,
+      positioning: {
+        ...rawSiteContent.positioning,
+        primaryCTA: {
+          ...rawSiteContent.positioning.primaryCTA,
+          href: `mailto:${rawSiteContent.contact.email}`,
+        },
+      },
+    };
+
+export const getPrimaryCtaHref = (): string => {
+  const href = siteContent.positioning.primaryCTA.href.trim();
+  return href.startsWith('https://calendly.com/')
+    ? href
+    : `mailto:${siteContent.contact.email}`;
 };

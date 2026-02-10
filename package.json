@@ -108,15 +108,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "eslint . --ignore-pattern out --ignore-pattern .next",
     "typecheck": "tsc --noEmit",
-    "test:e2e": "playwright test",
-    "verify": "pnpm lint && pnpm typecheck && pnpm build",
+    "test:e2e": "playwright test tests/e2e/smoke.spec.ts tests/e2e/landing-smoke.spec.ts tests/e2e/link-crawl.spec.ts --project=chromium",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
     "vercel-build": "pnpm run verify",
     "build:packages": "echo '📦 Building workspace packages...' && echo '🔨 Step 1/2: Building @ai-consultancy/config...' && (cd packages/config && pnpm run build || (echo '❌ Failed to build @ai-consultancy/config' && exit 1)) && echo '✅ @ai-consultancy/config built successfully' && echo '🔨 Step 2/2: Building @ai-consultancy/lib...' && (cd packages/lib && pnpm run build || (echo '❌ Failed to build @ai-consultancy/lib' && exit 1)) && echo '✅ @ai-consultancy/lib built successfully' && echo '✅ All workspace packages built successfully'",
     "build:analyze": "ANALYZE=true vite build",
     "preview": "next start",
-    "prepare": "husky install || true"
+    "prepare": "husky install || true",
+    "test": "pnpm typecheck"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",

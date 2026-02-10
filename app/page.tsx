@@ -15,7 +15,7 @@ import {
   ProfessionalServiceSchema,
 } from '@/components/seo/structured-data';
 
-import { siteContent, SiteConfig } from '@/src/content/site';
+import { getPrimaryCtaHref, siteContent, SiteConfig } from '@/src/content/site';
 
 
 
@@ -28,7 +28,7 @@ const mapHeroContent = (config: SiteConfig) => ({
   primaryCta: {
     visible: true,
     label: config.positioning.primaryCTA.label,
-    href: config.positioning.primaryCTA.href,
+    href: getPrimaryCtaHref(),
   },
   secondaryCta: {
     visible: true,

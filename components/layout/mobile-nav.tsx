@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { siteContent } from '@/src/content/site';
+import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -64,7 +64,7 @@ export function MobileNav() {
             >
               <Link
                 aria-label={siteContent.positioning.primaryCTA.label}
-                href={siteContent.positioning.primaryCTA.href}
+                href={getPrimaryCtaHref()}
                 onClick={() => setOpen(false)}
               >
                 {siteContent.positioning.primaryCTA.label}

@@ -31,7 +31,7 @@ import {
   getSectionClasses,
   TYPOGRAPHY,
 } from '@/lib/design-tokens';
-import { siteContent } from '@/src/content/site';
+import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 // Real CLI outputs from the repo
 const cliDemos = [
@@ -563,7 +563,7 @@ export function ProofSection() {
             </p>
             <div className='flex flex-col gap-3 sm:flex-row'>
               <Button asChild size='lg'>
-                <Link href={siteContent.positioning.primaryCTA.href}>
+                <Link href={getPrimaryCtaHref()}>
                   <Play className='mr-2 h-4 w-4' />
                   {siteContent.positioning.primaryCTA.label}
                 </Link>

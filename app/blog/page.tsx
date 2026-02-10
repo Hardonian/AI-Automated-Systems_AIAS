@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { getLatestArticles, getFeaturedArticles } from '@/lib/blog/articles';
-import { siteContent } from '@/src/content/site';
+import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = {
   title: 'Blog — Systems Thinking + AI | Daily Articles | AIAS Platform',
@@ -242,7 +242,7 @@ export default function BlogPage() {
           </p>
           <div className='flex flex-col gap-4 sm:flex-row'>
             <Button asChild>
-              <Link href={siteContent.positioning.primaryCTA.href}>
+              <Link href={getPrimaryCtaHref()}>
                 {siteContent.positioning.primaryCTA.label}
               </Link>
             </Button>

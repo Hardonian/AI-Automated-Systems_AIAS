@@ -3,15 +3,17 @@
 Contributors (and agents) should master the following:
 
 ## Frontend Architecture
-- **Next.js App Router**: Static export optimizations.
-- **Client Components**: Interactive UI islands (like `workflow-sandbox`).
-- **Tailwind CSS**: Utility-first styling for speed and consistency.
+- **Next.js App Router**: Static-first route rendering.
+- **Client Components**: Interactive UI islands (such as `workflow-sandbox`).
+- **Tailwind CSS**: Utility-first styling and consistent spacing.
 
 ## Content Management
-- **Type-Safe CMS**: All content lives in `src/content/site.ts`. Never hardcode text in components if it belongs in the 'CMS'.
-- **Structured Data**: Ensure SEO components match the TS interfaces.
+- **Type-Safe CMS Pattern**: Keep business content centralized in `src/content/site.ts`.
+- **Truthful Messaging**: Label non-client proof as “Example engagements” and avoid invented claims.
 
 ## Verification
-- **ESLint**: Respect the rules. No `any`, no unused vars.
-- **TypeCheck**: `tsc --noEmit` must pass cleanly.
-- **Playwright**: Smoke tests for critical paths only.
+- **ESLint**: `pnpm lint`
+- **TypeCheck**: `pnpm typecheck`
+- **Build**: `pnpm build`
+- **Smoke + Link Crawl**: `pnpm test:e2e`
+- **Gate**: `pnpm verify`

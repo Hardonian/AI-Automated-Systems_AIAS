@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { siteContent } from '@/src/content/site';
+import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 interface MobileStickyCTAProps {
   primaryLabel?: string;
@@ -16,7 +16,7 @@ interface MobileStickyCTAProps {
 
 export function MobileStickyCTA({
   primaryLabel = siteContent.positioning.primaryCTA.label,
-  primaryHref = siteContent.positioning.primaryCTA.href,
+  primaryHref = getPrimaryCtaHref(),
   secondaryLabel = 'Email Us',
   secondaryHref = `mailto:${siteContent.contact.email}`,
 }: MobileStickyCTAProps) {

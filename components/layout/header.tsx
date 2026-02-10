@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { MobileNav } from '@/components/layout/mobile-nav';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
-import { siteContent } from '@/src/content/site';
+import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 export function Header() {
   return (
@@ -22,7 +22,7 @@ export function Header() {
         >
           <Link
             aria-label='AI Automated Systems - Home'
-            className='group flex items-center gap-2 text-xl font-bold transition-opacity hover:opacity-80'
+            className='group flex items-center gap-2 text-lg font-bold transition-opacity hover:opacity-80 md:text-xl'
             href='/'
           >
             <Sparkles
@@ -30,7 +30,7 @@ export function Header() {
               className='h-5 w-5 text-primary transition-transform group-hover:rotate-12'
             />
             <span className='bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent'>
-              AI Automated Systems
+              {siteContent.brand.name}
             </span>
           </Link>
         </motion.div>
@@ -68,12 +68,12 @@ export function Header() {
           >
             <Button
               asChild
-              className='hover:shadow-glow ml-4 min-h-[44px] font-semibold shadow-md'
+              className='hover:shadow-glow ml-3 min-h-[44px] font-semibold shadow-md'
               size='sm'
             >
               <Link
                 aria-label={siteContent.positioning.primaryCTA.label}
-                href={siteContent.positioning.primaryCTA.href}
+                href={getPrimaryCtaHref()}
               >
                 {siteContent.positioning.primaryCTA.label}
               </Link>

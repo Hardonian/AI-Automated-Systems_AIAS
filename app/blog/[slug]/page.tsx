@@ -17,7 +17,7 @@ import {
   type BlogArticle,
 } from '@/lib/blog/articles';
 import { sanitizeHTMLServer } from '@/lib/utils/sanitize-html';
-import { siteContent } from '@/src/content/site';
+import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 interface PageProps {
   params: Promise<{
@@ -288,7 +288,7 @@ function ArticleContent({ article }: { article: BlogArticle }) {
           AI agents. Connect Shopify, Wave, Stripe, and 100+ other tools.
         </p>
         <Button asChild>
-          <Link href={siteContent.positioning.primaryCTA.href}>
+          <Link href={getPrimaryCtaHref()}>
             {siteContent.positioning.primaryCTA.label}
           </Link>
         </Button>

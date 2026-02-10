@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { siteContent } from '@/src/content/site';
+import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 export default function NotFound() {
   return (
@@ -89,7 +89,7 @@ export default function NotFound() {
             Looking for something specific?
           </p>
           <Button asChild className='w-full sm:w-auto' size='lg'>
-            <Link href={siteContent.positioning.primaryCTA.href}>
+            <Link href={getPrimaryCtaHref()}>
               {siteContent.positioning.primaryCTA.label}
             </Link>
           </Button>

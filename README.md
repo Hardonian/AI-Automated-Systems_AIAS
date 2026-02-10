@@ -1,66 +1,48 @@
 # AIAS Platform
 
-Enterprise-grade AI consultancy landing site and agentic workflow demonstration.
+Frontend-only, backendless consultancy website for AI Automated Systems (AIAS).
 
-## Overview
+## Repo Truth
 
-AIAS Platform is a high-performance, static-first web application built with Next.js 15 and TypeScript. It serves as the primary touchpoint for our consultancy services and features a client-side agentic workflow simulation.
+- **Framework:** Next.js App Router + TypeScript + Tailwind CSS
+- **Package manager:** pnpm
+- **Architecture:** Static-first + client-side interactivity only
+- **Backend dependencies:** None required for runtime
+- **Primary content source:** `src/content/site.ts`
+- **Deployment assumption:** Static content on Vercel/Node hosting with no required server env vars
 
-**Key Features:**
-- **Zero Backend**: Fully static/client-side architecture for maximum reliability and security.
-- **Deterministic Workflow Sandbox**: Interactive demo of agentic planning logic (client-side).
-- **Centralized Content**: All site copy managed via typed `src/content/site.ts`.
-- **Performance**: Optimized for core web vitals and accessibility.
+## Edit Content in One Place
 
-## Tech Stack
+All business copy, CTAs, services, process, FAQ, legal content, and engagement examples live in:
 
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript 5.9
-- **Styling**: Tailwind CSS + Radix UI
-- **Testing**: Playwright (E2E)
+- `src/content/site.ts`
 
-## Getting Started
+If Calendly is unavailable, the primary CTA gracefully falls back to `mailto:`.
 
-### Prerequisites
-
-- Node.js 20+
-- pnpm 8+
-
-### Installation
+## Commands
 
 ```bash
-git clone https://github.com/shardie-github/aias.git
-cd aias
 pnpm install
-```
-
-### Development
-
-```bash
 pnpm dev
-```
-
-Open [http://localhost:3000](http://localhost:3000).
-
-### Verification
-
-Run the full quality suite:
-
-```bash
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+pnpm test:e2e
 pnpm verify
 ```
 
-This runs:
-- `pnpm lint`
-- `pnpm typecheck`
-- `pnpm build`
+`pnpm verify` runs lint → typecheck → test → build → smoke e2e + internal link crawl.
 
-### Content Management
+## CTA Configuration
 
-All site content is located in `src/content/site.ts`.
-Edit this file to update text, links, feature lists, and testimonials. The TypeScript interface ensures you don't break the layout.
+- Primary CTA label/href: `siteContent.positioning.primaryCTA`
+- Fallback behavior: invalid/non-Calendly primary href auto-falls back to `mailto:${siteContent.contact.email}`
+- Secondary CTA: `siteContent.positioning.secondaryCTA`
+- Contact fallback: copy-email button in final CTA section
 
-## Deployment
+## Frontend Invariants
 
-The site is designed for static edge deployment (Vercel recommended).
-No environment variables are required for the core site to function.
+- No backend routes, server actions, database calls, or webhook dependencies.
+- No hidden runtime env requirements for site rendering.
+- Broken/missing content should degrade to safe UI defaults.

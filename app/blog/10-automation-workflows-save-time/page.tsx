@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import { siteContent } from '@/src/content/site';
+import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 import { Card, CardContent } from '@/components/ui/card';
 
 export const metadata: Metadata = {
@@ -258,7 +258,7 @@ export default function AutomationWorkflowsPage() {
           </p>
           <div className='flex flex-col justify-center gap-4 sm:flex-row'>
             <Button asChild size='lg'>
-              <Link href={siteContent.positioning.primaryCTA.href}>
+              <Link href={getPrimaryCtaHref()}>
                 {siteContent.positioning.primaryCTA.label}
                 <ArrowRight className='ml-2 h-4 w-4' />
               </Link>

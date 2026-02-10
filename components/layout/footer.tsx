@@ -4,7 +4,7 @@ import { Sparkles, ArrowRight, Calendar } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import { siteContent } from '@/src/content/site';
+import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 export function Footer() {
   return (
@@ -33,7 +33,7 @@ export function Footer() {
 
             <div className='mb-6 space-y-3'>
               <Button asChild className='w-full'>
-                <Link href={siteContent.positioning.primaryCTA.href}>
+                <Link href={getPrimaryCtaHref()}>
                   <Calendar className='mr-2 h-4 w-4' />
                   {siteContent.positioning.primaryCTA.label}
                 </Link>

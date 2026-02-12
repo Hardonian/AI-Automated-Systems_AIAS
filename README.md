@@ -46,3 +46,10 @@ pnpm verify
 - No backend routes, server actions, database calls, or webhook dependencies.
 - No hidden runtime env requirements for site rendering.
 - Broken/missing content should degrade to safe UI defaults.
+
+## Add a new Stitch-style panel page
+
+1. Add or update the source content in `src/content/site.ts`.
+2. Create a route in `app/<route>/page.tsx` and map the content into reusable panel components.
+3. Add the route to `siteContent.navigation` (header/footer visibility) and `app/sitemap.ts`.
+4. Run `pnpm verify` to validate lint, typecheck, build, and route smoke checks.

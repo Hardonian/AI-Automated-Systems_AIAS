@@ -113,6 +113,7 @@ export interface SiteConfig {
     challenge: string;
     solution: string;
     results: string[];
+    projectUrl: string;
   }>;
   faq: Array<{
     question: string;
@@ -179,20 +180,20 @@ const rawSiteContent: SiteConfig = {
   },
   navigation: {
     primary: [
-      { label: 'Services', href: '/#services' },
-      { label: 'Process', href: '/#process' },
-      { label: 'Proof', href: '/#proof' },
-      { label: 'Secret Sauce', href: '/#secret-sauce' },
-      { label: 'FAQ', href: '/#faq' },
+      { label: 'Services', href: '/services' },
+      { label: 'Case Studies', href: '/case-studies' },
+      { label: 'Process', href: '/process' },
+      { label: 'Pricing', href: '/pricing' },
+      { label: 'Contact', href: '/contact' },
     ],
     resources: [
-      { label: 'Workflow Sandbox', href: '/#workflow-sandbox' },
-      { label: 'Example Engagements', href: '/#engagements' },
+      { label: 'About', href: '/about' },
       { label: 'Insights', href: '/blog' },
+      { label: 'Dashboard', href: '/dashboard' },
     ],
   },
   contact: {
-    email: 'hello@aiautomatedsystems.ca',
+    email: 'scottrmhardie@gmail.com',
     responseTime: 'Replies within 2 business days.',
   },
   services: [
@@ -211,10 +212,10 @@ const rawSiteContent: SiteConfig = {
       icon: 'Workflow',
     },
     {
-      title: 'Systems & Data Strategy',
-      description: 'Preparing your data infrastructure for the AI era.',
-      outcome: 'Clean, accessible data ready for high-performance retrieval.',
-      deliverables: ['Data Schema Optimization', 'Vector Database Setup', 'Knowledge Graph Design'],
+      title: 'Tax & Finance Workflow Automation',
+      description: 'Automate GST/HST-ready reconciliations, exception routing, and filing workpacks.',
+      outcome: 'Faster month-end close with auditable, reviewer-friendly tax operations.',
+      deliverables: ['Tax Workflow Map', 'Exception Review Queue', 'Filing Workpack Templates'],
       icon: 'Database',
     },
     {
@@ -450,18 +451,20 @@ const rawSiteContent: SiteConfig = {
   ],
   caseStudies: [
     {
-      title: 'Automated Invoice Reconciliation',
-      client: 'National Retailer',
-      challenge: 'Manual processing of 5,000+ monthly invoices with 12% error rate.',
-      solution: 'Deployed a multi-agent system to extract, validate, and sync invoice data to ERP.',
-      results: ['99.8% Accuracy', '400 hours/month saved', 'Real-time fraud detection'],
+      title: 'AI Content Workflows for Settler',
+      client: 'Settler',
+      challenge: 'Manual GTM and content workflows were slowing launches and follow-up cadence.',
+      solution: 'Implemented automation-ready operating patterns and advisory sprints for execution consistency.',
+      results: ['Faster campaign iterations', 'Clearer operating playbooks', 'Reduced manual coordination overhead'],
+      projectUrl: 'https://settler.dev',
     },
     {
-      title: 'Intelligent Customer Triage',
-      client: 'SaaS Platform',
-      challenge: 'Support team overwhelmed by L1 tickets.',
-      solution: 'Implemented an intent-classification agent with deterministic routing.',
-      results: ['60% auto-resolution', '2min average response time', 'CSAT increased by 15 points'],
+      title: 'Ready Layer Automation Enablement',
+      client: 'Ready Layer',
+      challenge: 'Needed a structured automation roadmap with practical implementation guardrails.',
+      solution: 'Delivered phased engagement planning, technical advisory, and prioritized workflow opportunities.',
+      results: ['Prioritized automation backlog', 'Improved delivery confidence', 'Stronger systems alignment'],
+      projectUrl: 'https://ready-layer.com',
     }
   ],
   faq: [
@@ -518,7 +521,7 @@ const rawSiteContent: SiteConfig = {
         {
           heading: 'Your Rights',
           body:
-            'You can request access, updates, or deletion of your information by emailing hello@aiautomatedsystems.ca.',
+            'You can request access, updates, or deletion of your information by emailing scottrmhardie@gmail.com.',
         },
       ],
     },
@@ -550,7 +553,6 @@ const rawSiteContent: SiteConfig = {
     },
   },
 };
-
 const siteContentSchema = z.object({
   brand: z.object({
     name: z.string().min(1),

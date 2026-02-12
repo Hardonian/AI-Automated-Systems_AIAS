@@ -33,8 +33,11 @@ test.describe('@smoke AIAS Landing & Workflow Smoke Test', () => {
     await expect(page.getByText('Must comply with PIPEDA')).toBeVisible();
   });
 
-  test('Nav and Footer integrity', async ({ page }) => {
+  test('Route-first nav and footer integrity', async ({ page }) => {
     await page.goto('/');
+
+    await expect(page.getByRole('link', { name: 'Navigate to Services' }).first()).toHaveAttribute('href', '/services');
+    await expect(page.getByRole('link', { name: 'Navigate to Process' }).first()).toHaveAttribute('href', '/process');
 
     await expect(page.locator('footer')).toBeVisible();
     await expect(page.locator('footer').getByText('Built in Canada 🇨🇦', { exact: false })).toBeVisible();

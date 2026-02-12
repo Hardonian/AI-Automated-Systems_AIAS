@@ -204,7 +204,7 @@ export function SystemsSection() {
           className='mt-12 text-center'
         >
           <Button asChild size='lg' variant='outline'>
-            <Link href='#services'>Explore Services</Link>
+            <Link href='/services'>Explore Services</Link>
           </Button>
         </motion.div>
       </div>

@@ -102,7 +102,7 @@ export function EngagementModel() {
         </div>
         <div className='mt-12 text-center'>
           <Button asChild variant='outline' size='lg'>
-            <Link href='#process'>
+            <Link href='/process'>
               Review the process
               <ArrowRight className='ml-2 h-4 w-4' />
             </Link>

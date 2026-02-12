@@ -110,7 +110,7 @@
     "start": "next start",
     "lint": "eslint . --ignore-pattern out --ignore-pattern .next",
     "typecheck": "tsc --noEmit",
-    "test:e2e": "pnpm exec playwright install chromium && playwright test tests/e2e/smoke.spec.ts tests/e2e/landing-smoke.spec.ts tests/e2e/link-crawl.spec.ts --project=chromium",
+    "test:e2e": "pnpm exec playwright install chromium && playwright test tests/e2e/smoke.spec.ts tests/e2e/landing-smoke.spec.ts tests/e2e/link-crawl.spec.ts tests/e2e/case-studies-attribution.spec.ts --project=chromium",
     "verify": "pnpm exec tsx scripts/verify.ts",
     "vercel-build": "pnpm doctor && pnpm verify",
     "build:packages": "echo '\ud83d\udce6 Building workspace packages...' && echo '\ud83d\udd28 Step 1/2: Building @ai-consultancy/config...' && (cd packages/config && pnpm run build || (echo '\u274c Failed to build @ai-consultancy/config' && exit 1)) && echo '\u2705 @ai-consultancy/config built successfully' && echo '\ud83d\udd28 Step 2/2: Building @ai-consultancy/lib...' && (cd packages/lib && pnpm run build || (echo '\u274c Failed to build @ai-consultancy/lib' && exit 1)) && echo '\u2705 @ai-consultancy/lib built successfully' && echo '\u2705 All workspace packages built successfully'",

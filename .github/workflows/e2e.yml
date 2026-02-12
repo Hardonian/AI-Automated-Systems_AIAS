@@ -29,6 +29,9 @@ jobs:
   e2e-critical:
     name: E2E Tests (Critical Flows)
     runs-on: ubuntu-latest
+
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.0-noble
     timeout-minutes: 30
 
     steps:
@@ -51,8 +54,8 @@ jobs:
 
       - name: Install Playwright runtime libraries
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libatk1.0-0 libatk-bridge2.0-0
+          apt-get update
+          apt-get install -y libatk1.0-0 libatk-bridge2.0-0
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium firefox webkit
@@ -106,6 +109,9 @@ jobs:
   visual-regression:
     name: Visual Regression Tests
     runs-on: ubuntu-latest
+
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.0-noble
     timeout-minutes: 20
     # Only run on PRs with visual label, main/develop pushes, or manual dispatch
     if: |
@@ -135,8 +141,8 @@ jobs:
 
       - name: Install Playwright runtime libraries
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libatk1.0-0 libatk-bridge2.0-0
+          apt-get update
+          apt-get install -y libatk1.0-0 libatk-bridge2.0-0
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
@@ -215,6 +221,9 @@ jobs:
   e2e-cross-browser:
     name: E2E Tests (Cross Browser)
     runs-on: ubuntu-latest
+
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.0-noble
     timeout-minutes: 45
     # Only run on main/develop pushes or manual dispatch
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
@@ -242,8 +251,8 @@ jobs:
 
       - name: Install Playwright runtime libraries
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libatk1.0-0 libatk-bridge2.0-0
+          apt-get update
+          apt-get install -y libatk1.0-0 libatk-bridge2.0-0
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps ${{ matrix.browser }}

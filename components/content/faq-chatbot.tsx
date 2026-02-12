@@ -1,10 +1,10 @@
 'use client';
 
 import { FormEvent, useMemo, useState } from 'react';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { siteContent } from '@/src/content/site';
+import { extractApiAnswer } from '@/components/content/faq-api';
 
 function normalize(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
@@ -34,10 +34,6 @@ function bestFaqMatch(query: string): { question: string; answer: string } | nul
 
   return bestScore > 0 ? bestItem : null;
 }
-
-type APIReply = {
-  answer?: string;
-};
 
 export function FAQChatbot() {
   const [query, setQuery] = useState('');
@@ -76,9 +72,10 @@ export function FAQChatbot() {
       });
 
       if (response.ok) {
-        const payload = (await response.json()) as APIReply;
-        if (payload.answer) {
-          setApiAnswer(payload.answer);
+        const payload = await response.json();
+        const parsedAnswer = extractApiAnswer(payload);
+        if (parsedAnswer) {
+          setApiAnswer(parsedAnswer);
         }
       }
     } catch {

@@ -111,14 +111,18 @@
     "lint": "eslint . --ignore-pattern out --ignore-pattern .next",
     "typecheck": "tsc --noEmit",
     "test:e2e": "pnpm exec playwright install chromium && playwright test tests/e2e/smoke.spec.ts tests/e2e/landing-smoke.spec.ts tests/e2e/link-crawl.spec.ts --project=chromium",
-    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
-    "vercel-build": "pnpm lint && pnpm typecheck && pnpm build",
-    "build:packages": "echo '📦 Building workspace packages...' && echo '🔨 Step 1/2: Building @ai-consultancy/config...' && (cd packages/config && pnpm run build || (echo '❌ Failed to build @ai-consultancy/config' && exit 1)) && echo '✅ @ai-consultancy/config built successfully' && echo '🔨 Step 2/2: Building @ai-consultancy/lib...' && (cd packages/lib && pnpm run build || (echo '❌ Failed to build @ai-consultancy/lib' && exit 1)) && echo '✅ @ai-consultancy/lib built successfully' && echo '✅ All workspace packages built successfully'",
+    "verify": "pnpm exec tsx scripts/verify.ts",
+    "vercel-build": "pnpm doctor && pnpm verify",
+    "build:packages": "echo '\ud83d\udce6 Building workspace packages...' && echo '\ud83d\udd28 Step 1/2: Building @ai-consultancy/config...' && (cd packages/config && pnpm run build || (echo '\u274c Failed to build @ai-consultancy/config' && exit 1)) && echo '\u2705 @ai-consultancy/config built successfully' && echo '\ud83d\udd28 Step 2/2: Building @ai-consultancy/lib...' && (cd packages/lib && pnpm run build || (echo '\u274c Failed to build @ai-consultancy/lib' && exit 1)) && echo '\u2705 @ai-consultancy/lib built successfully' && echo '\u2705 All workspace packages built successfully'",
     "build:analyze": "ANALYZE=true vite build",
     "preview": "next start",
     "prepare": "husky install || true",
     "test": "pnpm typecheck",
-    "test:visual:landscape-smoke": "playwright test tests/e2e/hero-breakpoints.visual.spec.ts tests/e2e/landscape-critical.visual.spec.ts --project=visual-landscape-mobile"
+    "test:visual:landscape-smoke": "playwright test tests/e2e/hero-breakpoints.visual.spec.ts tests/e2e/landscape-critical.visual.spec.ts --project=visual-landscape-mobile",
+    "clean": "rm -rf .next out node_modules/.cache coverage playwright-report test-results",
+    "ci:install": "pnpm install --frozen-lockfile --prefer-offline",
+    "doctor": "pnpm exec tsx scripts/doctor.ts",
+    "audit:ci": "pnpm audit --prod --audit-level=high"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
@@ -179,8 +183,8 @@
     "wait-on": "^9.0.3"
   },
   "engines": {
-    "node": "^20.18.0 || ^22.0.0",
-    "pnpm": ">=8.0.0"
+    "node": "22.21.1",
+    "pnpm": "8.15.0"
   },
   "packageManager": "pnpm@8.15.0",
   "pnpm": {
@@ -189,7 +193,6 @@
       "react-dom": "$react-dom",
       "@types/react": "$@types/react",
       "@types/react-dom": "$@types/react-dom",
-      "next": "^16.1.6",
       "react-hook-form": "7.71.1",
       "@babel/core": "^7.28.6",
       "@playwright/test": "^1.58.0",

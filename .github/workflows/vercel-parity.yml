@@ -1,0 +1,39 @@
+name: Vercel Parity CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      NODE_ENV: production
+      NEXT_PUBLIC_SITE_URL: https://aiautomatedsystems.ca
+      VERCEL_ENV: preview
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.21.1
+          cache: pnpm
+
+      - name: Deterministic install
+        run: pnpm ci:install
+
+      - name: Doctor
+        run: pnpm doctor
+
+      - name: Verify
+        run: pnpm verify

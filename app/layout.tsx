@@ -124,15 +124,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
         <link href='https://fonts.googleapis.com' rel='dns-prefetch' />
         <link href='https://fonts.gstatic.com' rel='dns-prefetch' />
-
-        <link
-          as='font'
-          crossOrigin='anonymous'
-          href='/fonts/inter-var.woff2'
-          rel='preload'
-          type='font/woff2'
-        />
-
         <link href='/manifest.json' rel='manifest' />
         <meta content='#3b82f6' name='theme-color' />
         <meta content='yes' name='apple-mobile-web-app-capable' />

@@ -17,6 +17,18 @@ test.describe('@smoke Reality Mode Smoke Test', () => {
     await expect(secondaryCTA).toBeVisible();
   });
 
+  test('Route-first navigation pages render', async ({ page }) => {
+    await page.goto('/services');
+    await expect(page.getByRole('heading', { name: 'What we deliver' })).toBeVisible();
+
+    await page.goto('/process');
+    await expect(page.getByRole('heading', { name: 'How engagements run' })).toBeVisible();
+
+    await page.goto('/dashboard');
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+    await expect(page.getByText('No active session detected.')).toBeVisible();
+  });
+
   test('Workflow sandbox flow: Landing -> Sandbox -> Generate output', async ({ page }) => {
     const sandboxCTA = page.getByRole('link', { name: 'Try the Workflow Sandbox' }).first();
     await sandboxCTA.click();

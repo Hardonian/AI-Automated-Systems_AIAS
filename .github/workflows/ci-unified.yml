@@ -165,6 +165,12 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
+      - name: Install Playwright runtime libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libatk1.0-0 libatk-bridge2.0-0
+      - name: Install Playwright browser (chromium)
+        run: pnpm exec playwright install chromium
       - uses: actions/download-artifact@v4
         with:
           name: build-artifacts
@@ -322,6 +328,12 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
+      - name: Install Playwright runtime libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libatk1.0-0 libatk-bridge2.0-0
+      - name: Install Playwright browser (chromium)
+        run: pnpm exec playwright install --with-deps chromium
       - uses: actions/download-artifact@v4
         with:
           name: build-artifacts

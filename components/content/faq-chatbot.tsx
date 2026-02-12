@@ -35,17 +35,57 @@ function bestFaqMatch(query: string): { question: string; answer: string } | nul
   return bestScore > 0 ? bestItem : null;
 }
 
+type APIReply = {
+  answer?: string;
+};
+
 export function FAQChatbot() {
   const [query, setQuery] = useState('');
   const [submitted, setSubmitted] = useState('');
+  const [apiAnswer, setApiAnswer] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const match = useMemo(() => bestFaqMatch(submitted), [submitted]);
+  const faqApiEndpoint = process.env.NEXT_PUBLIC_FAQ_API_ENDPOINT;
   const hasOpenAIKey = Boolean(process.env.NEXT_PUBLIC_OPENAI_API_KEY);
   const hasDocsKey = Boolean(process.env.NEXT_PUBLIC_GOOGLE_DOCS_KEY);
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSubmitted(query.trim());
+    const trimmed = query.trim();
+    setSubmitted(trimmed);
+    setApiAnswer('');
+
+    if (!trimmed || !faqApiEndpoint) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(faqApiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-openai-enabled': hasOpenAIKey ? '1' : '0',
+          'x-google-docs-enabled': hasDocsKey ? '1' : '0',
+        },
+        body: JSON.stringify({
+          question: trimmed,
+          fallbackFaq: siteContent.faq,
+        }),
+      });
+
+      if (response.ok) {
+        const payload = (await response.json()) as APIReply;
+        if (payload.answer) {
+          setApiAnswer(payload.answer);
+        }
+      }
+    } catch {
+      setApiAnswer('');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -62,7 +102,7 @@ export function FAQChatbot() {
           placeholder='e.g. How fast can we launch a pilot?'
           value={query}
         />
-        <Button type='submit'>Ask</Button>
+        <Button type='submit'>{isLoading ? 'Checking...' : 'Ask'}</Button>
       </form>
 
       <div className='mt-4 rounded-lg bg-muted/40 p-4 text-sm'>
@@ -71,7 +111,13 @@ export function FAQChatbot() {
             No question yet. Try asking about timelines, deployment, or data privacy.
           </p>
         )}
-        {submitted.length > 0 && !match && (
+        {submitted.length > 0 && apiAnswer && (
+          <div className='space-y-2'>
+            <p className='font-semibold'>API-assisted answer</p>
+            <p className='text-muted-foreground'>{apiAnswer}</p>
+          </div>
+        )}
+        {submitted.length > 0 && !apiAnswer && !match && !isLoading && (
           <p>
             I could not find a direct FAQ match. Please email{' '}
             <a className='font-semibold text-primary underline' href={`mailto:${siteContent.contact.email}`}>
@@ -80,7 +126,7 @@ export function FAQChatbot() {
             and we will respond.
           </p>
         )}
-        {match && (
+        {submitted.length > 0 && !apiAnswer && match && (
           <div className='space-y-2'>
             <p className='font-semibold'>{match.question}</p>
             <p className='text-muted-foreground'>{match.answer}</p>
@@ -89,7 +135,8 @@ export function FAQChatbot() {
       </div>
 
       <p className='mt-4 text-xs text-muted-foreground'>
-        Integration readiness: OpenAI key {hasOpenAIKey ? 'configured' : 'not configured'} · Google Docs key{' '}
+        Integration readiness: FAQ endpoint {faqApiEndpoint ? 'configured' : 'not configured'} · OpenAI key{' '}
+        {hasOpenAIKey ? 'configured' : 'not configured'} · Google Docs key{' '}
         {hasDocsKey ? 'configured' : 'not configured'}.
       </p>
     </section>

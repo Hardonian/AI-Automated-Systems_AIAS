@@ -114,6 +114,8 @@ export interface SiteConfig {
     solution: string;
     results: string[];
     projectUrl: string;
+    logoSrc: string;
+    thumbnailSrc: string;
   }>;
   faq: Array<{
     question: string;
@@ -456,7 +458,9 @@ const rawSiteContent: SiteConfig = {
       challenge: 'Manual GTM and content workflows were slowing launches and follow-up cadence.',
       solution: 'Implemented automation-ready operating patterns and advisory sprints for execution consistency.',
       results: ['Faster campaign iterations', 'Clearer operating playbooks', 'Reduced manual coordination overhead'],
-      projectUrl: 'https://settler.dev',
+      projectUrl: 'https://settler.dev/?utm_source=aias&utm_medium=case-study&utm_campaign=website',
+      logoSrc: '/images/case-studies/settler-logo.svg',
+      thumbnailSrc: '/images/case-studies/settler-thumb.svg',
     },
     {
       title: 'Ready Layer Automation Enablement',
@@ -464,7 +468,9 @@ const rawSiteContent: SiteConfig = {
       challenge: 'Needed a structured automation roadmap with practical implementation guardrails.',
       solution: 'Delivered phased engagement planning, technical advisory, and prioritized workflow opportunities.',
       results: ['Prioritized automation backlog', 'Improved delivery confidence', 'Stronger systems alignment'],
-      projectUrl: 'https://ready-layer.com',
+      projectUrl: 'https://ready-layer.com/?utm_source=aias&utm_medium=case-study&utm_campaign=website',
+      logoSrc: '/images/case-studies/ready-layer-logo.svg',
+      thumbnailSrc: '/images/case-studies/ready-layer-thumb.svg',
     }
   ],
   faq: [

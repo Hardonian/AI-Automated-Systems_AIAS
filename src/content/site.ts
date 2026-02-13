@@ -154,7 +154,7 @@ export interface SiteConfig {
 const rawSiteContent: SiteConfig = {
   brand: {
     name: 'AIAS Platform',
-    tagline: 'Enterprise-Grade AI Automation. Built in Canada.',
+    tagline: 'Agentic Automation Consultancy',
     description:
       'We architect and deploy custom AI platforms that save Canadian businesses 10+ hours per week per employee.',
   },
@@ -174,10 +174,13 @@ const rawSiteContent: SiteConfig = {
     socialProof: [
       { icon: '🚀', text: '10x Faster Deployment' },
       { icon: '🔒', text: 'Enterprise Secure' },
+      { icon: '⚡', text: '10+ hrs/week saved per employee' },
+      { icon: '🍁', text: 'Made in Canada' },
     ],
     trustBadges: [
       { icon: 'shield', text: 'SOC 2 Ready' },
       { icon: 'globe', text: 'Global Scale' },
+      { icon: 'check', text: 'PIPEDA Compliant' },
     ],
   },
   navigation: {

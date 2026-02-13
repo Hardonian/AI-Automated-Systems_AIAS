@@ -10,6 +10,8 @@ import { TrustBadges } from '@/components/home/trust-badges';
 import { Testimonials } from '@/components/home/testimonials';
 import { SecretSauceSection } from '@/components/home/secret-sauce-section';
 import { WorkflowSandbox } from '@/components/home/workflow-sandbox';
+import { HeroIllustration } from '@/components/visual/HeroIllustration';
+import { TrustBadgeStrip } from '@/components/visual/TrustBadgeStrip';
 
 import {
   FAQSchema,
@@ -66,11 +68,36 @@ export default function HomePage() {
       <ProfessionalServiceSchema />
       <FAQSchema faqs={homepageFAQs} />
       <ContentDrivenHero content={heroContent} />
+      
+      {/* Visual trust section */}
+      <section className="border-b bg-muted/30 py-8">
+        <div className="container">
+          <TrustBadgeStrip />
+        </div>
+      </section>
+      
       <OutcomesSection />
       <ProofSection />
       <SystemsSection />
       <DeliverablesSection />
       <SecretSauceSection />
+      
+      {/* Visual workflow illustration */}
+      <section className="border-y bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-16">
+        <div className="container">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold text-white">How It Works</h2>
+            <p className="mt-4 text-slate-400">
+              Our agentic workflow engine processes inputs through classification, 
+              planning, and execution—with human oversight at every critical step.
+            </p>
+          </div>
+          <div className="mt-12">
+            <HeroIllustration />
+          </div>
+        </div>
+      </section>
+      
       <WorkflowSandbox />
       <Testimonials />
       <EngagementModel />

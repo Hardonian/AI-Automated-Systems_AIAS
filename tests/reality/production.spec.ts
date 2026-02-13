@@ -29,9 +29,9 @@ test.describe('Reality Suite - Production Health Checks', () => {
 test.describe('Synthetic Monitors', () => {
   const prodUrl = process.env.PROD_URL || 'https://your-app.vercel.app';
 
-  test('Primary CTA points to Calendly', async ({ page }) => {
+  test('Primary CTA points to email by default (or Calendly when enabled)', async ({ page }) => {
     await page.goto(prodUrl);
     const ctaLink = page.getByRole('link', { name: /Book a Strategy Call/i });
-    await expect(ctaLink).toHaveAttribute('href', /calendly\.com/);
+    await expect(ctaLink).toHaveAttribute('href', /^(mailto:|https:\/\/calendly\.com\/)/);
   });
 });

@@ -10,6 +10,7 @@ import { TrustBadges } from '@/components/home/trust-badges';
 import { Testimonials } from '@/components/home/testimonials';
 import { SecretSauceSection } from '@/components/home/secret-sauce-section';
 import { WorkflowSandbox } from '@/components/home/workflow-sandbox';
+
 import {
   FAQSchema,
   ProfessionalServiceSchema,

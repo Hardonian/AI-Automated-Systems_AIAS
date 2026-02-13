@@ -19,6 +19,9 @@ import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
 const siteUrl = env.app.siteUrl || 'https://aiautomatedsystems.ca';
 
+// Static-safe OG image configuration
+const ogImageUrl = `${siteUrl}/og-image.png`;
+
 export const metadata: Metadata = {
   ...generateSEOMetadata({
     title: 'AI Automated Systems | Agentic Automation Consultancy',
@@ -67,11 +70,11 @@ export const metadata: Metadata = {
     alternateLocale: ['en_CA'],
     images: [
       {
-        url: `${siteUrl}/placeholder.svg`,
+        url: ogImageUrl,
         width: 1200,
         height: 630,
         alt: 'AI Automated Systems | Agentic Automation Consultancy',
-        type: 'image/svg+xml',
+        type: 'image/png',
       },
     ],
   },
@@ -83,7 +86,7 @@ export const metadata: Metadata = {
     creator: '@aias_platform',
     site: '@aias_platform',
     images: [
-      `${siteUrl}/placeholder.svg`,
+      ogImageUrl,
     ],
   },
   robots: {

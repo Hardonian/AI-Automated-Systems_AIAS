@@ -37,10 +37,10 @@ export default function ServicesPage() {
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
-                  <span className="text-xs">🍁</span> Made in Canada
+                  <span className="text-xs">⚡</span> 10+ hrs/week saved
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-sm font-medium">
-                  <span className="text-xs">⚡</span> 10+ hrs/week saved
+                  <span className="text-xs">🎯</span> Deterministic Workflows
                 </span>
               </div>
             </div>

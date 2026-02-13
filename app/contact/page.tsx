@@ -29,7 +29,7 @@ export default function ContactPage() {
             <div className="mt-6 flex justify-center">
               <span className="inline-flex items-center gap-2 rounded-full border bg-background px-3 py-1.5 text-sm font-medium">
                 <MapPin className="h-4 w-4 text-primary" />
-                Made in Canada 🇨🇦
+                Serving clients worldwide 🌍
               </span>
             </div>
           </div>

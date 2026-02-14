@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Mail, MapPin, Clock, Calendar, ArrowRight } from 'lucide-react';
 
-import { siteContent } from '@/src/content/site';
+import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = {
   title: 'Contact | AI Automated Systems',
@@ -41,9 +41,7 @@ export default function ContactPage() {
         <div className="grid gap-8 md:grid-cols-2">
           {/* Book a Call */}
           <a
-            href="https://calendly.com/aias-consulting/strategy-call"
-            target="_blank"
-            rel="noreferrer"
+            href={getPrimaryCtaHref()}
             className="group relative overflow-hidden rounded-2xl border bg-card p-8 transition-all hover:border-primary/20 hover:shadow-lg"
           >
             <div className="absolute right-4 top-4 rounded-full bg-primary/10 p-3">

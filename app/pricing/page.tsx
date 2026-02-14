@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Check, ArrowRight, Sparkles } from 'lucide-react';
 
 import { FeatureIllustration } from '@/components/visual/FeatureIllustration';
+import { getPrimaryCtaHref, getContactEmailHref } from '@/src/content/site';
 
 export const metadata: Metadata = {
   title: 'Pricing | AI Automated Systems',
@@ -23,7 +24,7 @@ const plans = [
       'Written recommendations report',
     ],
     cta: 'Book Discovery',
-    href: 'https://calendly.com/aias-consulting/strategy-call',
+    href: getPrimaryCtaHref(),
     popular: false,
   },
   {
@@ -40,7 +41,7 @@ const plans = [
       '30-day support',
     ],
     cta: 'Start Pilot',
-    href: 'https://calendly.com/aias-consulting/strategy-call',
+    href: getPrimaryCtaHref(),
     popular: true,
   },
   {
@@ -58,7 +59,7 @@ const plans = [
       'Quarterly reviews',
     ],
     cta: 'Contact Us',
-    href: '/contact',
+    href: getContactEmailHref(),
     popular: false,
   },
 ];

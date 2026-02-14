@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { CheckCircle2, Circle, ArrowRight } from 'lucide-react';
 
 import { WorkflowDiagram } from '@/components/visual/WorkflowDiagram';
-import { siteContent } from '@/src/content/site';
+import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = {
   title: 'Process | AI Automated Systems',
@@ -118,7 +118,7 @@ export default function ProcessPage() {
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <a
-                href="https://calendly.com/aias-consulting/strategy-call"
+                href={getPrimaryCtaHref()}
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 Book a Strategy Call

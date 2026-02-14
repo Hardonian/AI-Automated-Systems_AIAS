@@ -623,8 +623,14 @@ export const siteContent: SiteConfig = parsedSiteContent.success
     };
 
 export const getPrimaryCtaHref = (): string => {
-  const href = siteContent.positioning.primaryCTA.href.trim();
-  return href.startsWith('https://calendly.com/')
-    ? href
-    : `mailto:${siteContent.contact.email}`;
+  const calendlyHref = siteContent.positioning.primaryCTA.href.trim();
+  const calendlyApiKey = process.env.NEXT_PUBLIC_CALENDLY_API_KEY?.trim();
+
+  if (calendlyApiKey && calendlyHref.startsWith('https://calendly.com/')) {
+    return calendlyHref;
+  }
+
+  return `mailto:${siteContent.contact.email}`;
 };
+
+export const getContactEmailHref = (): string => `mailto:${siteContent.contact.email}`;

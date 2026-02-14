@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { MapPin, Award, Users, ArrowRight } from 'lucide-react';
 
 import { FeatureIllustration } from '@/components/visual/FeatureIllustration';
-import { siteContent } from '@/src/content/site';
+import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = {
   title: 'About | AI Automated Systems',
@@ -133,7 +133,7 @@ export default function AboutPage() {
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <a
-              href="https://calendly.com/aias-consulting/strategy-call"
+              href={getPrimaryCtaHref()}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Book a Strategy Call

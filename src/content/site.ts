@@ -165,7 +165,7 @@ const rawSiteContent: SiteConfig = {
     impactCardsLabel: 'At-a-glance impact',
     primaryCTA: {
       label: 'Book a Strategy Call',
-      href: 'https://calendly.com/aias-consulting/strategy-call',
+      href: 'https://calendly.com/scottrmhardie',
     },
     secondaryCTA: {
       label: 'Try the Workflow Sandbox',
@@ -624,9 +624,16 @@ export const siteContent: SiteConfig = parsedSiteContent.success
 
 export const getPrimaryCtaHref = (): string => {
   const calendlyHref = siteContent.positioning.primaryCTA.href.trim();
-  const calendlyApiKey = process.env.NEXT_PUBLIC_CALENDLY_API_KEY?.trim();
 
-  if (calendlyApiKey && calendlyHref.startsWith('https://calendly.com/')) {
+  if (calendlyHref.startsWith('https://calendly.com/')) {
+    return calendlyHref;
+  }
+
+  if (
+    calendlyHref.startsWith('http://') ||
+    calendlyHref.startsWith('https://') ||
+    calendlyHref.startsWith('mailto:')
+  ) {
     return calendlyHref;
   }
 

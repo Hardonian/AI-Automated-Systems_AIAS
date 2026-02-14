@@ -27,13 +27,11 @@ export default function AboutPage() {
               </h1>
               <p className="mt-6 text-lg text-muted-foreground">
                 AIAS is a consultancy specializing in agentic automation for Canadian enterprises. 
-                We architect and deploy custom AI platforms that save businesses 10+ hours 
-                per week per employee.
+                We architect and deploy AI infrastructure that teams can own, operate, and scale.
               </p>
               <p className="mt-4 text-muted-foreground">
-                Our approach combines deterministic workflow design with enterprise-grade 
-                security practices. We don&apos;t just build chatbots—we build systems that 
-                handle complex business processes reliably and repeatably.
+                We engage through Foundation, Build + Empower, and Build + Manage + Scale
+                so teams can choose the right balance of speed, ownership, and ongoing iteration.
               </p>
             </div>
             <div className="relative hidden lg:block">

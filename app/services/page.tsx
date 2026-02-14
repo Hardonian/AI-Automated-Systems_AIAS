@@ -35,6 +35,9 @@ export default function ServicesPage() {
                 Practical, deterministic automation programs designed for production operations. 
                 We build systems that your team can trust, operate, and extend.
               </p>
+              <p className="mt-4 max-w-xl text-sm text-muted-foreground">
+                Engagement paths: Foundation, Build + Empower, and Build + Manage + Scale.
+              </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
                   <span className="text-xs">⚡</span> 10+ hrs/week saved
@@ -92,8 +95,8 @@ export default function ServicesPage() {
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-bold">How we work</h2>
             <p className="mt-4 text-muted-foreground">
-              Our &ldquo;Discover to Pilot&rdquo; cycle is typically 2-4 weeks. 
-              Full production rollout follows within 4-8 weeks.
+              Foundation projects are typically delivered in 4–6 weeks, then teams
+              can expand through Build + Empower or Build + Manage + Scale.
             </p>
             <div className="mt-8 grid grid-cols-5 gap-2 md:gap-4">
               {['Discover', 'Map', 'Automate', 'Ship', 'Monitor'].map((step, i) => (

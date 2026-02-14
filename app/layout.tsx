@@ -20,7 +20,7 @@ import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 const siteUrl = env.app.siteUrl || 'https://aiautomatedsystems.ca';
 
 // Static-safe OG image configuration
-const ogImageUrl = `${siteUrl}/og-image.png`;
+const ogImageUrl = `${siteUrl}/og-image.svg`;
 
 export const metadata: Metadata = {
   ...generateSEOMetadata({
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         alt: 'AI Automated Systems | Agentic Automation Consultancy',
-        type: 'image/png',
+        type: 'image/svg+xml',
       },
     ],
   },

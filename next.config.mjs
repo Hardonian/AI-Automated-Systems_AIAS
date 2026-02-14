@@ -65,6 +65,8 @@ const nextConfig = {
         : false,
   },
 
+  // Security headers configured in vercel.json for static export compatibility
+
   productionBrowserSourceMaps: false,
   generateEtags: true,
 

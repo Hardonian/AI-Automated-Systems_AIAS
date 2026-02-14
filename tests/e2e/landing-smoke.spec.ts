@@ -5,7 +5,7 @@ test.describe('@smoke AIAS Landing & Workflow Smoke Test', () => {
     await page.goto('/');
     await expect(page).toHaveTitle(/AIAS|AI Automated Systems/);
     await expect(page.locator('h1').first()).toBeVisible();
-    await expect(page.locator('text=Enterprise-Grade AI Automation')).toBeVisible();
+    await expect(page.locator('text=Agentic Automation Consultancy')).toBeVisible();
 
     const cta = page.getByRole('link', { name: 'Book a Strategy Call' }).first();
     await expect(cta).toBeVisible();

@@ -22,7 +22,7 @@ test.describe('@smoke Reality Mode Smoke Test', () => {
     await expect(page.getByRole('heading', { name: 'What we deliver' })).toBeVisible();
 
     await page.goto('/process');
-    await expect(page.getByRole('heading', { name: 'How engagements run' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'From discovery to deployment' })).toBeVisible();
 
     await page.goto('/dashboard');
     await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();

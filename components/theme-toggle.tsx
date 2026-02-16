@@ -5,7 +5,11 @@ import { useTheme } from '@/components/theme-provider';
 import { Button } from '@/components/ui/button';
 
 export function ThemeToggle() {
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme, isHydrated } = useTheme();
+
+  // During hydration, render with default moon icon
+  // After hydration, the icon updates based on actual resolved theme
+  const displayIcon = isHydrated && resolvedTheme === 'dark' ? <Sun className='h-5 w-5' /> : <Moon className='h-5 w-5' />;
 
   return (
     <Button
@@ -22,11 +26,7 @@ export function ThemeToggle() {
         }
       }}
     >
-      {resolvedTheme === 'light' ? (
-        <Moon className='h-5 w-5' />
-      ) : (
-        <Sun className='h-5 w-5' />
-      )}
+      {displayIcon}
     </Button>
   );
 }

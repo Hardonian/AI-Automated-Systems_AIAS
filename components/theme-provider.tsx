@@ -7,22 +7,31 @@ interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
   resolvedTheme: 'light' | 'dark';
+  isHydrated: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [isHydrated, setIsHydrated] = useState(false);
   const [theme, setThemeState] = useState<Theme>('system');
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
 
+  // Initialize theme on client-side only
   useEffect(() => {
     const stored = localStorage.getItem('theme') as Theme | null;
     if (stored) {
       setThemeState(stored);
+    } else {
+      setThemeState('system');
     }
+    setIsHydrated(true);
   }, []);
 
+  // Update resolved theme when theme changes
   useEffect(() => {
+    if (!isHydrated) return;
+
     const root = document.documentElement;
     const systemDark = window.matchMedia(
       '(prefers-color-scheme: dark)'
@@ -36,9 +45,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     } else {
       root.classList.remove('dark');
     }
-  }, [theme]);
+  }, [theme, isHydrated]);
 
+  // Listen for system preference changes
   useEffect(() => {
+    if (!isHydrated) return;
+
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handler = () => {
       if (theme === 'system') {
@@ -54,7 +66,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     };
     mediaQuery.addEventListener('change', handler);
     return () => mediaQuery.removeEventListener('change', handler);
-  }, [theme]);
+  }, [theme, isHydrated]);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
@@ -63,8 +75,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Memoize the context value to prevent unnecessary re-renders
   const value = useMemo(
-    () => ({ theme, setTheme, resolvedTheme }),
-    [theme, resolvedTheme]
+    () => ({ theme, setTheme, resolvedTheme, isHydrated }),
+    [theme, resolvedTheme, isHydrated]
   );
 
   return (

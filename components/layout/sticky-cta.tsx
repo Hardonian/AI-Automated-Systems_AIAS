@@ -8,8 +8,15 @@ import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 export function StickyCTA() {
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isHydrated) return;
+
     const handleScroll = () => {
       // Show after scrolling 300px
       if (window.scrollY > 300 && !isDismissed) {
@@ -21,12 +28,13 @@ export function StickyCTA() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isDismissed]);
+  }, [isDismissed, isHydrated]);
 
-  if (!isVisible || isDismissed) return null;
+  // Don't render at all until hydrated to avoid mismatch
+  if (!isHydrated || isDismissed) return null;
 
   return (
-    <div className='fixed bottom-0 left-0 right-0 z-50 duration-300 animate-in slide-in-from-bottom'>
+    <div className={`fixed bottom-0 left-0 right-0 z-50 duration-300 ${isVisible ? 'animate-in slide-in-from-bottom' : 'hidden'}`}>
       <div className='container mx-auto px-4 py-3'>
         <div className='flex items-center justify-between gap-4 rounded-lg border border-border bg-card p-4 shadow-lg'>
           <div className='flex-1'>

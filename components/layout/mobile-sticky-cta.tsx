@@ -21,8 +21,15 @@ export function MobileStickyCTA({
   secondaryHref = `mailto:${siteContent.contact.email}`,
 }: MobileStickyCTAProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isHydrated) return;
+
     const handleScroll = () => {
       // Show after scrolling 300px
       const shouldShow = window.scrollY > 300;
@@ -31,7 +38,10 @@ export function MobileStickyCTA({
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isHydrated]);
+
+  // Don't render until hydrated
+  if (!isHydrated) return null;
 
   return (
     <AnimatePresence>

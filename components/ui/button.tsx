@@ -88,6 +88,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const Comp = asChild ? Slot : motion.button;
+    // Safe SSR: use hook to defer motion preference check to after hydration
+    const shouldReduceMotion = useSafeReducedMotion();
     const isDisabled = disabled || loading;
 
     // If icon-only button without children, ensure aria-label is provided
@@ -173,8 +175,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       | 'aria-label'
     >;
 
-    // Safe SSR: use hook to defer motion preference check to after hydration
-    const shouldReduceMotion = useSafeReducedMotion();
+
     const motionProps: Partial<
       Pick<SafeMotionButtonProps, 'whileHover' | 'whileTap' | 'transition'>
     > = shouldReduceMotion

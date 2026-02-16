@@ -53,7 +53,7 @@ const nextConfig = {
   },
 
   turbopack: {
-    root: '.',
+    root: __dirname,
   },
 
   compiler: {

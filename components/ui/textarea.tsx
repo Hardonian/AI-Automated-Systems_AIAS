@@ -1,9 +1,11 @@
 'use client';
 
+'use client';
+
 import { motion } from 'framer-motion';
 import * as React from 'react';
 
-import { motionTransitions, prefersReducedMotion } from '@/lib/style/motion';
+import { motionTransitions, useSafeReducedMotion } from '@/lib/style/motion';
 import { cn } from '@/lib/utils';
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -14,8 +16,9 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, error, success, ...props }, ref) => {
     const [focused, setFocused] = React.useState(false);
+    const prefersReduced = useSafeReducedMotion();
 
-    const motionProps = prefersReducedMotion()
+    const motionProps = prefersReduced
       ? {}
       : {
           initial: { opacity: 0, y: -10 },

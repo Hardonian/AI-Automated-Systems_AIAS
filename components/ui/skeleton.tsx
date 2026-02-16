@@ -1,8 +1,11 @@
 'use client';
 
-import { motion } from 'framer-motion';
+'use client';
 
-import { motionTransitions, prefersReducedMotion } from '@/lib/style/motion';
+import { motion } from 'framer-motion';
+import * as React from 'react';
+
+import { motionTransitions, useSafeReducedMotion } from '@/lib/style/motion';
 import { cn } from '@/lib/utils';
 
 function Skeleton({
@@ -20,8 +23,9 @@ function Skeleton({
     rectangular: 'rounded-none',
   };
 
-  // Respect reduced motion preference
-  const shouldAnimate = !prefersReducedMotion();
+  // Respect reduced motion preference - safe for SSR
+  const prefersReduced = useSafeReducedMotion();
+  const shouldAnimate = !prefersReduced;
 
   return (
     <motion.div

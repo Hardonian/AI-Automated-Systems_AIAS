@@ -1,12 +1,14 @@
 'use client';
 
+'use client';
+
 import { motion } from 'framer-motion';
 import * as React from 'react';
 
 import {
   motionTransitions,
   motionTranslate,
-  prefersReducedMotion,
+  useSafeReducedMotion,
 } from '@/lib/style/motion';
 import { cn } from '@/lib/utils';
 
@@ -18,7 +20,9 @@ const Card = React.forwardRef<
   }
 >(({ className, hover = true, gradient = false, ...props }, ref) => {
   const MotionDiv = motion.div;
-  const motionProps = prefersReducedMotion()
+  const prefersReduced = useSafeReducedMotion();
+
+  const motionProps = prefersReduced
     ? {}
     : {
         initial: { opacity: 0, y: 20 },

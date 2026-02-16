@@ -34,7 +34,7 @@
         "package.json",
         "tsconfig.json",
         "next.config.js",
-        "prisma/schema.prisma"
+
       ]
     },
     "typecheck": {
@@ -57,10 +57,6 @@
       "cache": false,
       "persistent": true
     },
-    "db:generate": {
-      "cache": true,
-      "outputs": ["**/node_modules/.prisma/**"],
-      "inputs": ["**/prisma/schema.prisma"]
-    }
+
   }
 }

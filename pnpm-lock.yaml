@@ -33,380 +33,357 @@ overrides:
   cookie: '>=0.7.0'
   tmp: '>=0.2.4'
 
-importers:
+dependencies:
+  '@hookform/resolvers':
+    specifier: ^3.10.0
+    version: 3.10.0(react-hook-form@7.71.1)
+  '@radix-ui/react-accordion':
+    specifier: ^1.2.12
+    version: 1.2.12(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-alert-dialog':
+    specifier: ^1.1.15
+    version: 1.1.15(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-aspect-ratio':
+    specifier: ^1.1.8
+    version: 1.1.8(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-avatar':
+    specifier: ^1.1.11
+    version: 1.1.11(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-checkbox':
+    specifier: ^1.3.3
+    version: 1.3.3(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-collapsible':
+    specifier: ^1.1.12
+    version: 1.1.12(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-context-menu':
+    specifier: ^2.2.16
+    version: 2.2.16(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-dialog':
+    specifier: ^1.1.15
+    version: 1.1.15(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-dropdown-menu':
+    specifier: ^2.1.16
+    version: 2.1.16(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-hover-card':
+    specifier: ^1.1.15
+    version: 1.1.15(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-label':
+    specifier: ^2.1.8
+    version: 2.1.8(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-menubar':
+    specifier: ^1.1.16
+    version: 1.1.16(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-navigation-menu':
+    specifier: ^1.2.14
+    version: 1.2.14(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-popover':
+    specifier: ^1.1.15
+    version: 1.1.15(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-progress':
+    specifier: ^1.1.8
+    version: 1.1.8(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-radio-group':
+    specifier: ^1.3.8
+    version: 1.3.8(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-scroll-area':
+    specifier: ^1.2.10
+    version: 1.2.10(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-select':
+    specifier: ^2.2.6
+    version: 2.2.6(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-separator':
+    specifier: ^1.1.8
+    version: 1.1.8(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-slider':
+    specifier: ^1.3.6
+    version: 1.3.6(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-slot':
+    specifier: ^1.2.4
+    version: 1.2.4(@types/react@19.2.9)(react@19.2.4)
+  '@radix-ui/react-switch':
+    specifier: ^1.2.6
+    version: 1.2.6(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-tabs':
+    specifier: ^1.1.13
+    version: 1.1.13(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-toast':
+    specifier: ^1.2.15
+    version: 1.2.15(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-toggle':
+    specifier: ^1.1.10
+    version: 1.1.10(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-toggle-group':
+    specifier: ^1.1.11
+    version: 1.1.11(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@radix-ui/react-tooltip':
+    specifier: ^1.2.8
+    version: 1.2.8(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  '@tailwindcss/typography':
+    specifier: ^0.5.19
+    version: 0.5.19(tailwindcss@3.4.19)
+  '@tanstack/react-query':
+    specifier: ^5.90.20
+    version: 5.90.20(react@19.2.4)
+  '@vercel/analytics':
+    specifier: ^1.6.1
+    version: 1.6.1(next@15.5.12)(react@19.2.4)
+  '@vercel/og':
+    specifier: ^0.6.8
+    version: 0.6.8
+  '@vercel/speed-insights':
+    specifier: ^1.3.1
+    version: 1.3.1(next@15.5.12)(react@19.2.4)
+  '@xstate/react':
+    specifier: ^6.0.0
+    version: 6.0.0(@types/react@19.2.9)(react@19.2.4)(xstate@5.26.0)
+  class-variance-authority:
+    specifier: ^0.7.1
+    version: 0.7.1
+  clsx:
+    specifier: ^2.1.1
+    version: 2.1.1
+  cmdk:
+    specifier: ^0.2.1
+    version: 0.2.1(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  dompurify:
+    specifier: ^3.3.1
+    version: 3.3.1
+  embla-carousel-react:
+    specifier: ^8.6.0
+    version: 8.6.0(react@19.2.4)
+  framer-motion:
+    specifier: ^12.29.2
+    version: 12.29.2(react-dom@19.2.4)(react@19.2.4)
+  i18next:
+    specifier: ^23.16.8
+    version: 23.16.8
+  i18next-browser-languagedetector:
+    specifier: ^7.2.2
+    version: 7.2.2
+  input-otp:
+    specifier: ^1.4.2
+    version: 1.4.2(react-dom@19.2.4)(react@19.2.4)
+  isomorphic-dompurify:
+    specifier: ^2.35.0
+    version: 2.35.0
+  lenis:
+    specifier: ^1.3.17
+    version: 1.3.17(react@19.2.4)
+  lucide-react:
+    specifier: ^0.555.0
+    version: 0.555.0(react@19.2.4)
+  next:
+    specifier: ^15.5.10
+    version: 15.5.12(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.4)(react@19.2.4)
+  next-themes:
+    specifier: ^0.2.1
+    version: 0.2.1(next@15.5.12)(react-dom@19.2.4)(react@19.2.4)
+  react:
+    specifier: ^19.2.4
+    version: 19.2.4
+  react-day-picker:
+    specifier: ^8.10.1
+    version: 8.10.1(date-fns@3.6.0)(react@19.2.4)
+  react-dom:
+    specifier: ^19.2.4
+    version: 19.2.4(react@19.2.4)
+  react-hook-form:
+    specifier: 7.71.1
+    version: 7.71.1(react@19.2.4)
+  react-i18next:
+    specifier: ^14.1.3
+    version: 14.1.3(i18next@23.16.8)(react-dom@19.2.4)(react@19.2.4)
+  react-resizable-panels:
+    specifier: ^2.1.9
+    version: 2.1.9(react-dom@19.2.4)(react@19.2.4)
+  react-router-dom:
+    specifier: ^6.30.3
+    version: 6.30.3(react-dom@19.2.4)(react@19.2.4)
+  recharts:
+    specifier: ^2.15.4
+    version: 2.15.4(react-dom@19.2.4)(react@19.2.4)
+  sonner:
+    specifier: ^1.7.4
+    version: 1.7.4(react-dom@19.2.4)(react@19.2.4)
+  tailwind-merge:
+    specifier: ^2.6.0
+    version: 2.6.0
+  tailwindcss-animate:
+    specifier: ^1.0.7
+    version: 1.0.7(tailwindcss@3.4.19)
+  vaul:
+    specifier: ^1.1.2
+    version: 1.1.2(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
+  xstate:
+    specifier: ^5.26.0
+    version: 5.26.0
+  zod:
+    specifier: ^3.25.76
+    version: 3.25.76
 
-  .:
-    dependencies:
-      '@hookform/resolvers':
-        specifier: ^3.10.0
-        version: 3.10.0(react-hook-form@7.71.1)
-      '@octokit/rest':
-        specifier: ^20.1.2
-        version: 20.1.2
-      '@radix-ui/react-accordion':
-        specifier: ^1.2.12
-        version: 1.2.12(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-alert-dialog':
-        specifier: ^1.1.15
-        version: 1.1.15(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-aspect-ratio':
-        specifier: ^1.1.8
-        version: 1.1.8(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-avatar':
-        specifier: ^1.1.11
-        version: 1.1.11(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-checkbox':
-        specifier: ^1.3.3
-        version: 1.3.3(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-collapsible':
-        specifier: ^1.1.12
-        version: 1.1.12(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-context-menu':
-        specifier: ^2.2.16
-        version: 2.2.16(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-dialog':
-        specifier: ^1.1.15
-        version: 1.1.15(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-dropdown-menu':
-        specifier: ^2.1.16
-        version: 2.1.16(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-hover-card':
-        specifier: ^1.1.15
-        version: 1.1.15(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-label':
-        specifier: ^2.1.8
-        version: 2.1.8(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-menubar':
-        specifier: ^1.1.16
-        version: 1.1.16(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-navigation-menu':
-        specifier: ^1.2.14
-        version: 1.2.14(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-popover':
-        specifier: ^1.1.15
-        version: 1.1.15(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-progress':
-        specifier: ^1.1.8
-        version: 1.1.8(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-radio-group':
-        specifier: ^1.3.8
-        version: 1.3.8(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-scroll-area':
-        specifier: ^1.2.10
-        version: 1.2.10(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-select':
-        specifier: ^2.2.6
-        version: 2.2.6(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-separator':
-        specifier: ^1.1.8
-        version: 1.1.8(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-slider':
-        specifier: ^1.3.6
-        version: 1.3.6(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-slot':
-        specifier: ^1.2.4
-        version: 1.2.4(@types/react@19.2.9)(react@19.2.4)
-      '@radix-ui/react-switch':
-        specifier: ^1.2.6
-        version: 1.2.6(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-tabs':
-        specifier: ^1.1.13
-        version: 1.1.13(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-toast':
-        specifier: ^1.2.15
-        version: 1.2.15(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-toggle':
-        specifier: ^1.1.10
-        version: 1.1.10(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-toggle-group':
-        specifier: ^1.1.11
-        version: 1.1.11(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@radix-ui/react-tooltip':
-        specifier: ^1.2.8
-        version: 1.2.8(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      '@tailwindcss/typography':
-        specifier: ^0.5.19
-        version: 0.5.19(tailwindcss@3.4.19)
-      '@tanstack/react-query':
-        specifier: ^5.90.20
-        version: 5.90.20(react@19.2.4)
-      '@vercel/analytics':
-        specifier: ^1.6.1
-        version: 1.6.1(next@15.5.12)(react@19.2.4)
-      '@vercel/blob':
-        specifier: ^2.0.1
-        version: 2.0.1
-      '@vercel/edge-config':
-        specifier: ^1.4.3
-        version: 1.4.3(@opentelemetry/api@1.9.0)(next@15.5.12)
-      '@vercel/og':
-        specifier: ^0.6.8
-        version: 0.6.8
-      '@vercel/speed-insights':
-        specifier: ^1.3.1
-        version: 1.3.1(next@15.5.12)(react@19.2.4)
-      '@xstate/react':
-        specifier: ^6.0.0
-        version: 6.0.0(@types/react@19.2.9)(react@19.2.4)(xstate@5.26.0)
-      canvas-confetti:
-        specifier: ^1.9.4
-        version: 1.9.4
-      class-variance-authority:
-        specifier: ^0.7.1
-        version: 0.7.1
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      cmdk:
-        specifier: ^0.2.1
-        version: 0.2.1(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      dompurify:
-        specifier: ^3.3.1
-        version: 3.3.1
-      embla-carousel-react:
-        specifier: ^8.6.0
-        version: 8.6.0(react@19.2.4)
-      framer-motion:
-        specifier: ^12.29.2
-        version: 12.29.2(react-dom@19.2.4)(react@19.2.4)
-      i18next:
-        specifier: ^23.16.8
-        version: 23.16.8
-      i18next-browser-languagedetector:
-        specifier: ^7.2.2
-        version: 7.2.2
-      idb-keyval:
-        specifier: ^6.2.2
-        version: 6.2.2
-      input-otp:
-        specifier: ^1.4.2
-        version: 1.4.2(react-dom@19.2.4)(react@19.2.4)
-      isomorphic-dompurify:
-        specifier: ^2.35.0
-        version: 2.35.0
-      lenis:
-        specifier: ^1.3.17
-        version: 1.3.17(react@19.2.4)
-      lucide-react:
-        specifier: ^0.555.0
-        version: 0.555.0(react@19.2.4)
-      next:
-        specifier: ^15.5.10
-        version: 15.5.12(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.4)(react@19.2.4)
-      next-themes:
-        specifier: ^0.2.1
-        version: 0.2.1(next@15.5.12)(react-dom@19.2.4)(react@19.2.4)
-      react:
-        specifier: ^19.2.4
-        version: 19.2.4
-      react-day-picker:
-        specifier: ^8.10.1
-        version: 8.10.1(date-fns@3.6.0)(react@19.2.4)
-      react-dom:
-        specifier: ^19.2.4
-        version: 19.2.4(react@19.2.4)
-      react-hook-form:
-        specifier: 7.71.1
-        version: 7.71.1(react@19.2.4)
-      react-i18next:
-        specifier: ^14.1.3
-        version: 14.1.3(i18next@23.16.8)(react-dom@19.2.4)(react@19.2.4)
-      react-resizable-panels:
-        specifier: ^2.1.9
-        version: 2.1.9(react-dom@19.2.4)(react@19.2.4)
-      react-router-dom:
-        specifier: ^6.30.3
-        version: 6.30.3(react-dom@19.2.4)(react@19.2.4)
-      recharts:
-        specifier: ^2.15.4
-        version: 2.15.4(react-dom@19.2.4)(react@19.2.4)
-      sonner:
-        specifier: ^1.7.4
-        version: 1.7.4(react-dom@19.2.4)(react@19.2.4)
-      tailwind-merge:
-        specifier: ^2.6.0
-        version: 2.6.0
-      tailwindcss-animate:
-        specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@3.4.19)
-      vaul:
-        specifier: ^1.1.2
-        version: 1.1.2(@types/react-dom@19.2.3)(@types/react@19.2.9)(react-dom@19.2.4)(react@19.2.4)
-      xstate:
-        specifier: ^5.26.0
-        version: 5.26.0
-      zod:
-        specifier: ^3.25.76
-        version: 3.25.76
-    devDependencies:
-      '@axe-core/playwright':
-        specifier: ^4.11.0
-        version: 4.11.0(playwright-core@1.58.0)
-      '@eslint/js':
-        specifier: ^9.39.2
-        version: 9.39.2
-      '@lhci/cli':
-        specifier: ^0.15.1
-        version: 0.15.1
-      '@opentelemetry/api':
-        specifier: ^1.9.0
-        version: 1.9.0
-      '@opentelemetry/auto-instrumentations-node':
-        specifier: ^0.67.3
-        version: 0.67.3(@opentelemetry/api@1.9.0)(@opentelemetry/core@2.5.0)
-      '@opentelemetry/exporter-metrics-otlp-http':
-        specifier: ^0.208.0
-        version: 0.208.0(@opentelemetry/api@1.9.0)
-      '@opentelemetry/exporter-trace-otlp-http':
-        specifier: ^0.208.0
-        version: 0.208.0(@opentelemetry/api@1.9.0)
-      '@opentelemetry/resources':
-        specifier: ^2.5.0
-        version: 2.5.0(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-metrics':
-        specifier: ^2.5.0
-        version: 2.5.0(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-node':
-        specifier: ^0.208.0
-        version: 0.208.0(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions':
-        specifier: ^1.39.0
-        version: 1.39.0
-      '@playwright/test':
-        specifier: ^1.58.0
-        version: 1.58.0
-      '@types/js-yaml':
-        specifier: ^4.0.9
-        version: 4.0.9
-      '@types/node':
-        specifier: ^22.19.7
-        version: 22.19.7
-      '@types/react':
-        specifier: ^19.2.9
-        version: 19.2.9
-      '@types/react-dom':
-        specifier: ^19.2.3
-        version: 19.2.3(@types/react@19.2.9)
-      '@vitejs/plugin-react-swc':
-        specifier: ^4.2.2
-        version: 4.2.2(vite@5.4.21)
-      autoprefixer:
-        specifier: ^10.4.23
-        version: 10.4.23(postcss@8.5.6)
-      axe-playwright:
-        specifier: ^1.2.3
-        version: 1.2.3(playwright@1.58.0)
-      commander:
-        specifier: ^11.1.0
-        version: 11.1.0
-      depcheck:
-        specifier: ^1.4.7
-        version: 1.4.7
-      eslint:
-        specifier: ^9.39.2
-        version: 9.39.2
-      eslint-config-prettier:
-        specifier: ^10.1.8
-        version: 10.1.8(eslint@9.39.2)
-      eslint-plugin-import:
-        specifier: ^2.32.0
-        version: 2.32.0(@typescript-eslint/parser@8.54.0)(eslint@9.39.2)
-      eslint-plugin-jsx-a11y:
-        specifier: ^6.10.2
-        version: 6.10.2(eslint@9.39.2)
-      eslint-plugin-react:
-        specifier: ^7.37.5
-        version: 7.37.5(eslint@9.39.2)
-      eslint-plugin-react-hooks:
-        specifier: ^5.2.0
-        version: 5.2.0(eslint@9.39.2)
-      eslint-plugin-react-refresh:
-        specifier: ^0.4.26
-        version: 0.4.26(eslint@9.39.2)
-      eslint-plugin-unused-imports:
-        specifier: ^4.3.0
-        version: 4.3.0(eslint@9.39.2)
-      globals:
-        specifier: ^16.5.0
-        version: 16.5.0
-      husky:
-        specifier: ^8.0.3
-        version: 8.0.3
-      jose:
-        specifier: ^5.1.3
-        version: 5.10.0
-      js-yaml:
-        specifier: ^4.1.1
-        version: 4.1.1
-      knip:
-        specifier: ^5.82.1
-        version: 5.82.1(@types/node@22.19.7)(typescript@5.9.3)
-      license-checker:
-        specifier: ^25.0.1
-        version: 25.0.1
-      lighthouse-ci:
-        specifier: ^1.13.1
-        version: 1.13.1
-      lint-staged:
-        specifier: ^15.5.2
-        version: 15.5.2
-      pa11y-ci:
-        specifier: ^4.0.1
-        version: 4.0.1(typescript@5.9.3)
-      patch-package:
-        specifier: ^8.0.1
-        version: 8.0.1
-      playwright:
-        specifier: ^1.58.0
-        version: 1.58.0
-      postcss:
-        specifier: ^8.5.6
-        version: 8.5.6
-      prettier:
-        specifier: ^3.8.1
-        version: 3.8.1
-      prettier-plugin-tailwindcss:
-        specifier: ^0.7.2
-        version: 0.7.2(prettier@3.8.1)
-      rollup-plugin-visualizer:
-        specifier: ^6.0.5
-        version: 6.0.5(rollup@2.79.2)
-      server-only:
-        specifier: ^0.0.1
-        version: 0.0.1
-      tailwindcss:
-        specifier: ^3.4.19
-        version: 3.4.19(tsx@4.21.0)
-      terser:
-        specifier: ^5.46.0
-        version: 5.46.0
-      ts-prune:
-        specifier: ^0.10.3
-        version: 0.10.3
-      tsx:
-        specifier: ^4.21.0
-        version: 4.21.0
-      turbo:
-        specifier: ^2.7.6
-        version: 2.7.6
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      typescript-eslint:
-        specifier: ^8.54.0
-        version: 8.54.0(eslint@9.39.2)(typescript@5.9.3)
-      vercel:
-        specifier: ^49.2.0
-        version: 49.2.0(rollup@2.79.2)(typescript@5.9.3)
-      vite-plugin-pwa:
-        specifier: ^0.17.5
-        version: 0.17.5(vite@5.4.21)(workbox-build@7.4.0)(workbox-window@7.4.0)
-      vitest:
-        specifier: ^2.1.9
-        version: 2.1.9(@types/node@22.19.7)(terser@5.46.0)
-      wait-on:
-        specifier: ^9.0.3
-        version: 9.0.3
+devDependencies:
+  '@axe-core/playwright':
+    specifier: ^4.11.0
+    version: 4.11.0(playwright-core@1.58.0)
+  '@eslint/js':
+    specifier: ^9.39.2
+    version: 9.39.2
+  '@lhci/cli':
+    specifier: ^0.15.1
+    version: 0.15.1
+  '@opentelemetry/api':
+    specifier: ^1.9.0
+    version: 1.9.0
+  '@opentelemetry/auto-instrumentations-node':
+    specifier: ^0.67.3
+    version: 0.67.3(@opentelemetry/api@1.9.0)(@opentelemetry/core@2.5.0)
+  '@opentelemetry/exporter-metrics-otlp-http':
+    specifier: ^0.208.0
+    version: 0.208.0(@opentelemetry/api@1.9.0)
+  '@opentelemetry/exporter-trace-otlp-http':
+    specifier: ^0.208.0
+    version: 0.208.0(@opentelemetry/api@1.9.0)
+  '@opentelemetry/resources':
+    specifier: ^2.5.0
+    version: 2.5.0(@opentelemetry/api@1.9.0)
+  '@opentelemetry/sdk-metrics':
+    specifier: ^2.5.0
+    version: 2.5.0(@opentelemetry/api@1.9.0)
+  '@opentelemetry/sdk-node':
+    specifier: ^0.208.0
+    version: 0.208.0(@opentelemetry/api@1.9.0)
+  '@opentelemetry/semantic-conventions':
+    specifier: ^1.39.0
+    version: 1.39.0
+  '@playwright/test':
+    specifier: ^1.58.0
+    version: 1.58.0
+  '@types/js-yaml':
+    specifier: ^4.0.9
+    version: 4.0.9
+  '@types/node':
+    specifier: ^22.19.7
+    version: 22.19.7
+  '@types/react':
+    specifier: ^19.2.9
+    version: 19.2.9
+  '@types/react-dom':
+    specifier: ^19.2.3
+    version: 19.2.3(@types/react@19.2.9)
+  '@vitejs/plugin-react-swc':
+    specifier: ^4.2.2
+    version: 4.2.2(vite@5.4.21)
+  autoprefixer:
+    specifier: ^10.4.23
+    version: 10.4.23(postcss@8.5.6)
+  axe-playwright:
+    specifier: ^1.2.3
+    version: 1.2.3(playwright@1.58.0)
+  commander:
+    specifier: ^11.1.0
+    version: 11.1.0
+  depcheck:
+    specifier: ^1.4.7
+    version: 1.4.7
+  eslint:
+    specifier: ^9.39.2
+    version: 9.39.2
+  eslint-config-prettier:
+    specifier: ^10.1.8
+    version: 10.1.8(eslint@9.39.2)
+  eslint-plugin-import:
+    specifier: ^2.32.0
+    version: 2.32.0(@typescript-eslint/parser@8.54.0)(eslint@9.39.2)
+  eslint-plugin-jsx-a11y:
+    specifier: ^6.10.2
+    version: 6.10.2(eslint@9.39.2)
+  eslint-plugin-react:
+    specifier: ^7.37.5
+    version: 7.37.5(eslint@9.39.2)
+  eslint-plugin-react-hooks:
+    specifier: ^5.2.0
+    version: 5.2.0(eslint@9.39.2)
+  eslint-plugin-react-refresh:
+    specifier: ^0.4.26
+    version: 0.4.26(eslint@9.39.2)
+  eslint-plugin-unused-imports:
+    specifier: ^4.3.0
+    version: 4.3.0(eslint@9.39.2)
+  globals:
+    specifier: ^16.5.0
+    version: 16.5.0
+  husky:
+    specifier: ^8.0.3
+    version: 8.0.3
+  js-yaml:
+    specifier: ^4.1.1
+    version: 4.1.1
+  knip:
+    specifier: ^5.82.1
+    version: 5.82.1(@types/node@22.19.7)(typescript@5.9.3)
+  license-checker:
+    specifier: ^25.0.1
+    version: 25.0.1
+  lighthouse-ci:
+    specifier: ^1.13.1
+    version: 1.13.1
+  lint-staged:
+    specifier: ^15.5.2
+    version: 15.5.2
+  pa11y-ci:
+    specifier: ^4.0.1
+    version: 4.0.1(typescript@5.9.3)
+  patch-package:
+    specifier: ^8.0.1
+    version: 8.0.1
+  playwright:
+    specifier: ^1.58.0
+    version: 1.58.0
+  postcss:
+    specifier: ^8.5.6
+    version: 8.5.6
+  prettier:
+    specifier: ^3.8.1
+    version: 3.8.1
+  prettier-plugin-tailwindcss:
+    specifier: ^0.7.2
+    version: 0.7.2(prettier@3.8.1)
+  rollup-plugin-visualizer:
+    specifier: ^6.0.5
+    version: 6.0.5(rollup@2.79.2)
+  tailwindcss:
+    specifier: ^3.4.19
+    version: 3.4.19(tsx@4.21.0)
+  terser:
+    specifier: ^5.46.0
+    version: 5.46.0
+  ts-prune:
+    specifier: ^0.10.3
+    version: 0.10.3
+  tsx:
+    specifier: ^4.21.0
+    version: 4.21.0
+  turbo:
+    specifier: ^2.7.6
+    version: 2.7.6
+  typescript:
+    specifier: ^5.9.3
+    version: 5.9.3
+  typescript-eslint:
+    specifier: ^8.54.0
+    version: 8.54.0(eslint@9.39.2)(typescript@5.9.3)
+  vercel:
+    specifier: ^49.2.0
+    version: 49.2.0(rollup@2.79.2)(typescript@5.9.3)
+  vite-plugin-pwa:
+    specifier: ^0.17.5
+    version: 0.17.5(vite@5.4.21)(workbox-build@7.4.0)(workbox-window@7.4.0)
+  vitest:
+    specifier: ^2.1.9
+    version: 2.1.9(@types/node@22.19.7)(terser@5.46.0)
+  wait-on:
+    specifier: ^9.0.3
+    version: 9.0.3
 
 packages:
 
@@ -3008,109 +2985,6 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
-
-  /@octokit/auth-token@4.0.0:
-    resolution: {integrity: sha512-tY/msAuJo6ARbK6SPIxZrPBms3xPbfwBrulZe0Wtr/DIY9lje2HeV1uoebShn6mx7SjCHif6EjMvoREj+gZ+SA==}
-    engines: {node: '>= 18'}
-    dev: false
-
-  /@octokit/core@5.2.2:
-    resolution: {integrity: sha512-/g2d4sW9nUDJOMz3mabVQvOGhVa4e/BN/Um7yca9Bb2XTzPPnfTWHWQg+IsEYO7M3Vx+EXvaM/I2pJWIMun1bg==}
-    engines: {node: '>= 18'}
-    dependencies:
-      '@octokit/auth-token': 4.0.0
-      '@octokit/graphql': 7.1.1
-      '@octokit/request': 8.4.1
-      '@octokit/request-error': 5.1.1
-      '@octokit/types': 13.10.0
-      before-after-hook: 2.2.3
-      universal-user-agent: 6.0.1
-    dev: false
-
-  /@octokit/endpoint@9.0.6:
-    resolution: {integrity: sha512-H1fNTMA57HbkFESSt3Y9+FBICv+0jFceJFPWDePYlR/iMGrwM5ph+Dd4XRQs+8X+PUFURLQgX9ChPfhJ/1uNQw==}
-    engines: {node: '>= 18'}
-    dependencies:
-      '@octokit/types': 13.10.0
-      universal-user-agent: 6.0.1
-    dev: false
-
-  /@octokit/graphql@7.1.1:
-    resolution: {integrity: sha512-3mkDltSfcDUoa176nlGoA32RGjeWjl3K7F/BwHwRMJUW/IteSa4bnSV8p2ThNkcIcZU2umkZWxwETSSCJf2Q7g==}
-    engines: {node: '>= 18'}
-    dependencies:
-      '@octokit/request': 8.4.1
-      '@octokit/types': 13.10.0
-      universal-user-agent: 6.0.1
-    dev: false
-
-  /@octokit/openapi-types@24.2.0:
-    resolution: {integrity: sha512-9sIH3nSUttelJSXUrmGzl7QUBFul0/mB8HRYl3fOlgHbIWG+WnYDXU3v/2zMtAvuzZ/ed00Ei6on975FhBfzrg==}
-    dev: false
-
-  /@octokit/plugin-paginate-rest@11.4.4-cjs.2(@octokit/core@5.2.2):
-    resolution: {integrity: sha512-2dK6z8fhs8lla5PaOTgqfCGBxgAv/le+EhPs27KklPhm1bKObpu6lXzwfUEQ16ajXzqNrKMujsFyo9K2eaoISw==}
-    engines: {node: '>= 18'}
-    peerDependencies:
-      '@octokit/core': '5'
-    dependencies:
-      '@octokit/core': 5.2.2
-      '@octokit/types': 13.10.0
-    dev: false
-
-  /@octokit/plugin-request-log@4.0.1(@octokit/core@5.2.2):
-    resolution: {integrity: sha512-GihNqNpGHorUrO7Qa9JbAl0dbLnqJVrV8OXe2Zm5/Y4wFkZQDfTreBzVmiRfJVfE4mClXdihHnbpyyO9FSX4HA==}
-    engines: {node: '>= 18'}
-    peerDependencies:
-      '@octokit/core': '5'
-    dependencies:
-      '@octokit/core': 5.2.2
-    dev: false
-
-  /@octokit/plugin-rest-endpoint-methods@13.3.2-cjs.1(@octokit/core@5.2.2):
-    resolution: {integrity: sha512-VUjIjOOvF2oELQmiFpWA1aOPdawpyaCUqcEBc/UOUnj3Xp6DJGrJ1+bjUIIDzdHjnFNO6q57ODMfdEZnoBkCwQ==}
-    engines: {node: '>= 18'}
-    peerDependencies:
-      '@octokit/core': ^5
-    dependencies:
-      '@octokit/core': 5.2.2
-      '@octokit/types': 13.10.0
-    dev: false
-
-  /@octokit/request-error@5.1.1:
-    resolution: {integrity: sha512-v9iyEQJH6ZntoENr9/yXxjuezh4My67CBSu9r6Ve/05Iu5gNgnisNWOsoJHTP6k0Rr0+HQIpnH+kyammu90q/g==}
-    engines: {node: '>= 18'}
-    dependencies:
-      '@octokit/types': 13.10.0
-      deprecation: 2.3.1
-      once: 1.4.0
-    dev: false
-
-  /@octokit/request@8.4.1:
-    resolution: {integrity: sha512-qnB2+SY3hkCmBxZsR/MPCybNmbJe4KAlfWErXq+rBKkQJlbjdJeS85VI9r8UqeLYLvnAenU8Q1okM/0MBsAGXw==}
-    engines: {node: '>= 18'}
-    dependencies:
-      '@octokit/endpoint': 9.0.6
-      '@octokit/request-error': 5.1.1
-      '@octokit/types': 13.10.0
-      universal-user-agent: 6.0.1
-    dev: false
-
-  /@octokit/rest@20.1.2:
-    resolution: {integrity: sha512-GmYiltypkHHtihFwPRxlaorG5R9VAHuk/vbszVoRTGXnAsY60wYLkh/E2XiFmdZmqrisw+9FaazS1i5SbdWYgA==}
-    engines: {node: '>= 18'}
-    dependencies:
-      '@octokit/core': 5.2.2
-      '@octokit/plugin-paginate-rest': 11.4.4-cjs.2(@octokit/core@5.2.2)
-      '@octokit/plugin-request-log': 4.0.1(@octokit/core@5.2.2)
-      '@octokit/plugin-rest-endpoint-methods': 13.3.2-cjs.1(@octokit/core@5.2.2)
-    dev: false
-
-  /@octokit/types@13.10.0:
-    resolution: {integrity: sha512-ifLaO34EbbPj0Xgro4G5lP5asESjwHracYJvVaPIyXMuiuXLlhic3S47cBdTb+jfODkTE5YtGCLt3Ay3+J97sA==}
-    dependencies:
-      '@octokit/openapi-types': 24.2.0
-    dev: false
 
   /@opentelemetry/api-logs@0.208.0:
     resolution: {integrity: sha512-CjruKY9V6NMssL/T1kAFgzosF1v9o6oeN+aX5JB/C/xPNtmgIJqcXHG7fA82Ou1zCpWGl4lROQUKwUNE1pMCyg==}
@@ -7349,17 +7223,6 @@ packages:
       undici: 7.19.2
     dev: true
 
-  /@vercel/blob@2.0.1:
-    resolution: {integrity: sha512-DeJmC/B5oH1ExazYh/UvjbN6Mg0q0wlDz29GPIPNhi4COjVzqYRkyPYjOcAZd+RgXVzWqGXholZWtGcLCPuL8A==}
-    engines: {node: '>=20.0.0'}
-    dependencies:
-      async-retry: 1.3.3
-      is-buffer: 2.0.5
-      is-node-process: 1.2.0
-      throttleit: 2.1.0
-      undici: 7.19.2
-    dev: false
-
   /@vercel/build-utils@13.2.3:
     resolution: {integrity: sha512-SmXSNXfRh7E3wKR50IV3bGHw9iE5bw6D08LYvJdkQv1SjUgYVuIf2P5ceUPjzA2dqrKol0dxMvYb28dNHxmj5w==}
     dev: true
@@ -7381,27 +7244,6 @@ packages:
     resolution: {integrity: sha512-AIPgNkmtFcDgPCl+xvTT1ga90OL7OTX2RKM4zu0PMpwBthPfN2DpdHy10n3bh8K+CA22GDU0/ncjzprZsrk0sw==}
     engines: {node: '>=14'}
     dev: true
-
-  /@vercel/edge-config-fs@0.1.0:
-    resolution: {integrity: sha512-NRIBwfcS0bUoUbRWlNGetqjvLSwgYH/BqKqDN7vK1g32p7dN96k0712COgaz6VFizAm9b0g6IG6hR6+hc0KCPg==}
-    dev: false
-
-  /@vercel/edge-config@1.4.3(@opentelemetry/api@1.9.0)(next@15.5.12):
-    resolution: {integrity: sha512-8vTDATodRrH49wMzKEjZ8/5H2qs1aPkD0uRK585f/Fx4YN2wfHfY/3td9OFrh+gdnCq07z8A5f0hoY6xhBcPkg==}
-    engines: {node: '>=14.6'}
-    peerDependencies:
-      '@opentelemetry/api': ^1.7.0
-      next: '>=1'
-    peerDependenciesMeta:
-      '@opentelemetry/api':
-        optional: true
-      next:
-        optional: true
-    dependencies:
-      '@opentelemetry/api': 1.9.0
-      '@vercel/edge-config-fs': 0.1.0
-      next: 15.5.12(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.0)(react-dom@19.2.4)(react@19.2.4)
-    dev: false
 
   /@vercel/elysia@0.1.13(rollup@2.79.2):
     resolution: {integrity: sha512-rNmS4Pfg1ku38GNx9vW9lItL1Zkzoyd0aN2wjy1iXqbM2ElKzOWAa2nwqqWpXMwU5552paWdvl+JQ94M5Wyibw==}
@@ -8224,6 +8066,7 @@ packages:
     resolution: {integrity: sha512-wfr/jstw9xNi/0teMHrRW7dsz3Lt5ARhYNZ2ewpadnhaIp5mbALhOAP+EAdsC7t4Z6wqsDVv9+W6gm1Dk9mEyw==}
     dependencies:
       retry: 0.13.1
+    dev: true
 
   /async-sema@3.1.1:
     resolution: {integrity: sha512-tLRNUXati5MFePdAk8dw7Qt7DpxPB60ofAgn8WRhW6a2rcimZnYBP9oxHiv0OHy+Wz7kPMG+t4LGdt31+4EmGg==}
@@ -8460,10 +8303,6 @@ packages:
     resolution: {integrity: sha512-4Bcg1P8xhUuqcii/S0Z9wiHIrQVPMermM1any+MX5GeGD7faD3/msQUDGLol9wOcz4/jbg/WJnGqoJF6LiBdtg==}
     engines: {node: '>=10.0.0'}
     dev: true
-
-  /before-after-hook@2.2.3:
-    resolution: {integrity: sha512-NzUnlZexiaH/46WDhANlyR2bXRopNg4F/zuSA3OpZnllCUgRaOF2znDioDWrmbNVsuZk6l9pMquQB38cfBZwkQ==}
-    dev: false
 
   /bfj@9.1.2:
     resolution: {integrity: sha512-EetpSUewwznXQ7yRtxHCgE5RLZV718n9cOYXe5BlhYKuNs0UkidHaUOe6Jlgbf+viGTQeg8mYhm5Wr4c2AB3gA==}
@@ -8705,10 +8544,6 @@ packages:
 
   /caniuse-lite@1.0.30001766:
     resolution: {integrity: sha512-4C0lfJ0/YPjJQHagaE9x2Elb69CIqEPZeG0anQt9SIvIoOH4a4uaRl73IavyO+0qZh6MDLH//DrXThEYKHkmYA==}
-
-  /canvas-confetti@1.9.4:
-    resolution: {integrity: sha512-yxQbJkAVrFXWNbTUjPqjF7G+g6pDotOUHGbkZq2NELZUMDpiJ85rIEazVb8GTaAptNW2miJAXbs1BtioA251Pw==}
-    dev: false
 
   /chai@5.3.3:
     resolution: {integrity: sha512-4zNhdJD/iOjSH0A05ea+Ke6MU5mmpQcbQsSOkgdaUMJ9zTlDTD/GYlwohmIE2u0gaxHYiVHEn1Fw9mZ/ktJWgw==}
@@ -9585,10 +9420,6 @@ packages:
     resolution: {integrity: sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==}
     engines: {node: '>= 0.8'}
     dev: true
-
-  /deprecation@2.3.1:
-    resolution: {integrity: sha512-xmHIy4F3scKVwMsQ4WnVaS8bHOx0DmVwRywosKhaILI0ywMDWPtBSku2HNxRvF7jtwDRsoEwYQSfbxj8b7RlJQ==}
-    dev: false
 
   /deps-regex@0.2.0:
     resolution: {integrity: sha512-PwuBojGMQAYbWkMXOY9Pd/NWCDNHVH12pnS7WHqZkTSeMESe4hwnKKRp0yR87g37113x4JPbo/oIvXY+s/f56Q==}
@@ -11443,10 +11274,6 @@ packages:
       safer-buffer: 2.1.2
     dev: true
 
-  /idb-keyval@6.2.2:
-    resolution: {integrity: sha512-yjD9nARJ/jb1g+CvD0tlhUHOrJ9Sy0P8T9MF3YaLlHnSRpwPfpTX0XIvpmw3gAJUmEu3FiICLBDPXVwyEvrleg==}
-    dev: false
-
   /idb@7.1.1:
     resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
     dev: true
@@ -11664,6 +11491,7 @@ packages:
   /is-buffer@2.0.5:
     resolution: {integrity: sha512-i2R6zNFDwgEHJyQUtJEk0XFi1i0dPFn/oqjK3/vPCcDeJvW5NQ83V8QbicfF1SupOaB0h8ntgBC2YiE7dfyctQ==}
     engines: {node: '>=4'}
+    dev: true
 
   /is-callable@1.2.7:
     resolution: {integrity: sha512-1BC0BVFhS/p0qtw6enp8e+8OD0UrK0oFLztSjNzhcKA3WDuJxxAPXzPuPtKkjEY9UUoEWlX/8fgKeu2S8i9JTA==}
@@ -11793,6 +11621,7 @@ packages:
 
   /is-node-process@1.2.0:
     resolution: {integrity: sha512-Vg4o6/fqPxIjtxgUH5QLJhwZ7gW5diGCVlXpuUfELC62CuxM1iHcRe51f2W1FDy04Ai4KJkagKjx3XaqyfRKXw==}
+    dev: true
 
   /is-npm@4.0.0:
     resolution: {integrity: sha512-96ECIfh9xtDDlPylNPXhzjsykHsMJZ18ASpaWzQyBr4YRTcVjUvzaHayDAES2oU/3KpljhHUjtSRNiDwi0F0ig==}
@@ -12045,10 +11874,6 @@ packages:
       '@hapi/tlds': 1.1.4
       '@hapi/topo': 6.0.2
       '@standard-schema/spec': 1.1.0
-    dev: true
-
-  /jose@5.10.0:
-    resolution: {integrity: sha512-s+3Al/p9g32Iq+oqXxkW//7jk2Vig6FF1CFqzVXoTUXt2qz89YWbL+OwS17NFYEvxC35n0FKeGO2LGYSxeM2Gg==}
     dev: true
 
   /jose@5.9.6:
@@ -13280,6 +13105,7 @@ packages:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
     dependencies:
       wrappy: 1.0.2
+    dev: true
 
   /onetime@2.0.1:
     resolution: {integrity: sha512-oyyPpiMaKARvvcgip+JV+7zci5L8D1W9RZIz2l1o08AM3pfspitVWnPt3mzHcBPp12oYMTy0pqrFs/C+m3EwsQ==}
@@ -14765,6 +14591,7 @@ packages:
   /retry@0.13.1:
     resolution: {integrity: sha512-XQBQ3I8W1Cge0Seh+6gjj03LbmRFWuoszgK9ooCpwYIrhhoO80pfq4cUkU5DkknwfOfFteRwlZ56PYOGYyFWdg==}
     engines: {node: '>= 4'}
+    dev: true
 
   /reusify@1.1.0:
     resolution: {integrity: sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==}
@@ -15048,10 +14875,6 @@ packages:
       send: 0.19.2
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /server-only@0.0.1:
-    resolution: {integrity: sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==}
     dev: true
 
   /set-blocking@2.0.0:
@@ -15833,6 +15656,7 @@ packages:
   /throttleit@2.1.0:
     resolution: {integrity: sha512-nt6AMGKW1p/70DF/hGBdJB57B8Tspmbp5gfJ8ilhLnt7kkr2ye7hzD6NVG8GGErk2HWF34igrL2CXmNIkzKqKw==}
     engines: {node: '>=18'}
+    dev: true
 
   /through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
@@ -16309,6 +16133,7 @@ packages:
   /undici@7.19.2:
     resolution: {integrity: sha512-4VQSpGEGsWzk0VYxyB/wVX/Q7qf9t5znLRgs0dzszr9w9Fej/8RVNQ+S20vdXSAyra/bJ7ZQfGv6ZMj7UEbzSg==}
     engines: {node: '>=20.18.1'}
+    dev: true
 
   /unicode-canonical-property-names-ecmascript@2.0.1:
     resolution: {integrity: sha512-dA8WbNeb2a6oQzAQ55YlT5vQAWGV9WXOsi3SskE3bcCdM0P4SDd+24zS/OCacdRq5BkdsRj9q3Pg6YyQoxIGqg==}
@@ -16346,10 +16171,6 @@ packages:
     dependencies:
       crypto-random-string: 2.0.0
     dev: true
-
-  /universal-user-agent@6.0.1:
-    resolution: {integrity: sha512-yCzhz6FN2wU1NiiQRogkTQszlQSlpWaw8SvVegAc+bDxbzHgh1vX8uIe8OYyMH6DwH+sdTJsgMl36+mSMdRJIQ==}
-    dev: false
 
   /universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
@@ -17135,6 +16956,7 @@ packages:
 
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
+    dev: true
 
   /write-file-atomic@3.0.3:
     resolution: {integrity: sha512-AvHcyZ5JnSfq3ioSyjrBkH9yW4m7Ayk8/9My/DD9onKeu/94fwrMocemO2QAJFAlnnDN+ZDS+ZjAR5ua1/PV/Q==}

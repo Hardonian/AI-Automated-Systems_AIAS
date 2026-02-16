@@ -1,0 +1,12 @@
+ΓÇëWARNΓÇë Unsupported engine: wanted: {"node":">=22.0.0"} (current: {"node":"v20.11.0","pnpm":"8.15.9"})
+
+> aias-platform@1.1.0 lint C:\Users\scott\Documents\GitHub\AI-Automated-Systems_AIAS
+> eslint . --ignore-pattern out --ignore-pattern .next
+
+
+C:\Users\scott\Documents\GitHub\AI-Automated-Systems_AIAS\components\ui\button.tsx
+  177:32  error  React Hook "useSafeReducedMotion" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+
+Γ£û 1 problem (1 error, 0 warnings)
+
+ΓÇëELIFECYCLEΓÇë Command failed with exit code 1.

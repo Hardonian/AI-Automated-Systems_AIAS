@@ -1,7 +1,8 @@
 import './globals.css';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import type { Metadata } from 'next';
+import Script from 'next/script';
+import type { Metadata, Viewport } from 'next';
 import { ReactNode } from 'react';
 
 import { Footer } from '@/components/layout/footer';
@@ -53,6 +54,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'AI Automated Systems', url: siteUrl }],
   creator: 'AI Automated Systems',
   publisher: 'AI Automated Systems',
+  applicationName: 'AI Automated Systems',
   category: 'Technology',
   classification: 'Business Software',
   icons: [
@@ -142,36 +144,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link href='https://fonts.googleapis.com' rel='dns-prefetch' />
         <link href='https://fonts.gstatic.com' rel='dns-prefetch' />
         <link href='/manifest.json' rel='manifest' />
-        <meta content='#3b82f6' name='theme-color' />
-        <meta content='yes' name='apple-mobile-web-app-capable' />
-        <meta content='default' name='apple-mobile-web-app-status-bar-style' />
-        <meta
-          content='AI Automated Systems'
-          name='apple-mobile-web-app-title'
-        />
 
-        <meta
-          content='width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover'
-          name='viewport'
-        />
-        <meta content='telephone=no' name='format-detection' />
-        <meta content='yes' name='mobile-web-app-capable' />
-        <meta content='AI Automated Systems' name='application-name' />
 
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js').catch(function(err) {
-                    console.warn('Service Worker registration failed:', err);
-                  });
-                });
-              }
-            `,
-          }}
-          id='service-worker-registration'
-        />
+
 
         <OrganizationSchema />
         <WebSiteSchema />
@@ -192,6 +167,20 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <Analytics />
             <SpeedInsights />
             <Toaster />
+            <Script
+              dangerouslySetInnerHTML={{
+                __html: `
+              if('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                    console.warn('Service Worker registration failed:', err);
+                  });
+                });
+              }
+            `,
+              }}
+              id='service-worker-registration'
+            />
           </ThemeProvider>
         </EnhancedErrorBoundary>
       </body>

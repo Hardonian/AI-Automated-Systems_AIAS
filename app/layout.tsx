@@ -22,6 +22,14 @@ const siteUrl = env.app.siteUrl || 'https://aiautomatedsystems.ca';
 // Static-safe OG image configuration
 const ogImageUrl = `${siteUrl}/og-image.svg`;
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: 'cover',
+  themeColor: '#3b82f6',
+};
+
 export const metadata: Metadata = {
   ...generateSEOMetadata({
     title: 'AI Automated Systems | Agentic Automation Consultancy',
@@ -105,10 +113,16 @@ export const metadata: Metadata = {
     yandex: getOptionalEnv('NEXT_PUBLIC_YANDEX_VERIFICATION'),
     yahoo: getOptionalEnv('NEXT_PUBLIC_YAHOO_VERIFICATION'),
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'AI Automated Systems',
+  },
+  formatDetection: {
+    telephone: false,
+  },
   other: {
     'mobile-web-app-capable': 'yes',
-    'apple-mobile-web-app-capable': 'yes',
-    'apple-mobile-web-app-status-bar-style': 'default',
   },
 };
 

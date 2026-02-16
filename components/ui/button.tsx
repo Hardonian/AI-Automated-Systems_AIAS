@@ -129,15 +129,18 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
 
     if (asChild) {
-      return (
-        <Slot
-          ref={ref}
-          className={cn(buttonVariants({ variant, size }), className)}
-          {...props}
-        >
-          {buttonContent}
-        </Slot>
-      );
+      const child = React.Children.only(children);
+      if (React.isValidElement(child)) {
+        return (
+          <Slot
+            ref={ref}
+            className={cn(buttonVariants({ variant, size }), className)}
+            {...props}
+          >
+            {React.cloneElement(child, undefined, buttonContent)}
+          </Slot>
+        );
+      }
     }
 
     // Type-safe props for motion.button

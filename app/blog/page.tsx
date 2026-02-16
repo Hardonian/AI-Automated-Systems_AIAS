@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { getLatestArticles, getFeaturedArticles } from '@/lib/blog/articles';
+import { formatDateConsistent } from '@/lib/utils';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = {
@@ -87,14 +88,7 @@ export default function BlogPage() {
                 <CardContent>
                   <div className='flex items-center justify-between'>
                     <time className='text-xs text-muted-foreground'>
-                      {new Date(article.publishedDate).toLocaleDateString(
-                        'en-CA',
-                        {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        }
-                      )}
+                      {formatDateConsistent(article.publishedDate)}
                     </time>
                     <Link
                       className='text-sm font-medium text-primary hover:underline'

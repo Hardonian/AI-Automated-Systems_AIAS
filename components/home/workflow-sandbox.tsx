@@ -1,6 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+'use client';
+
+import { useMemo, useState, useEffect } from 'react';
 import { CheckCircle2, Copy, Download } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -35,8 +37,12 @@ export function WorkflowSandbox() {
   const [values, setValues] = useState<Record<string, string>>(initialState);
   const [submitted, setSubmitted] = useState(false);
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
+  const [timestamp, setTimestamp] = useState('');
 
-  const timestamp = useMemo(() => new Date().toISOString(), []);
+  // Generate timestamp on client only to avoid hydration mismatch
+  useEffect(() => {
+    setTimestamp(new Date().toISOString());
+  }, []);
 
   const normalizedValues = useMemo(
     () => ({

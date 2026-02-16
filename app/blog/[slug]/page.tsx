@@ -16,6 +16,7 @@ import {
   getLatestArticles,
   type BlogArticle,
 } from '@/lib/blog/articles';
+import { formatDateConsistent } from '@/lib/utils';
 import { sanitizeHTMLServer } from '@/lib/utils/sanitize-html';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
@@ -95,11 +96,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
             <span>By {article.author}</span>
             <span>•</span>
             <time dateTime={article.publishedDate}>
-              {new Date(article.publishedDate).toLocaleDateString('en-CA', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
+              {formatDateConsistent(article.publishedDate)}
             </time>
           </div>
         </header>

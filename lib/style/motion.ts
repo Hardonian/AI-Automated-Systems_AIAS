@@ -1,3 +1,7 @@
+'use client';
+
+import * as React from 'react';
+
 export const motionTransitions = {
     default: { duration: 0.2, ease: 'easeInOut' },
     spring: { type: 'spring', stiffness: 300, damping: 20 },
@@ -25,4 +29,18 @@ export const motionVariants = {
 export const prefersReducedMotion = () => {
     if (typeof window === 'undefined') return false;
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+};
+
+// Hook for safe SSR: always renders without motion on initial pass,
+// then updates to user preference after hydration on client
+export const useSafeReducedMotion = () => {
+    const [prefersReduced, setPrefersReduced] = React.useState(false);
+
+    React.useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setPrefersReduced(prefersReducedMotion());
+        }
+    }, []);
+
+    return prefersReduced;
 };

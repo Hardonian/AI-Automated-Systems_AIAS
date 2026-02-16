@@ -1,5 +1,7 @@
 'use client';
 
+'use client';
+
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { motion, type HTMLMotionProps } from 'framer-motion';
@@ -9,7 +11,7 @@ import * as React from 'react';
 import {
   motionTransitions,
   motionScale,
-  prefersReducedMotion,
+  useSafeReducedMotion,
 } from '@/lib/style/motion';
 import { cn } from '@/lib/utils';
 
@@ -171,10 +173,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       | 'aria-label'
     >;
 
-    // Safe SSR: prefersReducedMotion returns false during SSR/build
-    // This ensures motion props are consistent between server and client
-    const shouldReduceMotion =
-      typeof window !== 'undefined' && prefersReducedMotion();
+    // Safe SSR: use hook to defer motion preference check to after hydration
+    const shouldReduceMotion = useSafeReducedMotion();
     const motionProps: Partial<
       Pick<SafeMotionButtonProps, 'whileHover' | 'whileTap' | 'transition'>
     > = shouldReduceMotion

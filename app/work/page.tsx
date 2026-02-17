@@ -30,6 +30,7 @@ export default function WorkPage() {
                 alt={`${study.client} case study thumbnail`}
                 className='h-auto w-full border-b object-cover'
                 height={630}
+                sizes='(max-width: 768px) 100vw, 1200px'
                 src={study.thumbnailSrc}
                 width={1200}
               />

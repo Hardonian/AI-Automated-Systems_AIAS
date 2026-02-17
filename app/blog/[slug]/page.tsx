@@ -16,6 +16,7 @@ import {
   getLatestArticles,
   type BlogArticle,
 } from '@/lib/blog/articles';
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { sanitizeHTMLServer } from '@/lib/utils/sanitize-html';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
@@ -32,16 +33,19 @@ export async function generateMetadata({
   const article = getArticleBySlug(slug);
 
   if (!article) {
-    return {
-      title: 'Article Not Found',
-    };
+    return generateSEOMetadata({
+      title: 'Article Not Found | AI Automated Systems',
+      description: 'The requested article could not be found.',
+      canonical: '/blog',
+    });
   }
 
-  return {
+  return generateSEOMetadata({
     title: `${article.title} | AIAS Platform Blog`,
     description: article.excerpt,
+    canonical: `/blog/${article.slug}`,
     keywords: article.seoKeywords || article.tags,
-  };
+  });
 }
 
 export async function generateStaticParams() {

@@ -15,14 +15,11 @@ import {
 import { ThemeProvider } from '@/components/theme-provider';
 
 import { Toaster } from '@/components/ui/toaster';
-import { env, getOptionalEnv } from '@/lib/env';
+import { getOptionalEnv } from '@/lib/env';
 import { EnhancedErrorBoundary } from '@/lib/error-handling/error-boundary-enhanced';
-import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
+import { generateMetadata as generateSEOMetadata, SITE_URL } from '@/lib/seo/metadata';
 
-const siteUrl = env.app.siteUrl || 'https://aiautomatedsystems.ca';
-
-// Static-safe OG image configuration
-const ogImageUrl = `${siteUrl}/og-image.svg`;
+const ogImageUrl = `${SITE_URL}/og-image.svg`;
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -52,7 +49,7 @@ export const metadata: Metadata = {
       'governance and guardrails',
     ],
   }),
-  authors: [{ name: 'AI Automated Systems', url: siteUrl }],
+  authors: [{ name: 'AI Automated Systems', url: SITE_URL }],
   creator: 'AI Automated Systems',
   publisher: 'AI Automated Systems',
   applicationName: 'AI Automated Systems',
@@ -62,7 +59,7 @@ export const metadata: Metadata = {
     { rel: 'icon', url: '/favicon.ico' },
   ],
   manifest: '/manifest.json',
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: '/',
     languages: {
@@ -75,7 +72,7 @@ export const metadata: Metadata = {
     description:
       'We help organizations design, deploy, and operate reliable agentic automations while training teams to run them safely and productively.',
     type: 'website',
-    url: siteUrl,
+    url: SITE_URL,
     siteName: 'AI Automated Systems',
     locale: 'en_US',
     alternateLocale: ['en_CA'],

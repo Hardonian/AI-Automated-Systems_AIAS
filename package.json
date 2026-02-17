@@ -73,7 +73,7 @@
     "lint": "eslint . --ignore-pattern out --ignore-pattern .next",
     "typecheck": "tsc --noEmit",
     "test:e2e": "pnpm exec playwright install chromium && playwright test tests/e2e/smoke.spec.ts tests/e2e/landing-smoke.spec.ts tests/e2e/link-crawl.spec.ts tests/e2e/case-studies-attribution.spec.ts --project=chromium",
-    "verify": "pnpm lint && pnpm typecheck && pnpm build && pnpm pricing-language-check",
+    "verify": "pnpm lint && pnpm typecheck && pnpm build && pnpm check:links && pnpm check:route-metadata && pnpm pricing-language-check",
     "vercel-build": "pnpm doctor && pnpm verify",
     "build:analyze": "ANALYZE=true vite build",
     "preview": "next start",
@@ -86,7 +86,8 @@
     "audit:ci": "pnpm audit --prod --audit-level=high",
     "pricing-language-check": "pnpm exec tsx scripts/check-pricing-language.ts",
     "check:links": "pnpm exec tsx scripts/check-internal-links.ts",
-    "ci:lighthouse": "pnpm exec lhci autorun --config=./lighthouserc.json"
+    "ci:lighthouse": "pnpm exec lhci autorun --config=./lighthouserc.json",
+    "check:route-metadata": "pnpm exec tsx scripts/check-route-metadata.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",

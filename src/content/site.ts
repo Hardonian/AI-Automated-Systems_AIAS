@@ -194,6 +194,7 @@ const rawSiteContent: SiteConfig = {
     resources: [
       { label: 'About', href: '/about' },
       { label: 'Insights', href: '/blog' },
+      { label: 'FAQ', href: '/#faq' },
       { label: 'Dashboard', href: '/dashboard' },
     ],
   },

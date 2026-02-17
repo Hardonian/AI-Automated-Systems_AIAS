@@ -1,12 +1,15 @@
 import type { Metadata } from 'next';
 
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
+
 import { siteContent } from '@/src/content/site';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEOMetadata({
   title: 'Privacy Policy | AI Automated Systems',
   description:
     'Learn how AI Automated Systems collects, uses, and safeguards data for consulting engagements and website visitors.',
-};
+  canonical: '/privacy',
+});
 
 export default function PrivacyPage() {
   const { privacy } = siteContent.legal;

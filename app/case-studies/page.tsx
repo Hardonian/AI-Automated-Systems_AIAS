@@ -1,14 +1,19 @@
 import type { Metadata } from 'next';
+
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { CaseStudyTemplate } from '@/components/content/case-study-template';
+import { FAQSection } from '@/components/content/faq-section';
 import { siteContent } from '@/src/content/site';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEOMetadata({
   title: 'Case Studies | AI Automated Systems',
   description:
     'Review measurable outcomes from AIAS automation engagements across operations and support workflows.',
-};
+  canonical: '/case-studies',
+});
 
 export default function CaseStudiesPage() {
   return (
@@ -31,8 +36,7 @@ export default function CaseStudiesPage() {
               width={1200}
             />
             <div className='p-6'>
-              <div className='flex flex-wrap items-center justify-between gap-4'>
-                <h2 className='text-2xl font-semibold'>{study.title}</h2>
+              <div className='mb-4 flex justify-end'>
                 <Image
                   alt={`${study.client} logo`}
                   className='h-10 w-auto'
@@ -41,16 +45,14 @@ export default function CaseStudiesPage() {
                   width={150}
                 />
               </div>
-              <p className='mt-2 text-sm text-muted-foreground'>Client: {study.client}</p>
-              <p className='mt-4 text-muted-foreground'>{study.challenge}</p>
-              <p className='mt-2'>{study.solution}</p>
-              <ul className='mt-4 flex flex-wrap gap-2'>
-                {study.results.map(result => (
-                  <li key={result} className='rounded-full border px-3 py-1 text-sm'>
-                    {result}
-                  </li>
-                ))}
-              </ul>
+              <CaseStudyTemplate
+                anonymized={study.client.toLowerCase().includes('organization')}
+                challenge={study.challenge}
+                clientLabel={study.client}
+                results={study.results}
+                solution={study.solution}
+                title={study.title}
+              />
               <Link
                 className='mt-4 inline-block font-semibold text-primary underline'
                 href={study.projectUrl}
@@ -63,6 +65,11 @@ export default function CaseStudiesPage() {
           </article>
         ))}
       </div>
+      <FAQSection
+        entries={siteContent.faq.slice(0, 3)}
+        subtitle='Common questions about our delivery model and case-study documentation approach.'
+        title='Case study FAQs'
+      />
     </section>
   );
 }

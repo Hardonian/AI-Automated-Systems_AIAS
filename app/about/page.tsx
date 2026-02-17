@@ -1,14 +1,17 @@
 import type { Metadata } from 'next';
+
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { MapPin, Award, Users, ArrowRight } from 'lucide-react';
 
 import { FeatureIllustration } from '@/components/visual/FeatureIllustration';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEOMetadata({
   title: 'About | AI Automated Systems',
   description:
     'Learn about AIAS - a Canadian consultancy building enterprise-grade agentic automation systems.',
-};
+  canonical: '/about',
+});
 
 export default function AboutPage() {
   return (

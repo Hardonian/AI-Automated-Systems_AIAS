@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { ArrowRight, Check, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
@@ -10,11 +12,12 @@ import {
 } from '@/lib/design-tokens';
 import { getPrimaryCtaHref } from '@/src/content/site';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEOMetadata({
   title: 'Pricing | AI Automated Systems',
   description:
     'Flexible AIAS engagement models including workflow builds, strategic retainers, managed delivery, and team enablement.',
-};
+  canonical: '/pricing',
+});
 
 type EngagementPath = {
   name: string;

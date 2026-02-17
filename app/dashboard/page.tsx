@@ -1,12 +1,15 @@
 import type { Metadata } from 'next';
+
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import Link from 'next/link';
 
 import { getPrimaryCtaHref } from '@/src/content/site';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEOMetadata({
   title: 'Dashboard | AI Automated Systems',
   description: 'Protected workspace entry for client and team operations.',
-};
+  canonical: '/dashboard',
+});
 
 export default function DashboardPage() {
   return (

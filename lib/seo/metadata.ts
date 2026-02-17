@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
-const DEFAULT_SITE_URL = 'https://aiautomatedsystems.ca';
-const DEFAULT_OG_IMAGE = `${DEFAULT_SITE_URL}/og-image.svg`;
+export const SITE_URL = 'https://aiautomatedsystems.ca';
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.svg`;
 
 interface MetadataConfig {
   title: string;
@@ -15,7 +15,7 @@ const toAbsoluteUrl = (canonical: string) => {
     return canonical;
   }
 
-  return `${DEFAULT_SITE_URL}${canonical.startsWith('/') ? canonical : `/${canonical}`}`;
+  return `${SITE_URL}${canonical.startsWith('/') ? canonical : `/${canonical}`}`;
 };
 
 export function generateMetadata(config: MetadataConfig): Metadata {
@@ -23,6 +23,7 @@ export function generateMetadata(config: MetadataConfig): Metadata {
   const canonicalUrl = toAbsoluteUrl(canonical);
 
   const metadata: Metadata = {
+    metadataBase: new URL(SITE_URL),
     title: config.title,
     description: config.description,
     alternates: {

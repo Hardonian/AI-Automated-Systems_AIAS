@@ -40,8 +40,8 @@ export function Footer() {
                 </Link>
               </Button>
               <Button asChild variant='outline' className='w-full'>
-                <Link href={`mailto:${siteContent.contact.email}`}>
-                  Email Us
+                <Link href='/contact'>
+                  Request Proposal
                   <ArrowRight className='ml-2 h-4 w-4' />
                 </Link>
               </Button>

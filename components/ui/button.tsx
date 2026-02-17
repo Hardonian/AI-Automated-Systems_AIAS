@@ -1,7 +1,5 @@
 'use client';
 
-'use client';
-
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { motion, type HTMLMotionProps } from 'framer-motion';
@@ -134,14 +132,20 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     if (asChild) {
       const child = React.Children.only(children);
-      if (React.isValidElement(child)) {
+
+      const resolvedChild =
+        React.isValidElement<{ children?: React.ReactNode }>(child) && child.type === React.Fragment
+          ? React.Children.toArray(child.props.children)[0]
+          : child;
+
+      if (React.isValidElement(resolvedChild)) {
         return (
           <Slot
             ref={ref}
             className={cn(buttonVariants({ variant, size }), className)}
             {...props}
           >
-            {React.cloneElement(child, undefined, buttonContent)}
+            {React.cloneElement(resolvedChild, undefined, buttonContent)}
           </Slot>
         );
       }

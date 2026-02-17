@@ -138,8 +138,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           href='https://fonts.gstatic.com'
           rel='preconnect'
         />
-        <link href='https://fonts.googleapis.com' rel='dns-prefetch' />
-        <link href='https://fonts.gstatic.com' rel='dns-prefetch' />
         <link href='/manifest.json' rel='manifest' />
 
 

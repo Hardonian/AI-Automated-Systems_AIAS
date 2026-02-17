@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import nextPlugin from '@next/eslint-plugin-next';
 import globals from 'globals';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -45,6 +46,7 @@ export default tseslint.config(
       },
     },
     plugins: {
+      '@next/next': nextPlugin,
       react: react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
@@ -53,6 +55,8 @@ export default tseslint.config(
       'unused-imports': unusedImports,
     },
     rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs['core-web-vitals'].rules,
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [

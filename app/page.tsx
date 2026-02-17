@@ -1,3 +1,5 @@
+import dynamic from 'next/dynamic';
+
 import { ContentDrivenFAQ } from '@/components/content/ContentDrivenFAQ';
 import { HowWeWorkSection } from '@/components/content/how-we-work-section';
 import { OutcomesPatternSection } from '@/components/content/outcomes-pattern-section';
@@ -11,7 +13,6 @@ import { ConversionCTA } from '@/components/home/conversion-cta';
 import { TrustBadges } from '@/components/home/trust-badges';
 import { Testimonials } from '@/components/home/testimonials';
 import { SecretSauceSection } from '@/components/home/secret-sauce-section';
-import { WorkflowSandbox } from '@/components/home/workflow-sandbox';
 import { HeroIllustration } from '@/components/visual/HeroIllustration';
 import { TrustBadgeStrip } from '@/components/visual/TrustBadgeStrip';
 
@@ -19,6 +20,10 @@ import { FAQSchema } from '@/components/seo/structured-data';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
 import { getPrimaryCtaHref, siteContent, SiteConfig } from '@/src/content/site';
+
+const WorkflowSandbox = dynamic(
+  () => import('@/components/home/workflow-sandbox').then(module => module.WorkflowSandbox)
+);
 
 export const metadata = {
   ...generateSEOMetadata({

@@ -8,6 +8,8 @@ interface FeatureIllustrationProps {
 }
 
 export function FeatureIllustration({ type, className = '' }: FeatureIllustrationProps) {
+  const coordinate = (value: number) => Number(value.toFixed(3));
+
   const illustrations = {
     agents: (
       <svg viewBox="0 0 200 150" className="h-full w-full">
@@ -41,33 +43,45 @@ export function FeatureIllustration({ type, className = '' }: FeatureIllustratio
           animate={{ scale: 1 }}
           transition={{ delay: 0.7, type: 'spring' }}
         />
-        {[0, 60, 120, 180, 240, 300].map((angle, i) => (
-          <motion.line
-            key={angle}
-            x1="100"
-            y1="75"
-            x2={100 + 55 * Math.cos((angle * Math.PI) / 180)}
-            y2={75 + 55 * Math.sin((angle * Math.PI) / 180)}
-            stroke="#64748b"
-            strokeWidth="1"
-            strokeDasharray="4 2"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ delay: 0.8 + i * 0.1 }}
-          />
-        ))}
-        {[0, 72, 144, 216, 288].map((angle, i) => (
-          <motion.circle
-            key={angle}
-            cx={100 + 70 * Math.cos((angle * Math.PI) / 180)}
-            cy={75 + 70 * Math.sin((angle * Math.PI) / 180)}
-            r="6"
-            fill="#64748b"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 1 + i * 0.1 }}
-          />
-        ))}
+        {[0, 60, 120, 180, 240, 300].map((angle, i) => {
+          const radians = (angle * Math.PI) / 180;
+          const x2 = coordinate(100 + 55 * Math.cos(radians));
+          const y2 = coordinate(75 + 55 * Math.sin(radians));
+
+          return (
+            <motion.line
+              key={angle}
+              x1="100"
+              y1="75"
+              x2={x2}
+              y2={y2}
+              stroke="#64748b"
+              strokeWidth="1"
+              strokeDasharray="4 2"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ delay: 0.8 + i * 0.1 }}
+            />
+          );
+        })}
+        {[0, 72, 144, 216, 288].map((angle, i) => {
+          const radians = (angle * Math.PI) / 180;
+          const cx = coordinate(100 + 70 * Math.cos(radians));
+          const cy = coordinate(75 + 70 * Math.sin(radians));
+
+          return (
+            <motion.circle
+              key={angle}
+              cx={cx}
+              cy={cy}
+              r="6"
+              fill="#64748b"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 1 + i * 0.1 }}
+            />
+          );
+        })}
       </svg>
     ),
     automation: (

@@ -133,6 +133,20 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     if (asChild) {
       const child = React.Children.only(children);
       if (React.isValidElement(child)) {
+        const childType = child.type;
+        const childIsFragment = childType === React.Fragment;
+
+        if (childIsFragment) {
+          return (
+            <span
+              className={cn(buttonVariants({ variant, size }), className)}
+              {...(props as React.HTMLAttributes<HTMLSpanElement>)}
+            >
+              {buttonContent}
+            </span>
+          );
+        }
+
         // Use the child element's own children (e.g. the text inside <Link>)
         // instead of Button's `children` (the <Link> itself) to avoid nesting
         // an <a> inside an <a> when the child renders an anchor element.

@@ -9,6 +9,7 @@ import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
 import {
   OrganizationSchema,
+  ProfessionalServiceSchema,
   WebSiteSchema,
 } from '@/components/seo/structured-data';
 import { ThemeProvider } from '@/components/theme-provider';
@@ -149,6 +150,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
 
         <OrganizationSchema />
+        <ProfessionalServiceSchema />
         <WebSiteSchema />
       </head>
       <body className='min-h-dvh antialiased'>

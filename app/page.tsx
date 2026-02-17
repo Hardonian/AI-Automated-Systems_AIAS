@@ -13,10 +13,7 @@ import { WorkflowSandbox } from '@/components/home/workflow-sandbox';
 import { HeroIllustration } from '@/components/visual/HeroIllustration';
 import { TrustBadgeStrip } from '@/components/visual/TrustBadgeStrip';
 
-import {
-  FAQSchema,
-  ProfessionalServiceSchema,
-} from '@/components/seo/structured-data';
+import { FAQSchema } from '@/components/seo/structured-data';
 
 import { getPrimaryCtaHref, siteContent, SiteConfig } from '@/src/content/site';
 
@@ -65,7 +62,6 @@ export default function HomePage() {
 
   return (
     <>
-      <ProfessionalServiceSchema />
       <FAQSchema faqs={homepageFAQs} />
       <ContentDrivenHero content={heroContent} />
       

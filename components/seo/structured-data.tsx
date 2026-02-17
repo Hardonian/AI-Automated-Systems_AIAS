@@ -86,55 +86,6 @@ export function OrganizationSchema({
   );
 }
 
-interface SoftwareApplicationSchemaProps {
-  name?: string;
-  description?: string;
-  applicationCategory?: string;
-  operatingSystem?: string;
-  offers?: {
-    price?: string;
-    priceCurrency?: string;
-  };
-}
-
-export function SoftwareApplicationSchema({
-  name = 'AIAS Platform',
-  description = 'AI automation that speaks Canadian business. Save 10+ hours/week with no-code AI agents.',
-  applicationCategory = 'BusinessApplication',
-  operatingSystem = 'Web',
-  offers = {
-    price: '49',
-    priceCurrency: 'CAD',
-  },
-}: SoftwareApplicationSchemaProps) {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name,
-    description,
-    applicationCategory,
-    operatingSystem,
-    offers: {
-      '@type': 'Offer',
-      price: offers.price,
-      priceCurrency: offers.priceCurrency,
-    },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.8',
-      ratingCount: '500',
-    },
-  };
-
-  return (
-    <Script
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      id='software-application-schema'
-      type='application/ld+json'
-    />
-  );
-}
-
 interface WebSiteSchemaProps {
   name?: string;
   url?: string;

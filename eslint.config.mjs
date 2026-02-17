@@ -34,19 +34,26 @@ export default tseslint.config(
     ],
   },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    extends: [
+      js.configs.recommended,
+      ...tseslint.configs.recommended,
+      nextPlugin.configs.recommended,
+      nextPlugin.configs['core-web-vitals'],
+    ],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
     },
     settings: {
+      next: {
+        rootDir: ['.'],
+      },
       react: {
         version: 'detect',
       },
     },
     plugins: {
-      '@next/next': nextPlugin,
       react: react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
@@ -55,8 +62,6 @@ export default tseslint.config(
       'unused-imports': unusedImports,
     },
     rules: {
-      ...nextPlugin.configs.recommended.rules,
-      ...nextPlugin.configs['core-web-vitals'].rules,
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [

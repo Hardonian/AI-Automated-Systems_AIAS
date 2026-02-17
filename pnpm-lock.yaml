@@ -172,8 +172,8 @@ devDependencies:
     specifier: ^5.2.0
     version: 5.2.0(eslint@9.39.2)
   eslint-plugin-react-refresh:
-    specifier: ^0.4.26
-    version: 0.4.26(eslint@9.39.2)
+    specifier: ^0.5.0
+    version: 0.5.0(eslint@9.39.2)
   eslint-plugin-unused-imports:
     specifier: ^4.3.0
     version: 4.3.0(eslint@9.39.2)
@@ -3284,8 +3284,8 @@ packages:
         optional: true
     dev: true
 
-  /bare-fs@4.5.3:
-    resolution: {integrity: sha512-9+kwVx8QYvt3hPWnmb19tPnh38c6Nihz8Lx3t0g9+4GoIf3/fTgYwM4Z6NxgI+B9elLQA7mLE9PpqcWtOMRDiQ==}
+  /bare-fs@4.5.4:
+    resolution: {integrity: sha512-POK4oplfA7P7gqvetNmCs4CNtm9fNsx+IAh7jH7GgU0OJdge2rso0R20TNWVq6VoWcCvsTdlNDaleLHGaKx8CA==}
     engines: {bare: '>=1.16.0'}
     requiresBuild: true
     peerDependencies:
@@ -4361,10 +4361,10 @@ packages:
       eslint: 9.39.2
     dev: true
 
-  /eslint-plugin-react-refresh@0.4.26(eslint@9.39.2):
-    resolution: {integrity: sha512-1RETEylht2O6FM/MvgnyvT+8K21wLqDNg4qD51Zj3guhjt433XbnnkVttHMyaVyAFD03QSV4LPS5iE3VQmO7XQ==}
+  /eslint-plugin-react-refresh@0.5.0(eslint@9.39.2):
+    resolution: {integrity: sha512-ZYvmh7VfVgqR/7wR71I3Zl6hK/C5CcxdWYKZSpHawS5JCNgE4efhQWg/+/WPpgGAp9Ngp/rRZYyaIwmPQBq/lA==}
     peerDependencies:
-      eslint: '>=8.40'
+      eslint: '>=9'
     dependencies:
       eslint: 9.39.2
     dev: true
@@ -7228,7 +7228,7 @@ packages:
       pump: 3.0.3
       tar-stream: 3.1.7
     optionalDependencies:
-      bare-fs: 4.5.3
+      bare-fs: 4.5.4
       bare-path: 3.0.0
     transitivePeerDependencies:
       - bare-abort-controller

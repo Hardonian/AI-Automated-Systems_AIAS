@@ -89,7 +89,6 @@
     "check:static-first": "pnpm exec tsx scripts/check-static-first.ts"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.11.0",
     "@eslint/js": "^9.39.2",
     "@lhci/cli": "^0.15.1",
     "@next/eslint-plugin-next": "^16.1.6",

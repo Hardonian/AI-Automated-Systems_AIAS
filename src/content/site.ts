@@ -186,16 +186,17 @@ const rawSiteContent: SiteConfig = {
   navigation: {
     primary: [
       { label: 'Services', href: '/services' },
-      { label: 'Work', href: '/work' },
-      { label: 'Process', href: '/process' },
+      { label: 'Approach', href: '/approach' },
+      { label: 'Case Studies', href: '/case-studies' },
       { label: 'Pricing', href: '/pricing' },
+      { label: 'FAQ', href: '/faq' },
       { label: 'Contact', href: '/contact' },
     ],
     resources: [
       { label: 'About', href: '/about' },
       { label: 'Insights', href: '/blog' },
-      { label: 'FAQ', href: '/#faq' },
-      { label: 'Case Studies', href: '/work' },
+      { label: 'FAQ', href: '/faq' },
+      { label: 'Case Studies', href: '/case-studies' },
     ],
   },
   contact: {

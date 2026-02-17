@@ -5,6 +5,7 @@ import { Calendar, Clock, Mail } from 'lucide-react';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
 import { Button } from '@/components/ui/button';
+import { IntakeForm } from '@/components/IntakeForm';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -52,6 +53,11 @@ export default function ContactPage() {
             </Button>
           </SurfaceCard>
         </div>
+      </PageSection>
+
+
+      <PageSection width='narrow'>
+        <IntakeForm />
       </PageSection>
 
       <PageSection background='muted' width='narrow'>

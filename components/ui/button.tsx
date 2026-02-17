@@ -132,20 +132,47 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     if (asChild) {
       const child = React.Children.only(children);
-
-      const resolvedChild =
-        React.isValidElement<{ children?: React.ReactNode }>(child) && child.type === React.Fragment
-          ? React.Children.toArray(child.props.children)[0]
-          : child;
-
-      if (React.isValidElement(resolvedChild)) {
+      if (React.isValidElement(child)) {
+        // Use the child element's own children (e.g. the text inside <Link>)
+        // instead of Button's `children` (the <Link> itself) to avoid nesting
+        // an <a> inside an <a> when the child renders an anchor element.
+        const childContent = (child.props as { children?: React.ReactNode }).children;
+        const asChildContent = (
+          <>
+            {loading && (
+              <Loader2
+                className='absolute left-1/2 mr-2 h-4 w-4 -translate-x-1/2 animate-spin'
+                aria-hidden='true'
+              />
+            )}
+            <span className={cn('flex items-center gap-2', loading && 'invisible')}>
+              {icon && iconPosition === 'left' && (
+                <span className='inline-flex' aria-hidden='true'>
+                  {icon}
+                </span>
+              )}
+              {childContent}
+              {icon && iconPosition === 'right' && (
+                <span className='inline-flex' aria-hidden='true'>
+                  {icon}
+                </span>
+              )}
+            </span>
+            {variant === 'cta' && (
+              <span
+                className='absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 group-hover:translate-x-full'
+                aria-hidden='true'
+              />
+            )}
+          </>
+        );
         return (
           <Slot
             ref={ref}
             className={cn(buttonVariants({ variant, size }), className)}
             {...props}
           >
-            {React.cloneElement(resolvedChild, undefined, buttonContent)}
+            {React.cloneElement(child, undefined, asChildContent)}
           </Slot>
         );
       }

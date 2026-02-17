@@ -6,6 +6,7 @@ import { ArrowRight, Copy } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
+import { track } from '@/lib/analytics';
 
 export function ConversionCTA() {
   const [status, setStatus] = useState('');
@@ -13,6 +14,7 @@ export function ConversionCTA() {
   const handleCopyEmail = async () => {
     try {
       await navigator.clipboard.writeText(siteContent.contact.email);
+      track('copy_email_clicked', { location: 'conversion_cta' });
       setStatus('Email copied to clipboard.');
     } catch {
       setStatus('Copy failed. Please use the email link.');
@@ -34,7 +36,7 @@ export function ConversionCTA() {
         </p>
         <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
           <Button asChild size='lg' className='min-h-[48px] px-8'>
-            <Link href={getPrimaryCtaHref()}>
+            <Link href={getPrimaryCtaHref()} onClick={() => track('primary_cta_clicked', { location: 'conversion_cta' })}>
               {siteContent.positioning.primaryCTA.label}
               <ArrowRight className='ml-2 h-4 w-4' />
             </Link>
@@ -45,7 +47,7 @@ export function ConversionCTA() {
             variant='outline'
             className='min-h-[48px] px-8'
           >
-            <Link href={`mailto:${siteContent.contact.email}`}>
+            <Link href={`mailto:${siteContent.contact.email}`} onClick={() => track('email_cta_clicked', { location: 'conversion_cta' })}>
               Email {siteContent.contact.email}
             </Link>
           </Button>

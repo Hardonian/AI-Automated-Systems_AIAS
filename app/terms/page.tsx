@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
+import { PageCta, PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
 
-import { siteContent } from '@/src/content/site';
+import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Terms of Service | AI Automated Systems',
@@ -15,24 +16,30 @@ export default function TermsPage() {
   const { terms } = siteContent.legal;
 
   return (
-    <main className='container py-16'>
-      <header className='mb-10'>
-        <p className='text-sm font-semibold uppercase tracking-[0.2em] text-primary'>
-          Legal
-        </p>
-        <h1 className='mt-2 text-4xl font-bold'>{terms.title}</h1>
-        <p className='mt-3 text-sm text-muted-foreground'>
-          Last updated: {terms.lastUpdated}
-        </p>
-      </header>
-      <div className='space-y-8'>
-        {terms.sections.map(section => (
-          <section key={section.heading} className='space-y-2'>
-            <h2 className='text-2xl font-semibold'>{section.heading}</h2>
-            <p className='text-muted-foreground'>{section.body}</p>
-          </section>
-        ))}
-      </div>
-    </main>
+    <>
+      <PageHero
+        eyebrow='Legal'
+        title={terms.title}
+        description={`Last updated: ${terms.lastUpdated}`}
+      />
+
+      <PageSection>
+        <div className='space-y-6'>
+          {terms.sections.map(section => (
+            <SurfaceCard key={section.heading}>
+              <h2 className='text-2xl font-semibold'>{section.heading}</h2>
+              <p className='mt-3 text-muted-foreground'>{section.body}</p>
+            </SurfaceCard>
+          ))}
+        </div>
+      </PageSection>
+
+      <PageCta
+        title='Need contract clarity before kickoff?'
+        description='Use a strategy call to review scope, delivery boundaries, and governance expectations before signing.'
+        primary={{ label: siteContent.positioning.primaryCTA.label, href: getPrimaryCtaHref() }}
+        secondary={{ label: 'Request proposal', href: '/contact' }}
+      />
+    </>
   );
 }

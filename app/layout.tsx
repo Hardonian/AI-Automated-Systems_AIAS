@@ -1,6 +1,4 @@
 import './globals.css';
-import { Analytics } from '@vercel/analytics/next';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 import Script from 'next/script';
 import type { Metadata, Viewport } from 'next';
 import { ReactNode } from 'react';
@@ -13,6 +11,7 @@ import {
   WebSiteSchema,
 } from '@/components/seo/structured-data';
 import { ThemeProvider } from '@/components/theme-provider';
+import { AnalyticsRuntime } from '@/components/analytics/analytics-runtime';
 
 import { Toaster } from '@/components/ui/toaster';
 import { getOptionalEnv } from '@/lib/env';
@@ -163,8 +162,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               {children}
             </main>
             <Footer />
-            <Analytics />
-            <SpeedInsights />
+            <AnalyticsRuntime />
             <Toaster />
             <Script
               dangerouslySetInnerHTML={{

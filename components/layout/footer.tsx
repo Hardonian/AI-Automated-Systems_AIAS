@@ -104,7 +104,7 @@ export function Footer() {
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1 }}
-          {...({ className: 'mt-12 pt-8 border-t border-border' } as any)}
+          className='mt-12 border-t border-border pt-8'
         >
           <div
             className='mb-8 flex flex-wrap justify-center gap-4 text-xs text-muted-foreground'
@@ -133,18 +133,15 @@ export function Footer() {
               { icon: '🛡️', text: 'Security Focused' },
               { icon: '🇨🇦', text: 'Canadian Operations' },
               { icon: '📋', text: 'Audit Ready' },
-            ].map((badge, i) => (
+].map((badge, index) => (
               <motion.div
-                key={i}
+                key={badge.text}
                 initial={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3, delay: i * 0.1 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.05 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                {...({
-                  className:
-                    'inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border shadow-sm hover:shadow-md transition-all',
-                } as any)}
+                className='inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 shadow-sm transition-all hover:shadow-md'
               >
                 <span>{badge.icon}</span>
                 <span className='text-xs font-medium text-foreground'>

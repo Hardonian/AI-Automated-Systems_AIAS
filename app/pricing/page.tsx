@@ -64,7 +64,7 @@ export default function PricingPage() {
       <PageHero
         eyebrow='Engagement shapes'
         title='Flexible commercial models that match your stage'
-        description='We scope by outcomes and operating context, not rigid fixed-price tiers. Start small, validate quickly, then scale with the support level your team needs.'
+        description='We scope by outcomes and operating context, not rigid fixed-price tiers. Every engagement starts with a free 30-minute consult, then scales from focused builds to ongoing support based on your needs.'
       />
 
       <PageSection>

@@ -27,13 +27,14 @@ export default function CaseStudiesPage() {
 
       <PageSection>
         <div className='space-y-8'>
-          {siteContent.caseStudies.map(study => (
+          {siteContent.caseStudies.map((study, index) => (
             <SurfaceCard key={study.title} className='overflow-hidden p-0'>
               <Image
                 alt={`${study.client} case study thumbnail`}
                 className='h-auto w-full border-b object-cover'
                 height={630}
-                priority
+                priority={index === 0}
+                sizes='(max-width: 768px) 100vw, 1200px'
                 src={study.thumbnailSrc}
                 width={1200}
               />
@@ -43,6 +44,7 @@ export default function CaseStudiesPage() {
                     alt={`${study.client} logo`}
                     className='h-10 w-auto'
                     height={40}
+                    sizes='150px'
                     src={study.logoSrc}
                     width={150}
                   />

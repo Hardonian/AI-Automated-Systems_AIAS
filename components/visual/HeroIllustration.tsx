@@ -40,8 +40,8 @@ export function HeroIllustration() {
         { angle: 288, label: 'Output', color: 'bg-purple-500', delay: 0.7 },
       ].map((node) => {
         const radius = 80;
-        const x = Math.cos((node.angle * Math.PI) / 180) * radius;
-        const y = Math.sin((node.angle * Math.PI) / 180) * radius;
+        const x = Math.round(Math.cos((node.angle * Math.PI) / 180) * radius * 100) / 100;
+        const y = Math.round(Math.sin((node.angle * Math.PI) / 180) * radius * 100) / 100;
         return (
           <motion.div
             key={node.label}
@@ -70,8 +70,8 @@ export function HeroIllustration() {
           const radius = 80;
           const x1 = 200;
           const y1 = 128;
-          const x2 = 200 + Math.cos((angle * Math.PI) / 180) * radius;
-          const y2 = 128 + Math.sin((angle * Math.PI) / 180) * radius;
+          const x2 = Math.round((200 + Math.cos((angle * Math.PI) / 180) * radius) * 100) / 100;
+          const y2 = Math.round((128 + Math.sin((angle * Math.PI) / 180) * radius) * 100) / 100;
           return (
             <motion.line
               key={angle}

@@ -6,6 +6,7 @@ const publicEnvSchema = z.object({
   NEXT_PUBLIC_GOOGLE_VERIFICATION: z.string().optional(),
   NEXT_PUBLIC_YANDEX_VERIFICATION: z.string().optional(),
   NEXT_PUBLIC_YAHOO_VERIFICATION: z.string().optional(),
+  NEXT_PUBLIC_ANALYTICS_PROVIDER: z.enum(['none', 'vercel']).default('none'),
 });
 
 const serverEnvSchema = z.object({
@@ -19,6 +20,7 @@ const runtimeEnv = {
   NEXT_PUBLIC_GOOGLE_VERIFICATION: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
   NEXT_PUBLIC_YANDEX_VERIFICATION: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
   NEXT_PUBLIC_YAHOO_VERIFICATION: process.env.NEXT_PUBLIC_YAHOO_VERIFICATION,
+  NEXT_PUBLIC_ANALYTICS_PROVIDER: process.env.NEXT_PUBLIC_ANALYTICS_PROVIDER,
   VERCEL_ENV: process.env.VERCEL_ENV,
   VERCEL: process.env.VERCEL,
 };

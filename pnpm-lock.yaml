@@ -103,9 +103,6 @@ dependencies:
   framer-motion:
     specifier: ^12.29.2
     version: 12.29.2(react-dom@19.2.4)(react@19.2.4)
-  i18next:
-    specifier: ^23.16.8
-    version: 23.16.8
   lucide-react:
     specifier: ^0.555.0
     version: 0.555.0(react@19.2.4)
@@ -121,9 +118,6 @@ dependencies:
   react-hook-form:
     specifier: 7.71.1
     version: 7.71.1(react@19.2.4)
-  react-i18next:
-    specifier: ^14.1.3
-    version: 14.1.3(i18next@23.16.8)(react-dom@19.2.4)(react@19.2.4)
   tailwind-merge:
     specifier: ^2.6.0
     version: 2.6.0
@@ -228,11 +222,6 @@ packages:
       axe-core: 4.11.1
       playwright-core: 1.58.0
     dev: true
-
-  /@babel/runtime@7.28.6:
-    resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
-    engines: {node: '>=6.9.0'}
-    dev: false
 
   /@emnapi/runtime@1.8.1:
     resolution: {integrity: sha512-mehfKSMWjjNol8659Z8KxEMrdSJDDot5SXMq00dM8BN4o+CLNXQ0xH2V7EchNHV4RmbZLmmPdEaXZc5H2FXmDg==}
@@ -5000,12 +4989,6 @@ packages:
     dependencies:
       function-bind: 1.1.2
 
-  /html-parse-stringify@3.0.1:
-    resolution: {integrity: sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==}
-    dependencies:
-      void-elements: 3.1.0
-    dev: false
-
   /http-errors@2.0.1:
     resolution: {integrity: sha512-4FbRdAX+bSdmo4AUFuS0WNiPz8NgFt+r8ThgNWmlrjQjt1Q7ZR9+zTlce2859x4KSXrwIsaeTqDoKQmtP8pLmQ==}
     engines: {node: '>= 0.8'}
@@ -5052,12 +5035,6 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
     dev: true
-
-  /i18next@23.16.8:
-    resolution: {integrity: sha512-06r/TitrM88Mg5FdUXAKL96dJMzgqLE5dv3ryBAra4KCwD9mJ4ndOTS95ZuymIGoE+2hzfdaMak2X11/es7ZWg==}
-    dependencies:
-      '@babel/runtime': 7.28.6
-    dev: false
 
   /iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
@@ -6462,28 +6439,6 @@ packages:
       react: 19.2.4
     dev: false
 
-  /react-i18next@14.1.3(i18next@23.16.8)(react-dom@19.2.4)(react@19.2.4):
-    resolution: {integrity: sha512-wZnpfunU6UIAiJ+bxwOiTmBOAaB14ha97MjOEnLGac2RJ+h/maIYXZuTHlmyqQVX1UVHmU1YDTQ5vxLmwfXTjw==}
-    peerDependencies:
-      i18next: '>= 23.2.3'
-      react: ^19.2.4 || 19
-      react-dom: '*'
-      react-native: '*'
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
-    dependencies:
-      '@babel/runtime': 7.28.6
-      html-parse-stringify: 3.0.1
-      i18next: 23.16.8
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-    dev: false
-
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
     dev: true
@@ -7725,11 +7680,6 @@ packages:
       - supports-color
       - terser
     dev: true
-
-  /void-elements@3.1.0:
-    resolution: {integrity: sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==}
-    engines: {node: '>=0.10.0'}
-    dev: false
 
   /webdriver-bidi-protocol@0.4.0:
     resolution: {integrity: sha512-U9VIlNRrq94d1xxR9JrCEAx5Gv/2W7ERSv8oWRoNe/QYbfccS0V3h/H6qeNeCRJxXGMhhnkqvwNrvPAYeuP9VA==}

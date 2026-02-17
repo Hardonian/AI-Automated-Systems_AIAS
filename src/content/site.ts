@@ -195,7 +195,7 @@ const rawSiteContent: SiteConfig = {
       { label: 'About', href: '/about' },
       { label: 'Insights', href: '/blog' },
       { label: 'FAQ', href: '/#faq' },
-      { label: 'Dashboard', href: '/dashboard' },
+      { label: 'Case Studies', href: '/work' },
     ],
   },
   contact: {

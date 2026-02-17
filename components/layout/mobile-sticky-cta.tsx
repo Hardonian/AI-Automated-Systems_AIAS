@@ -17,8 +17,8 @@ interface MobileStickyCTAProps {
 export function MobileStickyCTA({
   primaryLabel = siteContent.positioning.primaryCTA.label,
   primaryHref = getPrimaryCtaHref(),
-  secondaryLabel = 'Email Us',
-  secondaryHref = `mailto:${siteContent.contact.email}`,
+  secondaryLabel = 'Request Proposal',
+  secondaryHref = '/contact',
 }: MobileStickyCTAProps) {
   const [isVisible, setIsVisible] = useState(false);
 

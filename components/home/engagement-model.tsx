@@ -8,10 +8,10 @@ import { Card, CardContent } from '@/components/ui/card';
 const phases = [
   {
     step: '01',
-    title: 'Foundation',
-    structure: 'Fixed Project',
-    investment: 'Starting at $X,XXX',
-    description: 'Best for first AI workflows, pilot automation, and fast validation.',
+    title: 'Build + handoff',
+    structure: 'Fixed-scope implementation',
+    investment: 'One-time project pricing',
+    description: 'Best for first production workflows and fast validation.',
     outputs: [
       'AI opportunity mapping',
       'Architecture design',
@@ -21,9 +21,9 @@ const phases = [
   },
   {
     step: '02',
-    title: 'Build + Empower',
-    structure: 'Implementation + Enablement',
-    investment: 'Starting at $X,XXX',
+    title: 'Build + manage',
+    structure: 'Strategic retainer',
+    investment: 'Retainer with usage-based scaling',
     description: 'Build systems while enabling internal teams to confidently run them.',
     outputs: [
       'Multi-workflow system design',
@@ -34,15 +34,15 @@ const phases = [
   },
   {
     step: '03',
-    title: 'Build + Manage + Scale',
-    structure: 'Monthly Strategic Partnership',
-    investment: 'Starting at $X,XXX / month',
-    description: 'Continuous optimization, measurable reporting, and priority response.',
+    title: 'Train your team',
+    structure: 'Capability accelerator',
+    investment: 'Program-based advisory package',
+    description: 'Hands-on enablement for teams building durable internal capability.',
     outputs: [
-      'Ongoing workflow deployment',
-      'Optimization cycles',
-      'Monitoring + reporting',
-      'Quarterly strategy reviews',
+      'Use-case mapping',
+      'Governance framework',
+      'Implementation playbooks',
+      'Operator coaching sessions',
     ],
   },
 ];
@@ -54,7 +54,8 @@ export function EngagementModel() {
         <div className='mb-12 text-center'>
           <h2 className='mb-4 text-3xl font-bold md:text-4xl'>Engagement Paths</h2>
           <p className='mx-auto max-w-2xl text-lg text-muted-foreground'>
-            Choose a clear starting point, then scale capacity and refinement as you grow.
+            Flexible ways to launch quickly, scale responsibly, and keep ownership aligned with
+            your team.
           </p>
         </div>
         <div className='grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8'>

@@ -104,8 +104,8 @@ dependencies:
     specifier: ^12.29.2
     version: 12.29.2(react-dom@19.2.4)(react@19.2.4)
   lucide-react:
-    specifier: ^0.555.0
-    version: 0.555.0(react@19.2.4)
+    specifier: ^0.564.0
+    version: 0.564.0(react@19.2.4)
   next:
     specifier: ^15.5.10
     version: 15.5.12(@playwright/test@1.58.0)(react-dom@19.2.4)(react@19.2.4)
@@ -3284,8 +3284,8 @@ packages:
         optional: true
     dev: true
 
-  /bare-fs@4.5.3:
-    resolution: {integrity: sha512-9+kwVx8QYvt3hPWnmb19tPnh38c6Nihz8Lx3t0g9+4GoIf3/fTgYwM4Z6NxgI+B9elLQA7mLE9PpqcWtOMRDiQ==}
+  /bare-fs@4.5.4:
+    resolution: {integrity: sha512-POK4oplfA7P7gqvetNmCs4CNtm9fNsx+IAh7jH7GgU0OJdge2rso0R20TNWVq6VoWcCvsTdlNDaleLHGaKx8CA==}
     engines: {bare: '>=1.16.0'}
     requiresBuild: true
     peerDependencies:
@@ -5665,8 +5665,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /lucide-react@0.555.0(react@19.2.4):
-    resolution: {integrity: sha512-D8FvHUGbxWBRQM90NZeIyhAvkFfsh3u9ekrMvJ30Z6gnpBHS6HC6ldLg7tL45hwiIz/u66eKDtdA23gwwGsAHA==}
+  /lucide-react@0.564.0(react@19.2.4):
+    resolution: {integrity: sha512-JJ8GVTQqFwuliifD48U6+h7DXEHdkhJ/E87kksGByII3qHxtPciVb8T8woQONHBQgHVOl7rSMrrip3SeVNy7Fg==}
     peerDependencies:
       react: ^19.2.4 || 19
     peerDependenciesMeta:
@@ -7228,7 +7228,7 @@ packages:
       pump: 3.0.3
       tar-stream: 3.1.7
     optionalDependencies:
-      bare-fs: 4.5.3
+      bare-fs: 4.5.4
       bare-path: 3.0.0
     transitivePeerDependencies:
       - bare-abort-controller

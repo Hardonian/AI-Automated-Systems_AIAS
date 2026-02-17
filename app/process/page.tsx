@@ -1,14 +1,17 @@
 import type { Metadata } from 'next';
+
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { CheckCircle2, Circle, ArrowRight } from 'lucide-react';
 
 import { WorkflowDiagram } from '@/components/visual/WorkflowDiagram';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEOMetadata({
   title: 'Process | AI Automated Systems',
   description:
     'Our proven methodology for delivering agentic automation: Discover, Map, Automate, Ship, Monitor.',
-};
+  canonical: '/process',
+});
 
 export default function ProcessPage() {
   return (

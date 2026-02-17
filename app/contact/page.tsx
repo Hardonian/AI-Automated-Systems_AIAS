@@ -1,13 +1,16 @@
 import type { Metadata } from 'next';
+
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { Mail, MapPin, Clock, Calendar, ArrowRight } from 'lucide-react';
 
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEOMetadata({
   title: 'Contact | AI Automated Systems',
   description:
     'Get in touch with AIAS for agentic automation consulting. Book a strategy call or email us directly.',
-};
+  canonical: '/contact',
+});
 
 export default function ContactPage() {
   return (

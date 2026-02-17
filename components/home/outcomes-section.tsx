@@ -1,36 +1,37 @@
 'use client';
 
-import { Clock, Shield, Zap, TrendingUp, Users, FileText } from 'lucide-react';
+import { Shield, Zap, TrendingUp, Users, FileText, Clock } from 'lucide-react';
+
 import { Card, CardContent } from '@/components/ui/card';
 
 const outcomes = [
   {
     icon: Clock,
-    metric: '90%',
-    label: 'Reduction in Manual Tasks',
+    pattern: 'Pattern',
+    label: 'Reduction in repetitive tasks',
     description:
-      'Automate repetitive workflows and free your team for strategic work',
+      'Delivery teams replace repetitive coordination tasks with deterministic automations and review checkpoints.',
   },
   {
     icon: Shield,
-    metric: '24/7',
-    label: 'Human-in-the-Loop Oversight',
+    pattern: 'Pattern',
+    label: 'Human-in-the-loop oversight',
     description:
-      'Critical decisions always require human approval with full audit trails',
+      'Critical decisions stay with your team while automation handles routing, preparation, and verification.',
   },
   {
     icon: Zap,
-    metric: '< 2hr',
-    label: 'Time to Production',
+    pattern: 'Pattern',
+    label: 'Faster pilot execution',
     description:
-      'Ship your first workflow in weeks, not months with our pilot model',
+      'Focused pilot scopes accelerate implementation without changing your core systems all at once.',
   },
   {
     icon: TrendingUp,
-    metric: '3x',
-    label: 'Faster Iterations',
+    pattern: 'Pattern',
+    label: 'Continuous iteration cycles',
     description:
-      'Test and deploy changes with version-controlled automation logic',
+      'Operational telemetry supports regular improvements after launch.',
   },
 ];
 
@@ -38,29 +39,17 @@ const deliverables = [
   {
     icon: FileText,
     title: 'Workflow Blueprints',
-    items: [
-      'State machine diagrams',
-      'Error handling procedures',
-      'Human checkpoint definitions',
-    ],
+    items: ['State machine diagrams', 'Error handling procedures', 'Human checkpoint definitions'],
   },
   {
     icon: Users,
     title: 'Training & Handoff',
-    items: [
-      'Team workshops',
-      'Documentation & runbooks',
-      'Ongoing support options',
-    ],
+    items: ['Team workshops', 'Documentation & runbooks', 'Ongoing support options'],
   },
   {
     icon: Shield,
     title: 'Governance & Security',
-    items: [
-      'Audit trails & event logs',
-      'SOC2-ready controls',
-      'PIPEDA compliance framework',
-    ],
+    items: ['Audit trails & event logs', 'SOC2-ready controls', 'PIPEDA compliance framework'],
   },
 ];
 
@@ -68,15 +57,11 @@ export function OutcomesSection() {
   return (
     <section className='bg-muted/30 px-4 py-20' id='outcomes'>
       <div className='container mx-auto max-w-6xl'>
-        {/* Outcomes Metrics */}
         <div className='mb-16'>
           <div className='mb-8 text-center'>
-            <h2 className='mb-4 text-3xl font-bold md:text-4xl'>
-              Outcomes, Not Just Features
-            </h2>
+            <h2 className='mb-4 text-3xl font-bold md:text-4xl'>Outcomes, Not Just Features</h2>
             <p className='mx-auto max-w-2xl text-lg text-muted-foreground'>
-              Every engagement delivers measurable business impact. Here is what
-              you can expect.
+              Outcome patterns from real delivery engagements. Results depend on implementation scope and team readiness.
             </p>
           </div>
           <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
@@ -84,30 +69,22 @@ export function OutcomesSection() {
               <Card key={outcome.label} className='p-6 text-center'>
                 <CardContent className='pt-6'>
                   <outcome.icon className='mx-auto mb-4 h-8 w-8 text-primary' />
-                  <div className='mb-2 text-4xl font-bold text-foreground'>
-                    {outcome.metric}
+                  <div className='mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-primary'>
+                    {outcome.pattern}
                   </div>
-                  <div className='mb-2 font-semibold text-primary'>
-                    {outcome.label}
-                  </div>
-                  <p className='text-sm text-muted-foreground'>
-                    {outcome.description}
-                  </p>
+                  <div className='mb-2 font-semibold text-foreground'>{outcome.label}</div>
+                  <p className='text-sm text-muted-foreground'>{outcome.description}</p>
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
 
-        {/* Deliverables */}
         <div>
           <div className='mb-8 text-center'>
-            <h3 className='mb-4 text-2xl font-bold'>
-              What You Own After Every Engagement
-            </h3>
+            <h3 className='mb-4 text-2xl font-bold'>What You Own After Every Engagement</h3>
             <p className='mx-auto max-w-2xl text-muted-foreground'>
-              All artifacts remain with your organization. No lock-in, no
-              dependencies.
+              All artifacts remain with your organization. No lock-in, no dependencies.
             </p>
           </div>
           <div className='grid gap-6 md:grid-cols-3'>
@@ -122,10 +99,7 @@ export function OutcomesSection() {
                   </div>
                   <ul className='space-y-3'>
                     {category.items.map(item => (
-                      <li
-                        key={item}
-                        className='flex items-start gap-2 text-sm text-muted-foreground'
-                      >
+                      <li key={item} className='flex items-start gap-2 text-sm text-muted-foreground'>
                         <span className='mt-0.5 text-primary'>✓</span>
                         {item}
                       </li>

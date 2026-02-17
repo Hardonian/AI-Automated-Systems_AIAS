@@ -4,14 +4,12 @@ interface ProfessionalServiceSchemaProps {
   name?: string;
   url?: string;
   description?: string;
-  priceRange?: string;
 }
 
 export function ProfessionalServiceSchema({
   name = 'AI Automated Systems Consultancy',
   url = 'https://aiautomatedsystems.ca',
   description = 'Enterprise AI strategy, custom platform development, and workflow automation consultancy.',
-  priceRange = '$$$',
 }: ProfessionalServiceSchemaProps) {
   const schema = {
     '@context': 'https://schema.org',
@@ -19,15 +17,12 @@ export function ProfessionalServiceSchema({
     name,
     url,
     description,
-    priceRange,
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'CA',
       addressLocality: 'Toronto',
       addressRegion: 'ON',
     },
-    openingHours: 'Mo,Tu,We,Th,Fr 09:00-17:00',
-    telephone: '+1-800-AIAS-HELP',
     sameAs: [
       'https://github.com/shardie-github/aias',
       'https://linkedin.com/company/aias-platform',
@@ -48,15 +43,13 @@ interface OrganizationSchemaProps {
   url?: string;
   logo?: string;
   email?: string;
-  phone?: string;
 }
 
 export function OrganizationSchema({
   name = 'AI Automated Systems',
   url = 'https://aiautomatedsystems.ca',
   logo = 'https://aiautomatedsystems.ca/logo.png',
-  email = 'support@aiautomatedsystems.ca',
-  phone = '+1-800-AIAS-HELP',
+  email = 'inquiries@aiautomatedsystems.ca',
 }: OrganizationSchemaProps) {
   const schema = {
     '@context': 'https://schema.org',
@@ -65,7 +58,6 @@ export function OrganizationSchema({
     url,
     logo,
     email,
-    telephone: phone,
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'CA',

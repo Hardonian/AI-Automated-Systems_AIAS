@@ -1,4 +1,6 @@
 import { ContentDrivenFAQ } from '@/components/content/ContentDrivenFAQ';
+import { HowWeWorkSection } from '@/components/content/how-we-work-section';
+import { OutcomesPatternSection } from '@/components/content/outcomes-pattern-section';
 import { ContentDrivenHero } from '@/components/content/ContentDrivenHero';
 import { OutcomesSection } from '@/components/home/outcomes-section';
 import { ProofSection } from '@/components/home/proof-section';
@@ -14,8 +16,18 @@ import { HeroIllustration } from '@/components/visual/HeroIllustration';
 import { TrustBadgeStrip } from '@/components/visual/TrustBadgeStrip';
 
 import { FAQSchema } from '@/components/seo/structured-data';
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
 import { getPrimaryCtaHref, siteContent, SiteConfig } from '@/src/content/site';
+
+export const metadata = {
+  ...generateSEOMetadata({
+    title: 'AI Automated Systems | Agentic Automation Consultancy',
+    description:
+      'Static-first AI consultancy site for agentic automation strategy, delivery, enablement, and governance support.',
+    canonical: '/',
+  }),
+};
 
 
 
@@ -73,6 +85,22 @@ export default function HomePage() {
       </section>
       
       <OutcomesSection />
+      <OutcomesPatternSection
+        examples={[
+          {
+            title: 'Manual effort reduction',
+            description: 'Teams shift repetitive triage and routing tasks into governed automation flows.',
+          },
+          {
+            title: 'Faster delivery cycles',
+            description: 'Delivery teams iterate with shared playbooks, guardrails, and review checkpoints.',
+          },
+          {
+            title: 'Stronger operational confidence',
+            description: 'Stakeholders gain clearer auditability through run logs, exceptions, and handoff artifacts.',
+          },
+        ]}
+      />
       <ProofSection />
       <SystemsSection />
       <DeliverablesSection />
@@ -94,6 +122,7 @@ export default function HomePage() {
         </div>
       </section>
       
+      <HowWeWorkSection steps={siteContent.process} />
       <WorkflowSandbox />
       <Testimonials />
       <EngagementModel />

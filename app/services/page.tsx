@@ -1,14 +1,17 @@
 import type { Metadata } from 'next';
 
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
+
 import { FeatureIllustration } from '@/components/visual/FeatureIllustration';
 import { WorkflowDiagram } from '@/components/visual/WorkflowDiagram';
 import { siteContent } from '@/src/content/site';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEOMetadata({
   title: 'Services | AI Automated Systems',
   description:
     'Explore AIAS consultancy services for agent architecture, workflow automation, and enterprise-grade implementation.',
-};
+  canonical: '/services',
+});
 
 const serviceVisuals: Record<string, 'agents' | 'automation' | 'security' | 'integration'> = {
   'AI Agent Architecture': 'agents',

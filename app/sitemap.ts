@@ -3,8 +3,9 @@ export const dynamic = 'force-static';
 import type { MetadataRoute } from 'next';
 
 import { getLatestArticles } from '@/lib/blog/articles';
+import { SITE_URL } from '@/lib/seo/metadata';
 
-const baseUrl = 'https://aiautomatedsystems.ca';
+const baseUrl = SITE_URL;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: Array<{

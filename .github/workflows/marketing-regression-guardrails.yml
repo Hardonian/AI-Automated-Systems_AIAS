@@ -28,5 +28,7 @@ jobs:
         run: pnpm build
       - name: Internal link guardrail
         run: pnpm check:links
+      - name: Route metadata guardrail
+        run: pnpm check:route-metadata
       - name: Lighthouse CI
         run: pnpm ci:lighthouse

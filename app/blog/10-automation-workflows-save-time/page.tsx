@@ -1,15 +1,18 @@
 import { Check, ArrowRight, Clock, Zap } from 'lucide-react';
 import type { Metadata } from 'next';
+
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 import { Card, CardContent } from '@/components/ui/card';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEOMetadata({
   title: '10 Automation Workflows That Save 10+ Hours Per Week | AIAS Platform',
   description:
-    'Discover 10 powerful automation workflows that save 10+ hours per week. From e-commerce to customer support, learn how to automate repetitive tasks.',
+    'Discover 10 powerful automation workflow examples for operations, support, and reporting teams.',
+  canonical: '/blog/10-automation-workflows-save-time',
   keywords: [
     'automation workflows',
     'time saving automation',
@@ -18,7 +21,7 @@ export const metadata: Metadata = {
     'automation examples',
     'productivity automation',
   ],
-};
+});
 
 const workflows = [
   {

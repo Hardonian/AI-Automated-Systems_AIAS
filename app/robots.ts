@@ -2,7 +2,9 @@ export const dynamic = 'force-static';
 
 import type { MetadataRoute } from 'next';
 
-const BASE_URL = 'https://aiautomatedsystems.ca';
+import { SITE_URL } from '@/lib/seo/metadata';
+
+const BASE_URL = SITE_URL;
 
 export default function robots(): MetadataRoute.Robots {
   return {

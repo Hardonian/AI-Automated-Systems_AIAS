@@ -1,12 +1,15 @@
 import type { Metadata } from 'next';
 
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
+
 import { siteContent } from '@/src/content/site';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEOMetadata({
   title: 'Terms of Service | AI Automated Systems',
   description:
     'Review the terms that govern AI Automated Systems consulting engagements and deliverables.',
-};
+  canonical: '/terms',
+});
 
 export default function TermsPage() {
   const { terms } = siteContent.legal;

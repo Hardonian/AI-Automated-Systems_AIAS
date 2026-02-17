@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -12,11 +14,12 @@ import {
 import { getLatestArticles, getFeaturedArticles } from '@/lib/blog/articles';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEOMetadata({
   title: 'Blog — Systems Thinking + AI | Daily Articles | AIAS Platform',
   description:
     'Daily articles on systems thinking, AI automation, and business success. RSS feed of AI and tech news analyzed through systems thinking. AI-moderated comments for quality discussions.',
-};
+  canonical: '/blog',
+});
 
 export default function BlogPage() {
   const articles = getLatestArticles(14); // All existing articles

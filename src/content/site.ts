@@ -193,6 +193,12 @@ export interface SiteConfig {
         note: string;
       }>;
     }>;
+    efficiencyComparisons: Array<{
+      workflow: string;
+      before: string;
+      after: string;
+      impact: string;
+    }>;
   };
   roiCalculatorPage: {
     hero: {
@@ -212,6 +218,11 @@ export interface SiteConfig {
       title: string;
       description: string;
       bullets: string[];
+    }>;
+    boundaryModel: Array<{
+      layer: string;
+      deterministicBoundary: string;
+      aiBoundary: string;
     }>;
   };
   socials: {
@@ -794,6 +805,26 @@ const rawSiteContent: SiteConfig = {
         ],
       },
     ],
+    efficiencyComparisons: [
+      {
+        workflow: 'Revenue operations triage',
+        before: 'Manual queue sorting every 2 hours',
+        after: 'Deterministic triage with AI-assisted enrichment in 45 seconds',
+        impact: '88% faster first-response loop and higher lead SLA adherence',
+      },
+      {
+        workflow: 'Invoice exception handling',
+        before: 'Spreadsheet reconciliation and email routing',
+        after: 'Rule-based exception classification with confidence thresholds',
+        impact: '61% lower handling effort and fewer escalations',
+      },
+      {
+        workflow: 'Support escalation governance',
+        before: 'Ad-hoc analyst judgment and delayed approvals',
+        after: 'Policy-gated escalation paths with review checkpoints',
+        impact: '43% reduction in escalation cycle time and full audit visibility',
+      },
+    ],
   },
   roiCalculatorPage: {
     hero: {
@@ -805,7 +836,8 @@ const rawSiteContent: SiteConfig = {
     assumptions: [
       'Assumes 48 active working weeks per year.',
       'Cost baseline uses blended operations and management effort assumptions.',
-      'Automation level applies a multiplier to manual hours eliminated.',
+      'Automation maturity applies fixed multipliers (35%, 55%, 75%) to manual hours eliminated.',
+      'Break-even estimate uses a fixed $48,000 implementation baseline.',
     ],
   },
   howItWorksPage: {
@@ -855,6 +887,23 @@ const rawSiteContent: SiteConfig = {
           'Managed for operator-light rollout paths',
           'Federated for multi-entity policy inheritance',
         ],
+      },
+    ],
+    boundaryModel: [
+      {
+        layer: 'Intake and classification',
+        deterministicBoundary: 'Schema validation, required fields, and policy checks run first.',
+        aiBoundary: 'AI enriches intent and context only within validated payload contracts.',
+      },
+      {
+        layer: 'Decision and orchestration',
+        deterministicBoundary: 'State transitions, approvals, and routing rules are explicit and replayable.',
+        aiBoundary: 'AI proposes ranked actions when confidence thresholds and policy allow.',
+      },
+      {
+        layer: 'Execution and reporting',
+        deterministicBoundary: 'Connector permissions, audit logs, and rollback paths are pre-defined.',
+        aiBoundary: 'AI summarizes outcomes and anomalies without bypassing control gates.',
       },
     ],
   },

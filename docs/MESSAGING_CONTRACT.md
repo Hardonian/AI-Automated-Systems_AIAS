@@ -38,3 +38,14 @@ AIAS designs and operationalizes deterministic, static-first automation systems 
 - Avoid hype and absolute claims (for example, "fully autonomous," "zero oversight," "guaranteed outcomes").
 - Avoid contradictory posture (for example, calling systems both deterministic and unpredictable).
 - Keep ecosystem references explicit: AIAS (governance), Reach (demand/strategy), Zeo (implementation), Settler (deployment operations).
+
+## Messaging Contract Enforcement
+
+The repository includes `pnpm audit:messaging`, which audits route and component copy for:
+
+- Inconsistent taglines against canonical templates.
+- Banned hype phrases and autonomy overclaims.
+- Conflicting claims (for example SOC 2 certification language when only SOC 2-aligned posture is accurate).
+- Terminology drift from approved service/system naming.
+
+This check is expected to run in CI via the `verify` pipeline.

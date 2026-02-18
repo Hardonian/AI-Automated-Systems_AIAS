@@ -28,6 +28,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { route: '/services/app-ai-systems', priority: 0.8, changeFrequency: 'monthly' },
     { route: '/about', priority: 0.7, changeFrequency: 'monthly' },
     { route: '/blog', priority: 0.8, changeFrequency: 'daily' },
+    { route: '/build-log', priority: 0.75, changeFrequency: 'weekly' },
+    { route: '/blueprints', priority: 0.75, changeFrequency: 'weekly' },
+    { route: '/engagement-simulator', priority: 0.75, changeFrequency: 'weekly' },
+    { route: '/methodology', priority: 0.7, changeFrequency: 'monthly' },
+    { route: '/operator-demo', priority: 0.55, changeFrequency: 'monthly' },
+    { route: '/certification', priority: 0.7, changeFrequency: 'monthly' },
+    { route: '/why-we-say-no', priority: 0.6, changeFrequency: 'monthly' },
     { route: '/privacy', priority: 0.3, changeFrequency: 'monthly' },
     { route: '/terms', priority: 0.3, changeFrequency: 'monthly' },
   ];

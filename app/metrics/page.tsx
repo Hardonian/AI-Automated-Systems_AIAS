@@ -40,6 +40,34 @@ export default function MetricsPage() {
           ))}
         </div>
       </PageSection>
+
+      <PageSection background='muted'>
+        <SurfaceCard>
+          <h2 className='text-2xl font-bold'>Before vs after efficiency</h2>
+          <div className='mt-6 overflow-x-auto'>
+            <table className='w-full min-w-[680px] border-separate border-spacing-y-3'>
+              <thead>
+                <tr className='text-left text-sm text-muted-foreground'>
+                  <th className='px-3'>Workflow</th>
+                  <th className='px-3'>Before</th>
+                  <th className='px-3'>After</th>
+                  <th className='px-3'>Impact</th>
+                </tr>
+              </thead>
+              <tbody>
+                {siteContent.metricsPage.efficiencyComparisons.map(row => (
+                  <tr key={row.workflow} className='rounded-xl border bg-background/80'>
+                    <td className='px-3 py-3 text-sm font-semibold'>{row.workflow}</td>
+                    <td className='px-3 py-3 text-sm text-muted-foreground'>{row.before}</td>
+                    <td className='px-3 py-3 text-sm text-muted-foreground'>{row.after}</td>
+                    <td className='px-3 py-3 text-sm font-medium text-primary'>{row.impact}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </SurfaceCard>
+      </PageSection>
     </>
   );
 }

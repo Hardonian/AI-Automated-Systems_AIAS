@@ -34,6 +34,26 @@ export default function HowItWorksPage() {
           ))}
         </div>
       </PageSection>
+
+      <PageSection background='muted'>
+        <SurfaceCard>
+          <h2 className='text-2xl font-bold'>Deterministic vs AI boundaries</h2>
+          <div className='mt-6 grid gap-4'>
+            {siteContent.howItWorksPage.boundaryModel.map(boundary => (
+              <article key={boundary.layer} className='rounded-xl border bg-background/70 p-5'>
+                <h3 className='text-lg font-semibold'>{boundary.layer}</h3>
+                <p className='mt-2 text-sm text-muted-foreground'>
+                  <span className='font-semibold text-foreground'>Deterministic:</span>{' '}
+                  {boundary.deterministicBoundary}
+                </p>
+                <p className='mt-2 text-sm text-muted-foreground'>
+                  <span className='font-semibold text-foreground'>AI-assisted:</span> {boundary.aiBoundary}
+                </p>
+              </article>
+            ))}
+          </div>
+        </SurfaceCard>
+      </PageSection>
     </>
   );
 }

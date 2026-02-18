@@ -430,6 +430,11 @@ test.describe('UI Consistency Audit', () => {
     { path: '/blog', name: 'blog' },
     { path: '/privacy', name: 'privacy' },
     { path: '/terms', name: 'terms' },
+    { path: '/services', name: 'services' },
+    { path: '/ecosystem', name: 'ecosystem' },
+    { path: '/metrics', name: 'metrics' },
+    { path: '/roi-calculator', name: 'roi-calculator' },
+    { path: '/how-it-works', name: 'how-it-works' },
   ];
 
   for (const route of routesToAudit) {

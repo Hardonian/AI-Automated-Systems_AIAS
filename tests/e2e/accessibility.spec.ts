@@ -45,6 +45,30 @@ test.describe('Accessibility Tests', () => {
     });
   });
 
+  test('metrics page should be accessible', async ({ page }) => {
+    await page.goto('/metrics');
+    await checkA11y(page, undefined, {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+    });
+  });
+
+  test('how-it-works page should be accessible', async ({ page }) => {
+    await page.goto('/how-it-works');
+    await checkA11y(page, undefined, {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+    });
+  });
+
+  test('roi-calculator page should be accessible', async ({ page }) => {
+    await page.goto('/roi-calculator');
+    await checkA11y(page, undefined, {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+    });
+  });
+
   test('keyboard navigation should work', async ({ page }) => {
     await page.goto('/');
 

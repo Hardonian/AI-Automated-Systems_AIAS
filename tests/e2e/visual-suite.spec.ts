@@ -188,6 +188,51 @@ test.describe('Visual Regression - Marketing Pages', () => {
     );
   });
 
+  test('metrics page - desktop', async ({ page }, testInfo) => {
+    await testRouteVisual(
+      page,
+      testInfo,
+      { path: '/metrics', name: 'metrics', auth: false },
+      'desktop'
+    );
+  });
+
+  test('how-it-works page - desktop', async ({ page }, testInfo) => {
+    await testRouteVisual(
+      page,
+      testInfo,
+      { path: '/how-it-works', name: 'how-it-works', auth: false },
+      'desktop'
+    );
+  });
+
+  test('roi-calculator page - desktop', async ({ page }, testInfo) => {
+    await testRouteVisual(
+      page,
+      testInfo,
+      { path: '/roi-calculator', name: 'roi-calculator', auth: false },
+      'desktop'
+    );
+  });
+
+  test('services page - desktop', async ({ page }, testInfo) => {
+    await testRouteVisual(
+      page,
+      testInfo,
+      { path: '/services', name: 'services', auth: false },
+      'desktop'
+    );
+  });
+
+  test('ecosystem page - desktop', async ({ page }, testInfo) => {
+    await testRouteVisual(
+      page,
+      testInfo,
+      { path: '/ecosystem', name: 'ecosystem', auth: false },
+      'desktop'
+    );
+  });
+
   test('workflow sandbox section - desktop', async ({ page }, testInfo) => {
     await testRouteVisual(
       page,
@@ -216,6 +261,51 @@ test.describe('Visual Regression - Content Pages', () => {
       page,
       testInfo,
       { path: '/blog', name: 'blog', auth: false },
+      'desktop'
+    );
+  });
+
+  test('metrics page - desktop', async ({ page }, testInfo) => {
+    await testRouteVisual(
+      page,
+      testInfo,
+      { path: '/metrics', name: 'metrics', auth: false },
+      'desktop'
+    );
+  });
+
+  test('how-it-works page - desktop', async ({ page }, testInfo) => {
+    await testRouteVisual(
+      page,
+      testInfo,
+      { path: '/how-it-works', name: 'how-it-works', auth: false },
+      'desktop'
+    );
+  });
+
+  test('roi-calculator page - desktop', async ({ page }, testInfo) => {
+    await testRouteVisual(
+      page,
+      testInfo,
+      { path: '/roi-calculator', name: 'roi-calculator', auth: false },
+      'desktop'
+    );
+  });
+
+  test('services page - desktop', async ({ page }, testInfo) => {
+    await testRouteVisual(
+      page,
+      testInfo,
+      { path: '/services', name: 'services', auth: false },
+      'desktop'
+    );
+  });
+
+  test('ecosystem page - desktop', async ({ page }, testInfo) => {
+    await testRouteVisual(
+      page,
+      testInfo,
+      { path: '/ecosystem', name: 'ecosystem', auth: false },
       'desktop'
     );
   });

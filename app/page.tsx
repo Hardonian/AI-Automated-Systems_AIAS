@@ -13,10 +13,12 @@ import { ConversionCTA } from '@/components/home/conversion-cta';
 import { TrustBadges } from '@/components/home/trust-badges';
 import { Testimonials } from '@/components/home/testimonials';
 import { SecretSauceSection } from '@/components/home/secret-sauce-section';
-import { HeroIllustration } from '@/components/visual/HeroIllustration';
 import { TrustBadgeStrip } from '@/components/visual/TrustBadgeStrip';
 
 import { FAQSchema } from '@/components/seo/structured-data';
+import { ConversionPathsSection } from '@/components/home/conversion-paths-section';
+import { TrustRiskSection } from '@/components/home/trust-risk-section';
+import { WorkflowIllustrationSection } from '@/components/home/workflow-illustration-section';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
 import { getPrimaryCtaHref, siteContent, SiteConfig } from '@/src/content/site';
@@ -111,25 +113,14 @@ export default function HomePage() {
       <DeliverablesSection />
       <SecretSauceSection />
       
-      {/* Visual workflow illustration */}
-      <section className="border-y bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-16">
-        <div className="container">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-bold text-white">How It Works</h2>
-            <p className="mt-4 text-slate-400">
-              Our agentic workflow engine processes inputs through classification, 
-              planning, and execution—with human oversight at every critical step.
-            </p>
-          </div>
-          <div className="mt-12">
-            <HeroIllustration />
-          </div>
-        </div>
-      </section>
-      
+      <WorkflowIllustrationSection />
+
       <HowWeWorkSection steps={siteContent.process} />
       <WorkflowSandbox />
       <Testimonials />
+      <ConversionPathsSection />
+      <TrustRiskSection />
+
       <EngagementModel />
       <TrustBadges />
       <ContentDrivenFAQ content={faqContent} />

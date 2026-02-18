@@ -121,6 +121,12 @@ export interface SiteConfig {
     question: string;
     answer: string;
   }>;
+  routeFaqs: {
+    ecosystem: Array<{ question: string; answer: string }>;
+    services: Array<{ question: string; answer: string }>;
+    automationWeb: Array<{ question: string; answer: string }>;
+    appAiSystems: Array<{ question: string; answer: string }>;
+  };
   socials: {
     twitter: string;
     linkedin: string;
@@ -189,6 +195,7 @@ const rawSiteContent: SiteConfig = {
       { label: 'Approach', href: '/approach' },
       { label: 'Case Studies', href: '/case-studies' },
       { label: 'Pricing', href: '/pricing' },
+      { label: 'Ecosystem', href: '/ecosystem' },
       { label: 'FAQ', href: '/faq' },
       { label: 'Contact', href: '/contact' },
     ],
@@ -197,6 +204,8 @@ const rawSiteContent: SiteConfig = {
       { label: 'Insights', href: '/blog' },
       { label: 'FAQ', href: '/faq' },
       { label: 'Case Studies', href: '/case-studies' },
+      { label: 'Automation Demo', href: '/automation-demo' },
+      { label: 'Readiness Checklist', href: '/readiness-checklist' },
     ],
   },
   contact: {
@@ -496,6 +505,56 @@ const rawSiteContent: SiteConfig = {
       answer: 'Yes. We specialize in containerized, edge-ready deployments for clients with strict data residency requirements.',
     }
   ],
+  routeFaqs: {
+    ecosystem: [
+      {
+        question: 'How do Reach, Zeo, and Settler fit into ecosystem delivery?',
+        answer: 'Reach supports demand and strategy, Zeo executes implementation, and Settler operationalizes deployment and governance handoff.',
+      },
+      {
+        question: 'Do you treat AI models as system-of-record controllers?',
+        answer: 'No. Deterministic control layers own policy and state transitions. AI layers operate as constrained advisors with explicit guardrails.',
+      },
+      {
+        question: 'Can the ecosystem run in regulated deployment models?',
+        answer: 'Yes. We support self-hosted, managed, and federated operating models with policy inheritance and auditability requirements.',
+      },
+    ],
+    services: [
+      {
+        question: 'How do you scope services without fixed packages?',
+        answer: 'We scope from constraints, governance obligations, and expected outcomes, then define a smallest-safe rollout path.',
+      },
+      {
+        question: 'What happens after delivery?',
+        answer: 'Every engagement includes handoff artifacts, ownership clarity, and operational checkpoints for sustained reliability.',
+      },
+      {
+        question: 'Do service engagements stay static-first?',
+        answer: 'Yes. Public routes remain static-first while automation logic uses deterministic client-safe patterns unless explicit backend requirements are approved.',
+      },
+    ],
+    automationWeb: [
+      {
+        question: 'Why prioritize static-first website automation?',
+        answer: 'Static-first improves reliability, keeps performance predictable, and reduces operational surface area for marketing routes.',
+      },
+      {
+        question: 'How is intake governance enforced on web automation builds?',
+        answer: 'We use deterministic classification rules, policy checkpoints, and explicit escalation paths before high-impact transitions.',
+      },
+    ],
+    appAiSystems: [
+      {
+        question: 'How do you balance deterministic execution with AI flexibility?',
+        answer: 'Deterministic layers enforce contracts and policies; AI layers provide bounded recommendations that require validation before execution.',
+      },
+      {
+        question: 'Can app orchestration be audited after incidents?',
+        answer: 'Yes. We design replayable logs and governance artifacts to support post-incident review and enterprise reporting.',
+      },
+    ],
+  },
   socials: {
     twitter: 'https://twitter.com/aias_platform',
     linkedin: 'https://linkedin.com/company/aias-platform',

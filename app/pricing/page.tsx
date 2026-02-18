@@ -8,9 +8,9 @@ import { Button } from '@/components/ui/button';
 import { getPrimaryCtaHref } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Pricing | AI Automated Systems',
+  title: 'Engagement Models | AI Automated Systems',
   description:
-    'Flexible AIAS engagement models including workflow builds, strategic retainers, managed delivery, and team enablement.',
+    'Value-based AIAS engagement models covering one-off workflow delivery, co-build execution, and managed system refinement.',
   canonical: '/pricing',
 });
 
@@ -21,40 +21,36 @@ type EngagementShape = {
   outcomes: string[];
   ctaLabel: string;
   ctaHref: string;
+  timeline: string;
 };
 
 const engagementShapes: EngagementShape[] = [
   {
-    title: 'Consultation',
-    description: 'Short advisory engagement to map priorities and define your first practical workflow.',
-    bestFor: 'Teams that need strategic clarity before implementation.',
-    outcomes: ['Current-state workflow review', 'Risk + readiness assessment', 'Prioritized rollout brief'],
-    ctaLabel: 'Book consultation',
-    ctaHref: getPrimaryCtaHref(),
+    title: 'One-off workflow',
+    description: 'Focused architecture and implementation for a single high-value workflow.',
+    bestFor: 'Teams that need one production-grade automation outcome quickly.',
+    outcomes: ['Constraint mapping and success criteria', 'Deterministic build with QA', 'Operational handoff package'],
+    ctaLabel: 'Scope one-off workflow',
+    ctaHref: '/contact',
+    timeline: '2-4 weeks depending on integration complexity.',
   },
   {
-    title: 'Pilot',
-    description: 'Focused implementation to prove value in one workflow with measurable outcomes.',
-    bestFor: 'Leaders validating ROI before broader expansion.',
-    outcomes: ['Deterministic workflow build', 'Launch checklist and QA', 'Handoff docs + operator training'],
-    ctaLabel: 'Start pilot discussion',
+    title: 'Co-build',
+    description: 'Shared sprint model where AIAS and your team build together with clear ownership.',
+    bestFor: 'Technical teams that want transfer of capability while shipping.',
+    outcomes: ['Sprint roadmap with checkpoints', 'Policy and governance controls', 'Enablement for internal operators'],
+    ctaLabel: 'Plan co-build sprint',
     ctaHref: '/contact',
+    timeline: '4-8 weeks for initial system and adoption workflow.',
   },
   {
-    title: 'Managed / Retainer',
-    description: 'Ongoing partnership for optimization, governance, and multi-workflow scaling.',
-    bestFor: 'Organizations treating automation as a core operating capability.',
-    outcomes: ['Monthly roadmap and delivery cycles', 'Monitoring + quality controls', 'Executive reporting and iteration'],
-    ctaLabel: 'Discuss managed model',
+    title: 'Managed refinement',
+    description: 'Ongoing optimization program for reliability, governance, and scale.',
+    bestFor: 'Organizations running automation as a core operating function.',
+    outcomes: ['Monthly optimization cycles', 'Governance and risk reviews', 'Performance and change reporting'],
+    ctaLabel: 'Discuss managed refinement',
     ctaHref: '/contact',
-  },
-  {
-    title: 'Enablement & Training',
-    description: 'Capability-building program for internal teams responsible for long-term ownership.',
-    bestFor: 'Teams that want in-house execution strength and governance fluency.',
-    outcomes: ['Role-based workshops', 'Governance playbooks', 'Coached implementation sprints'],
-    ctaLabel: 'Plan team enablement',
-    ctaHref: '/contact',
+    timeline: 'Quarterly planning cycles with monthly execution cadence.',
   },
 ];
 
@@ -62,18 +58,19 @@ export default function PricingPage() {
   return (
     <>
       <PageHero
-        eyebrow='Engagement shapes'
-        title='Flexible commercial models that match your stage'
-        description='We scope by outcomes and operating context, not rigid fixed-price tiers. Every engagement starts with a free 30-minute consult, then scales from focused builds to ongoing support based on your needs.'
+        eyebrow='Engagement models'
+        title='Value-based engagement packaging with explicit scoping'
+        description='No arbitrary fixed-price anchors. We scope based on workflow criticality, governance obligations, and integration depth.'
       />
 
       <PageSection>
-        <div className='grid gap-6 lg:grid-cols-2'>
+        <div className='grid gap-6 lg:grid-cols-3'>
           {engagementShapes.map(shape => (
             <SurfaceCard key={shape.title} className='p-7'>
               <h2 className='text-2xl font-bold'>{shape.title}</h2>
               <p className='mt-3 text-muted-foreground'>{shape.description}</p>
               <p className='mt-4 text-sm font-semibold text-primary'>Best for: {shape.bestFor}</p>
+              <p className='mt-2 text-xs text-muted-foreground'>Typical timeline: {shape.timeline}</p>
               <ul className='mt-5 space-y-2 text-sm text-muted-foreground'>
                 {shape.outcomes.map(item => (
                   <li key={item} className='flex items-start gap-2'>
@@ -95,10 +92,9 @@ export default function PricingPage() {
 
       <PageSection background='muted' width='narrow'>
         <SurfaceCard className='text-center'>
-          <h2 className='text-2xl font-bold'>How we scope investment</h2>
+          <h2 className='text-2xl font-bold'>Scoping and risk clarity</h2>
           <p className='mt-4 text-muted-foreground'>
-            Pricing is based on workflow complexity, integration depth, governance requirements,
-            and the level of ongoing support. We share clear scope boundaries before work begins.
+            Every engagement starts with constraints, non-fit criteria, and acceptance conditions. We document timeline assumptions before execution begins.
           </p>
           <div className='mt-6 flex flex-col justify-center gap-3 sm:flex-row'>
             <Button asChild size='lg'>

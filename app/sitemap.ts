@@ -4,6 +4,7 @@ import type { MetadataRoute } from 'next';
 
 import { getLatestArticles } from '@/lib/blog/articles';
 import { SITE_URL } from '@/lib/seo/metadata';
+import { caseStudies } from '@/src/content/caseStudies';
 
 const baseUrl = SITE_URL;
 
@@ -20,11 +21,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { route: '/pricing', priority: 0.8, changeFrequency: 'weekly' },
     { route: '/faq', priority: 0.75, changeFrequency: 'weekly' },
     { route: '/contact', priority: 0.7, changeFrequency: 'monthly' },
+    { route: '/ecosystem', priority: 0.8, changeFrequency: 'monthly' },
+    { route: '/automation-demo', priority: 0.7, changeFrequency: 'monthly' },
+    { route: '/readiness-checklist', priority: 0.7, changeFrequency: 'monthly' },
+    { route: '/services/automation-web', priority: 0.8, changeFrequency: 'monthly' },
+    { route: '/services/app-ai-systems', priority: 0.8, changeFrequency: 'monthly' },
     { route: '/about', priority: 0.7, changeFrequency: 'monthly' },
     { route: '/blog', priority: 0.8, changeFrequency: 'daily' },
     { route: '/privacy', priority: 0.3, changeFrequency: 'monthly' },
     { route: '/terms', priority: 0.3, changeFrequency: 'monthly' },
   ];
+
+  const caseStudyRoutes = caseStudies.map(study => ({
+    route: `/case-studies/${study.slug}`,
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  }));
 
   const articles = getLatestArticles(100);
   const blogRoutes = articles.map(article => ({
@@ -33,7 +45,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'monthly' as const,
   }));
 
-  return [...staticRoutes, ...blogRoutes].map(entry => ({
+  return [...staticRoutes, ...caseStudyRoutes, ...blogRoutes].map(entry => ({
     url: `${baseUrl}${entry.route}`,
     lastModified: new Date(),
     changeFrequency: entry.changeFrequency,

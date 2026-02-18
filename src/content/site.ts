@@ -127,6 +127,93 @@ export interface SiteConfig {
     automationWeb: Array<{ question: string; answer: string }>;
     appAiSystems: Array<{ question: string; answer: string }>;
   };
+  servicesPage: {
+    hero: {
+      eyebrow: string;
+      title: string;
+      description: string;
+    };
+    engagementInclusions: {
+      title: string;
+      items: string[];
+      processLinkLabel: string;
+      processLinkHref: string;
+    };
+    workflowView: {
+      title: string;
+      description: string;
+    };
+    cta: {
+      title: string;
+      description: string;
+      primaryLabel: string;
+      secondaryLabel: string;
+      secondaryHref: string;
+    };
+  };
+  ecosystemPage: {
+    hero: {
+      eyebrow: string;
+      title: string;
+      description: string;
+    };
+    diagram: {
+      title: string;
+      nodes: string[];
+    };
+    lifecycle: string[];
+    narrative: {
+      determinismVsIntelligence: {
+        title: string;
+        body: string;
+      };
+      deploymentModels: {
+        title: string;
+        items: string[];
+      };
+      governancePrinciples: {
+        title: string;
+        items: string[];
+      };
+    };
+  };
+  metricsPage: {
+    hero: {
+      eyebrow: string;
+      title: string;
+      description: string;
+    };
+    statGroups: Array<{
+      category: string;
+      period: string;
+      metrics: Array<{
+        label: string;
+        value: string;
+        delta: string;
+        note: string;
+      }>;
+    }>;
+  };
+  roiCalculatorPage: {
+    hero: {
+      eyebrow: string;
+      title: string;
+      description: string;
+    };
+    assumptions: string[];
+  };
+  howItWorksPage: {
+    hero: {
+      eyebrow: string;
+      title: string;
+      description: string;
+    };
+    sections: Array<{
+      title: string;
+      description: string;
+      bullets: string[];
+    }>;
+  };
   socials: {
     twitter: string;
     linkedin: string;
@@ -192,6 +279,7 @@ const rawSiteContent: SiteConfig = {
   navigation: {
     primary: [
       { label: 'Services', href: '/services' },
+      { label: 'Metrics', href: '/metrics' },
       { label: 'Approach', href: '/approach' },
       { label: 'Case Studies', href: '/case-studies' },
       { label: 'Pricing', href: '/pricing' },
@@ -206,6 +294,8 @@ const rawSiteContent: SiteConfig = {
       { label: 'Case Studies', href: '/case-studies' },
       { label: 'Automation Demo', href: '/automation-demo' },
       { label: 'Readiness Checklist', href: '/readiness-checklist' },
+      { label: 'ROI Calculator', href: '/roi-calculator' },
+      { label: 'How It Works', href: '/how-it-works' },
     ],
   },
   contact: {
@@ -552,6 +642,219 @@ const rawSiteContent: SiteConfig = {
       {
         question: 'Can app orchestration be audited after incidents?',
         answer: 'Yes. We design replayable logs and governance artifacts to support post-incident review and enterprise reporting.',
+      },
+    ],
+  },
+  servicesPage: {
+    hero: {
+      eyebrow: 'Services',
+      title: 'Deterministic automation services built for production teams',
+      description:
+        'Each service includes clear deliverables, documented handoff, and governance guardrails so your team can run confidently after launch.',
+    },
+    engagementInclusions: {
+      title: 'What you get in every engagement',
+      items: [
+        'Workflow map with decision points and fallback paths',
+        'Implementation artifacts your operators can review and own',
+        'Risk controls, observability baselines, and launch checklist',
+        'Enablement session to transfer capability into your team',
+      ],
+      processLinkLabel: 'Review delivery process',
+      processLinkHref: '/process',
+    },
+    workflowView: {
+      title: 'Workflow view',
+      description:
+        'We standardize around input validation, deterministic routing, controlled execution, and human escalation on low-confidence branches.',
+    },
+    cta: {
+      title: 'Need a service mix tailored to your operating model?',
+      description:
+        'Start with a strategy call and we will scope the smallest practical rollout for your team.',
+      primaryLabel: 'Book a strategy call',
+      secondaryLabel: 'View engagement shapes',
+      secondaryHref: '/pricing',
+    },
+  },
+  ecosystemPage: {
+    hero: {
+      eyebrow: 'Ecosystem architecture',
+      title: 'How AIAS connects strategy to reliable automation delivery',
+      description:
+        'The ecosystem aligns advisory, implementation, and deployment operations without sacrificing deterministic controls.',
+    },
+    diagram: {
+      title: 'Layered system diagram',
+      nodes: ['Client', 'AIAS Advisory', 'Reach', 'Zeo', 'Settler'],
+    },
+    lifecycle: ['Strategy', 'Design', 'Build', 'Automate', 'Govern', 'Scale'],
+    narrative: {
+      determinismVsIntelligence: {
+        title: 'Determinism vs intelligence',
+        body: 'Deterministic systems own state transitions, validation, and policy enforcement. Intelligence layers propose, summarize, and optimize within strict contracts. The result is explainable automation with controlled risk.',
+      },
+      deploymentModels: {
+        title: 'Deployment models',
+        items: [
+          'Self-hosted: full infrastructure control and custom compliance boundaries.',
+          'Managed: AIAS operates delivery with agreed service and governance terms.',
+          'Federated: shared control across teams or regulated entities with policy inheritance.',
+        ],
+      },
+      governancePrinciples: {
+        title: 'Governance principles',
+        items: [
+          'Policy before execution.',
+          'Human review for high-impact actions.',
+          'Auditable run artifacts and deterministic replay.',
+          'Explicit non-fit criteria to avoid unsafe deployments.',
+        ],
+      },
+    },
+  },
+  metricsPage: {
+    hero: {
+      eyebrow: 'Automation proof',
+      title: 'Measured outcomes from deterministic automation programs',
+      description:
+        'Representative benchmark data across delivery cohorts showing latency, conversion, reliability, and governance performance.',
+    },
+    statGroups: [
+      {
+        category: 'Automation latency reduction',
+        period: 'Q1-Q4 benchmark cohort',
+        metrics: [
+          {
+            label: 'Lead intake-to-triage time',
+            value: '42s median',
+            delta: '-78%',
+            note: 'From 3m 10s manual review baseline',
+          },
+          {
+            label: 'Exception routing turnaround',
+            value: '2.8 min',
+            delta: '-64%',
+            note: 'Across finance and support automations',
+          },
+        ],
+      },
+      {
+        category: 'Conversion improvements',
+        period: '90-day post-launch average',
+        metrics: [
+          {
+            label: 'Qualified form conversion',
+            value: '11.4%',
+            delta: '+3.6 pts',
+            note: 'Governed routing and intent enrichment',
+          },
+          {
+            label: 'Demo-to-opportunity progression',
+            value: '37%',
+            delta: '+9 pts',
+            note: 'Faster follow-up with deterministic handoff',
+          },
+        ],
+      },
+      {
+        category: 'Execution reliability stats',
+        period: 'Last 30 days',
+        metrics: [
+          {
+            label: 'Workflow success rate',
+            value: '99.2%',
+            delta: '+1.1 pts',
+            note: 'After fallback and retry hardening',
+          },
+          {
+            label: 'Mean time to recovery (MTTR)',
+            value: '7m 40s',
+            delta: '-52%',
+            note: 'Alerting + runbook automation applied',
+          },
+        ],
+      },
+      {
+        category: 'Governance coverage metrics',
+        period: 'Control framework v2',
+        metrics: [
+          {
+            label: 'Policy-gated transitions',
+            value: '100%',
+            delta: '+12 pts',
+            note: 'No uncontrolled high-impact actions',
+          },
+          {
+            label: 'Replayable audit artifacts',
+            value: '98.7%',
+            delta: '+18 pts',
+            note: 'Gap is legacy run payload normalization',
+          },
+        ],
+      },
+    ],
+  },
+  roiCalculatorPage: {
+    hero: {
+      eyebrow: 'ROI calculator',
+      title: 'Estimate automation impact for your operating team',
+      description:
+        'Use your current workload and automation maturity to model annual time and cost savings.',
+    },
+    assumptions: [
+      'Assumes 48 active working weeks per year.',
+      'Cost baseline uses blended operations and management effort assumptions.',
+      'Automation level applies a multiplier to manual hours eliminated.',
+    ],
+  },
+  howItWorksPage: {
+    hero: {
+      eyebrow: 'System transparency',
+      title: 'How our automation delivery model works in production',
+      description:
+        'A transparent view of tooling, governance, security controls, and deployment patterns used in AIAS programs.',
+    },
+    sections: [
+      {
+        title: 'Tooling stack',
+        description:
+          'Static-first web delivery, deterministic orchestration, and typed configuration ensure predictable releases.',
+        bullets: [
+          'Next.js App Router + TypeScript for static-first user routes',
+          'Schema-validated content and route metadata checks in CI',
+          'Playwright suites for visual, UX consistency, and accessibility regression',
+        ],
+      },
+      {
+        title: 'Governance',
+        description:
+          'Controls are applied before execution, not after incidents, to keep automation bounded and auditable.',
+        bullets: [
+          'Policy gates on high-impact transitions',
+          'Human-in-the-loop reviews for low-confidence actions',
+          'Replayable run artifacts for post-incident analysis',
+        ],
+      },
+      {
+        title: 'Security',
+        description:
+          'Security is designed into architecture, access paths, and operational playbooks from day one.',
+        bullets: [
+          'Least-privilege connector permissions',
+          'Tenant-aware boundary and data handling conventions',
+          'Structured escalation and incident response checkpoints',
+        ],
+      },
+      {
+        title: 'Deployment models',
+        description:
+          'Delivery can be mapped to your risk profile and compliance posture without changing core governance controls.',
+        bullets: [
+          'Self-hosted for strict infrastructure control',
+          'Managed for operator-light rollout paths',
+          'Federated for multi-entity policy inheritance',
+        ],
       },
     ],
   },

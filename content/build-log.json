@@ -1,0 +1,50 @@
+[
+  {
+    "weekOf": "2026-02-10",
+    "entries": [
+      {
+        "date": "2026-02-14",
+        "title": "Released public engagement simulator",
+        "summary": "Shipped self-serve qualification flow that produces deterministic engagement briefs.",
+        "category": "ship",
+        "links": [{ "label": "Engagement simulator", "href": "/engagement-simulator" }]
+      },
+      {
+        "date": "2026-02-13",
+        "title": "Removed non-deterministic copy from CTA stack",
+        "summary": "Killed language that implied unsupervised autonomy and aligned to governance-first framing.",
+        "category": "kill"
+      },
+      {
+        "date": "2026-02-12",
+        "title": "Improved metadata coverage for resource routes",
+        "summary": "Fixed metadata gaps to prevent SEO drift across new moat pages.",
+        "category": "fix"
+      }
+    ]
+  },
+  {
+    "weekOf": "2026-02-03",
+    "entries": [
+      {
+        "date": "2026-02-07",
+        "title": "Published methodology whitepaper",
+        "summary": "Shipped a rigorous methodology document clarifying deterministic boundaries and deployment models.",
+        "category": "ship",
+        "links": [{ "label": "Methodology", "href": "/methodology" }]
+      },
+      {
+        "date": "2026-02-05",
+        "title": "Retired duplicated service narrative blocks",
+        "summary": "Killed repeated messaging that created terminology drift between services and ecosystem pages.",
+        "category": "kill"
+      },
+      {
+        "date": "2026-02-04",
+        "title": "Added messaging consistency contract checks",
+        "summary": "Learned that fail-fast copy checks prevent regressions without slowing static builds.",
+        "category": "learn"
+      }
+    ]
+  }
+]

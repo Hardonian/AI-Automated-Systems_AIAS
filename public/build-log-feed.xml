@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+  <channel>
+    <title>AIAS Build Log</title>
+    <link>https://aiautomatedsystems.ca/build-log</link>
+    <description>Public transparency updates from AI Automated Systems.</description>
+    <item>
+      <title>Released public engagement simulator</title>
+      <link>https://aiautomatedsystems.ca/engagement-simulator</link>
+      <pubDate>Sat, 14 Feb 2026 00:00:00 GMT</pubDate>
+      <description>Shipped self-serve qualification flow that produces deterministic engagement briefs.</description>
+    </item>
+    <item>
+      <title>Published methodology whitepaper</title>
+      <link>https://aiautomatedsystems.ca/methodology</link>
+      <pubDate>Sat, 07 Feb 2026 00:00:00 GMT</pubDate>
+      <description>Shipped a rigorous methodology document clarifying deterministic boundaries and deployment models.</description>
+    </item>
+  </channel>
+</rss>

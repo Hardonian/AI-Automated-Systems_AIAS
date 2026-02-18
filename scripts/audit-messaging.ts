@@ -34,6 +34,19 @@ const inconsistentTermChecks = [
   },
 ] as const;
 
+const conflictingClaimChecks = [
+  {
+    name: 'SOC2 certification claim',
+    pattern: /\bSOC\s*2\b(?![-\s](?:aligned|ready))/i,
+    guidance: 'Only claim SOC 2-aligned posture unless certification is formally completed and documented.',
+  },
+  {
+    name: 'guaranteed outcome claim',
+    pattern: /(?<!not\s)\bguaranteed\s+(?:results|outcomes|roi)\b/i,
+    guidance: 'Avoid guaranteed outcome claims; use measurable targets and constraints instead.',
+  },
+] as const;
+
 const canonicalTaglinePatterns = new Set(CANONICAL_TAGLINES.map(tagline => tagline.toLowerCase()));
 
 type Hit = { file: string; line: number; rule: string; text: string; guidance: string };
@@ -82,6 +95,18 @@ function walk(dir: string): void {
             rule: `inconsistent term: ${check.name}`,
             text: line.trim(),
             guidance: `Prefer "${check.preferred}".`,
+          });
+        }
+      }
+
+      for (const check of conflictingClaimChecks) {
+        if (check.pattern.test(line)) {
+          hits.push({
+            file: relPath,
+            line: index + 1,
+            rule: `conflicting claim: ${check.name}`,
+            text: line.trim(),
+            guidance: check.guidance,
           });
         }
       }

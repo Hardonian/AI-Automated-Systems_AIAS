@@ -10,8 +10,9 @@ export function generateStaticParams() {
   return caseStudies.map((study) => ({ slug: study.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const study = getCaseStudyBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const study = getCaseStudyBySlug(slug);
 
   if (!study) {
     return {
@@ -38,8 +39,25 @@ function SectionList({ title, items }: { title: string; items: string[] }) {
   );
 }
 
-export default function CaseStudyDetailPage({ params }: { params: { slug: string } }) {
-  const study = getCaseStudyBySlug(params.slug);
+function CaseDiagram({ slug }: { slug: string }) {
+  return (
+    <svg aria-label='Case study architecture diagram' className='h-auto w-full rounded-md border bg-background p-4' viewBox='0 0 600 220'>
+      <rect fill='currentColor' fillOpacity='0.06' height='60' rx='10' width='140' x='20' y='80' />
+      <text fontSize='12' textAnchor='middle' x='90' y='115'>Inputs</text>
+      <line stroke='currentColor' strokeOpacity='0.5' x1='160' x2='230' y1='110' y2='110' />
+      <rect fill='currentColor' fillOpacity='0.08' height='60' rx='10' width='170' x='230' y='80' />
+      <text fontSize='12' textAnchor='middle' x='315' y='110'>Deterministic Control Layer</text>
+      <line stroke='currentColor' strokeOpacity='0.5' x1='400' x2='470' y1='110' y2='110' />
+      <rect fill='currentColor' fillOpacity='0.06' height='60' rx='10' width='110' x='470' y='80' />
+      <text fontSize='12' textAnchor='middle' x='525' y='115'>Outcomes</text>
+      <text fontSize='11' textAnchor='middle' x='300' y='30'>{slug}</text>
+    </svg>
+  );
+}
+
+export default async function CaseStudyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const study = getCaseStudyBySlug(slug);
 
   if (!study) {
     notFound();
@@ -47,31 +65,30 @@ export default function CaseStudyDetailPage({ params }: { params: { slug: string
 
   return (
     <>
-      <PageHero eyebrow='Case study' title={study.title} description={study.summary} />
+      <PageHero eyebrow='Case study deep dive' title={study.title} description={study.summary} />
 
       <PageSection width='narrow'>
         <SurfaceCard>
-          <h2 className='text-2xl font-bold'>1) Client Problem</h2>
+          <h2 className='text-2xl font-bold'>1) Problem</h2>
           <p className='mt-4 text-muted-foreground'>{study.clientProblem}</p>
         </SurfaceCard>
       </PageSection>
 
       <PageSection>
         <div className='grid gap-6 md:grid-cols-2'>
-          <SectionList title='2) System Constraints' items={study.systemConstraints} />
+          <SectionList title='2) Constraints' items={study.systemConstraints} />
           <SurfaceCard>
-            <h2 className='text-2xl font-bold'>3) Architecture Chosen</h2>
+            <h2 className='text-2xl font-bold'>3) Architecture</h2>
             <p className='mt-4 text-muted-foreground'>{study.architectureChosen}</p>
+            <div className='mt-4'>
+              <CaseDiagram slug={study.slug} />
+            </div>
           </SurfaceCard>
-          <SectionList title='4) Automation Layer' items={study.automationLayer} />
-          <SectionList title='5) AI Integration' items={study.aiIntegration} />
-          <SectionList title='6) Governance & Determinism' items={study.governanceDeterminism} />
-          <SectionList title='7) Performance Results' items={study.performanceResults} />
+          <SectionList title='4) Tradeoffs' items={study.tradeoffs} />
+          <SectionList title='5) Governance model' items={study.governanceModel} />
+          <SectionList title='6) Performance outcomes' items={study.performanceResults} />
+          <SectionList title='7) What we would do next' items={study.whatNext} />
         </div>
-      </PageSection>
-
-      <PageSection width='narrow'>
-        <SectionList title='8) Long-Term Scalability' items={study.longTermScalability} />
       </PageSection>
 
       <PageCta

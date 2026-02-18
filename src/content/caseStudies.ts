@@ -7,9 +7,10 @@ export type CaseStudy = {
   architectureChosen: string;
   automationLayer: string[];
   aiIntegration: string[];
-  governanceDeterminism: string[];
+  tradeoffs: string[];
+  governanceModel: string[];
   performanceResults: string[];
-  longTermScalability: string[];
+  whatNext: string[];
 };
 
 export const caseStudies: CaseStudy[] = [
@@ -37,17 +38,22 @@ export const caseStudies: CaseStudy[] = [
       'Deterministic scorecard remains source of truth for engagement routing',
       'Confidence-based escalation keeps human review in loop',
     ],
-    governanceDeterminism: [
-      'Policy gates enforce acceptable deployment patterns',
-      'Explicit fallback path when email is missing',
-      'Run artifacts include timestamped JSON for compliance review',
+    tradeoffs: [
+      'Deterministic routing reduced flexibility for ambiguous edge cases but improved auditability.',
+      'Local-first qualification keeps deployment simple but requires explicit export for downstream systems.',
+      'More up-front schema design effort is required to preserve deterministic scoring over time.',
+    ],
+    governanceModel: [
+      'Policy gates enforce acceptable deployment patterns.',
+      'Explicit fallback path when required fields are missing.',
+      'Run artifacts include timestamped JSON for compliance review.',
     ],
     performanceResults: [
       'Reduced manual triage time through deterministic classification',
       'Improved conversion quality by matching requests to clear engagement models',
       'Maintained static-safe rendering and predictable build output',
     ],
-    longTermScalability: [
+    whatNext: [
       'Reach uses these case patterns for demand generation and qualification',
       'Zeo consumes structured outputs for system build planning',
       'Settler handles repeatable deployment and governance handoff',
@@ -76,17 +82,22 @@ export const caseStudies: CaseStudy[] = [
       'Deterministic validators gate every generated action',
       'Fallback to deterministic path when confidence drops',
     ],
-    governanceDeterminism: [
-      'Central policy registry for data residency and access scopes',
-      'Replay tooling for incident analysis and audit evidence',
-      'Change management protocol with versioned orchestration contracts',
+    tradeoffs: [
+      'Replay storage adds operational overhead but materially improves incident response.',
+      'Policy-first execution can slow experimentation but protects production reliability.',
+      'Splitting control and advisory planes increases complexity while improving accountability.',
+    ],
+    governanceModel: [
+      'Central policy registry for data residency and access scopes.',
+      'Replay tooling for incident analysis and audit evidence.',
+      'Change management protocol with versioned orchestration contracts.',
     ],
     performanceResults: [
       'Stabilized execution consistency across interconnected workflows',
       'Lowered incident recovery time with deterministic replay',
       'Increased trust from security and compliance stakeholders',
     ],
-    longTermScalability: [
+    whatNext: [
       'Modular architecture enabled phased expansion by business unit',
       'Policy model supported managed and federated operating modes',
       'Governance artifacts simplified enterprise procurement reviews',
@@ -115,17 +126,22 @@ export const caseStudies: CaseStudy[] = [
       'Explanations are generated alongside recommendation outputs',
       'Human operators approve high-impact actions',
     ],
-    governanceDeterminism: [
-      'Immutable audit logs track recommendation-to-action lifecycle',
-      'Explainability artifacts included in customer success workflows',
-      'Known limitations documented in customer-facing governance docs',
+    tradeoffs: [
+      'Strict validation adds latency overhead but preserves deterministic commitments.',
+      'Human approval on high-impact actions slows throughput while reducing governance risk.',
+      'Separate advisory services increase deployment complexity but isolate failure domains.',
+    ],
+    governanceModel: [
+      'Immutable audit logs track recommendation-to-action lifecycle.',
+      'Explainability artifacts are included in customer success workflows.',
+      'Known limitations are documented in customer-facing governance docs.',
     ],
     performanceResults: [
       'Maintained deterministic latency profile under increased load',
       'Expanded product capability without breaching reliability SLAs',
       'Improved enterprise confidence through transparent guardrails',
     ],
-    longTermScalability: [
+    whatNext: [
       'Architecture supports federated deployments for regulated clients',
       'Deterministic core simplifies future model upgrades',
       'Shared ecosystem patterns keep Reach and Zeo services aligned',

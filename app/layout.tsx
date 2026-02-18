@@ -17,6 +17,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { getOptionalEnv } from '@/lib/env';
 import { EnhancedErrorBoundary } from '@/lib/error-handling/error-boundary-enhanced';
 import { generateMetadata as generateSEOMetadata, SITE_URL } from '@/lib/seo/metadata';
+import { MESSAGING_CONTRACT, TAGLINE_TITLE_TEMPLATE } from '@/content/constants';
 
 const ogImageUrl = `${SITE_URL}/og-image.svg`;
 
@@ -30,20 +31,19 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   ...generateSEOMetadata({
-    title: 'AI Automated Systems | Agentic Automation Consultancy',
-    description:
-      'We help organizations design, deploy, and operate reliable agentic automations while training teams to run them safely and productively. Pilot → Scale → Enable engagement model.',
+    title: TAGLINE_TITLE_TEMPLATE,
+    description: MESSAGING_CONTRACT.metadataDescription,
     canonical: '/',
     keywords: [
       'agentic automation',
-      'AI consultancy',
+      'agentic automation consultancy',
       'workflow automation',
       'AI agents',
       'automation training',
       'systems thinking',
       'human-in-the-loop',
       'operational reliability',
-      'Canadian AI consultancy',
+      'deterministic automation systems',
       'enterprise automation',
       'governance and guardrails',
     ],
@@ -67,9 +67,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'AI Automated Systems | Agentic Automation Consultancy',
-    description:
-      'We help organizations design, deploy, and operate reliable agentic automations while training teams to run them safely and productively.',
+    title: TAGLINE_TITLE_TEMPLATE,
+    description: MESSAGING_CONTRACT.metadataDescription,
     type: 'website',
     url: SITE_URL,
     siteName: 'AI Automated Systems',
@@ -80,16 +79,15 @@ export const metadata: Metadata = {
         url: ogImageUrl,
         width: 1200,
         height: 630,
-        alt: 'AI Automated Systems | Agentic Automation Consultancy',
+        alt: TAGLINE_TITLE_TEMPLATE,
         type: 'image/svg+xml',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Automated Systems | Agentic Automation Consultancy',
-    description:
-      'We help organizations design, deploy, and operate reliable agentic automations while training teams to run them safely and productively.',
+    title: TAGLINE_TITLE_TEMPLATE,
+    description: MESSAGING_CONTRACT.metadataDescription,
     creator: '@aias_platform',
     site: '@aias_platform',
     images: [

@@ -19,7 +19,11 @@ test.describe('@smoke Reality Mode Smoke Test', () => {
 
   test('Route-first navigation pages render', async ({ page }) => {
     await page.goto('/services');
-    await expect(page.getByRole('heading', { name: 'What we deliver' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', {
+        name: 'Deterministic automation services built for production teams',
+      })
+    ).toBeVisible();
 
     await page.goto('/process');
     await expect(page.getByRole('heading', { name: 'From discovery to deployment' })).toBeVisible();
@@ -45,5 +49,22 @@ test.describe('@smoke Reality Mode Smoke Test', () => {
 
     await expect(page.getByText('Agentic Execution Plan')).toBeVisible();
     await expect(page.getByText('Configure Ingestion Webhook')).toBeVisible();
+  });
+
+  test('New ecosystem and demo routes render', async ({ page }) => {
+    await page.goto('/ecosystem');
+    await expect(page.getByRole('heading', { name: 'Layered system diagram' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Governance principles' })).toBeVisible();
+
+    await page.goto('/automation-demo');
+    await expect(page.getByRole('heading', { name: 'Architecture diagram' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Governance Review' })).toBeVisible();
+
+    await page.goto('/readiness-checklist');
+    await expect(page.getByRole('heading', { name: 'AI Systems Readiness Checklist' }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Download checklist (.md)' })).toHaveAttribute(
+      'href',
+      '/downloads/ai-systems-readiness-checklist.md'
+    );
   });
 });

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { CheckCircle2, Circle, ArrowRight } from 'lucide-react';
@@ -127,12 +128,12 @@ export default function ProcessPage() {
                 Book a Strategy Call
                 <ArrowRight className="h-4 w-4" />
               </a>
-              <a
+              <Link
                 href="/case-studies"
                 className="inline-flex items-center justify-center gap-2 rounded-lg border bg-background px-6 py-3 font-semibold transition-colors hover:bg-muted"
               >
                 View Case Studies
-              </a>
+              </Link>
             </div>
           </div>
         </div>

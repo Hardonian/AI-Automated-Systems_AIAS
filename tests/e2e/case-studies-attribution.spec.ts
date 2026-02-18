@@ -1,30 +1,28 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('@smoke Case studies media + attribution', () => {
-  test('case studies page renders thumbnails and UTM-tagged outbound links', async ({ page }) => {
+test.describe('@smoke Case studies route coverage', () => {
+  test('case studies index links to all flagship structured routes', async ({ page }) => {
     await page.goto('/case-studies');
 
-    const settlerThumb = page.getByAltText('Settler case study thumbnail');
-    const readyLayerThumb = page.getByAltText('Ready Layer case study thumbnail');
-    await expect(settlerThumb).toBeVisible();
-    await expect(readyLayerThumb).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Website Automation System' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'App Orchestration Platform' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Hybrid Deterministic + AI SaaS' })).toBeVisible();
 
-    const settlerLogo = page.getByAltText('Settler logo');
-    const readyLayerLogo = page.getByAltText('Ready Layer logo');
-    await expect(settlerLogo).toBeVisible();
-    await expect(readyLayerLogo).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: 'Open case study' }).first()
+    ).toHaveAttribute('href', '/case-studies/website-automation-system');
+  });
 
-    const links = page.getByRole('link', { name: 'Visit project' });
-    await expect(links).toHaveCount(2);
+  test('structured case study template sections render on slug page', async ({ page }) => {
+    await page.goto('/case-studies/website-automation-system');
 
-    await expect(links.nth(0)).toHaveAttribute(
-      'href',
-      /settler\.dev\/\?utm_source=aias&utm_medium=case-study&utm_campaign=website/
-    );
-
-    await expect(links.nth(1)).toHaveAttribute(
-      'href',
-      /ready-layer\.com\/\?utm_source=aias&utm_medium=case-study&utm_campaign=website/
-    );
+    await expect(page.getByRole('heading', { name: '1) Client Problem' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '2) System Constraints' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '3) Architecture Chosen' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '4) Automation Layer' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '5) AI Integration' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '6) Governance & Determinism' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '7) Performance Results' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '8) Long-Term Scalability' })).toBeVisible();
   });
 });

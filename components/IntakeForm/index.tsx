@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/select';
 import { SurfaceCard } from '@/components/ui/section-primitives';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Input } from '@/components/ui/input';
 
 const formSchema = z.object({
   orgType: z.enum(ORG_TYPES, { required_error: 'Select organization type.' }),
@@ -30,10 +31,12 @@ const formSchema = z.object({
   urgency: z.enum(URGENCY_LEVELS, { required_error: 'Select urgency.' }),
   scope: z.enum(ENGAGEMENT_SCOPES, { required_error: 'Select engagement scope.' }),
   budgetFlexibility: z.enum(BUDGET_FLEXIBILITY_RANGES, { required_error: 'Select budget flexibility.' }),
+  email: z.string().email('Enter a valid email or leave blank.').optional().or(z.literal('')),
+  website: z.string().max(0).optional(),
 });
 
-type FormValues = Partial<IntakeSubmission>;
-type FormErrors = Partial<Record<keyof IntakeSubmission, string>>;
+type FormValues = Partial<IntakeSubmission> & { email?: string; website?: string };
+type FormErrors = Partial<Record<keyof FormValues, string>>;
 
 const orgTypeLabels: Record<IntakeSubmission['orgType'], string> = {
   startup: 'Startup / founding team',
@@ -59,8 +62,8 @@ const urgencyLabels: Record<IntakeSubmission['urgency'], string> = {
 
 const scopeLabels: Record<IntakeSubmission['scope'], string> = {
   'one-off': 'One-off diagnostic or implementation',
-  'build-with': 'Build-with partnership',
-  'managed-refinement': 'Managed refinement and optimization',
+  'build-with': 'Co-build sprint',
+  'managed-refinement': 'Managed system refinement',
 };
 
 const budgetLabels: Record<IntakeSubmission['budgetFlexibility'], string> = {
@@ -69,13 +72,13 @@ const budgetLabels: Record<IntakeSubmission['budgetFlexibility'], string> = {
   strategic: 'Strategic — open to deeper implementation',
 };
 
-const steps: ReadonlyArray<{ id: number; title: string; fields: ReadonlyArray<keyof IntakeSubmission> }> = [
+const steps: ReadonlyArray<{ id: number; title: string; fields: ReadonlyArray<keyof FormValues> }> = [
   { id: 1, title: 'Organization and problem context', fields: ['orgType', 'problemCategory'] },
   { id: 2, title: 'Urgency and engagement scope', fields: ['urgency', 'scope'] },
-  { id: 3, title: 'Budget flexibility and confirmation', fields: ['budgetFlexibility'] },
+  { id: 3, title: 'Budget and contact preferences', fields: ['budgetFlexibility', 'email'] },
 ];
 
-function validateFields(values: FormValues, fields: ReadonlyArray<keyof IntakeSubmission>): FormErrors {
+function validateFields(values: FormValues, fields: ReadonlyArray<keyof FormValues>): FormErrors {
   const parsed = formSchema.safeParse(values);
   if (parsed.success) {
     return {};
@@ -91,6 +94,16 @@ function validateFields(values: FormValues, fields: ReadonlyArray<keyof IntakeSu
   return errors;
 }
 
+function downloadJsonArtifact(payload: unknown) {
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = `aias-intake-${new Date().toISOString().slice(0, 10)}.json`;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
 export function IntakeForm() {
   const [stepIndex, setStepIndex] = useState(0);
   const [values, setValues] = useState<FormValues>({});
@@ -102,7 +115,7 @@ export function IntakeForm() {
 
   const completion = useMemo(() => ((stepIndex + 1) / steps.length) * 100, [stepIndex]);
 
-  const updateValue = <K extends keyof IntakeSubmission>(key: K, value: IntakeSubmission[K]) => {
+  const updateValue = <K extends keyof FormValues>(key: K, value: FormValues[K]) => {
     setValues((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: undefined }));
   };
@@ -123,16 +136,30 @@ export function IntakeForm() {
   const onSubmit = async () => {
     const parsed = formSchema.safeParse(values);
     if (!parsed.success) {
-      const allErrors = validateFields(values, ['orgType', 'problemCategory', 'urgency', 'scope', 'budgetFlexibility']);
+      const allErrors = validateFields(values, ['orgType', 'problemCategory', 'urgency', 'scope', 'budgetFlexibility', 'email']);
       setErrors(allErrors);
       return;
     }
 
-    const intake = parsed.data;
+    if (parsed.data.website) {
+      setSubmitted(true);
+      return;
+    }
+
+    const intake: IntakeSubmission = {
+      orgType: parsed.data.orgType,
+      problemCategory: parsed.data.problemCategory,
+      urgency: parsed.data.urgency,
+      scope: parsed.data.scope,
+      budgetFlexibility: parsed.data.budgetFlexibility,
+      email: parsed.data.email || undefined,
+    };
+
     const classification = classifyIntake(intake);
     const payload = {
       type: 'lead-intake',
       submittedAt: new Date().toISOString(),
+      contactAvailable: Boolean(intake.email),
       intake,
       classification,
     };
@@ -159,28 +186,39 @@ export function IntakeForm() {
       } else {
         console.info('No intake webhook configured. Submission logged in browser only.', payload);
       }
+      downloadJsonArtifact(payload);
     } catch (error) {
       console.error('Intake submission failed but was safely degraded.', error);
+      downloadJsonArtifact(payload);
     } finally {
       setIsSubmitting(false);
       setSubmitted(true);
-      setValues(intake);
+      setValues({ ...intake, email: intake.email });
     }
   };
 
   if (submitted) {
-    const intake = formSchema.parse(values);
-    const result = classifyIntake(intake);
+    const intake = formSchema.parse({ ...values, website: '' });
+    const result = classifyIntake({
+      orgType: intake.orgType,
+      problemCategory: intake.problemCategory,
+      urgency: intake.urgency,
+      scope: intake.scope,
+      budgetFlexibility: intake.budgetFlexibility,
+      email: intake.email || undefined,
+    });
 
     return (
       <SurfaceCard>
-        <p className='text-sm font-semibold uppercase tracking-wide text-primary'>Intake received</p>
-        <h2 className='mt-2 text-2xl font-bold'>Recommended path: {result.recommendedPath.title}</h2>
+        <p className='text-sm font-semibold uppercase tracking-[0.2em] text-primary'>Intake submitted</p>
+        <h2 className='mt-3 text-2xl font-bold'>{result.recommendedPath.title}</h2>
         <p className='mt-3 text-muted-foreground'>{result.recommendedPath.summary}</p>
-        <p className='mt-3 text-muted-foreground'>{result.recommendedPath.nextStep}</p>
-        <div className='mt-6 rounded-lg border border-border bg-muted/30 p-4'>
-          <h3 className='font-semibold'>Engagement rationale</h3>
-          <ul className='mt-3 list-disc space-y-2 pl-5 text-sm text-muted-foreground'>
+        <p className='mt-4 text-sm text-muted-foreground'>
+          {intake.email ? `Follow-up can be sent to ${intake.email}.` : 'No email provided. Downloaded JSON artifact can be shared manually.'}
+        </p>
+        <div className='mt-6 rounded-lg border bg-muted/40 p-4'>
+          <p className='text-sm font-semibold'>Why this path</p>
+          <ul className='mt-2 list-disc space-y-1 pl-4 text-sm text-muted-foreground'>
             {result.rationale.map((item) => (
               <li key={item}>{item}</li>
             ))}
@@ -211,6 +249,8 @@ export function IntakeForm() {
           onNext();
         }}
       >
+        <input autoComplete='off' className='hidden' name='website' tabIndex={-1} type='text' value={values.website || ''} onChange={(event) => updateValue('website', event.target.value)} />
+
         {stepIndex === 0 && (
           <>
             <div className='space-y-2'>
@@ -276,18 +316,27 @@ export function IntakeForm() {
         )}
 
         {stepIndex === 2 && (
-          <fieldset className='space-y-3'>
-            <legend className='text-sm font-medium'>Budget flexibility</legend>
-            <RadioGroup value={values.budgetFlexibility} onValueChange={(value) => updateValue('budgetFlexibility', value as IntakeSubmission['budgetFlexibility'])} aria-invalid={Boolean(errors.budgetFlexibility)} aria-describedby={errors.budgetFlexibility ? 'budgetFlexibility-error' : undefined}>
-              {BUDGET_FLEXIBILITY_RANGES.map((option) => (
-                <div className='flex items-center space-x-3' key={option}>
-                  <RadioGroupItem id={`budget-${option}`} value={option} />
-                  <Label htmlFor={`budget-${option}`}>{budgetLabels[option]}</Label>
-                </div>
-              ))}
-            </RadioGroup>
-            {errors.budgetFlexibility && <p id='budgetFlexibility-error' className='text-sm text-destructive'>{errors.budgetFlexibility}</p>}
-          </fieldset>
+          <>
+            <fieldset className='space-y-3'>
+              <legend className='text-sm font-medium'>Budget flexibility</legend>
+              <RadioGroup value={values.budgetFlexibility} onValueChange={(value) => updateValue('budgetFlexibility', value as IntakeSubmission['budgetFlexibility'])} aria-invalid={Boolean(errors.budgetFlexibility)} aria-describedby={errors.budgetFlexibility ? 'budgetFlexibility-error' : undefined}>
+                {BUDGET_FLEXIBILITY_RANGES.map((option) => (
+                  <div className='flex items-center space-x-3' key={option}>
+                    <RadioGroupItem id={`budget-${option}`} value={option} />
+                    <Label htmlFor={`budget-${option}`}>{budgetLabels[option]}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+              {errors.budgetFlexibility && <p id='budgetFlexibility-error' className='text-sm text-destructive'>{errors.budgetFlexibility}</p>}
+            </fieldset>
+
+            <div className='space-y-2'>
+              <Label htmlFor='email'>Email (optional)</Label>
+              <Input id='email' type='email' placeholder='you@company.com' value={values.email || ''} onChange={(event) => updateValue('email', event.target.value)} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'email-error' : undefined} />
+              {errors.email && <p id='email-error' className='text-sm text-destructive'>{errors.email}</p>}
+              <p className='text-xs text-muted-foreground'>If omitted, we still classify your intake and export structured JSON locally.</p>
+            </div>
+          </>
         )}
 
         <div className='flex flex-wrap items-center gap-3'>

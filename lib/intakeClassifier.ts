@@ -36,9 +36,10 @@ export interface IntakeSubmission {
   urgency: UrgencyLevel;
   scope: EngagementScope;
   budgetFlexibility: BudgetFlexibilityRange;
+  email?: string;
 }
 
-export type EngagementTier = 'advisory-sprint' | 'build-partnership' | 'managed-program';
+export type EngagementTier = 'advisory' | 'co-build-sprint' | 'managed-system-refinement' | 'enterprise-engagement';
 
 export interface ClassificationResult {
   tier: EngagementTier;
@@ -52,23 +53,29 @@ export interface ClassificationResult {
 }
 
 const tierCopy: Record<EngagementTier, ClassificationResult['recommendedPath']> = {
-  'advisory-sprint': {
-    title: 'Advisory Sprint',
+  advisory: {
+    title: 'Advisory',
     summary:
-      'Best for fast discovery or constrained initiatives where a tight plan and implementation map are the immediate priority.',
-    nextStep: 'We will start with a focused diagnostic, define the workflow map, and hand over an execution-ready blueprint.',
+      'Best for focused diagnosis and architecture planning when the team needs a deterministic plan before implementation.',
+    nextStep: 'We will run a short architecture sprint and provide a concrete rollout blueprint.',
   },
-  'build-partnership': {
-    title: 'Build-With Partnership',
+  'co-build-sprint': {
+    title: 'Co-build Sprint',
     summary:
-      'Best for teams that want a collaborative implementation with shared ownership, milestones, and measurable adoption outcomes.',
-    nextStep: 'We will propose a phased roadmap with sprint checkpoints and a jointly owned delivery cadence.',
+      'Best for teams that want to implement with shared ownership and measurable checkpoints.',
+    nextStep: 'We will propose a phased sprint plan with shared delivery responsibilities.',
   },
-  'managed-program': {
-    title: 'Managed Refinement Program',
+  'managed-system-refinement': {
+    title: 'Managed System Refinement',
     summary:
-      'Best for ongoing optimization, risk control, and workflow evolution across multiple systems and stakeholder groups.',
-    nextStep: 'We will recommend a rolling operating model with governance reviews, optimization cycles, and escalation paths.',
+      'Best for teams requiring ongoing optimization, governance reviews, and run-time reliability improvements.',
+    nextStep: 'We will design an operating cadence with monthly refinement and governance checkpoints.',
+  },
+  'enterprise-engagement': {
+    title: 'Enterprise Engagement',
+    summary:
+      'Best for complex, regulated, or multi-team environments requiring strict controls and federated delivery.',
+    nextStep: 'We will align stakeholders, define risk boundaries, and set enterprise governance milestones.',
   },
 };
 
@@ -107,12 +114,19 @@ export function classifyIntake(submission: IntakeSubmission): ClassificationResu
     rationale.push('Problem category indicates cross-system complexity and governance needs.');
   }
 
-  if (submission.orgType === 'enterprise' || submission.orgType === 'public-sector') {
-    score += 1;
-    rationale.push('Organization type often requires additional coordination and controls.');
+  const enterpriseProfile = submission.orgType === 'enterprise' || submission.orgType === 'public-sector';
+  if (enterpriseProfile) {
+    score += 2;
+    rationale.push('Organization type indicates enterprise governance and coordination requirements.');
   }
 
-  const tier: EngagementTier = score >= 7 ? 'managed-program' : score >= 4 ? 'build-partnership' : 'advisory-sprint';
+  const tier: EngagementTier = enterpriseProfile && score >= 6
+    ? 'enterprise-engagement'
+    : score >= 7
+      ? 'managed-system-refinement'
+      : score >= 4
+        ? 'co-build-sprint'
+        : 'advisory';
 
   return {
     tier,

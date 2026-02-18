@@ -1,18 +1,15 @@
 import type { Metadata } from 'next';
-
-import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
-import Image from 'next/image';
 import Link from 'next/link';
 
-import { CaseStudyTemplate } from '@/components/content/case-study-template';
-import { FAQSection } from '@/components/content/faq-section';
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageCta, PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
-import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
+import { getPrimaryCtaHref } from '@/src/content/site';
+import { caseStudies } from '@/src/content/caseStudies';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Case Studies | AI Automated Systems',
   description:
-    'Review measurable outcomes from AIAS automation engagements across operations and support workflows.',
+    'Structured automation case studies covering website automation, app orchestration, and hybrid deterministic + AI SaaS systems.',
   canonical: '/case-studies',
 });
 
@@ -21,69 +18,29 @@ export default function CaseStudiesPage() {
     <>
       <PageHero
         eyebrow='Case studies'
-        title='Proof of impact'
-        description='Examples of automation engagements with clear implementation scope, operational outcomes, and measurable process improvements.'
+        title='Systems-first implementation evidence'
+        description='Each case study documents problem constraints, architecture decisions, governance controls, and long-term scalability outcomes.'
       />
 
       <PageSection>
-        <div className='space-y-8'>
-          {siteContent.caseStudies.map((study, index) => (
-            <SurfaceCard key={study.title} className='overflow-hidden p-0'>
-              <Image
-                alt={`${study.client} case study thumbnail`}
-                className='h-auto w-full border-b object-cover'
-                height={630}
-                priority={index === 0}
-                sizes='(max-width: 768px) 100vw, 1200px'
-                src={study.thumbnailSrc}
-                width={1200}
-              />
-              <div className='p-6'>
-                <div className='mb-4 flex justify-end'>
-                  <Image
-                    alt={`${study.client} logo`}
-                    className='h-10 w-auto'
-                    height={40}
-                    sizes='150px'
-                    src={study.logoSrc}
-                    width={150}
-                  />
-                </div>
-                <CaseStudyTemplate
-                  anonymized={study.client.toLowerCase().includes('organization')}
-                  challenge={study.challenge}
-                  clientLabel={study.client}
-                  results={study.results}
-                  solution={study.solution}
-                  title={study.title}
-                />
-                <Link
-                  className='mt-4 inline-block font-semibold text-primary underline'
-                  href={study.projectUrl}
-                  rel='noreferrer'
-                  target='_blank'
-                >
-                  Visit project
-                </Link>
-              </div>
+        <div className='grid gap-6 md:grid-cols-3'>
+          {caseStudies.map((study) => (
+            <SurfaceCard key={study.slug}>
+              <h2 className='text-xl font-bold'>{study.title}</h2>
+              <p className='mt-3 text-muted-foreground'>{study.summary}</p>
+              <Link className='mt-6 inline-block font-semibold text-primary underline underline-offset-4' href={`/case-studies/${study.slug}`}>
+                Open case study
+              </Link>
             </SurfaceCard>
           ))}
         </div>
       </PageSection>
 
-      <PageSection background='muted'>
-        <FAQSection
-          entries={siteContent.faq.slice(0, 3)}
-          subtitle='Common questions about our delivery model and case-study documentation approach.'
-          title='Case study FAQs'
-        />
-      </PageSection>
-
       <PageCta
-        title='Want a similar implementation in your organization?'
-        description='Start with a strategy call and we will map the smallest practical rollout path for your workflows.'
-        primary={{ label: siteContent.positioning.primaryCTA.label, href: getPrimaryCtaHref() }}
-        secondary={{ label: 'Request proposal', href: '/contact' }}
+        title='Need a similar system architecture outcome?'
+        description='We scope engagements based on constraints, governance obligations, and operational risk tolerance.'
+        primary={{ label: 'Book strategy call', href: getPrimaryCtaHref() }}
+        secondary={{ label: 'View ecosystem architecture', href: '/ecosystem' }}
       />
     </>
   );

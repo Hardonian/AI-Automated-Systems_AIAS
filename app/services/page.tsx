@@ -4,6 +4,8 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageCta, PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
+import { FAQSchema } from '@/components/seo/structured-data';
+import { ServiceTrackLinks } from '@/components/services/service-track-links';
 import { FeatureIllustration } from '@/components/visual/FeatureIllustration';
 import { WorkflowDiagram } from '@/components/visual/WorkflowDiagram';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
@@ -25,6 +27,7 @@ const serviceVisuals: Record<string, 'agents' | 'automation' | 'security' | 'int
 export default function ServicesPage() {
   return (
     <>
+      <FAQSchema faqs={siteContent.routeFaqs.services} />
       <PageHero
         eyebrow='Services'
         title='Deterministic automation services built for production teams'
@@ -32,6 +35,8 @@ export default function ServicesPage() {
       />
 
       <PageSection>
+        <ServiceTrackLinks />
+
         <div className='grid gap-8 md:grid-cols-2'>
           {siteContent.services.map(service => (
             <SurfaceCard key={service.title} className='p-7'>

@@ -1,5 +1,7 @@
 import Script from 'next/script';
 
+import { MESSAGING_CONTRACT } from '@/content/constants';
+
 interface ProfessionalServiceSchemaProps {
   name?: string;
   url?: string;
@@ -9,7 +11,7 @@ interface ProfessionalServiceSchemaProps {
 export function ProfessionalServiceSchema({
   name = 'AI Automated Systems Consultancy',
   url = 'https://aiautomatedsystems.ca',
-  description = 'Enterprise AI strategy, custom platform development, and workflow automation consultancy.',
+  description = MESSAGING_CONTRACT.metadataDescription,
 }: ProfessionalServiceSchemaProps) {
   const schema = {
     '@context': 'https://schema.org',
@@ -87,7 +89,7 @@ interface WebSiteSchemaProps {
 export function WebSiteSchema({
   name = 'AI Automated Systems',
   url = 'https://aiautomatedsystems.ca',
-  description = 'Custom AI platform development and automation solutions. Built in Canada, serving the world.',
+  description = MESSAGING_CONTRACT.metadataDescription,
 }: WebSiteSchemaProps) {
   const schema = {
     '@context': 'https://schema.org',
@@ -151,8 +153,8 @@ interface ServiceSchemaProps {
 }
 
 export function ServiceSchema({
-  name = 'Custom AI Platform Development',
-  description = 'We architect and build custom AI platforms from the ground up',
+  name = 'Deterministic Automation Systems Design',
+  description = MESSAGING_CONTRACT.metadataDescription,
   provider = {
     name: 'AI Automated Systems',
     url: 'https://aiautomatedsystems.ca',

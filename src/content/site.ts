@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { MESSAGING_CONTRACT } from '@/content/constants';
+
 export interface SiteConfig {
   brand: {
     name: string;
@@ -258,13 +260,11 @@ export interface SiteConfig {
 const rawSiteContent: SiteConfig = {
   brand: {
     name: 'AIAS',
-    tagline: 'Agentic Automation Consultancy',
-    description:
-      'We architect and deploy custom AI platforms that save Canadian businesses 10+ hours per week per employee.',
+    tagline: MESSAGING_CONTRACT.primaryTagline,
+    description: MESSAGING_CONTRACT.positioningSentence,
   },
   positioning: {
-    subheading:
-      'Stop playing with chatbots. Start building intelligent, deterministic workflows that drive real ROI.',
+    subheading: MESSAGING_CONTRACT.heroSubheading,
     badgeText: 'New: Agentic Workflow Engine',
     impactCardsLabel: 'At-a-glance impact',
     primaryCTA: {
@@ -913,7 +913,7 @@ const rawSiteContent: SiteConfig = {
     github: 'https://github.com/shardie-github/aias',
   },
   footer: {
-    tagline: 'Engineering the future of work, one workflow at a time.',
+    tagline: MESSAGING_CONTRACT.primaryTagline,
     copyright: '© 2026 AI Automated Systems. All rights reserved.',
     legalLinks: [
       { label: 'Privacy Policy', href: '/privacy' },

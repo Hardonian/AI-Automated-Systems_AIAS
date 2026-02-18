@@ -20,6 +20,7 @@ import { ConversionPathsSection } from '@/components/home/conversion-paths-secti
 import { TrustRiskSection } from '@/components/home/trust-risk-section';
 import { WorkflowIllustrationSection } from '@/components/home/workflow-illustration-section';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
+import { MESSAGING_CONTRACT, TAGLINE_TITLE_TEMPLATE } from '@/content/constants';
 
 import { getPrimaryCtaHref, siteContent, SiteConfig } from '@/src/content/site';
 
@@ -29,9 +30,8 @@ const WorkflowSandbox = dynamic(
 
 export const metadata = {
   ...generateSEOMetadata({
-    title: 'AI Automated Systems | Agentic Automation Consultancy',
-    description:
-      'Static-first AI consultancy site for agentic automation strategy, delivery, enablement, and governance support.',
+    title: TAGLINE_TITLE_TEMPLATE,
+    description: MESSAGING_CONTRACT.metadataDescription,
     canonical: '/',
   }),
 };

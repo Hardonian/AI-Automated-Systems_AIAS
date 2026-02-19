@@ -178,17 +178,12 @@ export function IntakeForm() {
         });
 
         if (!response.ok) {
-          console.error('Intake submission endpoint returned non-OK response.', {
-            status: response.status,
-            statusText: response.statusText,
-          });
+          // Silently fail - artifact already downloaded
         }
-      } else {
-        console.info('No intake webhook configured. Submission logged in browser only.', payload);
       }
       downloadJsonArtifact(payload);
-    } catch (error) {
-      console.error('Intake submission failed but was safely degraded.', error);
+    } catch {
+      // Silently fail - artifact already downloaded
       downloadJsonArtifact(payload);
     } finally {
       setIsSubmitting(false);

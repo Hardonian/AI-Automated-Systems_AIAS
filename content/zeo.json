@@ -1,0 +1,19 @@
+{
+  "name": "Zeo",
+  "role": "Platform & Automation Execution",
+  "focus": [
+    "Agentic workflow implementation",
+    "Middleware and abstraction layers",
+    "Integration engineering"
+  ],
+  "capabilities": [
+    "Multi-agent coordination",
+    "Deterministic execution graphs",
+    "Legacy system stabilization"
+  ],
+  "impactSignals": [
+    "Reduced operational overhead",
+    "Deterministic reliability at scale",
+    "Elimination of manual triage"
+  ]
+}

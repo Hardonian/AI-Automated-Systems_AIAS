@@ -1,10 +1,19 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 import { PageCta, PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
+import { Button } from '@/components/ui/button';
 import { getPrimaryCtaHref } from '@/src/content/site';
-import { caseStudies, getCaseStudyBySlug } from '@/src/content/caseStudies';
+import { caseStudies, getCaseStudyBySlug } from '@/lib/case-studies-generator';
+import { ArchitectureDiagram } from '@/components/visual/ArchitectureDiagram';
+import { 
+  CaseStudySchema, 
+  OrganizationSchema, 
+  ServiceSchema, 
+  FAQSchema 
+} from '@/components/seo/structured-data';
 
 export function generateStaticParams() {
   return caseStudies.map((study) => ({ slug: study.slug }));
@@ -16,44 +25,44 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   if (!study) {
     return {
-      title: 'Case study not found | AI Automated Systems',
+      title: 'Case Study Not Found | AI Automated Systems',
     };
   }
 
   return {
     title: `${study.title} | AIAS Case Study`,
-    description: study.summary,
+    description: `Deep dive into the architecture and impact of the ${study.title} implementation by AIAS.`,
+    openGraph: {
+      title: `${study.title} | AIAS Case Study`,
+      description: `Deep dive into the architecture and impact of the ${study.title} implementation by AIAS.`,
+      type: 'article',
+      url: `https://aiautomatedsystems.ca/case-studies/${slug}`,
+    }
   };
 }
 
-function SectionList({ title, items }: { title: string; items: string[] }) {
+function SectionList({ title, items, icon: Icon = CheckCircle2 }: { title: string; items: string[]; icon?: any }) {
   return (
     <SurfaceCard>
-      <h2 className='text-2xl font-bold'>{title}</h2>
-      <ul className='mt-4 space-y-2 text-muted-foreground'>
+      <h2 className='text-xl font-bold tracking-tight'>{title}</h2>
+      <ul className='mt-6 space-y-3'>
         {items.map((item) => (
-          <li key={item}>• {item}</li>
+          <li key={item} className='flex items-start gap-3 text-sm text-muted-foreground'>
+            <Icon className='mt-1 h-4 w-4 shrink-0 text-primary/60' />
+            <span>{item}</span>
+          </li>
         ))}
       </ul>
     </SurfaceCard>
   );
 }
 
-function CaseDiagram({ slug }: { slug: string }) {
-  return (
-    <svg aria-label='Case study architecture diagram' className='h-auto w-full rounded-md border bg-background p-4' viewBox='0 0 600 220'>
-      <rect fill='currentColor' fillOpacity='0.06' height='60' rx='10' width='140' x='20' y='80' />
-      <text fontSize='12' textAnchor='middle' x='90' y='115'>Inputs</text>
-      <line stroke='currentColor' strokeOpacity='0.5' x1='160' x2='230' y1='110' y2='110' />
-      <rect fill='currentColor' fillOpacity='0.08' height='60' rx='10' width='170' x='230' y='80' />
-      <text fontSize='12' textAnchor='middle' x='315' y='110'>Deterministic Control Layer</text>
-      <line stroke='currentColor' strokeOpacity='0.5' x1='400' x2='470' y1='110' y2='110' />
-      <rect fill='currentColor' fillOpacity='0.06' height='60' rx='10' width='110' x='470' y='80' />
-      <text fontSize='12' textAnchor='middle' x='525' y='115'>Outcomes</text>
-      <text fontSize='11' textAnchor='middle' x='300' y='30'>{slug}</text>
-    </svg>
-  );
-}
+const PRICING_ALIGNMENT = [
+  { label: 'Build', href: '/contact?ref=build' },
+  { label: 'Train', href: '/contact?ref=train' },
+  { label: 'Operate', href: '/contact?ref=operate' },
+  { label: 'Scale', href: '/contact?ref=scale' },
+];
 
 export default async function CaseStudyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -65,44 +74,83 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
 
   return (
     <>
-      <PageHero eyebrow='Case study deep dive' title={study.title} description={study.summary} />
+      {/* Structured Data */}
+      <OrganizationSchema />
+      <ServiceSchema 
+        name={`${study.title} Implementation`}
+        description={study.problem}
+      />
+      <CaseStudySchema 
+        title={study.title}
+        description={study.problem}
+        url={`https://aiautomatedsystems.ca/case-studies/${slug}`}
+      />
+      <FAQSchema 
+        faqs={[
+          {
+            question: `What was the primary objective of the ${study.title} project?`,
+            answer: study.problem
+          },
+          {
+            question: `Which technologies were used in the ${study.title} architecture?`,
+            answer: study.technologies.join(', ')
+          }
+        ]}
+      />
+
+      <PageHero 
+        eyebrow='Case Study Deep Dive' 
+        title={study.title} 
+        description='Implementation evidence, architectural constraints, and measured outcomes.' 
+      />
 
       <PageSection width='narrow'>
-        <SurfaceCard>
-          <h2 className='text-2xl font-bold'>1) Problem</h2>
-          <p className='mt-4 text-muted-foreground'>{study.clientProblem}</p>
-        </SurfaceCard>
+        <div className='space-y-6'>
+          <SurfaceCard>
+            <h2 className='text-2xl font-bold tracking-tight italic text-primary/80'>01 / The Problem</h2>
+            <p className='mt-4 text-lg leading-relaxed text-muted-foreground'>{study.problem}</p>
+          </SurfaceCard>
+          
+          <SurfaceCard>
+            <h2 className='text-2xl font-bold tracking-tight italic text-primary/80'>02 / Interactive Architecture</h2>
+            <p className='mt-2 mb-8 text-sm text-muted-foreground'>Hover components to explore layer responsibilities.</p>
+            <ArchitectureDiagram />
+          </SurfaceCard>
+        </div>
       </PageSection>
 
       <PageSection>
         <div className='grid gap-6 md:grid-cols-2'>
-          <SectionList title='2) Constraints' items={study.systemConstraints} />
-          <SurfaceCard>
-            <h2 className='text-2xl font-bold'>3) Architecture</h2>
-            <p className='mt-4 text-muted-foreground'>{study.architectureChosen}</p>
-            <div className='mt-4'>
-              <CaseDiagram slug={study.slug} />
-            </div>
-          </SurfaceCard>
-          <SectionList title='4) Tradeoffs' items={study.tradeoffs} />
-          <SectionList title='5) Governance model' items={study.governanceModel} />
-          <SectionList title='6) Performance outcomes' items={study.performanceResults} />
-          <SectionList title='7) What we would do next' items={study.whatNext} />
+          <SectionList title='03 / Architecture Components' items={study.architecture} />
+          <SectionList title='04 / Implementation Highlights' items={study.implementationHighlights} />
+          <SectionList title='05 / Automation Wins' items={study.automationWins} />
+          <SectionList title='06 / Measurable Impact' items={study.measurableImpact} />
         </div>
       </PageSection>
 
-      <PageCta
-        title='Want this architecture mapped to your environment?'
-        description='We can scope advisory, co-build, managed refinement, or enterprise governance engagements.'
-        primary={{ label: 'Book strategy call', href: getPrimaryCtaHref() }}
-        secondary={{ label: 'Back to case studies', href: '/case-studies' }}
-      />
-
-      <PageSection width='narrow'>
-        <Link className='text-sm font-semibold text-primary underline underline-offset-4' href='/ecosystem'>
-          See ecosystem architecture
-        </Link>
+      <PageSection background='muted' width='narrow'>
+        <SurfaceCard className='border-primary/20 bg-primary/5'>
+          <h2 className='text-xl font-bold text-center'>Aligned Engagement Paths</h2>
+          <p className='text-center text-sm text-muted-foreground mt-2'>Select a path to deploy similar architecture in your environment.</p>
+          <div className='mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4'>
+            {PRICING_ALIGNMENT.map((item) => (
+              <Button key={item.label} asChild variant='outline' className='bg-background hover:bg-primary hover:text-primary-foreground transition-all duration-300'>
+                <Link href={item.href}>
+                  {item.label}
+                  <ArrowRight className='ml-2 h-3 w-3' />
+                </Link>
+              </Button>
+            ))}
+          </div>
+        </SurfaceCard>
       </PageSection>
+
+      <PageCta
+        title='Ready to automate your high-value workflows?'
+        description='We scope engagements based on measurable ROI, governance needs, and technical constraints.'
+        primary={{ label: 'Book Strategy Call', href: getPrimaryCtaHref() }}
+        secondary={{ label: 'Back to Case Studies', href: '/case-studies' }}
+      />
     </>
   );
 }

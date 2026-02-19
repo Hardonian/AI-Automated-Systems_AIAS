@@ -1,0 +1,19 @@
+{
+  "name": "Settler",
+  "role": "Deployment & Governance Operations",
+  "focus": [
+    "Secure deployment automation",
+    "Post-launch governance",
+    "Repeatable operational handoff"
+  ],
+  "capabilities": [
+    "PCI DSS compliant orchestration",
+    "Real-time settlement monitoring",
+    "Auditable change management"
+  ],
+  "impactSignals": [
+    "Bank-grade security posture",
+    "Minimized post-launch regression",
+    "Automated compliance evidence gathering"
+  ]
+}

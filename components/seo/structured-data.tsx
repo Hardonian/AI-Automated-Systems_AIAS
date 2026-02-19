@@ -217,3 +217,46 @@ export function FAQSchema({ faqs }: FAQSchemaProps) {
     />
   );
 }
+interface CaseStudySchemaProps {
+  title: string;
+  description: string;
+  url: string;
+  datePublished?: string;
+}
+
+export function CaseStudySchema({
+  title,
+  description,
+  url,
+  datePublished = '2024-01-01',
+}: CaseStudySchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    url,
+    datePublished,
+    author: {
+      '@type': 'Organization',
+      name: 'AI Automated Systems',
+      url: 'https://aiautomatedsystems.ca',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'AI Automated Systems',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://aiautomatedsystems.ca/logo.png',
+      },
+    },
+  };
+
+  return (
+    <Script
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      id={`case-study-schema-${title.toLowerCase().replace(/\s+/g, '-')}`}
+      type='application/ld+json'
+    />
+  );
+}

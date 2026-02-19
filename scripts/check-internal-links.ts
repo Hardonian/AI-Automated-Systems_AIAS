@@ -1,6 +1,4 @@
-import { readFileSync } from 'node:fs';
-import { existsSync } from 'node:fs';
-import { globSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
 const OUTPUT_DIR = path.resolve('out');
@@ -10,7 +8,23 @@ if (!existsSync(OUTPUT_DIR)) {
   process.exit(1);
 }
 
-const htmlFiles = globSync('**/*.html', { cwd: OUTPUT_DIR, nodir: true });
+// Recursive helper to get all html files
+function getHtmlFiles(dir: string, base: string = ''): string[] {
+  const entries = readdirSync(dir, { withFileTypes: true });
+  const files = entries.flatMap((entry) => {
+    const res = path.join(base, entry.name);
+    if (entry.isDirectory()) {
+      return getHtmlFiles(path.join(dir, entry.name), res);
+    } else if (entry.name.endsWith('.html')) {
+      return [res];
+    }
+    return [];
+  });
+  return files;
+}
+
+const htmlFiles = getHtmlFiles(OUTPUT_DIR);
+
 const hrefPattern = /href=("([^"]+)"|'([^']+)')/g;
 const failures: string[] = [];
 

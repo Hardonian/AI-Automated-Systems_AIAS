@@ -1,8 +1,15 @@
-import { globSync, readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
+import path from 'node:path';
 
-const routeFiles = globSync('app/**/page.tsx', {
-  ignore: ['app/**/_*.tsx'],
-});
+function getRouteFiles(dir: string): string[] {
+  const entries = readdirSync(dir, { withFileTypes: true, recursive: true });
+  return entries
+    .filter(entry => entry.isFile() && entry.name === 'page.tsx')
+    .map(entry => path.join(entry.path, entry.name));
+}
+
+const routeFiles = getRouteFiles('app');
+
 
 const violations: Array<{ file: string; reason: string }> = [];
 

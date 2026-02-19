@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, Calendar, Clock, Mail, Video, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Calendar, Clock, Video, CheckCircle2 } from 'lucide-react';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
@@ -46,7 +46,7 @@ export default function BookPage() {
           <SurfaceCard className="p-8">
             <h2 className="text-xl font-semibold mb-6">What to expect</h2>
             <div className="space-y-6">
-              {bookingSteps.map((step, index) => (
+              {bookingSteps.map((step) => (
                 <div key={step.title} className="flex gap-4">
                   <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                     <step.icon className="h-5 w-5 text-primary" aria-hidden="true" />

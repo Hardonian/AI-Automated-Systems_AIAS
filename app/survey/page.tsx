@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, CheckCircle2, ArrowLeft, Sparkles } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { SurfaceCard } from '@/components/ui/section-primitives';
@@ -88,14 +88,14 @@ export default function SurveyPage() {
 
   const handleAnswer = (optionIndex: number) => {
     const currentQuestion = questions[currentStep];
-    if (!currentQuestion) return;
+    if (!currentQuestion) { return; }
     setAnswers((prev) => ({ ...prev, [currentQuestion.id]: optionIndex }));
     setErrors((prev) => ({ ...prev, [currentQuestion.id]: '' }));
   };
 
   const handleNext = () => {
     const currentQuestion = questions[currentStep];
-    if (!currentQuestion) return;
+    if (!currentQuestion) { return; }
     if (answers[currentQuestion.id] === undefined) {
       setErrors((prev) => ({ ...prev, [currentQuestion.id]: 'Please select an option' }));
       return;

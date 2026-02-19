@@ -71,8 +71,9 @@ try {
 }
 
 if (existsSync('out')) {
-  const files = execSync('ls -la out 2>/dev/null | wc -l', { encoding: 'utf8' }).trim();
-  console.log(`✅ Build output directory exists (${files} entries)`);
+  const { readdirSync } = await import('node:fs');
+  const files = readdirSync('out');
+  console.log(`✅ Build output directory exists (${files.length} entries)`);
 } else {
   warnings.push('Build output directory (out/) not found - run build first');
 }

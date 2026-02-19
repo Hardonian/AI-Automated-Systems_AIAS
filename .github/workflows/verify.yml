@@ -4,25 +4,53 @@ on:
   push:
     branches: [main, master]
 
+env:
+  NODE_VERSION: '22.21.1'
+  PNPM_VERSION: '8.15.9'
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+
       - uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: ${{ env.PNPM_VERSION }}
+
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      - name: Install
-        run: pnpm install --frozen-lockfile=false
-      - name: Lint (if present)
-        run: pnpm -s lint || echo "lint skipped"
-      - name: Typecheck (if present)
-        run: pnpm -s typecheck || echo "typecheck skipped"
-      - name: Test (if present)
-        run: pnpm -s test || echo "test skipped"
-      - name: Build (if present)
-        run: pnpm -s build || echo "build skipped"
+
+      - name: Install dependencies
+        run: pnpm ci:install
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build
+        run: pnpm build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+
+      - name: Verify build output
+        run: |
+          echo "Checking build artifacts..."
+          if [ ! -d "out" ]; then
+            echo "::error::Build output directory 'out' not found"
+            exit 1
+          fi
+          if [ ! -f "out/index.html" ]; then
+            echo "::error::out/index.html not found"
+            exit 1
+          fi
+          echo "✅ Build artifacts verified"

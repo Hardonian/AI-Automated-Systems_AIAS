@@ -3,15 +3,17 @@
   "buildCommand": "pnpm vercel-build",
   "installCommand": "pnpm ci:install",
   "framework": "nextjs",
+  "outputDirectory": "out",
   "build": {
     "env": {
-      "NODE_OPTIONS": "--max-old-space-size=4096"
+      "NODE_OPTIONS": "--max-old-space-size=4096 --no-warnings",
+      "NEXT_TELEMETRY_DISABLED": "1"
     }
   },
+  "trailingSlash": false,
+  "cleanUrls": true,
   "ignoreCommand": "git rev-parse --verify HEAD^ >/dev/null 2>&1 && git diff --quiet HEAD^ HEAD . || exit 1",
-  "regions": [
-    "iad1"
-  ],
+  "regions": ["iad1"],
   "headers": [
     {
       "source": "/(.*)",
@@ -51,6 +53,15 @@
         {
           "key": "X-DNS-Prefetch-Control",
           "value": "off"
+        }
+      ]
+    },
+    {
+      "source": "/(.*).xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml; charset=utf-8"
         }
       ]
     }

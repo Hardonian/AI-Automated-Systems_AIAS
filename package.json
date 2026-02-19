@@ -63,7 +63,7 @@
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.25.76"
   },
-  "scripts": {
+"scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
@@ -76,6 +76,8 @@
     "preview": "next start",
     "prepare": "husky install || true",
     "test": "pnpm typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test:visual:landscape-smoke": "playwright test tests/e2e/hero-breakpoints.visual.spec.ts tests/e2e/landscape-critical.visual.spec.ts --project=visual-landscape-mobile",
     "clean": "rm -rf .next out node_modules/.cache coverage playwright-report test-results",
     "ci:install": "pnpm install --frozen-lockfile --prefer-offline",

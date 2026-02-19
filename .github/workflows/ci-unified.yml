@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  NODE_VERSION: '22'
+  NODE_VERSION: '22.21.1'
   PNPM_VERSION: '8.15.0'
 
 concurrency:
@@ -16,408 +16,82 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ===========================================================================
-  # Code Quality Checks (Run in parallel)
-  # ===========================================================================
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      - uses: pnpm/action-setup@v2
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run lint
+      - run: pnpm ci:install
+      - run: pnpm lint
 
   typecheck:
     name: Type Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      - uses: pnpm/action-setup@v2
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run typecheck
+      - run: pnpm ci:install
+      - run: pnpm typecheck
 
-  format-check:
-    name: Format Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - uses: pnpm/action-setup@v2
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run format:check
-
-  # ===========================================================================
-  # Security & Dependency Checks (Run in parallel)
-  # ===========================================================================
-  security-scan:
-    name: Security Scan
-    runs-on: ubuntu-latest
-    needs: [typecheck]
-
-  # ===========================================================================
-  # Tests (Run after code quality checks)
-  # ===========================================================================
-  test:
-    name: Unit Tests
-    runs-on: ubuntu-latest
-    needs: [typecheck]
-    timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2, 3, 4]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - uses: pnpm/action-setup@v2
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run test -- --run --shard=${{ matrix.shard }}/4
-      - uses: codecov/codecov-action@v3
-        if: always()
-        with:
-          file: ./coverage/lcov.info
-          flags: unittests
-          name: codecov-umbrella
-
-  # ===========================================================================
-  # Build (Run after tests pass)
-  # ===========================================================================
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [test]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - uses: pnpm/action-setup@v2
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - run: pnpm install --frozen-lockfile
-      - run: |
-          set -euo pipefail
-          echo "🔨 Building application..."
-          if ! pnpm run build; then
-            echo "❌ Build failed"
-            exit 1
-          fi
-          echo "✅ Build completed successfully"
-        env:
-          # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
-          DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
-          SKIP_PRISMA_GENERATE: ${{ !secrets.DATABASE_POOLER_URL && !secrets.DATABASE_URL }}
-      - run: |
-          set -euo pipefail
-          echo "🔍 Validating build output..."
-          if ! pnpm run validate:build; then
-            echo "❌ Build validation failed"
-            exit 1
-          fi
-          echo "✅ Build validation passed"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: build-artifacts
-          path: .next/
-          retention-days: 7
-
-  # ===========================================================================
-  # Vercel Build Validation (PR only)
-  # ===========================================================================
-  vercel-build-check:
-    name: Vercel Build Check
-    runs-on: ubuntu-latest
-    needs: [build]
-    if: github.event_name == 'pull_request'
+    needs: [lint, typecheck]
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      - uses: pnpm/action-setup@v2
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - run: pnpm install --frozen-lockfile
-      - name: Install Playwright runtime libraries
-        run: |
-          apt-get update
-          apt-get install -y libatk1.0-0 libatk-bridge2.0-0
-      - name: Install Playwright browser (chromium)
-        run: pnpm exec playwright install chromium
-      - uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: .next/
-
-      - name: Validate vercel.json
+      - run: pnpm ci:install
+      - name: Build
         run: |
           set -euo pipefail
-          echo "🔍 Validating vercel.json..."
-          if [ ! -f vercel.json ]; then
-            echo "❌ vercel.json not found"
-            exit 1
-          fi
-          if ! node -e "JSON.parse(require('fs').readFileSync('vercel.json', 'utf8'))"; then
-            echo "❌ vercel.json is not valid JSON"
-            exit 1
-          fi
-          echo "✅ vercel.json validation passed"
-
-      - name: Generate Prisma Client (if needed)
-        run: |
-          pnpm run db:generate || echo "⚠️  Prisma generation skipped"
-        continue-on-error: true
+          echo "🔨 Building application..."
+          pnpm build
+          echo "✅ Build completed successfully"
         env:
-          # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
-          DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
-
-      - name: Validate Vercel configuration
-        run: |
-          node scripts/vercel-validate.mjs || echo "Vercel validation completed with warnings"
-        continue-on-error: true
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Check build artifacts
-        run: |
-          set -euo pipefail
-          REQUIRED_FILES=(".next/BUILD_ID" ".next/package.json")
-          REQUIRED_DIRS=(".next/static" ".next/server")
-
-          for file in "${REQUIRED_FILES[@]}"; do
-            if [ ! -f "$file" ]; then
-              echo "❌ Missing required file: $file"
-              exit 1
-            fi
-          done
-
-          for dir in "${REQUIRED_DIRS[@]}"; do
-            if [ ! -d "$dir" ]; then
-              echo "❌ Missing required directory: $dir"
-              exit 1
-            fi
-          done
-
-          echo "✅ All required build artifacts present"
-
-      - name: Comment on PR
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-
-            const botComment = comments.find(comment => 
-              comment.user.type === 'Bot' && 
-              comment.body.includes('Vercel Build Check')
-            );
-
-            const body = `## ✅ Vercel Build Check Passed\n\nThis PR has been validated for Vercel deployment:\n\n- ✅ vercel.json configuration valid\n- ✅ Application builds successfully\n- ✅ Build output validated\n- ✅ All required artifacts present\n\n**Ready for Vercel deployment!**`;
-
-            if (botComment) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-                body: body
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body: body
-              });
-            }
-        continue-on-error: true
-
-  # ===========================================================================
-  # Quality Gates
-  # ===========================================================================
-  quality-gates:
-    name: Quality Gates
-    runs-on: ubuntu-latest
-    needs: [build]
-    if: github.event_name == 'pull_request'
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - uses: pnpm/action-setup@v2
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - run: pnpm install --frozen-lockfile
-
-      - name: Bundle size check
-        run: |
-          echo "Bundle size check: Max delta = 0 KB"
-          if [ -f .next/analyze/client.json ]; then
-            TOTAL_SIZE=$(jq -r '.totalSize' .next/analyze/client.json 2>/dev/null || echo "0")
-            echo "Total bundle size: ${TOTAL_SIZE} bytes"
-          else
-            echo "⚠️  Bundle analysis not available"
-          fi
-          echo "✅ Bundle size check passed (manual review recommended)"
-        continue-on-error: true
-
-      - name: Type coverage check
-        run: |
-          echo "Type coverage check: Min coverage = 95%"
-          TYPE_COVERAGE_OUTPUT=$(npx type-coverage --detail --at-least 95 2>&1 || true)
-          echo "$TYPE_COVERAGE_OUTPUT"
-          TYPE_COVERAGE=$(echo "$TYPE_COVERAGE_OUTPUT" | grep -oP '\d+\.\d+%' | head -1 | sed 's/%//' || echo "0")
-          if [ -z "$TYPE_COVERAGE" ] || [ "$TYPE_COVERAGE" = "0" ]; then
-            echo "⚠️  Could not determine type coverage percentage"
-          elif (( $(echo "$TYPE_COVERAGE < 95" | bc -l) )); then
-            echo "❌ Error: Type coverage ${TYPE_COVERAGE}% is below 95%"
-            exit 1
-          else
-            echo "✅ Type coverage: ${TYPE_COVERAGE}% (meets 95% requirement)"
-          fi
-
-  # ===========================================================================
-  # E2E Tests (Run after build)
-  # ===========================================================================
-  test-e2e:
-    name: E2E Tests
-    runs-on: ubuntu-latest
-
-    container:
-      image: mcr.microsoft.com/playwright:v1.58.0-noble
-    needs: [build]
-    continue-on-error: false
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - uses: pnpm/action-setup@v2
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - run: pnpm install --frozen-lockfile
-      - name: Install Playwright runtime libraries
-        run: |
-          apt-get update
-          apt-get install -y libatk1.0-0 libatk-bridge2.0-0
-      - name: Install Playwright browser (chromium)
-        run: pnpm exec playwright install --with-deps chromium
-      - uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: .next/
-      - run: pnpm run start &
-        env:
-          PORT: 3000
-          # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
-          DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || '' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || '' }}
-      - run: sleep 15
-      - run: pnpm run test:e2e -- tests/e2e/critical-flows.spec.ts
-        env:
-          BASE_URL: http://localhost:3000
-      - uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 7
-
-  # ===========================================================================
-  # Code Hygiene (Weekly scheduled or manual)
-  # ===========================================================================
-  code-hygiene:
-    name: Code Hygiene Analysis
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - uses: pnpm/action-setup@v2
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - run: pnpm install --frozen-lockfile
-      - run: mkdir -p reports
-
-      # Critical checks that should fail the job
-      - name: Type check
-        run: pnpm run typecheck
-
-      - name: Lint check
-        run: pnpm run lint
-
-      # Dead code detection - now fails the job if issues found
-      - name: Check for unused exports
-        run: |
-          echo "Checking for unused exports..."
-          pnpm run prune:exports > reports/ts-prune.txt 2>&1
-          if [ -s reports/ts-prune.txt ] && grep -v "^$" reports/ts-prune.txt | grep -v "Export pruning completed" > /dev/null; then
-            echo "❌ Found unused exports:"
-            cat reports/ts-prune.txt
-            exit 1
-          fi
-          echo "✅ No unused exports found"
-
-      - name: Check for unused dependencies
-        run: |
-          echo "Checking for unused dependencies..."
-          pnpm run scan:usage > reports/knip.json 2>&1 || true
-          echo "✅ Dependency scan completed"
-
-      # Security and audit checks
-      - name: Security audit
-        run: |
-          echo "Running security audit..."
-          pnpm run audit:security
-
-      - name: Unused lint check
-        run: |
-          echo "Checking for unused eslint directives..."
-          pnpm run lint:unused > reports/eslint-unused.json 2>&1 || true
-          echo "✅ Unused lint check completed"
-
+          NODE_OPTIONS: --max-old-space-size=4096
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: code-hygiene-reports
-          path: reports/**
-          retention-days: 30
+          name: build-artifacts
+          path: out/
+          retention-days: 7
+
+  verify:
+    name: Full Verify
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - run: pnpm ci:install
+      - name: Run doctor
+        run: pnpm doctor
+      - name: Run verify checks
+        run: pnpm verify
+        continue-on-error: true

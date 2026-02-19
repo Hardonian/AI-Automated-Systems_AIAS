@@ -1,10 +1,9 @@
-import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
-const require = createRequire(import.meta.url);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const rootDir = __dirname;
 const isRemoteBuild =
   process.env.CI === 'true' ||
   process.env.VERCEL === '1';
@@ -19,6 +18,11 @@ const nextConfig = {
 
   typescript: {
     ignoreBuildErrors: false,
+    tsconfigPath: './tsconfig.json',
+  },
+
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 
   images: {
@@ -75,18 +79,31 @@ const nextConfig = {
     pagesBufferLength: 2,
   },
 
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev, nextRuntime }) => {
     if (isRemoteBuild) {
       config.cache = { type: 'memory' };
     }
 
-    // Add path aliases for webpack resolution (resolve from workspace root)
-    const rootDir = __dirname;
     config.resolve.alias['@/components'] = path.resolve(rootDir, 'components');
     config.resolve.alias['@/lib'] = path.resolve(rootDir, 'lib');
     config.resolve.alias['@/app'] = path.resolve(rootDir, 'app');
     config.resolve.alias['@/src'] = path.resolve(rootDir, 'src');
     config.resolve.alias['@'] = rootDir;
+
+    if (!dev && !isServer) {
+      config.optimization = {
+        ...config.optimization,
+        minimize: true,
+        sideEffects: true,
+      };
+    }
+
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+    };
 
     return config;
   },

@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { getLatestArticles, getFeaturedArticles } from '@/lib/blog/articles';
+import { BlogCollectionSchema } from '@/components/seo/structured-data';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -26,8 +27,10 @@ export default function BlogPage() {
   const featuredArticles = getFeaturedArticles();
 
   return (
-    <div className='container py-16'>
-      <div className='mb-12 text-center'>
+    <>
+      <BlogCollectionSchema />
+      <div className='container py-16'>
+        <div className='mb-12 text-center'>
         <h1 className='mb-4 text-4xl font-bold md:text-5xl'>
           Systems Thinking + AI Blog
         </h1>
@@ -53,7 +56,7 @@ export default function BlogPage() {
           <span className='rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary'>
             💬 AI-Moderated Comments
           </span>
-        </div>
+          </div>
       </div>
 
       {/* Featured Articles */}
@@ -304,7 +307,8 @@ export default function BlogPage() {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

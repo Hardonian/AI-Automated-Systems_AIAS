@@ -5,8 +5,8 @@ on:
     branches: [main, master]
 
 env:
-  NODE_VERSION: '22.21.1'
-  PNPM_VERSION: '8.15.9'
+  NODE_VERSION: "22.21.1"
+  PNPM_VERSION: "8.15.9"
 
 concurrency:
   group: verify-${{ github.ref }}
@@ -26,7 +26,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm ci:install
@@ -39,6 +39,9 @@ jobs:
 
       - name: Validate route manifest order/format
         run: pnpm validate:route-manifest
+
+      - name: Enforce canonical route manifest ordering
+        run: pnpm fix:route-manifest --dry-run
 
       - name: Build
         run: pnpm build

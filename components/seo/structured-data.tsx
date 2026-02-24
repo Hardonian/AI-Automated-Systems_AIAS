@@ -260,6 +260,41 @@ export function FAQSchema({ faqs }: FAQSchemaProps) {
     />
   );
 }
+
+interface BlogCollectionSchemaProps {
+  url?: string;
+  name?: string;
+  description?: string;
+}
+
+export function BlogCollectionSchema({
+  url = 'https://aiautomatedsystems.ca/blog',
+  name = 'AI Automated Systems Blog',
+  description =
+    'Daily articles on systems thinking, AI automation, and business success.',
+}: BlogCollectionSchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name,
+    description,
+    url,
+    publisher: {
+      '@type': 'Organization',
+      name: 'AI Automated Systems',
+      url: 'https://aiautomatedsystems.ca',
+    },
+  };
+
+  return (
+    <Script
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      id='blog-collection-schema'
+      type='application/ld+json'
+    />
+  );
+}
+
 interface CaseStudySchemaProps {
   title: string;
   description: string;

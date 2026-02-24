@@ -94,7 +94,8 @@
     "validate:schema": "pnpm exec tsx scripts/validate-schema.ts",
     "validate:metadata-vs-manifest": "pnpm exec tsx scripts/validate-metadata-vs-manifest.ts",
     "validate:jsonld-smoke": "pnpm exec tsx scripts/validate-jsonld-smoke.ts",
-    "validate:route-manifest": "pnpm exec tsx scripts/validate-route-manifest.ts && pnpm exec prettier --check lib/seo/route-manifest.ts"
+    "validate:route-manifest": "pnpm exec tsx scripts/validate-route-manifest.ts && pnpm exec prettier --check lib/seo/route-manifest.ts",
+    "fix:route-manifest": "pnpm exec tsx scripts/fix-route-manifest.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

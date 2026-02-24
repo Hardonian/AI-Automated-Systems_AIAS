@@ -4,7 +4,9 @@ import Link from 'next/link';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageCta, PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
+import { CaseStudySchema } from '@/components/seo/structured-data';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
+import { caseStudies } from '@/src/content/caseStudies';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Work | AI Automated Systems',
@@ -16,6 +18,14 @@ export const metadata: Metadata = generateSEOMetadata({
 export default function WorkPage() {
   return (
     <>
+      {caseStudies.map(study => (
+        <CaseStudySchema
+          key={study.slug}
+          description={study.summary}
+          title={study.title}
+          url={`https://aiautomatedsystems.ca/case-studies/${study.slug}`}
+        />
+      ))}
       <PageHero
         eyebrow='Client outcomes'
         title='Work that ships and scales'

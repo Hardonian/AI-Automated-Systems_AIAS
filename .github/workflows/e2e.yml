@@ -52,13 +52,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install Playwright runtime libraries
-        run: |
-          apt-get update
-          apt-get install -y libatk1.0-0 libatk-bridge2.0-0
+      - name: Install Playwright system dependencies
+        run: pnpm exec playwright install-deps chromium firefox webkit
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium firefox webkit
+        run: pnpm exec playwright install chromium firefox webkit
 
       - name: Build application
         run: pnpm run build
@@ -139,13 +137,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install Playwright runtime libraries
-        run: |
-          apt-get update
-          apt-get install -y libatk1.0-0 libatk-bridge2.0-0
+      - name: Install Playwright system dependencies
+        run: pnpm exec playwright install-deps chromium
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm exec playwright install chromium
 
       - name: Build application
         run: pnpm run build

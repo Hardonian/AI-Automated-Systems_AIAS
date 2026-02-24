@@ -70,7 +70,7 @@
     "lint": "eslint . --ignore-pattern out --ignore-pattern .next",
     "typecheck": "tsc --noEmit",
     "test:e2e": "pnpm exec playwright install chromium && playwright test tests/e2e/smoke.spec.ts tests/e2e/landing-smoke.spec.ts tests/e2e/link-crawl.spec.ts tests/e2e/case-studies-attribution.spec.ts --project=chromium",
-    "verify": "pnpm lint && pnpm typecheck && pnpm build && pnpm check:links && pnpm check:route-metadata && pnpm validate:seo && pnpm check:static-first && pnpm pricing-language-check && pnpm audit:messaging",
+    "verify": "pnpm lint && pnpm typecheck && pnpm build && pnpm validate:links && pnpm check:route-metadata && pnpm validate:seo && pnpm validate:route-manifest && pnpm validate:metadata-vs-manifest && pnpm validate:schema && pnpm validate:jsonld-smoke && pnpm check:static-first && pnpm pricing-language-check && pnpm audit:messaging",
     "vercel-build": "pnpm doctor && pnpm verify",
     "build:analyze": "ANALYZE=true vite build",
     "preview": "next start",
@@ -89,7 +89,12 @@
     "check:route-metadata": "pnpm exec tsx scripts/check-route-metadata.ts",
     "check:static-first": "pnpm exec tsx scripts/check-static-first.ts",
     "audit:messaging": "pnpm exec tsx scripts/audit-messaging.ts",
-    "validate:seo": "pnpm exec tsx scripts/validate-seo.ts"
+    "validate:seo": "pnpm exec tsx scripts/validate-seo.ts",
+    "validate:links": "pnpm exec tsx scripts/check-internal-links.ts",
+    "validate:schema": "pnpm exec tsx scripts/validate-schema.ts",
+    "validate:metadata-vs-manifest": "pnpm exec tsx scripts/validate-metadata-vs-manifest.ts",
+    "validate:jsonld-smoke": "pnpm exec tsx scripts/validate-jsonld-smoke.ts",
+    "validate:route-manifest": "pnpm exec tsx scripts/validate-route-manifest.ts && pnpm exec prettier --check lib/seo/route-manifest.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

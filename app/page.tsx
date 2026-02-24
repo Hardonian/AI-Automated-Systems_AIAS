@@ -14,7 +14,6 @@ import { DiagnosticTimeline } from '@/components/visual/DiagnosticTimeline';
 import { ProblemDepthLadder } from '@/components/visual/ProblemDepthLadder';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
-import { MESSAGING_CONTRACT, TAGLINE_TITLE_TEMPLATE } from '@/content/constants';
 
 import { getPrimaryCtaHref, siteContent, SiteConfig } from '@/src/content/site';
 
@@ -24,8 +23,8 @@ const Testimonials = dynamic(
 
 export const metadata = {
   ...generateSEOMetadata({
-    title: TAGLINE_TITLE_TEMPLATE,
-    description: MESSAGING_CONTRACT.metadataDescription,
+    title: 'AI Automated Systems | Agentic Automation Consultancy',
+    description: 'AIAS designs and operationalizes deterministic, static-first automation systems that blend controlled AI assistance with measurable business outcomes.',
     canonical: '/',
   }),
 };

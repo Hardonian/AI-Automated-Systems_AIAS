@@ -143,7 +143,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
         <OrganizationSchema />
         <ProfessionalServiceSchema />
-        <WebSiteSchema />
+        <WebSiteSchema hasSiteSearch={false} />
       </head>
       <body className='min-h-dvh antialiased'>
         <EnhancedErrorBoundary>

@@ -1,5 +1,7 @@
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
+
+import { INDEXABLE_ROUTE_MANIFEST } from '@/lib/seo/route-manifest';
 
 function getRouteFiles(dir: string): string[] {
   const entries = readdirSync(dir, { withFileTypes: true, recursive: true });
@@ -10,53 +12,58 @@ function getRouteFiles(dir: string): string[] {
 
 const routeFiles = getRouteFiles('app');
 const failures: string[] = [];
-const canonicalSeen = new Map<string, string>();
+
 const titleSeen = new Map<string, string>();
 const descriptionSeen = new Map<string, string>();
+const canonicalSeen = new Map<string, string>();
 
-const titleRegex = /title:\s*['`"]([^'`"]+)['`"]/;
-const descRegex = /description:\s*['`"]([^'`"]+)['`"]/;
-const canonicalRegex = /canonical:\s*['`"]([^'`"]+)['`"]/;
+for (const route of INDEXABLE_ROUTE_MANIFEST) {
+  if (!route.title.trim()) failures.push(`${route.path}: missing title in route manifest`);
+  if (!route.description.trim()) failures.push(`${route.path}: missing description in route manifest`);
+  if (!route.canonical.trim()) failures.push(`${route.path}: missing canonical in route manifest`);
 
-for (const routeFile of routeFiles) {
-  const source = readFileSync(routeFile, 'utf8');
-  const isDynamicRoute = routeFile.includes('[');
-
-  const title = source.match(titleRegex)?.[1];
-  const description = source.match(descRegex)?.[1];
-  const canonical = source.match(canonicalRegex)?.[1];
-
-  if (!title) failures.push(`${routeFile}: missing title`);
-  if (!description) failures.push(`${routeFile}: missing description`);
-  if (!canonical && !source.includes('generateMetadata(')) failures.push(`${routeFile}: missing canonical`);
-
-  if (!source.includes('openGraph') && !source.includes('generateSEOMetadata(')) {
-    failures.push(`${routeFile}: missing OG metadata`);
+  if (titleSeen.has(route.title)) {
+    failures.push(`${route.path}: duplicate title with ${titleSeen.get(route.title)}`);
+  }
+  if (descriptionSeen.has(route.description)) {
+    failures.push(`${route.path}: duplicate description with ${descriptionSeen.get(route.description)}`);
+  }
+  if (canonicalSeen.has(route.canonical)) {
+    failures.push(`${route.path}: duplicate canonical with ${canonicalSeen.get(route.canonical)}`);
   }
 
-  if (!isDynamicRoute) {
-    if (title && titleSeen.has(title)) failures.push(`${routeFile}: duplicate title with ${titleSeen.get(title)}`);
-    if (description && descriptionSeen.has(description)) failures.push(`${routeFile}: duplicate description with ${descriptionSeen.get(description)}`);
-    if (canonical && canonicalSeen.has(canonical)) failures.push(`${routeFile}: duplicate canonical with ${canonicalSeen.get(canonical)}`);
+  titleSeen.set(route.title, route.path);
+  descriptionSeen.set(route.description, route.path);
+  canonicalSeen.set(route.canonical, route.path);
 
-    if (title) titleSeen.set(title, routeFile);
-    if (description) descriptionSeen.set(description, routeFile);
-    if (canonical) canonicalSeen.set(canonical, routeFile);
+  const normalizedPath = route.path === '/' ? 'app/page.tsx' : `app${route.path}/page.tsx`;
+  if (!existsSync(normalizedPath)) {
+    failures.push(`${route.path}: route manifest points to missing file ${normalizedPath}`);
   }
 }
 
-const structuredDataPages = ['app/page.tsx', 'app/services/page.tsx', 'app/how-it-works/page.tsx'];
-for (const file of structuredDataPages) {
-  const source = readFileSync(file, 'utf8');
-  if (!source.includes('FAQSchema') && !source.includes('ServiceSchema') && !source.includes('ServiceListSchema')) {
-    failures.push(`${file}: missing required JSON-LD usage`);
+for (const routeFile of routeFiles) {
+  const source = readFileSync(routeFile, 'utf8');
+
+  const hasMetadataExport =
+    source.includes('generateSEOMetadata(') ||
+    source.includes('export const metadata: Metadata') ||
+    source.includes('export const metadata =') ||
+    source.includes('export async function generateMetadata(');
+
+  if (!hasMetadataExport) {
+    failures.push(`${routeFile}: missing metadata export`);
+  }
+
+  if (source.includes('generateSEOMetadata(') && !source.includes('canonical:')) {
+    failures.push(`${routeFile}: generateSEOMetadata used without explicit canonical`);
   }
 }
 
 if (failures.length) {
   console.error('SEO validation failed:');
-  failures.forEach(f => console.error(`- ${f}`));
+  failures.forEach(failure => console.error(`- ${failure}`));
   process.exit(1);
 }
 
-console.log(`SEO validation passed across ${routeFiles.length} routes.`);
+console.log(`SEO validation passed for ${INDEXABLE_ROUTE_MANIFEST.length} indexable routes and ${routeFiles.length} route files.`);

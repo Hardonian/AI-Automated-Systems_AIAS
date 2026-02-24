@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { FAQSection } from '@/components/content/faq-section';
+import { FAQSchema } from '@/components/seo/structured-data';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { siteContent } from '@/src/content/site';
 
@@ -13,10 +14,13 @@ export const metadata: Metadata = generateSEOMetadata({
 
 export default function FAQPage() {
   return (
-    <FAQSection
+    <>
+      <FAQSchema faqs={siteContent.faq} />
+      <FAQSection
       entries={siteContent.faq}
       subtitle='Answers on engagement models, timelines, governance, and how we keep rollouts practical and low-risk.'
       title='Frequently asked questions'
     />
+    </>
   );
 }

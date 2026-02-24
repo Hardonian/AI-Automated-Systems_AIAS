@@ -84,12 +84,14 @@ interface WebSiteSchemaProps {
   name?: string;
   url?: string;
   description?: string;
+  hasSiteSearch?: boolean;
 }
 
 export function WebSiteSchema({
   name = 'AI Automated Systems',
   url = 'https://aiautomatedsystems.ca',
   description = MESSAGING_CONTRACT.metadataDescription,
+  hasSiteSearch = false,
 }: WebSiteSchemaProps) {
   const schema = {
     '@context': 'https://schema.org',
@@ -97,14 +99,18 @@ export function WebSiteSchema({
     name,
     url,
     description,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${url}/search?q={search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
-    },
+    ...(hasSiteSearch
+      ? {
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: {
+              '@type': 'EntryPoint',
+              urlTemplate: `${url}/search?q={search_term_string}`,
+            },
+            'query-input': 'required name=search_term_string',
+          },
+        }
+      : {}),
   };
 
   return (

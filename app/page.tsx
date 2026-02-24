@@ -102,6 +102,28 @@ export default function HomePage() {
 
       <ProofSection />
 
+      <section className='border-b bg-background py-14'>
+        <div className='container mx-auto px-4'>
+          <h2 className='text-3xl font-bold'>What We Believe About AI Systems</h2>
+          <ul className='mt-6 grid gap-3 text-sm text-muted-foreground md:grid-cols-2'>
+            {[
+              'AI failure is usually structural before technical.',
+              'Model selection does not fix unclear decision boundaries.',
+              'Cost and reliability are coupled decisions, not separate workstreams.',
+              'Evaluation without business context creates misleading confidence.',
+              'Governance must be designed into workflows, not retrofitted later.',
+              'Discovery quality determines implementation quality.',
+            ].map(item => (
+              <li key={item} className='rounded-lg border bg-card p-4'>• {item}</li>
+            ))}
+          </ul>
+          <div className='mt-6 flex flex-wrap gap-3 text-sm'>
+            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/framework'>View diagnostic framework</Link>
+            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/services'>See engagements</Link>
+          </div>
+        </div>
+      </section>
+
       <FadeIn className='container py-14'>
         <div className='grid gap-8 lg:grid-cols-[1.2fr_1fr]'>
           <div>

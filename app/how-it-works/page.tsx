@@ -25,10 +25,13 @@ export default function HowItWorksPage() {
 
       <PageSection>
         <p className='mb-6 max-w-3xl text-sm text-muted-foreground'>
-          Summary: this page explains exactly how AIAS scopes risk, controls quality, and separates deterministic logic from AI-assisted decisions.
+          AIAS helps operations, product, and leadership teams that need reliable AI outcomes without governance blind spots.
+          We use a structured diagnostic framework to map decisions, constraints, and failure paths before implementation.
+          The result is a delivery plan tied to business outcomes, with discovery first so architecture choices are evidence-based.
         </p>
         <div className='mb-6 flex flex-wrap gap-3 text-sm'>
           <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/services'>Services</Link>
+          <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/framework'>Framework</Link>
           <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/work'>Proof</Link>
           <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/contact'>Start intake</Link>
         </div>

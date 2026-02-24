@@ -55,6 +55,25 @@ export default function AboutPage() {
         </div>
       </PageSection>
 
+
+      <PageSection>
+        <div className='grid gap-6 md:grid-cols-2'>
+          <SurfaceCard>
+            <h2 className='text-2xl font-bold'>Who we are</h2>
+            <p className='mt-3 text-sm text-muted-foreground'>
+              AIAS is a consultancy focused on discovery, constraint mapping, and governance clarity for AI-enabled operations. We are Canada-based and work remotely with distributed teams.
+            </p>
+          </SurfaceCard>
+          <SurfaceCard>
+            <h2 className='text-2xl font-bold'>Is this for you?</h2>
+            <div className='mt-3 grid gap-3 text-sm text-muted-foreground'>
+              <p><span className='font-semibold text-foreground'>A fit:</span> teams with high-impact workflows, real governance requirements, and willingness to redesign decision boundaries.</p>
+              <p><span className='font-semibold text-foreground'>Not a fit:</span> teams seeking one-click AI shortcuts without ownership, controls, or operational change.</p>
+            </div>
+          </SurfaceCard>
+        </div>
+      </PageSection>
+
       <PageSection background='muted'>
         <div className='grid gap-6 md:grid-cols-3'>
           {[

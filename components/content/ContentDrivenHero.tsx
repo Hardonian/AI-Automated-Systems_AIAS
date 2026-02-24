@@ -1,12 +1,16 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import type { HeroContent } from '@/components/content/types';
+import { useSafeReducedMotion } from '@/lib/style/motion';
 
 export function ContentDrivenHero({ content }: { content: HeroContent }) {
+  const prefersReduced = useSafeReducedMotion();
+
   return (
     <section
       className='relative flex min-h-[68vh] items-center overflow-hidden py-12 [@media(max-height:420px)]:min-h-[100svh] [@media(max-height:420px)]:items-start [@media(max-height:420px)]:py-4 md:min-h-[78vh] md:py-20'
@@ -17,7 +21,12 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
 
       <div className='container relative z-10 mx-auto px-4'>
         <div className='mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1.2fr_0.8fr]'>
-          <div className='text-center lg:text-left'>
+          <motion.div
+            className='text-center lg:text-left'
+            initial={prefersReduced ? { opacity: 1 } : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={prefersReduced ? { duration: 0 } : { duration: 0.5, ease: 'easeOut' }}
+          >
             {content.badgeText && (
               <div className='mb-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-primary sm:text-sm'>
                 <Sparkles className='h-4 w-4' />
@@ -61,7 +70,7 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
                 </Button>
               )}
             </div>
-          </div>
+          </motion.div>
 
           <aside
             className='mx-auto w-full max-w-md rounded-2xl border border-border/70 bg-card/90 p-5 shadow-lg backdrop-blur'
@@ -75,7 +84,7 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
                 {content.socialProof?.map(item => (
                   <div
                     key={item.text}
-                    className='rounded-xl border bg-background p-3'
+                    className='rounded-xl border bg-background p-3 transition-transform duration-200 ease-out hover:-translate-y-0.5'
                     data-testid='hero-social-proof-card'
                   >
                     <p className='text-sm font-medium text-foreground'>{item.icon} {item.text}</p>
@@ -86,7 +95,7 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
                 {content.trustBadges?.map(item => (
                   <div
                     key={item.text}
-                    className='rounded-xl border bg-background p-3'
+                    className='rounded-xl border bg-background p-3 transition-transform duration-200 ease-out hover:-translate-y-0.5'
                     data-testid='hero-trust-badge-card'
                   >
                     <p className='text-sm font-medium text-foreground'>✓ {item.text}</p>

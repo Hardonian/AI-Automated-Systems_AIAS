@@ -2,14 +2,30 @@ import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
 function getRouteFiles(dir: string): string[] {
-  const entries = readdirSync(dir, { withFileTypes: true, recursive: true });
-  return entries
-    .filter(entry => entry.isFile() && entry.name === 'page.tsx')
-    .map(entry => path.join(entry.path, entry.name));
+  const routeFiles: string[] = [];
+
+  function walk(currentDir: string): void {
+    const entries = readdirSync(currentDir, { withFileTypes: true });
+
+    for (const entry of entries) {
+      const entryPath = path.join(currentDir, entry.name);
+
+      if (entry.isDirectory()) {
+        walk(entryPath);
+        continue;
+      }
+
+      if (entry.isFile() && entry.name === 'page.tsx') {
+        routeFiles.push(entryPath);
+      }
+    }
+  }
+
+  walk(dir);
+  return routeFiles;
 }
 
 const routeFiles = getRouteFiles('app');
-
 
 const failures: string[] = [];
 

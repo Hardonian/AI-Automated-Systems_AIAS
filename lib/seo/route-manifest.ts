@@ -238,7 +238,7 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
     path: "/readiness-checklist",
     title: "AI Governance Readiness Checklist | AI Automated Systems",
     description:
-      "Download and score the AI Governance Readiness Checklist to identify structural gaps before scaling AI systems.",
+      "Download and score the AI Governance Readiness Checklist, then optionally share your stack context for architecture feedback.",
     canonical: "/readiness-checklist",
     priority: 0.7,
     changeFrequency: "monthly",

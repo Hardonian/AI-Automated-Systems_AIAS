@@ -37,7 +37,7 @@ export default function ServicesPage() {
           idSuffix={service.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}
           name={service.title}
           provider={{ name: 'AI Automated Systems', url: 'https://aiautomatedsystems.ca' }}
-          serviceType='AI consultancy engagement'
+          serviceType='agentic automation consultancy'
         />
       ))}
 

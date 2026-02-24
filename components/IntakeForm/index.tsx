@@ -8,6 +8,10 @@ import {
   ENGAGEMENT_SCOPES,
   ORG_TYPES,
   PROBLEM_CATEGORIES,
+  AI_STACK_OPTIONS,
+  MODEL_MIX_OPTIONS,
+  FAILURE_MODE_OPTIONS,
+  GOVERNANCE_MATURITY_OPTIONS,
   URGENCY_LEVELS,
   classifyIntake,
   type IntakeSubmission,
@@ -28,6 +32,10 @@ import { Input } from '@/components/ui/input';
 const formSchema = z.object({
   orgType: z.enum(ORG_TYPES, { required_error: 'Select organization type.' }),
   problemCategory: z.enum(PROBLEM_CATEGORIES, { required_error: 'Select problem category.' }),
+  aiStack: z.enum(AI_STACK_OPTIONS, { required_error: 'Select current AI stack state.' }),
+  modelMix: z.enum(MODEL_MIX_OPTIONS, { required_error: 'Select model mix.' }),
+  failureMode: z.enum(FAILURE_MODE_OPTIONS, { required_error: 'Select current failure mode.' }),
+  governanceMaturity: z.enum(GOVERNANCE_MATURITY_OPTIONS, { required_error: 'Select governance maturity.' }),
   urgency: z.enum(URGENCY_LEVELS, { required_error: 'Select urgency.' }),
   scope: z.enum(ENGAGEMENT_SCOPES, { required_error: 'Select engagement scope.' }),
   budgetFlexibility: z.enum(BUDGET_FLEXIBILITY_RANGES, { required_error: 'Select budget flexibility.' }),
@@ -54,6 +62,35 @@ const problemLabels: Record<IntakeSubmission['problemCategory'], string> = {
   'ai-readiness': 'AI readiness and adoption planning',
 };
 
+const aiStackLabels: Record<IntakeSubmission['aiStack'], string> = {
+  none: 'No AI stack in production',
+  pilot: 'Pilot workflows only',
+  production: 'Production AI workflows',
+  'multi-system': 'Multiple AI systems across teams',
+};
+
+const modelMixLabels: Record<IntakeSubmission['modelMix'], string> = {
+  'single-model': 'Single model deployment',
+  'multi-model': 'Multiple models with routing',
+  'open-and-closed': 'Mix of open and closed models',
+  unknown: 'Unknown or unmanaged model mix',
+};
+
+const failureModeLabels: Record<IntakeSubmission['failureMode'], string> = {
+  hallucination: 'Hallucination and output quality issues',
+  latency: 'Latency and throughput issues',
+  'cost-drift': 'Inference cost drift',
+  'unsafe-actions': 'Unsafe or uncontrolled actions',
+  'evaluation-gaps': 'Evaluation and benchmark gaps',
+};
+
+const governanceMaturityLabels: Record<IntakeSubmission['governanceMaturity'], string> = {
+  'ad-hoc': 'Ad hoc controls',
+  repeatable: 'Repeatable but undocumented controls',
+  defined: 'Defined policies and review process',
+  controlled: 'Controlled with continuous auditability',
+};
+
 const urgencyLabels: Record<IntakeSubmission['urgency'], string> = {
   'this-month': 'Need action this month',
   'this-quarter': 'Planning for this quarter',
@@ -74,8 +111,9 @@ const budgetLabels: Record<IntakeSubmission['budgetFlexibility'], string> = {
 
 const steps: ReadonlyArray<{ id: number; title: string; fields: ReadonlyArray<keyof FormValues> }> = [
   { id: 1, title: 'Organization and problem context', fields: ['orgType', 'problemCategory'] },
-  { id: 2, title: 'Urgency and engagement scope', fields: ['urgency', 'scope'] },
-  { id: 3, title: 'Budget and contact preferences', fields: ['budgetFlexibility', 'email'] },
+  { id: 2, title: 'AI stack and governance diagnostics', fields: ['aiStack', 'modelMix', 'failureMode', 'governanceMaturity'] },
+  { id: 3, title: 'Urgency and engagement scope', fields: ['urgency', 'scope'] },
+  { id: 4, title: 'Budget and contact preferences', fields: ['budgetFlexibility', 'email'] },
 ];
 
 function validateFields(values: FormValues, fields: ReadonlyArray<keyof FormValues>): FormErrors {
@@ -136,7 +174,7 @@ export function IntakeForm() {
   const onSubmit = async () => {
     const parsed = formSchema.safeParse(values);
     if (!parsed.success) {
-      const allErrors = validateFields(values, ['orgType', 'problemCategory', 'urgency', 'scope', 'budgetFlexibility', 'email']);
+      const allErrors = validateFields(values, ['orgType', 'problemCategory', 'aiStack', 'modelMix', 'failureMode', 'governanceMaturity', 'urgency', 'scope', 'budgetFlexibility', 'email']);
       setErrors(allErrors);
       return;
     }
@@ -149,6 +187,10 @@ export function IntakeForm() {
     const intake: IntakeSubmission = {
       orgType: parsed.data.orgType,
       problemCategory: parsed.data.problemCategory,
+      aiStack: parsed.data.aiStack,
+      modelMix: parsed.data.modelMix,
+      failureMode: parsed.data.failureMode,
+      governanceMaturity: parsed.data.governanceMaturity,
       urgency: parsed.data.urgency,
       scope: parsed.data.scope,
       budgetFlexibility: parsed.data.budgetFlexibility,
@@ -162,6 +204,12 @@ export function IntakeForm() {
       contactAvailable: Boolean(intake.email),
       intake,
       classification,
+      tags: [
+        `problem:${intake.problemCategory}`,
+        `failure:${intake.failureMode}`,
+        `maturity:${intake.governanceMaturity}`,
+        `tier:${classification.tier}`,
+      ],
     };
 
     const endpoint = process.env.NEXT_PUBLIC_INTAKE_WEBHOOK_URL;
@@ -197,6 +245,10 @@ export function IntakeForm() {
     const result = classifyIntake({
       orgType: intake.orgType,
       problemCategory: intake.problemCategory,
+      aiStack: intake.aiStack,
+      modelMix: intake.modelMix,
+      failureMode: intake.failureMode,
+      governanceMaturity: intake.governanceMaturity,
       urgency: intake.urgency,
       scope: intake.scope,
       budgetFlexibility: intake.budgetFlexibility,
@@ -282,6 +334,70 @@ export function IntakeForm() {
 
         {stepIndex === 1 && (
           <>
+            <div className='space-y-2'>
+              <Label htmlFor='aiStack'>Current AI stack</Label>
+              <Select value={values.aiStack} onValueChange={(value) => updateValue('aiStack', value as IntakeSubmission['aiStack'])}>
+                <SelectTrigger id='aiStack' aria-invalid={Boolean(errors.aiStack)} aria-describedby={errors.aiStack ? 'aiStack-error' : undefined}>
+                  <SelectValue placeholder='Select current AI stack state' />
+                </SelectTrigger>
+                <SelectContent>
+                  {AI_STACK_OPTIONS.map((option) => (
+                    <SelectItem key={option} value={option}>{aiStackLabels[option]}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.aiStack && <p id='aiStack-error' className='text-sm text-destructive'>{errors.aiStack}</p>}
+            </div>
+
+            <div className='space-y-2'>
+              <Label htmlFor='modelMix'>Model mix</Label>
+              <Select value={values.modelMix} onValueChange={(value) => updateValue('modelMix', value as IntakeSubmission['modelMix'])}>
+                <SelectTrigger id='modelMix' aria-invalid={Boolean(errors.modelMix)} aria-describedby={errors.modelMix ? 'modelMix-error' : undefined}>
+                  <SelectValue placeholder='Select model mix' />
+                </SelectTrigger>
+                <SelectContent>
+                  {MODEL_MIX_OPTIONS.map((option) => (
+                    <SelectItem key={option} value={option}>{modelMixLabels[option]}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.modelMix && <p id='modelMix-error' className='text-sm text-destructive'>{errors.modelMix}</p>}
+            </div>
+
+            <div className='space-y-2'>
+              <Label htmlFor='failureMode'>Current failure mode</Label>
+              <Select value={values.failureMode} onValueChange={(value) => updateValue('failureMode', value as IntakeSubmission['failureMode'])}>
+                <SelectTrigger id='failureMode' aria-invalid={Boolean(errors.failureMode)} aria-describedby={errors.failureMode ? 'failureMode-error' : undefined}>
+                  <SelectValue placeholder='Select the highest-risk failure mode' />
+                </SelectTrigger>
+                <SelectContent>
+                  {FAILURE_MODE_OPTIONS.map((option) => (
+                    <SelectItem key={option} value={option}>{failureModeLabels[option]}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.failureMode && <p id='failureMode-error' className='text-sm text-destructive'>{errors.failureMode}</p>}
+            </div>
+
+            <div className='space-y-2'>
+              <Label htmlFor='governanceMaturity'>Governance maturity</Label>
+              <Select value={values.governanceMaturity} onValueChange={(value) => updateValue('governanceMaturity', value as IntakeSubmission['governanceMaturity'])}>
+                <SelectTrigger id='governanceMaturity' aria-invalid={Boolean(errors.governanceMaturity)} aria-describedby={errors.governanceMaturity ? 'governanceMaturity-error' : undefined}>
+                  <SelectValue placeholder='Select governance maturity level' />
+                </SelectTrigger>
+                <SelectContent>
+                  {GOVERNANCE_MATURITY_OPTIONS.map((option) => (
+                    <SelectItem key={option} value={option}>{governanceMaturityLabels[option]}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.governanceMaturity && <p id='governanceMaturity-error' className='text-sm text-destructive'>{errors.governanceMaturity}</p>}
+            </div>
+          </>
+        )}
+
+        {stepIndex === 2 && (
+          <>
             <fieldset className='space-y-3'>
               <legend className='text-sm font-medium'>Urgency</legend>
               <RadioGroup value={values.urgency} onValueChange={(value) => updateValue('urgency', value as IntakeSubmission['urgency'])} aria-invalid={Boolean(errors.urgency)} aria-describedby={errors.urgency ? 'urgency-error' : undefined}>
@@ -310,7 +426,7 @@ export function IntakeForm() {
           </>
         )}
 
-        {stepIndex === 2 && (
+        {stepIndex === 3 && (
           <>
             <fieldset className='space-y-3'>
               <legend className='text-sm font-medium'>Budget flexibility</legend>

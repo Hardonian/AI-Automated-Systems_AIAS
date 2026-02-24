@@ -14,6 +14,11 @@ export const PROBLEM_CATEGORIES = [
   'ai-readiness',
 ] as const;
 
+export const AI_STACK_OPTIONS = ['none', 'pilot', 'production', 'multi-system'] as const;
+export const MODEL_MIX_OPTIONS = ['single-model', 'multi-model', 'open-and-closed', 'unknown'] as const;
+export const FAILURE_MODE_OPTIONS = ['hallucination', 'latency', 'cost-drift', 'unsafe-actions', 'evaluation-gaps'] as const;
+export const GOVERNANCE_MATURITY_OPTIONS = ['ad-hoc', 'repeatable', 'defined', 'controlled'] as const;
+
 export const URGENCY_LEVELS = ['this-month', 'this-quarter', 'this-year'] as const;
 
 export const ENGAGEMENT_SCOPES = ['one-off', 'build-with', 'managed-refinement'] as const;
@@ -26,6 +31,10 @@ export const BUDGET_FLEXIBILITY_RANGES = [
 
 export type OrgType = (typeof ORG_TYPES)[number];
 export type ProblemCategory = (typeof PROBLEM_CATEGORIES)[number];
+export type AiStack = (typeof AI_STACK_OPTIONS)[number];
+export type ModelMix = (typeof MODEL_MIX_OPTIONS)[number];
+export type FailureMode = (typeof FAILURE_MODE_OPTIONS)[number];
+export type GovernanceMaturity = (typeof GOVERNANCE_MATURITY_OPTIONS)[number];
 export type UrgencyLevel = (typeof URGENCY_LEVELS)[number];
 export type EngagementScope = (typeof ENGAGEMENT_SCOPES)[number];
 export type BudgetFlexibilityRange = (typeof BUDGET_FLEXIBILITY_RANGES)[number];
@@ -33,6 +42,10 @@ export type BudgetFlexibilityRange = (typeof BUDGET_FLEXIBILITY_RANGES)[number];
 export interface IntakeSubmission {
   orgType: OrgType;
   problemCategory: ProblemCategory;
+  aiStack: AiStack;
+  modelMix: ModelMix;
+  failureMode: FailureMode;
+  governanceMaturity: GovernanceMaturity;
   urgency: UrgencyLevel;
   scope: EngagementScope;
   budgetFlexibility: BudgetFlexibilityRange;
@@ -112,6 +125,29 @@ export function classifyIntake(submission: IntakeSubmission): ClassificationResu
   if (submission.problemCategory === 'compliance-risk' || submission.problemCategory === 'data-fragmentation') {
     score += 2;
     rationale.push('Problem category indicates cross-system complexity and governance needs.');
+  }
+
+  if (submission.aiStack === 'production' || submission.aiStack === 'multi-system') {
+    score += 2;
+    rationale.push('Current AI stack indicates active production constraints to stabilize.');
+  }
+
+  if (submission.modelMix === 'multi-model' || submission.modelMix === 'open-and-closed') {
+    score += 1;
+    rationale.push('Model mix indicates orchestration and routing complexity.');
+  }
+
+  if (submission.failureMode === 'unsafe-actions' || submission.failureMode === 'evaluation-gaps') {
+    score += 2;
+    rationale.push('Failure mode requires governance controls and evaluation hardening.');
+  }
+
+  if (submission.governanceMaturity === 'ad-hoc') {
+    score += 2;
+    rationale.push('Governance maturity is ad-hoc, so control-plane foundation is needed first.');
+  } else if (submission.governanceMaturity === 'repeatable') {
+    score += 1;
+    rationale.push('Governance maturity is repeatable with room for stronger controls.');
   }
 
   const enterpriseProfile = submission.orgType === 'enterprise' || submission.orgType === 'public-sector';

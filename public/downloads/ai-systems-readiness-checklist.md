@@ -1,33 +1,26 @@
-# AI Systems Readiness Checklist
+# AIAS Governance Checklist
 
-Use this checklist to evaluate whether your organization can deploy deterministic + AI automation safely.
+## Control-Plane Foundations
+- [ ] Deterministic policy checks run before high-impact actions.
+- [ ] AI outputs cannot directly mutate system-of-record state.
+- [ ] Human escalation paths exist for low-confidence events.
 
-## 1) Strategy Alignment
-- Business objective defined with measurable outcomes.
-- Workflow selected based on throughput and risk.
-- Executive owner assigned.
+## Agent Infrastructure
+- [ ] Agent and tool contracts are versioned and testable.
+- [ ] Retry/fallback behavior is deterministic.
+- [ ] Incident replay logs are available for postmortems.
 
-## 2) System Constraints
-- Data boundaries documented.
-- Integration dependencies enumerated.
-- Failure handling strategy approved.
+## Evaluation Integrity
+- [ ] Benchmark suite covers the critical customer journeys.
+- [ ] Regression checks run before model or prompt changes.
+- [ ] Retrieval grounding quality is measured.
 
-## 3) Deterministic Control Layer
-- State transitions defined.
-- Validation schema established.
-- Replay and audit logs configured.
+## Multi-Model FinOps
+- [ ] Routing policy chooses model class per workload.
+- [ ] Cost limits prevent uncontrolled inference drift.
+- [ ] Accuracy/cost tradeoffs are reviewed on a cadence.
 
-## 4) Intelligence Layer Controls
-- AI tasks constrained to approved scope.
-- Confidence threshold defined.
-- Human escalation path documented.
-
-## 5) Governance
-- Security posture documented.
-- Data handling model reviewed.
-- Non-fit criteria documented.
-
-## 6) Scale Readiness
-- Monitoring and alerting baseline available.
-- Ownership and runbooks assigned.
-- Quarterly optimization cadence scheduled.
+## Enterprise Readiness
+- [ ] Governance maturity is tracked (Ad hoc → Controlled).
+- [ ] Security and compliance obligations map to controls.
+- [ ] Ownership and rollback responsibility are explicit.

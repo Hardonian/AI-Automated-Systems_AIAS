@@ -7,13 +7,13 @@ test.describe('@smoke Reality Mode Smoke Test', () => {
   });
 
   test('Landing page has unified CTAs', async ({ page }) => {
-    const primaryCTA = page.getByRole('link', { name: 'Book a Strategy Call' }).first();
+    const primaryCTA = page.getByRole('link', { name: /Book (a )?Strategy Call|Book Diagnostic/i }).first();
     await expect(primaryCTA).toBeVisible();
     const href = await primaryCTA.getAttribute('href');
     expect(href).toBeTruthy();
-    expect(href ?? '').toMatch(/calendly\.com|^mailto:/);
+    expect(href ?? '').toMatch(/calendly\.com|^mailto:|^\/book$/);
 
-    const secondaryCTA = page.getByRole('link', { name: 'Try the Workflow Sandbox' }).first();
+    const secondaryCTA = page.getByRole('link', { name: /Try the Workflow Sandbox|What AIAS Actually Does/i }).first();
     await expect(secondaryCTA).toBeVisible();
   });
 
@@ -29,26 +29,21 @@ test.describe('@smoke Reality Mode Smoke Test', () => {
     await expect(page.getByRole('heading', { name: 'From discovery to deployment' })).toBeVisible();
 
     await page.goto('/dashboard');
-    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
-    await expect(page.getByText('No active session detected.')).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Dashboard access is invite-only/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /No active session detected/i })).toBeVisible();
   });
 
-  test('Workflow sandbox flow: Landing -> Sandbox -> Generate output', async ({ page }) => {
-    const sandboxCTA = page.getByRole('link', { name: 'Try the Workflow Sandbox' }).first();
-    await sandboxCTA.click();
-    await expect(page).toHaveURL(/#workflow-sandbox/);
+  test('Intake flow: Contact -> classify context', async ({ page }) => {
+    await page.goto('/contact');
 
-    await page.getByLabel('Problem Domain').click();
-    await page.getByRole('option', { name: 'Invoice Processing' }).click();
-    await page.getByLabel('Constraints (e.g. "Must keep human in loop")').fill(
-      'Human approval required for exceptions'
-    );
-    await page.getByLabel('Current Tech Stack').fill('HubSpot, Slack, Google Drive');
+    await page.getByRole('combobox', { name: 'Organization type' }).click();
+    await page.getByRole('option', { name: 'Enterprise' }).click();
 
-    await page.getByRole('button', { name: 'Simulate Workflow' }).click();
+    await page.getByRole('combobox', { name: 'Primary problem category' }).click();
+    await page.getByRole('option', { name: 'Compliance, security, or governance risk' }).click();
 
-    await expect(page.getByText('Agentic Execution Plan')).toBeVisible();
-    await expect(page.getByText('Configure Ingestion Webhook')).toBeVisible();
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await expect(page.getByRole('heading', { name: /AI stack and governance diagnostics/i })).toBeVisible();
   });
 
   test('New ecosystem and demo routes render', async ({ page }) => {
@@ -61,8 +56,8 @@ test.describe('@smoke Reality Mode Smoke Test', () => {
     await expect(page.getByRole('heading', { name: 'Governance Review' })).toBeVisible();
 
     await page.goto('/readiness-checklist');
-    await expect(page.getByRole('heading', { name: 'AI Systems Readiness Checklist' }).first()).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Download checklist (.md)' })).toHaveAttribute(
+    await expect(page.getByRole('heading', { name: /AI Systems Readiness Checklist|AI Governance Checklist/i }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: /Download checklist \(.md\)|Download Governance Checklist \(.md\)/i })).toHaveAttribute(
       'href',
       '/downloads/ai-systems-readiness-checklist.md'
     );

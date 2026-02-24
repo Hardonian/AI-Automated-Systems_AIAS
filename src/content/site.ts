@@ -268,12 +268,12 @@ const rawSiteContent: SiteConfig = {
     badgeText: 'New: Agentic Workflow Engine',
     impactCardsLabel: 'At-a-glance impact',
     primaryCTA: {
-      label: 'Book a Strategy Call',
+      label: 'Book Diagnostic',
       href: 'https://calendly.com/scottrmhardie',
     },
     secondaryCTA: {
-      label: 'Try the Workflow Sandbox',
-      href: '/#workflow-sandbox',
+      label: 'What AIAS Actually Does',
+      href: '/what-aias-does',
     },
     socialProof: [
       { icon: '🚀', text: 'Faster delivery through scoped automation' },
@@ -291,6 +291,7 @@ const rawSiteContent: SiteConfig = {
     primary: [
       { label: 'Services', href: '/services' },
       { label: 'Metrics', href: '/metrics' },
+      { label: 'What AIAS Does', href: '/what-aias-does' },
       { label: 'Approach', href: '/approach' },
       { label: 'Case Studies', href: '/case-studies' },
       { label: 'Pricing', href: '/pricing' },

@@ -5,52 +5,59 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
 import { Button } from '@/components/ui/button';
-import { getPrimaryCtaHref } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Engagement Models | AI Automated Systems',
+  title: 'Offer Structure & Pricing Philosophy | AI Automated Systems',
   description:
-    'Value-based AIAS engagement models covering one-off workflow delivery, co-build execution, and managed system refinement.',
+    'Clear monetization structure for AIAS: Audit, Implementation, and Ongoing Governance with range-based pricing philosophy and ROI framing.',
   canonical: '/pricing',
 });
 
-type EngagementShape = {
+type OfferTier = {
   title: string;
-  description: string;
-  bestFor: string;
-  outcomes: string[];
+  outcome: string;
+  scope: string[];
+  pricingRange: string;
   ctaLabel: string;
   ctaHref: string;
-  timeline: string;
 };
 
-const engagementShapes: EngagementShape[] = [
+const tiers: OfferTier[] = [
   {
-    title: 'One-off workflow',
-    description: 'Focused architecture and implementation for a single high-value workflow.',
-    bestFor: 'Teams that need one production-grade automation outcome quickly.',
-    outcomes: ['Constraint mapping and success criteria', 'Deterministic build with QA', 'Operational handoff package'],
-    ctaLabel: 'Scope one-off workflow',
-    ctaHref: '/contact',
-    timeline: '2-4 weeks depending on integration complexity.',
+    title: 'Audit',
+    outcome: 'Diagnose control gaps, model risk, and delivery blockers before build spend.',
+    scope: [
+      'Deterministic governance baseline and risk map',
+      'AI stack + model mix failure analysis',
+      'Prioritized architecture plan and non-fit criteria',
+    ],
+    pricingRange: 'Typical range: $7,500-$20,000 based on system breadth and compliance depth.',
+    ctaLabel: 'Book Diagnostic',
+    ctaHref: '/book',
   },
   {
-    title: 'Co-build',
-    description: 'Shared sprint model where AIAS and your team build together with clear ownership.',
-    bestFor: 'Technical teams that want transfer of capability while shipping.',
-    outcomes: ['Sprint roadmap with checkpoints', 'Policy and governance controls', 'Enablement for internal operators'],
-    ctaLabel: 'Plan co-build sprint',
+    title: 'Implementation',
+    outcome: 'Implement control-plane architecture and orchestrated agents with measurable reliability targets.',
+    scope: [
+      'Control-plane workflow design and policy checkpoints',
+      'Agent orchestration with eval instrumentation',
+      'Runbooks, ownership transfer, and launch gates',
+    ],
+    pricingRange: 'Typical range: $25,000-$120,000 depending on integrations, model routing, and rollout phases.',
+    ctaLabel: 'Request Architecture Review',
     ctaHref: '/contact',
-    timeline: '4-8 weeks for initial system and adoption workflow.',
   },
   {
-    title: 'Managed refinement',
-    description: 'Ongoing optimization program for reliability, governance, and scale.',
-    bestFor: 'Organizations running automation as a core operating function.',
-    outcomes: ['Monthly optimization cycles', 'Governance and risk reviews', 'Performance and change reporting'],
-    ctaLabel: 'Discuss managed refinement',
-    ctaHref: '/contact',
-    timeline: 'Quarterly planning cycles with monthly execution cadence.',
+    title: 'Ongoing Governance',
+    outcome: 'Sustain reliability, cost control, and safety as AI systems evolve.',
+    scope: [
+      'Monthly evaluation integrity and incident review',
+      'Model + cost optimization across active workloads',
+      'Governance maturity progression with executive reporting',
+    ],
+    pricingRange: 'Typical range: $6,000-$35,000 monthly by operating footprint and oversight cadence.',
+    ctaLabel: 'Download Governance Checklist',
+    ctaHref: '/readiness-checklist',
   },
 ];
 
@@ -58,30 +65,29 @@ export default function PricingPage() {
   return (
     <>
       <PageHero
-        eyebrow='Engagement models'
-        title='Value-based engagement packaging with explicit scoping'
-        description='No arbitrary fixed-price anchors. We scope based on workflow criticality, governance obligations, and integration depth.'
+        eyebrow='Offer structure'
+        title='How money flows in AIAS engagements'
+        description='Three engagement tiers with explicit outcomes: Audit, Implementation, and Ongoing Governance. We price by risk surface, integration depth, and operating criticality.'
       />
 
       <PageSection>
         <div className='grid gap-6 lg:grid-cols-3'>
-          {engagementShapes.map(shape => (
-            <SurfaceCard key={shape.title} className='p-7'>
-              <h2 className='text-2xl font-bold'>{shape.title}</h2>
-              <p className='mt-3 text-muted-foreground'>{shape.description}</p>
-              <p className='mt-4 text-sm font-semibold text-primary'>Best for: {shape.bestFor}</p>
-              <p className='mt-2 text-xs text-muted-foreground'>Typical timeline: {shape.timeline}</p>
+          {tiers.map((tier) => (
+            <SurfaceCard key={tier.title} className='p-7'>
+              <h2 className='text-2xl font-bold'>{tier.title}</h2>
+              <p className='mt-3 text-muted-foreground'>{tier.outcome}</p>
               <ul className='mt-5 space-y-2 text-sm text-muted-foreground'>
-                {shape.outcomes.map(item => (
+                {tier.scope.map((item) => (
                   <li key={item} className='flex items-start gap-2'>
                     <CheckCircle2 className='mt-0.5 h-4 w-4 text-primary' />
                     {item}
                   </li>
                 ))}
               </ul>
+              <p className='mt-5 text-xs font-semibold uppercase tracking-wide text-primary'>{tier.pricingRange}</p>
               <Button asChild className='mt-6' size='lg'>
-                <Link href={shape.ctaHref}>
-                  {shape.ctaLabel}
+                <Link href={tier.ctaHref}>
+                  {tier.ctaLabel}
                   <ArrowRight className='h-4 w-4' />
                 </Link>
               </Button>
@@ -91,17 +97,19 @@ export default function PricingPage() {
       </PageSection>
 
       <PageSection background='muted' width='narrow'>
-        <SurfaceCard className='text-center'>
-          <h2 className='text-2xl font-bold'>Scoping and risk clarity</h2>
-          <p className='mt-4 text-muted-foreground'>
-            Every engagement starts with constraints, non-fit criteria, and acceptance conditions. We document timeline assumptions before execution begins.
-          </p>
+        <SurfaceCard>
+          <h2 className='text-2xl font-bold'>ROI framing used in every scope</h2>
+          <ul className='mt-4 list-disc space-y-2 pl-5 text-muted-foreground'>
+            <li><strong>Reliability ROI:</strong> reduce failed runs, escalations, and rollback incidents.</li>
+            <li><strong>Cost ROI:</strong> lower wasted inference spend, duplicate tooling, and manual rework hours.</li>
+            <li><strong>Evaluation ROI:</strong> improve benchmark confidence so releases move faster with fewer regressions.</li>
+          </ul>
           <div className='mt-6 flex flex-col justify-center gap-3 sm:flex-row'>
             <Button asChild size='lg'>
-              <a href={getPrimaryCtaHref()}>Book strategy call</a>
+              <Link href='/book'>Book Diagnostic</Link>
             </Button>
             <Button asChild size='lg' variant='outline'>
-              <Link href='/contact'>Request scoped proposal</Link>
+              <Link href='/contact'>Request Architecture Review</Link>
             </Button>
           </div>
         </SurfaceCard>

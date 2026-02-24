@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { route: '', priority: 1, changeFrequency: 'weekly' },
     { route: '/services', priority: 0.9, changeFrequency: 'weekly' },
     { route: '/approach', priority: 0.85, changeFrequency: 'weekly' },
+    { route: '/what-aias-does', priority: 0.9, changeFrequency: 'weekly' },
     { route: '/case-studies', priority: 0.8, changeFrequency: 'weekly' },
     { route: '/pricing', priority: 0.8, changeFrequency: 'weekly' },
     { route: '/faq', priority: 0.75, changeFrequency: 'weekly' },

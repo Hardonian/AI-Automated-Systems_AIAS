@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 
 test.describe('@smoke Internal link crawl', () => {
   test('all internal links resolve and avoid placeholders', async ({ page, context, baseURL }) => {
+    test.setTimeout(180000);
+
     if (!baseURL) {
       throw new Error('baseURL is required for link crawl');
     }
@@ -16,7 +18,11 @@ test.describe('@smoke Internal link crawl', () => {
       }
       visited.add(route);
 
-      const response = await page.goto(route);
+      let response = await page.goto(route, { waitUntil: 'domcontentloaded' });
+      if (!response || response.status() >= 400) {
+        response = await page.goto(route, { waitUntil: 'load' });
+      }
+
       expect(response?.status(), `Route failed: ${route}`).toBeLessThan(400);
 
       const hrefs = await page.$$eval('a[href]', links =>

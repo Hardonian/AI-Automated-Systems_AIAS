@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Governance Checklist | AI Automated Systems',
-  description: 'Download the AIAS governance checklist and optionally email your stack snapshot for architecture feedback.',
+  title: 'AI Governance Readiness Checklist | AI Automated Systems',
+  description: 'Download and score the AI Governance Readiness Checklist, then optionally share your stack context for architecture feedback.',
   canonical: '/readiness-checklist',
 });
 
@@ -19,12 +19,12 @@ export default function ReadinessChecklistPage() {
     <>
       <PageHero
         eyebrow='Lead magnet'
-        title='AI Governance Checklist'
-        description='Download the checklist instantly. If useful, send your stack snapshot by email for architecture-level feedback.'
+        title='AI Governance Readiness Checklist'
+        description='Download the checklist instantly, score governance readiness qualitatively, and optionally send your context for feedback. This checklist is a starting point for internal decision clarity, not a sales pitch.'
       />
       <PageSection width='narrow'>
         <SurfaceCard>
-          <h2 className='text-2xl font-bold'>Download + optional email capture path</h2>
+          <h2 className='text-2xl font-bold'>Download + optional follow-up path</h2>
           <p className='mt-3 text-muted-foreground'>No forced gate. The file is static and immediate, while the optional email route is aligned to governance diagnostics.</p>
           <div className='mt-6 flex flex-wrap gap-3'>
             <Button asChild>

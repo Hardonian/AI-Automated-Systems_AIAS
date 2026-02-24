@@ -34,11 +34,14 @@ export default function WorkPage() {
 
       <PageSection>
         <p className='mb-6 max-w-3xl text-sm text-muted-foreground'>
-          Summary: these engagements show measurable improvements in throughput, accuracy, and operational control after deterministic automation rollouts.
+          AIAS helps teams that need measurable reliability and governance improvements from AI-enabled operations.
+          These representative engagement scenarios show how discovery-first planning translates into faster throughput and tighter control.
+          Outcomes are framed around operational metrics, not vanity adoption numbers.
         </p>
         <div className='mb-6 flex flex-wrap gap-3 text-sm'>
           <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/services'>Services</Link>
-          <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/how-it-works'>How it works</Link>
+          <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/framework'>Framework</Link>
+          <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/what-we-measure'>What we measure</Link>
           <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/contact'>Start intake</Link>
         </div>
         <div className='grid gap-8'>

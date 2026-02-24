@@ -4,7 +4,7 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageCta, PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
-import { FAQSchema } from '@/components/seo/structured-data';
+import { FAQSchema, ServiceSchema } from '@/components/seo/structured-data';
 import { ServiceTrackLinks } from '@/components/services/service-track-links';
 import FadeIn from '@/components/motion/fade-in';
 import { FeatureIllustration } from '@/components/visual/FeatureIllustration';
@@ -19,16 +19,28 @@ export const metadata: Metadata = generateSEOMetadata({
 });
 
 const serviceVisuals: Record<string, 'agents' | 'automation' | 'security' | 'integration'> = {
-  'AI Agent Architecture': 'agents',
-  'Workflow Automation': 'automation',
-  'Tax & Finance Workflow Automation': 'automation',
-  'Enterprise Security & Compliance': 'security',
+  'AI Clarity Audit': 'agents',
+  'Stabilization Sprint': 'automation',
+  'Governance Architecture': 'security',
+  'Strategic Advantage Program': 'integration',
 };
 
 export default function ServicesPage() {
   return (
     <>
       <FAQSchema faqs={siteContent.routeFaqs.services} />
+
+      {siteContent.services.map(service => (
+        <ServiceSchema
+          key={service.title}
+          description={service.description}
+          idSuffix={service.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}
+          name={service.title}
+          provider={{ name: 'AI Automated Systems', url: 'https://aiautomatedsystems.ca' }}
+          serviceType='AI consultancy engagement'
+        />
+      ))}
+
       <PageHero
         eyebrow={siteContent.servicesPage.hero.eyebrow}
         title={siteContent.servicesPage.hero.title}
@@ -45,6 +57,15 @@ export default function ServicesPage() {
           <Link href='/contact' className='font-medium text-primary underline-offset-4 hover:underline'>Start intake</Link>
         </div>
         <ServiceTrackLinks />
+
+        <div className='mb-6 rounded-xl border bg-card p-4'>
+          <h2 className='text-lg font-semibold'>Related pages</h2>
+          <div className='mt-3 flex flex-wrap gap-3 text-sm'>
+            <Link href='/framework' className='font-medium text-primary underline-offset-4 hover:underline'>Framework</Link>
+            <Link href='/diagnostic' className='font-medium text-primary underline-offset-4 hover:underline'>Diagnostic</Link>
+            <Link href='/what-we-measure' className='font-medium text-primary underline-offset-4 hover:underline'>What we measure</Link>
+          </div>
+        </div>
 
         <div className='grid gap-8 md:grid-cols-2'>
           {siteContent.services.map((service, index) => (

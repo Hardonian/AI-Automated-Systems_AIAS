@@ -109,6 +109,15 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
     changeFrequency: "monthly",
   },
   {
+    path: "/diagnostic",
+    title: "Diagnostic Engagement | AI Automated Systems",
+    description:
+      "What happens during an AIAS diagnostic, what your team receives, and how the engagement de-risks implementation decisions.",
+    canonical: "/diagnostic",
+    priority: 0.8,
+    changeFrequency: "weekly",
+  },
+  {
     path: "/docs",
     title: "Documentation | AI Automated Systems",
     description:
@@ -142,6 +151,15 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
       "Frequently asked questions about AIAS consulting engagements, delivery model, pricing, and onboarding.",
     canonical: "/faq",
     priority: 0.75,
+    changeFrequency: "weekly",
+  },
+  {
+    path: "/framework",
+    title: "AIAS Diagnostic Framework | AI Automated Systems",
+    description:
+      "The AIAS five-step diagnostic framework used to map decisions, constraints, failure modes, and architecture tradeoffs before implementation.",
+    canonical: "/framework",
+    priority: 0.8,
     changeFrequency: "weekly",
   },
   {
@@ -218,9 +236,9 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   },
   {
     path: "/readiness-checklist",
-    title: "Governance Checklist | AI Automated Systems",
+    title: "AI Governance Readiness Checklist | AI Automated Systems",
     description:
-      "Download the AIAS governance checklist and optionally email your stack snapshot for architecture feedback.",
+      "Download and score the AI Governance Readiness Checklist to identify structural gaps before scaling AI systems.",
     canonical: "/readiness-checklist",
     priority: 0.7,
     changeFrequency: "monthly",
@@ -287,6 +305,15 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
     canonical: "/what-aias-does",
     priority: 0.9,
     changeFrequency: "weekly",
+  },
+  {
+    path: "/what-we-measure",
+    title: "What We Measure | AI Automated Systems",
+    description:
+      "How AIAS measures reliability, evaluation integrity, and cost discipline for governed AI systems.",
+    canonical: "/what-we-measure",
+    priority: 0.7,
+    changeFrequency: "monthly",
   },
   {
     path: "/why-we-say-no",

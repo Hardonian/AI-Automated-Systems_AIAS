@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
+import Link from 'next/link';
+
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
+import { FAQSchema } from '@/components/seo/structured-data';
 import { siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -13,6 +16,7 @@ export const metadata: Metadata = generateSEOMetadata({
 export default function HowItWorksPage() {
   return (
     <>
+      <FAQSchema faqs={siteContent.faq.slice(0, 4)} />
       <PageHero
         eyebrow={siteContent.howItWorksPage.hero.eyebrow}
         title={siteContent.howItWorksPage.hero.title}
@@ -20,6 +24,14 @@ export default function HowItWorksPage() {
       />
 
       <PageSection>
+        <p className='mb-6 max-w-3xl text-sm text-muted-foreground'>
+          Summary: this page explains exactly how AIAS scopes risk, controls quality, and separates deterministic logic from AI-assisted decisions.
+        </p>
+        <div className='mb-6 flex flex-wrap gap-3 text-sm'>
+          <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/services'>Services</Link>
+          <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/work'>Proof</Link>
+          <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/contact'>Start intake</Link>
+        </div>
         <div className='grid gap-6 lg:grid-cols-2'>
           {siteContent.howItWorksPage.sections.map(section => (
             <SurfaceCard key={section.title}>

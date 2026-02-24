@@ -23,6 +23,14 @@ export default function WorkPage() {
       />
 
       <PageSection>
+        <p className='mb-6 max-w-3xl text-sm text-muted-foreground'>
+          Summary: these engagements show measurable improvements in throughput, accuracy, and operational control after deterministic automation rollouts.
+        </p>
+        <div className='mb-6 flex flex-wrap gap-3 text-sm'>
+          <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/services'>Services</Link>
+          <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/how-it-works'>How it works</Link>
+          <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/contact'>Start intake</Link>
+        </div>
         <div className='grid gap-8'>
           {siteContent.caseStudies.map(study => (
             <SurfaceCard key={study.title} className='overflow-hidden p-0'>

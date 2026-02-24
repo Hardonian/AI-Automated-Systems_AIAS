@@ -6,6 +6,7 @@ import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageCta, PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
 import { FAQSchema } from '@/components/seo/structured-data';
 import { ServiceTrackLinks } from '@/components/services/service-track-links';
+import FadeIn from '@/components/motion/fade-in';
 import { FeatureIllustration } from '@/components/visual/FeatureIllustration';
 import { WorkflowDiagram } from '@/components/visual/WorkflowDiagram';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
@@ -35,11 +36,20 @@ export default function ServicesPage() {
       />
 
       <PageSection>
+        <p className='mb-6 max-w-3xl text-sm text-muted-foreground'>
+          Summary: these service tracks cover strategy, build, and governance so your team can launch production-ready automation without brittle workflows.
+        </p>
+        <div className='mb-6 flex flex-wrap gap-3 text-sm'>
+          <Link href='/how-it-works' className='font-medium text-primary underline-offset-4 hover:underline'>How we work</Link>
+          <Link href='/work' className='font-medium text-primary underline-offset-4 hover:underline'>Proof</Link>
+          <Link href='/contact' className='font-medium text-primary underline-offset-4 hover:underline'>Start intake</Link>
+        </div>
         <ServiceTrackLinks />
 
         <div className='grid gap-8 md:grid-cols-2'>
-          {siteContent.services.map(service => (
-            <SurfaceCard key={service.title} className='p-7'>
+          {siteContent.services.map((service, index) => (
+            <FadeIn key={service.title} delay={index * 0.05}>
+              <SurfaceCard className='p-7'>
               <FeatureIllustration
                 className='mb-5 h-24 opacity-90'
                 type={serviceVisuals[service.title] || 'automation'}
@@ -55,7 +65,8 @@ export default function ServicesPage() {
                   </li>
                 ))}
               </ul>
-            </SurfaceCard>
+              </SurfaceCard>
+            </FadeIn>
           ))}
         </div>
       </PageSection>

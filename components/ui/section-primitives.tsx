@@ -57,7 +57,7 @@ export function PageSection({
 
 export function SurfaceCard({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <article className={cn(BORDER_RADIUS.card, CARD_SHADOWS.card, 'border bg-card p-8', className)}>
+    <article className={cn(BORDER_RADIUS.card, CARD_SHADOWS.card, 'border bg-card p-8 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl', className)}>
       {children}
     </article>
   );

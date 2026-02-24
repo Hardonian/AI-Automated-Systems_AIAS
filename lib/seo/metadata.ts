@@ -50,6 +50,17 @@ export function generateMetadata(config: MetadataConfig): Metadata {
       description: config.description,
       images: [DEFAULT_OG_IMAGE],
     },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+        'max-video-preview': -1,
+      },
+    },
   };
 
   if (config.keywords?.length) {

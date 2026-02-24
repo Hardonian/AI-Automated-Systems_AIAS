@@ -150,6 +150,7 @@ interface ServiceSchemaProps {
   provider?: { name: string; url: string };
   areaServed?: string;
   serviceType?: string;
+  idSuffix?: string;
 }
 
 export function ServiceSchema({
@@ -161,6 +162,7 @@ export function ServiceSchema({
   },
   areaServed = 'Worldwide',
   serviceType = 'Consulting',
+  idSuffix = 'default',
 }: ServiceSchemaProps) {
   const schema = {
     '@context': 'https://schema.org',
@@ -182,7 +184,42 @@ export function ServiceSchema({
   return (
     <Script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      id='service-schema'
+      id={`service-schema-${idSuffix}`}
+      type='application/ld+json'
+    />
+  );
+}
+
+
+
+interface ServiceListSchemaProps {
+  services: Array<{ name: string; description: string; serviceType: string }>;
+}
+
+export function ServiceListSchema({ services }: ServiceListSchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': services.map(service => ({
+      '@type': 'Service',
+      name: service.name,
+      description: service.description,
+      serviceType: service.serviceType,
+      provider: {
+        '@type': 'Organization',
+        name: 'AI Automated Systems',
+        url: 'https://aiautomatedsystems.ca',
+      },
+      areaServed: {
+        '@type': 'Country',
+        name: 'Canada',
+      },
+    })),
+  };
+
+  return (
+    <Script
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      id='service-list-schema'
       type='application/ld+json'
     />
   );

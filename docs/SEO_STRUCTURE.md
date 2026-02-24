@@ -22,3 +22,9 @@
 
 - Each new route has explicit metadata title, description, and canonical path.
 - Sitemap includes new marketing and case-study routes.
+
+## Schema-critical routes
+
+- `/` (service list + FAQ schema markers)
+- `/blog` (blog collection schema marker)
+- `/case-studies/[slug]` (case-study article schema marker on each prerendered detail page)

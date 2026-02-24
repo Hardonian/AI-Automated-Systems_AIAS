@@ -11,7 +11,7 @@ import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Contact | AI Automated Systems',
   description:
-    'Get in touch with AIAS for agentic automation consulting. Book a strategy call or email us directly.',
+    'Book a diagnostic, request an architecture review, or submit your AI stack intake for governance-first implementation planning.',
   canonical: '/contact',
 });
 
@@ -28,7 +28,7 @@ export default function ContactPage() {
         <div className='grid gap-8 md:grid-cols-2'>
           <SurfaceCard>
             <Calendar className='h-6 w-6 text-primary' />
-            <h2 className='mt-4 text-2xl font-semibold'>Book a strategy call</h2>
+            <h2 className='mt-4 text-2xl font-semibold'>Book Diagnostic</h2>
             <p className='mt-3 text-muted-foreground'>
               Schedule a consult to review current workflows, constraints, and immediate quick wins.
             </p>
@@ -37,13 +37,13 @@ export default function ContactPage() {
               30 minutes • no-pressure planning call
             </p>
             <Button asChild className='mt-6 w-full' size='lg'>
-              <a href={getPrimaryCtaHref()}>Open scheduling</a>
+              <a href={getPrimaryCtaHref()}>Book Diagnostic</a>
             </Button>
           </SurfaceCard>
 
           <SurfaceCard>
             <Mail className='h-6 w-6 text-primary' />
-            <h2 className='mt-4 text-2xl font-semibold'>Email the team</h2>
+            <h2 className='mt-4 text-2xl font-semibold'>Request architecture review</h2>
             <p className='mt-3 text-muted-foreground'>
               Share context asynchronously and we will reply with next steps and suggested scope.
             </p>

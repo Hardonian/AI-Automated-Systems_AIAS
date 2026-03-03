@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
+import { RelatedPages } from '@/components/content/related-pages';
 
 const metrics = [
   {
@@ -58,15 +57,14 @@ export default function WhatWeMeasurePage() {
         </div>
       </PageSection>
       <PageSection background='muted'>
-        <SurfaceCard>
-          <h2 className='text-2xl font-bold'>Related pages</h2>
-          <div className='mt-4 flex flex-wrap gap-3 text-sm'>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/work'>Proof</Link>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/diagnostic'>Diagnostic</Link>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/framework'>Framework</Link>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/services'>Services</Link>
-          </div>
-        </SurfaceCard>
+        <RelatedPages
+          links={[
+            { label: 'Proof', href: '/work' },
+            { label: 'Diagnostic', href: '/diagnostic' },
+            { label: 'Framework', href: '/framework' },
+            { label: 'Services', href: '/services' },
+          ]}
+        />
       </PageSection>
     </>
   );

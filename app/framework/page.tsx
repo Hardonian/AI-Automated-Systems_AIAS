@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-
 import { DiagnosticFrameworkDiagram } from '@/components/visual/DiagnosticFrameworkDiagram';
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
+import { BreadcrumbSchema } from '@/components/seo/structured-data';
+import { RelatedPages } from '@/components/content/related-pages';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
 const frameworkSteps = [
@@ -23,6 +23,12 @@ export const metadata: Metadata = generateSEOMetadata({
 export default function FrameworkPage() {
   return (
     <>
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: 'https://aiautomatedsystems.ca/' },
+          { name: 'Framework', url: 'https://aiautomatedsystems.ca/framework' },
+        ]}
+      />
       <PageHero
         eyebrow='Signature framework'
         title='AIAS Diagnostic Architecture Framework'
@@ -47,15 +53,16 @@ export default function FrameworkPage() {
       </PageSection>
 
       <PageSection background='muted'>
-        <SurfaceCard>
-          <h2 className='text-2xl font-bold'>Related pages</h2>
-          <div className='mt-4 flex flex-wrap gap-3 text-sm'>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/how-it-works'>How We Work</Link>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/services'>Services</Link>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/diagnostic'>Diagnostic</Link>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/work'>Proof</Link>
-          </div>
-        </SurfaceCard>
+        <RelatedPages
+          navAriaLabel='Framework related pages'
+          linkAriaLabelPrefix='Framework related page'
+          links={[
+            { label: 'How We Work', href: '/how-it-works' },
+            { label: 'Services', href: '/services' },
+            { label: 'Diagnostic', href: '/diagnostic' },
+            { label: 'Proof', href: '/work' },
+          ]}
+        />
       </PageSection>
     </>
   );

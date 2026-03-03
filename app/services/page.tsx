@@ -6,6 +6,7 @@ import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageCta, PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
 import { FAQSchema, ServiceSchema } from '@/components/seo/structured-data';
 import { ServiceTrackLinks } from '@/components/services/service-track-links';
+import { RelatedPages } from '@/components/content/related-pages';
 import FadeIn from '@/components/motion/fade-in';
 import { FeatureIllustration } from '@/components/visual/FeatureIllustration';
 import { WorkflowDiagram } from '@/components/visual/WorkflowDiagram';
@@ -49,7 +50,9 @@ export default function ServicesPage() {
 
       <PageSection>
         <p className='mb-6 max-w-3xl text-sm text-muted-foreground'>
-          Summary: these service tracks cover strategy, build, and governance so your team can launch production-ready automation without brittle workflows.
+          AIAS helps operations, product, and leadership teams that need governed AI execution without delivery chaos.
+          These services are designed to move from discovery through implementation with explicit ownership, risk controls, and measurable outcomes.
+          We lead with diagnostic clarity so architecture choices are made against real constraints instead of assumptions.
         </p>
         <div className='mb-6 flex flex-wrap gap-3 text-sm'>
           <Link href='/how-it-works' className='font-medium text-primary underline-offset-4 hover:underline'>How we work</Link>
@@ -58,13 +61,16 @@ export default function ServicesPage() {
         </div>
         <ServiceTrackLinks />
 
-        <div className='mb-6 rounded-xl border bg-card p-4'>
-          <h2 className='text-lg font-semibold'>Related pages</h2>
-          <div className='mt-3 flex flex-wrap gap-3 text-sm'>
-            <Link href='/framework' className='font-medium text-primary underline-offset-4 hover:underline'>Framework</Link>
-            <Link href='/diagnostic' className='font-medium text-primary underline-offset-4 hover:underline'>Diagnostic</Link>
-            <Link href='/what-we-measure' className='font-medium text-primary underline-offset-4 hover:underline'>What we measure</Link>
-          </div>
+        <div className='mb-6'>
+          <RelatedPages
+            headingClassName='text-lg font-semibold'
+            links={[
+              { label: 'Framework', href: '/framework' },
+              { label: 'Point of view', href: '/point-of-view' },
+              { label: 'Diagnostic', href: '/diagnostic' },
+              { label: 'What we measure', href: '/what-we-measure' },
+            ]}
+          />
         </div>
 
         <div className='grid gap-8 md:grid-cols-2'>

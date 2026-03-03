@@ -98,6 +98,7 @@ jobs:
           if [ "${{ matrix.test-type }}" == "unit" ]; then
             pnpm test
           else
+            pnpm exec playwright install --with-deps chromium
             pnpm test:e2e
           fi
 

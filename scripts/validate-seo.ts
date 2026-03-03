@@ -3,6 +3,8 @@ import path from 'node:path';
 
 import { INDEXABLE_ROUTE_MANIFEST } from '@/lib/seo/route-manifest';
 
+import { countPrimaryHeadingSignals } from './validate-seo-utils';
+
 function getRouteFiles(dir: string): string[] {
   const entries = readdirSync(dir, { withFileTypes: true, recursive: true });
   return entries
@@ -39,6 +41,15 @@ for (const route of INDEXABLE_ROUTE_MANIFEST) {
   const normalizedPath = route.path === '/' ? 'app/page.tsx' : `app${route.path}/page.tsx`;
   if (!existsSync(normalizedPath)) {
     failures.push(`${route.path}: route manifest points to missing file ${normalizedPath}`);
+    continue;
+  }
+
+  const source = readFileSync(normalizedPath, 'utf8');
+  const headingSignalCount = countPrimaryHeadingSignals(source);
+  if (headingSignalCount !== 1) {
+    failures.push(
+      `${route.path}: expected exactly one primary heading signal (<h1>, <PageHero>, <ContentDrivenHero>, or <SurveyFlow>) but found ${headingSignalCount}`,
+    );
   }
 }
 

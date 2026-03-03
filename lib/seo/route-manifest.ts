@@ -208,6 +208,15 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
     changeFrequency: "monthly",
   },
   {
+    path: "/point-of-view",
+    title: "What We Believe About AI Systems | AI Automated Systems",
+    description:
+      "The AIAS point of view on discovery-first AI execution, governance design, and reliability tradeoffs for consultancy engagements.",
+    canonical: "/point-of-view",
+    priority: 0.75,
+    changeFrequency: "monthly",
+  },
+  {
     path: "/pricing",
     title: "Offer Structure & Pricing Philosophy | AI Automated Systems",
     description:

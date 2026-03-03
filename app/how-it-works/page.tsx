@@ -4,6 +4,7 @@ import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import Link from 'next/link';
 
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
+import { RelatedPages } from '@/components/content/related-pages';
 import { FAQSchema } from '@/components/seo/structured-data';
 import { siteContent } from '@/src/content/site';
 
@@ -32,6 +33,7 @@ export default function HowItWorksPage() {
         <div className='mb-6 flex flex-wrap gap-3 text-sm'>
           <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/services'>Services</Link>
           <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/framework'>Framework</Link>
+          <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/point-of-view'>Point of view</Link>
           <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/work'>Proof</Link>
           <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/contact'>Start intake</Link>
         </div>
@@ -68,6 +70,17 @@ export default function HowItWorksPage() {
             ))}
           </div>
         </SurfaceCard>
+      </PageSection>
+
+      <PageSection background='muted'>
+        <RelatedPages
+          links={[
+            { label: 'Point of view', href: '/point-of-view' },
+            { label: 'Framework', href: '/framework' },
+            { label: 'Diagnostic', href: '/diagnostic' },
+            { label: 'Services', href: '/services' },
+          ]}
+        />
       </PageSection>
     </>
   );

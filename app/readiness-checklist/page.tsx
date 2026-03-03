@@ -19,7 +19,7 @@ export default function ReadinessChecklistPage() {
     <>
       <PageHero
         eyebrow='Lead magnet'
-        title='AI Governance Readiness Checklist'
+        title='AI Governance Checklist'
         description='Download the checklist instantly, score governance readiness qualitatively, and optionally send your context for feedback. This checklist is a starting point for internal decision clarity, not a sales pitch.'
       />
       <PageSection width='narrow'>

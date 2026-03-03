@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
+import { BreadcrumbSchema } from '@/components/seo/structured-data';
+import { RelatedPages } from '@/components/content/related-pages';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
 const deliverables = [
@@ -21,6 +21,12 @@ export const metadata: Metadata = generateSEOMetadata({
 export default function DiagnosticPage() {
   return (
     <>
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: 'https://aiautomatedsystems.ca/' },
+          { name: 'Diagnostic', url: 'https://aiautomatedsystems.ca/diagnostic' },
+        ]}
+      />
       <PageHero
         eyebrow='Discovery engagement'
         title='AI Clarity Diagnostic'
@@ -45,15 +51,16 @@ export default function DiagnosticPage() {
         </div>
       </PageSection>
       <PageSection background='muted'>
-        <SurfaceCard>
-          <h2 className='text-2xl font-bold'>Related pages</h2>
-          <div className='mt-4 flex flex-wrap gap-3 text-sm'>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/framework'>Framework</Link>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/services'>Services</Link>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/readiness-checklist'>Readiness checklist</Link>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/contact'>Start intake</Link>
-          </div>
-        </SurfaceCard>
+        <RelatedPages
+          navAriaLabel='Diagnostic related pages'
+          linkAriaLabelPrefix='Diagnostic related page'
+          links={[
+            { label: 'Framework', href: '/framework' },
+            { label: 'Services', href: '/services' },
+            { label: 'Readiness checklist', href: '/readiness-checklist' },
+            { label: 'Start intake', href: '/contact' },
+          ]}
+        />
       </PageSection>
     </>
   );

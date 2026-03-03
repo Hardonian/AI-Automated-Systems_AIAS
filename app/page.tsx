@@ -118,6 +118,7 @@ export default function HomePage() {
             ))}
           </ul>
           <div className='mt-6 flex flex-wrap gap-3 text-sm'>
+            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/point-of-view'>Read full point of view</Link>
             <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/framework'>View diagnostic framework</Link>
             <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/services'>See engagements</Link>
           </div>

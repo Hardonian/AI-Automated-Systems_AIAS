@@ -151,7 +151,7 @@ devDependencies:
     version: 10.4.23(postcss@8.5.6)
   axe-playwright:
     specifier: ^1.2.3
-    version: 1.2.3(playwright@1.58.0)
+    version: 1.2.3(playwright@1.58.2)
   eslint:
     specifier: ^9.39.2
     version: 9.39.2
@@ -184,7 +184,7 @@ devDependencies:
     version: 15.5.2
   playwright:
     specifier: ^1.58.0
-    version: 1.58.0
+    version: 1.58.2
   postcss:
     specifier: ^8.5.6
     version: 8.5.6
@@ -1239,7 +1239,7 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
-      playwright: 1.58.0
+      playwright: 1.58.2
 
   /@puppeteer/browsers@2.11.1:
     resolution: {integrity: sha512-YmhAxs7XPuxN0j7LJloHpfD1ylhDuFmmwMvfy/+6nBSrETT2ycL53LrhgPtR+f+GcPSybQVuQ5inWWu5MrWCpA==}
@@ -3242,7 +3242,7 @@ packages:
       rimraf: 3.0.2
     dev: true
 
-  /axe-playwright@1.2.3(playwright@1.58.0):
+  /axe-playwright@1.2.3(playwright@1.58.2):
     resolution: {integrity: sha512-bTxCTNp3kx6sQRMjmuLv8pG3+v+kOCvFXATim1+XUXzW6ykulbbuJdQfgB+vQPNAF9uvYbW2qrv9pg81ZSFV/A==}
     peerDependencies:
       playwright: ^1.58.0
@@ -3250,7 +3250,7 @@ packages:
       axe-core: 4.11.0
       axe-html-reporter: 2.2.3(axe-core@4.11.0)
       picocolors: 1.1.1
-      playwright: 1.58.0
+      playwright: 1.58.2
     dev: true
 
   /axobject-query@4.1.0:
@@ -3280,8 +3280,8 @@ packages:
         optional: true
     dev: true
 
-  /bare-fs@4.5.3:
-    resolution: {integrity: sha512-9+kwVx8QYvt3hPWnmb19tPnh38c6Nihz8Lx3t0g9+4GoIf3/fTgYwM4Z6NxgI+B9elLQA7mLE9PpqcWtOMRDiQ==}
+  /bare-fs@4.5.5:
+    resolution: {integrity: sha512-XvwYM6VZqKoqDll8BmSww5luA5eflDzY0uEFfBJtFKe4PAAtxBjU3YIxzIBzhyaEQBy1VXEQBto4cpN5RZJw+w==}
     engines: {bare: '>=1.16.0'}
     requiresBuild: true
     peerDependencies:
@@ -6208,17 +6208,17 @@ packages:
     resolution: {integrity: sha512-TfySrs/5nm8fQJDcBDuUng3VOUKsd7S+zqvbOTiGXHfxX4wK31ard+hoNuvkicM/2YFzlpDgABOevKSsB4G/FA==}
     engines: {node: '>= 6'}
 
-  /playwright-core@1.58.0:
-    resolution: {integrity: sha512-aaoB1RWrdNi3//rOeKuMiS65UCcgOVljU46At6eFcOFPFHWtd2weHRRow6z/n+Lec0Lvu0k9ZPKJSjPugikirw==}
+  /playwright-core@1.58.2:
+    resolution: {integrity: sha512-yZkEtftgwS8CsfYo7nm0KE8jsvm6i/PTgVtB8DL726wNf6H2IMsDuxCpJj59KDaxCtSnrWan2AeDqM7JBaultg==}
     engines: {node: '>=18'}
     hasBin: true
 
-  /playwright@1.58.0:
-    resolution: {integrity: sha512-2SVA0sbPktiIY/MCOPX8e86ehA/e+tDNq+e5Y8qjKYti2Z/JG7xnronT/TXTIkKbYGWlCbuucZ6dziEgkoEjQQ==}
+  /playwright@1.58.2:
+    resolution: {integrity: sha512-vA30H8Nvkq/cPBnNw4Q8TWz1EJyqgpuinBcHET0YVJVFldr8JDNiU9LaWAE1KqSkRYazuaBhTpB5ZzShOezQ6A==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
-      playwright-core: 1.58.0
+      playwright-core: 1.58.2
     optionalDependencies:
       fsevents: 2.3.2
 
@@ -7210,7 +7210,7 @@ packages:
       pump: 3.0.3
       tar-stream: 3.1.7
     optionalDependencies:
-      bare-fs: 4.5.3
+      bare-fs: 4.5.5
       bare-path: 3.0.0
     transitivePeerDependencies:
       - bare-abort-controller

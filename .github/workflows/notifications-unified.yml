@@ -74,7 +74,7 @@ jobs:
           echo "branch=$BRANCH" >> $GITHUB_OUTPUT
 
       - name: Send Slack notification
-        uses: slackapi/slack-github-action@v1
+        uses: slackapi/slack-github-action@v3
         if: env.SLACK_WEBHOOK_URL != ''
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -108,7 +108,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     steps:
       - name: Send custom notification
-        uses: slackapi/slack-github-action@v1
+        uses: slackapi/slack-github-action@v3
         if: env.SLACK_WEBHOOK_URL != ''
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}

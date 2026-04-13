@@ -99,7 +99,7 @@
     "test:unit": "pnpm exec vitest run tests/unit/validate-seo-utils.test.ts"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^9.39.4",
     "@lhci/cli": "^0.15.1",
     "@next/eslint-plugin-next": "^16.1.6",
     "@playwright/test": "^1.58.0",

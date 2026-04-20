@@ -30,15 +30,15 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
 
 const formSchema = z.object({
-  orgType: z.enum(ORG_TYPES, { required_error: 'Select organization type.' }),
-  problemCategory: z.enum(PROBLEM_CATEGORIES, { required_error: 'Select problem category.' }),
-  aiStack: z.enum(AI_STACK_OPTIONS, { required_error: 'Select current AI stack state.' }),
-  modelMix: z.enum(MODEL_MIX_OPTIONS, { required_error: 'Select model mix.' }),
-  failureMode: z.enum(FAILURE_MODE_OPTIONS, { required_error: 'Select current failure mode.' }),
-  governanceMaturity: z.enum(GOVERNANCE_MATURITY_OPTIONS, { required_error: 'Select governance maturity.' }),
-  urgency: z.enum(URGENCY_LEVELS, { required_error: 'Select urgency.' }),
-  scope: z.enum(ENGAGEMENT_SCOPES, { required_error: 'Select engagement scope.' }),
-  budgetFlexibility: z.enum(BUDGET_FLEXIBILITY_RANGES, { required_error: 'Select budget flexibility.' }),
+  orgType: z.enum(ORG_TYPES, { error: 'Select organization type.' }),
+  problemCategory: z.enum(PROBLEM_CATEGORIES, { error: 'Select problem category.' }),
+  aiStack: z.enum(AI_STACK_OPTIONS, { error: 'Select current AI stack state.' }),
+  modelMix: z.enum(MODEL_MIX_OPTIONS, { error: 'Select model mix.' }),
+  failureMode: z.enum(FAILURE_MODE_OPTIONS, { error: 'Select current failure mode.' }),
+  governanceMaturity: z.enum(GOVERNANCE_MATURITY_OPTIONS, { error: 'Select governance maturity.' }),
+  urgency: z.enum(URGENCY_LEVELS, { error: 'Select urgency.' }),
+  scope: z.enum(ENGAGEMENT_SCOPES, { error: 'Select engagement scope.' }),
+  budgetFlexibility: z.enum(BUDGET_FLEXIBILITY_RANGES, { error: 'Select budget flexibility.' }),
   email: z.string().email('Enter a valid email or leave blank.').optional().or(z.literal('')),
   website: z.string().max(0).optional(),
 });

@@ -9,6 +9,9 @@ on:
     # Run daily at midnight UTC
     - cron: '0 0 * * *'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   security-audit:
     name: Security Audit
@@ -16,15 +19,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          version: 8
 
       - name: Install dependencies
         run: pnpm install
@@ -133,15 +134,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          version: 8
 
       - name: Install dependencies
         run: pnpm install

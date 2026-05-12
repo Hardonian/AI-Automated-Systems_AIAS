@@ -5,6 +5,9 @@ on:
     - cron: '0 10 * * *' # Daily at 10 AM UTC
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   rescue-email:
     runs-on: ubuntu-latest

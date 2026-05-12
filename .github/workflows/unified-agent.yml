@@ -27,6 +27,9 @@ on:
       - 'package-lock.json'
       - 'pnpm-lock.yaml'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   unified-agent:
     name: Unified Hardonia Agent
@@ -46,7 +49,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: |

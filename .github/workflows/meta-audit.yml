@@ -7,6 +7,9 @@ on:
       - 'v*'
   workflow_dispatch:
 permissions: { contents: write, pull-requests: write }
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   meta-audit:
     runs-on: ubuntu-latest
@@ -14,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 22, cache: npm }
+        with: { node-version: 22, cache: pnpm }
       - run: npm ci
       - name: Generate Meta Audit (reports + preview patches only)
         run: |

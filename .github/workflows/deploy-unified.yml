@@ -35,8 +35,8 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  NODE_VERSION: '22'
-  PNPM_VERSION: '8.15.0'
+  NODE_VERSION: '22.21.1'
+  PNPM_VERSION: '8.15.9'
   NODE_ENV: production
 
 concurrency:
@@ -169,7 +169,7 @@ jobs:
           output: 'trivy-results.sarif'
 
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'

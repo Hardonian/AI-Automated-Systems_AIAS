@@ -1,0 +1,2 @@
+def precommit():
+    pass

@@ -46,11 +46,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'pnpm'
+          cache: 'npm'
 
       - name: Install dependencies
         run: |
-          pnpm install --frozen-lockfile
+          npm ci
 
       - name: Run Unified Agent
         env:
@@ -64,7 +64,7 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          pnpm run agent:unified || echo "Agent run completed with warnings"
+          npm run agent:unified || echo "Agent run completed with warnings"
 
       - name: Check for changes
         id: changes

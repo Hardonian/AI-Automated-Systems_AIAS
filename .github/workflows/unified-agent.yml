@@ -50,7 +50,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci
+          pnpm install
 
       - name: Run Unified Agent
         env:

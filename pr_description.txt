@@ -1,3 +1,0 @@
-🎯 **What:** Fixed an XSS vulnerability in the blog article content rendering by implementing real server-side HTML sanitization using `dompurify` and `jsdom` instead of the previous stub implementation.
-⚠️ **Risk:** The previous stub implementation was returning un-sanitized raw HTML directly into `dangerouslySetInnerHTML`. If malicious data found its way into the article content, this could lead to Cross-Site Scripting (XSS), compromising user sessions and data.
-🛡️ **Solution:** Replaced the stubbed `sanitizeHTMLServer` function with a robust implementation. We initialize a `JSDOM` window once per module load to avoid performance penalties, and use it to power `DOMPurify`, effectively stripping all dangerous tags like `<script>` and event handlers before rendering.

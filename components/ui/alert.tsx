@@ -1,7 +1,7 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import { motion } from 'framer-motion';
+import { motion, type HTMLMotionProps } from 'framer-motion';
 import {
   AlertCircle,
   CheckCircle2,
@@ -44,7 +44,7 @@ const iconMap = {
 
 const Alert = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> &
+  HTMLMotionProps<'div'> &
     VariantProps<typeof alertVariants> & {
       dismissible?: boolean;
       onDismiss?: () => void;
@@ -60,7 +60,7 @@ const Alert = React.forwardRef<
       exit={{ opacity: 0, y: -10 }}
       initial={{ opacity: 0, y: -10 }}
       role='alert'
-      {...(props as any)}
+      {...props}
     >
       <Icon className='h-4 w-4' />
       {dismissible && (
@@ -72,7 +72,7 @@ const Alert = React.forwardRef<
           <span className='sr-only'>Close</span>
         </button>
       )}
-      {children}
+      {children as React.ReactNode}
     </motion.div>
   );
 });

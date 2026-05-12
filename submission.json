@@ -1,4 +1,0 @@
-{
-  "title": "🧹 Fix type safety bypass in skeleton loader",
-  "description": "🎯 **What:** The code health issue addressed is a type safety bypass using `as any` in `components/ui/skeleton.tsx`.\n💡 **Why:** This improves maintainability and strict type-safety by directly adopting `HTMLMotionProps<'div'>` from framer-motion and strongly typing `motionTransitions` in `lib/style/motion.ts`.\n✅ **Verification:** I confirmed the change is safe by successfully running `pnpm verify` and `pnpm run test:e2e` without introducing any new errors or typecheck failures.\n✨ **Result:** The `Skeleton` component is now fully type-safe."
-}

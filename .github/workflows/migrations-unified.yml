@@ -38,8 +38,8 @@ on:
     - cron: '0 2 * * *'
 
 env:
-  NODE_VERSION: '22'
-  PNPM_VERSION: '8.15.0'
+  NODE_VERSION: '22.21.1'
+  PNPM_VERSION: '8.15.9'
 
 concurrency:
   group: migrations-${{ github.ref }}

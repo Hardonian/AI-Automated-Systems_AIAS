@@ -35,10 +35,7 @@ export function TrustIndicator({
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       whileHover={{ scale: 1.05 }}
-      {...({
-        className:
-          'flex items-center gap-3 p-4 rounded-xl border border-border bg-card hover:border-primary/50 transition-all',
-      } as any)}
+      className='flex items-center gap-3 p-4 rounded-xl border border-border bg-card hover:border-primary/50 transition-all'
     >
       <div className='rounded-lg bg-primary/10 p-2 text-primary'>
         {icon || <Icon className='h-5 w-5' />}

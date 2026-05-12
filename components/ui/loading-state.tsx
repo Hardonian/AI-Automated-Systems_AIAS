@@ -31,12 +31,10 @@ export function LoadingState({
       animate='visible'
       initial='hidden'
       variants={motionVariants.fadeIn}
-      {...({
-        className: cn(
+      className={cn(
           'flex flex-col items-center justify-center py-12 px-4',
           className
-        ),
-      } as any)}
+        )}
       aria-label={ariaLabel || message}
       aria-live='polite'
       role='status'

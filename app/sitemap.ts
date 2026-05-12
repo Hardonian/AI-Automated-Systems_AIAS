@@ -1,6 +1,6 @@
 export const dynamic = 'force-static';
 
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { existsSync, statSync } from 'node:fs';
 
 import type { MetadataRoute } from 'next';
@@ -16,7 +16,7 @@ const fallbackLastModified = new Date();
 
 const resolveLastModified = (filePath: string) => {
   try {
-    const gitTimestamp = execSync(`git log -1 --format=%cI -- ${filePath}`, {
+    const gitTimestamp = execFileSync('git', ['log', '-1', '--format=%cI', '--', filePath], {
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'ignore'],
     }).trim();

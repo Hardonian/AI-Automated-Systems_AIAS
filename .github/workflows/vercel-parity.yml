@@ -30,7 +30,7 @@ jobs:
           cache: pnpm
 
       - name: Deterministic install
-        run: ppnpm install:install
+        run: pnpm install
 
       - name: Doctor
         run: pnpm doctor

@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      - run: ppnpm install:install
+      - run: pnpm install
       - run: pnpm lint
 
   typecheck:
@@ -43,7 +43,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      - run: ppnpm install:install
+      - run: pnpm install
       - run: pnpm typecheck
 
   build:
@@ -60,7 +60,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      - run: ppnpm install:install
+      - run: pnpm install
       - name: Build
         run: |
           set -euo pipefail
@@ -89,7 +89,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      - run: ppnpm install:install
+      - run: pnpm install
       - name: Run doctor
         run: pnpm doctor
       - name: Run verify checks

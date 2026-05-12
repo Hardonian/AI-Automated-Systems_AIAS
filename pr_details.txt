@@ -1,0 +1,13 @@
+Title: 🧹 [Remove type safety bypass in trust badges component]
+Description:
+🎯 **What:** Removed type safety bypasses (`{...({ className: ... } as any)}`) in `components/home/trust-badges.tsx` and replaced them with direct `className="..."` or `className={...}` assignments.
+
+💡 **Why:** The use of `as any` bypassed TypeScript's type checking, making the code more error-prone and harder to read. Setting the `className` prop directly improves readability, maintainability, and ensures type safety is enforced by the compiler. It also aligns better with standard React and Framer Motion patterns.
+
+✅ **Verification:**
+1. Ran `pnpm verify` (which includes linting, type checking, building, and several metadata/SEO validation scripts). All checks passed.
+2. Ran `pnpm test:e2e` to verify no UI functionality was broken.
+3. Ran `pnpm test:unit` to verify no unit tests were broken.
+4. Ensured that the visual styling and layout logic (e.g. `TYPOGRAPHY` and Tailwind classes) was preserved exactly as before.
+
+✨ **Result:** The `trust-badges.tsx` component is now fully type-safe, removing 7 instances of unnecessary `any` casting, resulting in cleaner and more idiomatic code.

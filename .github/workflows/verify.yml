@@ -6,7 +6,7 @@ on:
 
 env:
   NODE_VERSION: "22.21.1"
-  PNPM_VERSION: "8.15.9"
+  PNPM_VERSION: "8.15.0"
 
 concurrency:
   group: verify-${{ github.ref }}

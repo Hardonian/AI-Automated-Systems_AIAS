@@ -31,4 +31,4 @@ jobs:
       - name: Route metadata guardrail
         run: pnpm check:route-metadata
       - name: Lighthouse CI
-        run: ppnpm install --frozen-lockfile:lighthouse
+        run: pnpm install --frozen-lockfile:lighthouse

@@ -30,7 +30,7 @@ jobs:
           cache: pnpm
 
       - name: Deterministic install
-        run: ppnpm install --frozen-lockfile:install
+        run: pnpm install --frozen-lockfile:install
 
       - name: Doctor
         run: pnpm doctor

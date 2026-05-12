@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      - run: ppnpm install --frozen-lockfile:install
+      - run: pnpm install --frozen-lockfile:install
       - run: pnpm lint
 
   typecheck:
@@ -43,7 +43,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      - run: ppnpm install --frozen-lockfile:install
+      - run: pnpm install --frozen-lockfile:install
       - run: pnpm typecheck
 
   build:
@@ -60,7 +60,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      - run: ppnpm install --frozen-lockfile:install
+      - run: pnpm install --frozen-lockfile:install
       - name: Build
         run: |
           set -euo pipefail
@@ -89,7 +89,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      - run: ppnpm install --frozen-lockfile:install
+      - run: pnpm install --frozen-lockfile:install
       - name: Run doctor
         run: pnpm doctor
       - name: Run verify checks

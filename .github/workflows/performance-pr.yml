@@ -11,7 +11,7 @@ on:
 
 env:
   NODE_VERSION: '22'
-  PNPM_VERSION: '8.15.0'
+  PNPM_VERSION: "8.15.9"
 
 jobs:
   performance-check:
@@ -30,7 +30,6 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

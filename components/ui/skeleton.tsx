@@ -1,20 +1,20 @@
 'use client';
 
-'use client';
-
-import { motion } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'framer-motion';
 import * as React from 'react';
 
 import { motionTransitions, useSafeReducedMotion } from '@/lib/style/motion';
 import { cn } from '@/lib/utils';
 
+export interface SkeletonProps extends HTMLMotionProps<'div'> {
+  variant?: 'default' | 'text' | 'circular' | 'rectangular';
+}
+
 function Skeleton({
   className,
   variant = 'default',
   ...props
-}: React.HTMLAttributes<HTMLDivElement> & {
-  variant?: 'default' | 'text' | 'circular' | 'rectangular';
-}) {
+}: SkeletonProps) {
   const baseClasses = 'animate-pulse bg-muted/60';
   const variantClasses = {
     default: 'rounded-md',
@@ -42,7 +42,7 @@ function Skeleton({
       transition={
         shouldAnimate ? motionTransitions.standard : { duration: 0.01 }
       }
-      {...(props as any)}
+      {...props}
     />
   );
 }

@@ -1,8 +1,9 @@
 'use client';
 
 import * as React from 'react';
+import { Transition, Variants } from 'framer-motion';
 
-export const motionTransitions = {
+export const motionTransitions: Record<string, Transition> = {
     default: { duration: 0.2, ease: 'easeInOut' },
     spring: { type: 'spring', stiffness: 300, damping: 20 },
     standard: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
@@ -18,7 +19,7 @@ export const motionTranslate = {
     lift: -4,
 };
 
-export const motionVariants = {
+export const motionVariants: Record<string, Variants> = {
     fadeIn: {
         initial: { opacity: 0, y: 10 },
         animate: { opacity: 1, y: 0 },

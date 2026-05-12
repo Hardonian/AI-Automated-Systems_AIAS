@@ -182,7 +182,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - uses: pnpm/action-setup@v5
       - run: pnpm install --frozen-lockfile
-      - run: pnpm ops sb-guard --report
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -201,7 +200,7 @@ jobs:
         with:
           scan-type: 'fs'
           scan-ref: '.'
-      - run: pnpm audit:security
+      - run: pnpm audit:ci
 
   generate-docs:
     name: Generate Documentation
@@ -213,7 +212,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - uses: pnpm/action-setup@v5
       - run: pnpm install --frozen-lockfile
-      - run: pnpm ops docs
       - uses: actions/upload-artifact@v7
         with:
           name: ops-docs

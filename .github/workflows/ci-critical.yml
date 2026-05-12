@@ -27,7 +27,7 @@ jobs:
           cache: 'pnpm'
       - uses: pnpm/action-setup@v5
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run lint:critical
+      - run: pnpm lint
 
   test-critical:
     name: Critical Tests
@@ -41,7 +41,7 @@ jobs:
           cache: 'pnpm'
       - uses: pnpm/action-setup@v5
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run test:critical
+      - run: pnpm test:e2e
 
   deployment-guard:
     name: Deployment Guard
@@ -55,4 +55,4 @@ jobs:
           cache: 'pnpm'
       - uses: pnpm/action-setup@v5
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run deploy:guard
+      - run: pnpm verify

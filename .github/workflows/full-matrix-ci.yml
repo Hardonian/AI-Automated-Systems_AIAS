@@ -11,7 +11,7 @@ on:
 
 env:
   NODE_VERSION: '22'
-  PNPM_VERSION: '8.15.0'
+  PNPM_VERSION: '8.15.9'
 
 jobs:
   oss-guard:
@@ -215,7 +215,7 @@ jobs:
         with:
           scan-type: 'fs'
           scan-ref: '.'
-      - run: pnpm audit:security
+      - run: pnpm audit:ci
 
   generate-docs:
     name: Generate Documentation

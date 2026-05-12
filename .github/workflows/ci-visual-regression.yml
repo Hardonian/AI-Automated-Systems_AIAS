@@ -41,7 +41,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: 8.15.9
 
       - name: Get pnpm store directory
         shell: bash
@@ -80,7 +80,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: 8.15.9
 
       - name: Get pnpm store directory
         shell: bash
@@ -120,7 +120,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: 8.15.9
 
       - name: Get pnpm store directory
         shell: bash
@@ -171,7 +171,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: 8.15.9
 
       - name: Get pnpm store directory
         shell: bash
@@ -212,7 +212,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: 8.15.9
 
       - name: Get pnpm store directory
         shell: bash
@@ -275,7 +275,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: 8.15.9
 
       - name: Get pnpm store directory
         shell: bash
@@ -376,7 +376,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: 8.15.9
 
       - name: Get pnpm store directory
         shell: bash
@@ -446,7 +446,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: 8.15.9
 
       - name: Get pnpm store directory
         shell: bash

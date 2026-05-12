@@ -28,7 +28,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: 8.15.9
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -62,7 +62,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: 8.15.9
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -93,7 +93,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: 8.15.9
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

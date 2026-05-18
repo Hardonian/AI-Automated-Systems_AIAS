@@ -103,8 +103,8 @@ dependencies:
     specifier: ^12.29.2
     version: 12.29.2(react-dom@19.2.4)(react@19.2.4)
   lucide-react:
-    specifier: ^0.575.0
-    version: 0.575.0(react@19.2.4)
+    specifier: ^1.16.0
+    version: 1.16.0(react@19.2.4)
   next:
     specifier: ^15.5.10
     version: 15.5.12(@playwright/test@1.58.0)(react-dom@19.2.4)(react@19.2.4)
@@ -1526,7 +1526,7 @@ packages:
     resolution: {integrity: sha512-PUl/vlfo08Oj804VI5nDPeSk9vyslnBlVzDDwFt8SUVxY8+KdGMkra/vrXjEEHe8gb7+RqVTfOIlGw0nyrEelA==}
     dependencies:
       legacy-javascript: 0.0.1
-      third-party-web: 0.29.0
+      third-party-web: 0.29.2
     dev: true
 
   /@pkgjs/parseargs@0.11.0:
@@ -3735,8 +3735,8 @@ packages:
         optional: true
     dev: true
 
-  /bare-fs@4.5.4:
-    resolution: {integrity: sha512-POK4oplfA7P7gqvetNmCs4CNtm9fNsx+IAh7jH7GgU0OJdge2rso0R20TNWVq6VoWcCvsTdlNDaleLHGaKx8CA==}
+  /bare-fs@4.7.1:
+    resolution: {integrity: sha512-WDRsyVN52eAx/lBamKD6uyw8H4228h/x0sGGGegOamM2cd7Pag88GfMQalobXI+HaEUxpCkbKQUDOQqt9wawRw==}
     engines: {bare: '>=1.16.0'}
     requiresBuild: true
     peerDependencies:
@@ -6347,8 +6347,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /lucide-react@0.575.0(react@19.2.4):
-    resolution: {integrity: sha512-VuXgKZrk0uiDlWjGGXmKV6MSk9Yy4l10qgVvzGn2AWBx1Ylt0iBexKOAoA6I7JO3m+M9oeovJd3yYENfkUbOeg==}
+  /lucide-react@1.16.0(react@19.2.4):
+    resolution: {integrity: sha512-dYwyPzb4MEKpGUmNYk3WKWPnMrHs3FKM+q94kAnJrcDIqqn1hq2xY8scaS2ovsOCM5D51ey2gaRG3PBb1vgoYQ==}
     peerDependencies:
       react: ^19.2.4 || 19
     peerDependenciesMeta:
@@ -8038,7 +8038,7 @@ packages:
       pump: 3.0.3
       tar-stream: 3.1.7
     optionalDependencies:
-      bare-fs: 4.5.4
+      bare-fs: 4.7.1
       bare-path: 3.0.0
     transitivePeerDependencies:
       - bare-abort-controller
@@ -8089,8 +8089,8 @@ packages:
     resolution: {integrity: sha512-buUzX4sXC4efFX6xg2bw6/eZsCUh8qQwSavC4D9HpONMFlRbcHhD8Je5qwYdCpViR6q0qla2wPP+t91a2vgolg==}
     dev: true
 
-  /third-party-web@0.29.0:
-    resolution: {integrity: sha512-nBDSJw5B7Sl1YfsATG2XkW5qgUPODbJhXw++BKygi9w6O/NKS98/uY/nR/DxDq2axEjL6halHW1v+jhm/j1DBQ==}
+  /third-party-web@0.29.2:
+    resolution: {integrity: sha512-fegtha91tq2DHphyoiBXVHjVi2YG9zFaRnboT9C28tO1en9Y3wJsfspuy40F+u5wl3hHVbw7cnd1b67kEGHb8g==}
     dev: true
 
   /through@2.3.8:

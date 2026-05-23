@@ -66,7 +66,7 @@ export default function WorkPage() {
                 <Link
                   className='mt-5 inline-block font-semibold text-primary underline'
                   href={study.projectUrl}
-                  rel='noreferrer'
+                  rel='noopener noreferrer'
                   target='_blank'
                 >
                   Visit project

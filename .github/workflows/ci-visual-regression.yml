@@ -14,8 +14,8 @@ on:
         type: boolean
 
 env:
-  NODE_VERSION: '20'
-  PNPM_VERSION: '8'
+  NODE_VERSION: '22'
+  PNPM_VERSION: '8.15.9'
   BASE_URL: 'http://localhost:3000'
 
 concurrency:

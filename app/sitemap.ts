@@ -1,29 +1,34 @@
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 
-import { execSync } from 'node:child_process';
-import { existsSync, statSync } from 'node:fs';
+import { execSync } from "node:child_process";
+import { existsSync, statSync } from "node:fs";
 
-import type { MetadataRoute } from 'next';
+import type { MetadataRoute } from "next";
 
-import { getLatestArticles } from '@/lib/blog/articles';
-import { SITE_URL } from '@/lib/seo/metadata';
-import { INDEXABLE_ROUTE_MANIFEST } from '@/lib/seo/route-manifest';
-import { caseStudies } from '@/src/content/caseStudies';
-import { blueprints } from '@/src/content/moat';
+import { getLatestArticles } from "@/lib/blog/articles";
+import { SITE_URL } from "@/lib/seo/metadata";
+import { INDEXABLE_ROUTE_MANIFEST } from "@/lib/seo/route-manifest";
+import { caseStudies } from "@/src/content/caseStudies";
+import { blueprints } from "@/src/content/moat";
 
 const baseUrl = SITE_URL;
 const fallbackLastModified = new Date();
 
+const cache = new Map<string, Date>();
+
 const resolveLastModified = (filePath: string) => {
+  if (cache.has(filePath)) {return cache.get(filePath) as Date;}
+
   try {
     const gitTimestamp = execSync(`git log -1 --format=%cI -- ${filePath}`, {
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore'],
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
     }).trim();
 
     if (gitTimestamp) {
       const gitDate = new Date(gitTimestamp);
       if (!Number.isNaN(gitDate.getTime())) {
+        cache.set(filePath, gitDate);
         return gitDate;
       }
     }
@@ -31,17 +36,20 @@ const resolveLastModified = (filePath: string) => {
     // gracefully fall through to file mtime
   }
 
+  let result = fallbackLastModified;
   if (existsSync(filePath)) {
-    return statSync(filePath).mtime;
+    result = statSync(filePath).mtime;
   }
 
-  return fallbackLastModified;
+  cache.set(filePath, result);
+  return result;
 };
 
-const staticRoutes = INDEXABLE_ROUTE_MANIFEST.map(route => {
-  const pagePath = route.path === '/' ? 'app/page.tsx' : `app${route.path}/page.tsx`;
+const staticRoutes = INDEXABLE_ROUTE_MANIFEST.map((route) => {
+  const pagePath =
+    route.path === "/" ? "app/page.tsx" : `app${route.path}/page.tsx`;
   return {
-    route: route.path === '/' ? '' : route.path,
+    route: route.path === "/" ? "" : route.path,
     priority: route.priority,
     changeFrequency: route.changeFrequency,
     lastModified: resolveLastModified(pagePath),
@@ -49,28 +57,38 @@ const staticRoutes = INDEXABLE_ROUTE_MANIFEST.map(route => {
 });
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const caseStudyRoutes = caseStudies.map(study => ({
+  const caseStudyLastModified = resolveLastModified(
+    "src/content/caseStudies.ts",
+  );
+  const caseStudyRoutes = caseStudies.map((study) => ({
     route: `/case-studies/${study.slug}`,
     priority: 0.7,
-    changeFrequency: 'monthly' as const,
-    lastModified: resolveLastModified('src/content/caseStudies.ts'),
+    changeFrequency: "monthly" as const,
+    lastModified: caseStudyLastModified,
   }));
 
-  const blogRoutes = getLatestArticles(100).map(article => ({
+  const blogLastModified = resolveLastModified("lib/blog/articles.ts");
+  const blogRoutes = getLatestArticles(100).map((article) => ({
     route: `/blog/${article.slug}`,
     priority: 0.6,
-    changeFrequency: 'monthly' as const,
-    lastModified: resolveLastModified('lib/blog/articles.ts'),
+    changeFrequency: "monthly" as const,
+    lastModified: blogLastModified,
   }));
 
-  const blueprintRoutes = blueprints.map(blueprint => ({
+  const blueprintLastModified = resolveLastModified("src/content/moat.ts");
+  const blueprintRoutes = blueprints.map((blueprint) => ({
     route: `/blueprints/${blueprint.slug}`,
     priority: 0.65,
-    changeFrequency: 'monthly' as const,
-    lastModified: resolveLastModified('src/content/moat.ts'),
+    changeFrequency: "monthly" as const,
+    lastModified: blueprintLastModified,
   }));
 
-  return [...staticRoutes, ...caseStudyRoutes, ...blogRoutes, ...blueprintRoutes].map(entry => ({
+  return [
+    ...staticRoutes,
+    ...caseStudyRoutes,
+    ...blogRoutes,
+    ...blueprintRoutes,
+  ].map((entry) => ({
     url: `${baseUrl}${entry.route}`,
     lastModified: entry.lastModified,
     changeFrequency: entry.changeFrequency,

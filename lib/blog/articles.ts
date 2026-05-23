@@ -35,8 +35,12 @@ const articles: BlogArticle[] = [
     },
 ];
 
+const sortedArticlesCache = [...articles].sort(
+  (a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime()
+);
+
 export function getLatestArticles(limit: number): BlogArticle[] {
-    return [...articles].sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime()).slice(0, limit);
+    return sortedArticlesCache.slice(0, limit);
 }
 
 export function getFeaturedArticles(): BlogArticle[] {

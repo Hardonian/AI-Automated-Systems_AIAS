@@ -26,7 +26,9 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+        run: pnpm install --frozen-lockfile
 
       - name: Check backup evidence
         run: |

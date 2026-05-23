@@ -67,8 +67,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
       - run: pnpm ops doctor
         env:
@@ -90,8 +88,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
       - name: Run tests
         run: |
@@ -113,8 +109,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm build:analyze
@@ -134,8 +128,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
       - uses: actions/download-artifact@v8
         with:
@@ -153,8 +145,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps
       - run: pnpm ops test:e2e
@@ -176,8 +166,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
       - run: npx prisma migrate status
         env:
@@ -193,8 +181,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
       - run: pnpm ops sb-guard --report
         env:
@@ -226,8 +212,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
       - run: pnpm ops docs
       - uses: actions/upload-artifact@v7
@@ -247,8 +231,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
       - run: pnpm ops release
         env:

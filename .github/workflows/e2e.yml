@@ -46,8 +46,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -59,7 +57,7 @@ jobs:
         run: pnpm exec playwright install chromium firefox webkit
 
       - name: Build application
-        run: pnpm run build
+        run: ppnpm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || '' }}
@@ -68,7 +66,7 @@ jobs:
 
       - name: Start server for E2E tests
         run: |
-          pnpm run start &
+          ppnpm run start &
           echo $! > server.pid
           sleep 15
           # Verify server is running
@@ -81,7 +79,7 @@ jobs:
           SKIP_ENV_VALIDATION: 'true'
 
       - name: Run E2E tests (critical flows)
-        run: pnpm run test:e2e -- tests/e2e/critical-flows.spec.ts
+        run: ppnpm run test:e2e -- tests/e2e/critical-flows.spec.ts
         env:
           BASE_URL: http://localhost:3000
 
@@ -131,8 +129,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -144,7 +140,7 @@ jobs:
         run: pnpm exec playwright install chromium
 
       - name: Build application
-        run: pnpm run build
+        run: ppnpm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || '' }}
@@ -153,7 +149,7 @@ jobs:
 
       - name: Start server for visual tests
         run: |
-          pnpm run start &
+          ppnpm run start &
           echo $! > server.pid
           sleep 15
           curl -f http://localhost:3000/api/healthz || exit 1
@@ -165,7 +161,7 @@ jobs:
           SKIP_ENV_VALIDATION: 'true'
 
       - name: Run visual regression tests
-        run: pnpm run test:e2e --project=visual-regression
+        run: ppnpm run test:e2e --project=visual-regression
         env:
           BASE_URL: http://localhost:3000
         continue-on-error: true
@@ -239,8 +235,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -254,7 +248,7 @@ jobs:
         run: pnpm exec playwright install --with-deps ${{ matrix.browser }}
 
       - name: Build application
-        run: pnpm run build
+        run: ppnpm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || '' }}
@@ -263,7 +257,7 @@ jobs:
 
       - name: Start server
         run: |
-          pnpm run start &
+          ppnpm run start &
           echo $! > server.pid
           sleep 15
           curl -f http://localhost:3000/api/healthz || exit 1
@@ -275,7 +269,7 @@ jobs:
           SKIP_ENV_VALIDATION: 'true'
 
       - name: Run E2E tests (${{ matrix.browser }})
-        run: pnpm run test:e2e --project=${{ matrix.browser }} tests/e2e/critical-flows.spec.ts
+        run: ppnpm run test:e2e --project=${{ matrix.browser }} tests/e2e/critical-flows.spec.ts
         env:
           BASE_URL: http://localhost:3000
 

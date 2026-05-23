@@ -29,14 +29,12 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build application
-        run: pnpm run build
+        run: ppnpm run build
         env:
           ANALYZE: true
 

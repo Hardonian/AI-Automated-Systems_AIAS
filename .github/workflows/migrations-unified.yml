@@ -66,8 +66,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -116,7 +114,7 @@ jobs:
           echo "Validating staging schema..."
           # Mask secrets in output to prevent exposure
           echo "::add-mask::$DATABASE_URL"
-          pnpm run db:validate-schema || echo "Schema validation skipped"
+          ppnpm run db:validate-schema || echo "Schema validation skipped"
         continue-on-error: true
         env:
           SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
@@ -151,8 +149,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -186,7 +182,7 @@ jobs:
       - name: Apply Supabase migrations
         run: |
           echo "Applying all pending Supabase migrations..."
-          pnpm run migrate:run || {
+          ppnpm run migrate:run || {
             echo "Migration script failed, trying Supabase CLI directly..."
             supabase db push --include-all || {
               echo "Supabase CLI push failed, trying alternative method..."
@@ -206,7 +202,7 @@ jobs:
       - name: Validate schema after migration
         run: |
           echo "Validating database schema..."
-          pnpm run db:validate-schema || echo "Schema validation skipped"
+          ppnpm run db:validate-schema || echo "Schema validation skipped"
         continue-on-error: true
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -215,7 +211,7 @@ jobs:
       - name: Regenerate Supabase types
         run: |
           echo "Regenerating Supabase TypeScript types..."
-          npm run regenerate-types || echo "Type regeneration skipped"
+          pnpm run regenerate-types || echo "Type regeneration skipped"
         continue-on-error: true
         env:
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
@@ -256,8 +252,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -289,7 +283,7 @@ jobs:
           echo "::add-mask::$DATABASE_URL"
           echo "::add-mask::$DIRECT_URL"
           echo "=== Applying Prisma Migrations ==="
-          pnpm run db:migrate || {
+          ppnpm run db:migrate || {
             echo "Migration failed!"
             exit 1
           }
@@ -362,8 +356,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -382,7 +374,7 @@ jobs:
           # Mask secrets in output to prevent exposure
           echo "::add-mask::$DATABASE_URL"
           echo "::add-mask::$DIRECT_URL"
-          pnpm run migrate:guardian || echo "Migration guardian check completed"
+          ppnpm run migrate:guardian || echo "Migration guardian check completed"
         continue-on-error: true
 
       - name: Upload Migration Log

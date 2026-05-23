@@ -62,14 +62,12 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Run Deploy Doctor
-        run: pnpm run deploy:doctor || echo "Deploy doctor check completed"
+        run: ppnpm run deploy:doctor || echo "Deploy doctor check completed"
         continue-on-error: true
 
       - name: Validate environment variables
@@ -115,30 +113,28 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Run type checking
-        run: pnpm run typecheck
+        run: ppnpm run typecheck
 
       - name: Run linting
-        run: pnpm run lint
+        run: ppnpm run lint
 
       - name: Run tests
-        run: pnpm run test -- --run
+        run: ppnpm run test -- --run
 
       - name: Build application
-        run: pnpm run build
+        run: ppnpm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || '' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || '' }}
 
       - name: Validate build output
-        run: pnpm run validate:build || echo "Build validation skipped"
+        run: ppnpm run validate:build || echo "Build validation skipped"
         continue-on-error: true
 
       - name: Upload build artifacts
@@ -199,8 +195,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -232,7 +226,7 @@ jobs:
           npx vercel@latest build --token="${{ secrets.VERCEL_TOKEN }}"
 
           # Validate build output
-          pnpm run validate:build || echo "Build validation skipped"
+          ppnpm run validate:build || echo "Build validation skipped"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -327,14 +321,12 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Run type checking
-        run: pnpm run typecheck
+        run: ppnpm run typecheck
 
       - name: Run tests for agents/workflows
         run: pnpm test -- tests/lib/agents tests/lib/workflows || echo "Agent tests completed"
@@ -382,8 +374,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -438,8 +428,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -453,7 +441,7 @@ jobs:
           fi
 
       - name: Build application with canary flags
-        run: pnpm run build
+        run: ppnpm run build
         env:
           CANARY_ENABLED: 'true'
           CANARY_PERCENTAGE: ${{ github.event.inputs.canary_percentage }}
@@ -481,7 +469,7 @@ jobs:
       - name: Run smoke tests
         run: |
           echo "Running smoke tests..."
-          pnpm run verify:deployment || echo "Smoke tests completed"
+          ppnpm run verify:deployment || echo "Smoke tests completed"
         continue-on-error: true
         env:
           DEPLOYMENT_URL: ${{ needs.deploy-frontend.outputs.deployment_url || 'https://aiautomatedsystems.ca' }}

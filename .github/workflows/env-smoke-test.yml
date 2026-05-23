@@ -57,7 +57,7 @@ jobs:
         run: |
           if [ -f pnpm-lock.yaml ]; then corepack enable && pnpm install; \
           elif [ -f yarn.lock ]; then yarn install --frozen-lockfile; \
-          elif [ -f package-lock.json ]; then npm ci; \
+          elif [ -f package-lock.json ]; then pnpm install --frozen-lockfile; \
           else npm install; fi
 
       - name: Prisma Checks (if applicable)
@@ -72,7 +72,7 @@ jobs:
       - name: Build App
         run: |
           if grep -q '"next"' package.json 2>/dev/null; then \
-            npm run build || pnpm build || yarn build; \
+            pnpm run build || pnpm build || yarn build; \
           else
             echo "No Next.js build found; skipping.";
           fi

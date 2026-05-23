@@ -35,20 +35,18 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build application
-        run: pnpm run build
+        run: ppnpm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
 
       - name: Start application
         run: |
-          pnpm run start &
+          ppnpm run start &
           sleep 15
         env:
           PORT: 3000
@@ -58,14 +56,14 @@ jobs:
 
       - name: Run load test
         run: |
-          pnpm run load-test \
+          ppnpm run load-test \
             --users ${{ github.event.inputs.target_users || '1000' }} \
             --duration ${{ github.event.inputs.duration || '300' }} \
             --base-url http://localhost:3000
         continue-on-error: true
 
       - name: Generate HTML report
-        run: pnpm run load-test:report
+        run: ppnpm run load-test:report
         if: always()
 
       - name: Upload test results

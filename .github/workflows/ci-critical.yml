@@ -26,10 +26,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run lint:critical
+      - run: ppnpm run lint:critical
 
   test-critical:
     name: Critical Tests
@@ -42,10 +40,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run test:critical
+      - run: ppnpm run test:critical
 
   deployment-guard:
     name: Deployment Guard
@@ -58,7 +54,5 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run deploy:guard
+      - run: ppnpm run deploy:guard

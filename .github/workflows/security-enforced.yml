@@ -28,8 +28,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -124,14 +122,12 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build application
-        run: pnpm run build
+        run: ppnpm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
 
@@ -157,8 +153,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -166,7 +160,7 @@ jobs:
       - name: Run security self-check
         run: |
           echo "🔒 Running security self-check..."
-          pnpm run security:check || {
+          ppnpm run security:check || {
             echo "❌ Security self-check failed"
             exit 1
           }
@@ -258,8 +252,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -267,7 +259,7 @@ jobs:
       - name: Check licenses
         run: |
           echo "📄 Checking license compliance..."
-          pnpm run audit:licenses || {
+          ppnpm run audit:licenses || {
             echo "❌ License check failed"
             exit 1
           }

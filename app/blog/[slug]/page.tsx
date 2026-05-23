@@ -58,7 +58,7 @@ export async function generateStaticParams() {
 export default async function BlogArticlePage({ params }: PageProps) {
   const { slug } = await params;
   const article = getArticleBySlug(slug);
-  const relatedArticles = getLatestArticles(3).filter(a => a.slug !== slug);
+  const relatedArticles = getLatestArticles(4).filter(a => a.slug !== slug).slice(0, 3);
 
   if (!article) {
     notFound();

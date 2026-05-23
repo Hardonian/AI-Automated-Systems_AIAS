@@ -1,12 +1,13 @@
 'use client';
 
 import * as React from 'react';
+import { EasingDefinition } from 'framer-motion';
 
 export const motionTransitions = {
-    default: { duration: 0.2, ease: 'easeInOut' },
+    default: { duration: 0.2, ease: 'easeInOut' as EasingDefinition },
     spring: { type: 'spring', stiffness: 300, damping: 20 },
-    standard: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
-    entrance: { duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] },
+    standard: { duration: 0.3, ease: [0.4, 0, 0.2, 1] as EasingDefinition },
+    entrance: { duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] as EasingDefinition },
 };
 
 export const motionScale = {

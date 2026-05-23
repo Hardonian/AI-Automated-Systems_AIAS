@@ -1,5 +1,10 @@
+import DOMPurify from 'dompurify';
+import { JSDOM } from 'jsdom';
+
+const window = new JSDOM('').window;
+// DOMPurify expects a specific type here, but runtime execution works correctly with the JSDOM window
+const purify = DOMPurify(window as any);
+
 export function sanitizeHTMLServer(html: string): string {
-    // Minimal implementation for now - in a real app this would use a library like isomorphic-dompurify or similar
-    // For static export and safety, we just return the string or a very basic filter
-    return html;
+    return purify.sanitize(html);
 }

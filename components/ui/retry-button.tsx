@@ -29,6 +29,9 @@ export function RetryButton({
     setIsRetrying(true);
     try {
       await onRetry();
+    } catch (error) {
+      // Catch and log error to prevent unhandled rejections
+      console.error('Retry failed:', error);
     } finally {
       setIsRetrying(false);
     }

@@ -15,7 +15,7 @@ export function PageLoader() {
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        {...({ className: 'flex flex-col items-center gap-4' } as any)}
+        className='flex flex-col items-center gap-4'
       >
         <Loader2 className='h-8 w-8 animate-spin text-primary' />
         <p className='text-sm text-muted-foreground'>Loading...</p>

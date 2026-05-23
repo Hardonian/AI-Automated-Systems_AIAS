@@ -97,7 +97,7 @@ export function TrustBadges() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
-          className={'mb-16'}
+          className='mb-16'
         >
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -158,7 +158,7 @@ export function TrustBadges() {
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
-          className={'mb-16'}
+          className='mb-16'
         >
           <motion.h3
             initial={{ opacity: 0, y: 20 }}
@@ -225,7 +225,7 @@ export function TrustBadges() {
           transition={{ duration: 0.6, delay: 0.3 }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
-          className={'mb-12'}
+          className='mb-12'
         >
           <motion.h4
             initial={{ opacity: 0, y: 20 }}
@@ -277,7 +277,7 @@ export function TrustBadges() {
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
-          className={'mt-12 pt-8 border-t border-border'}
+          className='mt-12 pt-8 border-t border-border'
         >
           <div
             className={`flex flex-wrap items-center justify-center gap-4 md:gap-6 ${TYPOGRAPHY.bodySmall}`}

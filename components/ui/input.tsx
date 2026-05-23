@@ -2,7 +2,7 @@
 
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'framer-motion';
 import * as React from 'react';
 
 import { motionTransitions, useSafeReducedMotion } from '@/lib/style/motion';
@@ -23,7 +23,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const [focused, setFocused] = React.useState(false);
     const prefersReduced = useSafeReducedMotion();
 
-    const motionProps = prefersReduced
+    const motionProps: HTMLMotionProps<'div'> = prefersReduced
       ? {}
       : {
           initial: { opacity: 0, y: -10 },
@@ -33,7 +33,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <motion.div
-        {...({ className: 'relative w-full' } as any)}
+        className='relative w-full'
         {...motionProps}
       >
         {icon && iconPosition === 'left' && (

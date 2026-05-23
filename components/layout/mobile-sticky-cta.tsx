@@ -41,10 +41,7 @@ export function MobileStickyCTA({
           exit={{ y: 100 }}
           initial={{ y: 100 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          {...({
-            className:
-              'fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-lg border-t z-50 md:hidden pb-safe',
-          } as any)}
+          className='fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-lg border-t z-50 md:hidden pb-safe'
         >
           <div className='flex gap-3'>
             <Button asChild className='flex-1 font-bold shadow-lg' size='lg'>

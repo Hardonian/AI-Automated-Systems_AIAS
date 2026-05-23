@@ -34,9 +34,7 @@ function Blob({ className, speed = 0.5, initialX = 0 }: BlobProps) {
     <motion.div
       ref={ref}
       style={{ y, opacity, x: initialX }}
-      {...({
-        className: cn('absolute rounded-full blur-3xl', className),
-      } as any)}
+      className={cn('absolute rounded-full blur-3xl', className)}
     />
   );
 }

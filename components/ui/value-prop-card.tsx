@@ -43,7 +43,7 @@ export function ValuePropCard({
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.5, delay }}
       whileHover={{ y: -8, transition: { duration: 0.2 } }}
-      {...({ className: cn('h-full', className) } as any)}
+      className={cn('h-full', className)}
     >
       <Card
         hover={true}

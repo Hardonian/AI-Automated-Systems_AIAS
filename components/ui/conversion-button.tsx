@@ -38,9 +38,7 @@ export function ConversionButton({
 
   return (
     <motion.div
-      {...({
-        className: 'relative inline-flex flex-col items-center gap-2',
-      } as any)}
+      className='relative inline-flex flex-col items-center gap-2'
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
@@ -68,9 +66,7 @@ export function ConversionButton({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          {...({
-            className: 'text-xs text-muted-foreground text-center',
-          } as any)}
+          className='text-xs text-muted-foreground text-center'
         >
           {socialProof}
         </motion.p>

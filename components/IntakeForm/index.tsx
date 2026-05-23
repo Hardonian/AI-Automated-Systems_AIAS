@@ -123,9 +123,11 @@ function validateFields(values: FormValues, fields: ReadonlyArray<keyof FormValu
   }
 
   const errors: FormErrors = {};
-  for (const field of fields) {
-    const issue = parsed.error.issues.find((entry) => entry.path[0] === field);
-    if (issue) {
+  const fieldSet = new Set(fields);
+
+  for (const issue of parsed.error.issues) {
+    const field = issue.path[0] as keyof FormValues;
+    if (fieldSet.has(field) && !errors[field]) {
       errors[field] = issue.message;
     }
   }

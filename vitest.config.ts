@@ -1,18 +1,13 @@
-import { defineConfig } from 'vitest/config'
-import { resolve } from 'path'
+import { defineConfig } from 'vitest/config';
+import path from 'path';
 
 export default defineConfig({
   test: {
-    environment: 'happy-dom',
-    globals: true,
-    setupFiles: ['./tests/setup.ts'],
-  },
-  esbuild: {
-    jsxInject: `import React from 'react'`
+    environment: 'node',
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, './'),
+      '@': path.resolve(__dirname, './'),
     },
   },
-})
+});

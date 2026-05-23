@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+import { motion, type HTMLMotionProps } from 'framer-motion';
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -55,7 +55,7 @@ TableFooter.displayName = 'TableFooter';
 
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
-  React.HTMLAttributes<HTMLTableRowElement>
+  HTMLMotionProps<'tr'>
 >(({ className, ...props }, ref) => (
   <motion.tr
     ref={ref}
@@ -66,7 +66,7 @@ const TableRow = React.forwardRef<
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ duration: 0.2 }}
-    {...(props as any)}
+    {...props}
   />
 ));
 TableRow.displayName = 'TableRow';

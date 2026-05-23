@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
@@ -72,10 +72,11 @@ jobs:
             const path = require('path');
 
             let performanceComment = '## 📊 Performance Analysis\n\n';
-
             // Get PR number from context
             const prNumber = context.payload.pull_request?.number || context.issue.number;
             const benchFile = `bench/results/pr-${prNumber}.json`;
+            let hasRegressions = false;
+
             if (fs.existsSync(benchFile)) {
               try {
                 const results = JSON.parse(fs.readFileSync(benchFile, 'utf-8'));
@@ -86,6 +87,9 @@ jobs:
                 if (Array.isArray(results)) {
                   results.forEach(result => {
                     const status = result.averageTime < 100 ? '✅' : '⚠️';
+                    if (result.averageTime >= 100) {
+                      hasRegressions = true;
+                    }
                     performanceComment += `| ${result.name} | ${result.averageTime.toFixed(2)}ms | ${status} |\n`;
                   });
                 }
@@ -98,9 +102,6 @@ jobs:
 
             performanceComment += '\n### Bundle Size\n\n';
             performanceComment += 'Bundle analysis available in build artifacts.\n';
-
-            // Check for performance regressions
-            const hasRegressions = false; // TODO: Implement regression detection
 
             if (hasRegressions) {
               performanceComment += '\n⚠️ **Performance regressions detected!** Please review.\n';

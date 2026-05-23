@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "Tidying docs..."
+echo "docs-tidy.sh running..."

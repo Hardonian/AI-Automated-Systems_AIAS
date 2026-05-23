@@ -215,7 +215,7 @@ jobs:
         with:
           scan-type: 'fs'
           scan-ref: '.'
-      - run: pnpm audit:security
+      - run: pnpm audit:ci
 
   generate-docs:
     name: Generate Documentation

@@ -1,8 +1,6 @@
 'use client';
 
-'use client';
-
-import { motion, type HTMLMotionProps } from 'framer-motion';
+import { HTMLMotionProps, motion } from 'framer-motion';
 import * as React from 'react';
 
 import { motionTransitions, useSafeReducedMotion } from '@/lib/style/motion';
@@ -16,7 +14,9 @@ function Skeleton({
   className,
   variant = 'default',
   ...props
-}: SkeletonProps) {
+}: HTMLMotionProps<'div'> & {
+  variant?: 'default' | 'text' | 'circular' | 'rectangular';
+}) {
   const baseClasses = 'animate-pulse bg-muted/60';
   const variantClasses = {
     default: 'rounded-md',

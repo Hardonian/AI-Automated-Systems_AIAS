@@ -5,10 +5,8 @@ on:
     branches: [main, master]
 
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
   NODE_VERSION: '22'
-  PNPM_VERSION: "8.15.0"
+  PNPM_VERSION: "8.15.9"
 
 concurrency:
   group: verify-${{ github.ref }}
@@ -48,8 +46,6 @@ jobs:
       - name: Build
         run: pnpm build
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           NODE_OPTIONS: --max-old-space-size=4096
 
       - name: Verify build output

@@ -21,8 +21,6 @@ jobs:
 
       - name: Run system health audit
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: tsx scripts/agents/system_health.ts
 
@@ -38,8 +36,6 @@ jobs:
       - name: Notify
         if: always()
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           tsx scripts/agents/notify.ts "System Health Audit Complete" "Weekly system health audit completed. Check reports." info

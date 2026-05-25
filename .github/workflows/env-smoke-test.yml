@@ -10,8 +10,6 @@ jobs:
   env-smoke-test:
     runs-on: ubuntu-latest
     env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
       DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}

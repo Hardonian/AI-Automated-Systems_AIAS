@@ -8,8 +8,10 @@ on:
   workflow_dispatch:
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
   NODE_VERSION: '22'
-  PNPM_VERSION: '8.15.9'
+  PNPM_VERSION: '8.15.0'
 
 jobs:
   # Security Dependency Scan - BLOCKING
@@ -97,7 +99,7 @@ jobs:
           exit-code: '1' # Fail on critical/high vulnerabilities
 
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
@@ -111,7 +113,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: javascript,typescript
           queries: security-extended,security-and-quality
@@ -133,6 +135,8 @@ jobs:
       - name: Build application
         run: pnpm run build
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://localhost:5432/test' }}
 
       - name: Perform CodeQL Analysis

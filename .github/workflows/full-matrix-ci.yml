@@ -10,8 +10,10 @@ on:
   workflow_dispatch:
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
   NODE_VERSION: '22'
-  PNPM_VERSION: '8.15.9'
+  PNPM_VERSION: '8.15.0'
 
 jobs:
   oss-guard:
@@ -72,6 +74,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm ops doctor
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
@@ -159,6 +163,8 @@ jobs:
       - run: pnpm exec playwright install --with-deps
       - run: pnpm ops test:e2e
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           PROD_URL: ${{ secrets.PROD_URL }}
       - name: Notify on failure
         if: failure()
@@ -181,6 +187,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: npx prisma migrate status
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         continue-on-error: true
 
@@ -198,6 +206,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm ops sb-guard --report
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -252,4 +262,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm ops release
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

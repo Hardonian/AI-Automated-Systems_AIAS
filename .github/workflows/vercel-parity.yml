@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       NODE_ENV: production
       NEXT_PUBLIC_SITE_URL: https://aiautomatedsystems.ca
       VERCEL_ENV: preview

@@ -14,6 +14,8 @@ on:
         type: string
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
   NODE_VERSION: '22'
   PNPM_VERSION: '8'
   BASE_URL: 'http://localhost:3000'
@@ -30,6 +32,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
           ref: ${{ github.event.inputs.branch }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -41,6 +46,9 @@ jobs:
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -71,6 +79,8 @@ jobs:
       - name: Build application
         run: pnpm build
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           NODE_OPTIONS: '--max-old-space-size=4096'
           SKIP_DB: 'true'
 
@@ -79,11 +89,15 @@ jobs:
           pnpm start &
           npx wait-on ${{ env.BASE_URL }} --timeout 60000
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           PORT: '3000'
 
       - name: Update visual baselines
         run: pnpm test:visual:update
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           CI: 'true'
           BASE_URL: ${{ env.BASE_URL }}
 

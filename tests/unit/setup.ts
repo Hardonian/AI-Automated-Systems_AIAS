@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 const originalMatchMedia = window.matchMedia;
-Object.defineProperty(window, 'matchMedia', { ... });
+Object.defineProperty(window, 'matchMedia', { configurable: true, writable: true, value: originalMatchMedia });
 
 afterEach(() => {
   window.matchMedia = originalMatchMedia;

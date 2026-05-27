@@ -39,7 +39,7 @@ on:
 
 env:
   NODE_VERSION: '22'
-  PNPM_VERSION: '8.15.9'
+  PNPM_VERSION: '8.15.0'
 
 concurrency:
   group: migrations-${{ github.ref }}

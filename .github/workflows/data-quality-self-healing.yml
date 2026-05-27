@@ -10,9 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
           node-version: '22'
 
@@ -21,16 +27,22 @@ jobs:
 
       - name: Compute metrics for yesterday
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: tsx scripts/etl/compute_metrics.ts --cron
 
       - name: Run data quality checks
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: tsx scripts/agents/run_data_quality.ts
 
       - name: Notify on failure
         if: failure()
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: tsx scripts/agents/notify.ts "Data Quality Check Failed" "One or more data quality checks failed. Check logs." error

@@ -21,6 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       - name: Check for internal/ directory in git
         run: |
           if git ls-files | grep -q "^internal/"; then
@@ -68,6 +71,9 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -93,6 +99,9 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -116,6 +125,9 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -221,6 +233,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       - uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'

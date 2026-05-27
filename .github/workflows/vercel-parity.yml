@@ -19,14 +19,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: 8.15.9
+          version: 8.15.0
 
       - name: Setup Node
         uses: actions/setup-node@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
           node-version: 22.21.1
           cache: pnpm

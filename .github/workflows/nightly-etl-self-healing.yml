@@ -10,9 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
           node-version: '22'
 
@@ -21,28 +27,38 @@ jobs:
 
       - name: Pull events
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: tsx scripts/etl/pull_events.ts
 
       - name: Pull Source A ads
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
           GENERIC_SOURCE_A_TOKEN: ${{ secrets.GENERIC_SOURCE_A_TOKEN }}
         run: tsx scripts/etl/pull_ads_source_a.ts
 
       - name: Pull Source B ads
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
           GENERIC_SOURCE_B_TOKEN: ${{ secrets.GENERIC_SOURCE_B_TOKEN }}
         run: tsx scripts/etl/pull_ads_source_b.ts
 
       - name: Compute metrics
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: tsx scripts/etl/compute_metrics.ts --cron
 
       - name: Notify on failure
         if: failure()
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: tsx scripts/agents/notify.ts "ETL Failed" "Nightly ETL job failed. Check logs." error

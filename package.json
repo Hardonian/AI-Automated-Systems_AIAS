@@ -126,7 +126,7 @@
     "globals": "^16.5.0",
     "happy-dom": "^20.9.0",
     "husky": "^8.0.3",
-    "jsdom": "^29.1.1",
+    "jsdom": "^22.1.0",
     "lint-staged": "^15.5.2",
     "next-router-mock": "^1.0.5",
     "playwright": "^1.60.0",
@@ -143,7 +143,7 @@
     "node": ">=22.0.0",
     "pnpm": ">=8.15.0"
   },
-  "packageManager": "pnpm@8.15.0",
+  "packageManager": "pnpm@8.15.9",
   "pnpm": {
     "overrides": {
       "react": "$react",

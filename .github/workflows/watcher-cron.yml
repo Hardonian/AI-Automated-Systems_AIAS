@@ -17,6 +17,9 @@ on:
           - api_contract
           - ai_performance
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   watchers:
     runs-on: ubuntu-latest

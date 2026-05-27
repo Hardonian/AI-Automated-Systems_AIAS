@@ -10,8 +10,10 @@ on:
   workflow_dispatch:
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   NODE_VERSION: '22'
-  PNPM_VERSION: '8.15.9'
+  PNPM_VERSION: "8.15.9".15.9"
+  PNPM_VERSION: "8.15.9".15.9'
 
 jobs:
   performance-check:
@@ -24,13 +26,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 22
           cache: 'pnpm'
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
+        uses: pnpm/action-setup@v4
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

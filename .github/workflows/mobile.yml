@@ -26,6 +26,7 @@ on:
           - development
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
   APPLE_ID: ${{ secrets.APPLE_ID }}
   APP_STORE_CONNECT_APP_ID: ${{ secrets.APP_STORE_CONNECT_APP_ID }}
@@ -52,9 +53,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          version: 8.15.9
+        uses: pnpm/action-setup@v4
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

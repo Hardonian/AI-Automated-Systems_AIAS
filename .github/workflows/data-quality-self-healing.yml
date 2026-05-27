@@ -21,6 +21,7 @@ jobs:
 
       - name: Compute metrics for yesterday
         env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: tsx scripts/etl/compute_metrics.ts --cron
 

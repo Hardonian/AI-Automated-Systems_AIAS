@@ -14,8 +14,10 @@ on:
         type: string
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   NODE_VERSION: '22'
-  PNPM_VERSION: '8'
+  PNPM_VERSION: "8.15.9".15.9"
+  PNPM_VERSION: "8.15.9"
   BASE_URL: 'http://localhost:3000'
 
 concurrency:
@@ -42,12 +44,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 22
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
+        uses: pnpm/action-setup@v4
 
       - name: Get pnpm store directory
         shell: bash

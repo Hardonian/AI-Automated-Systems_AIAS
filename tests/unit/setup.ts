@@ -6,11 +6,11 @@ afterEach(() => {
   cleanup();
 });
 const originalMatchMedia = window.matchMedia;
-Object.defineProperty(window, 'matchMedia', { ... });
 
 afterEach(() => {
   window.matchMedia = originalMatchMedia;
 });
+
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

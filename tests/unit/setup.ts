@@ -6,10 +6,17 @@ afterEach(() => {
   cleanup();
 });
 const originalMatchMedia = window.matchMedia;
+Object.defineProperty(window, 'matchMedia', { configurable: true, writable: true, value: originalMatchMedia });
 
 afterEach(() => {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: originalMatchMedia,
+  });
+});
   window.matchMedia = originalMatchMedia;
 });
+
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

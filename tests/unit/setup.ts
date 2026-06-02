@@ -14,8 +14,6 @@ afterEach(() => {
     value: originalMatchMedia,
   });
 });
-  window.matchMedia = originalMatchMedia;
-});
 
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {

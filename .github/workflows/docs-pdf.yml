@@ -5,11 +5,11 @@ on:
     branches:
       - main
     paths:
-      - 'docs/business/**/*.md'
+      - "docs/business/**/*.md"
   workflow_dispatch:
   schedule:
     # Run weekly on Mondays at 9 AM UTC
-    - cron: '0 9 * * 1'
+    - cron: "0 9 * * 1"
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -18,6 +18,9 @@ env:
 jobs:
   generate-pdfs:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout repository
@@ -32,8 +35,8 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
-          node-version: '22'
-          cache: 'pnpm'
+          node-version: "22"
+          cache: "pnpm"
 
       - name: Install Marp CLI
         run: |
@@ -79,14 +82,27 @@ jobs:
           path: docs/business/_pdf/**/*.pdf
           retention-days: 30
 
-      - name: Commit PDFs (optional)
+      - name: Create PR with generated PDFs
         if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          BRANCH_NAME="docs/auto-generate-pdfs-$(date +%s)"
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add docs/business/_pdf/**/*.pdf
-          git diff --staged --quiet || git commit -m "docs(biz): Auto-generate PDFs from Markdown [skip ci]"
-          git push || echo "No changes to commit"
+          git checkout -b "$BRANCH_NAME"
+          git add docs/business/_pdf/
+          if git diff --staged --quiet; then
+            echo "No new or updated PDFs to commit."
+          else
+            git commit -m "docs(biz): Auto-generate PDFs from Markdown [skip ci]"
+            git push origin "$BRANCH_NAME"
+            gh pr create \
+              --title "docs(biz): Auto-generate PDFs from Markdown" \
+              --body "This PR contains automatically generated/updated PDFs for business documents." \
+              --label "auto/docs,documentation" \
+              --base "main"
+          fi
 
       - name: Lint CAD currency consistency (optional)
         run: |

@@ -29,6 +29,10 @@ jobs:
     name: Update Visual Baselines
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    permissions:
+      contents: write
+      pull-requests: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -110,36 +114,31 @@ jobs:
             echo "has_changes=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Commit and push baselines
+      - name: Create PR with updated baselines
         if: steps.check_changes.outputs.has_changes == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          BRANCH_NAME="chore/update-visual-baselines-$(date +%s)"
+          git checkout -b "$BRANCH_NAME"
           git add tests/e2e/__screenshots__/
           git commit -m "chore: update visual regression baselines
 
           Reason: ${{ github.event.inputs.reason }}
 
           - Triggered by: ${{ github.actor }}
-          - Branch: ${{ github.event.inputs.branch }}
           - Workflow: ${{ github.run_id }}"
-          git push origin ${{ github.event.inputs.branch }}
+          git push origin "$BRANCH_NAME"
 
-      - name: Comment on commit
-        if: steps.check_changes.outputs.has_changes == 'true'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const { data: commit } = await github.rest.repos.getCommit({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: '${{ github.event.inputs.branch }}'
-            });
+          gh pr create \
+            --title "chore: update visual regression baselines" \
+            --body "📸 Visual regression baselines updated.
 
-            await github.rest.repos.createCommitComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              commit_sha: commit.sha,
-              body: `📸 Visual regression baselines updated\n\nReason: ${{ github.event.inputs.reason }}\nTriggered by: @${{ github.actor }}`
-            });
+            **Reason:** ${{ github.event.inputs.reason }}
+            **Triggered by:** @${{ github.actor }}
+            **Target Branch:** ${{ github.event.inputs.branch }}" \
+            --base "${{ github.event.inputs.branch }}" \
+            --label "auto/visual-baselines"
 
       - name: No changes summary
         if: steps.check_changes.outputs.has_changes == 'false'

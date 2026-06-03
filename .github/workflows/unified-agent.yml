@@ -78,15 +78,28 @@ jobs:
         id: changes
         run: |
           git diff --exit-code || echo "has_changes=true" >> $GITHUB_OUTPUT
-
-      - name: Commit artifacts
+ 
+      - name: Create PR with artifacts
         if: steps.changes.outputs.has_changes == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          BRANCH_NAME="auto/agent-updates-$(date +%s)"
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          git checkout -b "$BRANCH_NAME"
           git add admin/ security/ docs/intent-log.md roadmap/ auto/ .cursor/config/master-agent.json
-          git commit -m "🤖 Autonomous improvement cycle: Update artifacts and recommendations" || echo "No changes to commit"
-          git push || echo "Push failed (may be branch protection)"
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "🤖 Autonomous improvement cycle: Update artifacts and recommendations"
+            git push origin "$BRANCH_NAME"
+            gh pr create \
+              --title "🤖 Autonomous Improvement Cycle" \
+              --body "Automated updates from the Unified Hardonia Agent. This PR includes updated artifacts and recommendations. Please review and merge." \
+              --label "auto/agent-run" \
+              --base "${{ github.ref_name }}"
+          fi
 
       - name: Create summary
         if: always()

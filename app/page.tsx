@@ -3,15 +3,10 @@ import Link from 'next/link';
 
 import { ContentDrivenHero } from '@/components/content/ContentDrivenHero';
 import { HowWeWorkSection } from '@/components/content/how-we-work-section';
-import { OutcomesPatternSection } from '@/components/content/outcomes-pattern-section';
-import { OutcomesSection } from '@/components/home/outcomes-section';
 import { ProofSection } from '@/components/home/proof-section';
 import { ConversionCTA } from '@/components/home/conversion-cta';
 import { FAQSchema, ServiceListSchema } from '@/components/seo/structured-data';
 import FadeIn from '@/components/motion/fade-in';
-import { CapabilityMap } from '@/components/visual/CapabilityMap';
-import { DiagnosticTimeline } from '@/components/visual/DiagnosticTimeline';
-import { ProblemDepthLadder } from '@/components/visual/ProblemDepthLadder';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
@@ -65,81 +60,107 @@ export default function HomePage() {
       <FAQSchema faqs={siteContent.faq.slice(0, 5)} />
       <ContentDrivenHero content={heroContent} />
 
-      <section className='border-b bg-muted/30 py-12'>
-        <div className='container mx-auto px-4'>
-          <p className='mx-auto max-w-3xl text-center text-sm text-muted-foreground'>
-            AIAS helps teams move from ad-hoc automations to deterministic delivery systems with clear ownership,
-            governance, and measurable outcomes.
-          </p>
-          <div className='mt-6 flex flex-wrap justify-center gap-3 text-sm'>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/services'>Services</Link>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/how-it-works'>How it works</Link>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/work'>Proof</Link>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/contact'>Start intake</Link>
+      {/* Problem Statement — Why AI Projects Fail */}
+      <section className="border-b bg-gradient-to-b from-background to-muted/20 py-20">
+        <div className="container mx-auto max-w-5xl px-4">
+          <FadeIn>
+            <div className="text-center">
+              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+                Most AI projects fail before they ship
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
+                Not because the model is wrong — because nobody owns the workflow around it.
+              </p>
+            </div>
+          </FadeIn>
+
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
+            {[
+              {
+                problem: 'No clear decision boundaries',
+                detail: 'Teams bolt AI onto existing processes without defining what the model should and shouldn\'t touch.',
+                number: '01',
+              },
+              {
+                problem: 'Governance comes after incidents',
+                detail: 'Audit trails, escalation paths, and approval flows get designed reactively instead of up front.',
+                number: '02',
+              },
+              {
+                problem: 'Pilots succeed, production fails',
+                detail: 'The demo works, but nobody built the error handling, retry logic, or handoff procedures for real operations.',
+                number: '03',
+              },
+            ].map((item) => (
+              <FadeIn key={item.number}>
+                <div className="group relative rounded-2xl border bg-card p-6 transition-all hover:border-primary/30 hover:shadow-lg">
+                  <span className="text-4xl font-extrabold text-primary/15">{item.number}</span>
+                  <h3 className="mt-2 text-lg font-bold">{item.problem}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.detail}</p>
+                </div>
+              </FadeIn>
+            ))}
           </div>
 
-          <OutcomesSection />
-          <div className='mt-16'>
-            <OutcomesPatternSection
-              examples={[
-                {
-                  title: 'Manual effort reduction',
-                  description: 'Teams shift repetitive triage and routing tasks into governed automation flows.',
-                },
-                {
-                  title: 'Faster delivery cycles',
-                  description: 'Delivery teams iterate with shared playbooks, guardrails, and review checkpoints.',
-                },
-                {
-                  title: 'Stronger operational confidence',
-                  description: 'Stakeholders gain clearer auditability through run logs, exceptions, and handoff artifacts.',
-                },
-              ]}
-            />
+          <FadeIn>
+            <div className="mt-12 text-center">
+              <p className="text-base font-medium text-foreground">
+                We fix the workflow, not just the model.{' '}
+                <Link
+                  className="font-semibold text-primary underline-offset-4 hover:underline"
+                  href="/how-it-works"
+                >
+                  See how →
+                </Link>
+              </p>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* Services — Quick scan */}
+      <section className="border-b py-20">
+        <div className="container mx-auto max-w-6xl px-4">
+          <FadeIn>
+            <div className="text-center">
+              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+                Four ways we work with teams
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+                Each engagement includes clear deliverables, documented handoff, and governance guardrails.
+              </p>
+            </div>
+          </FadeIn>
+
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {siteContent.services.map((service, index) => (
+              <FadeIn key={service.title}>
+                <div className="gradient-border group h-full rounded-2xl border bg-card p-6 transition-all hover:shadow-lg">
+                  <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+                    <span className="text-sm font-bold">{String(index + 1).padStart(2, '0')}</span>
+                  </div>
+                  <h3 className="text-lg font-bold">{service.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{service.description}</p>
+                  <p className="mt-4 text-xs font-semibold text-primary">
+                    {service.deliverables.length} deliverables included
+                  </p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+
+          <div className="mt-10 text-center">
+            <Link
+              className="text-sm font-semibold text-primary underline-offset-4 hover:underline"
+              href="/services"
+            >
+              View full service details →
+            </Link>
           </div>
         </div>
       </section>
 
       <ProofSection />
-
-      <section className='border-b bg-background py-14'>
-        <div className='container mx-auto px-4'>
-          <h2 className='text-3xl font-bold'>What We Believe About AI Systems</h2>
-          <ul className='mt-6 grid gap-3 text-sm text-muted-foreground md:grid-cols-2'>
-            {[
-              'AI failure is usually structural before technical.',
-              'Model selection does not fix unclear decision boundaries.',
-              'Cost and reliability are coupled decisions, not separate workstreams.',
-              'Evaluation without business context creates misleading confidence.',
-              'Governance must be designed into workflows, not retrofitted later.',
-              'Discovery quality determines implementation quality.',
-            ].map(item => (
-              <li key={item} className='rounded-lg border bg-card p-4'>• {item}</li>
-            ))}
-          </ul>
-          <div className='mt-6 flex flex-wrap gap-3 text-sm'>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/point-of-view'>Read full point of view</Link>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/framework'>View diagnostic framework</Link>
-            <Link className='font-medium text-primary underline-offset-4 hover:underline' href='/services'>See engagements</Link>
-          </div>
-        </div>
-      </section>
-
-      <FadeIn className='container py-14'>
-        <div className='grid gap-8 lg:grid-cols-[1.2fr_1fr]'>
-          <div>
-            <h2 className='text-2xl font-bold'>Capability map</h2>
-            <p className='mt-2 text-sm text-muted-foreground'>A practical view of where AIAS creates leverage across discovery, delivery, and governance.</p>
-            <div className='mt-5'>
-              <CapabilityMap />
-            </div>
-          </div>
-          <div className='space-y-5'>
-            <DiagnosticTimeline />
-            <ProblemDepthLadder />
-          </div>
-        </div>
-      </FadeIn>
 
       <Testimonials />
 

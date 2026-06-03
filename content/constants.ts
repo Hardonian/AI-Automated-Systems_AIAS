@@ -2,10 +2,10 @@ export const MESSAGING_CONTRACT = {
   brandName: 'AI Automated Systems',
   shortBrandName: 'AIAS',
   positioningSentence:
-    'AIAS designs and operationalizes deterministic, static-first automation systems that blend controlled AI assistance with measurable business outcomes.',
+    'We help operations teams replace fragile AI experiments with production-grade automation that actually ships — governed, measurable, and built to hand off.',
   primaryTagline: 'Agentic Automation Consultancy',
   heroSubheading:
-    'Move from AI experimentation to deterministic workflow automation with measurable ROI and governance-ready delivery.',
+    'Your AI pilots stall because nobody owns the workflow. We fix that.',
   metadataDescription:
     'AIAS helps organizations design, deploy, and operate deterministic automation systems with controlled AI assistance, governance guardrails, and measurable outcomes.',
   ecosystemAlignment:

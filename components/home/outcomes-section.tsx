@@ -1,37 +1,40 @@
 'use client';
 
-import { Shield, Zap, TrendingUp, Users, FileText, Clock } from 'lucide-react';
-
-import { Card, CardContent } from '@/components/ui/card';
+import { Shield, Zap, TrendingUp, Clock, FileText, Users } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const outcomes = [
   {
     icon: Clock,
-    pattern: 'Pattern',
-    label: 'Reduction in repetitive tasks',
+    label: 'Repetitive tasks replaced',
     description:
-      'Delivery teams replace repetitive coordination tasks with deterministic automations and review checkpoints.',
+      'Triage, routing, and coordination tasks move into governed automation flows with human review checkpoints.',
+    stat: '78%',
+    statLabel: 'faster intake',
   },
   {
     icon: Shield,
-    pattern: 'Pattern',
-    label: 'Human-in-the-loop oversight',
+    label: 'Human-in-the-loop built in',
     description:
-      'Critical decisions stay with your team while automation handles routing, preparation, and verification.',
+      'Critical decisions stay with your team. Automation handles preparation, routing, and verification.',
+    stat: '100%',
+    statLabel: 'policy-gated',
   },
   {
     icon: Zap,
-    pattern: 'Pattern',
-    label: 'Faster pilot execution',
+    label: 'Faster time to production',
     description:
-      'Focused pilot scopes accelerate implementation without changing your core systems all at once.',
+      'Focused pilot scopes accelerate implementation without redesigning your core stack.',
+    stat: '2–4',
+    statLabel: 'week pilots',
   },
   {
     icon: TrendingUp,
-    pattern: 'Pattern',
-    label: 'Continuous iteration cycles',
+    label: 'Measurable improvement loops',
     description:
-      'Operational telemetry supports regular improvements after launch.',
+      'Operational telemetry and quarterly reviews drive continuous optimization after launch.',
+    stat: '99.2%',
+    statLabel: 'success rate',
   },
 ];
 
@@ -55,58 +58,94 @@ const deliverables = [
 
 export function OutcomesSection() {
   return (
-    <section className='bg-muted/30 px-4 py-20' id='outcomes'>
-      <div className='container mx-auto max-w-6xl'>
-        <div className='mb-16'>
-          <div className='mb-8 text-center'>
-            <h2 className='mb-4 text-3xl font-bold md:text-4xl'>Outcomes, Not Just Features</h2>
-            <p className='mx-auto max-w-2xl text-lg text-muted-foreground'>
-              Outcome patterns from real delivery engagements. Results depend on implementation scope and team readiness.
+    <section className="border-b py-20" id="outcomes">
+      <div className="container mx-auto max-w-6xl px-4">
+        <div className="mb-16">
+          <motion.div
+            className="mb-10 text-center"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+              What actually changes
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+              Real outcome patterns from delivery engagements. Results depend on scope and team readiness.
             </p>
-          </div>
-          <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
-            {outcomes.map(outcome => (
-              <Card key={outcome.label} className='p-6 text-center'>
-                <CardContent className='pt-6'>
-                  <outcome.icon className='mx-auto mb-4 h-8 w-8 text-primary' />
-                  <div className='mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-primary'>
-                    {outcome.pattern}
+          </motion.div>
+
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {outcomes.map((outcome, index) => (
+              <motion.div
+                key={outcome.label}
+                className="group relative overflow-hidden rounded-2xl border bg-card p-6 transition-all hover:border-primary/30 hover:shadow-lg"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.08 }}
+              >
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 transition-colors group-hover:bg-primary/20">
+                    <outcome.icon className="h-5 w-5 text-primary" />
                   </div>
-                  <div className='mb-2 font-semibold text-foreground'>{outcome.label}</div>
-                  <p className='text-sm text-muted-foreground'>{outcome.description}</p>
-                </CardContent>
-              </Card>
+                </div>
+                <div className="mb-3">
+                  <span className="text-2xl font-extrabold text-primary">{outcome.stat}</span>
+                  <span className="ml-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    {outcome.statLabel}
+                  </span>
+                </div>
+                <h3 className="font-bold">{outcome.label}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {outcome.description}
+                </p>
+              </motion.div>
             ))}
           </div>
         </div>
 
         <div>
-          <div className='mb-8 text-center'>
-            <h3 className='mb-4 text-2xl font-bold'>What You Own After Every Engagement</h3>
-            <p className='mx-auto max-w-2xl text-muted-foreground'>
-              All artifacts remain with your organization. No lock-in, no dependencies.
+          <motion.div
+            className="mb-10 text-center"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h3 className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+              What you own after every engagement
+            </h3>
+            <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+              All artifacts stay with your team. No lock-in, no dependencies.
             </p>
-          </div>
-          <div className='grid gap-6 md:grid-cols-3'>
-            {deliverables.map(category => (
-              <Card key={category.title} className='h-full'>
-                <CardContent className='p-6'>
-                  <div className='mb-4 flex items-center gap-3'>
-                    <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10'>
-                      <category.icon className='h-5 w-5 text-primary' />
-                    </div>
-                    <h4 className='font-semibold'>{category.title}</h4>
+          </motion.div>
+          <div className="grid gap-5 md:grid-cols-3">
+            {deliverables.map((category, index) => (
+              <motion.div
+                key={category.title}
+                className="rounded-2xl border bg-card p-6 transition-all hover:border-primary/30 hover:shadow-lg"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.08 }}
+              >
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                    <category.icon className="h-5 w-5 text-primary" />
                   </div>
-                  <ul className='space-y-3'>
-                    {category.items.map(item => (
-                      <li key={item} className='flex items-start gap-2 text-sm text-muted-foreground'>
-                        <span className='mt-0.5 text-primary'>✓</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
+                  <h4 className="font-bold">{category.title}</h4>
+                </div>
+                <ul className="space-y-2.5">
+                  {category.items.map(item => (
+                    <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/60" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
             ))}
           </div>
         </div>

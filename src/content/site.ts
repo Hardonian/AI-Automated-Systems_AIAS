@@ -987,51 +987,265 @@ const rawSiteContent: SiteConfig = {
     },
   },
 };
+
+// Reusable schemas for clarity and consistency
+const linkSchema = z.object({
+  label: z.string().min(1),
+  href: z.string().min(1),
+});
+
+const heroSchema = z.object({
+  eyebrow: z.string().min(1),
+  title: z.string().min(1),
+  description: z.string().min(1),
+});
+
+const faqItemSchema = z.object({
+  question: z.string().min(1),
+  answer: z.string().min(1),
+});
+
 const siteContentSchema = z.object({
   brand: z.object({
     name: z.string().min(1),
     tagline: z.string().min(1),
     description: z.string().min(1),
   }),
+  navigation: z.object({
+    primary: z.array(linkSchema).min(1),
+    resources: z.array(linkSchema).min(1),
+  }),
   positioning: z.object({
     subheading: z.string().min(1),
     badgeText: z.string().min(1),
     impactCardsLabel: z.string().min(1),
-    primaryCTA: z.object({
-      label: z.string().min(1),
-      href: z.string().min(1),
-    }),
-    secondaryCTA: z.object({
-      label: z.string().min(1),
-      href: z.string().min(1),
-    }),
+    primaryCTA: linkSchema,
+    secondaryCTA: linkSchema,
     socialProof: z.array(
       z.object({
         icon: z.string().min(1),
         text: z.string().min(1),
       })
-    ),
+    ).min(1),
     trustBadges: z.array(
       z.object({
         icon: z.string().min(1),
         text: z.string().min(1),
       })
-    ),
+    ).min(1),
   }),
   contact: z.object({
     email: z.string().email(),
     responseTime: z.string().min(1),
   }),
-  navigation: z.object({
-    primary: z.array(z.object({ label: z.string().min(1), href: z.string().min(1) })).min(1),
-    resources: z.array(z.object({ label: z.string().min(1), href: z.string().min(1) })).min(1),
+
+  services: z.array(
+    z.object({
+      title: z.string().min(1),
+      description: z.string().min(1),
+      outcome: z.string().min(1),
+      deliverables: z.array(z.string().min(1)).min(1),
+      icon: z.string().min(1),
+    })
+  ).min(1),
+  process: z.array(
+    z.object({
+      step: z.number().int().positive(),
+      title: z.string().min(1),
+      description: z.string().min(1),
+    })
+  ).min(1),
+  agenticWorkflow: z.object({
+    heroImage: z.string().min(1),
+    steps: z.array(
+      z.object({
+        title: z.string().min(1),
+        description: z.string().min(1),
+        inputs: z.array(z.string().min(1)).min(1),
+        outputs: z.array(z.string().min(1)).min(1),
+      })
+    ).min(1),
+  }),
+  workflowSandbox: z.object({
+    title: z.string().min(1),
+    description: z.string().min(1),
+    ctaLabel: z.string().min(1),
+    inputForm: z.object({
+      title: z.string().min(1),
+      fields: z.array(
+        z.object({
+          id: z.string().min(1),
+          label: z.string().min(1),
+          type: z.enum(['select', 'textarea', 'text']),
+          options: z.array(z.string().min(1)).optional(),
+        })
+      ).min(1),
+      submitLabel: z.string().min(1),
+    }),
+    output: z.object({
+      title: z.string().min(1),
+      markdownTemplate: z.string().min(1),
+      checklistTemplate: z.string().min(1),
+      artifactJsonTemplate: z.string().min(1),
+    }),
+  }),
+  secretSauce: z.object({
+    title: z.string().min(1),
+    description: z.string().min(1),
+    pillars: z.array(
+      z.object({
+        title: z.string().min(1),
+        description: z.string().min(1),
+        highlights: z.array(z.string().min(1)).min(1),
+      })
+    ).min(1),
+  }),
+  optimizationHotspots: z.object({
+    title: z.string().min(1),
+    description: z.string().min(1),
+    areas: z.array(
+      z.object({
+        title: z.string().min(1),
+        impact: z.string().min(1),
+        improvements: z.array(z.string().min(1)).min(1),
+      })
+    ).min(1),
+  }),
+  testimonials: z.array(
+    z.object({
+      quote: z.string().min(1),
+      author: z.string().min(1),
+      role: z.string().min(1),
+      company: z.string().min(1),
+    })
+  ).min(1),
+  caseStudies: z.array(
+    z.object({
+      title: z.string().min(1),
+      client: z.string().min(1),
+      challenge: z.string().min(1),
+      solution: z.string().min(1),
+      results: z.array(z.string().min(1)).min(1),
+      projectUrl: z.string().url(),
+      logoSrc: z.string().min(1),
+      thumbnailSrc: z.string().min(1),
+    })
+  ).min(1),
+  faq: z.array(faqItemSchema).min(1),
+  routeFaqs: z.object({
+    ecosystem: z.array(faqItemSchema).min(1),
+    services: z.array(faqItemSchema).min(1),
+    automationWeb: z.array(faqItemSchema).min(1),
+    appAiSystems: z.array(faqItemSchema).min(1),
+  }),
+  servicesPage: z.object({
+    hero: heroSchema,
+    engagementInclusions: z.object({
+      title: z.string().min(1),
+      items: z.array(z.string().min(1)).min(1),
+      processLinkLabel: z.string().min(1),
+      processLinkHref: z.string().min(1),
+    }),
+    workflowView: z.object({
+      title: z.string().min(1),
+      description: z.string().min(1),
+    }),
+    cta: z.object({
+      title: z.string().min(1),
+      description: z.string().min(1),
+      primaryLabel: z.string().min(1),
+      secondaryLabel: z.string().min(1),
+      secondaryHref: z.string().min(1),
+    }),
+  }),
+  ecosystemPage: z.object({
+    hero: heroSchema,
+    diagram: z.object({
+      title: z.string().min(1),
+      nodes: z.array(z.string().min(1)).min(1),
+    }),
+    lifecycle: z.array(z.string().min(1)).min(1),
+    narrative: z.object({
+      determinismVsIntelligence: z.object({ title: z.string().min(1), body: z.string().min(1) }),
+      deploymentModels: z.object({ title: z.string().min(1), items: z.array(z.string().min(1)).min(1) }),
+      governancePrinciples: z.object({ title: z.string().min(1), items: z.array(z.string().min(1)).min(1) }),
+    }),
+  }),
+  metricsPage: z.object({
+    hero: heroSchema,
+    statGroups: z.array(
+      z.object({
+        category: z.string().min(1),
+        period: z.string().min(1),
+        metrics: z.array(
+          z.object({
+            label: z.string().min(1),
+            value: z.string().min(1),
+            delta: z.string(),
+            note: z.string(),
+          })
+        ).min(1),
+      })
+    ).min(1),
+    efficiencyComparisons: z.array(
+      z.object({
+        workflow: z.string().min(1),
+        before: z.string().min(1),
+        after: z.string().min(1),
+        impact: z.string().min(1),
+      })
+    ).min(1),
+  }),
+  roiCalculatorPage: z.object({
+    hero: heroSchema,
+    assumptions: z.array(z.string().min(1)).min(1),
+  }),
+  howItWorksPage: z.object({
+    hero: heroSchema,
+    sections: z.array(
+      z.object({
+        title: z.string().min(1),
+        description: z.string().min(1),
+        bullets: z.array(z.string().min(1)).min(1),
+      })
+    ).min(1),
+    boundaryModel: z.array(
+      z.object({
+        layer: z.string().min(1),
+        deterministicBoundary: z.string().min(1),
+        aiBoundary: z.string().min(1),
+      })
+    ).min(1),
+  }),
+  socials: z.object({
+    twitter: z.string().url(),
+    linkedin: z.string().url(),
+    github: z.string().url().optional(),
+  }),
+  footer: z.object({
+    tagline: z.string().min(1),
+    copyright: z.string().min(1),
+    legalLinks: z.array(linkSchema).min(1),
+  }),
+  legal: z.object({
+    privacy: z.object({
+      title: z.string().min(1),
+      lastUpdated: z.string().min(1),
+      sections: z.array(z.object({ heading: z.string().min(1), body: z.string().min(1) })).min(1),
+    }),
+    terms: z.object({
+      title: z.string().min(1),
+      lastUpdated: z.string().min(1),
+      sections: z.array(z.object({ heading: z.string().min(1), body: z.string().min(1) })).min(1),
+    }),
   }),
 });
 
 const parsedSiteContent = siteContentSchema.safeParse(rawSiteContent);
 
-if (!parsedSiteContent.success && process.env.NODE_ENV !== 'production') {
-  console.warn('Invalid site content configuration detected.', parsedSiteContent.error.flatten());
+if (!parsedSiteContent.success) {
+  console.error('❌ Invalid site content configuration:', parsedSiteContent.error.flatten());
+  throw new Error('Site content validation failed. Check the console for details.');
 }
 
 export const siteContent: SiteConfig = parsedSiteContent.success

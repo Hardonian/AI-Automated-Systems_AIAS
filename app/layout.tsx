@@ -32,14 +32,14 @@ import { EnhancedErrorBoundary } from '@/lib/error-handling/error-boundary-enhan
 import { generateMetadata as generateSEOMetadata, SITE_URL } from '@/lib/seo/metadata';
 import { MESSAGING_CONTRACT, TAGLINE_TITLE_TEMPLATE } from '@/content/constants';
 
-const ogImageUrl = `${SITE_URL}/og-image.svg`;
+const ogImageUrl = `${SITE_URL}/og-image.png`;
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
   viewportFit: 'cover',
-  themeColor: '#3b82f6',
+  themeColor: '#FF4D1A',
 };
 
 export const metadata: Metadata = {
@@ -93,7 +93,7 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         alt: TAGLINE_TITLE_TEMPLATE,
-        type: 'image/svg+xml',
+        type: 'image/png',
       },
     ],
   },

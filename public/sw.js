@@ -31,9 +31,12 @@ function isAllowedOrigin(url) {
     const urlObj = new URL(url);
     return ALLOWED_ORIGINS.some(origin => {
       if (origin.includes('*')) {
-        // Escape literal dots first, then replace * with .* for regex matching
-        // Using $ anchor to ensure exact match to end of string
-        const pattern = origin.replace(/\./g, '\\.').replace(/\*/g, '.*');
+        // Escape all regex metacharacters (including backslash), then
+        // convert escaped wildcard \* back to .* for pattern matching.
+        // Using anchors to ensure full origin match.
+        const pattern = origin
+          .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+          .replace(/\\\*/g, '.*');
         return new RegExp(`^${pattern}$`).test(urlObj.origin);
       }
       return urlObj.origin === origin;

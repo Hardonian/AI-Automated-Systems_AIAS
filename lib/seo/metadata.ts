@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const SITE_URL = 'https://aiautomatedsystems.ca';
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.svg`;
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 interface MetadataConfig {
   title: string;

@@ -27,70 +27,70 @@
 @layer base {
   :root {
     /* ========================================
-       CORE SURFACE COLORS - Warm, Light Palette
+       CORE SURFACE COLORS - Nous Brutalist Dark
        ======================================== */
-    --bg: 210 20% 99%;
-    --surface: 0 0% 100%;
-    --surface-muted: 210 20% 97%;
-    --surface-warm: 210 15% 98%;
+    --bg: 0 0% 2%; 
+    --surface: 0 0% 5%; 
+    --surface-muted: 0 0% 8%; 
+    --surface-warm: 0 0% 6%; 
 
     /* ========================================
-       TEXT COLORS - Professional Neutrals
+       TEXT COLORS - Stark High Contrast
        ======================================== */
-    --text: 222 47% 11%;
-    --text-muted: 215 16% 47%;
-    --text-inverse: 210 20% 99%;
+    --text: 0 0% 98%; 
+    --text-muted: 0 0% 60%; 
+    --text-inverse: 0 0% 2%; 
 
     /* ========================================
-       PRIMARY BRAND - Trustworthy Blue
+       PRIMARY BRAND - Technical Accent (Neon Orange/Red)
        ======================================== */
-    --primary: 221 83% 53%;
-    --primary-hover: 221 83% 45%;
-    --primary-foreground: 210 40% 98%;
-    --primary-subtle: 221 83% 96%;
-    --primary-glow: 221 83% 53% / 0.15;
+    --primary: 15 100% 55%;
+    --primary-hover: 15 100% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-subtle: 15 100% 15%;
+    --primary-glow: 15 100% 55% / 0.2;
 
     /* ========================================
-       SECONDARY / ACCENT - Warm Tones
+       SECONDARY / ACCENT
        ======================================== */
-    --secondary: 30 15% 95%;
-    --secondary-foreground: 222 20% 10%;
-    --accent: 30 15% 95%;
-    --accent-foreground: 222 20% 10%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 98%;
 
     /* ========================================
-       FEEDBACK COLORS - Vibrant but Warm
+       FEEDBACK COLORS
        ======================================== */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --success: 142 71% 40%;
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
-    --warning-foreground: 222 20% 10%;
+    --warning-foreground: 0 0% 4%;
 
     /* ========================================
-       UI ELEMENTS - Warmer Borders
+       UI ELEMENTS - Sharp Borders
        ======================================== */
-    --border: 30 15% 88%;
-    --border-subtle: 30 15% 92%;
-    --input: 30 15% 90%;
-    --ring: 243 75% 59%;
-    --focus-ring: 243 75% 59%;
+    --border: 0 0% 20%;
+    --border-subtle: 0 0% 10%;
+    --input: 0 0% 15%;
+    --ring: 15 100% 55%;
+    --focus-ring: 15 100% 55%;
 
     /* ========================================
        COMPONENT-SPECIFIC
        ======================================== */
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 98%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 60%;
 
     /* ========================================
-       DATA VISUALIZATION - Harmonized with Indigo
+       DATA VISUALIZATION
        ======================================== */
-    --chart-1: 243 75% 59%;
+    --chart-1: 15 100% 55%;
     --chart-2: 142 71% 40%;
     --chart-3: 38 92% 50%;
     --chart-4: 0 84% 60%;
@@ -98,40 +98,34 @@
     --chart-6: 189 94% 43%;
 
     /* ========================================
-       GEOMETRY
+       GEOMETRY - Brutalist Zero Radius
        ======================================== */
-    --radius: 0.5rem;
-    --radius-sm: calc(var(--radius) - 2px);
-    --radius-md: var(--radius);
-    --radius-lg: calc(var(--radius) + 4px);
-    --radius-xl: calc(var(--radius) + 8px);
+    --radius: 0rem;
+    --radius-sm: 0rem;
+    --radius-md: 0rem;
+    --radius-lg: 0rem;
+    --radius-xl: 0rem;
 
     /* ========================================
-       SHADOWS - Lighter, Layered
+       SHADOWS - Sharp Offset
        ======================================== */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-    --shadow-md:
-      0 2px 4px -1px rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
-    --shadow-lg:
-      0 8px 12px -2px rgba(0, 0, 0, 0.05), 0 3px 6px -2px rgba(0, 0, 0, 0.03);
-    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
-    --shadow-focus:
-      0 0 0 2px hsl(var(--bg)), 0 0 0 4px hsl(var(--focus-ring) / 0.5);
-    --shadow-glow: 0 0 20px hsl(var(--primary-glow));
+    --shadow-sm: 2px 2px 0px 0px hsl(var(--border));
+    --shadow-md: 4px 4px 0px 0px hsl(var(--border));
+    --shadow-lg: 8px 8px 0px 0px hsl(var(--primary) / 0.5);
+    --shadow-card: 4px 4px 0px 0px hsl(var(--border));
+    --shadow-focus: 0 0 0 2px hsl(var(--bg)), 0 0 0 4px hsl(var(--focus-ring));
+    --shadow-glow: 0 0 15px hsl(var(--primary-glow));
 
     /* ========================================
        TYPOGRAPHY
        ======================================== */
-    --font-heading:
-      var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-    --font-body: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-    --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+    --font-mono: ui-monospace, monospace;
 
     /* ========================================
-       GRID BACKGROUND (for hero sections) - Warmer
+       GRID BACKGROUND 
        ======================================== */
-    --grid-line: 30 15% 60% / 0.04;
-    --grid-line-dense: 30 15% 60% / 0.06;
+    --grid-line: 0 0% 100% / 0.05;
+    --grid-line-dense: 0 0% 100% / 0.08;
   }
 
   /* ========================================
@@ -241,6 +235,121 @@
 
   .text-gradient {
     @apply bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent;
+  }
+
+  /* ========================================
+     GLASSMORPHISM CARD
+     ======================================== */
+  .glass-card {
+    background: hsla(var(--surface), 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid hsla(var(--border), 0.5);
+  }
+
+  /* ========================================
+     HERO CTA GLOW
+     ======================================== */
+  .hero-cta-glow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-cta-glow::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary) / 0.3),
+      transparent 40%,
+      transparent 60%,
+      hsl(var(--primary) / 0.3)
+    );
+    z-index: -1;
+    filter: blur(8px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .hero-cta-glow:hover::after {
+    opacity: 1;
+  }
+
+  /* ========================================
+     GRADIENT BORDER CARD
+     ======================================== */
+  .gradient-border {
+    position: relative;
+    background: hsl(var(--card));
+    border-radius: var(--radius-lg);
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary) / 0.3),
+      hsl(var(--primary) / 0.05),
+      hsl(var(--primary) / 0.3)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .gradient-border:hover::before {
+    opacity: 1;
+  }
+
+  /* ========================================
+     CONNECTED TIMELINE
+     ======================================== */
+  .timeline-connector {
+    position: relative;
+  }
+
+  .timeline-connector::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -1rem;
+    width: 2rem;
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      hsl(var(--primary) / 0.3),
+      hsl(var(--primary) / 0.1)
+    );
+  }
+
+  .timeline-connector:last-child::after {
+    display: none;
+  }
+
+  @media (max-width: 1023px) {
+    .timeline-connector::after {
+      top: auto;
+      bottom: -0.5rem;
+      left: 50%;
+      right: auto;
+      width: 2px;
+      height: 1rem;
+      background: linear-gradient(
+        to bottom,
+        hsl(var(--primary) / 0.3),
+        hsl(var(--primary) / 0.1)
+      );
+    }
   }
 }
 

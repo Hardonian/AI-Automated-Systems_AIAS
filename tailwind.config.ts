@@ -205,6 +205,14 @@ export default {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
         },
+        'hero-glow': {
+          '0%, 100%': { opacity: '0.5', transform: 'scale(1)' },
+          '50%': { opacity: '0.8', transform: 'scale(1.1)' },
+        },
+        'hero-glow-delayed': {
+          '0%, 100%': { opacity: '0.3', transform: 'scale(1) translate(0, 0)' },
+          '50%': { opacity: '0.6', transform: 'scale(1.15) translate(10px, -10px)' },
+        },
       },
 
       animation: {
@@ -215,6 +223,8 @@ export default {
         'accordion-up': 'accordion-up 0.2s ease-out',
         shimmer: 'shimmer 2s infinite',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'hero-glow': 'hero-glow 8s ease-in-out infinite',
+        'hero-glow-delayed': 'hero-glow-delayed 10s ease-in-out infinite 2s',
       },
 
       /* ========================================

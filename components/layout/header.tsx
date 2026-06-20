@@ -1,6 +1,7 @@
 'use client';
+
 import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 
 import { MobileNav } from '@/components/layout/mobile-nav';
@@ -8,38 +9,42 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
 export function Header() {
   return (
     <header
-      className='sticky top-0 z-50 border-b border-border/50 bg-background/80 shadow-sm backdrop-blur-md'
-      data-testid='header-nav-cluster'
-      role='banner'
+      className="sticky top-0 z-50 border-b-2 border-border bg-background shadow-none"
+      data-testid="header-nav-cluster"
+      role="banner"
     >
-      <div className='container flex h-16 items-center justify-between'>
+      <div className="container flex h-16 items-center justify-between px-4">
         <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.2 }}
         >
           <Link
-            aria-label='AI Automated Systems - Home'
-            className='group flex items-center gap-2 text-lg font-bold transition-opacity hover:opacity-80 md:text-xl'
-            href='/'
+            aria-label="AI Automated Systems - Home"
+            className="group flex items-center gap-3 text-lg font-black uppercase tracking-widest text-foreground hover:text-primary md:text-xl"
+            href="/"
           >
-            <Sparkles
-              aria-hidden='true'
-              className='h-5 w-5 text-primary transition-transform group-hover:rotate-12'
-            />
-            <span className='bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent'>
-              {siteContent.brand.name}
+            <span className="flex h-8 w-8 items-center justify-center border-2 border-border bg-black text-xs font-bold text-primary transition-colors group-hover:border-primary">
+              //
             </span>
+            <span>AIAS</span>
           </Link>
         </motion.div>
 
         <nav
-          aria-label='Primary'
-          className='hidden items-center gap-1 md:flex'
-          data-testid='header-primary-nav'
+          aria-label="Primary"
+          className="hidden items-center gap-6 md:flex"
+          data-testid="header-primary-nav"
         >
           {siteContent.navigation.primary.map((item, index) => (
             <motion.div
@@ -48,23 +53,54 @@ export function Header() {
               animate={{ opacity: 1, y: 0 }}
               transition={{
                 duration: 0.2,
-                delay: index * 0.03,
-                ease: [0.22, 1, 0.36, 1],
+                delay: index * 0.05,
               }}
             >
               <Link
                 aria-label={`Navigate to ${item.label}`}
-                className='group relative flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 hover:text-foreground'
+                className="group relative flex items-center justify-center font-mono text-sm font-bold uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
                 href={item.href}
               >
                 {item.label}
-                <span
-                  aria-hidden='true'
-                  className='absolute bottom-0 left-0 right-0 h-0.5 origin-left scale-x-0 bg-primary transition-transform group-hover:scale-x-100'
-                />
               </Link>
             </motion.div>
           ))}
+
+          {/* Resources dropdown */}
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.2,
+              delay: siteContent.navigation.primary.length * 0.05,
+            }}
+          >
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="group flex items-center gap-1 font-mono text-sm font-bold uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary focus:outline-none"
+                >
+                  RESOURCES
+                  <ChevronDown className="h-3.5 w-3.5 transition-transform group-data-[state=open]:rotate-180" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="mt-2 w-56 rounded-none border-2 border-border bg-background p-0 shadow-card"
+              >
+                {siteContent.navigation.resources.map((item) => (
+                  <DropdownMenuItem key={item.href} asChild className="rounded-none font-mono focus:bg-primary focus:text-primary-foreground cursor-pointer">
+                    <Link
+                      href={item.href}
+                      className="block w-full px-4 py-3 text-sm font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:text-primary-foreground"
+                    >
+                      {item.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </motion.div>
 
           <motion.div
             animate={{ opacity: 1, scale: 1 }}
@@ -73,8 +109,8 @@ export function Header() {
           >
             <Button
               asChild
-              className='hover:shadow-glow ml-3 min-h-[44px] font-semibold shadow-md'
-              size='sm'
+              className="ml-4 rounded-none border-2 border-primary bg-primary px-6 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card transition-all hover:-translate-y-0.5 hover:shadow-lg"
+              size="sm"
             >
               <Link
                 aria-label={siteContent.positioning.primaryCTA.label}
@@ -88,7 +124,7 @@ export function Header() {
           <ThemeToggle />
         </nav>
 
-        <div className='flex items-center gap-2 md:hidden'>
+        <div className="flex items-center gap-4 md:hidden">
           <ThemeToggle />
           <MobileNav />
         </div>

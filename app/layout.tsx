@@ -2,6 +2,19 @@ import './globals.css';
 import Script from 'next/script';
 import type { Metadata, Viewport } from 'next';
 import { ReactNode } from 'react';
+import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
+
+const fontHeading = Space_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-heading',
+});
+
+const fontBody = JetBrains_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-body',
+});
 
 import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
@@ -145,7 +158,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <ProfessionalServiceSchema />
         <WebSiteSchema hasSiteSearch={false} />
       </head>
-      <body className='min-h-dvh antialiased'>
+      <body className={`min-h-dvh antialiased ${fontHeading.variable} ${fontBody.variable}`}>
         <EnhancedErrorBoundary>
           <ThemeProvider>
             <Header />

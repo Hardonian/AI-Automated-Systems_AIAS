@@ -2,15 +2,15 @@ import './globals.css';
 import Script from 'next/script';
 import type { Metadata, Viewport } from 'next';
 import { ReactNode } from 'react';
-import { Inter, Outfit } from 'next/font/google';
+import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 
-const fontHeading = Outfit({
+const fontHeading = Space_Grotesk({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-heading',
 });
 
-const fontBody = Inter({
+const fontBody = JetBrains_Mono({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-body',

@@ -6,7 +6,7 @@ import { RelatedPages } from '@/components/content/related-pages';
 import { siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'FAQ | AI Automated Systems',
+  title: 'AI Automation FAQ — Pricing, Process, Security | AIAS',
   description:
     'Frequently asked questions about AIAS consulting engagements, delivery model, pricing, and onboarding.',
   canonical: '/faq',

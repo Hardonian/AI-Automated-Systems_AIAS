@@ -35,7 +35,7 @@ export function Header() {
             href="/"
           >
             <span className="flex h-8 w-8 items-center justify-center border-2 border-border bg-black text-xs font-bold text-primary transition-colors group-hover:border-primary">
-              //
+              {'//'}
             </span>
             <span>AIAS</span>
           </Link>

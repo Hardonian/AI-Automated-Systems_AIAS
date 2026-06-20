@@ -7,7 +7,7 @@ import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-prim
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Offer Structure & Pricing Philosophy | AI Automated Systems',
+  title: 'AI Automation Consulting Pricing — Transparent Engagement Models | AIAS',
   description:
     'Clear monetization structure for AIAS: Audit, Implementation, and Ongoing Governance with range-based pricing philosophy and ROI framing.',
   canonical: '/pricing',

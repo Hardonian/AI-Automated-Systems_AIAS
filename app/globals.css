@@ -27,19 +27,19 @@
 @layer base {
   :root {
     /* ========================================
-       CORE SURFACE COLORS - Nous Brutalist Dark
+       CORE SURFACE COLORS - Stark Light Editorial
        ======================================== */
-    --bg: 0 0% 2%; 
-    --surface: 0 0% 5%; 
-    --surface-muted: 0 0% 8%; 
-    --surface-warm: 0 0% 6%; 
+    --bg: 0 0% 100%;
+    --surface: 0 0% 98%;
+    --surface-muted: 0 0% 95%;
+    --surface-warm: 30 10% 98%;
 
     /* ========================================
        TEXT COLORS - Stark High Contrast
        ======================================== */
-    --text: 0 0% 98%; 
-    --text-muted: 0 0% 60%; 
-    --text-inverse: 0 0% 2%; 
+    --text: 0 0% 0%;
+    --text-muted: 0 0% 35%; /* WCAG compliant contrast against white */
+    --text-inverse: 0 0% 100%;
 
     /* ========================================
        PRIMARY BRAND - Technical Accent (Neon Orange/Red)
@@ -47,45 +47,45 @@
     --primary: 15 100% 55%;
     --primary-hover: 15 100% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-subtle: 15 100% 15%;
-    --primary-glow: 15 100% 55% / 0.2;
+    --primary-subtle: 15 100% 95%;
+    --primary-glow: 15 100% 55% / 0.15;
 
     /* ========================================
        SECONDARY / ACCENT
        ======================================== */
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
-    --accent: 0 0% 12%;
-    --accent-foreground: 0 0% 98%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 0%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 0%;
 
     /* ========================================
        FEEDBACK COLORS
        ======================================== */
-    --destructive: 0 84% 60%;
+    --destructive: 0 84% 45%; /* Darker for light background contrast */
     --destructive-foreground: 0 0% 100%;
-    --success: 142 71% 40%;
+    --success: 142 71% 30%; /* Darker for light background contrast */
     --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 4%;
+    --warning: 38 92% 40%; /* Darker for light background contrast */
+    --warning-foreground: 0 0% 100%;
 
     /* ========================================
        UI ELEMENTS - Sharp Borders
        ======================================== */
-    --border: 0 0% 20%;
-    --border-subtle: 0 0% 10%;
-    --input: 0 0% 15%;
+    --border: 0 0% 85%;
+    --border-subtle: 0 0% 92%;
+    --input: 0 0% 85%;
     --ring: 15 100% 55%;
     --focus-ring: 15 100% 55%;
 
     /* ========================================
        COMPONENT-SPECIFIC
        ======================================== */
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 98%;
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 60%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 40%;
 
     /* ========================================
        DATA VISUALIZATION
@@ -109,10 +109,10 @@
     /* ========================================
        SHADOWS - Sharp Offset
        ======================================== */
-    --shadow-sm: 2px 2px 0px 0px hsl(var(--border));
-    --shadow-md: 4px 4px 0px 0px hsl(var(--border));
-    --shadow-lg: 8px 8px 0px 0px hsl(var(--primary) / 0.5);
-    --shadow-card: 4px 4px 0px 0px hsl(var(--border));
+    --shadow-sm: 2px 2px 0px 0px hsl(var(--text));
+    --shadow-md: 4px 4px 0px 0px hsl(var(--text));
+    --shadow-lg: 8px 8px 0px 0px hsl(var(--text));
+    --shadow-card: 4px 4px 0px 0px hsl(var(--text));
     --shadow-focus: 0 0 0 2px hsl(var(--bg)), 0 0 0 4px hsl(var(--focus-ring));
     --shadow-glow: 0 0 15px hsl(var(--primary-glow));
 
@@ -124,8 +124,8 @@
     /* ========================================
        GRID BACKGROUND 
        ======================================== */
-    --grid-line: 0 0% 100% / 0.05;
-    --grid-line-dense: 0 0% 100% / 0.08;
+    --grid-line: 0 0% 0% / 0.05;
+    --grid-line-dense: 0 0% 0% / 0.08;
   }
 
   /* ========================================
@@ -174,8 +174,8 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings:
-      'rlig' 1,
-      'calt' 1;
+      "rlig" 1,
+      "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -256,7 +256,7 @@
   }
 
   .hero-cta-glow::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: -1px;
     border-radius: inherit;
@@ -287,7 +287,7 @@
   }
 
   .gradient-border::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     border-radius: inherit;
@@ -298,8 +298,12 @@
       hsl(var(--primary) / 0.05),
       hsl(var(--primary) / 0.3)
     );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
@@ -319,7 +323,7 @@
   }
 
   .timeline-connector::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     right: -1rem;

@@ -29,17 +29,17 @@
     /* ========================================
        CORE SURFACE COLORS - Stark Light Editorial
        ======================================== */
-    --bg: 0 0% 100%; 
-    --surface: 0 0% 98%; 
-    --surface-muted: 0 0% 95%; 
-    --surface-warm: 30 10% 98%; 
+    --bg: 0 0% 100%;
+    --surface: 0 0% 98%;
+    --surface-muted: 0 0% 95%;
+    --surface-warm: 30 10% 98%;
 
     /* ========================================
        TEXT COLORS - Stark High Contrast
        ======================================== */
-    --text: 0 0% 0%; 
+    --text: 0 0% 0%;
     --text-muted: 0 0% 35%; /* WCAG compliant contrast against white */
-    --text-inverse: 0 0% 100%; 
+    --text-inverse: 0 0% 100%;
 
     /* ========================================
        PRIMARY BRAND - Technical Accent (Neon Orange/Red)
@@ -174,8 +174,8 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings:
-      'rlig' 1,
-      'calt' 1;
+      "rlig" 1,
+      "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -256,7 +256,7 @@
   }
 
   .hero-cta-glow::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: -1px;
     border-radius: inherit;
@@ -287,7 +287,7 @@
   }
 
   .gradient-border::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     border-radius: inherit;
@@ -298,8 +298,12 @@
       hsl(var(--primary) / 0.05),
       hsl(var(--primary) / 0.3)
     );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
@@ -319,7 +323,7 @@
   }
 
   .timeline-connector::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     right: -1rem;

@@ -20,16 +20,16 @@ function MetricCard({ icon, text, index }: { icon: string; text: string; index: 
   const Icon = iconMap[icon] || CheckCircle2;
   return (
     <motion.div
-      className="group relative rounded-xl border border-border/60 bg-white/70 p-4 backdrop-blur-sm transition-all hover:border-primary/40 hover:shadow-md dark:bg-slate-900/70"
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: 0.6 + index * 0.08, ease: 'easeOut' }}
+      className="group relative border-2 border-border bg-card p-5 transition-all hover:border-primary hover:shadow-card"
+      initial={{ opacity: 0, y: 0, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.2, delay: 0.3 + index * 0.05, ease: 'easeOut' }}
     >
-      <div className="flex items-start gap-3">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-          <Icon className="h-4 w-4 text-primary" />
+      <div className="flex items-start gap-4">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-border bg-black">
+          <Icon className="h-5 w-5 text-primary" />
         </div>
-        <p className="text-sm font-medium leading-snug text-foreground">{text}</p>
+        <p className="font-mono text-sm leading-snug text-foreground uppercase tracking-tight">{text}</p>
       </div>
     </motion.div>
   );
@@ -40,66 +40,64 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
 
   return (
     <section
-      className="relative flex min-h-[75vh] items-center overflow-hidden py-16 md:min-h-[82vh] md:py-24"
+      className="relative flex min-h-[75vh] items-center overflow-hidden py-16 md:min-h-[82vh] md:py-24 bg-background"
       id="top"
     >
-      {/* Layered background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-blue-50/40 dark:from-slate-950 dark:via-slate-900 dark:to-blue-950/30" />
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="animate-hero-glow absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full bg-primary/[0.07] blur-3xl" />
-        <div className="animate-hero-glow-delayed absolute -bottom-20 -left-20 h-[400px] w-[400px] rounded-full bg-blue-400/[0.05] blur-3xl" />
-      </div>
-      <div className="grid-bg pointer-events-none absolute inset-0 opacity-30" />
+      {/* Brutalist Grid Background */}
+      <div className="pointer-events-none absolute inset-0 z-0 opacity-10"
+           style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} 
+      />
 
       <div className="container relative z-10 mx-auto px-4">
         <div className="mx-auto max-w-5xl">
-          {/* Main content — centered, strong hierarchy */}
-          <div className="text-center">
+          <div className="border-l-4 border-primary pl-6 md:pl-10">
             <motion.div
-              initial={prefersReduced ? { opacity: 1 } : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={prefersReduced ? { duration: 0 } : { duration: 0.5, ease: 'easeOut' }}
+              initial={prefersReduced ? { opacity: 1 } : { opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={prefersReduced ? { duration: 0 } : { duration: 0.3, ease: 'linear' }}
             >
-              <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-                <span className="block">{content.title}</span>
+              <div className="mb-4 inline-flex items-center bg-primary px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground">
+                [ {content.badgeText || 'SYS_INIT'} ]
+              </div>
+              <h1 className="max-w-4xl text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl">
+                <span className="block text-foreground">{content.title}</span>
               </h1>
             </motion.div>
 
             <motion.p
-              className="mx-auto mt-6 max-w-2xl text-lg font-medium text-primary sm:text-xl md:text-2xl"
-              initial={prefersReduced ? { opacity: 1 } : { opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={prefersReduced ? { duration: 0 } : { duration: 0.5, delay: 0.15, ease: 'easeOut' }}
+              className="mt-8 max-w-2xl font-mono text-lg font-medium text-primary sm:text-xl md:text-2xl"
+              initial={prefersReduced ? { opacity: 1 } : { opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={prefersReduced ? { duration: 0 } : { duration: 0.3, delay: 0.1, ease: 'linear' }}
             >
-              {content.subtitle}
+              &gt; {content.subtitle}
             </motion.p>
 
             <motion.p
-              className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg"
-              initial={prefersReduced ? { opacity: 1 } : { opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={prefersReduced ? { duration: 0 } : { duration: 0.5, delay: 0.25, ease: 'easeOut' }}
+              className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg"
+              initial={prefersReduced ? { opacity: 1 } : { opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={prefersReduced ? { duration: 0 } : { duration: 0.3, delay: 0.2, ease: 'linear' }}
             >
               {content.description}
             </motion.p>
 
-            {/* CTAs */}
             <motion.div
-              className="mt-10 flex flex-wrap items-center justify-center gap-4"
+              className="mt-12 flex flex-wrap items-center gap-6"
               data-testid="hero-cta-group"
-              initial={prefersReduced ? { opacity: 1 } : { opacity: 0, y: 12 }}
+              initial={prefersReduced ? { opacity: 1 } : { opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={prefersReduced ? { duration: 0 } : { duration: 0.5, delay: 0.35, ease: 'easeOut' }}
+              transition={prefersReduced ? { duration: 0 } : { duration: 0.3, delay: 0.3, ease: 'linear' }}
             >
               {content.primaryCta?.visible && (
                 <Button
                   asChild
                   size="lg"
-                  className="hero-cta-glow min-h-[52px] px-8 text-base font-bold shadow-lg transition-all hover:shadow-xl"
+                  className="rounded-none border-2 border-primary bg-primary px-8 font-mono text-base font-bold uppercase tracking-wider text-primary-foreground shadow-card transition-all hover:-translate-y-1 hover:shadow-lg"
                 >
                   <Link href={content.primaryCta.href}>
                     {content.primaryCta.label}
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <ArrowRight className="ml-3 h-5 w-5" />
                   </Link>
                 </Button>
               )}
@@ -108,7 +106,7 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="min-h-[52px] px-8 text-base font-semibold transition-all hover:bg-primary/5"
+                  className="rounded-none border-2 border-border bg-transparent px-8 font-mono text-base font-bold uppercase tracking-wider text-foreground shadow-card transition-all hover:-translate-y-1 hover:border-foreground"
                 >
                   <Link href={content.secondaryCta.href}>
                     {content.secondaryCta.label}
@@ -118,10 +116,9 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
             </motion.div>
           </div>
 
-          {/* Metrics grid — below the fold, real numbers */}
           {content.socialProof && content.socialProof.length > 0 && (
             <div
-              className="mx-auto mt-16 grid max-w-3xl gap-3 sm:grid-cols-2"
+              className="mx-auto mt-20 grid max-w-4xl gap-4 sm:grid-cols-2 md:grid-cols-4"
               data-testid="hero-social-proof-grid"
             >
               {content.socialProof.map((item, index) => (
@@ -130,20 +127,18 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
             </div>
           )}
 
-          {/* Trust badges — subtle, below metrics */}
           {content.trustBadges && content.trustBadges.length > 0 && (
             <motion.div
-              className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground"
+              className="mt-12 flex flex-wrap items-center gap-8 font-mono text-xs uppercase tracking-widest text-muted-foreground"
               data-testid="hero-trust-badge-grid"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 1 }}
+              transition={{ duration: 0.3, delay: 0.5 }}
             >
+              <span className="font-bold text-foreground">TRUSTED_BY //</span>
               {content.trustBadges.map((item) => {
-                const Icon = iconMap[item.icon] || CheckCircle2;
                 return (
-                  <span key={item.text} className="flex items-center gap-1.5">
-                    <Icon className="h-3.5 w-3.5 text-muted-foreground/70" />
+                  <span key={item.text} className="flex items-center gap-2">
                     {item.text}
                   </span>
                 );

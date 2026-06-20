@@ -314,29 +314,29 @@ const rawSiteContent: SiteConfig = {
   services: [
     {
       title: 'AI Clarity Audit',
-      description: 'Decision-surface and constraint analysis to de-risk AI implementation before build execution.',
-      outcome: 'A practical roadmap showing where automation should and should not be applied.',
+      description: 'We map where automation will actually work in your operations — and where it won\'t. You get a decision-ready roadmap before any build spend.',
+      outcome: 'A clear build-or-kill decision for every workflow under consideration.',
       deliverables: ['Decision Surface Map', 'Constraint Register', 'Failure Mode Matrix', 'Implementation Brief'],
       icon: 'Cpu',
     },
     {
       title: 'Stabilization Sprint',
-      description: 'Rapid hardening of fragile AI workflows with deterministic controls and incident playbooks.',
-      outcome: 'Higher reliability with fewer production exceptions and clearer operator ownership.',
+      description: 'Your AI workflows are live but flaky. We harden them with deterministic controls, retry logic, and incident playbooks your ops team can actually run.',
+      outcome: 'Fewer production fires, clearer ownership, measurable reliability.',
       deliverables: ['Failure Triage', 'Control Layer Updates', 'Escalation Paths', 'Reliability Review'],
       icon: 'Workflow',
     },
     {
       title: 'Governance Architecture',
-      description: 'Control-plane design for policy enforcement, escalation design, and accountability boundaries.',
-      outcome: 'Governed AI operations with auditability and decision transparency built in.',
+      description: 'We design the control plane — who approves what, how decisions get logged, and what happens when things go wrong. Built for auditors and operators.',
+      outcome: 'Auditable AI operations with clear accountability at every transition.',
       deliverables: ['Governance Blueprint', 'Control Mapping', 'Audit Logging Model', 'Ownership Matrix'],
       icon: 'Database',
     },
     {
       title: 'Strategic Advantage Program',
-      description: 'Ongoing advisory and delivery support for teams scaling AI capabilities across core operations.',
-      outcome: 'Compounding operational gains tied to business priorities, not tool hype.',
+      description: 'Ongoing advisory for teams scaling AI across operations. We run quarterly reviews, optimize your model portfolio, and keep your architecture ahead of your roadmap.',
+      outcome: 'Compounding gains tied to business priorities, not tool hype.',
       deliverables: ['Quarterly Architecture Reviews', 'Capability Roadmap', 'Model Portfolio Strategy', 'Executive Briefings'],
       icon: 'ShieldCheck',
     },
@@ -345,27 +345,27 @@ const rawSiteContent: SiteConfig = {
     {
       step: 1,
       title: 'Discover',
-      description: 'We map your existing value stream and identify high-impact friction points.',
+      description: 'We sit with your team, map the actual workflow, and find where time and money leak.',
     },
     {
       step: 2,
-      title: 'Map',
-      description: 'We design a deterministic workflow architecture before writing a line of code.',
+      title: 'Architect',
+      description: 'We design every state transition, checkpoint, and fallback before touching code.',
     },
     {
       step: 3,
-      title: 'Automate',
-      description: 'We build and deploy targeted agents to handle the heavy lifting.',
+      title: 'Build',
+      description: 'Targeted agents go into your stack. Each one scoped, tested, and documented.',
     },
     {
       step: 4,
       title: 'Ship',
-      description: 'Rigorous testing and staged rollout to ensure zero disruption.',
+      description: 'Staged rollout with your operators in the loop. No big-bang deploys.',
     },
     {
       step: 5,
-      title: 'Monitor',
-      description: 'Real-time telemetry and feedback loops for continuous improvement.',
+      title: 'Measure',
+      description: 'Live telemetry, exception tracking, and quarterly optimization reviews.',
     },
   ],
   agenticWorkflow: {
@@ -550,20 +550,7 @@ const rawSiteContent: SiteConfig = {
       },
     ],
   },
-  testimonials: [
-    {
-      quote: "AIAS helped us reduce our manual data entry load by 80% in just three weeks. The system is rock solid.",
-      author: "Sarah J.",
-      role: "Operations Director",
-      company: "Logistics Co.",
-    },
-    {
-      quote: "Finally, an AI consultancy that understands engineering rigor. No hallucinations, just results.",
-      author: "Michael T.",
-      role: "CTO",
-      company: "FinTech Corp.",
-    }
-  ],
+  testimonials: [],
   caseStudies: [
     {
       title: 'AI Content Workflows for Settler',

@@ -2,18 +2,18 @@ export const MESSAGING_CONTRACT = {
   brandName: 'AI Automated Systems',
   shortBrandName: 'AIAS',
   positioningSentence:
-    'AIAS designs and operationalizes deterministic, static-first automation systems that blend controlled AI assistance with measurable business outcomes.',
-  primaryTagline: 'Agentic Automation Consultancy',
+    'AIAS is a systems consultancy that turns brittle AI experiments into production-grade automation with clear ownership, audit trails, and measurable operational ROI.',
+  primaryTagline: 'AI Systems That Ship — And Stay Running',
   heroSubheading:
-    'Move from AI experimentation to deterministic workflow automation with measurable ROI and governance-ready delivery.',
+    'We design, build, and operate production AI workflows for operations teams — with governance baked in from day one.',
   metadataDescription:
-    'AIAS helps organizations design, deploy, and operate deterministic automation systems with controlled AI assistance, governance guardrails, and measurable outcomes.',
+    'AIAS helps operations and engineering teams design, deploy, and govern production AI workflows — with measurable ROI, human-in-the-loop controls, and enterprise-grade reliability.',
   ecosystemAlignment:
     'AIAS leads architecture and governance while Reach, Zeo, and Settler execute aligned demand, implementation, and deployment operations.',
   canonicalTerms: {
-    offering: 'agentic automation consultancy',
-    systemModel: 'deterministic automation systems',
-    deliveryModel: 'static-first delivery',
+    offering: 'AI automation consultancy',
+    systemModel: 'production-grade automation systems',
+    deliveryModel: 'governance-first delivery',
     controlPlane: 'deterministic control layer',
     intelligencePlane: 'constrained AI advisory layer',
   },

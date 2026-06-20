@@ -23,8 +23,8 @@ const Testimonials = dynamic(
 
 export const metadata = {
   ...generateSEOMetadata({
-    title: 'AI Automated Systems | Agentic Automation Consultancy',
-    description: 'AIAS designs and operationalizes deterministic, static-first automation systems that blend controlled AI assistance with measurable business outcomes.',
+    title: 'AI Automated Systems | AI Systems That Ship — And Stay Running',
+    description: 'AIAS helps operations and engineering teams design, deploy, and govern production AI workflows — with measurable ROI, human-in-the-loop controls, and enterprise-grade reliability.',
     canonical: '/',
   }),
 };

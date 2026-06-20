@@ -11,7 +11,7 @@ export interface RouteManifestEntry {
 export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   {
     path: "/",
-    title: "AI Automated Systems | Agentic Automation Consultancy",
+    title: "AI Automated Systems | AI Systems That Ship — And Stay Running",
     description:
       "AIAS designs and operationalizes deterministic, static-first automation systems that blend controlled AI assistance with measurable business outcomes.",
     canonical: "/",
@@ -83,7 +83,7 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   },
   {
     path: "/case-studies",
-    title: "Case Studies | AI Automated Systems",
+    title: "AI Automation Case Studies — Real Outcomes, Real Workflows | AIAS",
     description:
       "Implementation proof with metrics, before/after patterns, and governance maturity progression for AI control-plane programs.",
     canonical: "/case-studies",
@@ -101,7 +101,7 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   },
   {
     path: "/contact",
-    title: "Contact | AI Automated Systems",
+    title: "Book a Free AI Automation Diagnostic Call | AIAS",
     description:
       "Book a diagnostic, request an architecture review, or submit your AI stack intake for governance-first implementation planning.",
     canonical: "/contact",
@@ -146,7 +146,7 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   },
   {
     path: "/faq",
-    title: "FAQ | AI Automated Systems",
+    title: "AI Automation FAQ — Pricing, Process, Security | AIAS",
     description:
       "Frequently asked questions about AIAS consulting engagements, delivery model, pricing, and onboarding.",
     canonical: "/faq",
@@ -164,7 +164,7 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   },
   {
     path: "/how-it-works",
-    title: "How It Works | AI Automated Systems",
+    title: "How Our AI Automation Delivery Model Works | AIAS",
     description:
       "System transparency page covering tooling stack, governance, security, and deployment models.",
     canonical: "/how-it-works",
@@ -218,7 +218,8 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   },
   {
     path: "/pricing",
-    title: "Offer Structure & Pricing Philosophy | AI Automated Systems",
+    title:
+      "AI Automation Consulting Pricing — Transparent Engagement Models | AIAS",
     description:
       "Clear monetization structure for AIAS: Audit, Implementation, and Ongoing Governance with range-based pricing philosophy and ROI framing.",
     canonical: "/pricing",
@@ -263,7 +264,7 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   },
   {
     path: "/services",
-    title: "Services | AI Automated Systems",
+    title: "AI Automation Consulting Services — Audit, Build, Govern | AIAS",
     description:
       "Explore AIAS consultancy services for agent architecture, workflow automation, and enterprise-grade implementation.",
     canonical: "/services",

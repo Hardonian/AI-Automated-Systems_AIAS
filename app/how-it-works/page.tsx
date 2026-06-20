@@ -9,7 +9,7 @@ import { FAQSchema } from '@/components/seo/structured-data';
 import { siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'How It Works | AI Automated Systems',
+  title: 'How Our AI Automation Delivery Model Works | AIAS',
   description: 'System transparency page covering tooling stack, governance, security, and deployment models.',
   canonical: '/how-it-works',
 });

@@ -13,7 +13,7 @@ import { WorkflowDiagram } from '@/components/visual/WorkflowDiagram';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Services | AI Automated Systems',
+  title: 'AI Automation Consulting Services — Audit, Build, Govern | AIAS',
   description:
     'Explore AIAS consultancy services for agent architecture, workflow automation, and enterprise-grade implementation.',
   canonical: '/services',

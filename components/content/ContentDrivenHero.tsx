@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Clock, Shield, Zap, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import type { HeroContent } from "@/components/content/types";
@@ -76,10 +77,11 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
             className="mb-12 relative w-full max-w-lg aspect-[16/9] border-2 border-border bg-card p-2 shadow-lg"
           >
             <div className="absolute inset-0 bg-primary/5 z-0" />
-            <img
+            <Image
               src="/images/esoteric_schema.png"
               alt="Structural AI workflow schema"
-              className="w-full h-full object-cover img-crisp opacity-90 mix-blend-multiply"
+              fill
+              className="object-cover img-crisp opacity-90 mix-blend-multiply"
             />
           </motion.div>
 

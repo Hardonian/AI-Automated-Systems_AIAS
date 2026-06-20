@@ -5,7 +5,7 @@ function getRouteFiles(dir: string): string[] {
   const entries = readdirSync(dir, { withFileTypes: true, recursive: true });
   return entries
     .filter(entry => entry.isFile() && entry.name === 'page.tsx')
-    .map(entry => path.join(entry.path, entry.name));
+    .map(entry => path.join((entry as any).parentPath || (entry as any).path || '', entry.name));
 }
 
 const routeFiles = getRouteFiles('app');

@@ -9,7 +9,7 @@ import { IntakeForm } from '@/components/IntakeForm';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Contact | AI Automated Systems',
+  title: 'Book a Free AI Automation Diagnostic Call | AIAS',
   description:
     'Book a diagnostic, request an architecture review, or submit your AI stack intake for governance-first implementation planning.',
   canonical: '/contact',

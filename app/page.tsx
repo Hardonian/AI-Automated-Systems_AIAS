@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import Image from "next/image";
 
 import { ContentDrivenHero } from "@/components/content/ContentDrivenHero";
 import { HowWeWorkSection } from "@/components/content/how-we-work-section";
@@ -22,7 +23,7 @@ export const metadata = {
   ...generateSEOMetadata({
     title: "AI Automated Systems | AI Systems That Ship — And Stay Running",
     description:
-      "AIAS helps operations and engineering teams design, deploy, and govern production AI workflows — with measurable ROI, human-in-the-loop controls, and enterprise-grade reliability.",
+      "AIAS designs and operationalizes deterministic, static-first automation systems that blend controlled AI assistance with measurable business outcomes.",
     canonical: "/",
   }),
 };
@@ -83,10 +84,11 @@ export default function HomePage() {
           <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3 items-center">
             <div className="lg:col-span-1 hidden lg:block relative w-full aspect-square border-2 border-border bg-card p-2 shadow-lg mix-blend-multiply opacity-90">
               <div className="absolute inset-0 bg-primary/5 z-0" />
-              <img
+              <Image
                 src="/images/workflow_schema.png"
                 alt="Workflow bottleneck schema"
-                className="w-full h-full object-cover img-crisp mix-blend-multiply"
+                fill
+                className="object-cover img-crisp mix-blend-multiply"
               />
             </div>
             <div className="lg:col-span-2 grid gap-6 sm:grid-cols-2">

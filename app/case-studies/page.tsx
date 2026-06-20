@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { caseStudies } from '@/lib/case-studies-generator';
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Case Studies | AI Automated Systems',
+  title: 'AI Automation Case Studies — Real Outcomes, Real Workflows | AIAS',
   description:
     'Implementation proof with metrics, before/after patterns, and governance maturity progression for AI control-plane programs.',
   canonical: '/case-studies',

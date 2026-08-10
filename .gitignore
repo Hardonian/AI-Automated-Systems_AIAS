@@ -295,3 +295,6 @@ tests/e2e/__screenshots__/**/*.png
 playwright-report/
 test-results/
 
+__pycache__/
+.pytest_cache/
+*.pyc

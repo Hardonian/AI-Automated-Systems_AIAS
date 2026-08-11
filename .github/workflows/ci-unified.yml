@@ -27,8 +27,6 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -48,8 +46,6 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -71,8 +67,6 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -88,8 +82,8 @@ jobs:
           pnpm build
           echo "✅ Build completed successfully"
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           NODE_OPTIONS: --max-old-space-size=4096
       - uses: actions/upload-artifact@v7
         if: always()
@@ -108,8 +102,6 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true

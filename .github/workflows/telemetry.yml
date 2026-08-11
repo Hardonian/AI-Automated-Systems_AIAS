@@ -30,6 +30,9 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         env:
@@ -39,19 +42,14 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Collect metrics from all sources
         run: pnpm tsx scripts/collect-metrics.ts
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -70,6 +68,9 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         env:
@@ -79,19 +80,14 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Generate performance report
         run: pnpm tsx scripts/generate-performance-report.ts
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
@@ -115,6 +111,9 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         env:
@@ -124,19 +123,14 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Run auto-optimization analysis
         run: pnpm tsx scripts/auto-optimize.ts
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
@@ -152,6 +146,9 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         env:
@@ -161,19 +158,14 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Check for regressions and alert
         run: pnpm tsx scripts/alert-regressions.ts
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

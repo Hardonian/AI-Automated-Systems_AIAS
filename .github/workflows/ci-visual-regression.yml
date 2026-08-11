@@ -48,8 +48,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Get pnpm store directory
         shell: bash
@@ -93,8 +91,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Get pnpm store directory
         shell: bash
@@ -139,8 +135,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Get pnpm store directory
         shell: bash
@@ -161,8 +155,8 @@ jobs:
       - name: Build application
         run: pnpm build
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           NODE_OPTIONS: '--max-old-space-size=4096'
           # Skip DB operations during build if not available
           SKIP_DB: 'true'
@@ -198,8 +192,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Get pnpm store directory
         shell: bash
@@ -245,8 +237,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Get pnpm store directory
         shell: bash
@@ -276,8 +266,8 @@ jobs:
       - name: Run E2E tests (non-visual)
         run: pnpm test:e2e --project=chromium --project=firefox --project=webkit
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           CI: 'true'
           BASE_URL: ${{ env.BASE_URL }}
 
@@ -316,8 +306,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Get pnpm store directory
         shell: bash
@@ -349,8 +337,8 @@ jobs:
           pnpm start &
           npx wait-on ${{ env.BASE_URL }} --timeout 60000
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           PORT: '3000'
 
       - name: Run visual regression tests
@@ -361,8 +349,8 @@ jobs:
             pnpm test:visual
           fi
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           CI: 'true'
           BASE_URL: ${{ env.BASE_URL }}
 
@@ -427,8 +415,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Get pnpm store directory
         shell: bash
@@ -460,15 +446,15 @@ jobs:
           pnpm start &
           npx wait-on ${{ env.BASE_URL }} --timeout 60000
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           PORT: '3000'
 
       - name: Run UI consistency audit
         run: pnpm test:audit
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           CI: 'true'
           BASE_URL: ${{ env.BASE_URL }}
 
@@ -507,8 +493,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Get pnpm store directory
         shell: bash
@@ -540,15 +524,15 @@ jobs:
           pnpm start &
           npx wait-on ${{ env.BASE_URL }} --timeout 60000
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           PORT: '3000'
 
       - name: Run accessibility tests
         run: pnpm test:e2e --grep @accessibility
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           CI: 'true'
           BASE_URL: ${{ env.BASE_URL }}
 

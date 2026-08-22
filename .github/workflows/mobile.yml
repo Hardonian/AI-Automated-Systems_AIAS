@@ -50,6 +50,9 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         env:
@@ -58,11 +61,6 @@ jobs:
         with:
           node-version: 22
           cache: 'pnpm'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          version: 8.15.0
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

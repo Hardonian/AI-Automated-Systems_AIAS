@@ -24,8 +24,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -43,8 +41,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -62,8 +58,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true

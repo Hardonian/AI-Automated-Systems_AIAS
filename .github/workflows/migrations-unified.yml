@@ -63,6 +63,9 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         env:
@@ -71,11 +74,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -89,16 +87,16 @@ jobs:
         run: |
           echo "${{ secrets.STAGING_SUPABASE_ACCESS_TOKEN }}" | supabase login --token -
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_ACCESS_TOKEN: ${{ secrets.STAGING_SUPABASE_ACCESS_TOKEN }}
 
       - name: Link staging project
         run: |
           supabase link --project-ref ${{ secrets.STAGING_SUPABASE_PROJECT_REF }}
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_PROJECT_REF: ${{ secrets.STAGING_SUPABASE_PROJECT_REF }}
           SUPABASE_ACCESS_TOKEN: ${{ secrets.STAGING_SUPABASE_ACCESS_TOKEN }}
 
@@ -119,8 +117,8 @@ jobs:
           pnpm prisma migrate status || echo "Prisma migration status check completed"
         continue-on-error: true
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_POOLER_URL || secrets.STAGING_DATABASE_URL }}
           DIRECT_URL: ${{ secrets.STAGING_DATABASE_POOLER_DIRECT_URL || secrets.STAGING_DIRECT_URL || secrets.STAGING_DATABASE_POOLER_URL || secrets.STAGING_DATABASE_URL }}
@@ -133,8 +131,8 @@ jobs:
           pnpm run db:validate-schema || echo "Schema validation skipped"
         continue-on-error: true
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
           # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
@@ -151,8 +149,8 @@ jobs:
       (github.event.inputs.migration_type == 'all' || github.event.inputs.migration_type == 'supabase' || github.event.inputs.migration_type == '')
     environment: ${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'production' || 'staging') }}
     env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
       SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
@@ -164,6 +162,9 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         env:
@@ -172,11 +173,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -191,8 +187,8 @@ jobs:
         run: |
           echo "${{ secrets.SUPABASE_ACCESS_TOKEN }}" | supabase login --token -
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Link Supabase project
@@ -200,8 +196,8 @@ jobs:
         run: |
           supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
@@ -237,8 +233,8 @@ jobs:
           pnpm run db:validate-schema || echo "Schema validation skipped"
         continue-on-error: true
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
@@ -248,8 +244,8 @@ jobs:
           npm run regenerate-types || echo "Type regeneration skipped"
         continue-on-error: true
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
@@ -283,6 +279,9 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         env:
@@ -292,19 +291,14 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Check migration status (before)
         id: status-before
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
           DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DATABASE_POOLER_DIRECT_URL || secrets.DIRECT_URL || secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
@@ -320,8 +314,8 @@ jobs:
       - name: Apply Prisma migrations
         id: migrate
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
           DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DATABASE_POOLER_DIRECT_URL || secrets.DIRECT_URL || secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
@@ -340,8 +334,8 @@ jobs:
       - name: Verify migration status (after)
         id: status-after
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
           DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DATABASE_POOLER_DIRECT_URL || secrets.DIRECT_URL || secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
@@ -364,8 +358,8 @@ jobs:
 
       - name: Verify database schema
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
           DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DATABASE_POOLER_DIRECT_URL || secrets.DIRECT_URL || secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
@@ -403,6 +397,9 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         env:
@@ -412,18 +409,13 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Run Migration Guardian
         env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           # Use pooler URL from GitHub Secrets, fallback to DATABASE_URL for backward compatibility
           DATABASE_URL: ${{ secrets.DATABASE_POOLER_URL || secrets.DATABASE_URL }}
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}

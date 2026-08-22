@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-npx pnpm validate:route-manifest
+pnpm validate:route-manifest

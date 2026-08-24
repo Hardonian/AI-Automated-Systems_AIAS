@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowRight, Download, Mail, FileText, CheckCircle2 } from 'lucide-react';
+import { Download, Mail } from 'lucide-react';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';

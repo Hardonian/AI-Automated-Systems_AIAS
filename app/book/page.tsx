@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, Calendar, Clock, Video, CheckCircle2, Shield } from 'lucide-react';
+import { ArrowRight, Video, CheckCircle2, Shield } from 'lucide-react';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
 import { InteractiveScheduler } from '@/components/content/interactive-scheduler';
 import { Button } from '@/components/ui/button';
-import { siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Book a Strategy Call | AI Automated Systems',

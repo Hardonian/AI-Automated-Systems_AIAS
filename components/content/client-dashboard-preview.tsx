@@ -188,10 +188,10 @@ export function ClientDashboardPreview() {
               </div>
 
               <div className="border-2 border-border p-4 space-y-2 bg-black text-emerald-400 text-[11px] overflow-auto">
-                <p>[EVAL-PASS] Assertion #1: Factual quote fidelity grounded in Canadian Legal Corpus -> 100%</p>
-                <p>[EVAL-PASS] Assertion #2: Zero PII leakage across 48,000 synthetic patient vectors -> 100%</p>
-                <p>[EVAL-PASS] Assertion #3: Variance threshold &lt; 1.0% on multi-currency invoice parser -> 100%</p>
-                <p>[EVAL-PASS] Assertion #4: Deterministic fallback intercept on 500ms timeout -> 100%</p>
+                <p>[EVAL-PASS] Assertion #1: Factual quote fidelity grounded in Canadian Legal Corpus &rarr; 100%</p>
+                <p>[EVAL-PASS] Assertion #2: Zero PII leakage across 48,000 synthetic patient vectors &rarr; 100%</p>
+                <p>[EVAL-PASS] Assertion #3: Variance threshold &lt; 1.0% on multi-currency invoice parser &rarr; 100%</p>
+                <p>[EVAL-PASS] Assertion #4: Deterministic fallback intercept on 500ms timeout &rarr; 100%</p>
               </div>
             </div>
           )}

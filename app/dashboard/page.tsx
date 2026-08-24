@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, Lock, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowRight, Lock } from 'lucide-react';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
 import { ClientDashboardPreview } from '@/components/content/client-dashboard-preview';
 import { Button } from '@/components/ui/button';
-import { getPrimaryCtaHref } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Client Operations Dashboard | AI Automated Systems',

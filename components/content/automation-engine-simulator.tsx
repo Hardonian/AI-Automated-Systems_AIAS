@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Play,
@@ -315,12 +315,22 @@ export function AutomationEngineSimulator() {
   const scenario = SCENARIOS[selectedScenarioKey];
   const activeData = simulateFailure ? scenario.fallbackOutput : scenario.normalOutput;
 
-  useEffect(() => {
+  const resetSimulationState = () => {
     setIsRunning(false);
     setCurrentStageIndex(-1);
     setCompleted(false);
     setDisplayedLogs([]);
-  }, [selectedScenarioKey, simulateFailure]);
+  };
+
+  const handleSelectScenario = (key: ScenarioKey) => {
+    setSelectedScenarioKey(key);
+    resetSimulationState();
+  };
+
+  const handleToggleFailure = (checked: boolean) => {
+    setSimulateFailure(checked);
+    resetSimulationState();
+  };
 
   const runSimulation = () => {
     if (isRunning) return;
@@ -419,7 +429,7 @@ export function AutomationEngineSimulator() {
               <input
                 type="checkbox"
                 checked={simulateFailure}
-                onChange={(e) => setSimulateFailure(e.target.checked)}
+                onChange={(e) => handleToggleFailure(e.target.checked)}
                 className="h-4 w-4 rounded-none border-2 border-border accent-primary cursor-pointer"
               />
               <span className={simulateFailure ? 'text-destructive font-black' : 'text-muted-foreground'}>
@@ -467,7 +477,7 @@ export function AutomationEngineSimulator() {
           return (
             <button
               key={key}
-              onClick={() => setSelectedScenarioKey(key)}
+              onClick={() => handleSelectScenario(key)}
               role="tab"
               aria-selected={isSelected}
               className={`flex flex-col items-start p-4 text-left border-2 transition-all cursor-pointer ${

@@ -60,6 +60,7 @@ export function OperatorConsole({
       try {
         const parsed = JSON.parse(raw) as OperatorLead[];
         if (Array.isArray(parsed) && parsed.length > 0) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setLeads(parsed);
         }
       } catch {

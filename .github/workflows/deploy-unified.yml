@@ -372,7 +372,7 @@ jobs:
         continue-on-error: true
 
       - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v2
+        uses: supabase/setup-cli@v3
         with:
           version: latest
 
@@ -424,7 +424,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v2
+        uses: supabase/setup-cli@v3
         with:
           version: latest
 

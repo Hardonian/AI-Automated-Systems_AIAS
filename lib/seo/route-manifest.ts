@@ -38,9 +38,9 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   },
   {
     path: "/automation-demo",
-    title: "Automation Demo | AI Automated Systems",
+    title: "Interactive Automation Simulator | AI Automated Systems",
     description:
-      "Safe static demo of intake classification, system execution flow, and governance checkpoints.",
+      "Interactive execution demo showing deterministic policy gates, model orchestration, and telemetry guardrails.",
     canonical: "/automation-demo",
     priority: 0.7,
     changeFrequency: "monthly",
@@ -65,9 +65,9 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   },
   {
     path: "/book",
-    title: "Book a Call | AI Automated Systems",
+    title: "Book a Strategy Call | AI Automated Systems",
     description:
-      "Schedule a free 30-minute strategy call to discuss your automation needs and explore how we can help.",
+      "Schedule a 30-minute diagnostic session with an AIAS systems architect to map workflows, identify quick wins, and establish deterministic governance boundaries.",
     canonical: "/book",
     priority: 0.8,
     changeFrequency: "weekly",
@@ -246,9 +246,9 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   },
   {
     path: "/readiness-checklist",
-    title: "AI Governance Readiness Checklist | AI Automated Systems",
+    title: "AI Governance Readiness Checklist & Scorecard | AIAS",
     description:
-      "Download and score the AI Governance Readiness Checklist, then optionally share your stack context for architecture feedback.",
+      "Interactive 16-point audit scorecard and downloadable checklist to evaluate AI governance, deterministic boundaries, and error recovery maturity.",
     canonical: "/readiness-checklist",
     priority: 0.7,
     changeFrequency: "monthly",

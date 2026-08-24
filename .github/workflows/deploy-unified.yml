@@ -547,7 +547,7 @@ jobs:
     if: always()
     steps:
       - name: Notify deployment status
-        uses: slackapi/slack-github-action@v3
+        uses: slackapi/slack-github-action@v4
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
           payload: |

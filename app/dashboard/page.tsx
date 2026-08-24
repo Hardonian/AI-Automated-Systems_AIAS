@@ -1,12 +1,16 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import { ArrowRight, Lock, ShieldCheck, Sparkles } from 'lucide-react';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
-import { PageCta, PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
+import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
+import { ClientDashboardPreview } from '@/components/content/client-dashboard-preview';
+import { Button } from '@/components/ui/button';
 import { getPrimaryCtaHref } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Dashboard | AI Automated Systems',
-  description: 'Protected workspace entry for client and team operations.',
+  title: 'Client Operations Dashboard | AI Automated Systems',
+  description: 'Protected client control-plane workspace showcasing live workload telemetry, evaluation scorecards, and audit runbooks.',
   canonical: '/dashboard',
 });
 
@@ -14,26 +18,53 @@ export default function DashboardPage() {
   return (
     <>
       <PageHero
-        eyebrow='Client workspace'
-        title='Dashboard access is invite-only'
-        description='This workspace is reserved for authenticated client and team sessions. Request access to begin onboarding.'
+        eyebrow="Client Control-Plane"
+        title="Operations & Workload Dashboard"
+        description="Monitor active deterministic agent fleets, continuous evaluation integrity, latency budgets, and compliance audit logs in real time."
       />
 
+      {/* Interactive Workspace Preview */}
       <PageSection>
-        <SurfaceCard>
-          <h2 className='text-2xl font-bold'>No active session detected</h2>
-          <p className='mt-3 max-w-2xl text-muted-foreground'>
-            We provision dashboard access after kickoff so each workspace maps to current engagements and governance controls.
-          </p>
-        </SurfaceCard>
+        <ClientDashboardPreview />
       </PageSection>
 
-      <PageCta
-        title='Request dashboard access'
-        description='Book a strategy call and we will confirm fit, kickoff scope, and workspace provisioning steps.'
-        primary={{ label: 'Request access / book a call', href: getPrimaryCtaHref() }}
-        secondary={{ label: 'Contact team', href: '/contact' }}
-      />
+      {/* Access Provisioning CTA */}
+      <PageSection background="muted" width="narrow">
+        <SurfaceCard className="border-2 border-primary bg-card p-8 text-center shadow-card">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center border-2 border-primary bg-primary/10 text-primary mb-4">
+            <Lock className="h-6 w-6" />
+          </div>
+
+          <h2 className="text-2xl font-black uppercase tracking-tight text-foreground sm:text-3xl">
+            Request Provisioned Client Access
+          </h2>
+          <p className="mt-3 max-w-xl mx-auto text-sm text-muted-foreground leading-relaxed">
+            Dedicated multi-tenant client instances are provisioned alongside our architecture diagnostic. Every active workspace maps to your dedicated Git repositories and private VPC endpoints.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-4">
+            <Button
+              asChild
+              size="lg"
+              className="rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card hover:-translate-y-0.5 transition-all"
+            >
+              <Link href="/book">
+                Book Strategy Session
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-widest hover:border-foreground transition-all"
+            >
+              <Link href="/contact">
+                Contact Architecture Team
+              </Link>
+            </Button>
+          </div>
+        </SurfaceCard>
+      </PageSection>
     </>
   );
 }

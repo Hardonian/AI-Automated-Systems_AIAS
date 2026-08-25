@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { FAQSchema, ServiceSchema } from '@/components/seo/structured-data';
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { siteContent } from '@/src/content/site';
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -16,11 +17,22 @@ export default function AutomationWebServicePage() {
     <>
       <FAQSchema faqs={siteContent.routeFaqs.automationWeb} />
       <ServiceSchema name='Website Automation Systems' description='Static-first automation websites with governance and deterministic routing.' serviceType='Website automation consulting' />
+      
+      <div className="container pt-4">
+        <Breadcrumbs
+          items={[
+            { label: 'Services', href: '/services' },
+            { label: 'Automation Web Systems' },
+          ]}
+        />
+      </div>
+
       <PageHero
         eyebrow='Service'
         title='Website automation systems'
         description='We build static-first websites that classify demand, route qualified opportunities, and expose governance checkpoints.'
       />
+
       <PageSection>
         <div className='grid gap-6 md:grid-cols-2'>
           <SurfaceCard><h2 className='text-xl font-bold'>Automation philosophy</h2><p className='mt-3 text-muted-foreground'>Design deterministic paths first, then add intelligence where it improves throughput without increasing risk.</p></SurfaceCard>

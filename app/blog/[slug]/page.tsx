@@ -18,6 +18,7 @@ import {
 } from '@/lib/blog/articles';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { sanitizeHTMLServer } from '@/lib/utils/sanitize-html';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 interface PageProps {
@@ -65,17 +66,27 @@ export default async function BlogArticlePage({ params }: PageProps) {
   }
 
   return (
-    <div className='container max-w-4xl py-16'>
+    <div className='container max-w-4xl py-12 md:py-16'>
+      <div className="mb-6">
+        <Breadcrumbs
+          items={[
+            { label: 'Blog', href: '/blog' },
+            { label: article.title },
+          ]}
+        />
+      </div>
+
       <article>
         {/* Back to Blog */}
         <div className='mb-6'>
           <Link
-            className='text-sm text-muted-foreground hover:underline'
+            className='font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors'
             href='/blog'
           >
             ← Back to Blog
           </Link>
         </div>
+
 
         {/* Article Header */}
         <header className='mb-8'>

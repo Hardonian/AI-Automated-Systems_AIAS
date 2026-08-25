@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { blueprints } from '@/src/content/moat';
 
@@ -55,7 +56,17 @@ export default async function BlueprintDetailPage({ params }: { params: Promise<
 
   return (
     <>
+      <div className="container pt-4">
+        <Breadcrumbs
+          items={[
+            { label: 'Blueprints', href: '/blueprints' },
+            { label: blueprint.title },
+          ]}
+        />
+      </div>
+
       <PageHero eyebrow='Blueprint' title={blueprint.title} description={blueprint.summary} />
+
       <PageSection>
         <div className='grid gap-6 md:grid-cols-2'>
           <SurfaceCard>

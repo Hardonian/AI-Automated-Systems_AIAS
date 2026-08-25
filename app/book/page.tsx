@@ -5,6 +5,7 @@ import { ArrowRight, Video, CheckCircle2, Shield } from 'lucide-react';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
 import { InteractiveScheduler } from '@/components/content/interactive-scheduler';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -35,11 +36,21 @@ const bookingGuarantees = [
 export default function BookPage() {
   return (
     <>
+      <div className="container pt-4">
+        <Breadcrumbs
+          items={[
+            { label: 'Booking', href: '/book' },
+            { label: 'Strategy Diagnostic' },
+          ]}
+        />
+      </div>
+
       <PageHero
         eyebrow="Direct Architecture Booking"
         title="Schedule Your AI Systems Strategy Session"
         description="Select a time slot below to review your workflow bottlenecks, test feasibility, and evaluate deterministic automation architecture. Zero sales pressure—just technical clarity."
       />
+
 
       {/* Main Interactive Scheduler */}
       <PageSection>

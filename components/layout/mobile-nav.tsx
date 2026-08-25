@@ -1,11 +1,29 @@
 'use client';
-import { Menu } from 'lucide-react';
+import { Menu, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
+
+const MOBILE_TOOL_LINKS = [
+  { label: 'Automation Simulator', href: '/automation-demo' },
+  { label: 'Operations Dashboard', href: '/dashboard' },
+  { label: 'ROI Calculator', href: '/roi-calculator' },
+  { label: 'Readiness Scorecard', href: '/readiness-checklist' },
+  { label: 'Scope Estimator', href: '/engagement-simulator' },
+  { label: 'Book Diagnostic', href: '/book' },
+];
+
+const MOBILE_BLUEPRINT_LINKS = [
+  { label: 'Blueprints Library', href: '/blueprints' },
+  { label: 'Systems Framework', href: '/framework' },
+  { label: 'Case Studies', href: '/case-studies' },
+  { label: 'Build Log', href: '/build-log' },
+  { label: 'Operational Metrics', href: '/metrics' },
+  { label: 'FAQ', href: '/faq' },
+];
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -17,7 +35,7 @@ export function MobileNav() {
           aria-controls='mobile-navigation'
           aria-expanded={open}
           aria-label='Open navigation menu'
-          className='min-h-[44px] min-w-[44px]'
+          className='min-h-[44px] min-w-[44px] rounded-none border-2 border-border bg-card hover:border-primary'
           data-testid='mobile-nav-trigger'
           size='sm'
           variant='ghost'
@@ -27,42 +45,92 @@ export function MobileNav() {
       </SheetTrigger>
       <SheetContent
         aria-label='Mobile navigation'
-        className='w-64'
+        className='w-80 rounded-none border-l-2 border-primary bg-background p-6 shadow-2xl overflow-y-auto'
         id='mobile-navigation'
         side='right'
       >
+        <div className="flex items-center gap-2 pb-4 border-b-2 border-border">
+          <span className="flex h-7 w-7 items-center justify-center border border-primary bg-primary/10 text-xs font-mono font-bold text-primary">
+            {'//'}
+          </span>
+          <span className="font-mono text-sm font-black uppercase tracking-wider text-foreground">
+            AIAS Platform
+          </span>
+        </div>
+
         <nav
           aria-label='Mobile navigation menu'
-          className='mt-8 flex flex-col gap-4'
+          className='mt-6 flex flex-col gap-6'
           data-testid='mobile-nav-menu'
           role='navigation'
         >
-          {siteContent.navigation.primary.map(link => (
-            <Link
-              key={link.href}
-              aria-label={`Navigate to ${link.label}`}
-              className='flex min-h-[44px] items-center text-lg font-medium hover:underline'
-              href={link.href}
-              onClick={() => setOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
-          {siteContent.navigation.resources.map(link => (
-            <Link
-              key={link.href}
-              aria-label={`Navigate to ${link.label}`}
-              className='flex min-h-[44px] items-center text-lg font-medium hover:underline'
-              href={link.href}
-              onClick={() => setOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <div className='space-y-3 border-t pt-4'>
+          {/* Primary Navigation */}
+          <div>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
+              Main Navigation
+            </p>
+            <div className="space-y-1">
+              {siteContent.navigation.primary.map(link => (
+                <Link
+                  key={link.href}
+                  aria-label={`Navigate to ${link.label}`}
+                  className='flex items-center justify-between p-2 font-mono text-sm font-bold uppercase tracking-wide text-foreground transition-colors hover:bg-primary/10 hover:text-primary'
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                >
+                  <span>{link.label}</span>
+                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Interactive Tools */}
+          <div>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-primary mb-2">
+              Interactive Tools & Simulators
+            </p>
+            <div className="grid grid-cols-1 gap-1">
+              {MOBILE_TOOL_LINKS.map(link => (
+                <Link
+                  key={link.href}
+                  aria-label={`Navigate to ${link.label}`}
+                  className='flex items-center justify-between p-2 font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                >
+                  <span>{link.label}</span>
+                  <span className="font-mono text-[9px] border border-border px-1 py-0.2 bg-muted/40">TOOL</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Blueprints & Architecture */}
+          <div>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
+              Architecture & Reference
+            </p>
+            <div className="grid grid-cols-1 gap-1">
+              {MOBILE_BLUEPRINT_LINKS.map(link => (
+                <Link
+                  key={link.href}
+                  aria-label={`Navigate to ${link.label}`}
+                  className='flex items-center justify-between p-2 font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                >
+                  <span>{link.label}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* CTAs */}
+          <div className='space-y-2.5 border-t-2 border-border pt-4'>
             <Button
               asChild
-              className='min-h-[48px] w-full text-base font-bold shadow-lg'
+              className='min-h-[44px] w-full rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card'
             >
               <Link
                 aria-label={siteContent.positioning.primaryCTA.label}
@@ -74,7 +142,7 @@ export function MobileNav() {
             </Button>
             <Button
               asChild
-              className='min-h-[48px] w-full text-base font-semibold'
+              className='min-h-[44px] w-full rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-widest'
               variant='outline'
             >
               <Link
@@ -91,3 +159,4 @@ export function MobileNav() {
     </Sheet>
   );
 }
+

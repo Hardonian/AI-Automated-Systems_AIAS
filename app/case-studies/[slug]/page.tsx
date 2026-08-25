@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { getPrimaryCtaHref } from '@/src/content/site';
 import { caseStudies, getCaseStudyBySlug } from '@/lib/case-studies-generator';
 import { ArchitectureDiagram } from '@/components/visual/ArchitectureDiagram';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { 
   CaseStudySchema, 
   OrganizationSchema, 
@@ -98,11 +99,21 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
         ]}
       />
 
+      <div className="container pt-4">
+        <Breadcrumbs
+          items={[
+            { label: 'Case Studies', href: '/case-studies' },
+            { label: study.title },
+          ]}
+        />
+      </div>
+
       <PageHero 
         eyebrow='Case Study Deep Dive' 
         title={study.title} 
         description='Implementation evidence, architectural constraints, and measured outcomes.' 
       />
+
 
       <PageSection width='narrow'>
         <div className='space-y-6'>

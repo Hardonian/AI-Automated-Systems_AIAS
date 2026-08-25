@@ -5,6 +5,8 @@ import { ArrowRight, Lock } from 'lucide-react';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
 import { ClientDashboardPreview } from '@/components/content/client-dashboard-preview';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
+import { WebApplicationSchema } from '@/components/seo/structured-data';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -16,11 +18,28 @@ export const metadata: Metadata = generateSEOMetadata({
 export default function DashboardPage() {
   return (
     <>
+      <WebApplicationSchema
+        name="AIAS Client Operations Dashboard"
+        description="Client control-plane workspace showcasing live workload telemetry, evaluation scorecards, and audit runbooks."
+        url="https://aiautomatedsystems.ca/dashboard"
+        applicationCategory="BusinessApplication"
+      />
+
+      <div className="container pt-4">
+        <Breadcrumbs
+          items={[
+            { label: 'Tools', href: '/automation-demo' },
+            { label: 'Operations Dashboard' },
+          ]}
+        />
+      </div>
+
       <PageHero
         eyebrow="Client Control-Plane"
         title="Operations & Workload Dashboard"
         description="Monitor active deterministic agent fleets, continuous evaluation integrity, latency budgets, and compliance audit logs in real time."
       />
+
 
       {/* Interactive Workspace Preview */}
       <PageSection>

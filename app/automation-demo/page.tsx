@@ -5,6 +5,8 @@ import { ArrowRight, ShieldCheck, Cpu, Database, CheckCircle2 } from 'lucide-rea
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
 import { AutomationEngineSimulator } from '@/components/content/automation-engine-simulator';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
+import { WebApplicationSchema } from '@/components/seo/structured-data';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -39,11 +41,28 @@ const architecturalPillars = [
 export default function AutomationDemoPage() {
   return (
     <>
+      <WebApplicationSchema
+        name="AIAS Automation Engine Simulator"
+        description="Interactive execution simulator showing deterministic policy gates, model orchestration, and telemetry guardrails."
+        url="https://aiautomatedsystems.ca/automation-demo"
+        applicationCategory="BusinessApplication"
+      />
+
+      <div className="container pt-4">
+        <Breadcrumbs
+          items={[
+            { label: 'Tools', href: '/automation-demo' },
+            { label: 'Automation Simulator' },
+          ]}
+        />
+      </div>
+
       <PageHero
         eyebrow="Interactive Demo"
         title="Live Automation Engine & Control-Plane"
         description="Experience deterministic workflow execution in real time. Switch scenarios, inspect live telemetry, and test how safety guardrails intercept failure states."
       />
+
 
       {/* Main Interactive Simulator Section */}
       <PageSection>

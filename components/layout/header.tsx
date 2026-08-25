@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import { MobileNav } from '@/components/layout/mobile-nav';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { CommandPalette } from '@/components/layout/command-palette';
 import { Button } from '@/components/ui/button';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
@@ -13,8 +14,35 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
+const RESOURCE_GROUPS = [
+  {
+    category: 'Interactive Tools',
+    items: [
+      { label: 'Automation Simulator', href: '/automation-demo' },
+      { label: 'Operations Dashboard', href: '/dashboard' },
+      { label: 'ROI Calculator', href: '/roi-calculator' },
+      { label: 'Readiness Scorecard', href: '/readiness-checklist' },
+      { label: 'Scope Estimator', href: '/engagement-simulator' },
+      { label: 'Book Diagnostic', href: '/book' },
+    ],
+  },
+  {
+    category: 'Architecture & Reference',
+    items: [
+      { label: 'Blueprints Library', href: '/blueprints' },
+      { label: 'Systems Framework', href: '/framework' },
+      { label: 'Build Log', href: '/build-log' },
+      { label: 'Metrics & Proof', href: '/metrics' },
+      { label: 'About AIAS', href: '/about' },
+      { label: 'FAQ', href: '/faq' },
+    ],
+  },
+];
 
 export function Header() {
   return (
@@ -43,7 +71,7 @@ export function Header() {
 
         <nav
           aria-label="Primary"
-          className="hidden items-center gap-6 md:flex"
+          className="hidden items-center gap-5 lg:gap-6 md:flex"
           data-testid="header-primary-nav"
         >
           {siteContent.navigation.primary.map((item, index) => (
@@ -66,7 +94,7 @@ export function Header() {
             </motion.div>
           ))}
 
-          {/* Resources dropdown */}
+          {/* Resources & Tools Dropdown */}
           <motion.div
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
@@ -78,7 +106,7 @@ export function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="group flex items-center gap-1 font-mono text-sm font-bold uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary focus:outline-none"
+                  className="group flex items-center gap-1 font-mono text-sm font-bold uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary focus:outline-none cursor-pointer"
                 >
                   RESOURCES
                   <ChevronDown className="h-3.5 w-3.5 transition-transform group-data-[state=open]:rotate-180" />
@@ -86,22 +114,40 @@ export function Header() {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="mt-2 w-56 rounded-none border-2 border-border bg-background p-0 shadow-card"
+                className="mt-2 w-80 rounded-none border-2 border-border bg-background p-2 shadow-card"
               >
-                {siteContent.navigation.resources.map((item) => (
-                  <DropdownMenuItem key={item.href} asChild className="rounded-none font-mono focus:bg-primary focus:text-primary-foreground cursor-pointer">
-                    <Link
-                      href={item.href}
-                      className="block w-full px-4 py-3 text-sm font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:text-primary-foreground"
-                    >
-                      {item.label}
-                    </Link>
-                  </DropdownMenuItem>
+                {RESOURCE_GROUPS.map((group, gIdx) => (
+                  <div key={group.category}>
+                    {gIdx > 0 && <DropdownMenuSeparator className="my-1.5 border-border" />}
+                    <DropdownMenuLabel className="px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                      {group.category}
+                    </DropdownMenuLabel>
+                    <div className="grid grid-cols-2 gap-1">
+                      {group.items.map((item) => (
+                        <DropdownMenuItem
+                          key={item.href}
+                          asChild
+                          className="rounded-none font-mono focus:bg-primary focus:text-primary-foreground cursor-pointer"
+                        >
+                          <Link
+                            href={item.href}
+                            className="block w-full px-2.5 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground transition-colors hover:text-primary-foreground"
+                          >
+                            {item.label}
+                          </Link>
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </motion.div>
 
+          {/* Command Palette Search Trigger */}
+          <CommandPalette />
+
+          {/* Primary CTA */}
           <motion.div
             animate={{ opacity: 1, scale: 1 }}
             initial={{ opacity: 0, scale: 0.9 }}
@@ -109,7 +155,7 @@ export function Header() {
           >
             <Button
               asChild
-              className="ml-4 rounded-none border-2 border-primary bg-primary px-6 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card transition-all hover:-translate-y-0.5 hover:shadow-lg"
+              className="rounded-none border-2 border-primary bg-primary px-5 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card transition-all hover:-translate-y-0.5 hover:shadow-lg"
               size="sm"
             >
               <Link
@@ -124,7 +170,8 @@ export function Header() {
           <ThemeToggle />
         </nav>
 
-        <div className="flex items-center gap-4 md:hidden">
+        <div className="flex items-center gap-3 md:hidden">
+          <CommandPalette />
           <ThemeToggle />
           <MobileNav />
         </div>
@@ -132,3 +179,4 @@ export function Header() {
     </header>
   );
 }
+

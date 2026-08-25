@@ -338,3 +338,48 @@ export function CaseStudySchema({
     />
   );
 }
+
+interface WebApplicationSchemaProps {
+  name: string;
+  description: string;
+  url: string;
+  applicationCategory?: string;
+  operatingSystem?: string;
+}
+
+export function WebApplicationSchema({
+  name,
+  description,
+  url,
+  applicationCategory = 'BusinessApplication',
+  operatingSystem = 'All',
+}: WebApplicationSchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name,
+    description,
+    url,
+    applicationCategory,
+    operatingSystem,
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'AI Automated Systems',
+      url: 'https://aiautomatedsystems.ca',
+    },
+  };
+
+  return (
+    <Script
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      id={`web-app-schema-${name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
+      type='application/ld+json'
+    />
+  );
+}
+

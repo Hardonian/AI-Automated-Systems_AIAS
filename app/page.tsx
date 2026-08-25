@@ -6,7 +6,7 @@ import { ContentDrivenHero } from "@/components/content/ContentDrivenHero";
 import { HowWeWorkSection } from "@/components/content/how-we-work-section";
 import { ProofSection } from "@/components/home/proof-section";
 import { ConversionCTA } from "@/components/home/conversion-cta";
-import { FAQSchema, ServiceListSchema } from "@/components/seo/structured-data";
+import { FAQSchema, ServiceListSchema, WebSiteSchema, OrganizationSchema } from "@/components/seo/structured-data";
 import FadeIn from "@/components/motion/fade-in";
 
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
@@ -54,6 +54,8 @@ export default function HomePage() {
 
   return (
     <>
+      <WebSiteSchema hasSiteSearch={true} />
+      <OrganizationSchema />
       <ServiceListSchema
         services={siteContent.services.map((service) => ({
           name: service.title,
@@ -63,6 +65,7 @@ export default function HomePage() {
       />
       <FAQSchema faqs={siteContent.faq.slice(0, 5)} />
       <ContentDrivenHero content={heroContent} />
+
 
       {/* Problem Statement — Why AI Projects Fail */}
       <section className="border-b-2 border-border bg-background py-24 relative overflow-hidden">

@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 
 import { EngagementSimulator } from '@/components/content/engagement-simulator';
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
+import { WebApplicationSchema } from '@/components/seo/structured-data';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -13,11 +15,28 @@ export const metadata: Metadata = generateSEOMetadata({
 export default function EngagementSimulatorPage() {
   return (
     <>
+      <WebApplicationSchema
+        name="AIAS Engagement Simulator"
+        description="Self-serve walkthrough to model scope and generate a deterministic AIAS engagement brief."
+        url="https://aiautomatedsystems.ca/engagement-simulator"
+        applicationCategory="BusinessApplication"
+      />
+
+      <div className="container pt-4">
+        <Breadcrumbs
+          items={[
+            { label: 'Tools', href: '/automation-demo' },
+            { label: 'Engagement Simulator' },
+          ]}
+        />
+      </div>
+
       <PageHero
         eyebrow='Self-serve qualification'
         title='Engagement Simulator'
         description='Assess current state, risk profile, and outcomes to generate a structured engagement brief.'
       />
+
 
       <PageSection width='narrow'>
         <EngagementSimulator />

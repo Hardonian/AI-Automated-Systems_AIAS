@@ -13,91 +13,133 @@ const trustSignals = [
   { icon: ClipboardCheck, text: 'Audit Ready' },
 ];
 
+const FOOTER_COLUMNS = [
+  {
+    title: 'Interactive Tools',
+    links: [
+      { label: 'Automation Simulator', href: '/automation-demo' },
+      { label: 'Operations Dashboard', href: '/dashboard' },
+      { label: 'ROI Calculator', href: '/roi-calculator' },
+      { label: 'Readiness Scorecard', href: '/readiness-checklist' },
+      { label: 'Scope Estimator', href: '/engagement-simulator' },
+      { label: 'Book Diagnostic', href: '/book' },
+    ],
+  },
+  {
+    title: 'Services & Blueprints',
+    links: [
+      { label: 'Services Overview', href: '/services' },
+      { label: 'Blueprints Library', href: '/blueprints' },
+      { label: 'Governed Intake Router', href: '/blueprints/governed-intake-router' },
+      { label: 'Execution Fabric', href: '/blueprints/execution-fabric-control-plane' },
+      { label: 'Release Pipeline', href: '/blueprints/resilient-agent-release-pipeline' },
+      { label: 'App & AI Systems', href: '/services/app-ai-systems' },
+    ],
+  },
+  {
+    title: 'Proof & Methodology',
+    links: [
+      { label: 'Case Studies', href: '/case-studies' },
+      { label: 'Systems Framework', href: '/framework' },
+      { label: 'How It Works', href: '/how-it-works' },
+      { label: 'Operational Metrics', href: '/metrics' },
+      { label: 'Public Build Log', href: '/build-log' },
+      { label: 'Certification Path', href: '/certification' },
+    ],
+  },
+  {
+    title: 'Company & Legal',
+    links: [
+      { label: 'About AIAS', href: '/about' },
+      { label: 'Why We Say No', href: '/why-we-say-no' },
+      { label: 'FAQ', href: '/faq' },
+      { label: 'Contact Team', href: '/contact' },
+      ...siteContent.footer.legalLinks,
+    ],
+  },
+];
+
 export function Footer() {
   return (
     <footer
       aria-label="Site footer"
-      className="mt-auto border-t border-border bg-gradient-to-b from-background to-muted/20 py-12 text-sm text-muted-foreground md:py-16"
+      className="mt-auto border-t-2 border-border bg-gradient-to-b from-background to-muted/30 py-12 text-sm text-muted-foreground md:py-16"
       data-testid="footer-legal-cluster"
       role="contentinfo"
     >
       <div className="container">
-        <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-4 md:gap-12">
+        <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5 md:gap-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
             whileInView={{ opacity: 1, y: 0 }}
+            className="lg:col-span-1"
           >
             <div className="mb-4 flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-xs font-black text-white">
-                AI
+              <span className="flex h-8 w-8 items-center justify-center border-2 border-border bg-black text-xs font-mono font-black text-primary">
+                {'//'}
               </span>
-              <h3 className="text-lg font-bold text-foreground">
-                AI Automated Systems
+              <h3 className="font-mono text-base font-black uppercase tracking-wider text-foreground">
+                AIAS Platform
               </h3>
             </div>
-            <p className="mb-6 max-w-sm text-sm leading-relaxed md:text-base">
+            <p className="mb-6 max-w-sm text-xs leading-relaxed text-muted-foreground">
               {siteContent.brand.description}
             </p>
 
-            <div className="mb-6 space-y-3">
-              <Button asChild className="w-full">
+            <div className="mb-6 space-y-2.5">
+              <Button
+                asChild
+                className="w-full rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card hover:-translate-y-0.5 transition-all"
+              >
                 <Link href={getPrimaryCtaHref()}>
-                  <Calendar className="mr-2 h-4 w-4" />
+                  <Calendar className="mr-2 h-3.5 w-3.5" />
                   {siteContent.positioning.primaryCTA.label}
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="w-full">
+              <Button
+                asChild
+                variant="outline"
+                className="w-full rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-wider hover:border-foreground transition-all"
+              >
                 <Link href="/contact">
                   Request Proposal
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="ml-2 h-3.5 w-3.5" />
                 </Link>
               </Button>
             </div>
 
-            <div className="flex flex-wrap gap-2 text-xs">
-              <span className="rounded-full bg-primary/10 px-2 py-1 font-medium text-primary">
-                Custom AI Agents
+            <div className="flex flex-wrap gap-1.5 text-[10px] font-mono">
+              <span className="border border-border bg-card px-2 py-0.5 font-bold uppercase text-foreground">
+                Deterministic
               </span>
-              <span className="rounded-full bg-primary/10 px-2 py-1 font-medium text-primary">
-                Workflow Automation
+              <span className="border border-border bg-card px-2 py-0.5 font-bold uppercase text-foreground">
+                Static-First
               </span>
-              <span className="rounded-full bg-primary/10 px-2 py-1 font-medium text-primary">
-                OSS Modules
+              <span className="border border-border bg-card px-2 py-0.5 font-bold uppercase text-foreground">
+                Zero Hard-500s
               </span>
             </div>
           </motion.div>
-          {[
-            {
-              title: 'Explore',
-              links: siteContent.navigation.primary,
-            },
-            {
-              title: 'Resources',
-              links: siteContent.navigation.resources,
-            },
-            {
-              title: 'Legal',
-              links: siteContent.footer.legalLinks,
-            },
-          ].map((section, index) => (
+
+          {FOOTER_COLUMNS.map((section, index) => (
             <motion.div
               key={section.title}
               initial={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.5, delay: (index + 1) * 0.08 }}
               viewport={{ once: true }}
               whileInView={{ opacity: 1, y: 0 }}
             >
-              <h4 className="mb-4 text-base font-bold text-foreground">
+              <h4 className="mb-4 font-mono text-xs font-bold uppercase tracking-widest text-foreground">
                 {section.title}
               </h4>
-              <ul className="space-y-3" role="list">
-                {section.links.map(link => (
+              <ul className="space-y-2" role="list">
+                {section.links.map((link) => (
                   <li key={link.href} role="listitem">
                     <Link
                       aria-label={`Navigate to ${link.label}`}
-                      className="inline-block flex min-h-[44px] items-center text-sm transition-colors hover:text-foreground hover:underline md:text-base"
+                      className="inline-block font-mono text-xs text-muted-foreground transition-colors hover:text-primary hover:underline"
                       href={link.href}
                     >
                       {link.label}
@@ -108,6 +150,7 @@ export function Footer() {
             </motion.div>
           ))}
         </div>
+
         <motion.div
           initial={{ opacity: 0 }}
           transition={{ duration: 0.5 }}

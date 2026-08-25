@@ -4,6 +4,8 @@ import { Download, Mail } from 'lucide-react';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
 import { ReadinessScorecard } from '@/components/content/readiness-scorecard';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
+import { WebApplicationSchema } from '@/components/seo/structured-data';
 import { Button } from '@/components/ui/button';
 import { siteContent } from '@/src/content/site';
 
@@ -21,11 +23,28 @@ export default function ReadinessChecklistPage() {
 
   return (
     <>
+      <WebApplicationSchema
+        name="AIAS AI Governance Readiness Scorecard"
+        description="Interactive audit scorecard and checklist evaluating AI governance, deterministic boundaries, and error recovery maturity."
+        url="https://aiautomatedsystems.ca/readiness-checklist"
+        applicationCategory="BusinessApplication"
+      />
+
+      <div className="container pt-4">
+        <Breadcrumbs
+          items={[
+            { label: 'Tools', href: '/automation-demo' },
+            { label: 'Readiness Scorecard' },
+          ]}
+        />
+      </div>
+
       <PageHero
         eyebrow="Readiness Scorecard"
         title="AI Governance & Systems Readiness"
         description="Audit your production AI controls against deterministic engineering standards. Score your current posture in real time or export the markdown checklist."
       />
+
 
       {/* Main Interactive Scorecard */}
       <PageSection>

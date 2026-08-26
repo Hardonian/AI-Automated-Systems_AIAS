@@ -77,7 +77,7 @@ jobs:
           fi
 
       - name: Upload PDF artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: business-docs-pdfs
           path: docs/business/_pdf/**/*.pdf

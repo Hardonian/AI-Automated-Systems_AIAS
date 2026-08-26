@@ -139,7 +139,7 @@ jobs:
           git push
 
       - name: Upload Metrics Artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: systems-metrics-${DATE}
           path: |

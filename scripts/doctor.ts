@@ -14,7 +14,7 @@ const categories: Record<string, string[]> = {
 };
 
 function run(cmd: string, args: string[], category: keyof typeof categories): boolean {
-  const result = spawnSync(cmd, args, { stdio: 'pipe', encoding: 'utf8' });
+  const result = spawnSync(cmd, args, { stdio: 'pipe', encoding: 'utf8', shell: true });
   if (result.status !== 0) {
     categories[category].push(`${cmd} ${args.join(' ')} failed`);
     return false;

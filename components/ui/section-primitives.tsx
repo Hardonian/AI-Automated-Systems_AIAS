@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import * as motion from "framer-motion/client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,21 +29,46 @@ export function PageHero({
     <section
       className={cn(
         getSectionClasses("large", "gradient"),
-        "border-b",
+        "border-b relative overflow-hidden",
         className,
       )}
     >
-      <div className={getContainerClasses("default")}>
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-900/20 via-background to-background pointer-events-none" />
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className={cn(getContainerClasses("default"), "relative z-10")}
+      >
         <header className="mx-auto max-w-3xl text-center">
           {eyebrow && (
-            <p className={cn(TYPOGRAPHY.eyebrow, "text-primary")}>{eyebrow}</p>
+            <motion.p 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1, duration: 0.4 }}
+              className={cn(TYPOGRAPHY.eyebrow, "text-primary")}
+            >
+              {eyebrow}
+            </motion.p>
           )}
-          <h1 className={cn(TYPOGRAPHY.h2, "mt-3")}>{title}</h1>
-          <p className={cn(TYPOGRAPHY.body, "mt-4 text-muted-foreground")}>
+          <motion.h1 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className={cn(TYPOGRAPHY.h2, "mt-3")}
+          >
+            {title}
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className={cn(TYPOGRAPHY.body, "mt-4 text-muted-foreground")}
+          >
             {description}
-          </p>
+          </motion.p>
         </header>
-      </div>
+      </motion.div>
     </section>
   );
 }
@@ -60,9 +86,17 @@ export function PageSection({
 }) {
   return (
     <section
-      className={cn(getSectionClasses("default", background), className)}
+      className={cn(getSectionClasses("default", background), "relative", className)}
     >
-      <div className={getContainerClasses(width)}>{children}</div>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className={getContainerClasses(width)}
+      >
+        {children}
+      </motion.div>
     </section>
   );
 }
@@ -79,7 +113,7 @@ export function SurfaceCard({
       className={cn(
         BORDER_RADIUS.card,
         CARD_SHADOWS.card,
-        "border bg-card p-8 transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl",
+        "border bg-card p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_hsl(var(--primary))] hover:border-primary backdrop-blur-sm",
         className,
       )}
     >

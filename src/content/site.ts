@@ -73,6 +73,7 @@ export interface CatalogProduct {
   liveDemoHref?: string;
   storeHref: string;
   featured?: boolean;
+  thumbnailSrc?: string;
 }
 
 export interface SiteConfig {
@@ -726,6 +727,7 @@ const rawSiteContent: SiteConfig = {
       liveDemoHref: "/dashboard",
       storeHref: "https://store.hardonia.com/products/hardonia-suite-ops",
       featured: true,
+      thumbnailSrc: "/images/catalog/hardonia_suite_ops.jpg",
     },
     {
       id: "settler-deployment-fabric",
@@ -761,6 +763,7 @@ const rawSiteContent: SiteConfig = {
       liveDemoHref: "/how-it-works",
       storeHref: "https://store.hardonia.com/products/settler-fabric",
       featured: true,
+      thumbnailSrc: "/images/catalog/settler_deployment_fabric.jpg",
     },
     {
       id: "zeo-ingestion-engine",
@@ -790,6 +793,7 @@ const rawSiteContent: SiteConfig = {
       liveDemoHref: "/automation-demo",
       storeHref: "https://store.hardonia.com/products/zeo-engine",
       featured: true,
+      thumbnailSrc: "/images/catalog/zeo_ingestion_engine.jpg",
     },
     {
       id: "reach-demand-accelerator",
@@ -818,6 +822,7 @@ const rawSiteContent: SiteConfig = {
       ],
       liveDemoHref: "/contact",
       storeHref: "https://store.hardonia.com/products/reach-accelerator",
+      thumbnailSrc: "/images/catalog/reach_demand_accelerator.jpg",
     },
     {
       id: "tokpulse-growth-core",
@@ -846,6 +851,7 @@ const rawSiteContent: SiteConfig = {
       ],
       liveDemoHref: "/work",
       storeHref: "https://store.hardonia.com/products/tokpulse-core",
+      thumbnailSrc: "/images/catalog/abstract_cyber_product.jpg",
     },
     {
       id: "policy-guardrail-kit",
@@ -875,6 +881,7 @@ const rawSiteContent: SiteConfig = {
       liveDemoHref: "/tools/policy-studio",
       storeHref: "https://store.hardonia.com/products/policy-guardrail-kit",
       featured: true,
+      thumbnailSrc: "/images/catalog/abstract_cyber_product.jpg",
     },
     {
       id: "operator-console-kit",
@@ -909,6 +916,7 @@ const rawSiteContent: SiteConfig = {
       ],
       liveDemoHref: "/operator-demo",
       storeHref: "https://store.hardonia.com/products/operator-console-kit",
+      thumbnailSrc: "/images/catalog/abstract_cyber_product.jpg",
     },
     {
       id: "invoice-document-parser",
@@ -937,6 +945,7 @@ const rawSiteContent: SiteConfig = {
       ],
       liveDemoHref: "/blueprints",
       storeHref: "https://store.hardonia.com/products/invoice-parser",
+      thumbnailSrc: "/images/catalog/abstract_cyber_product.jpg",
     },
   ],
   services: [

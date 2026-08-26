@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -126,14 +127,29 @@ export function CatalogDirectoryClient({
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.2 }}
-            className={`flex flex-col justify-between border-2 bg-card p-6 md:p-8 transition-all hover:-translate-y-1 ${
+            className={`flex flex-col justify-between border-2 bg-card overflow-hidden transition-all hover:-translate-y-1 ${
               product.featured
                 ? "border-cyan-500 shadow-[4px_4px_0px_0px_hsl(var(--secondary))]"
                 : "border-border shadow-card hover:border-foreground"
             }`}
           >
-            <div>
-              {/* Card Header */}
+            <div className="flex flex-col h-full">
+              {/* Card Image Header */}
+              {product.thumbnailSrc && (
+                <div className="relative h-48 w-full border-b-2 border-border bg-black/50 overflow-hidden group">
+                  <Image
+                    src={product.thumbnailSrc}
+                    alt={product.title}
+                    fill
+                    className="object-cover opacity-80 mix-blend-screen transition-transform duration-700 group-hover:scale-105 group-hover:opacity-100"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+                </div>
+              )}
+
+              <div className="p-6 md:p-8 flex flex-col flex-grow">
+                {/* Card Header */}
               <div className="flex items-center justify-between border-b-2 border-border pb-4">
                 <span className="border border-border bg-surface-muted px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase text-foreground">
                   {product.category}
@@ -214,12 +230,12 @@ export function CatalogDirectoryClient({
             </div>
 
             {/* Action Buttons */}
-            <div className="mt-8 pt-6 border-t-2 border-border flex flex-col sm:flex-row items-center gap-3">
+            <div className="p-6 md:p-8 pt-0 flex flex-col sm:flex-row items-center gap-3">
               {product.liveDemoHref && (
                 <Button
                   asChild
                   variant="outline"
-                  className="w-full sm:w-auto flex-1 rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-wider hover:border-foreground"
+                  className="w-full sm:w-auto flex-1 rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-wider hover:border-foreground hover:bg-surface-muted transition-colors"
                 >
                   <Link href={product.liveDemoHref}>
                     Try Live Demo
@@ -230,7 +246,7 @@ export function CatalogDirectoryClient({
 
               <Button
                 asChild
-                className="w-full sm:w-auto flex-1 rounded-none border-2 border-cyan-500 bg-cyan-500 font-mono text-xs font-bold uppercase tracking-widest text-white shadow-card hover:-translate-y-0.5 transition-transform"
+                className="w-full sm:w-auto flex-1 rounded-none border-2 border-cyan-500 bg-cyan-500/10 font-mono text-xs font-bold uppercase tracking-widest text-cyan-400 shadow-[2px_2px_0px_0px_rgba(6,182,212,0.5)] hover:bg-cyan-500 hover:text-white hover:shadow-[4px_4px_0px_0px_rgba(6,182,212,1)] hover:-translate-y-0.5 transition-all backdrop-blur-sm"
               >
                 <Link
                   href={product.storeHref}
@@ -241,6 +257,7 @@ export function CatalogDirectoryClient({
                   <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
                 </Link>
               </Button>
+            </div>
             </div>
           </motion.div>
         ))}

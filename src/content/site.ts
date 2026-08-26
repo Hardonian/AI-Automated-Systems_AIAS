@@ -2,6 +2,69 @@ import { z } from 'zod';
 
 import { MESSAGING_CONTRACT } from '@/content/constants';
 
+export interface TriadPillar {
+  id: 'tools' | 'consultancy' | 'catalog';
+  title: string;
+  badge: string;
+  tagline: string;
+  description: string;
+  highlights: string[];
+  ctaLabel: string;
+  ctaHref: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+  iconName: string;
+  accentColor: string;
+  stats: { label: string; value: string };
+}
+
+export interface QuickToolItem {
+  id: string;
+  title: string;
+  category: 'Simulators' | 'Calculators' | 'Diagnostics' | 'Builders' | 'Studios';
+  badge: string;
+  description: string;
+  outcome: string;
+  estimatedTime: string;
+  inputs: string[];
+  outputs: string[];
+  href: string;
+  iconName: string;
+  featured?: boolean;
+}
+
+export interface ConsultancyTrack {
+  id: string;
+  title: string;
+  eyebrow: string;
+  subtitle: string;
+  timeline: string;
+  description: string;
+  idealFor: string[];
+  deliverables: string[];
+  slaGuarantees: string[];
+  architectureFocus: string;
+  ctaLabel: string;
+  ctaHref: string;
+}
+
+export interface CatalogProduct {
+  id: string;
+  title: string;
+  subtitle: string;
+  category: 'Software Engines' | 'Turnkey Workflows' | 'Governance Kits' | 'UI Kits' | 'Starter Blueprints';
+  badge: string;
+  license: 'Commercial' | 'Open Source' | 'Enterprise License';
+  description: string;
+  techStack: string[];
+  keyFeatures: string[];
+  architectureSummary: string;
+  includedArtifacts: string[];
+  liveDemoHref?: string;
+  storeHref: string;
+  featured?: boolean;
+}
+
 export interface SiteConfig {
   brand: {
     name: string;
@@ -43,6 +106,10 @@ export interface SiteConfig {
     email: string;
     responseTime: string;
   };
+  triadPillars: TriadPillar[];
+  quickTools: QuickToolItem[];
+  consultancyTracks: ConsultancyTrack[];
+  catalogProducts: CatalogProduct[];
   services: Array<{
     title: string;
     description: string;
@@ -290,6 +357,9 @@ const rawSiteContent: SiteConfig = {
   navigation: {
     primary: [
       { label: 'Services', href: '/services' },
+      { label: 'Hire Us', href: '/hire' },
+      { label: 'Quick Tools', href: '/tools' },
+      { label: 'Product Catalog', href: '/catalog' },
       { label: 'Case Studies', href: '/case-studies' },
       { label: 'How It Works', href: '/how-it-works' },
       { label: 'Pricing', href: '/pricing' },
@@ -297,13 +367,17 @@ const rawSiteContent: SiteConfig = {
       { label: 'Contact', href: '/contact' },
     ],
     resources: [
-      { label: 'About', href: '/about' },
-      { label: 'Framework', href: '/framework' },
+      { label: 'Quick Tools Hub', href: '/tools' },
+      { label: 'Policy Studio', href: '/tools/policy-studio' },
+      { label: 'Hardonia Store & Catalog', href: '/catalog' },
+      { label: 'Hire to Build', href: '/hire' },
       { label: 'ROI Calculator', href: '/roi-calculator' },
-      { label: 'Readiness Checklist', href: '/readiness-checklist' },
-      { label: 'Automation Demo', href: '/automation-demo' },
+      { label: 'Readiness Scorecard', href: '/readiness-checklist' },
+      { label: 'Automation Simulator', href: '/automation-demo' },
+      { label: 'Blueprint Library', href: '/blueprints' },
+      { label: 'Systems Framework', href: '/framework' },
       { label: 'Build Log', href: '/build-log' },
-      { label: 'Metrics', href: '/metrics' },
+      { label: 'About AIAS', href: '/about' },
       { label: 'FAQ', href: '/faq' },
     ],
   },
@@ -311,6 +385,516 @@ const rawSiteContent: SiteConfig = {
     email: 'inquiries@aiautomatedsystems.ca',
     responseTime: 'Replies within 1 business day.',
   },
+  triadPillars: [
+    {
+      id: 'tools',
+      title: 'Interactive Quick Tools',
+      badge: 'Prong 01 // Instant & Self-Serve',
+      tagline: 'Simulate, Calculate & Audit in Your Browser',
+      description:
+        'Run our client-side diagnostics, ROI calculators, deterministic workflow planners, and policy studios with zero setup.',
+      highlights: [
+        'Deterministic Workflow Simulator',
+        'Automation ROI & Labor Savings Modeler',
+        'Governance & Readiness Scorecard',
+        'Policy & Guardrail Rule Studio',
+      ],
+      ctaLabel: 'Explore Quick Tools',
+      ctaHref: '/tools',
+      secondaryLabel: 'Try Policy Studio',
+      secondaryHref: '/tools/policy-studio',
+      iconName: 'Wrench',
+      accentColor: 'text-amber-500 border-amber-500',
+      stats: { label: 'Self-Serve Utilities', value: '7 Active Tools' },
+    },
+    {
+      id: 'consultancy',
+      title: 'Hire AIAS to Build & Automate',
+      badge: 'Prong 02 // Enterprise Engineering',
+      tagline: 'Custom Architecture, Flaky AI Fixes & Modernization',
+      description:
+        'Hire our systems architects to map, build, stabilize, and govern enterprise-grade automation pipelines tailored to your operations.',
+      highlights: [
+        'AI Clarity Audits & Boundary Scoping',
+        'Stabilization Sprints for Flaky Agents',
+        'End-to-End Bespoke System Engineering',
+        'Full Runbook & Operator Enablement Handoff',
+      ],
+      ctaLabel: 'Hire Us to Build',
+      ctaHref: '/hire',
+      secondaryLabel: 'Book Strategy Call',
+      secondaryHref: 'https://calendly.com/scottrmhardie',
+      iconName: 'Cpu',
+      accentColor: 'text-primary border-primary',
+      stats: { label: 'Production Success Rate', value: '99.2% Uptime' },
+    },
+    {
+      id: 'catalog',
+      title: 'Hardonia Store & Product Catalog',
+      badge: 'Prong 03 // Turnkey Software & Ecosystem',
+      tagline: 'Pre-Built Modules, Automation Packs & Starter Kits',
+      description:
+        'Browse our tested repository of deployable workflow packages, deterministic policy kits, and Hardonia ecosystem software.',
+      highlights: [
+        'Hardonia Suite Client Operations Fabric',
+        'Settler Deployment & Rollback Fabric',
+        'Deterministic Zod Guardrail Kits',
+        'Turnkey Intake & Ingestion Engines',
+      ],
+      ctaLabel: 'Browse Product Catalog',
+      ctaHref: '/catalog',
+      secondaryLabel: 'Visit Hardonia Store',
+      secondaryHref: 'https://store.hardonia.com',
+      iconName: 'ShoppingBag',
+      accentColor: 'text-cyan-500 border-cyan-500',
+      stats: { label: 'Deployable Modules', value: '8 Ready Packs' },
+    },
+  ],
+  quickTools: [
+    {
+      id: 'policy-studio',
+      title: 'Policy & Guardrail Studio',
+      category: 'Studios',
+      badge: 'NEW // Interactive',
+      description:
+        'Test deterministic boundary rules, PII filters, and confidence escalation thresholds against live AI prompts.',
+      outcome: 'Validated JSON/TypeScript policy schema ready to drop into production.',
+      estimatedTime: '2 mins',
+      inputs: ['System Prompt', 'Schema Rules', 'Confidence Threshold'],
+      outputs: ['Violation Interceptions', 'Exportable Policy Zod Schema'],
+      href: '/tools/policy-studio',
+      iconName: 'ShieldAlert',
+      featured: true,
+    },
+    {
+      id: 'roi-calculator',
+      title: 'Automation ROI Calculator',
+      category: 'Calculators',
+      badge: 'Core Utility',
+      description:
+        'Model annual labor hours eliminated, net cost reductions, and break-even timelines based on your team size and volume.',
+      outcome: 'Auditable annual savings estimate and resource allocation breakdown.',
+      estimatedTime: '3 mins',
+      inputs: ['Team Size', 'Manual Hours/Wk', 'Baseline Burden Rate'],
+      outputs: ['Annual Savings ($)', 'Hours Saved/Yr', 'Break-even Month'],
+      href: '/roi-calculator',
+      iconName: 'Calculator',
+      featured: true,
+    },
+    {
+      id: 'automation-demo',
+      title: 'Workflow Execution Simulator',
+      category: 'Simulators',
+      badge: 'Live Engine',
+      description:
+        'Simulate high-throughput invoice processing, lead triage, and exception routing across deterministic control layers.',
+      outcome: 'Step-by-step state transition graph and telemetry trace.',
+      estimatedTime: '1 min',
+      inputs: ['Payload Type', 'Failure Probability', 'Latency SLA'],
+      outputs: ['Execution Trace', 'Audit Log', 'Telemetry Graph'],
+      href: '/automation-demo',
+      iconName: 'Workflow',
+      featured: true,
+    },
+    {
+      id: 'readiness-checklist',
+      title: 'AI Governance Readiness Scorecard',
+      category: 'Diagnostics',
+      badge: 'Self-Audit',
+      description:
+        'Evaluate your system maturity across 16 critical dimensions of error recovery, data privacy, and deterministic boundaries.',
+      outcome: 'Composite readiness grade (A-F) with prioritized gap remediation roadmap.',
+      estimatedTime: '4 mins',
+      inputs: ['16 Governance Checkpoints'],
+      outputs: ['Maturity Score', 'Risk Heatmap', 'Action Checklist'],
+      href: '/readiness-checklist',
+      iconName: 'CheckCircle2',
+      featured: true,
+    },
+    {
+      id: 'engagement-simulator',
+      title: 'Scope & Architecture Estimator',
+      category: 'Simulators',
+      badge: 'Interactive Scoper',
+      description:
+        'Walk through an interactive scoping flow to determine the ideal engagement shape, timeline, and deliverable suite.',
+      outcome: 'Customized engagement specification brief ready for architectural review.',
+      estimatedTime: '2 mins',
+      inputs: ['Business Domain', 'Current Tech Stack', 'Autonomy Tier'],
+      outputs: ['Architecture Map', 'Deliverable Breakdown', 'Timeline Scope'],
+      href: '/engagement-simulator',
+      iconName: 'Sliders',
+    },
+    {
+      id: 'workflows',
+      title: 'Deterministic Workflow Builder',
+      category: 'Builders',
+      badge: 'Blueprint Engine',
+      description:
+        'Visually assemble agentic pipelines with policy gates, human checkpoints, and fallback routing nodes.',
+      outcome: 'Replayable DAG diagram and schema definition.',
+      estimatedTime: '3 mins',
+      inputs: ['Triggers', 'Action Nodes', 'Approval Gates'],
+      outputs: ['Interactive DAG', 'Pipeline JSON Spec'],
+      href: '/workflows',
+      iconName: 'GitBranch',
+    },
+    {
+      id: 'blueprints',
+      title: 'Architecture Blueprint Explorer',
+      category: 'Builders',
+      badge: 'Reference Specs',
+      description:
+        'Browse production-grade architecture blueprints for high-throughput triage, ERP synchronization, and document ingestion.',
+      outcome: 'Reference implementation diagrams and security topology.',
+      estimatedTime: '5 mins',
+      inputs: ['Architecture Category'],
+      outputs: ['System Diagram', 'Sequence Specs', 'Failure Matrix'],
+      href: '/blueprints',
+      iconName: 'FileCode',
+    },
+  ],
+  consultancyTracks: [
+    {
+      id: 'clarity-audit',
+      title: 'AI Clarity Audit & Decision Mapping',
+      eyebrow: 'Track 01 // Discovery & Architecture',
+      subtitle: 'Map your decision surfaces before spending on custom development',
+      timeline: '1 to 2 weeks',
+      description:
+        'We analyze your workflows, identify high-ROI automation targets, uncover hidden edge-case risks, and establish strict decision boundaries.',
+      idealFor: [
+        'Teams wanting to automate manual operations without wasting budget on hype',
+        'Companies with complex multi-system handoffs (CRM, ERP, Billing, Support)',
+        'Leaders who need clear build-vs-kill recommendations before greenlighting projects',
+      ],
+      deliverables: [
+        'Decision Surface Map & Boundary Specifications',
+        'Constraint & Failure Mode Risk Matrix',
+        'System Architecture Blueprint with Schema Contracts',
+        'Prioritized Implementation Brief & ROI Projection',
+      ],
+      slaGuarantees: [
+        '100% Deterministic boundary definitions',
+        'Zero vendor lock-in; open-standard architectural artifacts',
+        'Executive & technical stakeholder sign-off alignment',
+      ],
+      architectureFocus:
+        'Decision boundary identification, failure mode mapping, and constraint registries.',
+      ctaLabel: 'Book Clarity Audit Call',
+      ctaHref: 'https://calendly.com/scottrmhardie',
+    },
+    {
+      id: 'stabilization-sprint',
+      title: 'Stabilization & Hardening Sprint',
+      eyebrow: 'Track 02 // Reliability & Remediation',
+      subtitle: 'Transform flaky, hallucination-prone AI prototypes into robust production systems',
+      timeline: '2 to 3 weeks',
+      description:
+        'If your existing AI workflows crash, fail silently, or produce unreliable outputs, we harden them with deterministic policy layers, retry logic, and exception escalation.',
+      idealFor: [
+        'Teams with existing AI automations that suffer from silent failures',
+        'Workflows where hallucinations cause operational or financial risks',
+        'Companies needing structured telemetry, alerting, and incident recovery runbooks',
+      ],
+      deliverables: [
+        'Failure Triage & Edge-Case Root Cause Analysis',
+        'Deterministic Control Layer & Zod Validation Gates',
+        'Automated Retry & Human-in-the-Loop Fallback Paths',
+        'Operational Runbooks & Incident Playbooks for Ops Teams',
+      ],
+      slaGuarantees: [
+        '99%+ Workflow execution reliability target',
+        'Zero unintercepted high-impact error transitions',
+        'Replayable audit trails for all operations',
+      ],
+      architectureFocus:
+        'Input schema validation, deterministic retry budgets, and human-in-the-loop exception routing.',
+      ctaLabel: 'Schedule Stabilization Review',
+      ctaHref: 'https://calendly.com/scottrmhardie',
+    },
+    {
+      id: 'custom-build',
+      title: 'Full-Stack Deterministic Automation Build',
+      eyebrow: 'Track 03 // Turnkey Engineering',
+      subtitle: 'End-to-end bespoke system engineering tailored to your exact business rules',
+      timeline: '4 to 8 weeks',
+      description:
+        'Our senior systems architects design, build, test, and deploy customized automation pipelines embedded directly into your tech stack with enterprise governance.',
+      idealFor: [
+        'Enterprises needing custom intelligent workflows with zero off-the-shelf fit',
+        'High-volume operations (e-commerce fulfillment, financial reconciliation, intake triage)',
+        'Teams wanting turnkey delivery with complete source code ownership',
+      ],
+      deliverables: [
+        'Custom Orchestration Fabric & AI Agent Modules',
+        'Secure API Connectors to Internal ERP/CRM/Databases',
+        'Operator Console & Exception Management Dashboard',
+        'Automated CI/CD Test Suites & Verification Pipelines',
+        'Hands-on Operator Enablement Sessions & Complete Documentation',
+      ],
+      slaGuarantees: [
+        '100% Code & IP ownership transferred to your organization',
+        'Policy-before-execution guarantees on all state transitions',
+        'Full test suite coverage for automated regression prevention',
+      ],
+      architectureFocus:
+        'Modular agent orchestration, deterministic state machines, and private connector infrastructure.',
+      ctaLabel: 'Scope a Custom Build',
+      ctaHref: 'https://calendly.com/scottrmhardie',
+    },
+    {
+      id: 'strategic-governance',
+      title: 'Strategic Advantage & Continuous Governance',
+      eyebrow: 'Track 04 // Embedded Advisory',
+      subtitle: 'Ongoing architectural guidance, model portfolio optimization, and system evolution',
+      timeline: 'Quarterly Partnership',
+      description:
+        'Act as your dedicated Fractional Chief Automation Architect. We continually review telemetry, benchmark new models, prevent architectural drift, and expand capabilities.',
+      idealFor: [
+        'Scaling organizations expanding AI across multiple operational departments',
+        'Companies requiring ongoing compliance, security, and performance audits',
+        'Leadership teams seeking strategic alignment on emerging AI capabilities',
+      ],
+      deliverables: [
+        'Quarterly Architecture & Governance Reviews',
+        'Model Portfolio Benchmarking & Cost-Performance Optimization',
+        'Security & Data Handling Compliance Verification',
+        'Quarterly Executive Briefings & Systems Roadmap Updates',
+      ],
+      slaGuarantees: [
+        'Continuous architectural drift prevention',
+        'Priority incident escalation advisory',
+        'Proactive technology radar updates',
+      ],
+      architectureFocus:
+        'Model portfolio governance, enterprise policy evolution, and cross-department automation alignment.',
+      ctaLabel: 'Discuss Advisory Partnership',
+      ctaHref: 'https://calendly.com/scottrmhardie',
+    },
+  ],
+  catalogProducts: [
+    {
+      id: 'hardonia-suite-ops',
+      title: 'Hardonia Suite Client Operations Fabric',
+      subtitle: 'Multi-channel e-commerce automation, inventory sync & reconciliation engine',
+      category: 'Software Engines',
+      badge: 'Flagship System',
+      license: 'Commercial',
+      description:
+        'Complete operational backbone connecting multi-channel storefronts, warehouse inventory feeds, order triage, and automated supplier routing with deterministic reconciliation.',
+      techStack: ['TypeScript', 'Next.js', 'PostgreSQL / Supabase', 'Zod', 'Tailwind CSS'],
+      keyFeatures: [
+        'Real-time multi-channel inventory synchronization',
+        'Deterministic order classification and fraud rule evaluation',
+        'Automated supplier purchase order generation with human approvals',
+        'Comprehensive exception management dashboard with telemetry',
+      ],
+      architectureSummary:
+        'Decoupled event-driven architecture with deterministic policy gates on stock allocation and supplier dispatch.',
+      includedArtifacts: [
+        'Full Source Repository',
+        'Deployment Dockerfiles',
+        'Architecture Blueprints',
+        'Operator Runbooks',
+      ],
+      liveDemoHref: '/dashboard',
+      storeHref: 'https://store.hardonia.com/products/hardonia-suite-ops',
+      featured: true,
+    },
+    {
+      id: 'settler-deployment-fabric',
+      title: 'Settler Deployment & Rollback Fabric',
+      subtitle: 'Deterministic release orchestrator with automated policy verification and health gating',
+      category: 'Software Engines',
+      badge: 'Ecosystem Partner',
+      license: 'Commercial',
+      description:
+        'Production deployment control plane built for static-first and edge-native applications. Enforces verification suites, schema integrity, and zero-downtime rollback triggers.',
+      techStack: ['Node.js', 'TypeScript', 'Docker', 'GitHub Actions', 'Vercel / Cloudflare'],
+      keyFeatures: [
+        'Automated pre-flight verification test suite execution',
+        'Canary health telemetry with deterministic rollback triggers',
+        'Environment variable validation and secret isolation',
+        'Audit-ready changelog generation and deployment receipts',
+      ],
+      architectureSummary:
+        'Stateful release orchestrator enforcing CI/CD gates and health probe telemetry before traffic routing.',
+      includedArtifacts: [
+        'CLI Tooling',
+        'CI/CD Workflows',
+        'Configuration Schemas',
+        'Documentation',
+      ],
+      liveDemoHref: '/how-it-works',
+      storeHref: 'https://store.hardonia.com/products/settler-fabric',
+      featured: true,
+    },
+    {
+      id: 'zeo-ingestion-engine',
+      title: 'Zeo High-Throughput Ingestion & ETL Engine',
+      subtitle: 'Unstructured document parser, schema normalizer and verified data pipeline',
+      category: 'Turnkey Workflows',
+      badge: 'High Throughput',
+      license: 'Commercial',
+      description:
+        'Transforms messy incoming invoices, shipping manifests, and PDF contracts into validated, strictly typed JSON records with human escalation on low-confidence extractions.',
+      techStack: ['Python', 'TypeScript', 'Zod', 'OCR Engine', 'FastAPI'],
+      keyFeatures: [
+        'Multi-format ingestion (PDF, scan images, CSV, webhook streams)',
+        'Deterministic schema extraction with strict Zod validation',
+        'Confidence scoring with automatic routing to operator review queue',
+        'Export connectors for ERPs, CRMs, and SQL data warehouses',
+      ],
+      architectureSummary:
+        'Dual-phase pipeline: AI extraction followed by strict deterministic schema validation and policy gating.',
+      includedArtifacts: [
+        'FastAPI Service Code',
+        'Schema Definitions',
+        'Test Fixtures',
+        'Integration Guides',
+      ],
+      liveDemoHref: '/automation-demo',
+      storeHref: 'https://store.hardonia.com/products/zeo-engine',
+      featured: true,
+    },
+    {
+      id: 'reach-demand-accelerator',
+      title: 'Reach Demand Qualification & Intent Triage',
+      subtitle: 'Inbound lead enrichment, buying intent scoring, and deterministic routing system',
+      category: 'Turnkey Workflows',
+      badge: 'Conversion Booster',
+      license: 'Commercial',
+      description:
+        'Eliminates manual lead sorting by enriching inbound submissions, classifying project intent, evaluating constraints, and routing to the optimal sales architect instantly.',
+      techStack: ['TypeScript', 'Next.js App Router', 'Zod', 'CRM Webhooks'],
+      keyFeatures: [
+        '45-second inbound intake classification and enrichment',
+        'Deterministic qualification score based on organizational constraints',
+        'Automated calendar routing with pre-populated strategy dossiers',
+        'Full PIPEDA/GDPR-compliant data handling with zero lead leakage',
+      ],
+      architectureSummary:
+        'Web-native intake controller with deterministic scoring matrix and real-time CRM webhook dispatch.',
+      includedArtifacts: [
+        'Next.js Component Suite',
+        'Scoring Matrices',
+        'Webhook Connectors',
+        'Setup Guide',
+      ],
+      liveDemoHref: '/contact',
+      storeHref: 'https://store.hardonia.com/products/reach-accelerator',
+    },
+    {
+      id: 'tokpulse-growth-core',
+      title: 'TokPulse Social Commerce Growth Core',
+      subtitle: 'E-commerce social campaign analytics, trend detection & automated content intelligence',
+      category: 'Software Engines',
+      badge: 'E-Commerce Core',
+      license: 'Commercial',
+      description:
+        'Autonomous analytics engine designed for modern e-commerce brands scaling TikTok and multi-channel social storefronts with predictive inventory recommendations.',
+      techStack: ['Python', 'TypeScript', 'Next.js', 'FastAPI', 'PostgreSQL'],
+      keyFeatures: [
+        'Trend velocity scoring and social product interest tracking',
+        'Automated content performance attribution and SKU linkage',
+        'Inventory replenishment recommendations based on viral signal spikes',
+        'Brand-safe content generation and copy suggestions',
+      ],
+      architectureSummary:
+        'Stream processing analytics engine linked to social commerce APIs with automated trend alerts.',
+      includedArtifacts: [
+        'Full Web App Source',
+        'API Microservice',
+        'Docker Compose Setup',
+        'Documentation',
+      ],
+      liveDemoHref: '/work',
+      storeHref: 'https://store.hardonia.com/products/tokpulse-core',
+    },
+    {
+      id: 'policy-guardrail-kit',
+      title: 'Deterministic Policy & Zod Guardrail Kit',
+      subtitle: 'Reusable TypeScript & Zod boundary layer for reliable AI orchestration',
+      category: 'Governance Kits',
+      badge: 'Open / Pro Pack',
+      license: 'Open Source',
+      description:
+        'The core governance architecture used by AIAS across all client deployments. Enforces policy validation before execution, scrubs PII, and generates replayable audit records.',
+      techStack: ['TypeScript', 'Zod', 'Vitest'],
+      keyFeatures: [
+        'Pre-built Zod schemas for system inputs, actions, and outputs',
+        'PII scrubbers with regex and semantic masking',
+        'Confidence score evaluation with human-in-the-loop triggers',
+        'Structured audit trail generator compatible with SIEM / logging tools',
+      ],
+      architectureSummary:
+        'Zero-dependency TypeScript module designed to wrap any LLM or automation pipeline with deterministic gates.',
+      includedArtifacts: [
+        'TypeScript NPM Package Source',
+        'Unit Test Suite',
+        'Integration Examples',
+        'MIT License',
+      ],
+      liveDemoHref: '/tools/policy-studio',
+      storeHref: 'https://store.hardonia.com/products/policy-guardrail-kit',
+      featured: true,
+    },
+    {
+      id: 'operator-console-kit',
+      title: 'Human-in-the-Loop Operator Console Kit',
+      subtitle: 'Lightweight triage, exception management, and review dashboard UI component library',
+      category: 'UI Kits',
+      badge: 'UI / UX Kit',
+      license: 'Commercial',
+      description:
+        'High-contrast neo-brutalist dashboard components for operators managing AI exceptions, pipeline approvals, risk score reviews, and lead qualification queues.',
+      techStack: ['React 19', 'Next.js', 'Tailwind CSS', 'Radix UI', 'Framer Motion'],
+      keyFeatures: [
+        'Queue triage view with one-click approve/reject/escalate actions',
+        'JSON payload diff viewer with anomaly highlighting',
+        'Operator audit trail and notes timeline component',
+        'Full dark/light mode with keyboard shortcut navigation',
+      ],
+      architectureSummary:
+        'Accessible React UI components built with Radix primitives and Tailwind CSS token architecture.',
+      includedArtifacts: [
+        'React Components',
+        'Tailwind Theme Config',
+        'Storybook Stories',
+        'Figma Tokens',
+      ],
+      liveDemoHref: '/operator-demo',
+      storeHref: 'https://store.hardonia.com/products/operator-console-kit',
+    },
+    {
+      id: 'invoice-document-parser',
+      title: 'Autonomous Invoice & Financial Doc Parser',
+      subtitle: 'Pre-configured n8n & LangGraph workflow pack for accounts payable automation',
+      category: 'Turnkey Workflows',
+      badge: 'Workflow Pack',
+      license: 'Commercial',
+      description:
+        'End-to-end accounts payable automation workflow. Ingests PDF invoices from email, extracts line items with 99%+ accuracy, reconciles with PO numbers, and drafts approval batches.',
+      techStack: ['n8n / LangGraph', 'TypeScript', 'Zod', 'ERP Webhooks'],
+      keyFeatures: [
+        'Multi-currency line item and tax extraction',
+        'Three-way matching against purchase orders and receipts',
+        'Automated ERP bill creation with draft status',
+        'Slack / Teams notification bot for manager approvals',
+      ],
+      architectureSummary:
+        'Event-driven workflow DAG with deterministic three-way matching logic and approval escalation.',
+      includedArtifacts: [
+        'n8n Workflow JSON',
+        'LangGraph Python Code',
+        'Test PDFs',
+        'Setup Guide',
+      ],
+      liveDemoHref: '/blueprints',
+      storeHref: 'https://store.hardonia.com/products/invoice-parser',
+    },
+  ],
   services: [
     {
       title: 'AI Clarity Audit',

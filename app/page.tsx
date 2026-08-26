@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { ContentDrivenHero } from "@/components/content/ContentDrivenHero";
+import { ThreeProngedSection } from "@/components/home/three-pronged-section";
 import { HowWeWorkSection } from "@/components/content/how-we-work-section";
 import { ProofSection } from "@/components/home/proof-section";
 import { ConversionCTA } from "@/components/home/conversion-cta";
@@ -66,6 +67,7 @@ export default function HomePage() {
       <FAQSchema faqs={siteContent.faq.slice(0, 5)} />
       <ContentDrivenHero content={heroContent} />
 
+      <ThreeProngedSection />
 
       {/* Problem Statement — Why AI Projects Fail */}
       <section className="border-b-2 border-border bg-background py-24 relative overflow-hidden">

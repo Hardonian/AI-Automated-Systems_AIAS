@@ -21,24 +21,24 @@ import {
 
 const RESOURCE_GROUPS = [
   {
-    category: 'Interactive Tools',
+    category: 'Quick Tools & Simulators',
     items: [
-      { label: 'Automation Simulator', href: '/automation-demo' },
-      { label: 'Operations Dashboard', href: '/dashboard' },
+      { label: 'Tools Hub', href: '/tools' },
+      { label: 'Policy Studio', href: '/tools/policy-studio' },
       { label: 'ROI Calculator', href: '/roi-calculator' },
       { label: 'Readiness Scorecard', href: '/readiness-checklist' },
-      { label: 'Scope Estimator', href: '/engagement-simulator' },
-      { label: 'Book Diagnostic', href: '/book' },
+      { label: 'Automation Simulator', href: '/automation-demo' },
+      { label: 'Workflow Builder', href: '/workflows' },
     ],
   },
   {
-    category: 'Architecture & Reference',
+    category: 'Consultancy & Catalog',
     items: [
+      { label: 'Hire Us to Build', href: '/hire' },
+      { label: 'Product Catalog', href: '/catalog' },
       { label: 'Blueprints Library', href: '/blueprints' },
       { label: 'Systems Framework', href: '/framework' },
       { label: 'Build Log', href: '/build-log' },
-      { label: 'Metrics & Proof', href: '/metrics' },
-      { label: 'About AIAS', href: '/about' },
       { label: 'FAQ', href: '/faq' },
     ],
   },

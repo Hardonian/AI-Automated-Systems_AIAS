@@ -91,6 +91,15 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
     changeFrequency: "weekly",
   },
   {
+    path: "/catalog",
+    title: "Product Catalog & Hardonia Store Gateway | AIAS",
+    description:
+      "Browse ready-to-deploy automation software engines, deterministic workflow packs, and Hardonia ecosystem products.",
+    canonical: "/catalog",
+    priority: 0.85,
+    changeFrequency: "weekly",
+  },
+  {
     path: "/certification",
     title: "Certification Path | AI Automated Systems",
     description:
@@ -160,6 +169,15 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
       "The AIAS five-step diagnostic framework used to map decisions, constraints, failure modes, and architecture tradeoffs before implementation.",
     canonical: "/framework",
     priority: 0.8,
+    changeFrequency: "weekly",
+  },
+  {
+    path: "/hire",
+    title: "Hire AI Automation Systems Engineers & Architects | AIAS",
+    description:
+      "Hire AIAS to build bespoke deterministic automation pipelines, stabilize flaky AI agents, and architect enterprise-grade governance.",
+    canonical: "/hire",
+    priority: 0.9,
     changeFrequency: "weekly",
   },
   {
@@ -306,6 +324,24 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
     canonical: "/terms",
     priority: 0.3,
     changeFrequency: "monthly",
+  },
+  {
+    path: "/tools",
+    title: "Interactive AI Automation Tools & Simulators | AIAS",
+    description:
+      "Self-serve client-side AI tools, ROI calculators, deterministic workflow planners, and policy studios to model and test automation impact.",
+    canonical: "/tools",
+    priority: 0.85,
+    changeFrequency: "weekly",
+  },
+  {
+    path: "/tools/policy-studio",
+    title: "Policy & Guardrail Studio | AI Automated Systems",
+    description:
+      "Test deterministic boundary rules, PII filters, and confidence escalation thresholds against AI prompts with instant schema export.",
+    canonical: "/tools/policy-studio",
+    priority: 0.8,
+    changeFrequency: "weekly",
   },
   {
     path: "/what-aias-does",

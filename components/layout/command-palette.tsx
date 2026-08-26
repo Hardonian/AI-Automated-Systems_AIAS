@@ -19,6 +19,8 @@ import {
   HelpCircle,
   BarChart3,
   X,
+  Wrench,
+  ShoppingBag,
 } from 'lucide-react';
 import {
   Dialog,
@@ -40,6 +42,26 @@ export interface CommandItem {
 
 const COMMAND_ITEMS: CommandItem[] = [
   // Interactive Tools
+  {
+    id: 'tool-hub',
+    title: 'Quick Tools Command Center',
+    description: 'Explore all self-serve simulators, ROI calculators, diagnostics, and policy studios.',
+    category: 'Tools',
+    href: '/tools',
+    icon: Wrench,
+    badge: 'Hub',
+    keywords: ['tools', 'hub', 'directory', 'calculators', 'simulators', 'diagnostics'],
+  },
+  {
+    id: 'tool-policy-studio',
+    title: 'Policy & Guardrail Studio',
+    description: 'Test deterministic boundary rules, PII masking, and confidence escalation gates.',
+    category: 'Tools',
+    href: '/tools/policy-studio',
+    icon: ShieldAlert,
+    badge: 'Interactive',
+    keywords: ['policy', 'guardrail', 'zod', 'schema', 'pii', 'studio', 'bounds'],
+  },
   {
     id: 'tool-sim',
     title: 'Automation Engine Simulator',
@@ -101,7 +123,27 @@ const COMMAND_ITEMS: CommandItem[] = [
     keywords: ['book', 'schedule', 'diagnostic', 'call', 'consultation'],
   },
 
-  // Services
+  // Services & Consultancy
+  {
+    id: 'srv-hire',
+    title: 'Hire AIAS to Build & Automate',
+    description: 'Hire our systems architects for bespoke automation builds, stabilization sprints, and modernization.',
+    category: 'Services',
+    href: '/hire',
+    icon: Cpu,
+    badge: 'Hire Us',
+    keywords: ['hire', 'consultancy', 'build', 'bespoke', 'custom', 'stabilize', 'engineer'],
+  },
+  {
+    id: 'srv-catalog',
+    title: 'Hardonia Store & Product Catalog',
+    description: 'Browse ready-to-deploy software packages, workflow packs, and Hardonia ecosystem software.',
+    category: 'Services',
+    href: '/catalog',
+    icon: ShoppingBag,
+    badge: 'Catalog',
+    keywords: ['catalog', 'store', 'hardonia', 'products', 'software', 'modules', 'packages'],
+  },
   {
     id: 'srv-all',
     title: 'All Services & Engagement Models',

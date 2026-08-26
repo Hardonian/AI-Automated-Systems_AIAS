@@ -8,20 +8,20 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
 
 const MOBILE_TOOL_LINKS = [
-  { label: 'Automation Simulator', href: '/automation-demo' },
-  { label: 'Operations Dashboard', href: '/dashboard' },
+  { label: 'Quick Tools Hub', href: '/tools' },
+  { label: 'Policy & Guardrail Studio', href: '/tools/policy-studio' },
   { label: 'ROI Calculator', href: '/roi-calculator' },
   { label: 'Readiness Scorecard', href: '/readiness-checklist' },
-  { label: 'Scope Estimator', href: '/engagement-simulator' },
-  { label: 'Book Diagnostic', href: '/book' },
+  { label: 'Automation Simulator', href: '/automation-demo' },
+  { label: 'Workflow Builder', href: '/workflows' },
 ];
 
 const MOBILE_BLUEPRINT_LINKS = [
+  { label: 'Hire AIAS to Build', href: '/hire' },
+  { label: 'Product Catalog', href: '/catalog' },
   { label: 'Blueprints Library', href: '/blueprints' },
   { label: 'Systems Framework', href: '/framework' },
-  { label: 'Case Studies', href: '/case-studies' },
   { label: 'Build Log', href: '/build-log' },
-  { label: 'Operational Metrics', href: '/metrics' },
   { label: 'FAQ', href: '/faq' },
 ];
 

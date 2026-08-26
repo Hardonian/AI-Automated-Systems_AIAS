@@ -1,60 +1,76 @@
-'use client';
-import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, Shield, Lock, MapPin, ClipboardCheck } from 'lucide-react';
-import Link from 'next/link';
+"use client";
+import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  Calendar,
+  Shield,
+  Lock,
+  MapPin,
+  ClipboardCheck,
+} from "lucide-react";
+import Link from "next/link";
 
-import { Button } from '@/components/ui/button';
-import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
+import { Button } from "@/components/ui/button";
+import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
 
 const trustSignals = [
-  { icon: Lock, text: 'PIPEDA Practices' },
-  { icon: Shield, text: 'Security Focused' },
-  { icon: MapPin, text: 'Canadian Operations' },
-  { icon: ClipboardCheck, text: 'Audit Ready' },
+  { icon: Lock, text: "PIPEDA Practices" },
+  { icon: Shield, text: "Security Focused" },
+  { icon: MapPin, text: "Canadian Operations" },
+  { icon: ClipboardCheck, text: "Audit Ready" },
 ];
 
 const FOOTER_COLUMNS = [
   {
-    title: 'Quick Tools & Simulators',
+    title: "Quick Tools & Simulators",
     links: [
-      { label: 'Quick Tools Hub', href: '/tools' },
-      { label: 'Policy & Guardrail Studio', href: '/tools/policy-studio' },
-      { label: 'ROI Calculator', href: '/roi-calculator' },
-      { label: 'Readiness Scorecard', href: '/readiness-checklist' },
-      { label: 'Automation Simulator', href: '/automation-demo' },
-      { label: 'Workflow Builder', href: '/workflows' },
+      { label: "Quick Tools Hub", href: "/tools" },
+      { label: "Policy & Guardrail Studio", href: "/tools/policy-studio" },
+      { label: "ROI Calculator", href: "/roi-calculator" },
+      { label: "Readiness Scorecard", href: "/readiness-checklist" },
+      { label: "Automation Simulator", href: "/automation-demo" },
+      { label: "Workflow Builder", href: "/workflows" },
     ],
   },
   {
-    title: 'Consultancy & Hire',
+    title: "Consultancy & Hire",
     links: [
-      { label: 'Hire AIAS to Build', href: '/hire' },
-      { label: 'Services Overview', href: '/services' },
-      { label: 'Engagement Pricing', href: '/pricing' },
-      { label: 'Book Diagnostic', href: '/book' },
-      { label: 'Case Studies', href: '/case-studies' },
-      { label: 'App & AI Systems', href: '/services/app-ai-systems' },
+      { label: "Hire AIAS to Build", href: "/hire" },
+      { label: "Services Overview", href: "/services" },
+      { label: "Engagement Pricing", href: "/pricing" },
+      { label: "Book Diagnostic", href: "/book" },
+      { label: "Case Studies", href: "/case-studies" },
+      { label: "App & AI Systems", href: "/services/app-ai-systems" },
     ],
   },
   {
-    title: 'Product Catalog',
+    title: "Product Catalog",
     links: [
-      { label: 'Hardonia Store Gateway', href: '/catalog' },
-      { label: 'Blueprints Library', href: '/blueprints' },
-      { label: 'Governed Intake Router', href: '/blueprints/governed-intake-router' },
-      { label: 'Execution Fabric', href: '/blueprints/execution-fabric-control-plane' },
-      { label: 'Release Pipeline', href: '/blueprints/resilient-agent-release-pipeline' },
-      { label: 'Certification Path', href: '/certification' },
+      { label: "Hardonia Store Gateway", href: "/catalog" },
+      { label: "Blueprints Library", href: "/blueprints" },
+      {
+        label: "Governed Intake Router",
+        href: "/blueprints/governed-intake-router",
+      },
+      {
+        label: "Execution Fabric",
+        href: "/blueprints/execution-fabric-control-plane",
+      },
+      {
+        label: "Release Pipeline",
+        href: "/blueprints/resilient-agent-release-pipeline",
+      },
+      { label: "Certification Path", href: "/certification" },
     ],
   },
   {
-    title: 'Architecture & Legal',
+    title: "Architecture & Legal",
     links: [
-      { label: 'About AIAS', href: '/about' },
-      { label: 'How It Works', href: '/how-it-works' },
-      { label: 'Systems Framework', href: '/framework' },
-      { label: 'Public Build Log', href: '/build-log' },
-      { label: 'FAQ', href: '/faq' },
+      { label: "About AIAS", href: "/about" },
+      { label: "How It Works", href: "/how-it-works" },
+      { label: "Systems Framework", href: "/framework" },
+      { label: "Public Build Log", href: "/build-log" },
+      { label: "FAQ", href: "/faq" },
       ...siteContent.footer.legalLinks,
     ],
   },
@@ -79,7 +95,7 @@ export function Footer() {
           >
             <div className="mb-4 flex items-center gap-2.5">
               <span className="flex h-8 w-8 items-center justify-center border-2 border-border bg-black text-xs font-mono font-black text-primary">
-                {'//'}
+                {"//"}
               </span>
               <h3 className="font-mono text-base font-black uppercase tracking-wider text-foreground">
                 AIAS Platform
@@ -167,9 +183,9 @@ export function Footer() {
               ...siteContent.footer.legalLinks,
               {
                 href: `mailto:${siteContent.contact.email}`,
-                label: 'Support',
+                label: "Support",
               },
-            ].map(link => (
+            ].map((link) => (
               <Link
                 key={link.href}
                 aria-label={`Navigate to ${link.label}`}

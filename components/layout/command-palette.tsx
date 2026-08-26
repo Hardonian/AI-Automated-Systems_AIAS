@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { useRouter } from "next/navigation";
 import {
   Search,
   Cpu,
@@ -21,19 +21,25 @@ import {
   X,
   Wrench,
   ShoppingBag,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 
 export interface CommandItem {
   id: string;
   title: string;
   description: string;
-  category: 'Tools' | 'Services' | 'Blueprints' | 'Case Studies' | 'Architecture' | 'Company';
+  category:
+    | "Tools"
+    | "Services"
+    | "Blueprints"
+    | "Case Studies"
+    | "Architecture"
+    | "Company";
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: string;
@@ -43,321 +49,398 @@ export interface CommandItem {
 const COMMAND_ITEMS: CommandItem[] = [
   // Interactive Tools
   {
-    id: 'tool-hub',
-    title: 'Quick Tools Command Center',
-    description: 'Explore all self-serve simulators, ROI calculators, diagnostics, and policy studios.',
-    category: 'Tools',
-    href: '/tools',
+    id: "tool-hub",
+    title: "Quick Tools Command Center",
+    description:
+      "Explore all self-serve simulators, ROI calculators, diagnostics, and policy studios.",
+    category: "Tools",
+    href: "/tools",
     icon: Wrench,
-    badge: 'Hub',
-    keywords: ['tools', 'hub', 'directory', 'calculators', 'simulators', 'diagnostics'],
+    badge: "Hub",
+    keywords: [
+      "tools",
+      "hub",
+      "directory",
+      "calculators",
+      "simulators",
+      "diagnostics",
+    ],
   },
   {
-    id: 'tool-policy-studio',
-    title: 'Policy & Guardrail Studio',
-    description: 'Test deterministic boundary rules, PII masking, and confidence escalation gates.',
-    category: 'Tools',
-    href: '/tools/policy-studio',
+    id: "tool-policy-studio",
+    title: "Policy & Guardrail Studio",
+    description:
+      "Test deterministic boundary rules, PII masking, and confidence escalation gates.",
+    category: "Tools",
+    href: "/tools/policy-studio",
     icon: ShieldAlert,
-    badge: 'Interactive',
-    keywords: ['policy', 'guardrail', 'zod', 'schema', 'pii', 'studio', 'bounds'],
+    badge: "Interactive",
+    keywords: [
+      "policy",
+      "guardrail",
+      "zod",
+      "schema",
+      "pii",
+      "studio",
+      "bounds",
+    ],
   },
   {
-    id: 'tool-sim',
-    title: 'Automation Engine Simulator',
-    description: 'Simulate deterministic policy gates, model orchestration, and telemetry guardrails.',
-    category: 'Tools',
-    href: '/automation-demo',
+    id: "tool-sim",
+    title: "Automation Engine Simulator",
+    description:
+      "Simulate deterministic policy gates, model orchestration, and telemetry guardrails.",
+    category: "Tools",
+    href: "/automation-demo",
     icon: Cpu,
-    badge: 'Interactive',
-    keywords: ['simulator', 'engine', 'guardrails', 'telemetry', 'failover', 'demo'],
+    badge: "Interactive",
+    keywords: [
+      "simulator",
+      "engine",
+      "guardrails",
+      "telemetry",
+      "failover",
+      "demo",
+    ],
   },
   {
-    id: 'tool-dash',
-    title: 'Operations & Workload Dashboard',
-    description: 'Client control-plane for active agent fleets, evaluation benchmarks, and runbooks.',
-    category: 'Tools',
-    href: '/dashboard',
+    id: "tool-dash",
+    title: "Operations & Workload Dashboard",
+    description:
+      "Client control-plane for active agent fleets, evaluation benchmarks, and runbooks.",
+    category: "Tools",
+    href: "/dashboard",
     icon: LayoutDashboard,
-    badge: 'Control Plane',
-    keywords: ['dashboard', 'metrics', 'fleets', 'sla', 'canary', 'workload'],
+    badge: "Control Plane",
+    keywords: ["dashboard", "metrics", "fleets", "sla", "canary", "workload"],
   },
   {
-    id: 'tool-roi',
-    title: 'ROI & Efficiency Calculator',
-    description: 'Model annual cost savings, time reclaimed, and payback period from deterministic AI.',
-    category: 'Tools',
-    href: '/roi-calculator',
+    id: "tool-roi",
+    title: "ROI & Efficiency Calculator",
+    description:
+      "Model annual cost savings, time reclaimed, and payback period from deterministic AI.",
+    category: "Tools",
+    href: "/roi-calculator",
     icon: Calculator,
-    badge: 'Modeler',
-    keywords: ['roi', 'calculator', 'savings', 'payback', 'cost', 'hours'],
+    badge: "Modeler",
+    keywords: ["roi", "calculator", "savings", "payback", "cost", "hours"],
   },
   {
-    id: 'tool-readiness',
-    title: 'Readiness & Maturity Scorecard',
-    description: 'Assess enterprise AI maturity across data readiness, governance, and architecture.',
-    category: 'Tools',
-    href: '/readiness-checklist',
+    id: "tool-readiness",
+    title: "Readiness & Maturity Scorecard",
+    description:
+      "Assess enterprise AI maturity across data readiness, governance, and architecture.",
+    category: "Tools",
+    href: "/readiness-checklist",
     icon: ShieldAlert,
-    badge: 'Assessment',
-    keywords: ['scorecard', 'readiness', 'audit', 'checklist', 'assessment', 'maturity'],
+    badge: "Assessment",
+    keywords: [
+      "scorecard",
+      "readiness",
+      "audit",
+      "checklist",
+      "assessment",
+      "maturity",
+    ],
   },
   {
-    id: 'tool-engagement',
-    title: 'Engagement Scope Estimator',
-    description: 'Calculate timeline, deliverables, and architecture team composition for projects.',
-    category: 'Tools',
-    href: '/engagement-simulator',
+    id: "tool-engagement",
+    title: "Engagement Scope Estimator",
+    description:
+      "Calculate timeline, deliverables, and architecture team composition for projects.",
+    category: "Tools",
+    href: "/engagement-simulator",
     icon: Sliders,
-    badge: 'Planner',
-    keywords: ['engagement', 'scope', 'sprint', 'deliverables', 'timeline'],
+    badge: "Planner",
+    keywords: ["engagement", "scope", "sprint", "deliverables", "timeline"],
   },
   {
-    id: 'tool-book',
-    title: 'Book Architecture Diagnostic',
-    description: 'Schedule a 30-minute diagnostic session with an AIAS systems architect.',
-    category: 'Tools',
-    href: '/book',
+    id: "tool-book",
+    title: "Book Architecture Diagnostic",
+    description:
+      "Schedule a 30-minute diagnostic session with an AIAS systems architect.",
+    category: "Tools",
+    href: "/book",
     icon: Calendar,
-    badge: 'Booking',
-    keywords: ['book', 'schedule', 'diagnostic', 'call', 'consultation'],
+    badge: "Booking",
+    keywords: ["book", "schedule", "diagnostic", "call", "consultation"],
   },
 
   // Services & Consultancy
   {
-    id: 'srv-hire',
-    title: 'Hire AIAS to Build & Automate',
-    description: 'Hire our systems architects for bespoke automation builds, stabilization sprints, and modernization.',
-    category: 'Services',
-    href: '/hire',
+    id: "srv-hire",
+    title: "Hire AIAS to Build & Automate",
+    description:
+      "Hire our systems architects for bespoke automation builds, stabilization sprints, and modernization.",
+    category: "Services",
+    href: "/hire",
     icon: Cpu,
-    badge: 'Hire Us',
-    keywords: ['hire', 'consultancy', 'build', 'bespoke', 'custom', 'stabilize', 'engineer'],
+    badge: "Hire Us",
+    keywords: [
+      "hire",
+      "consultancy",
+      "build",
+      "bespoke",
+      "custom",
+      "stabilize",
+      "engineer",
+    ],
   },
   {
-    id: 'srv-catalog',
-    title: 'Hardonia Store & Product Catalog',
-    description: 'Browse ready-to-deploy software packages, workflow packs, and Hardonia ecosystem software.',
-    category: 'Services',
-    href: '/catalog',
+    id: "srv-catalog",
+    title: "Hardonia Store & Product Catalog",
+    description:
+      "Browse ready-to-deploy software packages, workflow packs, and Hardonia ecosystem software.",
+    category: "Services",
+    href: "/catalog",
     icon: ShoppingBag,
-    badge: 'Catalog',
-    keywords: ['catalog', 'store', 'hardonia', 'products', 'software', 'modules', 'packages'],
+    badge: "Catalog",
+    keywords: [
+      "catalog",
+      "store",
+      "hardonia",
+      "products",
+      "software",
+      "modules",
+      "packages",
+    ],
   },
   {
-    id: 'srv-all',
-    title: 'All Services & Engagement Models',
-    description: 'Explore Clarity Audits, Stabilization Sprints, Governance, and Advisory programs.',
-    category: 'Services',
-    href: '/services',
+    id: "srv-all",
+    title: "All Services & Engagement Models",
+    description:
+      "Explore Clarity Audits, Stabilization Sprints, Governance, and Advisory programs.",
+    category: "Services",
+    href: "/services",
     icon: Briefcase,
-    keywords: ['services', 'offerings', 'consultancy', 'audit', 'sprint'],
+    keywords: ["services", "offerings", "consultancy", "audit", "sprint"],
   },
   {
-    id: 'srv-app-ai',
-    title: 'App & AI Systems',
-    description: 'Integration of LLMs and deterministic workflows directly into client web apps.',
-    category: 'Services',
-    href: '/services/app-ai-systems',
+    id: "srv-app-ai",
+    title: "App & AI Systems",
+    description:
+      "Integration of LLMs and deterministic workflows directly into client web apps.",
+    category: "Services",
+    href: "/services/app-ai-systems",
     icon: Sparkles,
-    keywords: ['apps', 'web', 'integration', 'fullstack', 'llm'],
+    keywords: ["apps", "web", "integration", "fullstack", "llm"],
   },
   {
-    id: 'srv-web-auto',
-    title: 'Automation Web Systems',
-    description: 'Multi-system back-office and web automation fabrics with strict governance.',
-    category: 'Services',
-    href: '/services/automation-web',
+    id: "srv-web-auto",
+    title: "Automation Web Systems",
+    description:
+      "Multi-system back-office and web automation fabrics with strict governance.",
+    category: "Services",
+    href: "/services/automation-web",
     icon: Layers,
-    keywords: ['web', 'automation', 'backoffice', 'pipeda', 'fabric'],
+    keywords: ["web", "automation", "backoffice", "pipeda", "fabric"],
   },
 
   // Blueprints
   {
-    id: 'bp-all',
-    title: 'Blueprint Library',
-    description: 'Open implementation blueprints for deterministic workflows and governance.',
-    category: 'Blueprints',
-    href: '/blueprints',
+    id: "bp-all",
+    title: "Blueprint Library",
+    description:
+      "Open implementation blueprints for deterministic workflows and governance.",
+    category: "Blueprints",
+    href: "/blueprints",
     icon: FileCode,
-    keywords: ['blueprints', 'templates', 'specs', 'architecture'],
+    keywords: ["blueprints", "templates", "specs", "architecture"],
   },
   {
-    id: 'bp-intake',
-    title: 'Governed Intake Router',
-    description: 'Deterministic schema validation, context scoring, and routing runbook.',
-    category: 'Blueprints',
-    href: '/blueprints/governed-intake-router',
+    id: "bp-intake",
+    title: "Governed Intake Router",
+    description:
+      "Deterministic schema validation, context scoring, and routing runbook.",
+    category: "Blueprints",
+    href: "/blueprints/governed-intake-router",
     icon: FileCode,
-    badge: 'Spec',
-    keywords: ['intake', 'router', 'schema', 'zod', 'routing'],
+    badge: "Spec",
+    keywords: ["intake", "router", "schema", "zod", "routing"],
   },
   {
-    id: 'bp-fabric',
-    title: 'Execution Fabric Control Plane',
-    description: 'High-availability execution fabric with telemetry, fallback, and canary release.',
-    category: 'Blueprints',
-    href: '/blueprints/execution-fabric-control-plane',
+    id: "bp-fabric",
+    title: "Execution Fabric Control Plane",
+    description:
+      "High-availability execution fabric with telemetry, fallback, and canary release.",
+    category: "Blueprints",
+    href: "/blueprints/execution-fabric-control-plane",
     icon: FileCode,
-    badge: 'Spec',
-    keywords: ['fabric', 'control plane', 'canary', 'telemetry', 'rollback'],
+    badge: "Spec",
+    keywords: ["fabric", "control plane", "canary", "telemetry", "rollback"],
   },
   {
-    id: 'bp-pipeline',
-    title: 'Resilient Agent Release Pipeline',
-    description: 'Deterministic CI/CD verification and evaluation harness for agent fleets.',
-    category: 'Blueprints',
-    href: '/blueprints/resilient-agent-release-pipeline',
+    id: "bp-pipeline",
+    title: "Resilient Agent Release Pipeline",
+    description:
+      "Deterministic CI/CD verification and evaluation harness for agent fleets.",
+    category: "Blueprints",
+    href: "/blueprints/resilient-agent-release-pipeline",
     icon: FileCode,
-    badge: 'Spec',
-    keywords: ['release', 'pipeline', 'eval', 'harness', 'ci/cd'],
+    badge: "Spec",
+    keywords: ["release", "pipeline", "eval", "harness", "ci/cd"],
   },
 
   // Case Studies
   {
-    id: 'cs-all',
-    title: 'Case Studies Index',
-    description: 'Production proof, measured metrics, and before/after transformation logs.',
-    category: 'Case Studies',
-    href: '/case-studies',
+    id: "cs-all",
+    title: "Case Studies Index",
+    description:
+      "Production proof, measured metrics, and before/after transformation logs.",
+    category: "Case Studies",
+    href: "/case-studies",
     icon: BookOpen,
-    keywords: ['case studies', 'proof', 'results', 'clients', 'metrics'],
+    keywords: ["case studies", "proof", "results", "clients", "metrics"],
   },
   {
-    id: 'cs-reach',
-    title: 'Case Study: REACH Systems',
-    description: 'High-throughput lead qualification with deterministic governance.',
-    category: 'Case Studies',
-    href: '/case-studies/reach',
+    id: "cs-reach",
+    title: "Case Study: REACH Systems",
+    description:
+      "High-throughput lead qualification with deterministic governance.",
+    category: "Case Studies",
+    href: "/case-studies/reach",
     icon: BookOpen,
-    keywords: ['reach', 'lead qualification', 'crm', 'automation'],
+    keywords: ["reach", "lead qualification", "crm", "automation"],
   },
   {
-    id: 'cs-zeo',
-    title: 'Case Study: ZEO Intelligence',
-    description: 'Automated invoice reconciliation and financial ledger audit trail.',
-    category: 'Case Studies',
-    href: '/case-studies/zeo',
+    id: "cs-zeo",
+    title: "Case Study: ZEO Intelligence",
+    description:
+      "Automated invoice reconciliation and financial ledger audit trail.",
+    category: "Case Studies",
+    href: "/case-studies/zeo",
     icon: BookOpen,
-    keywords: ['zeo', 'invoice', 'financial', 'reconciliation'],
+    keywords: ["zeo", "invoice", "financial", "reconciliation"],
   },
   {
-    id: 'cs-settler',
-    title: 'Case Study: Settler Group',
-    description: 'Customer ops triage with SLA countdown and engineer signoff gates.',
-    category: 'Case Studies',
-    href: '/case-studies/settler',
+    id: "cs-settler",
+    title: "Case Study: Settler Group",
+    description:
+      "Customer ops triage with SLA countdown and engineer signoff gates.",
+    category: "Case Studies",
+    href: "/case-studies/settler",
     icon: BookOpen,
-    keywords: ['settler', 'support', 'sla', 'triage'],
+    keywords: ["settler", "support", "sla", "triage"],
   },
 
   // Architecture & Methodology
   {
-    id: 'arch-framework',
-    title: 'Systems Framework',
-    description: 'The architectural boundary between deterministic controls and probabilistic AI.',
-    category: 'Architecture',
-    href: '/framework',
+    id: "arch-framework",
+    title: "Systems Framework",
+    description:
+      "The architectural boundary between deterministic controls and probabilistic AI.",
+    category: "Architecture",
+    href: "/framework",
     icon: Layers,
-    keywords: ['framework', 'determinism', 'principles', 'boundary'],
+    keywords: ["framework", "determinism", "principles", "boundary"],
   },
   {
-    id: 'arch-how',
-    title: 'How It Works',
-    description: 'Detailed 4-stage operational lifecycle from discovery to continuous telemetry.',
-    category: 'Architecture',
-    href: '/how-it-works',
+    id: "arch-how",
+    title: "How It Works",
+    description:
+      "Detailed 4-stage operational lifecycle from discovery to continuous telemetry.",
+    category: "Architecture",
+    href: "/how-it-works",
     icon: Cpu,
-    keywords: ['how it works', 'lifecycle', 'stages', 'architecture'],
+    keywords: ["how it works", "lifecycle", "stages", "architecture"],
   },
   {
-    id: 'arch-process',
-    title: 'Engagement Process',
-    description: 'Structured 4-step delivery model: Discover, Pilot, Hardening, Enablement.',
-    category: 'Architecture',
-    href: '/process',
+    id: "arch-process",
+    title: "Engagement Process",
+    description:
+      "Structured 4-step delivery model: Discover, Pilot, Hardening, Enablement.",
+    category: "Architecture",
+    href: "/process",
     icon: Sliders,
-    keywords: ['process', 'methodology', 'sprints', 'delivery'],
+    keywords: ["process", "methodology", "sprints", "delivery"],
   },
   {
-    id: 'arch-cert',
-    title: 'Certification Path',
-    description: 'Open standard for deterministic AI operations and operator verification.',
-    category: 'Architecture',
-    href: '/certification',
+    id: "arch-cert",
+    title: "Certification Path",
+    description:
+      "Open standard for deterministic AI operations and operator verification.",
+    category: "Architecture",
+    href: "/certification",
     icon: ShieldAlert,
-    keywords: ['certification', 'badges', 'standards', 'verification'],
+    keywords: ["certification", "badges", "standards", "verification"],
   },
   {
-    id: 'arch-metrics',
-    title: 'Operational Metrics & Proof',
-    description: 'Live performance metrics, latency budgets, and cost benchmarks across client systems.',
-    category: 'Architecture',
-    href: '/metrics',
+    id: "arch-metrics",
+    title: "Operational Metrics & Proof",
+    description:
+      "Live performance metrics, latency budgets, and cost benchmarks across client systems.",
+    category: "Architecture",
+    href: "/metrics",
     icon: BarChart3,
-    keywords: ['metrics', 'benchmarks', 'p95', 'telemetry', 'proof'],
+    keywords: ["metrics", "benchmarks", "p95", "telemetry", "proof"],
   },
   {
-    id: 'arch-why-no',
-    title: 'Why We Say No',
-    description: 'Our criteria for rejecting unviable, brittle, or un-governed AI project requests.',
-    category: 'Architecture',
-    href: '/why-we-say-no',
+    id: "arch-why-no",
+    title: "Why We Say No",
+    description:
+      "Our criteria for rejecting unviable, brittle, or un-governed AI project requests.",
+    category: "Architecture",
+    href: "/why-we-say-no",
     icon: HelpCircle,
-    keywords: ['say no', 'fit', 'criteria', 'governance', 'boundaries'],
+    keywords: ["say no", "fit", "criteria", "governance", "boundaries"],
   },
 
   // Company & Resources
   {
-    id: 'co-about',
-    title: 'About AIAS',
-    description: 'Canadian systems consultancy turning brittle AI into production-grade automation.',
-    category: 'Company',
-    href: '/about',
+    id: "co-about",
+    title: "About AIAS",
+    description:
+      "Canadian systems consultancy turning brittle AI into production-grade automation.",
+    category: "Company",
+    href: "/about",
     icon: Briefcase,
-    keywords: ['about', 'team', 'canada', 'leadership'],
+    keywords: ["about", "team", "canada", "leadership"],
   },
   {
-    id: 'co-blog',
-    title: 'Engineering & Systems Blog',
-    description: 'Deep dives on systems thinking, deterministic architectures, and AI scale.',
-    category: 'Company',
-    href: '/blog',
+    id: "co-blog",
+    title: "Engineering & Systems Blog",
+    description:
+      "Deep dives on systems thinking, deterministic architectures, and AI scale.",
+    category: "Company",
+    href: "/blog",
     icon: BookOpen,
-    keywords: ['blog', 'articles', 'systems thinking', 'insights'],
+    keywords: ["blog", "articles", "systems thinking", "insights"],
   },
   {
-    id: 'co-build-log',
-    title: 'Public Build Log',
-    description: 'Weekly transparency ledger of shipped updates, experiments, and architectural decisions.',
-    category: 'Company',
-    href: '/build-log',
+    id: "co-build-log",
+    title: "Public Build Log",
+    description:
+      "Weekly transparency ledger of shipped updates, experiments, and architectural decisions.",
+    category: "Company",
+    href: "/build-log",
     icon: FileCode,
-    keywords: ['build log', 'changelog', 'updates', 'ledger'],
+    keywords: ["build log", "changelog", "updates", "ledger"],
   },
   {
-    id: 'co-faq',
-    title: 'Frequently Asked Questions',
-    description: 'Common questions regarding pricing, data residency, sovereignty, and SLAs.',
-    category: 'Company',
-    href: '/faq',
+    id: "co-faq",
+    title: "Frequently Asked Questions",
+    description:
+      "Common questions regarding pricing, data residency, sovereignty, and SLAs.",
+    category: "Company",
+    href: "/faq",
     icon: HelpCircle,
-    keywords: ['faq', 'questions', 'pricing', 'contracts', 'support'],
+    keywords: ["faq", "questions", "pricing", "contracts", "support"],
   },
   {
-    id: 'co-contact',
-    title: 'Contact & Stack Intake',
-    description: 'Submit an architecture brief or connect with our engineering team directly.',
-    category: 'Company',
-    href: '/contact',
+    id: "co-contact",
+    title: "Contact & Stack Intake",
+    description:
+      "Submit an architecture brief or connect with our engineering team directly.",
+    category: "Company",
+    href: "/contact",
     icon: ArrowRight,
-    keywords: ['contact', 'email', 'inquiries', 'intake'],
+    keywords: ["contact", "email", "inquiries", "intake"],
   },
 ];
 
 export function CommandPalette() {
   const [isOpen, setIsOpen] = useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -365,14 +448,14 @@ export function CommandPalette() {
   // Global hotkey: Cmd+K or Ctrl+K
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setIsOpen((prev) => !prev);
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   // Filter items based on query
@@ -385,25 +468,31 @@ export function CommandPalette() {
       const matchTitle = item.title.toLowerCase().includes(cleanQuery);
       const matchDesc = item.description.toLowerCase().includes(cleanQuery);
       const matchCategory = item.category.toLowerCase().includes(cleanQuery);
-      const matchKeywords = item.keywords?.some((k) => k.toLowerCase().includes(cleanQuery));
+      const matchKeywords = item.keywords?.some((k) =>
+        k.toLowerCase().includes(cleanQuery),
+      );
       return matchTitle || matchDesc || matchCategory || matchKeywords;
     });
   }, [query]);
 
   const handleSelect = (item: CommandItem) => {
     setIsOpen(false);
-    setQuery('');
+    setQuery("");
     router.push(item.href);
   };
 
   const handleKeyDownInInput = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowDown') {
+    if (e.key === "ArrowDown") {
       e.preventDefault();
       setSelectedIndex((prev) => (prev + 1) % (filteredItems.length || 1));
-    } else if (e.key === 'ArrowUp') {
+    } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev - 1 + (filteredItems.length || 1)) % (filteredItems.length || 1));
-    } else if (e.key === 'Enter') {
+      setSelectedIndex(
+        (prev) =>
+          (prev - 1 + (filteredItems.length || 1)) %
+          (filteredItems.length || 1),
+      );
+    } else if (e.key === "Enter") {
       e.preventDefault();
       const selected = filteredItems[selectedIndex];
       if (selected) {
@@ -453,7 +542,7 @@ export function CommandPalette() {
             {query && (
               <button
                 onClick={() => {
-                  setQuery('');
+                  setQuery("");
                   setSelectedIndex(0);
                 }}
                 className="text-muted-foreground hover:text-foreground p-1"
@@ -464,7 +553,6 @@ export function CommandPalette() {
             )}
           </div>
 
-
           {/* Results List */}
           <div className="max-h-[60vh] overflow-y-auto p-2 divide-y divide-border/40">
             {filteredItems.length === 0 ? (
@@ -473,7 +561,9 @@ export function CommandPalette() {
                   No matching architecture items found
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Try searching for &quot;simulator&quot;, &quot;blueprints&quot;, &quot;dashboard&quot;, or &quot;governance&quot;.
+                  Try searching for &quot;simulator&quot;,
+                  &quot;blueprints&quot;, &quot;dashboard&quot;, or
+                  &quot;governance&quot;.
                 </p>
               </div>
             ) : (
@@ -488,16 +578,16 @@ export function CommandPalette() {
                     onMouseEnter={() => setSelectedIndex(idx)}
                     className={`flex items-center justify-between p-3 transition-colors cursor-pointer border-l-2 ${
                       isSelected
-                        ? 'border-l-primary bg-primary/10 text-foreground'
-                        : 'border-l-transparent hover:bg-muted/40 text-muted-foreground hover:text-foreground'
+                        ? "border-l-primary bg-primary/10 text-foreground"
+                        : "border-l-transparent hover:bg-muted/40 text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     <div className="flex items-start gap-3 min-w-0 pr-4">
                       <div
                         className={`flex h-8 w-8 shrink-0 items-center justify-center border transition-colors mt-0.5 ${
                           isSelected
-                            ? 'border-primary bg-primary text-primary-foreground'
-                            : 'border-border bg-card text-primary'
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border bg-card text-primary"
                         }`}
                       >
                         <IconComponent className="h-4 w-4" />
@@ -525,7 +615,9 @@ export function CommandPalette() {
                       </span>
                       <ArrowRight
                         className={`h-4 w-4 transition-transform ${
-                          isSelected ? 'text-primary translate-x-1' : 'text-muted-foreground/40'
+                          isSelected
+                            ? "text-primary translate-x-1"
+                            : "text-muted-foreground/40"
                         }`}
                       />
                     </div>
@@ -540,13 +632,16 @@ export function CommandPalette() {
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1">
                 <kbd className="border border-border bg-muted px-1">↑</kbd>
-                <kbd className="border border-border bg-muted px-1">↓</kbd> to navigate
+                <kbd className="border border-border bg-muted px-1">↓</kbd> to
+                navigate
               </span>
               <span className="flex items-center gap-1">
-                <kbd className="border border-border bg-muted px-1">↵</kbd> to select
+                <kbd className="border border-border bg-muted px-1">↵</kbd> to
+                select
               </span>
               <span className="flex items-center gap-1">
-                <kbd className="border border-border bg-muted px-1">esc</kbd> to close
+                <kbd className="border border-border bg-muted px-1">esc</kbd> to
+                close
               </span>
             </div>
             <span className="font-bold text-primary">

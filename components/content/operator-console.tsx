@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Search,
   Filter,
@@ -14,21 +14,21 @@ import {
   Layers,
   RotateCcw,
   Sparkles,
-} from 'lucide-react';
+} from "lucide-react";
 
-import type { OperatorLead } from '@/src/content/moat';
-import { SurfaceCard } from '@/components/ui/section-primitives';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import type { OperatorLead } from "@/src/content/moat";
+import { SurfaceCard } from "@/components/ui/section-primitives";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
-const STORAGE_KEY = 'aias-operator-leads';
+const STORAGE_KEY = "aias-operator-leads";
 
-const STAGE_OPTIONS: OperatorLead['stage'][] = [
-  'intake',
-  'scoping',
-  'pilot',
-  'governance-review',
-  'active',
+const STAGE_OPTIONS: OperatorLead["stage"][] = [
+  "intake",
+  "scoping",
+  "pilot",
+  "governance-review",
+  "active",
 ];
 
 export function OperatorConsole({
@@ -39,16 +39,16 @@ export function OperatorConsole({
   readOnly?: boolean;
 }) {
   const [leads, setLeads] = useState<OperatorLead[]>(initialLeads);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStageFilter, setSelectedStageFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedStageFilter, setSelectedStageFilter] = useState<string>("all");
   const [isAddingLead, setIsAddingLead] = useState(false);
 
   // New lead form state
-  const [newAccount, setNewAccount] = useState('');
-  const [newOwner, setNewOwner] = useState('Scott H.');
-  const [newStage, setNewStage] = useState<OperatorLead['stage']>('intake');
+  const [newAccount, setNewAccount] = useState("");
+  const [newOwner, setNewOwner] = useState("Scott H.");
+  const [newStage, setNewStage] = useState<OperatorLead["stage"]>("intake");
   const [newRiskScore, setNewRiskScore] = useState(45);
-  const [newNotes, setNewNotes] = useState('');
+  const [newNotes, setNewNotes] = useState("");
 
   useEffect(() => {
     if (readOnly) {
@@ -82,7 +82,9 @@ export function OperatorConsole({
     const totalRisk = leads.reduce((sum, l) => sum + l.riskScore, 0);
     const avg = Math.round(totalRisk / leads.length);
     const highRisk = leads.filter((l) => l.riskScore >= 70).length;
-    const active = leads.filter((l) => l.stage === 'active' || l.stage === 'pilot').length;
+    const active = leads.filter(
+      (l) => l.stage === "active" || l.stage === "pilot",
+    ).length;
 
     return {
       count: leads.length,
@@ -100,7 +102,7 @@ export function OperatorConsole({
         lead.notes.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesStage =
-        selectedStageFilter === 'all' || lead.stage === selectedStageFilter;
+        selectedStageFilter === "all" || lead.stage === selectedStageFilter;
 
       return matchesSearch && matchesStage;
     });
@@ -112,7 +114,9 @@ export function OperatorConsole({
     }
 
     setLeads((current) =>
-      current.map((lead, leadIndex) => (leadIndex === index ? { ...lead, ...patch } : lead))
+      current.map((lead, leadIndex) =>
+        leadIndex === index ? { ...lead, ...patch } : lead,
+      ),
     );
   };
 
@@ -124,13 +128,13 @@ export function OperatorConsole({
       account: newAccount.trim(),
       stage: newStage,
       riskScore: newRiskScore,
-      owner: newOwner.trim() || 'Unassigned',
-      notes: newNotes.trim() || 'Initial intake logged via operator console.',
+      owner: newOwner.trim() || "Unassigned",
+      notes: newNotes.trim() || "Initial intake logged via operator console.",
     };
 
     setLeads((prev) => [created, ...prev]);
-    setNewAccount('');
-    setNewNotes('');
+    setNewAccount("");
+    setNewNotes("");
     setIsAddingLead(false);
   };
 
@@ -167,7 +171,8 @@ export function OperatorConsole({
             Average Risk Score
           </p>
           <p className="mt-1 font-mono text-2xl font-black text-foreground">
-            {stats.averageRisk} <span className="text-xs text-muted-foreground">/100</span>
+            {stats.averageRisk}{" "}
+            <span className="text-xs text-muted-foreground">/100</span>
           </p>
         </SurfaceCard>
 
@@ -203,7 +208,7 @@ export function OperatorConsole({
                   className="rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-card"
                 >
                   <Plus className="mr-1.5 h-3.5 w-3.5" />
-                  {isAddingLead ? 'Cancel' : 'Add Lead'}
+                  {isAddingLead ? "Cancel" : "Add Lead"}
                 </Button>
                 <Button
                   onClick={handleResetToDefault}
@@ -222,11 +227,11 @@ export function OperatorConsole({
         {/* Stage Filter Buttons */}
         <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border">
           <button
-            onClick={() => setSelectedStageFilter('all')}
+            onClick={() => setSelectedStageFilter("all")}
             className={`px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider border transition-colors cursor-pointer ${
-              selectedStageFilter === 'all'
-                ? 'border-primary bg-primary text-primary-foreground'
-                : 'border-border bg-card text-muted-foreground hover:text-foreground'
+              selectedStageFilter === "all"
+                ? "border-primary bg-primary text-primary-foreground"
+                : "border-border bg-card text-muted-foreground hover:text-foreground"
             }`}
           >
             All ({leads.length})
@@ -239,8 +244,8 @@ export function OperatorConsole({
                 onClick={() => setSelectedStageFilter(stg)}
                 className={`px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider border transition-colors cursor-pointer ${
                   selectedStageFilter === stg
-                    ? 'border-primary bg-primary text-primary-foreground'
-                    : 'border-border bg-card text-muted-foreground hover:text-foreground'
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-card text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {stg} ({count})
@@ -289,7 +294,9 @@ export function OperatorConsole({
                 </label>
                 <select
                   value={newStage}
-                  onChange={(e) => setNewStage(e.target.value as OperatorLead['stage'])}
+                  onChange={(e) =>
+                    setNewStage(e.target.value as OperatorLead["stage"])
+                  }
                   className="w-full rounded-none border-2 border-border bg-background px-3 py-2 font-mono text-xs font-bold text-foreground focus:outline-none focus:border-primary"
                 >
                   {STAGE_OPTIONS.map((stg) => (
@@ -359,10 +366,10 @@ export function OperatorConsole({
           filteredLeads.map((lead, index) => {
             const riskColor =
               lead.riskScore >= 70
-                ? 'text-destructive border-destructive bg-destructive/10'
+                ? "text-destructive border-destructive bg-destructive/10"
                 : lead.riskScore >= 40
-                ? 'text-amber-600 dark:text-amber-400 border-amber-500 bg-amber-500/10'
-                : 'text-emerald-600 dark:text-emerald-400 border-emerald-600 bg-emerald-500/10';
+                  ? "text-amber-600 dark:text-amber-400 border-amber-500 bg-amber-500/10"
+                  : "text-emerald-600 dark:text-emerald-400 border-emerald-600 bg-emerald-500/10";
 
             return (
               <SurfaceCard
@@ -391,7 +398,7 @@ export function OperatorConsole({
                         value={lead.stage}
                         onChange={(e) =>
                           updateLead(index, {
-                            stage: e.target.value as OperatorLead['stage'],
+                            stage: e.target.value as OperatorLead["stage"],
                           })
                         }
                         className="rounded-none border-2 border-border bg-background px-2 py-1 font-mono text-xs font-bold text-foreground focus:outline-none focus:border-primary disabled:opacity-80"
@@ -414,7 +421,9 @@ export function OperatorConsole({
                     <Input
                       disabled={readOnly}
                       value={lead.owner}
-                      onChange={(e) => updateLead(index, { owner: e.target.value })}
+                      onChange={(e) =>
+                        updateLead(index, { owner: e.target.value })
+                      }
                       className="rounded-none border-2 border-border font-mono text-xs h-8"
                     />
                   </div>
@@ -451,7 +460,9 @@ export function OperatorConsole({
                   <Input
                     disabled={readOnly}
                     value={lead.notes}
-                    onChange={(e) => updateLead(index, { notes: e.target.value })}
+                    onChange={(e) =>
+                      updateLead(index, { notes: e.target.value })
+                    }
                     className="rounded-none border-2 border-border font-mono text-xs"
                   />
                 </div>

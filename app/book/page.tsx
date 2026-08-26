@@ -1,35 +1,42 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowRight, Video, CheckCircle2, Shield } from 'lucide-react';
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight, Video, CheckCircle2, Shield } from "lucide-react";
 
-import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
-import { PageHero, PageSection, SurfaceCard } from '@/components/ui/section-primitives';
-import { InteractiveScheduler } from '@/components/content/interactive-scheduler';
-import { Breadcrumbs } from '@/components/layout/breadcrumbs';
-import { Button } from '@/components/ui/button';
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
+import {
+  PageHero,
+  PageSection,
+  SurfaceCard,
+} from "@/components/ui/section-primitives";
+import { InteractiveScheduler } from "@/components/content/interactive-scheduler";
+import { Breadcrumbs } from "@/components/layout/breadcrumbs";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Book a Strategy Call | AI Automated Systems',
+  title: "Book a Strategy Call | AI Automated Systems",
   description:
-    'Schedule a 30-minute diagnostic session with an AIAS systems architect to map workflows, identify quick wins, and establish deterministic governance boundaries.',
-  canonical: '/book',
+    "Schedule a 30-minute diagnostic session with an AIAS systems architect to map workflows, identify quick wins, and establish deterministic governance boundaries.",
+  canonical: "/book",
 });
 
 const bookingGuarantees = [
   {
     icon: Shield,
-    title: 'Strict Confidentiality',
-    description: 'All workflow discussions are treated under strict NDA and PIPEDA privacy standards.',
+    title: "Strict Confidentiality",
+    description:
+      "All workflow discussions are treated under strict NDA and PIPEDA privacy standards.",
   },
   {
     icon: Video,
-    title: 'Direct Architect Access',
-    description: 'You meet directly with a senior AI systems engineer—not an entry-level sales rep.',
+    title: "Direct Architect Access",
+    description:
+      "You meet directly with a senior AI systems engineer—not an entry-level sales rep.",
   },
   {
     icon: CheckCircle2,
-    title: 'Tailored Action Roadmap',
-    description: 'Receive a clear diagnosis and structured engagement brief following our session.',
+    title: "Tailored Action Roadmap",
+    description:
+      "Receive a clear diagnosis and structured engagement brief following our session.",
   },
 ];
 
@@ -39,8 +46,8 @@ export default function BookPage() {
       <div className="container pt-4">
         <Breadcrumbs
           items={[
-            { label: 'Booking', href: '/book' },
-            { label: 'Strategy Diagnostic' },
+            { label: "Booking", href: "/book" },
+            { label: "Strategy Diagnostic" },
           ]}
         />
       </div>
@@ -50,7 +57,6 @@ export default function BookPage() {
         title="Schedule Your AI Systems Strategy Session"
         description="Select a time slot below to review your workflow bottlenecks, test feasibility, and evaluate deterministic automation architecture. Zero sales pressure—just technical clarity."
       />
-
 
       {/* Main Interactive Scheduler */}
       <PageSection>
@@ -70,7 +76,10 @@ export default function BookPage() {
 
         <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto">
           {bookingGuarantees.map((item) => (
-            <SurfaceCard key={item.title} className="border-2 border-border p-6 flex flex-col justify-between">
+            <SurfaceCard
+              key={item.title}
+              className="border-2 border-border p-6 flex flex-col justify-between"
+            >
               <div>
                 <div className="flex h-10 w-10 items-center justify-center border-2 border-border bg-black text-primary mb-4">
                   <item.icon className="h-5 w-5" />
@@ -94,7 +103,8 @@ export default function BookPage() {
             Prefer an instant assessment before booking?
           </h2>
           <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">
-            Take our 2-minute interactive automation survey or evaluate your governance readiness score.
+            Take our 2-minute interactive automation survey or evaluate your
+            governance readiness score.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button
@@ -111,9 +121,7 @@ export default function BookPage() {
               variant="outline"
               className="rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-widest hover:border-foreground transition-all"
             >
-              <Link href="/readiness-checklist">
-                AI Readiness Scorecard
-              </Link>
+              <Link href="/readiness-checklist">AI Readiness Scorecard</Link>
             </Button>
           </div>
         </SurfaceCard>

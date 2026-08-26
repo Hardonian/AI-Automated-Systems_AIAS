@@ -5,43 +5,43 @@ on:
   push:
     branches: [main, master]
     paths:
-      - 'supabase/migrations/**'
-      - 'apps/web/prisma/migrations/**'
-      - 'apps/web/prisma/schema.prisma'
+      - "supabase/migrations/**"
+      - "apps/web/prisma/migrations/**"
+      - "apps/web/prisma/schema.prisma"
   pull_request:
     paths:
-      - 'supabase/migrations/**'
-      - 'apps/web/prisma/migrations/**'
-      - 'apps/web/prisma/schema.prisma'
+      - "supabase/migrations/**"
+      - "apps/web/prisma/migrations/**"
+      - "apps/web/prisma/schema.prisma"
   # Manual trigger
   workflow_dispatch:
     inputs:
       migration_type:
-        description: 'Type of migration to apply'
+        description: "Type of migration to apply"
         required: true
         type: choice
         options:
           - all
           - supabase
           - prisma
-        default: 'all'
+        default: "all"
       environment:
-        description: 'Environment to apply migrations to'
+        description: "Environment to apply migrations to"
         required: true
         type: choice
         options:
           - staging
           - production
-        default: 'staging'
+        default: "staging"
   # Scheduled daily at 2 AM UTC to catch any missed migrations
   schedule:
-    - cron: '0 2 * * *'
+    - cron: "0 2 * * *"
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-  NODE_VERSION: '22'
-  PNPM_VERSION: '8.15.0'
+  NODE_VERSION: "22"
+  PNPM_VERSION: "8.15.0"
 
 concurrency:
   group: migrations-${{ github.ref }}
@@ -73,7 +73,7 @@ jobs:
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -172,7 +172,7 @@ jobs:
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -289,7 +289,7 @@ jobs:
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -407,7 +407,7 @@ jobs:
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

@@ -3,12 +3,12 @@
  * Accessible image component with loading states and error handling
  */
 
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { useState } from 'react';
+import Image from "next/image";
+import { useState } from "react";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 interface ImageWithFallbackProps {
   src: string;
@@ -18,10 +18,10 @@ interface ImageWithFallbackProps {
   className?: string;
   fallbackSrc?: string;
   priority?: boolean;
-  loading?: 'lazy' | 'eager';
+  loading?: "lazy" | "eager";
   fill?: boolean;
   sizes?: string;
-  objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
+  objectFit?: "contain" | "cover" | "fill" | "none" | "scale-down";
 }
 
 export function ImageWithFallback({
@@ -30,12 +30,12 @@ export function ImageWithFallback({
   width,
   height,
   className,
-  fallbackSrc = '/placeholder.svg',
+  fallbackSrc = "/placeholder.svg",
   priority = false,
-  loading = 'lazy',
+  loading = "lazy",
   fill = false,
   sizes,
-  objectFit = 'cover',
+  objectFit = "cover",
 }: ImageWithFallbackProps) {
   const [imgSrc, setImgSrc] = useState(src);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,16 +57,16 @@ export function ImageWithFallback({
     ? {
         fill: true,
         sizes:
-          sizes || '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+          sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
         className: cn(
           className,
-          isLoading && 'opacity-0',
-          'transition-opacity duration-300',
-          objectFit === 'cover' && 'object-cover',
-          objectFit === 'contain' && 'object-contain',
-          objectFit === 'fill' && 'object-fill',
-          objectFit === 'none' && 'object-none',
-          objectFit === 'scale-down' && 'object-scale-down'
+          isLoading && "opacity-0",
+          "transition-opacity duration-300",
+          objectFit === "cover" && "object-cover",
+          objectFit === "contain" && "object-contain",
+          objectFit === "fill" && "object-fill",
+          objectFit === "none" && "object-none",
+          objectFit === "scale-down" && "object-scale-down",
         ),
       }
     : {
@@ -74,18 +74,18 @@ export function ImageWithFallback({
         height: height || 600,
         className: cn(
           className,
-          isLoading && 'opacity-0',
-          'transition-opacity duration-300',
-          objectFit === 'cover' && 'object-cover',
-          objectFit === 'contain' && 'object-contain',
-          objectFit === 'fill' && 'object-fill',
-          objectFit === 'none' && 'object-none',
-          objectFit === 'scale-down' && 'object-scale-down'
+          isLoading && "opacity-0",
+          "transition-opacity duration-300",
+          objectFit === "cover" && "object-cover",
+          objectFit === "contain" && "object-contain",
+          objectFit === "fill" && "object-fill",
+          objectFit === "none" && "object-none",
+          objectFit === "scale-down" && "object-scale-down",
         ),
       };
 
   return (
-    <div className='relative overflow-hidden'>
+    <div className="relative overflow-hidden">
       <Image
         {...imageProps}
         src={imgSrc}
@@ -98,27 +98,27 @@ export function ImageWithFallback({
       />
       {isLoading && (
         <div
-          className='absolute inset-0 animate-pulse bg-muted'
-          aria-hidden='true'
+          className="absolute inset-0 animate-pulse bg-muted"
+          aria-hidden="true"
         />
       )}
       {hasError && (
         <div
-          className='absolute inset-0 flex items-center justify-center bg-muted text-muted-foreground'
-          aria-label='Image failed to load'
+          className="absolute inset-0 flex items-center justify-center bg-muted text-muted-foreground"
+          aria-label="Image failed to load"
         >
           <svg
-            className='h-12 w-12'
-            fill='none'
-            stroke='currentColor'
-            viewBox='0 0 24 24'
-            aria-hidden='true'
+            className="h-12 w-12"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
+              strokeLinecap="round"
+              strokeLinejoin="round"
               strokeWidth={2}
-              d='M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'
+              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
             />
           </svg>
         </div>

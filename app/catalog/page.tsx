@@ -1,22 +1,19 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import {
-  ArrowRight,
-  Cpu,
-} from 'lucide-react';
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight, Cpu } from "lucide-react";
 
-import { PageHero, PageSection } from '@/components/ui/section-primitives';
-import { Breadcrumbs } from '@/components/layout/breadcrumbs';
-import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
-import { siteContent } from '@/src/content/site';
-import { CatalogDirectoryClient } from '@/components/catalog/catalog-directory-client';
-import { Button } from '@/components/ui/button';
+import { PageHero, PageSection } from "@/components/ui/section-primitives";
+import { Breadcrumbs } from "@/components/layout/breadcrumbs";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
+import { siteContent } from "@/src/content/site";
+import { CatalogDirectoryClient } from "@/components/catalog/catalog-directory-client";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Product Catalog & Hardonia Store Gateway | AIAS',
+  title: "Product Catalog & Hardonia Store Gateway | AIAS",
   description:
-    'Browse ready-to-deploy automation software engines, deterministic workflow packs, and Hardonia ecosystem products.',
-  canonical: '/catalog',
+    "Browse ready-to-deploy automation software engines, deterministic workflow packs, and Hardonia ecosystem products.",
+  canonical: "/catalog",
 });
 
 export default function ProductCatalogPage() {
@@ -25,7 +22,7 @@ export default function ProductCatalogPage() {
   return (
     <>
       <div className="container pt-4">
-        <Breadcrumbs items={[{ label: 'Product Catalog' }]} />
+        <Breadcrumbs items={[{ label: "Product Catalog" }]} />
       </div>
 
       <PageHero
@@ -49,8 +46,9 @@ export default function ProductCatalogPage() {
               Hire AIAS Engineers to Adapt Any Catalog Module
             </h2>
             <p className="mt-2 text-xs text-muted-foreground max-w-2xl leading-relaxed">
-              Every software engine and workflow pack can be customized, integrated into legacy
-              systems, and hardened for enterprise data residency by our senior architects.
+              Every software engine and workflow pack can be customized,
+              integrated into legacy systems, and hardened for enterprise data
+              residency by our senior architects.
             </p>
           </div>
           <Button

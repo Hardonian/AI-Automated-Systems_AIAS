@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { 
+import { motion } from "framer-motion";
+import { useState } from "react";
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -10,35 +10,35 @@ import {
 } from "@/components/ui/tooltip";
 
 const nodes = [
-  { 
-    id: 'reach', 
-    label: 'Reach', 
-    x: 100, 
-    y: 100, 
-    color: 'bg-indigo-600', 
-    description: 'Demand Shaping & Qualification Layer' 
+  {
+    id: "reach",
+    label: "Reach",
+    x: 100,
+    y: 100,
+    color: "bg-indigo-600",
+    description: "Demand Shaping & Qualification Layer",
   },
-  { 
-    id: 'zeo', 
-    label: 'Zeo', 
-    x: 300, 
-    y: 100, 
-    color: 'bg-emerald-600', 
-    description: 'Platform & Automation Execution Layer' 
+  {
+    id: "zeo",
+    label: "Zeo",
+    x: 300,
+    y: 100,
+    color: "bg-emerald-600",
+    description: "Platform & Automation Execution Layer",
   },
-  { 
-    id: 'settler', 
-    label: 'Settler', 
-    x: 500, 
-    y: 100, 
-    color: 'bg-amber-600', 
-    description: 'Deployment & Governance Operations Layer' 
+  {
+    id: "settler",
+    label: "Settler",
+    x: 500,
+    y: 100,
+    color: "bg-amber-600",
+    description: "Deployment & Governance Operations Layer",
   },
 ];
 
 const connections = [
-  { from: 'reach', to: 'zeo' },
-  { from: 'zeo', to: 'settler' },
+  { from: "reach", to: "zeo" },
+  { from: "zeo", to: "settler" },
 ];
 
 export function ArchitectureDiagram() {
@@ -60,10 +60,10 @@ export function ArchitectureDiagram() {
               <polygon points="0 0, 10 3.5, 0 7" fill="#475569" />
             </marker>
           </defs>
-          
+
           {connections.map((conn, i) => {
-            const from = nodes.find(n => n.id === conn.from)!;
-            const to = nodes.find(n => n.id === conn.to)!;
+            const from = nodes.find((n) => n.id === conn.from)!;
+            const to = nodes.find((n) => n.id === conn.to)!;
             return (
               <motion.line
                 key={i}
@@ -94,15 +94,22 @@ export function ArchitectureDiagram() {
                   onMouseEnter={() => setHoveredNode(node.id)}
                   onMouseLeave={() => setHoveredNode(null)}
                 >
-                  <div className={`h-16 w-16 rounded-xl ${node.color} flex items-center justify-center shadow-xl shadow-black/20 border border-white/10`}>
-                    <span className="text-sm font-bold text-white uppercase tracking-tighter">{node.label}</span>
+                  <div
+                    className={`h-16 w-16 rounded-xl ${node.color} flex items-center justify-center shadow-xl shadow-black/20 border border-white/10`}
+                  >
+                    <span className="text-sm font-bold text-white uppercase tracking-tighter">
+                      {node.label}
+                    </span>
                   </div>
                   <div className="text-[10px] font-medium text-slate-500 uppercase tracking-widest leading-none">
                     Component {i + 1}
                   </div>
                 </motion.div>
               </TooltipTrigger>
-              <TooltipContent side="bottom" className="bg-slate-900 text-slate-200 border-slate-800">
+              <TooltipContent
+                side="bottom"
+                className="bg-slate-900 text-slate-200 border-slate-800"
+              >
                 <p className="font-semibold text-xs">{node.description}</p>
               </TooltipContent>
             </Tooltip>
@@ -111,7 +118,9 @@ export function ArchitectureDiagram() {
 
         <div className="absolute top-4 left-6 flex items-center gap-2">
           <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-slate-500">Live Architecture Model</span>
+          <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-slate-500">
+            Live Architecture Model
+          </span>
         </div>
       </div>
     </TooltipProvider>

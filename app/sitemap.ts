@@ -17,7 +17,9 @@ const fallbackLastModified = new Date();
 const cache = new Map<string, Date>();
 
 const resolveLastModified = (filePath: string) => {
-  if (cache.has(filePath)) {return cache.get(filePath) as Date;}
+  if (cache.has(filePath)) {
+    return cache.get(filePath) as Date;
+  }
 
   try {
     const gitTimestamp = execSync(`git log -1 --format=%cI -- ${filePath}`, {

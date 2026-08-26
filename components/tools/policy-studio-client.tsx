@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ShieldAlert,
   ShieldCheck,
@@ -17,9 +17,9 @@ import {
   ExternalLink,
   Lock,
   RefreshCw,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 
 interface PresetScenario {
   id: string;
@@ -36,11 +36,11 @@ interface PresetScenario {
 
 const PRESETS: PresetScenario[] = [
   {
-    id: 'refund-dispatch',
-    name: 'Customer Refund & Credit Card Request',
-    category: 'E-Commerce',
+    id: "refund-dispatch",
+    name: "Customer Refund & Credit Card Request",
+    category: "E-Commerce",
     sampleInput:
-      'Customer requested $420.00 refund for damaged item. Card on file: 4532-8921-3829-1029, email: alex.miller@example.com. Requested immediate refund to card without manager signature.',
+      "Customer requested $420.00 refund for damaged item. Card on file: 4532-8921-3829-1029, email: alex.miller@example.com. Requested immediate refund to card without manager signature.",
     suggestedRules: {
       maskPii: true,
       blockUnapprovedFinancials: true,
@@ -49,11 +49,11 @@ const PRESETS: PresetScenario[] = [
     },
   },
   {
-    id: 'invoice-parsing',
-    name: 'Invoice Parsing & Supplier PO Dispatch',
-    category: 'Finance / AP',
+    id: "invoice-parsing",
+    name: "Invoice Parsing & Supplier PO Dispatch",
+    category: "Finance / AP",
     sampleInput:
-      'Vendor Acme Corp submitted Invoice #INV-9821 for $8,450.00. PO Number referenced: PO-4402. Line items: Server hardware $7,000, Delivery $1,450. Match confidence: 84%.',
+      "Vendor Acme Corp submitted Invoice #INV-9821 for $8,450.00. PO Number referenced: PO-4402. Line items: Server hardware $7,000, Delivery $1,450. Match confidence: 84%.",
     suggestedRules: {
       maskPii: false,
       blockUnapprovedFinancials: true,
@@ -62,11 +62,11 @@ const PRESETS: PresetScenario[] = [
     },
   },
   {
-    id: 'support-escalation',
-    name: 'Support VIP Ticket Triage',
-    category: 'Support',
+    id: "support-escalation",
+    name: "Support VIP Ticket Triage",
+    category: "Support",
     sampleInput:
-      'Enterprise user reported outage on webhook sync endpoint. Sentiment: High frustration. Customer Tier: Enterprise SLA (2 hour resolution).',
+      "Enterprise user reported outage on webhook sync endpoint. Sentiment: High frustration. Customer Tier: Enterprise SLA (2 hour resolution).",
     suggestedRules: {
       maskPii: true,
       blockUnapprovedFinancials: false,
@@ -79,8 +79,11 @@ const PRESETS: PresetScenario[] = [
 const DEFAULT_PRESET: PresetScenario = PRESETS[0]!;
 
 export function PolicyStudioClient() {
-  const [selectedPreset, setSelectedPreset] = useState<PresetScenario>(DEFAULT_PRESET);
-  const [promptText, setPromptText] = useState<string>(DEFAULT_PRESET.sampleInput);
+  const [selectedPreset, setSelectedPreset] =
+    useState<PresetScenario>(DEFAULT_PRESET);
+  const [promptText, setPromptText] = useState<string>(
+    DEFAULT_PRESET.sampleInput,
+  );
 
   // Policy rules
   const [maskPii, setMaskPii] = useState<boolean>(true);
@@ -92,7 +95,7 @@ export function PolicyStudioClient() {
   // Evaluation results
   const [isEvaluating, setIsEvaluating] = useState<boolean>(false);
   const [evalResult, setEvalResult] = useState<{
-    status: 'PASSED' | 'INTERCEPTED' | 'ESCALATED';
+    status: "PASSED" | "INTERCEPTED" | "ESCALATED";
     violations: string[];
     redactedPayload: string;
     decisionTelemetry: {
@@ -120,46 +123,53 @@ export function PolicyStudioClient() {
     setIsEvaluating(true);
 
     setTimeout(() => {
-      let status: 'PASSED' | 'INTERCEPTED' | 'ESCALATED' = 'PASSED';
+      let status: "PASSED" | "INTERCEPTED" | "ESCALATED" = "PASSED";
       const violations: string[] = [];
       let redacted = promptText;
 
       // PII check
       if (maskPii) {
         if (/(\d{4}[-\s]?){4}/.test(promptText)) {
-          redacted = redacted.replace(/(\d{4}[-\s]?){4}/g, '[REDACTED_PAYMENT_CARD]');
-          violations.push('Policy G101: Detected & Masked Card Details');
+          redacted = redacted.replace(
+            /(\d{4}[-\s]?){4}/g,
+            "[REDACTED_PAYMENT_CARD]",
+          );
+          violations.push("Policy G101: Detected & Masked Card Details");
         }
         if (/[\w.-]+@[\w.-]+\.\w+/.test(promptText)) {
-          redacted = redacted.replace(/[\w.-]+@[\w.-]+\.\w+/g, '[REDACTED_EMAIL]');
-          violations.push('Policy G102: Detected & Masked Email Address');
+          redacted = redacted.replace(
+            /[\w.-]+@[\w.-]+\.\w+/g,
+            "[REDACTED_EMAIL]",
+          );
+          violations.push("Policy G102: Detected & Masked Email Address");
         }
       }
 
       // Financial threshold check
       const amountMatch = promptText.match(/\$(\d+[\d,.]*)/);
       if (blockFinancials && amountMatch && amountMatch[1]) {
-        const val = parseFloat(amountMatch[1].replace(/,/g, ''));
+        const val = parseFloat(amountMatch[1].replace(/,/g, ""));
         if (val > 100) {
-          status = 'INTERCEPTED';
+          status = "INTERCEPTED";
           violations.push(
-            `Policy F204: Action involves financial movement ($${val.toLocaleString()}) > $100 limit without supervisor approval.`
+            `Policy F204: Action involves financial movement ($${val.toLocaleString()}) > $100 limit without supervisor approval.`,
           );
         }
       }
 
       // Confidence check
-      const simulatedConfidence = selectedPreset.id === 'invoice-parsing' ? 84 : 96;
+      const simulatedConfidence =
+        selectedPreset.id === "invoice-parsing" ? 84 : 96;
       if (requireHumanSignOff && simulatedConfidence < confidenceThreshold) {
-        status = 'ESCALATED';
+        status = "ESCALATED";
         violations.push(
-          `Policy C301: Extraction confidence (${simulatedConfidence}%) falls below required threshold (${confidenceThreshold}%). Routing to Operator Review.`
+          `Policy C301: Extraction confidence (${simulatedConfidence}%) falls below required threshold (${confidenceThreshold}%). Routing to Operator Review.`,
         );
       }
 
       const generatedZod = `import { z } from 'zod';
 
-export const ${selectedPreset.id.replace(/-/g, '_')}_policy = z.object({
+export const ${selectedPreset.id.replace(/-/g, "_")}_policy = z.object({
   payload_id: z.string().uuid(),
   timestamp: z.string().datetime(),
   domain: z.literal('${selectedPreset.category}'),
@@ -170,7 +180,7 @@ export const ${selectedPreset.id.replace(/-/g, '_')}_policy = z.object({
     max_unsupervised_amount: z.literal(100),
   }),
   operator_fallback: z.enum(['AUTO_DISPATCH', 'HOLD_FOR_OPERATOR', 'REJECT']).default('${
-    status === 'PASSED' ? 'AUTO_DISPATCH' : 'HOLD_FOR_OPERATOR'
+    status === "PASSED" ? "AUTO_DISPATCH" : "HOLD_FOR_OPERATOR"
   }'),
 });`;
 
@@ -179,15 +189,20 @@ export const ${selectedPreset.id.replace(/-/g, '_')}_policy = z.object({
         violations,
         redactedPayload: redacted,
         decisionTelemetry: {
-          evaluatedRules: (maskPii ? 2 : 0) + (blockFinancials ? 1 : 0) + (enforceSchema ? 1 : 0) + (requireHumanSignOff ? 1 : 0) + 3,
+          evaluatedRules:
+            (maskPii ? 2 : 0) +
+            (blockFinancials ? 1 : 0) +
+            (enforceSchema ? 1 : 0) +
+            (requireHumanSignOff ? 1 : 0) +
+            3,
           latencyMs: 18,
           confidenceScore: simulatedConfidence,
           deterministicRoute:
-            status === 'PASSED'
-              ? 'GATEWAY::PROCEED_EXECUTION'
-              : status === 'INTERCEPTED'
-              ? 'GATEWAY::INTERCEPT_AND_LOCK'
-              : 'GATEWAY::OPERATOR_TRIAGE_QUEUE',
+            status === "PASSED"
+              ? "GATEWAY::PROCEED_EXECUTION"
+              : status === "INTERCEPTED"
+                ? "GATEWAY::INTERCEPT_AND_LOCK"
+                : "GATEWAY::OPERATOR_TRIAGE_QUEUE",
         },
         generatedCode: generatedZod,
       });
@@ -225,15 +240,17 @@ export const ${selectedPreset.id.replace(/-/g, '_')}_policy = z.object({
               onClick={() => handleSelectPreset(preset)}
               className={`border-2 p-4 text-left font-mono transition-all cursor-pointer ${
                 selectedPreset.id === preset.id
-                  ? 'border-primary bg-primary/10 shadow-[2px_2px_0px_0px_hsl(var(--primary))]'
-                  : 'border-border bg-background hover:border-foreground'
+                  ? "border-primary bg-primary/10 shadow-[2px_2px_0px_0px_hsl(var(--primary))]"
+                  : "border-border bg-background hover:border-foreground"
               }`}
               type="button"
             >
               <span className="border border-border bg-background px-2 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">
                 {preset.category}
               </span>
-              <p className="mt-2 text-xs font-bold uppercase text-foreground">{preset.name}</p>
+              <p className="mt-2 text-xs font-bold uppercase text-foreground">
+                {preset.name}
+              </p>
             </button>
           ))}
         </div>
@@ -350,7 +367,9 @@ export const ${selectedPreset.id.replace(/-/g, '_')}_policy = z.object({
                   min={70}
                   max={98}
                   value={confidenceThreshold}
-                  onChange={(e) => setConfidenceThreshold(parseInt(e.target.value, 10))}
+                  onChange={(e) =>
+                    setConfidenceThreshold(parseInt(e.target.value, 10))
+                  }
                   disabled={!requireHumanSignOff}
                   className="mt-3 w-full accent-primary cursor-pointer"
                 />
@@ -362,7 +381,9 @@ export const ${selectedPreset.id.replace(/-/g, '_')}_policy = z.object({
               disabled={isEvaluating}
               className="w-full rounded-none border-2 border-primary bg-primary py-5 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card hover:-translate-y-0.5 transition-transform cursor-pointer"
             >
-              {isEvaluating ? 'Evaluating Boundary Gates...' : 'Run Policy Gate Evaluation'}
+              {isEvaluating
+                ? "Evaluating Boundary Gates..."
+                : "Run Policy Gate Evaluation"}
               <Play className="ml-2 h-4 w-4 fill-current" />
             </Button>
           </div>
@@ -378,11 +399,11 @@ export const ${selectedPreset.id.replace(/-/g, '_')}_policy = z.object({
               {evalResult && (
                 <span
                   className={`border px-2.5 py-0.5 font-mono text-xs font-black uppercase ${
-                    evalResult.status === 'PASSED'
-                      ? 'border-green-500 bg-green-500/10 text-green-500'
-                      : evalResult.status === 'INTERCEPTED'
-                      ? 'border-red-500 bg-red-500/10 text-red-500'
-                      : 'border-amber-500 bg-amber-500/10 text-amber-500'
+                    evalResult.status === "PASSED"
+                      ? "border-green-500 bg-green-500/10 text-green-500"
+                      : evalResult.status === "INTERCEPTED"
+                        ? "border-red-500 bg-red-500/10 text-red-500"
+                        : "border-amber-500 bg-amber-500/10 text-amber-500"
                   }`}
                 >
                   {evalResult.status}
@@ -396,27 +417,35 @@ export const ${selectedPreset.id.replace(/-/g, '_')}_policy = z.object({
                 {/* Telemetry chips */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   <div className="border border-border bg-surface-muted p-2">
-                    <p className="font-mono text-[9px] uppercase text-muted-foreground">Rules Run</p>
+                    <p className="font-mono text-[9px] uppercase text-muted-foreground">
+                      Rules Run
+                    </p>
                     <p className="font-mono text-xs font-bold text-foreground">
                       {evalResult.decisionTelemetry.evaluatedRules} Gates
                     </p>
                   </div>
                   <div className="border border-border bg-surface-muted p-2">
-                    <p className="font-mono text-[9px] uppercase text-muted-foreground">Latency</p>
+                    <p className="font-mono text-[9px] uppercase text-muted-foreground">
+                      Latency
+                    </p>
                     <p className="font-mono text-xs font-bold text-foreground">
                       {evalResult.decisionTelemetry.latencyMs} ms
                     </p>
                   </div>
                   <div className="border border-border bg-surface-muted p-2">
-                    <p className="font-mono text-[9px] uppercase text-muted-foreground">Confidence</p>
+                    <p className="font-mono text-[9px] uppercase text-muted-foreground">
+                      Confidence
+                    </p>
                     <p className="font-mono text-xs font-bold text-foreground">
                       {evalResult.decisionTelemetry.confidenceScore}%
                     </p>
                   </div>
                   <div className="border border-border bg-surface-muted p-2">
-                    <p className="font-mono text-[9px] uppercase text-muted-foreground">Audit Code</p>
+                    <p className="font-mono text-[9px] uppercase text-muted-foreground">
+                      Audit Code
+                    </p>
                     <p className="font-mono text-[10px] font-bold text-primary">
-                      {evalResult.status === 'PASSED' ? 'OK-200' : 'GAT-403'}
+                      {evalResult.status === "PASSED" ? "OK-200" : "GAT-403"}
                     </p>
                   </div>
                 </div>
@@ -495,7 +524,8 @@ export const ${selectedPreset.id.replace(/-/g, '_')}_policy = z.object({
               <div className="py-16 text-center text-muted-foreground">
                 <ShieldAlert className="h-10 w-10 mx-auto text-muted-foreground/40 mb-3" />
                 <p className="font-mono text-xs uppercase">
-                  Click &ldquo;Run Policy Gate Evaluation&rdquo; to simulate control-plane execution.
+                  Click &ldquo;Run Policy Gate Evaluation&rdquo; to simulate
+                  control-plane execution.
                 </p>
               </div>
             )}
@@ -507,8 +537,9 @@ export const ${selectedPreset.id.replace(/-/g, '_')}_policy = z.object({
               Ready to Embed This Guardrail Kit Into Your Architecture?
             </h4>
             <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-              Get our complete open-source TypeScript & Zod guardrail package from the product
-              catalog, or hire AIAS engineers to harden your entire system.
+              Get our complete open-source TypeScript & Zod guardrail package
+              from the product catalog, or hire AIAS engineers to harden your
+              entire system.
             </p>
             <div className="mt-4 flex flex-wrap items-center gap-3">
               <Button

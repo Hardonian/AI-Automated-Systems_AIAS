@@ -68,19 +68,19 @@ Our visual tests are designed to be stable and deterministic:
 ## Adding New Visual Tests
 
 ```typescript
-import { test, expect } from '@playwright/test';
-import { setupVisualTest, waitForPageStability } from './utils/visual-helpers';
+import { test, expect } from "@playwright/test";
+import { setupVisualTest, waitForPageStability } from "./utils/visual-helpers";
 
-const baseURL = process.env.BASE_URL || 'http://localhost:3000';
+const baseURL = process.env.BASE_URL || "http://localhost:3000";
 
-test('my new page - desktop', async ({ page }, testInfo) => {
+test("my new page - desktop", async ({ page }, testInfo) => {
   await setupVisualTest(page, testInfo);
   await page.goto(`${baseURL}/my-route`);
   await waitForPageStability(page);
 
-  await expect(page).toHaveScreenshot('my-page-desktop.png', {
+  await expect(page).toHaveScreenshot("my-page-desktop.png", {
     fullPage: true,
-    animations: 'disabled',
+    animations: "disabled",
   });
 });
 ```

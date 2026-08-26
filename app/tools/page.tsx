@@ -1,22 +1,18 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import {
-  Cpu,
-  ShoppingBag,
-  ArrowRight,
-} from 'lucide-react';
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Cpu, ShoppingBag, ArrowRight } from "lucide-react";
 
-import { PageHero, PageSection } from '@/components/ui/section-primitives';
-import { Breadcrumbs } from '@/components/layout/breadcrumbs';
-import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
-import { siteContent } from '@/src/content/site';
-import { ToolsDirectoryClient } from '@/components/tools/tools-directory-client';
+import { PageHero, PageSection } from "@/components/ui/section-primitives";
+import { Breadcrumbs } from "@/components/layout/breadcrumbs";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
+import { siteContent } from "@/src/content/site";
+import { ToolsDirectoryClient } from "@/components/tools/tools-directory-client";
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Interactive AI Automation Tools & Simulators | AIAS',
+  title: "Interactive AI Automation Tools & Simulators | AIAS",
   description:
-    'Self-serve client-side AI tools, ROI calculators, deterministic workflow planners, and policy studios to model and test automation impact.',
-  canonical: '/tools',
+    "Self-serve client-side AI tools, ROI calculators, deterministic workflow planners, and policy studios to model and test automation impact.",
+  canonical: "/tools",
 });
 
 export default function ToolsHubPage() {
@@ -25,7 +21,7 @@ export default function ToolsHubPage() {
   return (
     <>
       <div className="container pt-4">
-        <Breadcrumbs items={[{ label: 'Quick Tools' }]} />
+        <Breadcrumbs items={[{ label: "Quick Tools" }]} />
       </div>
 
       <PageHero
@@ -55,8 +51,9 @@ export default function ToolsHubPage() {
               </div>
             </div>
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-              Ready to turn simulation plans into production reality? Hire our systems architects
-              for bespoke automation builds, stabilization sprints, and operator enablement.
+              Ready to turn simulation plans into production reality? Hire our
+              systems architects for bespoke automation builds, stabilization
+              sprints, and operator enablement.
             </p>
             <div className="mt-6">
               <Link
@@ -84,8 +81,9 @@ export default function ToolsHubPage() {
               </div>
             </div>
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-              Looking for pre-built modules, deployment fabrics, or governance kits? Browse our
-              tested catalog of ready-to-deploy software packages.
+              Looking for pre-built modules, deployment fabrics, or governance
+              kits? Browse our tested catalog of ready-to-deploy software
+              packages.
             </p>
             <div className="mt-6">
               <Link

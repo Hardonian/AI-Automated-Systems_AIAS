@@ -1,34 +1,40 @@
 #!/usr/bin/env tsx
-import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { join, relative } from "node:path";
 
-import { CANONICAL_TAGLINES, MESSAGING_CONTRACT, TAGLINE_TITLE_TEMPLATE } from '../content/constants';
+import {
+  CANONICAL_TAGLINES,
+  MESSAGING_CONTRACT,
+  TAGLINE_TITLE_TEMPLATE,
+} from "../content/constants";
 
 const ROOT = process.cwd();
-const TARGET_DIRS = ['app', 'components'];
-const EXTENSIONS = new Set(['.ts', '.tsx', '.md', '.mdx']);
+const TARGET_DIRS = ["app", "components"];
+const EXTENSIONS = new Set([".ts", ".tsx", ".md", ".mdx"]);
 
 const bannedPhraseChecks = [
   {
-    name: 'chatbot-dismissive framing',
+    name: "chatbot-dismissive framing",
     pattern: /stop\s+playing\s+with\s+chatbots/i,
-    guidance: 'Use contract-approved transition language for experimentation to production messaging.',
+    guidance:
+      "Use contract-approved transition language for experimentation to production messaging.",
   },
   {
-    name: 'autonomy overclaim',
+    name: "autonomy overclaim",
     pattern: /\b(?:fully\s+autonomous|zero\s+oversight)\b/i,
-    guidance: 'Avoid absolute outcome claims; emphasize governed, measurable delivery.',
+    guidance:
+      "Avoid absolute outcome claims; emphasize governed, measurable delivery.",
   },
 ] as const;
 
 const inconsistentTermChecks = [
   {
-    name: 'non-canonical service terminology',
+    name: "non-canonical service terminology",
     pattern: /\bAI\s+consultancy\b/i,
     preferred: MESSAGING_CONTRACT.canonicalTerms.offering,
   },
   {
-    name: 'non-canonical system terminology',
+    name: "non-canonical system terminology",
     pattern: /\bcustom\s+AI\s+platform\s+development\b/i,
     preferred: MESSAGING_CONTRACT.canonicalTerms.systemModel,
   },
@@ -36,25 +42,39 @@ const inconsistentTermChecks = [
 
 const conflictingClaimChecks = [
   {
-    name: 'SOC2 certification claim',
+    name: "SOC2 certification claim",
     pattern: /\bSOC\s*2\b(?![-\s](?:aligned|ready))/i,
-    guidance: 'Only claim SOC 2-aligned posture unless certification is formally completed and documented.',
+    guidance:
+      "Only claim SOC 2-aligned posture unless certification is formally completed and documented.",
   },
   {
-    name: 'guaranteed outcome claim',
+    name: "guaranteed outcome claim",
     pattern: /(?<!not\s)\bguaranteed\s+(?:results|outcomes|roi)\b/i,
-    guidance: 'Avoid guaranteed outcome claims; use measurable targets and constraints instead.',
+    guidance:
+      "Avoid guaranteed outcome claims; use measurable targets and constraints instead.",
   },
 ] as const;
 
-const canonicalTaglinePatterns = new Set(CANONICAL_TAGLINES.map(tagline => tagline.toLowerCase()));
+const canonicalTaglinePatterns = new Set(
+  CANONICAL_TAGLINES.map((tagline) => tagline.toLowerCase()),
+);
 
-type Hit = { file: string; line: number; rule: string; text: string; guidance: string };
+type Hit = {
+  file: string;
+  line: number;
+  rule: string;
+  text: string;
+  guidance: string;
+};
 const hits: Hit[] = [];
 
 function walk(dir: string): void {
   for (const entry of readdirSync(dir)) {
-    if (entry.startsWith('.next') || entry.startsWith('node_modules') || entry.startsWith('.git')) {
+    if (
+      entry.startsWith(".next") ||
+      entry.startsWith("node_modules") ||
+      entry.startsWith(".git")
+    ) {
       continue;
     }
 
@@ -66,13 +86,13 @@ function walk(dir: string): void {
       continue;
     }
 
-    const ext = fullPath.slice(fullPath.lastIndexOf('.'));
+    const ext = fullPath.slice(fullPath.lastIndexOf("."));
     if (!EXTENSIONS.has(ext)) {
       continue;
     }
 
     const relPath = relative(ROOT, fullPath);
-    const lines = readFileSync(fullPath, 'utf8').split(/\r?\n/);
+    const lines = readFileSync(fullPath, "utf8").split(/\r?\n/);
 
     lines.forEach((line, index) => {
       for (const check of bannedPhraseChecks) {
@@ -118,7 +138,7 @@ function walk(dir: string): void {
           hits.push({
             file: relPath,
             line: index + 1,
-            rule: 'conflicting tagline',
+            rule: "conflicting tagline",
             text: line.trim(),
             guidance: `Use TAGLINE_TITLE_TEMPLATE (${TAGLINE_TITLE_TEMPLATE}).`,
           });
@@ -133,7 +153,7 @@ for (const dir of TARGET_DIRS) {
 }
 
 if (hits.length > 0) {
-  console.error('❌ Messaging audit failed:\n');
+  console.error("❌ Messaging audit failed:\n");
   for (const hit of hits) {
     console.error(`- ${hit.file}:${hit.line} [${hit.rule}]`);
     console.error(`  ${hit.text}`);
@@ -142,6 +162,8 @@ if (hits.length > 0) {
   process.exit(1);
 }
 
-console.log('✅ Messaging audit passed.');
-console.log(`   Canonical positioning: ${MESSAGING_CONTRACT.positioningSentence}`);
+console.log("✅ Messaging audit passed.");
+console.log(
+  `   Canonical positioning: ${MESSAGING_CONTRACT.positioningSentence}`,
+);
 console.log(`   Canonical tagline: ${TAGLINE_TITLE_TEMPLATE}`);

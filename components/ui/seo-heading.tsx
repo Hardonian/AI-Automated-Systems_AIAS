@@ -1,42 +1,42 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import * as React from "react";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface SEOHeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
-  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   gradient?: boolean;
   animate?: boolean;
-  priority?: 'high' | 'medium' | 'low';
+  priority?: "high" | "medium" | "low";
 }
 
 export const SEOHeading = React.forwardRef<HTMLHeadingElement, SEOHeadingProps>(
   (
     {
-      as: Component = 'h2',
+      as: Component = "h2",
       gradient = false,
       animate = true,
-      priority = 'medium',
+      priority = "medium",
       className,
       children,
       ...props
     },
-    ref
+    ref,
   ) => {
     const headingClasses = cn(
-      'font-bold tracking-tight',
+      "font-bold tracking-tight",
       {
-        'text-4xl md:text-5xl lg:text-6xl': Component === 'h1',
-        'text-3xl md:text-4xl': Component === 'h2',
-        'text-2xl md:text-3xl': Component === 'h3',
-        'text-xl md:text-2xl': Component === 'h4',
-        'text-lg md:text-xl': Component === 'h5',
-        'text-base md:text-lg': Component === 'h6',
+        "text-4xl md:text-5xl lg:text-6xl": Component === "h1",
+        "text-3xl md:text-4xl": Component === "h2",
+        "text-2xl md:text-3xl": Component === "h3",
+        "text-xl md:text-2xl": Component === "h4",
+        "text-lg md:text-xl": Component === "h5",
+        "text-base md:text-lg": Component === "h6",
       },
       gradient &&
-        'bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent',
-      className
+        "bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent",
+      className,
     );
 
     const content = (
@@ -58,6 +58,6 @@ export const SEOHeading = React.forwardRef<HTMLHeadingElement, SEOHeadingProps>(
     }
 
     return content;
-  }
+  },
 );
-SEOHeading.displayName = 'SEOHeading';
+SEOHeading.displayName = "SEOHeading";

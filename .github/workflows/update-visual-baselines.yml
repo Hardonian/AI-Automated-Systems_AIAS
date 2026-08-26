@@ -4,21 +4,21 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Branch to update baselines on'
+        description: "Branch to update baselines on"
         required: true
-        default: 'main'
+        default: "main"
         type: string
       reason:
-        description: 'Reason for baseline update'
+        description: "Reason for baseline update"
         required: true
         type: string
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-  NODE_VERSION: '22'
-  PNPM_VERSION: '8'
-  BASE_URL: 'http://localhost:3000'
+  NODE_VERSION: "22"
+  PNPM_VERSION: "8"
+  BASE_URL: "http://localhost:3000"
 
 concurrency:
   group: visual-baseline-update
@@ -83,8 +83,8 @@ jobs:
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-          NODE_OPTIONS: '--max-old-space-size=4096'
-          SKIP_DB: 'true'
+          NODE_OPTIONS: "--max-old-space-size=4096"
+          SKIP_DB: "true"
 
       - name: Start production server
         run: |
@@ -93,14 +93,14 @@ jobs:
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-          PORT: '3000'
+          PORT: "3000"
 
       - name: Update visual baselines
         run: pnpm test:visual:update
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-          CI: 'true'
+          CI: "true"
           BASE_URL: ${{ env.BASE_URL }}
 
       - name: Check for baseline changes

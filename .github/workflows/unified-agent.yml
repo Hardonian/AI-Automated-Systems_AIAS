@@ -3,13 +3,13 @@ name: Unified Hardonia Agent
 on:
   schedule:
     # Run every 12 hours at :05 (matches schedule_cron_light from ops.config.json)
-    - cron: '5 */12 * * *'
+    - cron: "5 */12 * * *"
   workflow_dispatch:
     inputs:
       mode:
-        description: 'Agent mode'
+        description: "Agent mode"
         required: false
-        default: 'full'
+        default: "full"
         type: choice
         options:
           - full
@@ -19,13 +19,13 @@ on:
       - main
       - develop
     paths:
-      - '**.ts'
-      - '**.tsx'
-      - '**.js'
-      - '**.jsx'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'pnpm-lock.yaml'
+      - "**.ts"
+      - "**.tsx"
+      - "**.js"
+      - "**.jsx"
+      - "package.json"
+      - "package-lock.json"
+      - "pnpm-lock.yaml"
 
 jobs:
   unified-agent:
@@ -54,8 +54,8 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
-          node-version: '22'
-          cache: 'pnpm'
+          node-version: "22"
+          cache: "pnpm"
 
       - name: Install dependencies
         run: |
@@ -81,7 +81,7 @@ jobs:
         id: changes
         run: |
           git diff --exit-code || echo "has_changes=true" >> $GITHUB_OUTPUT
- 
+
       - name: Create PR with artifacts
         if: steps.changes.outputs.has_changes == 'true'
         env:

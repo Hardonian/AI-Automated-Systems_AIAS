@@ -5,7 +5,7 @@
  * All utilities ensure consistent rendering across runs.
  */
 
-import { Page, TestInfo, expect } from '@playwright/test';
+import { Page, TestInfo, expect } from "@playwright/test";
 
 /**
  * Injects CSS and JS to disable animations and ensure visual stability
@@ -13,7 +13,7 @@ import { Page, TestInfo, expect } from '@playwright/test';
 export async function disableAnimations(page: Page): Promise<void> {
   // Inject CSS to disable animations
   await page.addInitScript(() => {
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       /* Disable all animations and transitions */
       *,
@@ -93,14 +93,14 @@ export async function disableAnimations(page: Page): Promise<void> {
       window.IntersectionObserver = class extends OriginalIntersectionObserver {
         constructor(
           callback: IntersectionObserverCallback,
-          options?: IntersectionObserverInit
+          options?: IntersectionObserverInit,
         ) {
           // Immediately trigger callback with all elements intersecting
           const wrappedCallback: IntersectionObserverCallback = (
             entries,
-            observer
+            observer,
           ) => {
-            const modifiedEntries = entries.map(entry => ({
+            const modifiedEntries = entries.map((entry) => ({
               ...entry,
               isIntersecting: true,
               intersectionRatio: 1,
@@ -113,7 +113,7 @@ export async function disableAnimations(page: Page): Promise<void> {
     }
 
     // Freeze Date for consistent timestamps
-    const frozenDate = new Date('2024-06-15T12:00:00.000Z');
+    const frozenDate = new Date("2024-06-15T12:00:00.000Z");
     const OriginalDate = window.Date;
     window.Date = class extends OriginalDate {
       constructor(...args: (string | number | Date)[]) {
@@ -128,7 +128,7 @@ export async function disableAnimations(page: Page): Promise<void> {
       }
     } as DateConstructor;
     Object.setPrototypeOf(window.Date, OriginalDate);
-    Object.defineProperty(window.Date, 'name', { value: 'Date' });
+    Object.defineProperty(window.Date, "name", { value: "Date" });
 
     // Disable Math.random for deterministic renders
     let seed = 12345;
@@ -145,11 +145,11 @@ export async function disableAnimations(page: Page): Promise<void> {
 export async function maskDynamicContent(page: Page): Promise<void> {
   const maskSelectors = [
     // Timestamps and dates
-    'time',
-    '[datetime]',
-    '.timestamp',
-    '.date',
-    '.time',
+    "time",
+    "[datetime]",
+    ".timestamp",
+    ".date",
+    ".time",
     '[data-testid="timestamp"]',
 
     // User-generated content with randomness
@@ -157,12 +157,12 @@ export async function maskDynamicContent(page: Page): Promise<void> {
     '.user-avatar[src*="random"]',
 
     // Analytics and counters
-    '.view-count',
-    '.live-users',
-    '.real-time-stats',
+    ".view-count",
+    ".live-users",
+    ".real-time-stats",
 
     // Version numbers
-    '.version',
+    ".version",
     '[data-testid="version"]',
 
     // Dynamic IDs
@@ -174,8 +174,8 @@ export async function maskDynamicContent(page: Page): Promise<void> {
     const elements = page.locator(selector);
     const count = await elements.count();
     if (count > 0) {
-      await elements.evaluateAll(els => {
-        els.forEach(el => {
+      await elements.evaluateAll((els) => {
+        els.forEach((el) => {
           el.style.cssText += `
             visibility: hidden !important;
             opacity: 0 !important;
@@ -198,7 +198,7 @@ export async function waitForPageStability(
     imagesLoaded?: boolean;
     fontsLoaded?: boolean;
     timeout?: number;
-  } = {}
+  } = {},
 ): Promise<void> {
   const {
     networkIdle = true,
@@ -210,13 +210,13 @@ export async function waitForPageStability(
 
   // Wait for network idle
   if (networkIdle) {
-    await page.waitForLoadState('networkidle', { timeout });
+    await page.waitForLoadState("networkidle", { timeout });
   }
 
   // Wait for DOM to be stable (no mutations for 500ms)
   if (domStable) {
     await page.evaluate(() => {
-      return new Promise<void>(resolve => {
+      return new Promise<void>((resolve) => {
         let timeoutId: NodeJS.Timeout;
         const observer = new MutationObserver(() => {
           clearTimeout(timeoutId);
@@ -244,8 +244,8 @@ export async function waitForPageStability(
   // Wait for images to load
   if (imagesLoaded) {
     await page.evaluate(async () => {
-      const images = Array.from(document.querySelectorAll('img'));
-      const pendingImages = images.filter(img => !img.complete);
+      const images = Array.from(document.querySelectorAll("img"));
+      const pendingImages = images.filter((img) => !img.complete);
 
       if (pendingImages.length === 0) {
         return;
@@ -253,32 +253,32 @@ export async function waitForPageStability(
 
       await Promise.all(
         pendingImages.map(
-          img =>
-            new Promise<void>(resolve => {
+          (img) =>
+            new Promise<void>((resolve) => {
               const timeout = setTimeout(() => {
                 // Resolve anyway after timeout - image might be broken
                 resolve();
               }, 5000);
 
               img.addEventListener(
-                'load',
+                "load",
                 () => {
                   clearTimeout(timeout);
                   resolve();
                 },
-                { once: true }
+                { once: true },
               );
 
               img.addEventListener(
-                'error',
+                "error",
                 () => {
                   clearTimeout(timeout);
                   resolve(); // Resolve on error too - broken images should still be captured
                 },
-                { once: true }
+                { once: true },
               );
-            })
-        )
+            }),
+        ),
       );
     });
   }
@@ -304,13 +304,13 @@ export async function setupVisualTest(
     darkMode?: boolean;
     reducedMotion?: boolean;
     locale?: string;
-  } = {}
+  } = {},
 ): Promise<void> {
   const {
     viewport,
     darkMode = false,
     reducedMotion = true,
-    locale = 'en-US',
+    locale = "en-US",
   } = options;
 
   // Set viewport if provided
@@ -320,8 +320,8 @@ export async function setupVisualTest(
 
   // Set color scheme
   await page.emulateMedia({
-    colorScheme: darkMode ? 'dark' : 'light',
-    reducedMotion: reducedMotion ? 'reduce' : 'no-preference',
+    colorScheme: darkMode ? "dark" : "light",
+    reducedMotion: reducedMotion ? "reduce" : "no-preference",
   });
 
   // Disable animations
@@ -336,7 +336,7 @@ export async function setupVisualTest(
       DateTimeFormat: class extends OriginalIntl.DateTimeFormat {
         constructor(
           locales?: string | string[],
-          options?: Intl.DateTimeFormatOptions
+          options?: Intl.DateTimeFormatOptions,
         ) {
           super(localeCode, options);
         }
@@ -344,7 +344,7 @@ export async function setupVisualTest(
       NumberFormat: class extends OriginalIntl.NumberFormat {
         constructor(
           locales?: string | string[],
-          options?: Intl.NumberFormatOptions
+          options?: Intl.NumberFormatOptions,
         ) {
           super(localeCode, options);
         }
@@ -362,17 +362,19 @@ export function getScreenshotOptions(
     clip?: { x: number; y: number; width: number; height: number };
     mask?: string[];
     omitBackground?: boolean;
-  } = {}
+  } = {},
 ): object {
   return {
     fullPage: options.fullPage ?? true,
-    animations: 'disabled' as const,
+    animations: "disabled" as const,
     ...(options.clip && { clip: options.clip }),
-    ...(options.mask && { mask: options.mask.map(selector => ({ selector })) }),
+    ...(options.mask && {
+      mask: options.mask.map((selector) => ({ selector })),
+    }),
     ...(options.omitBackground && { omitBackground: true }),
     // Use consistent scale for screenshots
-    scale: 'css' as const,
-    type: 'png' as const,
+    scale: "css" as const,
+    type: "png" as const,
   };
 }
 
@@ -392,12 +394,12 @@ export const viewports = {
  * Critical routes for visual testing
  */
 export const criticalRoutes = [
-  { path: '/', name: 'homepage', auth: false },
-  { path: '/blog', name: 'blog', auth: false },
-  { path: '/privacy', name: 'privacy', auth: false },
-  { path: '/terms', name: 'terms', auth: false },
-  { path: '/#workflow-sandbox', name: 'workflow-sandbox', auth: false },
-  { path: '/#secret-sauce', name: 'secret-sauce', auth: false },
+  { path: "/", name: "homepage", auth: false },
+  { path: "/blog", name: "blog", auth: false },
+  { path: "/privacy", name: "privacy", auth: false },
+  { path: "/terms", name: "terms", auth: false },
+  { path: "/#workflow-sandbox", name: "workflow-sandbox", auth: false },
+  { path: "/#secret-sauce", name: "secret-sauce", auth: false },
 ];
 
 /**
@@ -410,14 +412,14 @@ export async function takeStableScreenshot(
     fullPage?: boolean;
     maskSelectors?: string[];
     waitForSelector?: string;
-  } = {}
+  } = {},
 ): Promise<void> {
   const { fullPage = true, maskSelectors = [], waitForSelector } = options;
 
   // Wait for specific element if requested
   if (waitForSelector) {
     await page.waitForSelector(waitForSelector, {
-      state: 'visible',
+      state: "visible",
       timeout: 10000,
     });
   }
@@ -431,9 +433,9 @@ export async function takeStableScreenshot(
   // Take screenshot with animations disabled
   await expect(page).toHaveScreenshot(name, {
     fullPage,
-    animations: 'disabled',
+    animations: "disabled",
     ...(maskSelectors.length > 0 && {
-      mask: maskSelectors.map(selector => page.locator(selector)),
+      mask: maskSelectors.map((selector) => page.locator(selector)),
     }),
   });
 }

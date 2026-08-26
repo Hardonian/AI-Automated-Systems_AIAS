@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
   Calendar as CalendarIcon,
   Clock,
@@ -12,13 +12,13 @@ import {
   Download,
   CalendarCheck,
   RotateCcw,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { SurfaceCard } from '@/components/ui/section-primitives';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SurfaceCard } from "@/components/ui/section-primitives";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-type SessionType = 'diagnostic' | 'architecture' | 'governance';
+type SessionType = "diagnostic" | "architecture" | "governance";
 
 interface SessionOption {
   id: SessionType;
@@ -29,58 +29,62 @@ interface SessionOption {
 
 const SESSION_TYPES: SessionOption[] = [
   {
-    id: 'diagnostic',
-    title: 'AI Clarity Diagnostic',
-    duration: '30 min',
-    description: 'Map workflows, evaluate automation fit, and identify immediate high-ROI boundaries.',
+    id: "diagnostic",
+    title: "AI Clarity Diagnostic",
+    duration: "30 min",
+    description:
+      "Map workflows, evaluate automation fit, and identify immediate high-ROI boundaries.",
   },
   {
-    id: 'architecture',
-    title: 'Architecture & Failure Mode Review',
-    duration: '45 min',
-    description: 'Technical review of existing agent pipelines, schema contracts, and latency/cost issues.',
+    id: "architecture",
+    title: "Architecture & Failure Mode Review",
+    duration: "45 min",
+    description:
+      "Technical review of existing agent pipelines, schema contracts, and latency/cost issues.",
   },
   {
-    id: 'governance',
-    title: 'Governance & Safety Scoping',
-    duration: '30 min',
-    description: 'Evaluate PIPEDA compliance, multi-tenant boundaries, and deterministic audit controls.',
+    id: "governance",
+    title: "Governance & Safety Scoping",
+    duration: "30 min",
+    description:
+      "Evaluate PIPEDA compliance, multi-tenant boundaries, and deterministic audit controls.",
   },
 ];
 
 const TIMEZONES = [
-  { label: 'Eastern Time (ET / Toronto)', value: 'America/Toronto' },
-  { label: 'Pacific Time (PT / Vancouver)', value: 'America/Vancouver' },
-  { label: 'Central Time (CT / Chicago)', value: 'America/Chicago' },
-  { label: 'UTC / GMT', value: 'UTC' },
-  { label: 'London Time (BST / London)', value: 'Europe/London' },
+  { label: "Eastern Time (ET / Toronto)", value: "America/Toronto" },
+  { label: "Pacific Time (PT / Vancouver)", value: "America/Vancouver" },
+  { label: "Central Time (CT / Chicago)", value: "America/Chicago" },
+  { label: "UTC / GMT", value: "UTC" },
+  { label: "London Time (BST / London)", value: "Europe/London" },
 ];
 
-const TIME_SLOTS = [
-  '09:30 AM',
-  '11:00 AM',
-  '01:30 PM',
-  '03:00 PM',
-  '04:30 PM',
-];
+const TIME_SLOTS = ["09:30 AM", "11:00 AM", "01:30 PM", "03:00 PM", "04:30 PM"];
 
 export function InteractiveScheduler() {
-  const [sessionType, setSessionType] = useState<SessionType>('diagnostic');
-  const [selectedTimezone, setSelectedTimezone] = useState(TIMEZONES[0]?.value || 'America/Toronto');
+  const [sessionType, setSessionType] = useState<SessionType>("diagnostic");
+  const [selectedTimezone, setSelectedTimezone] = useState(
+    TIMEZONES[0]?.value || "America/Toronto",
+  );
   const [selectedDateIndex, setSelectedDateIndex] = useState(0);
-  const [selectedSlot, setSelectedSlot] = useState<string | null>('11:00 AM');
+  const [selectedSlot, setSelectedSlot] = useState<string | null>("11:00 AM");
 
   // Form State
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [company, setCompany] = useState('');
-  const [notes, setNotes] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [notes, setNotes] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Generate next 10 business days
   const availableDates = useMemo(() => {
-    const dates: { dateStr: string; dayName: string; monthDay: string; fullDate: Date }[] = [];
+    const dates: {
+      dateStr: string;
+      dayName: string;
+      monthDay: string;
+      fullDate: Date;
+    }[] = [];
     const now = new Date();
     let current = new Date(now.getTime() + 24 * 60 * 60 * 1000); // Start tomorrow
 
@@ -89,9 +93,12 @@ export function InteractiveScheduler() {
       if (dayOfWeek !== 0 && dayOfWeek !== 6) {
         // Skip Sat/Sun
         dates.push({
-          dateStr: current.toISOString().split('T')[0] ?? '',
-          dayName: current.toLocaleDateString('en-US', { weekday: 'short' }),
-          monthDay: current.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          dateStr: current.toISOString().split("T")[0] ?? "",
+          dayName: current.toLocaleDateString("en-US", { weekday: "short" }),
+          monthDay: current.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          }),
           fullDate: new Date(current),
         });
       }
@@ -101,15 +108,17 @@ export function InteractiveScheduler() {
   }, []);
 
   const activeDate = availableDates[selectedDateIndex] ?? availableDates[0];
-  const activeSession = SESSION_TYPES.find((s) => s.id === sessionType) ?? SESSION_TYPES[0];
+  const activeSession =
+    SESSION_TYPES.find((s) => s.id === sessionType) ?? SESSION_TYPES[0];
 
   const handleConfirmBooking = (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: Record<string, string> = {};
 
-    if (!name.trim()) newErrors.name = 'Please enter your name.';
-    if (!email.trim() || !email.includes('@')) newErrors.email = 'Please enter a valid work email.';
-    if (!selectedSlot) newErrors.slot = 'Please select a time slot.';
+    if (!name.trim()) newErrors.name = "Please enter your name.";
+    if (!email.trim() || !email.includes("@"))
+      newErrors.email = "Please enter a valid work email.";
+    if (!selectedSlot) newErrors.slot = "Please select a time slot.";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -123,30 +132,32 @@ export function InteractiveScheduler() {
   const handleDownloadICS = () => {
     if (!activeDate || !selectedSlot) return;
 
-    const summary = `${activeSession?.title || 'AI Strategy Session'} with AIAS`;
-    const description = `Consultation on deterministic AI architecture, workflow boundaries, and governance controls. Scheduled for ${name} (${company || 'Client'}).`;
-    
+    const summary = `${activeSession?.title || "AI Strategy Session"} with AIAS`;
+    const description = `Consultation on deterministic AI architecture, workflow boundaries, and governance controls. Scheduled for ${name} (${company || "Client"}).`;
+
     // Parse time to ISO approx
     const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//AI Automated Systems//AIAS Scheduler//EN',
-      'CALSCALE:GREGORIAN',
-      'METHOD:REQUEST',
-      'BEGIN:VEVENT',
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//AI Automated Systems//AIAS Scheduler//EN",
+      "CALSCALE:GREGORIAN",
+      "METHOD:REQUEST",
+      "BEGIN:VEVENT",
       `SUMMARY:${summary}`,
       `DESCRIPTION:${description}`,
-      'LOCATION:Google Meet (Video Link will be delivered via email confirmation)',
-      `DTSTART:${activeDate.dateStr.replace(/-/g, '')}T150000Z`,
-      `DTEND:${activeDate.dateStr.replace(/-/g, '')}T153000Z`,
-      'STATUS:CONFIRMED',
-      'END:VEVENT',
-      'END:VCALENDAR',
-    ].join('\r\n');
+      "LOCATION:Google Meet (Video Link will be delivered via email confirmation)",
+      `DTSTART:${activeDate.dateStr.replace(/-/g, "")}T150000Z`,
+      `DTEND:${activeDate.dateStr.replace(/-/g, "")}T153000Z`,
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
 
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const blob = new Blob([icsContent], {
+      type: "text/calendar;charset=utf-8",
+    });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
     link.download = `aias-strategy-session-${activeDate.dateStr}.ics`;
     link.click();
@@ -155,10 +166,10 @@ export function InteractiveScheduler() {
 
   const handleReset = () => {
     setIsConfirmed(false);
-    setName('');
-    setEmail('');
-    setCompany('');
-    setNotes('');
+    setName("");
+    setEmail("");
+    setCompany("");
+    setNotes("");
   };
 
   if (isConfirmed) {
@@ -177,26 +188,41 @@ export function InteractiveScheduler() {
         </h2>
 
         <p className="mt-2 text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed">
-          A calendar invite and Google Meet link have been prepared for <strong className="text-foreground">{email}</strong>.
+          A calendar invite and Google Meet link have been prepared for{" "}
+          <strong className="text-foreground">{email}</strong>.
         </p>
 
         {/* Appointment Details Box */}
         <div className="mt-8 border-2 border-border bg-muted/30 p-6 text-left space-y-3 font-mono text-xs max-w-md mx-auto">
           <div className="flex justify-between border-b border-border pb-2">
             <span className="text-muted-foreground uppercase">Session:</span>
-            <span className="font-bold text-foreground">{activeSession?.title}</span>
+            <span className="font-bold text-foreground">
+              {activeSession?.title}
+            </span>
           </div>
           <div className="flex justify-between border-b border-border pb-2">
             <span className="text-muted-foreground uppercase">Date:</span>
-            <span className="font-bold text-foreground">{activeDate?.dayName}, {activeDate?.monthDay}</span>
+            <span className="font-bold text-foreground">
+              {activeDate?.dayName}, {activeDate?.monthDay}
+            </span>
           </div>
           <div className="flex justify-between border-b border-border pb-2">
             <span className="text-muted-foreground uppercase">Time:</span>
-            <span className="font-bold text-foreground">{selectedSlot} ({TIMEZONES.find(t => t.value === selectedTimezone)?.label.split(' ')[0]})</span>
+            <span className="font-bold text-foreground">
+              {selectedSlot} (
+              {
+                TIMEZONES.find(
+                  (t) => t.value === selectedTimezone,
+                )?.label.split(" ")[0]
+              }
+              )
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground uppercase">Host:</span>
-            <span className="font-bold text-primary">Scott H. (Principal Systems Architect)</span>
+            <span className="font-bold text-primary">
+              Scott H. (Principal Systems Architect)
+            </span>
           </div>
         </div>
 
@@ -239,8 +265,8 @@ export function InteractiveScheduler() {
                 onClick={() => setSessionType(session.id)}
                 className={`p-5 text-left border-2 transition-all cursor-pointer ${
                   isSelected
-                    ? 'border-primary bg-primary/5 shadow-card font-bold'
-                    : 'border-border bg-card hover:border-muted-foreground'
+                    ? "border-primary bg-primary/5 shadow-card font-bold"
+                    : "border-border bg-card hover:border-muted-foreground"
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -310,12 +336,16 @@ export function InteractiveScheduler() {
                       onClick={() => setSelectedDateIndex(index)}
                       className={`flex flex-col items-center justify-center min-w-[72px] p-3 border-2 transition-all cursor-pointer ${
                         isSelected
-                          ? 'border-primary bg-primary text-primary-foreground font-black shadow-sm'
-                          : 'border-border bg-card text-muted-foreground hover:border-muted-foreground hover:text-foreground'
+                          ? "border-primary bg-primary text-primary-foreground font-black shadow-sm"
+                          : "border-border bg-card text-muted-foreground hover:border-muted-foreground hover:text-foreground"
                       }`}
                     >
-                      <span className="font-mono text-[10px] uppercase">{d.dayName}</span>
-                      <span className="font-mono text-sm font-bold mt-1">{d.monthDay}</span>
+                      <span className="font-mono text-[10px] uppercase">
+                        {d.dayName}
+                      </span>
+                      <span className="font-mono text-sm font-bold mt-1">
+                        {d.monthDay}
+                      </span>
                     </button>
                   );
                 })}
@@ -325,7 +355,8 @@ export function InteractiveScheduler() {
             {/* Time Slot Picker */}
             <div className="mt-6 border-t-2 border-border pt-4">
               <p className="font-mono text-xs font-bold uppercase text-muted-foreground mb-3">
-                Available Time Slots for {activeDate?.dayName}, {activeDate?.monthDay}
+                Available Time Slots for {activeDate?.dayName},{" "}
+                {activeDate?.monthDay}
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {TIME_SLOTS.map((slot) => {
@@ -336,12 +367,12 @@ export function InteractiveScheduler() {
                       type="button"
                       onClick={() => {
                         setSelectedSlot(slot);
-                        setErrors((prev) => ({ ...prev, slot: '' }));
+                        setErrors((prev) => ({ ...prev, slot: "" }));
                       }}
                       className={`flex items-center justify-center p-3 font-mono text-xs font-bold border-2 transition-all cursor-pointer ${
                         isSelected
-                          ? 'border-primary bg-primary/10 text-primary shadow-sm font-black'
-                          : 'border-border bg-card text-foreground hover:border-muted-foreground'
+                          ? "border-primary bg-primary/10 text-primary shadow-sm font-black"
+                          : "border-border bg-card text-foreground hover:border-muted-foreground"
                       }`}
                     >
                       <Clock className="mr-1.5 h-3.5 w-3.5" />
@@ -350,7 +381,11 @@ export function InteractiveScheduler() {
                   );
                 })}
               </div>
-              {errors.slot && <p className="mt-2 text-xs font-mono text-destructive">{errors.slot}</p>}
+              {errors.slot && (
+                <p className="mt-2 text-xs font-mono text-destructive">
+                  {errors.slot}
+                </p>
+              )}
             </div>
           </SurfaceCard>
         </div>
@@ -368,7 +403,10 @@ export function InteractiveScheduler() {
 
               <form onSubmit={handleConfirmBooking} className="mt-5 space-y-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="name" className="font-mono text-xs uppercase font-bold text-foreground">
+                  <Label
+                    htmlFor="name"
+                    className="font-mono text-xs uppercase font-bold text-foreground"
+                  >
                     Your Name *
                   </Label>
                   <Input
@@ -376,16 +414,23 @@ export function InteractiveScheduler() {
                     value={name}
                     onChange={(e) => {
                       setName(e.target.value);
-                      setErrors((prev) => ({ ...prev, name: '' }));
+                      setErrors((prev) => ({ ...prev, name: "" }));
                     }}
                     placeholder="Jane Doe"
                     className="rounded-none border-2 border-border font-mono text-xs"
                   />
-                  {errors.name && <p className="text-xs font-mono text-destructive">{errors.name}</p>}
+                  {errors.name && (
+                    <p className="text-xs font-mono text-destructive">
+                      {errors.name}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="email" className="font-mono text-xs uppercase font-bold text-foreground">
+                  <Label
+                    htmlFor="email"
+                    className="font-mono text-xs uppercase font-bold text-foreground"
+                  >
                     Work Email *
                   </Label>
                   <Input
@@ -394,16 +439,23 @@ export function InteractiveScheduler() {
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);
-                      setErrors((prev) => ({ ...prev, email: '' }));
+                      setErrors((prev) => ({ ...prev, email: "" }));
                     }}
                     placeholder="jane@company.com"
                     className="rounded-none border-2 border-border font-mono text-xs"
                   />
-                  {errors.email && <p className="text-xs font-mono text-destructive">{errors.email}</p>}
+                  {errors.email && (
+                    <p className="text-xs font-mono text-destructive">
+                      {errors.email}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="company" className="font-mono text-xs uppercase font-bold text-foreground">
+                  <Label
+                    htmlFor="company"
+                    className="font-mono text-xs uppercase font-bold text-foreground"
+                  >
                     Organization / Company
                   </Label>
                   <Input
@@ -416,7 +468,10 @@ export function InteractiveScheduler() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="notes" className="font-mono text-xs uppercase font-bold text-foreground">
+                  <Label
+                    htmlFor="notes"
+                    className="font-mono text-xs uppercase font-bold text-foreground"
+                  >
                     Primary Workflow Challenge
                   </Label>
                   <Input

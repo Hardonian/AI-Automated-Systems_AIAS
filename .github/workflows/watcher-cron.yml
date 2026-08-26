@@ -3,13 +3,13 @@ name: Autonomous Regression Watchers
 on:
   schedule:
     # Run nightly at 3 AM UTC
-    - cron: '0 3 * * *'
+    - cron: "0 3 * * *"
   workflow_dispatch:
     inputs:
       watcher_type:
-        description: 'Type of watcher to run'
+        description: "Type of watcher to run"
         required: false
-        default: 'all'
+        default: "all"
         type: choice
         options:
           - all
@@ -40,8 +40,8 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
-          node-version: '22'
-          cache: 'pnpm'
+          node-version: "22"
+          cache: "pnpm"
 
       - name: Install dependencies
         run: |

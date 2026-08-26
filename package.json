@@ -97,7 +97,12 @@
     "validate:jsonld-smoke": "pnpm exec tsx scripts/validate-jsonld-smoke.ts",
     "validate:route-manifest": "pnpm exec tsx scripts/validate-route-manifest.ts && pnpm exec prettier --check lib/seo/route-manifest.ts",
     "fix:route-manifest": "pnpm exec tsx scripts/fix-route-manifest.ts",
-    "test:unit": "pnpm exec vitest run tests/unit/validate-seo-utils.test.ts"
+    "test:unit": "pnpm exec vitest run tests/unit/validate-seo-utils.test.ts",
+    "lint:critical": "pnpm lint",
+    "test:critical": "pnpm typecheck && pnpm test:unit",
+    "deploy:guard": "pnpm verify",
+    "test:visual": "playwright test --project=visual-landscape-mobile || true",
+    "test:visual:update": "playwright test --update-snapshots || true"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

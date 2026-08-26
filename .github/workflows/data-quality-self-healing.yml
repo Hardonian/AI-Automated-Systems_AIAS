@@ -2,7 +2,7 @@ name: Data Quality Checks
 
 on:
   schedule:
-    - cron: '0 2 * * *' # 2 AM UTC daily (9 PM ET previous day)
+    - cron: "0 2 * * *" # 2 AM UTC daily (9 PM ET previous day)
   workflow_dispatch:
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
-          node-version: '22'
+          node-version: "22"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

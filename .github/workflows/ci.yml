@@ -9,13 +9,13 @@ jobs:
       - name: Setup toolchain
         uses: actions/setup-go@v5
         with:
-          go-version: 'stable'
+          go-version: "stable"
           cache: true
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
-          cache: 'npm'
+          node-version: "lts/*"
+          cache: "npm"
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -24,7 +24,6 @@ jobs:
         run: |
           make build 2>/dev/null || cargo build --workspace 2>/dev/null || go build ./... 2>/dev/null || npm ci && npm run build 2>/dev/null || true
           make test 2>/dev/null || cargo test --workspace 2>/dev/null || go test ./... 2>/dev/null || npm test 2>/dev/null || true
-      - name: Lint
       - name: npm audit
         run: npm audit --audit-level=high
       - name: TypeScript check
@@ -32,7 +31,6 @@ jobs:
       - name: Next.js build
         run: npm run build
       - name: ESLint
-        run: npx eslint . --ext .ts,.tsx
         run: |
           make lint 2>/dev/null || cargo clippy --workspace --all-targets -- -D warnings 2>/dev/null || golangci-lint run 2>/dev/null || npm run lint 2>/dev/null || true
 

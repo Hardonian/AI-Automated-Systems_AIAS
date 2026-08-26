@@ -5,6 +5,7 @@ Last updated: 2026-02-18
 ## 1. Data we collect
 
 AIAS collects only data required to respond to inquiries and deliver services, such as:
+
 - Contact details voluntarily submitted.
 - Intake selections describing business context.
 - Basic website analytics.
@@ -14,6 +15,7 @@ Do not submit highly sensitive personal, financial, or regulated data through pu
 ## 2. How data is used
 
 Data is used to:
+
 - Respond to inquiries.
 - Assess engagement fit.
 - Deliver and improve consulting services.

@@ -86,13 +86,13 @@ The following governance/legal files are now present in this repository and shou
 
 ## Priority risk register
 
-| Area | Risk | Severity | Recommended action |
-|---|---|---:|---|
-| Marketing claims | Certification/performance implication beyond evidence | High | Add explicit “not certified unless stated” language and “results vary” qualifiers |
-| AI advisory liability | Users interpret outputs as guaranteed or autonomous | High | Keep explicit advisory-only disclaimer in legal docs and proposal templates |
-| Data handling | Optional webhook may send inquiry data to third parties | Medium | Add explicit intake notice and downstream processor disclosure |
-| IP ownership | Scope ambiguity on deliverables vs pre-existing IP | Medium | Define ownership split in terms + SOW templates |
-| Trademark/ecosystem references | Implied affiliation/ownership ambiguity | Medium | Add trademark usage/ownership note in legal docs |
+| Area                           | Risk                                                    | Severity | Recommended action                                                                |
+| ------------------------------ | ------------------------------------------------------- | -------: | --------------------------------------------------------------------------------- |
+| Marketing claims               | Certification/performance implication beyond evidence   |     High | Add explicit “not certified unless stated” language and “results vary” qualifiers |
+| AI advisory liability          | Users interpret outputs as guaranteed or autonomous     |     High | Keep explicit advisory-only disclaimer in legal docs and proposal templates       |
+| Data handling                  | Optional webhook may send inquiry data to third parties |   Medium | Add explicit intake notice and downstream processor disclosure                    |
+| IP ownership                   | Scope ambiguity on deliverables vs pre-existing IP      |   Medium | Define ownership split in terms + SOW templates                                   |
+| Trademark/ecosystem references | Implied affiliation/ownership ambiguity                 |   Medium | Add trademark usage/ownership note in legal docs                                  |
 
 ## Defensible legal posture target
 

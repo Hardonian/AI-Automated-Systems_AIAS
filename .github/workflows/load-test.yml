@@ -4,22 +4,22 @@ on:
   workflow_dispatch:
     inputs:
       target_users:
-        description: 'Number of concurrent users (10x peak load)'
+        description: "Number of concurrent users (10x peak load)"
         required: false
-        default: '1000'
+        default: "1000"
       duration:
-        description: 'Test duration in seconds'
+        description: "Test duration in seconds"
         required: false
-        default: '300'
+        default: "300"
   schedule:
     # Run weekly on Sundays at 2 AM
-    - cron: '0 2 * * 0'
+    - cron: "0 2 * * 0"
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-  NODE_VERSION: '22'
-  PNPM_VERSION: '8.15.0'
+  NODE_VERSION: "22"
+  PNPM_VERSION: "8.15.0"
 
 jobs:
   load-test:
@@ -42,7 +42,7 @@ jobs:
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

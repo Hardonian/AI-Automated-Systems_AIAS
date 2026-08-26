@@ -4,16 +4,16 @@ on:
   workflow_run:
     workflows:
       [
-        'Unified CI Pipeline',
-        'Unified Deployment',
-        'Unified Database Migrations',
+        "Unified CI Pipeline",
+        "Unified Deployment",
+        "Unified Database Migrations",
       ]
     types:
       - completed
   workflow_dispatch:
     inputs:
       notification_type:
-        description: 'Type of notification'
+        description: "Type of notification"
         required: true
         type: choice
         options:
@@ -21,9 +21,9 @@ on:
           - failure
           - warning
           - info
-        default: 'info'
+        default: "info"
       message:
-        description: 'Notification message'
+        description: "Notification message"
         required: true
         type: string
 

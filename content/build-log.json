@@ -7,7 +7,9 @@
         "title": "Released public engagement simulator",
         "summary": "Shipped self-serve qualification flow that produces deterministic engagement briefs.",
         "category": "ship",
-        "links": [{ "label": "Engagement simulator", "href": "/engagement-simulator" }]
+        "links": [
+          { "label": "Engagement simulator", "href": "/engagement-simulator" }
+        ]
       },
       {
         "date": "2026-02-13",

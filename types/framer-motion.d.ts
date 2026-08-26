@@ -3,16 +3,16 @@
  * Extends motion components to accept className prop
  */
 
-import 'framer-motion';
-import { HTMLAttributes, ReactNode } from 'react';
+import "framer-motion";
+import { HTMLAttributes, ReactNode } from "react";
 
-declare module 'framer-motion' {
+declare module "framer-motion" {
   // Override the problematic type that filters out className
   export type HTMLAttributesWithoutMotionProps<
     T extends keyof React.JSX.IntrinsicElements,
   > = Omit<
     HTMLAttributes<React.JSX.IntrinsicElements[T]>,
-    'style' | 'className'
+    "style" | "className"
   > & {
     className?: string;
     style?: React.CSSProperties | any;

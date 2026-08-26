@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import { Button } from '@/components/ui/button';
-import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
+import { Button } from "@/components/ui/button";
+import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
 
 interface MobileStickyCTAProps {
   primaryLabel?: string;
@@ -17,8 +17,8 @@ interface MobileStickyCTAProps {
 export function MobileStickyCTA({
   primaryLabel = siteContent.positioning.primaryCTA.label,
   primaryHref = getPrimaryCtaHref(),
-  secondaryLabel = 'Request Architecture Review',
-  secondaryHref = '/contact',
+  secondaryLabel = "Request Architecture Review",
+  secondaryHref = "/contact",
 }: MobileStickyCTAProps) {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -29,8 +29,8 @@ export function MobileStickyCTA({
       setIsVisible(shouldShow);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -40,14 +40,14 @@ export function MobileStickyCTA({
           animate={{ y: 0 }}
           exit={{ y: 100 }}
           initial={{ y: 100 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className='fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-lg border-t z-50 md:hidden pb-safe'
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-lg border-t z-50 md:hidden pb-safe"
         >
-          <div className='flex gap-3'>
-            <Button asChild className='flex-1 font-bold shadow-lg' size='lg'>
+          <div className="flex gap-3">
+            <Button asChild className="flex-1 font-bold shadow-lg" size="lg">
               <Link href={primaryHref}>{primaryLabel}</Link>
             </Button>
-            <Button asChild className='flex-1' size='lg' variant='outline'>
+            <Button asChild className="flex-1" size="lg" variant="outline">
               <Link href={secondaryHref}>{secondaryLabel}</Link>
             </Button>
           </div>

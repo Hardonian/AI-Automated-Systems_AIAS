@@ -1,15 +1,15 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
-import { PageHero, PageSection } from '@/components/ui/section-primitives';
-import { Breadcrumbs } from '@/components/layout/breadcrumbs';
-import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
-import { PolicyStudioClient } from '@/components/tools/policy-studio-client';
+import { PageHero, PageSection } from "@/components/ui/section-primitives";
+import { Breadcrumbs } from "@/components/layout/breadcrumbs";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
+import { PolicyStudioClient } from "@/components/tools/policy-studio-client";
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Policy & Guardrail Studio | AI Automated Systems',
+  title: "Policy & Guardrail Studio | AI Automated Systems",
   description:
-    'Test deterministic boundary rules, PII filters, and confidence escalation thresholds against AI prompts with instant schema export.',
-  canonical: '/tools/policy-studio',
+    "Test deterministic boundary rules, PII filters, and confidence escalation thresholds against AI prompts with instant schema export.",
+  canonical: "/tools/policy-studio",
 });
 
 export default function PolicyStudioPage() {
@@ -18,8 +18,8 @@ export default function PolicyStudioPage() {
       <div className="container pt-4">
         <Breadcrumbs
           items={[
-            { label: 'Quick Tools', href: '/tools' },
-            { label: 'Policy & Guardrail Studio' },
+            { label: "Quick Tools", href: "/tools" },
+            { label: "Policy & Guardrail Studio" },
           ]}
         />
       </div>

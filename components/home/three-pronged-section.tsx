@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import {
   Wrench,
   Cpu,
@@ -13,10 +13,10 @@ import {
   ExternalLink,
   ChevronRight,
   Sparkles,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { siteContent } from '@/src/content/site';
-import { Button } from '@/components/ui/button';
+import { siteContent } from "@/src/content/site";
+import { Button } from "@/components/ui/button";
 
 const ICON_MAP = {
   Wrench,
@@ -25,7 +25,9 @@ const ICON_MAP = {
 };
 
 export function ThreeProngedSection() {
-  const [activeTab, setActiveTab] = useState<'tools' | 'consultancy' | 'catalog'>('tools');
+  const [activeTab, setActiveTab] = useState<
+    "tools" | "consultancy" | "catalog"
+  >("tools");
 
   const pillars = siteContent.triadPillars || [];
   const activePillar = pillars.find((p) => p.id === activeTab) || pillars[0];
@@ -49,15 +51,16 @@ export function ThreeProngedSection() {
             HOW YOU ENGAGE WITH AIAS
           </h2>
           <p className="mx-auto mt-4 max-w-3xl font-mono text-base text-muted-foreground">
-            From instant browser-based simulation tools to bespoke enterprise systems engineering
-            and ready-to-deploy software packages.
+            From instant browser-based simulation tools to bespoke enterprise
+            systems engineering and ready-to-deploy software packages.
           </p>
         </div>
 
         {/* 3-Pillar Tab Switcher */}
         <div className="mt-12 grid grid-cols-1 gap-3 sm:grid-cols-3">
           {pillars.map((pillar, idx) => {
-            const Icon = ICON_MAP[pillar.iconName as keyof typeof ICON_MAP] || Wrench;
+            const Icon =
+              ICON_MAP[pillar.iconName as keyof typeof ICON_MAP] || Wrench;
             const isSelected = activeTab === pillar.id;
 
             return (
@@ -66,8 +69,8 @@ export function ThreeProngedSection() {
                 onClick={() => setActiveTab(pillar.id)}
                 className={`group relative flex flex-col items-start border-2 p-5 text-left transition-all cursor-pointer ${
                   isSelected
-                    ? 'border-primary bg-card shadow-[4px_4px_0px_0px_hsl(var(--primary))] -translate-y-1'
-                    : 'border-border bg-surface-muted/60 hover:border-foreground/60 hover:bg-card'
+                    ? "border-primary bg-card shadow-[4px_4px_0px_0px_hsl(var(--primary))] -translate-y-1"
+                    : "border-border bg-surface-muted/60 hover:border-foreground/60 hover:bg-card"
                 }`}
                 type="button"
               >
@@ -75,8 +78,8 @@ export function ThreeProngedSection() {
                   <div
                     className={`flex h-10 w-10 items-center justify-center border-2 ${
                       isSelected
-                        ? 'border-primary bg-primary text-primary-foreground'
-                        : 'border-border bg-background text-muted-foreground group-hover:border-foreground group-hover:text-foreground'
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border bg-background text-muted-foreground group-hover:border-foreground group-hover:text-foreground"
                     }`}
                   >
                     <Icon className="h-5 w-5" />
@@ -159,30 +162,33 @@ export function ThreeProngedSection() {
                       </Link>
                     </Button>
 
-                    {activePillar.secondaryLabel && activePillar.secondaryHref && (
-                      <Button
-                        asChild
-                        variant="outline"
-                        className="rounded-none border-2 border-border bg-background px-5 font-mono text-xs font-bold uppercase tracking-widest text-foreground hover:border-foreground"
-                      >
-                        <Link
-                          href={activePillar.secondaryHref}
-                          target={
-                            activePillar.secondaryHref.startsWith('http') ? '_blank' : undefined
-                          }
-                          rel={
-                            activePillar.secondaryHref.startsWith('http')
-                              ? 'noopener noreferrer'
-                              : undefined
-                          }
+                    {activePillar.secondaryLabel &&
+                      activePillar.secondaryHref && (
+                        <Button
+                          asChild
+                          variant="outline"
+                          className="rounded-none border-2 border-border bg-background px-5 font-mono text-xs font-bold uppercase tracking-widest text-foreground hover:border-foreground"
                         >
-                          {activePillar.secondaryLabel}
-                          {activePillar.secondaryHref.startsWith('http') && (
-                            <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
-                          )}
-                        </Link>
-                      </Button>
-                    )}
+                          <Link
+                            href={activePillar.secondaryHref}
+                            target={
+                              activePillar.secondaryHref.startsWith("http")
+                                ? "_blank"
+                                : undefined
+                            }
+                            rel={
+                              activePillar.secondaryHref.startsWith("http")
+                                ? "noopener noreferrer"
+                                : undefined
+                            }
+                          >
+                            {activePillar.secondaryLabel}
+                            {activePillar.secondaryHref.startsWith("http") && (
+                              <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
+                            )}
+                          </Link>
+                        </Button>
+                      )}
                   </div>
                 </div>
 
@@ -197,7 +203,7 @@ export function ThreeProngedSection() {
                     </span>
                   </div>
 
-                  {activePillar.id === 'tools' && (
+                  {activePillar.id === "tools" && (
                     <div className="mt-4 space-y-3">
                       <p className="font-mono text-xs text-muted-foreground">
                         Featured Quick Utilities:
@@ -224,56 +230,60 @@ export function ThreeProngedSection() {
                     </div>
                   )}
 
-                  {activePillar.id === 'consultancy' && (
+                  {activePillar.id === "consultancy" && (
                     <div className="mt-4 space-y-3">
                       <p className="font-mono text-xs text-muted-foreground">
                         Consultancy Engagement Tracks:
                       </p>
                       <div className="space-y-2">
-                        {siteContent.consultancyTracks.slice(0, 3).map((track) => (
-                          <Link
-                            key={track.id}
-                            href="/hire"
-                            className="group flex items-center justify-between border border-border bg-background p-2.5 transition-all hover:border-primary hover:bg-card"
-                          >
-                            <div>
-                              <p className="font-mono text-xs font-bold uppercase text-foreground group-hover:text-primary">
-                                {track.title}
-                              </p>
-                              <p className="text-[11px] text-muted-foreground">
-                                {track.timeline} · {track.eyebrow}
-                              </p>
-                            </div>
-                            <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-transform" />
-                          </Link>
-                        ))}
+                        {siteContent.consultancyTracks
+                          .slice(0, 3)
+                          .map((track) => (
+                            <Link
+                              key={track.id}
+                              href="/hire"
+                              className="group flex items-center justify-between border border-border bg-background p-2.5 transition-all hover:border-primary hover:bg-card"
+                            >
+                              <div>
+                                <p className="font-mono text-xs font-bold uppercase text-foreground group-hover:text-primary">
+                                  {track.title}
+                                </p>
+                                <p className="text-[11px] text-muted-foreground">
+                                  {track.timeline} · {track.eyebrow}
+                                </p>
+                              </div>
+                              <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-transform" />
+                            </Link>
+                          ))}
                       </div>
                     </div>
                   )}
 
-                  {activePillar.id === 'catalog' && (
+                  {activePillar.id === "catalog" && (
                     <div className="mt-4 space-y-3">
                       <p className="font-mono text-xs text-muted-foreground">
                         Featured Hardonia Store Products:
                       </p>
                       <div className="space-y-2">
-                        {siteContent.catalogProducts.slice(0, 3).map((product) => (
-                          <Link
-                            key={product.id}
-                            href="/catalog"
-                            className="group flex items-center justify-between border border-border bg-background p-2.5 transition-all hover:border-primary hover:bg-card"
-                          >
-                            <div>
-                              <p className="font-mono text-xs font-bold uppercase text-foreground group-hover:text-primary">
-                                {product.title}
-                              </p>
-                              <p className="text-[11px] text-muted-foreground">
-                                {product.category} · {product.license}
-                              </p>
-                            </div>
-                            <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-transform" />
-                          </Link>
-                        ))}
+                        {siteContent.catalogProducts
+                          .slice(0, 3)
+                          .map((product) => (
+                            <Link
+                              key={product.id}
+                              href="/catalog"
+                              className="group flex items-center justify-between border border-border bg-background p-2.5 transition-all hover:border-primary hover:bg-card"
+                            >
+                              <div>
+                                <p className="font-mono text-xs font-bold uppercase text-foreground group-hover:text-primary">
+                                  {product.title}
+                                </p>
+                                <p className="text-[11px] text-muted-foreground">
+                                  {product.category} · {product.license}
+                                </p>
+                              </div>
+                              <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-transform" />
+                            </Link>
+                          ))}
                       </div>
                     </div>
                   )}

@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { motion } from 'framer-motion';
+import * as React from "react";
+import { motion } from "framer-motion";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import { LucideIcon } from 'lucide-react';
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { LucideIcon } from "lucide-react";
 
 interface ValuePropCardProps {
   icon: LucideIcon | React.ComponentType<{ className?: string }>;
@@ -40,38 +40,38 @@ export function ValuePropCard({
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
+      viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay }}
       whileHover={{ y: -8, transition: { duration: 0.2 } }}
-      className={cn('h-full', className)}
+      className={cn("h-full", className)}
     >
       <Card
         hover={true}
         gradient={gradient}
         className={cn(
-          'h-full cursor-pointer transition-all duration-300',
-          onClick && 'hover:border-primary/50'
+          "h-full cursor-pointer transition-all duration-300",
+          onClick && "hover:border-primary/50",
         )}
         onClick={onClick}
       >
         <CardHeader>
-          <div className='mb-2 flex items-start justify-between'>
-            <div className='rounded-xl bg-primary/10 p-3 text-primary'>
-              <Icon className='h-6 w-6' />
+          <div className="mb-2 flex items-start justify-between">
+            <div className="rounded-xl bg-primary/10 p-3 text-primary">
+              <Icon className="h-6 w-6" />
             </div>
             {badge && (
-              <Badge variant='success' size='sm'>
+              <Badge variant="success" size="sm">
                 {badge}
               </Badge>
             )}
           </div>
-          <CardTitle className='text-xl'>{title}</CardTitle>
+          <CardTitle className="text-xl">{title}</CardTitle>
           {value && (
-            <div className='mt-2 text-2xl font-bold text-primary'>{value}</div>
+            <div className="mt-2 text-2xl font-bold text-primary">{value}</div>
           )}
         </CardHeader>
         <CardContent>
-          <CardDescription className='text-base leading-relaxed'>
+          <CardDescription className="text-base leading-relaxed">
             {description}
           </CardDescription>
         </CardContent>

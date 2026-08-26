@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Shield, Globe, CheckCircle, Award } from 'lucide-react';
+import { motion } from "framer-motion";
+import { Shield, Globe, CheckCircle, Award } from "lucide-react";
 
 const badges = [
-  { icon: Shield, label: 'SOC 2 Ready', color: 'text-blue-500' },
-  { icon: Globe, label: 'Global Scale', color: 'text-emerald-500' },
-  { icon: CheckCircle, label: 'PIPEDA Compliant', color: 'text-purple-500' },
-  { icon: Award, label: 'Enterprise Grade', color: 'text-amber-500' },
+  { icon: Shield, label: "SOC 2 Ready", color: "text-blue-500" },
+  { icon: Globe, label: "Global Scale", color: "text-emerald-500" },
+  { icon: CheckCircle, label: "PIPEDA Compliant", color: "text-purple-500" },
+  { icon: Award, label: "Enterprise Grade", color: "text-amber-500" },
 ];
 
 export function TrustBadgeStrip() {

@@ -1,6 +1,6 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
-export const SITE_URL = 'https://aiautomatedsystems.ca';
+export const SITE_URL = "https://aiautomatedsystems.ca";
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 interface MetadataConfig {
@@ -11,15 +11,15 @@ interface MetadataConfig {
 }
 
 const toAbsoluteUrl = (canonical: string) => {
-  if (canonical.startsWith('http://') || canonical.startsWith('https://')) {
+  if (canonical.startsWith("http://") || canonical.startsWith("https://")) {
     return canonical;
   }
 
-  return `${SITE_URL}${canonical.startsWith('/') ? canonical : `/${canonical}`}`;
+  return `${SITE_URL}${canonical.startsWith("/") ? canonical : `/${canonical}`}`;
 };
 
 export function generateMetadata(config: MetadataConfig): Metadata {
-  const canonical = config.canonical ?? '/';
+  const canonical = config.canonical ?? "/";
   const canonicalUrl = toAbsoluteUrl(canonical);
 
   const metadata: Metadata = {
@@ -32,9 +32,9 @@ export function generateMetadata(config: MetadataConfig): Metadata {
     openGraph: {
       title: config.title,
       description: config.description,
-      type: 'website',
+      type: "website",
       url: canonicalUrl,
-      siteName: 'AI Automated Systems',
+      siteName: "AI Automated Systems",
       images: [
         {
           url: DEFAULT_OG_IMAGE,
@@ -45,7 +45,7 @@ export function generateMetadata(config: MetadataConfig): Metadata {
       ],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: config.title,
       description: config.description,
       images: [DEFAULT_OG_IMAGE],
@@ -56,9 +56,9 @@ export function generateMetadata(config: MetadataConfig): Metadata {
       googleBot: {
         index: true,
         follow: true,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-        'max-video-preview': -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
       },
     },
   };

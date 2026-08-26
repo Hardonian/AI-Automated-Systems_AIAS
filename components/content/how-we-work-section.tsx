@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 interface ProcessStep {
   step: number;
@@ -9,11 +9,11 @@ interface ProcessStep {
 }
 
 const stepColors = [
-  'from-blue-500/20 to-blue-600/10',
-  'from-indigo-500/20 to-indigo-600/10',
-  'from-violet-500/20 to-violet-600/10',
-  'from-purple-500/20 to-purple-600/10',
-  'from-fuchsia-500/20 to-fuchsia-600/10',
+  "from-blue-500/20 to-blue-600/10",
+  "from-indigo-500/20 to-indigo-600/10",
+  "from-violet-500/20 to-violet-600/10",
+  "from-purple-500/20 to-purple-600/10",
+  "from-fuchsia-500/20 to-fuchsia-600/10",
 ];
 
 export function HowWeWorkSection({ steps }: { steps: ProcessStep[] }) {
@@ -59,9 +59,11 @@ export function HowWeWorkSection({ steps }: { steps: ProcessStep[] }) {
                 >
                   {/* Step number node */}
                   <div className="relative z-10 mx-auto mb-5 flex h-16 w-16 items-center justify-center">
-                    <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${stepColors[index] || stepColors[0]}`} />
+                    <div
+                      className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${stepColors[index] || stepColors[0]}`}
+                    />
                     <span className="relative text-lg font-extrabold text-primary">
-                      {String(step.step).padStart(2, '0')}
+                      {String(step.step).padStart(2, "0")}
                     </span>
                   </div>
                   <h3 className="text-base font-bold">{step.title}</h3>
@@ -90,9 +92,11 @@ export function HowWeWorkSection({ steps }: { steps: ProcessStep[] }) {
                 transition={{ duration: 0.4, delay: index * 0.08 }}
               >
                 <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center">
-                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${stepColors[index] || stepColors[0]}`} />
+                  <div
+                    className={`absolute inset-0 rounded-xl bg-gradient-to-br ${stepColors[index] || stepColors[0]}`}
+                  />
                   <span className="relative text-sm font-extrabold text-primary">
-                    {String(step.step).padStart(2, '0')}
+                    {String(step.step).padStart(2, "0")}
                   </span>
                 </div>
                 <div className="pt-2">

@@ -14,18 +14,18 @@ AIAS demonstrates strong architecture discipline for a public static-first surfa
 
 ## Scored diligence matrix
 
-| Category | Status | Notes |
-|---|---|---|
-| Revenue model clarity | PARTIAL | Clear consulting/service framing, but no public packaging of recurring revenue mechanics beyond managed refinement narratives. |
-| Delivery scalability | PARTIAL | Deterministic workflows and handoff language exist, but staffing/throughput model is not publicly quantified. |
-| Automation leverage vs human dependency | PARTIAL | Strong AI governance narrative; still consultancy-heavy and person-dependent for strategy and implementation. |
-| Technical moat (Reach/Zeo/Settler ecosystem) | PASS | Role-defined ecosystem and governance-first differentiation are explicit. |
-| DevOps maturity | PARTIAL | Verify scripts and route checks are strong for static app; production incident/SRE signals are limited in public artifacts. |
-| CI/CD discipline | PASS | Deterministic verify workflow with lint/type/build and architecture checks. |
-| Hosting security posture | PARTIAL | Static-first lowers risk; optional webhook and external integrations shift risk to process controls. |
-| Performance profile | PASS | Static-first route discipline and metadata/link checks indicate good baseline hygiene. |
-| Dependency risk | PARTIAL | Modern stack with overrides present; no dedicated license/SBOM artifact in repo. |
-| Single-founder risk mitigation | GAP | No explicit continuity plan, key-person runbook, or succession/escrow statement found in current docs. |
+| Category                                     | Status  | Notes                                                                                                                          |
+| -------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Revenue model clarity                        | PARTIAL | Clear consulting/service framing, but no public packaging of recurring revenue mechanics beyond managed refinement narratives. |
+| Delivery scalability                         | PARTIAL | Deterministic workflows and handoff language exist, but staffing/throughput model is not publicly quantified.                  |
+| Automation leverage vs human dependency      | PARTIAL | Strong AI governance narrative; still consultancy-heavy and person-dependent for strategy and implementation.                  |
+| Technical moat (Reach/Zeo/Settler ecosystem) | PASS    | Role-defined ecosystem and governance-first differentiation are explicit.                                                      |
+| DevOps maturity                              | PARTIAL | Verify scripts and route checks are strong for static app; production incident/SRE signals are limited in public artifacts.    |
+| CI/CD discipline                             | PASS    | Deterministic verify workflow with lint/type/build and architecture checks.                                                    |
+| Hosting security posture                     | PARTIAL | Static-first lowers risk; optional webhook and external integrations shift risk to process controls.                           |
+| Performance profile                          | PASS    | Static-first route discipline and metadata/link checks indicate good baseline hygiene.                                         |
+| Dependency risk                              | PARTIAL | Modern stack with overrides present; no dedicated license/SBOM artifact in repo.                                               |
+| Single-founder risk mitigation               | GAP     | No explicit continuity plan, key-person runbook, or succession/escrow statement found in current docs.                         |
 
 ---
 

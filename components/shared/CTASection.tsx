@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { ArrowRight } from 'lucide-react';
-import Link from 'next/link';
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
-import { Button } from '@/components/ui/button';
-import { getContainerClasses } from '@/lib/design-tokens';
+import { Button } from "@/components/ui/button";
+import { getContainerClasses } from "@/lib/design-tokens";
 
 interface CTASectionProps {
   title: string;
@@ -19,7 +19,7 @@ interface CTASectionProps {
     href: string;
     onClick?: () => void;
   };
-  variant?: 'default' | 'gradient' | 'muted';
+  variant?: "default" | "gradient" | "muted";
 }
 
 export function CTASection({
@@ -27,17 +27,17 @@ export function CTASection({
   subtitle,
   primaryCta,
   secondaryCta,
-  variant = 'default',
+  variant = "default",
 }: CTASectionProps) {
   const bgClasses = {
-    default: 'border-t border-border/50 bg-muted/30',
-    gradient: 'bg-gradient-to-b from-transparent via-primary/5 to-transparent',
-    muted: 'bg-muted/50',
+    default: "border-t border-border/50 bg-muted/30",
+    gradient: "bg-gradient-to-b from-transparent via-primary/5 to-transparent",
+    muted: "bg-muted/50",
   };
 
   return (
     <section className={`py-20 ${bgClasses[variant]}`}>
-      <div className={`${getContainerClasses('narrow')} text-center`}>
+      <div className={`${getContainerClasses("narrow")} text-center`}>
         <h2 className="mb-4 text-3xl font-bold md:text-4xl">{title}</h2>
         {subtitle && (
           <p className="mb-8 text-lg text-muted-foreground">{subtitle}</p>
@@ -52,7 +52,12 @@ export function CTASection({
             </Button>
           )}
           {secondaryCta && (
-            <Button asChild size="lg" variant="outline" className="min-h-[48px] px-8">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="min-h-[48px] px-8"
+            >
               <Link href={secondaryCta.href} onClick={secondaryCta.onClick}>
                 {secondaryCta.label}
               </Link>

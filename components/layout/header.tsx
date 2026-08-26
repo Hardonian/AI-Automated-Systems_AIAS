@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
-import Link from 'next/link';
+import { motion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 
-import { MobileNav } from '@/components/layout/mobile-nav';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { CommandPalette } from '@/components/layout/command-palette';
-import { Button } from '@/components/ui/button';
-import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
+import { MobileNav } from "@/components/layout/mobile-nav";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { CommandPalette } from "@/components/layout/command-palette";
+import { Button } from "@/components/ui/button";
+import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
 
 import {
   DropdownMenu,
@@ -17,29 +17,29 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 
 const RESOURCE_GROUPS = [
   {
-    category: 'Quick Tools & Simulators',
+    category: "Quick Tools & Simulators",
     items: [
-      { label: 'Tools Hub', href: '/tools' },
-      { label: 'Policy Studio', href: '/tools/policy-studio' },
-      { label: 'ROI Calculator', href: '/roi-calculator' },
-      { label: 'Readiness Scorecard', href: '/readiness-checklist' },
-      { label: 'Automation Simulator', href: '/automation-demo' },
-      { label: 'Workflow Builder', href: '/workflows' },
+      { label: "Tools Hub", href: "/tools" },
+      { label: "Policy Studio", href: "/tools/policy-studio" },
+      { label: "ROI Calculator", href: "/roi-calculator" },
+      { label: "Readiness Scorecard", href: "/readiness-checklist" },
+      { label: "Automation Simulator", href: "/automation-demo" },
+      { label: "Workflow Builder", href: "/workflows" },
     ],
   },
   {
-    category: 'Consultancy & Catalog',
+    category: "Consultancy & Catalog",
     items: [
-      { label: 'Hire Us to Build', href: '/hire' },
-      { label: 'Product Catalog', href: '/catalog' },
-      { label: 'Blueprints Library', href: '/blueprints' },
-      { label: 'Systems Framework', href: '/framework' },
-      { label: 'Build Log', href: '/build-log' },
-      { label: 'FAQ', href: '/faq' },
+      { label: "Hire Us to Build", href: "/hire" },
+      { label: "Product Catalog", href: "/catalog" },
+      { label: "Blueprints Library", href: "/blueprints" },
+      { label: "Systems Framework", href: "/framework" },
+      { label: "Build Log", href: "/build-log" },
+      { label: "FAQ", href: "/faq" },
     ],
   },
 ];
@@ -63,7 +63,7 @@ export function Header() {
             href="/"
           >
             <span className="flex h-8 w-8 items-center justify-center border-2 border-border bg-black text-xs font-bold text-primary transition-colors group-hover:border-primary">
-              {'//'}
+              {"//"}
             </span>
             <span>AIAS</span>
           </Link>
@@ -105,9 +105,7 @@ export function Header() {
           >
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button
-                  className="group flex items-center gap-1 font-mono text-sm font-bold uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary focus:outline-none cursor-pointer"
-                >
+                <button className="group flex items-center gap-1 font-mono text-sm font-bold uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary focus:outline-none cursor-pointer">
                   RESOURCES
                   <ChevronDown className="h-3.5 w-3.5 transition-transform group-data-[state=open]:rotate-180" />
                 </button>
@@ -118,7 +116,9 @@ export function Header() {
               >
                 {RESOURCE_GROUPS.map((group, gIdx) => (
                   <div key={group.category}>
-                    {gIdx > 0 && <DropdownMenuSeparator className="my-1.5 border-border" />}
+                    {gIdx > 0 && (
+                      <DropdownMenuSeparator className="my-1.5 border-border" />
+                    )}
                     <DropdownMenuLabel className="px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                       {group.category}
                     </DropdownMenuLabel>
@@ -179,4 +179,3 @@ export function Header() {
     </header>
   );
 }
-

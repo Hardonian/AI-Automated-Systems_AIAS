@@ -1,6 +1,6 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import { SurfaceCard } from '@/components/ui/section-primitives';
+import { SurfaceCard } from "@/components/ui/section-primitives";
 
 interface RelatedPageLink {
   label: string;
@@ -9,7 +9,7 @@ interface RelatedPageLink {
 
 export function RelatedPages({
   links,
-  headingClassName = 'text-2xl font-bold',
+  headingClassName = "text-2xl font-bold",
   navAriaLabel,
   linkAriaLabelPrefix,
 }: {
@@ -21,8 +21,8 @@ export function RelatedPages({
   return (
     <SurfaceCard>
       <h2 className={headingClassName}>Related pages</h2>
-      <nav aria-label={navAriaLabel ?? 'Related pages'} className='mt-4'>
-        <div className='flex flex-wrap gap-3 text-sm'>
+      <nav aria-label={navAriaLabel ?? "Related pages"} className="mt-4">
+        <div className="flex flex-wrap gap-3 text-sm">
           {links.map((link, index) => {
             const ariaLabel = linkAriaLabelPrefix
               ? `${linkAriaLabelPrefix} ${index + 1}: ${link.label}`
@@ -32,7 +32,7 @@ export function RelatedPages({
               <Link
                 key={link.href}
                 aria-label={ariaLabel}
-                className='font-medium text-primary underline-offset-4 hover:underline'
+                className="font-medium text-primary underline-offset-4 hover:underline"
                 href={link.href}
               >
                 {link.label}

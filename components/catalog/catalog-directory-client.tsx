@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useMemo } from 'react';
-import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useMemo } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
   ShoppingBag,
@@ -16,38 +16,44 @@ import {
   Zap,
   ArrowRight,
   Download,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { CatalogProduct } from '@/src/content/site';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { CatalogProduct } from "@/src/content/site";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const CATEGORIES = [
-  'All',
-  'Software Engines',
-  'Turnkey Workflows',
-  'Governance Kits',
-  'UI Kits',
+  "All",
+  "Software Engines",
+  "Turnkey Workflows",
+  "Governance Kits",
+  "UI Kits",
 ] as const;
 
-export function CatalogDirectoryClient({ products }: { products: CatalogProduct[] }) {
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [selectedLicense, setSelectedLicense] = useState<string>('All');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+export function CatalogDirectoryClient({
+  products,
+}: {
+  products: CatalogProduct[];
+}) {
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedLicense, setSelectedLicense] = useState<string>("All");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       const matchesCategory =
-        selectedCategory === 'All' ||
+        selectedCategory === "All" ||
         product.category.toLowerCase() === selectedCategory.toLowerCase();
       const matchesLicense =
-        selectedLicense === 'All' ||
+        selectedLicense === "All" ||
         product.license.toLowerCase() === selectedLicense.toLowerCase();
       const matchesSearch =
         product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.subtitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.techStack.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+        product.techStack.some((t) =>
+          t.toLowerCase().includes(searchQuery.toLowerCase()),
+        );
 
       return matchesCategory && matchesLicense && matchesSearch;
     });
@@ -66,8 +72,8 @@ export function CatalogDirectoryClient({ products }: { products: CatalogProduct[
                 onClick={() => setSelectedCategory(category)}
                 className={`border-2 px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   selectedCategory === category
-                    ? 'border-cyan-500 bg-cyan-500 text-white'
-                    : 'border-border bg-background text-muted-foreground hover:border-foreground hover:text-foreground'
+                    ? "border-cyan-500 bg-cyan-500 text-white"
+                    : "border-border bg-background text-muted-foreground hover:border-foreground hover:text-foreground"
                 }`}
                 type="button"
               >
@@ -94,14 +100,14 @@ export function CatalogDirectoryClient({ products }: { products: CatalogProduct[
           <span className="font-mono text-[11px] font-bold uppercase text-muted-foreground">
             License Type:
           </span>
-          {['All', 'Commercial', 'Open Source'].map((lic) => (
+          {["All", "Commercial", "Open Source"].map((lic) => (
             <button
               key={lic}
               onClick={() => setSelectedLicense(lic)}
               className={`font-mono text-xs font-bold uppercase underline-offset-4 cursor-pointer ${
                 selectedLicense === lic
-                  ? 'text-cyan-500 underline'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? "text-cyan-500 underline"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
               type="button"
             >
@@ -122,8 +128,8 @@ export function CatalogDirectoryClient({ products }: { products: CatalogProduct[
             transition={{ duration: 0.2 }}
             className={`flex flex-col justify-between border-2 bg-card p-6 md:p-8 transition-all hover:-translate-y-1 ${
               product.featured
-                ? 'border-cyan-500 shadow-[4px_4px_0px_0px_hsl(var(--secondary))]'
-                : 'border-border shadow-card hover:border-foreground'
+                ? "border-cyan-500 shadow-[4px_4px_0px_0px_hsl(var(--secondary))]"
+                : "border-border shadow-card hover:border-foreground"
             }`}
           >
             <div>
@@ -135,9 +141,9 @@ export function CatalogDirectoryClient({ products }: { products: CatalogProduct[
                 <div className="flex items-center gap-2">
                   <span
                     className={`border px-2 py-0.5 font-mono text-[10px] font-black uppercase ${
-                      product.license === 'Open Source'
-                        ? 'border-green-500 bg-green-500/10 text-green-500'
-                        : 'border-cyan-500 bg-cyan-500/10 text-cyan-500'
+                      product.license === "Open Source"
+                        ? "border-green-500 bg-green-500/10 text-green-500"
+                        : "border-cyan-500 bg-cyan-500/10 text-cyan-500"
                     }`}
                   >
                     {product.license}
@@ -178,7 +184,10 @@ export function CatalogDirectoryClient({ products }: { products: CatalogProduct[
                 </p>
                 <ul className="space-y-1.5">
                   {product.keyFeatures.map((feat, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-xs text-foreground">
+                    <li
+                      key={idx}
+                      className="flex items-start gap-2 text-xs text-foreground"
+                    >
                       <CheckCircle className="h-3.5 w-3.5 text-cyan-500 flex-shrink-0 mt-0.5" />
                       <span>{feat}</span>
                     </li>
@@ -244,9 +253,9 @@ export function CatalogDirectoryClient({ products }: { products: CatalogProduct[
           </p>
           <Button
             onClick={() => {
-              setSelectedCategory('All');
-              setSelectedLicense('All');
-              setSearchQuery('');
+              setSelectedCategory("All");
+              setSelectedLicense("All");
+              setSearchQuery("");
             }}
             variant="outline"
             className="mt-4 rounded-none border-2 border-border font-mono text-xs uppercase"

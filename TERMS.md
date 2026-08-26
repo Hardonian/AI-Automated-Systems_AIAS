@@ -21,6 +21,7 @@ Any examples of performance improvement, speed, or savings are context-dependent
 ## 5. Client responsibilities
 
 Clients are responsible for:
+
 - Providing accurate requirements and timely access.
 - Validating outputs before high-impact use.
 - Operating controls in their environment.
@@ -32,6 +33,7 @@ AIAS describes security and governance practices, but does not claim third-party
 ## 7. Intellectual property
 
 Unless otherwise agreed in writing:
+
 - Client owns deliverables specifically developed and paid for under the engagement.
 - AIAS retains ownership of pre-existing methodologies, frameworks, templates, and generalized know-how.
 

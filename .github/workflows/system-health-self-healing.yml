@@ -2,7 +2,7 @@ name: System Health Audit
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Weekly on Sunday at midnight UTC
+    - cron: "0 0 * * 0" # Weekly on Sunday at midnight UTC
   workflow_dispatch:
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
-          node-version: '22'
+          node-version: "22"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       update_baselines:
-        description: 'Update visual regression baselines'
+        description: "Update visual regression baselines"
         required: false
         default: false
         type: boolean
@@ -16,9 +16,9 @@ on:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-  NODE_VERSION: '22'
-  PNPM_VERSION: '8'
-  BASE_URL: 'http://localhost:3000'
+  NODE_VERSION: "22"
+  PNPM_VERSION: "8"
+  BASE_URL: "http://localhost:3000"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -157,9 +157,9 @@ jobs:
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-          NODE_OPTIONS: '--max-old-space-size=4096'
+          NODE_OPTIONS: "--max-old-space-size=4096"
           # Skip DB operations during build if not available
-          SKIP_DB: 'true'
+          SKIP_DB: "true"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v7
@@ -268,7 +268,7 @@ jobs:
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-          CI: 'true'
+          CI: "true"
           BASE_URL: ${{ env.BASE_URL }}
 
       - name: Upload test results
@@ -339,7 +339,7 @@ jobs:
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-          PORT: '3000'
+          PORT: "3000"
 
       - name: Run visual regression tests
         run: |
@@ -351,7 +351,7 @@ jobs:
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-          CI: 'true'
+          CI: "true"
           BASE_URL: ${{ env.BASE_URL }}
 
       - name: Upload visual test results
@@ -448,14 +448,14 @@ jobs:
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-          PORT: '3000'
+          PORT: "3000"
 
       - name: Run UI consistency audit
         run: pnpm test:audit
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-          CI: 'true'
+          CI: "true"
           BASE_URL: ${{ env.BASE_URL }}
 
       - name: Upload audit results
@@ -526,14 +526,14 @@ jobs:
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-          PORT: '3000'
+          PORT: "3000"
 
       - name: Run accessibility tests
         run: pnpm test:e2e --grep @accessibility
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-          CI: 'true'
+          CI: "true"
           BASE_URL: ${{ env.BASE_URL }}
 
       - name: Upload accessibility results

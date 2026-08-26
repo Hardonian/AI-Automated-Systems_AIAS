@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { motion, Variants } from 'framer-motion';
-import { ReactNode } from 'react';
+import { motion, Variants } from "framer-motion";
+import { ReactNode } from "react";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 interface TextRevealProps {
   children: ReactNode;
@@ -11,8 +11,8 @@ interface TextRevealProps {
   delay?: number;
   duration?: number;
   staggerDelay?: number;
-  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span' | 'div';
-  splitBy?: 'words' | 'chars' | 'none';
+  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span" | "div";
+  splitBy?: "words" | "chars" | "none";
 }
 
 // Variants are defined inline in the component
@@ -23,16 +23,16 @@ export function TextReveal({
   delay = 0,
   duration = 0.5,
   staggerDelay = 0.05,
-  as: Component = 'h1',
-  splitBy = 'words',
+  as: Component = "h1",
+  splitBy = "words",
 }: TextRevealProps) {
-  const text = typeof children === 'string' ? children : String(children);
+  const text = typeof children === "string" ? children : String(children);
 
   let items: string[] = [];
-  if (splitBy === 'words') {
+  if (splitBy === "words") {
     items = text.split(/\s+/).filter(Boolean);
-  } else if (splitBy === 'chars') {
-    items = text.split('');
+  } else if (splitBy === "chars") {
+    items = text.split("");
   } else {
     items = [text];
   }
@@ -65,29 +65,29 @@ export function TextReveal({
 
   return (
     <motion.div
-      initial='hidden'
+      initial="hidden"
       variants={containerVariants}
-      viewport={{ once: true, margin: '-100px' }}
-      whileInView='visible'
-      className={cn('inline-block', className)}
+      viewport={{ once: true, margin: "-100px" }}
+      whileInView="visible"
+      className={cn("inline-block", className)}
     >
-      {splitBy === 'none' ? (
+      {splitBy === "none" ? (
         <Component>{children}</Component>
       ) : (
-        <Component className='inline-block'>
+        <Component className="inline-block">
           {items.map((item, index) => (
             <motion.span
               key={index}
               variants={itemVariants}
-              className='inline-block'
+              className="inline-block"
               style={
-                splitBy === 'words' && index < items.length - 1
-                  ? { marginRight: '0.25em' }
+                splitBy === "words" && index < items.length - 1
+                  ? { marginRight: "0.25em" }
                   : {}
               }
             >
               {item}
-              {splitBy === 'words' && index < items.length - 1 ? '\u00A0' : ''}
+              {splitBy === "words" && index < items.length - 1 ? "\u00A0" : ""}
             </motion.span>
           ))}
         </Component>

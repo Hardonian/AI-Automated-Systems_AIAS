@@ -33,8 +33,7 @@
         "**/*.jsx",
         "package.json",
         "tsconfig.json",
-        "next.config.js",
-
+        "next.config.js"
       ]
     },
     "typecheck": {
@@ -56,7 +55,6 @@
     "dev": {
       "cache": false,
       "persistent": true
-    },
-
+    }
   }
 }

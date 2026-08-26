@@ -22,20 +22,20 @@ import {
   TestInfo,
   ConsoleMessage,
   Request,
-} from '@playwright/test';
+} from "@playwright/test";
 import {
   setupVisualTest,
   waitForPageStability,
   viewports,
-} from './utils/visual-helpers';
+} from "./utils/visual-helpers";
 
-const baseURL = process.env.BASE_URL || 'http://localhost:3000';
+const baseURL = process.env.BASE_URL || "http://localhost:3000";
 
 // Store issues found during audit
 interface AuditIssue {
   route: string;
   viewport: string;
-  severity: 'BLOCKER' | 'HIGH' | 'MED' | 'LOW';
+  severity: "BLOCKER" | "HIGH" | "MED" | "LOW";
   category: string;
   message: string;
   details?: string;
@@ -49,22 +49,22 @@ const auditIssues: AuditIssue[] = [];
 function logIssue(
   route: string,
   viewport: string,
-  severity: AuditIssue['severity'],
+  severity: AuditIssue["severity"],
   category: string,
   message: string,
-  details?: string
+  details?: string,
 ): void {
   auditIssues.push({ route, viewport, severity, category, message, details });
   const emoji =
-    severity === 'BLOCKER'
-      ? '🔴'
-      : severity === 'HIGH'
-        ? '🟠'
-        : severity === 'MED'
-          ? '🟡'
-          : '🔵';
+    severity === "BLOCKER"
+      ? "🔴"
+      : severity === "HIGH"
+        ? "🟠"
+        : severity === "MED"
+          ? "🟡"
+          : "🔵";
   console.log(
-    `${emoji} [${severity}] ${category}: ${message} (${route} @ ${viewport})`
+    `${emoji} [${severity}] ${category}: ${message} (${route} @ ${viewport})`,
   );
 }
 
@@ -74,80 +74,80 @@ function logIssue(
 async function setupMonitoring(
   page: Page,
   route: string,
-  viewport: string
+  viewport: string,
 ): Promise<void> {
   // Monitor console errors
-  page.on('console', (msg: ConsoleMessage) => {
-    if (msg.type() === 'error') {
+  page.on("console", (msg: ConsoleMessage) => {
+    if (msg.type() === "error") {
       const text = msg.text();
       // Filter out known non-critical errors
       if (
-        !text.includes('favicon') &&
-        !text.includes('ResizeObserver') &&
-        !text.includes('source map') &&
-        !text.includes('[webpack]') &&
-        !text.includes('hot-update')
+        !text.includes("favicon") &&
+        !text.includes("ResizeObserver") &&
+        !text.includes("source map") &&
+        !text.includes("[webpack]") &&
+        !text.includes("hot-update")
       ) {
-        logIssue(route, viewport, 'HIGH', 'Console Error', text);
+        logIssue(route, viewport, "HIGH", "Console Error", text);
       }
     }
-    if (msg.type() === 'warning') {
+    if (msg.type() === "warning") {
       const text = msg.text();
       // Capture hydration warnings
-      if (text.includes('hydrat') || text.includes('Hydration')) {
-        logIssue(route, viewport, 'BLOCKER', 'Hydration Mismatch', text);
+      if (text.includes("hydrat") || text.includes("Hydration")) {
+        logIssue(route, viewport, "BLOCKER", "Hydration Mismatch", text);
       }
     }
   });
 
   // Monitor page errors
-  page.on('pageerror', (error: Error) => {
+  page.on("pageerror", (error: Error) => {
     logIssue(
       route,
       viewport,
-      'BLOCKER',
-      'Page Error',
+      "BLOCKER",
+      "Page Error",
       error.message,
-      error.stack
+      error.stack,
     );
   });
 
   // Monitor network failures
-  page.on('requestfailed', (request: Request) => {
+  page.on("requestfailed", (request: Request) => {
     const url = request.url();
     // Filter out non-critical failures
     if (
-      !url.includes('favicon') &&
-      !url.includes('.map') &&
-      !url.includes('hot-update')
+      !url.includes("favicon") &&
+      !url.includes(".map") &&
+      !url.includes("hot-update")
     ) {
       logIssue(
         route,
         viewport,
-        'HIGH',
-        'Network Failure',
-        `Failed to load: ${url}`
+        "HIGH",
+        "Network Failure",
+        `Failed to load: ${url}`,
       );
     }
   });
 
   // Monitor 4xx/5xx responses
-  page.on('response', response => {
+  page.on("response", (response) => {
     const status = response.status();
     const url = response.url();
 
     if (status >= 400 && status < 600) {
       // Skip certain expected errors
       if (
-        url.includes('api/auth') || // Auth endpoints may return 401/403
-        url.includes('analytics') || // Analytics may be blocked
-        url.includes('telemetry') // Telemetry failures are non-critical
+        url.includes("api/auth") || // Auth endpoints may return 401/403
+        url.includes("analytics") || // Analytics may be blocked
+        url.includes("telemetry") // Telemetry failures are non-critical
       ) {
         return;
       }
 
-      const severity = status >= 500 ? 'BLOCKER' : 'HIGH';
-      logIssue(route, viewport, severity, 'HTTP Error', `${status} on ${url}`);
+      const severity = status >= 500 ? "BLOCKER" : "HIGH";
+      logIssue(route, viewport, severity, "HTTP Error", `${status} on ${url}`);
     }
   });
 }
@@ -158,7 +158,7 @@ async function setupMonitoring(
 async function checkResponsiveIssues(
   page: Page,
   route: string,
-  viewportName: string
+  viewportName: string,
 ): Promise<void> {
   // Check for elements that might be hidden incorrectly
   const hiddenElements = await page.evaluate(() => {
@@ -168,24 +168,24 @@ async function checkResponsiveIssues(
     const bodyOverflow = document.body.scrollWidth > window.innerWidth;
     if (bodyOverflow) {
       issues.push(
-        `Horizontal overflow detected: ${document.body.scrollWidth - window.innerWidth}px`
+        `Horizontal overflow detected: ${document.body.scrollWidth - window.innerWidth}px`,
       );
     }
 
     // Check for elements outside viewport
-    const allElements = document.querySelectorAll('*');
-    allElements.forEach(el => {
+    const allElements = document.querySelectorAll("*");
+    allElements.forEach((el) => {
       const rect = el.getBoundingClientRect();
       if (
         rect.right > window.innerWidth + 10 ||
         rect.bottom > window.innerHeight + 10
       ) {
-        if (el.tagName !== 'SCRIPT' && el.tagName !== 'STYLE') {
+        if (el.tagName !== "SCRIPT" && el.tagName !== "STYLE") {
           // Only log significant elements
-          const isVisible = window.getComputedStyle(el).display !== 'none';
+          const isVisible = window.getComputedStyle(el).display !== "none";
           if (isVisible && rect.width > 50 && rect.height > 50) {
             issues.push(
-              `Element ${el.tagName} at (${rect.left}, ${rect.top}) extends beyond viewport`
+              `Element ${el.tagName} at (${rect.left}, ${rect.top}) extends beyond viewport`,
             );
           }
         }
@@ -195,8 +195,8 @@ async function checkResponsiveIssues(
     return issues;
   });
 
-  hiddenElements.forEach(issue => {
-    logIssue(route, viewportName, 'MED', 'Responsive Issue', issue);
+  hiddenElements.forEach((issue) => {
+    logIssue(route, viewportName, "MED", "Responsive Issue", issue);
   });
 }
 
@@ -206,11 +206,11 @@ async function checkResponsiveIssues(
 async function checkKeyboardAccessibility(
   page: Page,
   route: string,
-  viewportName: string
+  viewportName: string,
 ): Promise<void> {
   // Try to tab through the page
   const initialFocus = await page.evaluate(
-    () => document.activeElement?.tagName
+    () => document.activeElement?.tagName,
   );
 
   // Tab 10 times and see if we get stuck
@@ -218,11 +218,11 @@ async function checkKeyboardAccessibility(
   let previousFocus: string | null = null;
 
   for (let i = 0; i < 10; i++) {
-    await page.keyboard.press('Tab');
+    await page.keyboard.press("Tab");
     await page.waitForTimeout(100);
 
     const currentFocus = await page.evaluate(
-      () => document.activeElement?.tagName || 'null'
+      () => document.activeElement?.tagName || "null",
     );
 
     if (currentFocus === previousFocus) {
@@ -231,9 +231,9 @@ async function checkKeyboardAccessibility(
         logIssue(
           route,
           viewportName,
-          'HIGH',
-          'Keyboard Trap',
-          'Focus appears to be trapped'
+          "HIGH",
+          "Keyboard Trap",
+          "Focus appears to be trapped",
         );
         break;
       }
@@ -247,15 +247,15 @@ async function checkKeyboardAccessibility(
   // Check for focusable elements that are hidden
   const hiddenFocusable = await page.evaluate(() => {
     const focusable = document.querySelectorAll(
-      'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])',
     );
     let hiddenCount = 0;
-    focusable.forEach(el => {
+    focusable.forEach((el) => {
       const style = window.getComputedStyle(el);
       const rect = el.getBoundingClientRect();
       if (
-        style.display === 'none' ||
-        style.visibility === 'hidden' ||
+        style.display === "none" ||
+        style.visibility === "hidden" ||
         (rect.width === 0 && rect.height === 0)
       ) {
         hiddenCount++;
@@ -268,9 +268,9 @@ async function checkKeyboardAccessibility(
     logIssue(
       route,
       viewportName,
-      'MED',
-      'Accessibility',
-      `${hiddenFocusable} focusable elements are hidden`
+      "MED",
+      "Accessibility",
+      `${hiddenFocusable} focusable elements are hidden`,
     );
   }
 }
@@ -279,21 +279,21 @@ async function checkKeyboardAccessibility(
  * Checks for reduced motion compliance
  */
 async function checkReducedMotion(page: Page, route: string): Promise<void> {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.reload({ waitUntil: 'networkidle' });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.reload({ waitUntil: "networkidle" });
   await waitForPageStability(page);
 
   // Check if animations are properly disabled
   const hasReducedMotionSupport = await page.evaluate(() => {
-    const testElement = document.createElement('div');
-    testElement.style.animation = 'test 1s infinite';
+    const testElement = document.createElement("div");
+    testElement.style.animation = "test 1s infinite";
     document.body.appendChild(testElement);
 
     const style = window.getComputedStyle(testElement);
     const isAnimationDisabled =
-      style.animationDuration === '0.001ms' ||
-      style.animationDuration === '0s' ||
-      style.animationName === 'none';
+      style.animationDuration === "0.001ms" ||
+      style.animationDuration === "0s" ||
+      style.animationName === "none";
 
     document.body.removeChild(testElement);
     return isAnimationDisabled;
@@ -302,10 +302,10 @@ async function checkReducedMotion(page: Page, route: string): Promise<void> {
   if (!hasReducedMotionSupport) {
     logIssue(
       route,
-      'desktop',
-      'MED',
-      'Accessibility',
-      'Reduced motion preferences not fully supported'
+      "desktop",
+      "MED",
+      "Accessibility",
+      "Reduced motion preferences not fully supported",
     );
   }
 }
@@ -314,30 +314,30 @@ async function checkReducedMotion(page: Page, route: string): Promise<void> {
  * Checks for dark mode consistency
  */
 async function checkDarkMode(page: Page, route: string): Promise<void> {
-  await page.emulateMedia({ colorScheme: 'dark' });
-  await page.reload({ waitUntil: 'networkidle' });
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.reload({ waitUntil: "networkidle" });
   await waitForPageStability(page);
 
   // Check if dark mode is applied
   const hasDarkMode = await page.evaluate(() => {
-    const hasDarkClass = document.documentElement.classList.contains('dark');
+    const hasDarkClass = document.documentElement.classList.contains("dark");
     const computedStyle = window.getComputedStyle(document.body);
     const backgroundColor = computedStyle.backgroundColor;
     // Check if background is dark (simple heuristic)
     const isDarkBackground =
-      backgroundColor.includes('0, 0, 0') ||
-      backgroundColor.includes('rgb(2') ||
-      backgroundColor.includes('rgb(1');
+      backgroundColor.includes("0, 0, 0") ||
+      backgroundColor.includes("rgb(2") ||
+      backgroundColor.includes("rgb(1");
     return hasDarkClass || isDarkBackground;
   });
 
   if (!hasDarkMode) {
     logIssue(
       route,
-      'desktop',
-      'MED',
-      'Theming',
-      'Dark mode not properly applied'
+      "desktop",
+      "MED",
+      "Theming",
+      "Dark mode not properly applied",
     );
   }
 }
@@ -350,7 +350,7 @@ async function auditRoute(
   testInfo: TestInfo,
   route: string,
   viewportName: string,
-  viewport: { width: number; height: number }
+  viewport: { width: number; height: number },
 ): Promise<void> {
   // Set viewport
   await page.setViewportSize(viewport);
@@ -365,12 +365,12 @@ async function auditRoute(
 
   // Navigate to route
   const response = await page.goto(`${baseURL}${route}`, {
-    waitUntil: 'networkidle',
+    waitUntil: "networkidle",
     timeout: 30000,
   });
 
   if (!response || response.status() === 404) {
-    logIssue(route, viewportName, 'LOW', 'Route', 'Route not found (404)');
+    logIssue(route, viewportName, "LOW", "Route", "Route not found (404)");
     return;
   }
 
@@ -385,17 +385,17 @@ async function auditRoute(
 // ============================================
 // MAIN AUDIT TEST SUITE
 // ============================================
-test.describe('UI Consistency Audit', () => {
+test.describe("UI Consistency Audit", () => {
   test.afterAll(async () => {
     // Generate audit report
-    console.log('\n========================================');
-    console.log('UI CONSISTENCY AUDIT REPORT');
-    console.log('========================================\n');
+    console.log("\n========================================");
+    console.log("UI CONSISTENCY AUDIT REPORT");
+    console.log("========================================\n");
 
-    const blockers = auditIssues.filter(i => i.severity === 'BLOCKER');
-    const highs = auditIssues.filter(i => i.severity === 'HIGH');
-    const meds = auditIssues.filter(i => i.severity === 'MED');
-    const lows = auditIssues.filter(i => i.severity === 'LOW');
+    const blockers = auditIssues.filter((i) => i.severity === "BLOCKER");
+    const highs = auditIssues.filter((i) => i.severity === "HIGH");
+    const meds = auditIssues.filter((i) => i.severity === "MED");
+    const lows = auditIssues.filter((i) => i.severity === "LOW");
 
     console.log(`Total Issues: ${auditIssues.length}`);
     console.log(`  🔴 BLOCKER: ${blockers.length}`);
@@ -404,37 +404,37 @@ test.describe('UI Consistency Audit', () => {
     console.log(`  🔵 LOW: ${lows.length}`);
 
     if (blockers.length > 0) {
-      console.log('\n🔴 BLOCKER Issues (must fix):');
-      blockers.forEach(issue => {
+      console.log("\n🔴 BLOCKER Issues (must fix):");
+      blockers.forEach((issue) => {
         console.log(
-          `  - [${issue.category}] ${issue.message} (${issue.route})`
+          `  - [${issue.category}] ${issue.message} (${issue.route})`,
         );
       });
     }
 
     if (highs.length > 0) {
-      console.log('\n🟠 HIGH Issues (should fix):');
-      highs.forEach(issue => {
+      console.log("\n🟠 HIGH Issues (should fix):");
+      highs.forEach((issue) => {
         console.log(
-          `  - [${issue.category}] ${issue.message} (${issue.route})`
+          `  - [${issue.category}] ${issue.message} (${issue.route})`,
         );
       });
     }
 
-    console.log('\n========================================');
+    console.log("\n========================================");
   });
 
   // Audit critical routes across viewports
   const routesToAudit = [
-    { path: '/', name: 'homepage' },
-    { path: '/blog', name: 'blog' },
-    { path: '/privacy', name: 'privacy' },
-    { path: '/terms', name: 'terms' },
-    { path: '/services', name: 'services' },
-    { path: '/ecosystem', name: 'ecosystem' },
-    { path: '/metrics', name: 'metrics' },
-    { path: '/roi-calculator', name: 'roi-calculator' },
-    { path: '/how-it-works', name: 'how-it-works' },
+    { path: "/", name: "homepage" },
+    { path: "/blog", name: "blog" },
+    { path: "/privacy", name: "privacy" },
+    { path: "/terms", name: "terms" },
+    { path: "/services", name: "services" },
+    { path: "/ecosystem", name: "ecosystem" },
+    { path: "/metrics", name: "metrics" },
+    { path: "/roi-calculator", name: "roi-calculator" },
+    { path: "/how-it-works", name: "how-it-works" },
   ];
 
   for (const route of routesToAudit) {
@@ -444,58 +444,58 @@ test.describe('UI Consistency Audit', () => {
         page,
         testInfo,
         route.path,
-        'desktop',
-        viewports.desktop
+        "desktop",
+        viewports.desktop,
       );
     });
 
     // Tablet audit
     test(`${route.name} - tablet audit`, async ({ page }, testInfo) => {
-      await auditRoute(page, testInfo, route.path, 'tablet', viewports.tablet);
+      await auditRoute(page, testInfo, route.path, "tablet", viewports.tablet);
     });
 
     // Mobile audit
     test(`${route.name} - mobile audit`, async ({ page }, testInfo) => {
-      await auditRoute(page, testInfo, route.path, 'mobile', viewports.mobile);
+      await auditRoute(page, testInfo, route.path, "mobile", viewports.mobile);
     });
 
     // Dark mode check (desktop only)
     test(`${route.name} - dark mode check`, async ({ page }, testInfo) => {
       await setupVisualTest(page, testInfo);
-      await page.goto(`${baseURL}${route.path}`, { waitUntil: 'networkidle' });
+      await page.goto(`${baseURL}${route.path}`, { waitUntil: "networkidle" });
       await checkDarkMode(page, route.path);
     });
 
     // Reduced motion check (desktop only)
     test(`${route.name} - reduced motion check`, async ({ page }, testInfo) => {
       await setupVisualTest(page, testInfo);
-      await page.goto(`${baseURL}${route.path}`, { waitUntil: 'networkidle' });
+      await page.goto(`${baseURL}${route.path}`, { waitUntil: "networkidle" });
       await checkReducedMotion(page, route.path);
     });
   }
 
   // Cross-viewport consistency check
-  test('cross-viewport navigation consistency', async ({ page }, testInfo) => {
-    const route = '/';
+  test("cross-viewport navigation consistency", async ({ page }, testInfo) => {
+    const route = "/";
 
     // Get desktop state
     await page.setViewportSize(viewports.desktop);
-    await page.goto(`${baseURL}${route}`, { waitUntil: 'networkidle' });
-    const desktopNavItems = await page.locator('nav a, header a').count();
+    await page.goto(`${baseURL}${route}`, { waitUntil: "networkidle" });
+    const desktopNavItems = await page.locator("nav a, header a").count();
 
     // Get mobile state
     await page.setViewportSize(viewports.mobile);
-    await page.reload({ waitUntil: 'networkidle' });
-    const mobileNavItems = await page.locator('nav a, header a').count();
+    await page.reload({ waitUntil: "networkidle" });
+    const mobileNavItems = await page.locator("nav a, header a").count();
 
     // Navigation should be accessible on both
     if (mobileNavItems === 0 && desktopNavItems > 0) {
       logIssue(
         route,
-        'mobile',
-        'HIGH',
-        'Navigation',
-        'Navigation items missing on mobile'
+        "mobile",
+        "HIGH",
+        "Navigation",
+        "Navigation items missing on mobile",
       );
     }
   });

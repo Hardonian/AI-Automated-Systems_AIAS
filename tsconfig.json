@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -25,21 +21,12 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@supabase/supabase-js": [
-        "./lib/shims/supabase-js"
-      ],
-      "@supabase/ssr": [
-        "./lib/shims/supabase-ssr"
-      ]
+      "@/*": ["./*"],
+      "@supabase/supabase-js": ["./lib/shims/supabase-js"],
+      "@supabase/ssr": ["./lib/shims/supabase-ssr"]
     },
     "baseUrl": ".",
-    "typeRoots": [
-      "./node_modules/@types",
-      "./types"
-    ],
+    "typeRoots": ["./node_modules/@types", "./types"],
     "forceConsistentCasingInFileNames": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitAny": true,

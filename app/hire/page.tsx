@@ -1,5 +1,5 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
+import type { Metadata } from "next";
+import Link from "next/link";
 import {
   ArrowRight,
   ShieldCheck,
@@ -10,20 +10,20 @@ import {
   Lock,
   Layers,
   ExternalLink,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { PageHero, PageSection } from '@/components/ui/section-primitives';
-import { Breadcrumbs } from '@/components/layout/breadcrumbs';
-import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
-import { siteContent } from '@/src/content/site';
-import { Button } from '@/components/ui/button';
-import { HireScopingWizard } from '@/components/hire/hire-scoping-wizard';
+import { PageHero, PageSection } from "@/components/ui/section-primitives";
+import { Breadcrumbs } from "@/components/layout/breadcrumbs";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
+import { siteContent } from "@/src/content/site";
+import { Button } from "@/components/ui/button";
+import { HireScopingWizard } from "@/components/hire/hire-scoping-wizard";
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Hire AI Automation Systems Engineers & Architects | AIAS',
+  title: "Hire AI Automation Systems Engineers & Architects | AIAS",
   description:
-    'Hire AIAS to build bespoke deterministic automation pipelines, stabilize flaky AI agents, and architect enterprise-grade governance.',
-  canonical: '/hire',
+    "Hire AIAS to build bespoke deterministic automation pipelines, stabilize flaky AI agents, and architect enterprise-grade governance.",
+  canonical: "/hire",
 });
 
 export default function HireConsultancyPage() {
@@ -32,7 +32,7 @@ export default function HireConsultancyPage() {
   return (
     <>
       <div className="container pt-4">
-        <Breadcrumbs items={[{ label: 'Hire AIAS' }]} />
+        <Breadcrumbs items={[{ label: "Hire AIAS" }]} />
       </div>
 
       <PageHero
@@ -46,23 +46,27 @@ export default function HireConsultancyPage() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-16">
           {[
             {
-              title: '100% IP & Code Ownership',
-              description: 'You own every line of code, schema definition, and Docker configuration.',
+              title: "100% IP & Code Ownership",
+              description:
+                "You own every line of code, schema definition, and Docker configuration.",
               icon: Lock,
             },
             {
-              title: 'Policy Before Execution',
-              description: 'Zero unintercepted hallucinated actions or uncontrolled API dispatches.',
+              title: "Policy Before Execution",
+              description:
+                "Zero unintercepted hallucinated actions or uncontrolled API dispatches.",
               icon: ShieldCheck,
             },
             {
-              title: 'Zero Vendor Lock-in',
-              description: 'Built on open standards (TypeScript, Python, Next.js, Zod, PostgreSQL).',
+              title: "Zero Vendor Lock-in",
+              description:
+                "Built on open standards (TypeScript, Python, Next.js, Zod, PostgreSQL).",
               icon: Layers,
             },
             {
-              title: 'Operator Enablement',
-              description: 'Complete runbooks, SOPs, and training sessions so your team operates independently.',
+              title: "Operator Enablement",
+              description:
+                "Complete runbooks, SOPs, and training sessions so your team operates independently.",
               icon: Users,
             },
           ].map((item, idx) => {
@@ -96,7 +100,8 @@ export default function HireConsultancyPage() {
               Choose How Your Team Engages
             </h2>
             <p className="mt-2 font-mono text-xs text-muted-foreground uppercase tracking-wider">
-              Scoper-backed delivery models with transparent deliverables and zero runaway scopes.
+              Scoper-backed delivery models with transparent deliverables and
+              zero runaway scopes.
             </p>
           </div>
 
@@ -134,7 +139,10 @@ export default function HireConsultancyPage() {
                     </p>
                     <ul className="mt-2 space-y-1.5">
                       {track.idealFor.map((item, idx) => (
-                        <li key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
+                        <li
+                          key={idx}
+                          className="flex items-start gap-2 text-xs text-muted-foreground"
+                        >
                           <CheckCircle className="h-3.5 w-3.5 text-primary flex-shrink-0 mt-0.5" />
                           <span>{item}</span>
                         </li>
@@ -149,7 +157,10 @@ export default function HireConsultancyPage() {
                     </p>
                     <ul className="mt-2 space-y-1.5">
                       {track.deliverables.map((item, idx) => (
-                        <li key={idx} className="flex items-start gap-2 text-xs font-medium text-foreground">
+                        <li
+                          key={idx}
+                          className="flex items-start gap-2 text-xs font-medium text-foreground"
+                        >
                           <FileCode className="h-3.5 w-3.5 text-primary flex-shrink-0 mt-0.5" />
                           <span>{item}</span>
                         </li>
@@ -166,11 +177,17 @@ export default function HireConsultancyPage() {
                   >
                     <Link
                       href={track.ctaHref}
-                      target={track.ctaHref.startsWith('http') ? '_blank' : undefined}
-                      rel={track.ctaHref.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      target={
+                        track.ctaHref.startsWith("http") ? "_blank" : undefined
+                      }
+                      rel={
+                        track.ctaHref.startsWith("http")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
                     >
                       {track.ctaLabel}
-                      {track.ctaHref.startsWith('http') ? (
+                      {track.ctaHref.startsWith("http") ? (
                         <ExternalLink className="ml-2 h-4 w-4" />
                       ) : (
                         <ArrowRight className="ml-2 h-4 w-4" />
@@ -194,8 +211,8 @@ export default function HireConsultancyPage() {
             Looking for Self-Serve Tools or Turnkey Software Packages?
           </h2>
           <p className="mt-2 text-xs text-muted-foreground">
-            Explore our browser-based simulators or purchase ready-to-deploy workflow code modules
-            directly.
+            Explore our browser-based simulators or purchase ready-to-deploy
+            workflow code modules directly.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-4">
             <Button

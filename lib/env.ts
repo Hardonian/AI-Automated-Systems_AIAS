@@ -1,16 +1,21 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 const publicEnvSchema = z.object({
-  NEXT_PUBLIC_SITE_URL: z.string().url().default('https://aiautomatedsystems.ca'),
-  NEXT_PUBLIC_APP_ENV: z.enum(['local', 'preview', 'production']).default('production'),
+  NEXT_PUBLIC_SITE_URL: z
+    .string()
+    .url()
+    .default("https://aiautomatedsystems.ca"),
+  NEXT_PUBLIC_APP_ENV: z
+    .enum(["local", "preview", "production"])
+    .default("production"),
   NEXT_PUBLIC_GOOGLE_VERIFICATION: z.string().optional(),
   NEXT_PUBLIC_YANDEX_VERIFICATION: z.string().optional(),
   NEXT_PUBLIC_YAHOO_VERIFICATION: z.string().optional(),
-  NEXT_PUBLIC_ANALYTICS_PROVIDER: z.enum(['none', 'vercel']).default('none'),
+  NEXT_PUBLIC_ANALYTICS_PROVIDER: z.enum(["none", "vercel"]).default("none"),
 });
 
 const serverEnvSchema = z.object({
-  VERCEL_ENV: z.enum(['development', 'preview', 'production']).optional(),
+  VERCEL_ENV: z.enum(["development", "preview", "production"]).optional(),
   VERCEL: z.string().optional(),
 });
 
@@ -32,18 +37,22 @@ export const env = {
   app: {
     siteUrl: parsedPublic.success
       ? parsedPublic.data.NEXT_PUBLIC_SITE_URL
-      : 'https://aiautomatedsystems.ca',
+      : "https://aiautomatedsystems.ca",
   },
   monitoring: {
-    logLevel: 'info' as const,
+    logLevel: "info" as const,
   },
 };
 
-export const getOptionalEnv = (key: string): string | undefined => process.env[key];
+export const getOptionalEnv = (key: string): string | undefined =>
+  process.env[key];
 
-export type EnvMode = 'local' | 'preview' | 'production';
+export type EnvMode = "local" | "preview" | "production";
 
-const modeRequirements: Record<EnvMode, { public: string[]; server: string[] }> = {
+const modeRequirements: Record<
+  EnvMode,
+  { public: string[]; server: string[] }
+> = {
   local: {
     public: [],
     server: [],
@@ -70,10 +79,14 @@ export function validateEnvMode(mode: EnvMode): {
 
   const invalid: string[] = [];
   if (!parsedPublic.success) {
-    invalid.push(...parsedPublic.error.issues.map((issue) => issue.path.join('.')));
+    invalid.push(
+      ...parsedPublic.error.issues.map((issue) => issue.path.join(".")),
+    );
   }
   if (!parsedServer.success) {
-    invalid.push(...parsedServer.error.issues.map((issue) => issue.path.join('.')));
+    invalid.push(
+      ...parsedServer.error.issues.map((issue) => issue.path.join(".")),
+    );
   }
 
   return {

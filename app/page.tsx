@@ -7,7 +7,12 @@ import { ThreeProngedSection } from "@/components/home/three-pronged-section";
 import { HowWeWorkSection } from "@/components/content/how-we-work-section";
 import { ProofSection } from "@/components/home/proof-section";
 import { ConversionCTA } from "@/components/home/conversion-cta";
-import { FAQSchema, ServiceListSchema, WebSiteSchema, OrganizationSchema } from "@/components/seo/structured-data";
+import {
+  FAQSchema,
+  ServiceListSchema,
+  WebSiteSchema,
+  OrganizationSchema,
+} from "@/components/seo/structured-data";
 import FadeIn from "@/components/motion/fade-in";
 
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";

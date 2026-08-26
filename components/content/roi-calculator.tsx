@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useMemo, useState } from 'react';
-import Link from 'next/link';
+import React, { useMemo, useState } from "react";
+import Link from "next/link";
 import {
   Calculator,
   TrendingUp,
@@ -13,12 +13,12 @@ import {
   ArrowRight,
   Sparkles,
   Zap,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { SurfaceCard } from '@/components/ui/section-primitives';
-import { Input } from '@/components/ui/input';
-import { Slider } from '@/components/ui/slider';
-import { Button } from '@/components/ui/button';
+import { SurfaceCard } from "@/components/ui/section-primitives";
+import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
 
 const WEEKS_PER_YEAR = 48;
 const BASELINE_IMPLEMENTATION_COST = 48000;
@@ -36,9 +36,9 @@ interface PresetScenario {
 
 const PRESETS: PresetScenario[] = [
   {
-    id: 'startup',
-    name: 'Startup / Growth Team',
-    badge: '10-25 FTEs',
+    id: "startup",
+    name: "Startup / Growth Team",
+    badge: "10-25 FTEs",
     teamSize: 12,
     laborRate: 65,
     manualHours: 16,
@@ -46,9 +46,9 @@ const PRESETS: PresetScenario[] = [
     maturity: 45,
   },
   {
-    id: 'midmarket',
-    name: 'Mid-Market Operations',
-    badge: '50-200 FTEs',
+    id: "midmarket",
+    name: "Mid-Market Operations",
+    badge: "50-200 FTEs",
     teamSize: 45,
     laborRate: 78,
     manualHours: 12,
@@ -56,9 +56,9 @@ const PRESETS: PresetScenario[] = [
     maturity: 65,
   },
   {
-    id: 'enterprise',
-    name: 'Enterprise Regulated Unit',
-    badge: '200+ FTEs',
+    id: "enterprise",
+    name: "Enterprise Regulated Unit",
+    badge: "200+ FTEs",
     teamSize: 120,
     laborRate: 95,
     manualHours: 10,
@@ -73,7 +73,7 @@ export function RoiCalculator() {
   const [manualHours, setManualHours] = useState(14);
   const [repetitionRate, setRepetitionRate] = useState(65);
   const [maturity, setMaturity] = useState(55);
-  const [copyState, setCopyState] = useState<'idle' | 'done' | 'error'>('idle');
+  const [copyState, setCopyState] = useState<"idle" | "done" | "error">("idle");
 
   const applyPreset = (preset: PresetScenario) => {
     setTeamSize(preset.teamSize);
@@ -86,12 +86,17 @@ export function RoiCalculator() {
   const model = useMemo(() => {
     const maturityFactor = maturity / 100;
     const repetitionFactor = repetitionRate / 100;
-    const weeklySavedHours = teamSize * manualHours * repetitionFactor * maturityFactor;
+    const weeklySavedHours =
+      teamSize * manualHours * repetitionFactor * maturityFactor;
     const annualSavedHours = weeklySavedHours * WEEKS_PER_YEAR;
     const annualCostSavings = annualSavedHours * laborRate;
     const monthlySavings = annualCostSavings / 12;
-    const breakEvenMonths = monthlySavings > 0 ? BASELINE_IMPLEMENTATION_COST / monthlySavings : 0;
-    const roiMultiplier = BASELINE_IMPLEMENTATION_COST > 0 ? (annualCostSavings / BASELINE_IMPLEMENTATION_COST).toFixed(1) : '1.0';
+    const breakEvenMonths =
+      monthlySavings > 0 ? BASELINE_IMPLEMENTATION_COST / monthlySavings : 0;
+    const roiMultiplier =
+      BASELINE_IMPLEMENTATION_COST > 0
+        ? (annualCostSavings / BASELINE_IMPLEMENTATION_COST).toFixed(1)
+        : "1.0";
 
     return {
       maturityFactor,
@@ -102,7 +107,10 @@ export function RoiCalculator() {
       monthlySavings,
       breakEvenMonths,
       roiMultiplier,
-      riskReduction: Math.min(90, Math.round((repetitionFactor * 0.5 + maturityFactor * 0.5) * 100)),
+      riskReduction: Math.min(
+        90,
+        Math.round((repetitionFactor * 0.5 + maturityFactor * 0.5) * 100),
+      ),
     };
   }, [teamSize, laborRate, manualHours, repetitionRate, maturity]);
 
@@ -118,7 +126,7 @@ export function RoiCalculator() {
       operatingWeeksPerYear: WEEKS_PER_YEAR,
       baselineImplementationBudgetCAD: BASELINE_IMPLEMENTATION_COST,
       calculationFormula:
-        'weekly_reclaimed_hours = team_size * manual_hours_per_week * repetition_rate * automation_maturity',
+        "weekly_reclaimed_hours = team_size * manual_hours_per_week * repetition_rate * automation_maturity",
     },
     outputs: {
       weeklyHoursReclaimed: Number(model.weeklySavedHours.toFixed(1)),
@@ -129,17 +137,19 @@ export function RoiCalculator() {
       riskReductionIndex: `${model.riskReduction}%`,
       riskNote:
         model.riskReduction >= 60
-          ? 'High repeatability and defined maturity indicate immediate high-probability operational ROI.'
-          : 'Moderate baseline maturity indicates governance and safety guardrails should precede scaling.',
+          ? "High repeatability and defined maturity indicate immediate high-probability operational ROI."
+          : "Moderate baseline maturity indicates governance and safety guardrails should precede scaling.",
     },
   };
 
   const downloadSummary = () => {
-    const blob = new Blob([JSON.stringify(summary, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(summary, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
+    const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = 'aias-roi-projection.json';
+    anchor.download = "aias-roi-projection.json";
     anchor.click();
     URL.revokeObjectURL(url);
   };
@@ -147,10 +157,10 @@ export function RoiCalculator() {
   const copySummary = async () => {
     try {
       await navigator.clipboard.writeText(JSON.stringify(summary, null, 2));
-      setCopyState('done');
-      setTimeout(() => setCopyState('idle'), 2500);
+      setCopyState("done");
+      setTimeout(() => setCopyState("idle"), 2500);
     } catch {
-      setCopyState('error');
+      setCopyState("error");
     }
   };
 
@@ -179,7 +189,8 @@ export function RoiCalculator() {
                 {preset.name}
               </h3>
               <p className="mt-1 font-mono text-[11px] text-muted-foreground">
-                {preset.teamSize} FTEs • ~${preset.laborRate}/unit • {preset.manualHours}h manual
+                {preset.teamSize} FTEs • ~${preset.laborRate}/unit •{" "}
+                {preset.manualHours}h manual
               </p>
             </button>
           ))}
@@ -218,7 +229,9 @@ export function RoiCalculator() {
                   max={500}
                   type="number"
                   value={teamSize}
-                  onChange={(e) => setTeamSize(Math.max(1, Number(e.target.value) || 1))}
+                  onChange={(e) =>
+                    setTeamSize(Math.max(1, Number(e.target.value) || 1))
+                  }
                   className="rounded-none border-2 border-border font-mono text-xs"
                 />
               </div>
@@ -236,7 +249,9 @@ export function RoiCalculator() {
                   min={1}
                   type="number"
                   value={laborRate}
-                  onChange={(e) => setLaborRate(Math.max(1, Number(e.target.value) || 1))}
+                  onChange={(e) =>
+                    setLaborRate(Math.max(1, Number(e.target.value) || 1))
+                  }
                   className="rounded-none border-2 border-border font-mono text-xs"
                 />
               </div>
@@ -255,7 +270,9 @@ export function RoiCalculator() {
                   max={40}
                   type="number"
                   value={manualHours}
-                  onChange={(e) => setManualHours(Math.max(1, Number(e.target.value) || 1))}
+                  onChange={(e) =>
+                    setManualHours(Math.max(1, Number(e.target.value) || 1))
+                  }
                   className="rounded-none border-2 border-border font-mono text-xs"
                 />
               </div>
@@ -278,7 +295,8 @@ export function RoiCalculator() {
                   className="cursor-pointer"
                 />
                 <p className="mt-1.5 text-[11px] text-muted-foreground">
-                  Portion of manual tasks that follow recurring patterns and clear business logic.
+                  Portion of manual tasks that follow recurring patterns and
+                  clear business logic.
                 </p>
               </div>
 
@@ -300,7 +318,8 @@ export function RoiCalculator() {
                   className="cursor-pointer"
                 />
                 <p className="mt-1.5 text-[11px] text-muted-foreground">
-                  Expected degree of end-to-end automation with deterministic human-in-the-loop checkpoints.
+                  Expected degree of end-to-end automation with deterministic
+                  human-in-the-loop checkpoints.
                 </p>
               </div>
             </div>
@@ -332,10 +351,14 @@ export function RoiCalculator() {
                     Time Saved Weekly
                   </p>
                   <p className="mt-1 font-mono text-2xl sm:text-3xl font-black text-foreground">
-                    {model.weeklySavedHours.toFixed(1)} <span className="text-sm font-bold text-muted-foreground">hrs</span>
+                    {model.weeklySavedHours.toFixed(1)}{" "}
+                    <span className="text-sm font-bold text-muted-foreground">
+                      hrs
+                    </span>
                   </p>
                   <p className="mt-1 text-[11px] text-muted-foreground">
-                    ~{Math.round(model.annualSavedHours).toLocaleString()} annual hours reclaimed
+                    ~{Math.round(model.annualSavedHours).toLocaleString()}{" "}
+                    annual hours reclaimed
                   </p>
                 </div>
 
@@ -359,7 +382,9 @@ export function RoiCalculator() {
                     Estimated Payback Period:
                   </span>
                   <span className="font-mono text-sm font-bold text-foreground">
-                    {model.breakEvenMonths <= 0.1 ? '< 1 month' : `${model.breakEvenMonths.toFixed(1)} months`}
+                    {model.breakEvenMonths <= 0.1
+                      ? "< 1 month"
+                      : `${model.breakEvenMonths.toFixed(1)} months`}
                   </span>
                 </div>
 
@@ -374,7 +399,9 @@ export function RoiCalculator() {
 
                 <div className="rounded-none border-2 border-border bg-muted/40 p-3">
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    <strong className="text-foreground font-mono uppercase">Guidance: </strong>
+                    <strong className="text-foreground font-mono uppercase">
+                      Guidance:{" "}
+                    </strong>
                     {summary.outputs.riskNote}
                   </p>
                 </div>
@@ -400,7 +427,7 @@ export function RoiCalculator() {
                   className="flex-1 rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-wider hover:border-foreground"
                 >
                   <Copy className="mr-1.5 h-3.5 w-3.5" />
-                  {copyState === 'done' ? 'Copied!' : 'Copy Summary'}
+                  {copyState === "done" ? "Copied!" : "Copy Summary"}
                 </Button>
               </div>
 

@@ -2,7 +2,7 @@ export interface HeroContent {
   title: string;
   subtitle: string;
   description: string;
-  backgroundVariant?: 'gradient' | 'plain';
+  backgroundVariant?: "gradient" | "plain";
   badgeText?: string;
   impactCardsLabel?: string;
   primaryCta?: {

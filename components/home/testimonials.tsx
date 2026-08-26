@@ -1,15 +1,12 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { ArrowRight, ExternalLink } from 'lucide-react';
-import Link from 'next/link';
+import { motion } from "framer-motion";
+import { ArrowRight, ExternalLink } from "lucide-react";
+import Link from "next/link";
 
-import { Button } from '@/components/ui/button';
-import {
-  getContainerClasses,
-  TYPOGRAPHY,
-} from '@/lib/design-tokens';
-import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
+import { Button } from "@/components/ui/button";
+import { getContainerClasses, TYPOGRAPHY } from "@/lib/design-tokens";
+import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
 
 export function Testimonials() {
   const studies = siteContent.caseStudies;
@@ -21,7 +18,7 @@ export function Testimonials() {
       className="relative overflow-hidden border-b bg-gradient-to-b from-background via-muted/10 to-background py-20"
       id="engagements"
     >
-      <div className={getContainerClasses('wide')}>
+      <div className={getContainerClasses("wide")}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
@@ -32,12 +29,10 @@ export function Testimonials() {
           <span className="text-sm font-semibold uppercase tracking-wider text-primary">
             Real work, real clients
           </span>
-          <h2 className={`${TYPOGRAPHY.h2} mb-4 mt-3`}>
-            Recent Engagements
-          </h2>
+          <h2 className={`${TYPOGRAPHY.h2} mb-4 mt-3`}>Recent Engagements</h2>
           <p className="mx-auto max-w-2xl text-muted-foreground">
-            Actual projects with named clients. Each one shipped with governance artifacts,
-            documented handoff, and measurable outcomes.
+            Actual projects with named clients. Each one shipped with governance
+            artifacts, documented handoff, and measurable outcomes.
           </p>
         </motion.div>
 
@@ -80,13 +75,17 @@ export function Testimonials() {
                     <p className="text-xs font-semibold uppercase tracking-wider text-destructive/70">
                       Challenge
                     </p>
-                    <p className="mt-1 text-sm leading-relaxed">{study.challenge}</p>
+                    <p className="mt-1 text-sm leading-relaxed">
+                      {study.challenge}
+                    </p>
                   </div>
                   <div className="rounded-xl bg-primary/5 p-4">
                     <p className="text-xs font-semibold uppercase tracking-wider text-primary/70">
                       What we did
                     </p>
-                    <p className="mt-1 text-sm leading-relaxed">{study.solution}</p>
+                    <p className="mt-1 text-sm leading-relaxed">
+                      {study.solution}
+                    </p>
                   </div>
                 </div>
 
@@ -97,7 +96,10 @@ export function Testimonials() {
                   </p>
                   <ul className="space-y-1.5">
                     {study.results.map((result) => (
-                      <li key={result} className="flex items-start gap-2 text-sm">
+                      <li
+                        key={result}
+                        className="flex items-start gap-2 text-sm"
+                      >
                         <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                         {result}
                       </li>

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
+import React, { useState } from "react";
+import Link from "next/link";
 import {
   Activity,
   ShieldCheck,
@@ -14,40 +14,42 @@ import {
   Sparkles,
   ArrowRight,
   Terminal,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { SurfaceCard } from '@/components/ui/section-primitives';
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SurfaceCard } from "@/components/ui/section-primitives";
 
 export function ClientDashboardPreview() {
-  const [activeTab, setActiveTab] = useState<'workloads' | 'evals' | 'finops' | 'audit'>('workloads');
+  const [activeTab, setActiveTab] = useState<
+    "workloads" | "evals" | "finops" | "audit"
+  >("workloads");
 
   const workloads = [
     {
-      id: 'wk-1',
-      name: 'RFP Response Intelligence & Verification',
-      status: 'HEALTHY (CANARY v4.2)',
-      model: 'Claude 3.5 Sonnet / Custom Schema',
-      evalScore: '99.4%',
-      requests24h: '1,420 runs',
-      errorRate: '0.00%',
+      id: "wk-1",
+      name: "RFP Response Intelligence & Verification",
+      status: "HEALTHY (CANARY v4.2)",
+      model: "Claude 3.5 Sonnet / Custom Schema",
+      evalScore: "99.4%",
+      requests24h: "1,420 runs",
+      errorRate: "0.00%",
     },
     {
-      id: 'wk-2',
-      name: 'Multi-Currency AP Invoice Reconciliation',
-      status: 'HEALTHY (ACTIVE)',
-      model: 'Deterministic Math + GPT-4o-mini',
-      evalScore: '100.0%',
-      requests24h: '840 runs',
-      errorRate: '0.00%',
+      id: "wk-2",
+      name: "Multi-Currency AP Invoice Reconciliation",
+      status: "HEALTHY (ACTIVE)",
+      model: "Deterministic Math + GPT-4o-mini",
+      evalScore: "100.0%",
+      requests24h: "840 runs",
+      errorRate: "0.00%",
     },
     {
-      id: 'wk-3',
-      name: 'Compliance Audit & PII Boundary Scanner',
-      status: 'HEALTHY (ACTIVE)',
-      model: 'Deterministic Regex + Entropy Filter',
-      evalScore: '99.8%',
-      requests24h: '4,890 runs',
-      errorRate: '0.00%',
+      id: "wk-3",
+      name: "Compliance Audit & PII Boundary Scanner",
+      status: "HEALTHY (ACTIVE)",
+      model: "Deterministic Regex + Entropy Filter",
+      evalScore: "99.8%",
+      requests24h: "4,890 runs",
+      errorRate: "0.00%",
     },
   ];
 
@@ -98,31 +100,31 @@ export function ClientDashboardPreview() {
         <div className="flex flex-wrap items-center justify-between border-b-2 border-border pb-4 gap-3">
           <div className="flex gap-2">
             <button
-              onClick={() => setActiveTab('workloads')}
+              onClick={() => setActiveTab("workloads")}
               className={`px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer ${
-                activeTab === 'workloads'
-                  ? 'border-2 border-primary bg-primary text-primary-foreground'
-                  : 'border-2 border-border bg-card text-muted-foreground hover:text-foreground'
+                activeTab === "workloads"
+                  ? "border-2 border-primary bg-primary text-primary-foreground"
+                  : "border-2 border-border bg-card text-muted-foreground hover:text-foreground"
               }`}
             >
               Active Workloads (3)
             </button>
             <button
-              onClick={() => setActiveTab('evals')}
+              onClick={() => setActiveTab("evals")}
               className={`px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer ${
-                activeTab === 'evals'
-                  ? 'border-2 border-primary bg-primary text-primary-foreground'
-                  : 'border-2 border-border bg-card text-muted-foreground hover:text-foreground'
+                activeTab === "evals"
+                  ? "border-2 border-primary bg-primary text-primary-foreground"
+                  : "border-2 border-border bg-card text-muted-foreground hover:text-foreground"
               }`}
             >
               Evaluation Benchmark
             </button>
             <button
-              onClick={() => setActiveTab('audit')}
+              onClick={() => setActiveTab("audit")}
               className={`px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer ${
-                activeTab === 'audit'
-                  ? 'border-2 border-primary bg-primary text-primary-foreground'
-                  : 'border-2 border-border bg-card text-muted-foreground hover:text-foreground'
+                activeTab === "audit"
+                  ? "border-2 border-primary bg-primary text-primary-foreground"
+                  : "border-2 border-border bg-card text-muted-foreground hover:text-foreground"
               }`}
             >
               Audit Runbook
@@ -136,7 +138,7 @@ export function ClientDashboardPreview() {
 
         {/* Tab Contents */}
         <div className="mt-6">
-          {activeTab === 'workloads' && (
+          {activeTab === "workloads" && (
             <div className="space-y-4">
               {workloads.map((wk) => (
                 <div
@@ -162,13 +164,17 @@ export function ClientDashboardPreview() {
                       <span className="text-[10px] uppercase text-muted-foreground block">
                         Eval Accuracy
                       </span>
-                      <span className="font-bold text-foreground">{wk.evalScore}</span>
+                      <span className="font-bold text-foreground">
+                        {wk.evalScore}
+                      </span>
                     </div>
                     <div>
                       <span className="text-[10px] uppercase text-muted-foreground block">
                         24h Invocations
                       </span>
-                      <span className="font-bold text-foreground">{wk.requests24h}</span>
+                      <span className="font-bold text-foreground">
+                        {wk.requests24h}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -176,49 +182,76 @@ export function ClientDashboardPreview() {
             </div>
           )}
 
-          {activeTab === 'evals' && (
+          {activeTab === "evals" && (
             <div className="space-y-4 font-mono text-xs">
               <div className="border-2 border-border bg-muted/20 p-4 space-y-2">
                 <p className="font-bold uppercase text-foreground">
                   Continuous Regression Suite (GroundTruth v4.8)
                 </p>
                 <p className="text-muted-foreground leading-relaxed">
-                  240 golden test assertions executed on every prompt or tool definition commit.
+                  240 golden test assertions executed on every prompt or tool
+                  definition commit.
                 </p>
               </div>
 
               <div className="border-2 border-border p-4 space-y-2 bg-black text-emerald-400 text-[11px] overflow-auto">
-                <p>[EVAL-PASS] Assertion #1: Factual quote fidelity grounded in Canadian Legal Corpus &rarr; 100%</p>
-                <p>[EVAL-PASS] Assertion #2: Zero PII leakage across 48,000 synthetic patient vectors &rarr; 100%</p>
-                <p>[EVAL-PASS] Assertion #3: Variance threshold &lt; 1.0% on multi-currency invoice parser &rarr; 100%</p>
-                <p>[EVAL-PASS] Assertion #4: Deterministic fallback intercept on 500ms timeout &rarr; 100%</p>
+                <p>
+                  [EVAL-PASS] Assertion #1: Factual quote fidelity grounded in
+                  Canadian Legal Corpus &rarr; 100%
+                </p>
+                <p>
+                  [EVAL-PASS] Assertion #2: Zero PII leakage across 48,000
+                  synthetic patient vectors &rarr; 100%
+                </p>
+                <p>
+                  [EVAL-PASS] Assertion #3: Variance threshold &lt; 1.0% on
+                  multi-currency invoice parser &rarr; 100%
+                </p>
+                <p>
+                  [EVAL-PASS] Assertion #4: Deterministic fallback intercept on
+                  500ms timeout &rarr; 100%
+                </p>
               </div>
             </div>
           )}
 
-          {activeTab === 'audit' && (
+          {activeTab === "audit" && (
             <div className="space-y-4 font-mono text-xs">
               <div className="border-2 border-border bg-muted/20 p-4">
                 <p className="font-bold uppercase text-foreground">
                   Immutable Incident & Runbook Ledger
                 </p>
                 <p className="mt-1 text-muted-foreground">
-                  All production transitions, prompt releases, and human approval signoffs are stored in append-only cryptographic runbooks.
+                  All production transitions, prompt releases, and human
+                  approval signoffs are stored in append-only cryptographic
+                  runbooks.
                 </p>
               </div>
 
               <div className="border-2 border-border p-4 space-y-2 bg-card">
                 <div className="flex justify-between border-b border-border pb-2">
-                  <span className="text-muted-foreground">LAST CANARY PROMOTION:</span>
-                  <span className="font-bold text-foreground">2026-08-24 14:22 EST (commit #d48a19)</span>
+                  <span className="text-muted-foreground">
+                    LAST CANARY PROMOTION:
+                  </span>
+                  <span className="font-bold text-foreground">
+                    2026-08-24 14:22 EST (commit #d48a19)
+                  </span>
                 </div>
                 <div className="flex justify-between border-b border-border pb-2">
-                  <span className="text-muted-foreground">APPROVING ARCHITECT:</span>
-                  <span className="font-bold text-primary">Scott H. (Principal)</span>
+                  <span className="text-muted-foreground">
+                    APPROVING ARCHITECT:
+                  </span>
+                  <span className="font-bold text-primary">
+                    Scott H. (Principal)
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">AUDIT INTEGRITY HASH:</span>
-                  <span className="font-bold text-foreground">SHA256:7f92a1c0...98bf</span>
+                  <span className="text-muted-foreground">
+                    AUDIT INTEGRITY HASH:
+                  </span>
+                  <span className="font-bold text-foreground">
+                    SHA256:7f92a1c0...98bf
+                  </span>
                 </div>
               </div>
             </div>

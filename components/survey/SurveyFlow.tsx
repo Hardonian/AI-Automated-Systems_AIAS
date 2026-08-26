@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState, useMemo, useCallback } from 'react';
-import { ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
+import { useState, useMemo, useCallback } from "react";
+import { ArrowRight, ArrowLeft, Sparkles } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { SurfaceCard } from '@/components/ui/section-primitives';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Progress } from '@/components/ui/progress';
+import { Button } from "@/components/ui/button";
+import { SurfaceCard } from "@/components/ui/section-primitives";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 
 interface Question {
   id: string;
@@ -17,104 +17,114 @@ interface Question {
 
 const QUESTIONS: Question[] = [
   {
-    id: 'current_state',
-    question: 'What best describes your current automation maturity?',
+    id: "current_state",
+    question: "What best describes your current automation maturity?",
     options: [
-      'We are just starting to explore automation',
-      'We have some manual workflows we want to automate',
-      'We have basic automation but want to add AI capabilities',
-      'We need to scale and govern existing automation',
+      "We are just starting to explore automation",
+      "We have some manual workflows we want to automate",
+      "We have basic automation but want to add AI capabilities",
+      "We need to scale and govern existing automation",
     ],
   },
   {
-    id: 'primary_goal',
-    question: 'What is your primary automation goal?',
+    id: "primary_goal",
+    question: "What is your primary automation goal?",
     options: [
-      'Reduce manual data entry and processing time',
-      'Improve customer response times',
-      'Scale operations without adding headcount',
-      'Reduce errors and improve compliance',
+      "Reduce manual data entry and processing time",
+      "Improve customer response times",
+      "Scale operations without adding headcount",
+      "Reduce errors and improve compliance",
     ],
   },
   {
-    id: 'complexity',
-    question: 'How complex are your target workflows?',
+    id: "complexity",
+    question: "How complex are your target workflows?",
     options: [
-      'Simple: Single step, one system',
-      'Moderate: Multi-step, few systems',
-      'Complex: Many steps, multiple systems, decisions required',
-      'Enterprise: Cross-departmental with governance needs',
+      "Simple: Single step, one system",
+      "Moderate: Multi-step, few systems",
+      "Complex: Many steps, multiple systems, decisions required",
+      "Enterprise: Cross-departmental with governance needs",
     ],
   },
   {
-    id: 'timeline',
-    question: 'What is your target timeline?',
+    id: "timeline",
+    question: "What is your target timeline?",
     options: [
-      'ASAP - We need quick wins',
-      '1-2 months for initial deployment',
-      '3-6 months for full implementation',
-      'Flexible - Focus on getting it right',
+      "ASAP - We need quick wins",
+      "1-2 months for initial deployment",
+      "3-6 months for full implementation",
+      "Flexible - Focus on getting it right",
     ],
   },
 ];
 
 const RECOMMENDATIONS: Record<string, string> = {
-  '0-0': 'One-off Workflow',
-  '0-1': 'One-off Workflow',
-  '0-2': 'Co-build Engagement',
-  '0-3': 'Co-build Engagement',
-  '1-0': 'One-off Workflow',
-  '1-1': 'One-off Workflow',
-  '1-2': 'Co-build Engagement',
-  '1-3': 'Co-build Engagement',
-  '2-0': 'Co-build Engagement',
-  '2-1': 'Co-build Engagement',
-  '2-2': 'Co-build Engagement',
-  '2-3': 'Managed Refinement',
-  '3-0': 'Co-build Engagement',
-  '3-1': 'Managed Refinement',
-  '3-2': 'Managed Refinement',
-  '3-3': 'Managed Refinement',
+  "0-0": "One-off Workflow",
+  "0-1": "One-off Workflow",
+  "0-2": "Co-build Engagement",
+  "0-3": "Co-build Engagement",
+  "1-0": "One-off Workflow",
+  "1-1": "One-off Workflow",
+  "1-2": "Co-build Engagement",
+  "1-3": "Co-build Engagement",
+  "2-0": "Co-build Engagement",
+  "2-1": "Co-build Engagement",
+  "2-2": "Co-build Engagement",
+  "2-3": "Managed Refinement",
+  "3-0": "Co-build Engagement",
+  "3-1": "Managed Refinement",
+  "3-2": "Managed Refinement",
+  "3-3": "Managed Refinement",
 };
 
 interface SurveyFlowProps {
-  onComplete?: (data: { answers: Record<string, number>; email: string; recommendation: string }) => void;
+  onComplete?: (data: {
+    answers: Record<string, number>;
+    email: string;
+    recommendation: string;
+  }) => void;
 }
 
 export function SurveyFlow({ onComplete }: SurveyFlowProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const progress = useMemo(
     () => ((currentStep + 1) / (QUESTIONS.length + 1)) * 100,
-    [currentStep]
+    [currentStep],
   );
 
   const getRecommendation = useCallback(() => {
-    const maturity = answers['current_state'] ?? 0;
-    const goal = answers['primary_goal'] ?? 0;
-    const complexity = answers['complexity'] ?? 0;
+    const maturity = answers["current_state"] ?? 0;
+    const goal = answers["primary_goal"] ?? 0;
+    const complexity = answers["complexity"] ?? 0;
     const key = `${Math.max(maturity, goal)}-${complexity}`;
-    return RECOMMENDATIONS[key] ?? 'Co-build Engagement';
+    return RECOMMENDATIONS[key] ?? "Co-build Engagement";
   }, [answers]);
 
-  const handleAnswer = useCallback((optionIndex: number) => {
-    const currentQuestion = QUESTIONS[currentStep];
-    if (!currentQuestion) return;
-    
-    setAnswers((prev) => ({ ...prev, [currentQuestion.id]: optionIndex }));
-    setErrors((prev) => ({ ...prev, [currentQuestion.id]: '' }));
-  }, [currentStep]);
+  const handleAnswer = useCallback(
+    (optionIndex: number) => {
+      const currentQuestion = QUESTIONS[currentStep];
+      if (!currentQuestion) return;
+
+      setAnswers((prev) => ({ ...prev, [currentQuestion.id]: optionIndex }));
+      setErrors((prev) => ({ ...prev, [currentQuestion.id]: "" }));
+    },
+    [currentStep],
+  );
 
   const handleNext = useCallback(() => {
     const currentQuestion = QUESTIONS[currentStep];
     if (!currentQuestion) return;
-    
+
     if (answers[currentQuestion.id] === undefined) {
-      setErrors((prev) => ({ ...prev, [currentQuestion.id]: 'Please select an option' }));
+      setErrors((prev) => ({
+        ...prev,
+        [currentQuestion.id]: "Please select an option",
+      }));
       return;
     }
     setCurrentStep((prev) => prev + 1);
@@ -124,22 +134,28 @@ export function SurveyFlow({ onComplete }: SurveyFlowProps) {
     setCurrentStep((prev) => Math.max(0, prev - 1));
   }, []);
 
-  const handleSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !email.includes('@')) {
-      setErrors((prev) => ({ ...prev, email: 'Please enter a valid email' }));
-      return;
-    }
-    
-    const recommendation = getRecommendation();
-    setIsSubmitted(true);
-    onComplete?.({ answers, email, recommendation });
-  }, [email, answers, getRecommendation, onComplete]);
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!email || !email.includes("@")) {
+        setErrors((prev) => ({ ...prev, email: "Please enter a valid email" }));
+        return;
+      }
+
+      const recommendation = getRecommendation();
+      setIsSubmitted(true);
+      onComplete?.({ answers, email, recommendation });
+    },
+    [email, answers, getRecommendation, onComplete],
+  );
 
   if (isSubmitted) {
     const recommendation = getRecommendation();
     return (
-      <main className="min-h-screen flex items-center justify-center p-4" role="main">
+      <main
+        className="min-h-screen flex items-center justify-center p-4"
+        role="main"
+      >
         <SurfaceCard className="max-w-lg w-full p-8 text-center animate-in-fade">
           <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
             <Sparkles className="h-8 w-8 text-primary" aria-hidden="true" />
@@ -149,12 +165,18 @@ export function SurveyFlow({ onComplete }: SurveyFlowProps) {
             Based on your responses, we recommend:
           </p>
           <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-6">
-            <p className="text-lg font-semibold text-primary">{recommendation}</p>
+            <p className="text-lg font-semibold text-primary">
+              {recommendation}
+            </p>
           </div>
           <p className="text-sm text-muted-foreground mb-6">
-            We have sent a detailed breakdown to {email}. Our team will follow up within 24 hours to discuss next steps.
+            We have sent a detailed breakdown to {email}. Our team will follow
+            up within 24 hours to discuss next steps.
           </p>
-          <Button asChild className="w-full transition-transform duration-200 hover:scale-105">
+          <Button
+            asChild
+            className="w-full transition-transform duration-200 hover:scale-105"
+          >
             <a href="/contact">
               Schedule your free consultation
               <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
@@ -169,34 +191,51 @@ export function SurveyFlow({ onComplete }: SurveyFlowProps) {
 
   if (currentQuestion && currentStep < QUESTIONS.length) {
     return (
-      <main className="min-h-screen flex items-center justify-center p-4" role="main">
+      <main
+        className="min-h-screen flex items-center justify-center p-4"
+        role="main"
+      >
         <SurfaceCard className="max-w-lg w-full p-8">
           <div className="mb-6">
-            <Progress value={progress} className="h-2" aria-label={`Question ${currentStep + 1} of ${QUESTIONS.length}`} />
+            <Progress
+              value={progress}
+              className="h-2"
+              aria-label={`Question ${currentStep + 1} of ${QUESTIONS.length}`}
+            />
             <p className="mt-2 text-sm text-muted-foreground text-right">
               Question {currentStep + 1} of {QUESTIONS.length}
             </p>
           </div>
 
-          <h2 className="text-xl font-semibold mb-6">{currentQuestion.question}</h2>
+          <h2 className="text-xl font-semibold mb-6">
+            {currentQuestion.question}
+          </h2>
 
-          <div className="space-y-3" role="radiogroup" aria-label={currentQuestion.question}>
+          <div
+            className="space-y-3"
+            role="radiogroup"
+            aria-label={currentQuestion.question}
+          >
             {currentQuestion.options.map((option, index) => (
               <button
                 key={index}
                 onClick={() => handleAnswer(index)}
                 className={`w-full text-left p-4 rounded-lg border transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                   answers[currentQuestion.id] === index
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:border-primary/50 hover:bg-muted'
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-primary/50 hover:bg-muted"
                 }`}
                 role="radio"
                 aria-checked={answers[currentQuestion.id] === index}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                    answers[currentQuestion.id] === index ? 'border-primary' : 'border-muted-foreground'
-                  }`}>
+                  <div
+                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                      answers[currentQuestion.id] === index
+                        ? "border-primary"
+                        : "border-muted-foreground"
+                    }`}
+                  >
                     {answers[currentQuestion.id] === index && (
                       <div className="w-2.5 h-2.5 rounded-full bg-primary" />
                     )}
@@ -208,7 +247,9 @@ export function SurveyFlow({ onComplete }: SurveyFlowProps) {
           </div>
 
           {errors[currentQuestion.id] && (
-            <p className="mt-3 text-sm text-destructive" role="alert">{errors[currentQuestion.id]}</p>
+            <p className="mt-3 text-sm text-destructive" role="alert">
+              {errors[currentQuestion.id]}
+            </p>
           )}
 
           <div className="mt-8 flex gap-3">
@@ -236,16 +277,24 @@ export function SurveyFlow({ onComplete }: SurveyFlowProps) {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4" role="main">
+    <main
+      className="min-h-screen flex items-center justify-center p-4"
+      role="main"
+    >
       <SurfaceCard className="max-w-lg w-full p-8">
         <div className="mb-6">
           <Progress value={progress} className="h-2" aria-label="Final step" />
-          <p className="mt-2 text-sm text-muted-foreground text-right">Final step</p>
+          <p className="mt-2 text-sm text-muted-foreground text-right">
+            Final step
+          </p>
         </div>
 
-        <h2 className="text-xl font-semibold mb-2">Get your personalized recommendation</h2>
+        <h2 className="text-xl font-semibold mb-2">
+          Get your personalized recommendation
+        </h2>
         <p className="text-muted-foreground mb-6">
-          Enter your email to receive a detailed automation roadmap tailored to your needs.
+          Enter your email to receive a detailed automation roadmap tailored to
+          your needs.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -258,14 +307,18 @@ export function SurveyFlow({ onComplete }: SurveyFlowProps) {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                setErrors((prev) => ({ ...prev, email: '' }));
+                setErrors((prev) => ({ ...prev, email: "" }));
               }}
               className="mt-1.5 transition-all duration-200 focus:ring-2 focus:ring-primary"
               aria-invalid={!!errors.email}
-              aria-describedby={errors.email ? 'email-error' : undefined}
+              aria-describedby={errors.email ? "email-error" : undefined}
             />
             {errors.email && (
-              <p id="email-error" className="mt-1.5 text-sm text-destructive" role="alert">
+              <p
+                id="email-error"
+                className="mt-1.5 text-sm text-destructive"
+                role="alert"
+              >
                 {errors.email}
               </p>
             )}

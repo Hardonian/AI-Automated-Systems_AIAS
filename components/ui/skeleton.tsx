@@ -1,28 +1,28 @@
-'use client';
+"use client";
 
-import { HTMLMotionProps, motion } from 'framer-motion';
-import * as React from 'react';
+import { HTMLMotionProps, motion } from "framer-motion";
+import * as React from "react";
 
-import { motionTransitions, useSafeReducedMotion } from '@/lib/style/motion';
-import { cn } from '@/lib/utils';
+import { motionTransitions, useSafeReducedMotion } from "@/lib/style/motion";
+import { cn } from "@/lib/utils";
 
-export interface SkeletonProps extends HTMLMotionProps<'div'> {
-  variant?: 'default' | 'text' | 'circular' | 'rectangular';
+export interface SkeletonProps extends HTMLMotionProps<"div"> {
+  variant?: "default" | "text" | "circular" | "rectangular";
 }
 
 function Skeleton({
   className,
-  variant = 'default',
+  variant = "default",
   ...props
-}: HTMLMotionProps<'div'> & {
-  variant?: 'default' | 'text' | 'circular' | 'rectangular';
+}: HTMLMotionProps<"div"> & {
+  variant?: "default" | "text" | "circular" | "rectangular";
 }) {
-  const baseClasses = 'animate-pulse bg-muted/60';
+  const baseClasses = "animate-pulse bg-muted/60";
   const variantClasses = {
-    default: 'rounded-md',
-    text: 'rounded h-4',
-    circular: 'rounded-full',
-    rectangular: 'rounded-none',
+    default: "rounded-md",
+    text: "rounded h-4",
+    circular: "rounded-full",
+    rectangular: "rounded-none",
   };
 
   // Respect reduced motion preference - safe for SSR
@@ -32,18 +32,18 @@ function Skeleton({
   return (
     <motion.div
       animate={{ opacity: 1 }}
-      aria-hidden='true'
+      aria-hidden="true"
       className={cn(
         baseClasses,
         variantClasses[variant],
-        shouldAnimate && 'shimmer', // Add shimmer effect if motion is enabled
-        className
+        shouldAnimate && "shimmer", // Add shimmer effect if motion is enabled
+        className,
       )}
       initial={shouldAnimate ? { opacity: 0 } : { opacity: 1 }}
-      role='presentation'
+      role="presentation"
       transition={
         shouldAnimate
-          ? (motionTransitions.standard as unknown as HTMLMotionProps<'div'>['transition'])
+          ? (motionTransitions.standard as unknown as HTMLMotionProps<"div">["transition"])
           : { duration: 0.01 }
       }
       {...props}

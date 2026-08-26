@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to configure'
+        description: "Environment to configure"
         required: true
-        default: 'production'
+        default: "production"
         type: choice
         options:
           - production

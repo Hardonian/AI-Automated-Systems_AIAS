@@ -1,58 +1,70 @@
-'use client';
+"use client";
 
-import { Shield, Zap, TrendingUp, Clock, FileText, Users } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Shield, Zap, TrendingUp, Clock, FileText, Users } from "lucide-react";
+import { motion } from "framer-motion";
 
 const outcomes = [
   {
     icon: Clock,
-    label: 'Repetitive tasks replaced',
+    label: "Repetitive tasks replaced",
     description:
-      'Triage, routing, and coordination tasks move into governed automation flows with human review checkpoints.',
-    stat: '78%',
-    statLabel: 'faster intake',
+      "Triage, routing, and coordination tasks move into governed automation flows with human review checkpoints.",
+    stat: "78%",
+    statLabel: "faster intake",
   },
   {
     icon: Shield,
-    label: 'Human-in-the-loop built in',
+    label: "Human-in-the-loop built in",
     description:
-      'Critical decisions stay with your team. Automation handles preparation, routing, and verification.',
-    stat: '100%',
-    statLabel: 'policy-gated',
+      "Critical decisions stay with your team. Automation handles preparation, routing, and verification.",
+    stat: "100%",
+    statLabel: "policy-gated",
   },
   {
     icon: Zap,
-    label: 'Faster time to production',
+    label: "Faster time to production",
     description:
-      'Focused pilot scopes accelerate implementation without redesigning your core stack.',
-    stat: '2–4',
-    statLabel: 'week pilots',
+      "Focused pilot scopes accelerate implementation without redesigning your core stack.",
+    stat: "2–4",
+    statLabel: "week pilots",
   },
   {
     icon: TrendingUp,
-    label: 'Measurable improvement loops',
+    label: "Measurable improvement loops",
     description:
-      'Operational telemetry and quarterly reviews drive continuous optimization after launch.',
-    stat: '99.2%',
-    statLabel: 'success rate',
+      "Operational telemetry and quarterly reviews drive continuous optimization after launch.",
+    stat: "99.2%",
+    statLabel: "success rate",
   },
 ];
 
 const deliverables = [
   {
     icon: FileText,
-    title: 'Workflow Blueprints',
-    items: ['State machine diagrams', 'Error handling procedures', 'Human checkpoint definitions'],
+    title: "Workflow Blueprints",
+    items: [
+      "State machine diagrams",
+      "Error handling procedures",
+      "Human checkpoint definitions",
+    ],
   },
   {
     icon: Users,
-    title: 'Training & Handoff',
-    items: ['Team workshops', 'Documentation & runbooks', 'Ongoing support options'],
+    title: "Training & Handoff",
+    items: [
+      "Team workshops",
+      "Documentation & runbooks",
+      "Ongoing support options",
+    ],
   },
   {
     icon: Shield,
-    title: 'Governance & Security',
-    items: ['Audit trails & event logs', 'SOC2-ready controls', 'PIPEDA compliance framework'],
+    title: "Governance & Security",
+    items: [
+      "Audit trails & event logs",
+      "SOC2-ready controls",
+      "PIPEDA compliance framework",
+    ],
   },
 ];
 
@@ -72,7 +84,8 @@ export function OutcomesSection() {
               What actually changes
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-              Real outcome patterns from delivery engagements. Results depend on scope and team readiness.
+              Real outcome patterns from delivery engagements. Results depend on
+              scope and team readiness.
             </p>
           </motion.div>
 
@@ -92,7 +105,9 @@ export function OutcomesSection() {
                   </div>
                 </div>
                 <div className="mb-3">
-                  <span className="text-2xl font-extrabold text-primary">{outcome.stat}</span>
+                  <span className="text-2xl font-extrabold text-primary">
+                    {outcome.stat}
+                  </span>
                   <span className="ml-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     {outcome.statLabel}
                   </span>
@@ -138,8 +153,11 @@ export function OutcomesSection() {
                   <h4 className="font-bold">{category.title}</h4>
                 </div>
                 <ul className="space-y-2.5">
-                  {category.items.map(item => (
-                    <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+                  {category.items.map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-2 text-sm text-muted-foreground"
+                    >
                       <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/60" />
                       {item}
                     </li>

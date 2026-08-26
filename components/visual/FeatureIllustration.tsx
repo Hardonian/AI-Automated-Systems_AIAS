@@ -1,13 +1,16 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 interface FeatureIllustrationProps {
-  type: 'agents' | 'automation' | 'security' | 'integration';
+  type: "agents" | "automation" | "security" | "integration";
   className?: string;
 }
 
-export function FeatureIllustration({ type, className = '' }: FeatureIllustrationProps) {
+export function FeatureIllustration({
+  type,
+  className = "",
+}: FeatureIllustrationProps) {
   const coordinate = (value: number) => Number(value.toFixed(3));
 
   const illustrations = {
@@ -20,7 +23,9 @@ export function FeatureIllustration({ type, className = '' }: FeatureIllustratio
           </linearGradient>
         </defs>
         <motion.circle
-          cx="100" cy="75" r="40"
+          cx="100"
+          cy="75"
+          r="40"
           fill="none"
           stroke="url(#agentGrad)"
           strokeWidth="2"
@@ -29,19 +34,23 @@ export function FeatureIllustration({ type, className = '' }: FeatureIllustratio
           transition={{ duration: 1.5 }}
         />
         <motion.circle
-          cx="100" cy="75" r="25"
+          cx="100"
+          cy="75"
+          r="25"
           fill="url(#agentGrad)"
           fillOpacity="0.2"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: 0.5, type: 'spring' }}
+          transition={{ delay: 0.5, type: "spring" }}
         />
         <motion.circle
-          cx="100" cy="75" r="8"
+          cx="100"
+          cy="75"
+          r="8"
           fill="#3b82f6"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: 0.7, type: 'spring' }}
+          transition={{ delay: 0.7, type: "spring" }}
         />
         {[0, 60, 120, 180, 240, 300].map((angle, i) => {
           const radians = (angle * Math.PI) / 180;
@@ -93,22 +102,30 @@ export function FeatureIllustration({ type, className = '' }: FeatureIllustratio
           </linearGradient>
         </defs>
         <motion.rect
-          x="20" y="60" width="40" height="30" rx="4"
+          x="20"
+          y="60"
+          width="40"
+          height="30"
+          rx="4"
           fill="none"
           stroke="url(#autoGrad)"
           strokeWidth="2"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ type: 'spring' }}
+          transition={{ type: "spring" }}
         />
         <motion.rect
-          x="140" y="60" width="40" height="30" rx="4"
+          x="140"
+          y="60"
+          width="40"
+          height="30"
+          rx="4"
           fill="none"
           stroke="url(#autoGrad)"
           strokeWidth="2"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: 0.3, type: 'spring' }}
+          transition={{ delay: 0.3, type: "spring" }}
         />
         <motion.path
           d="M 60 75 L 90 75 L 90 55 L 110 55 L 110 75 L 140 75"
@@ -120,16 +137,39 @@ export function FeatureIllustration({ type, className = '' }: FeatureIllustratio
           transition={{ delay: 0.5, duration: 0.8 }}
         />
         <motion.circle
-          cx="100" cy="45" r="15"
+          cx="100"
+          cy="45"
+          r="15"
           fill="url(#autoGrad)"
           fillOpacity="0.2"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: 0.8, type: 'spring' }}
+          transition={{ delay: 0.8, type: "spring" }}
         />
-        <text x="40" y="78" textAnchor="middle" className="fill-slate-400 text-xs">Input</text>
-        <text x="160" y="78" textAnchor="middle" className="fill-slate-400 text-xs">Output</text>
-        <text x="100" y="49" textAnchor="middle" className="fill-emerald-400 text-xs font-bold">AI</text>
+        <text
+          x="40"
+          y="78"
+          textAnchor="middle"
+          className="fill-slate-400 text-xs"
+        >
+          Input
+        </text>
+        <text
+          x="160"
+          y="78"
+          textAnchor="middle"
+          className="fill-slate-400 text-xs"
+        >
+          Output
+        </text>
+        <text
+          x="100"
+          y="49"
+          textAnchor="middle"
+          className="fill-emerald-400 text-xs font-bold"
+        >
+          AI
+        </text>
       </svg>
     ),
     security: (
@@ -155,7 +195,7 @@ export function FeatureIllustration({ type, className = '' }: FeatureIllustratio
           fillOpacity="0.15"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: 0.6, type: 'spring' }}
+          transition={{ delay: 0.6, type: "spring" }}
         />
         <motion.path
           d="M85 75 L95 85 L115 60"
@@ -187,15 +227,18 @@ export function FeatureIllustration({ type, className = '' }: FeatureIllustratio
             height="30"
             rx="4"
             fill="none"
-            stroke={i === 1 ? 'url(#intGrad)' : '#64748b'}
-            strokeWidth={i === 1 ? '2' : '1'}
+            stroke={i === 1 ? "url(#intGrad)" : "#64748b"}
+            strokeWidth={i === 1 ? "2" : "1"}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ delay: i * 0.2, type: 'spring' }}
+            transition={{ delay: i * 0.2, type: "spring" }}
           />
         ))}
         <motion.line
-          x1="60" y1="75" x2="80" y2="75"
+          x1="60"
+          y1="75"
+          x2="80"
+          y2="75"
           stroke="#64748b"
           strokeWidth="1"
           initial={{ pathLength: 0 }}
@@ -203,7 +246,10 @@ export function FeatureIllustration({ type, className = '' }: FeatureIllustratio
           transition={{ delay: 0.6 }}
         />
         <motion.line
-          x1="120" y1="75" x2="140" y2="75"
+          x1="120"
+          y1="75"
+          x2="140"
+          y2="75"
           stroke="#64748b"
           strokeWidth="1"
           initial={{ pathLength: 0 }}
@@ -211,22 +257,43 @@ export function FeatureIllustration({ type, className = '' }: FeatureIllustratio
           transition={{ delay: 0.8 }}
         />
         <motion.circle
-          cx="100" cy="75" r="12"
+          cx="100"
+          cy="75"
+          r="12"
           fill="url(#intGrad)"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: 1, type: 'spring' }}
+          transition={{ delay: 1, type: "spring" }}
         />
-        <text x="40" y="78" textAnchor="middle" className="fill-slate-400 text-[8px]">CRM</text>
-        <text x="100" y="78" textAnchor="middle" className="fill-white text-[8px] font-bold">Hub</text>
-        <text x="160" y="78" textAnchor="middle" className="fill-slate-400 text-[8px]">ERP</text>
+        <text
+          x="40"
+          y="78"
+          textAnchor="middle"
+          className="fill-slate-400 text-[8px]"
+        >
+          CRM
+        </text>
+        <text
+          x="100"
+          y="78"
+          textAnchor="middle"
+          className="fill-white text-[8px] font-bold"
+        >
+          Hub
+        </text>
+        <text
+          x="160"
+          y="78"
+          textAnchor="middle"
+          className="fill-slate-400 text-[8px]"
+        >
+          ERP
+        </text>
       </svg>
     ),
   };
 
   return (
-    <div className={`h-32 w-full ${className}`}>
-      {illustrations[type]}
-    </div>
+    <div className={`h-32 w-full ${className}`}>{illustrations[type]}</div>
   );
 }

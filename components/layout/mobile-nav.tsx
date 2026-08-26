@@ -1,28 +1,28 @@
-'use client';
-import { Menu, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
-import { useState } from 'react';
+"use client";
+import { Menu, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
 
 const MOBILE_TOOL_LINKS = [
-  { label: 'Quick Tools Hub', href: '/tools' },
-  { label: 'Policy & Guardrail Studio', href: '/tools/policy-studio' },
-  { label: 'ROI Calculator', href: '/roi-calculator' },
-  { label: 'Readiness Scorecard', href: '/readiness-checklist' },
-  { label: 'Automation Simulator', href: '/automation-demo' },
-  { label: 'Workflow Builder', href: '/workflows' },
+  { label: "Quick Tools Hub", href: "/tools" },
+  { label: "Policy & Guardrail Studio", href: "/tools/policy-studio" },
+  { label: "ROI Calculator", href: "/roi-calculator" },
+  { label: "Readiness Scorecard", href: "/readiness-checklist" },
+  { label: "Automation Simulator", href: "/automation-demo" },
+  { label: "Workflow Builder", href: "/workflows" },
 ];
 
 const MOBILE_BLUEPRINT_LINKS = [
-  { label: 'Hire AIAS to Build', href: '/hire' },
-  { label: 'Product Catalog', href: '/catalog' },
-  { label: 'Blueprints Library', href: '/blueprints' },
-  { label: 'Systems Framework', href: '/framework' },
-  { label: 'Build Log', href: '/build-log' },
-  { label: 'FAQ', href: '/faq' },
+  { label: "Hire AIAS to Build", href: "/hire" },
+  { label: "Product Catalog", href: "/catalog" },
+  { label: "Blueprints Library", href: "/blueprints" },
+  { label: "Systems Framework", href: "/framework" },
+  { label: "Build Log", href: "/build-log" },
+  { label: "FAQ", href: "/faq" },
 ];
 
 export function MobileNav() {
@@ -32,26 +32,26 @@ export function MobileNav() {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
-          aria-controls='mobile-navigation'
+          aria-controls="mobile-navigation"
           aria-expanded={open}
-          aria-label='Open navigation menu'
-          className='min-h-[44px] min-w-[44px] rounded-none border-2 border-border bg-card hover:border-primary'
-          data-testid='mobile-nav-trigger'
-          size='sm'
-          variant='ghost'
+          aria-label="Open navigation menu"
+          className="min-h-[44px] min-w-[44px] rounded-none border-2 border-border bg-card hover:border-primary"
+          data-testid="mobile-nav-trigger"
+          size="sm"
+          variant="ghost"
         >
-          <Menu aria-hidden='true' className='h-5 w-5' />
+          <Menu aria-hidden="true" className="h-5 w-5" />
         </Button>
       </SheetTrigger>
       <SheetContent
-        aria-label='Mobile navigation'
-        className='w-80 rounded-none border-l-2 border-primary bg-background p-6 shadow-2xl overflow-y-auto'
-        id='mobile-navigation'
-        side='right'
+        aria-label="Mobile navigation"
+        className="w-80 rounded-none border-l-2 border-primary bg-background p-6 shadow-2xl overflow-y-auto"
+        id="mobile-navigation"
+        side="right"
       >
         <div className="flex items-center gap-2 pb-4 border-b-2 border-border">
           <span className="flex h-7 w-7 items-center justify-center border border-primary bg-primary/10 text-xs font-mono font-bold text-primary">
-            {'//'}
+            {"//"}
           </span>
           <span className="font-mono text-sm font-black uppercase tracking-wider text-foreground">
             AIAS Platform
@@ -59,10 +59,10 @@ export function MobileNav() {
         </div>
 
         <nav
-          aria-label='Mobile navigation menu'
-          className='mt-6 flex flex-col gap-6'
-          data-testid='mobile-nav-menu'
-          role='navigation'
+          aria-label="Mobile navigation menu"
+          className="mt-6 flex flex-col gap-6"
+          data-testid="mobile-nav-menu"
+          role="navigation"
         >
           {/* Primary Navigation */}
           <div>
@@ -70,11 +70,11 @@ export function MobileNav() {
               Main Navigation
             </p>
             <div className="space-y-1">
-              {siteContent.navigation.primary.map(link => (
+              {siteContent.navigation.primary.map((link) => (
                 <Link
                   key={link.href}
                   aria-label={`Navigate to ${link.label}`}
-                  className='flex items-center justify-between p-2 font-mono text-sm font-bold uppercase tracking-wide text-foreground transition-colors hover:bg-primary/10 hover:text-primary'
+                  className="flex items-center justify-between p-2 font-mono text-sm font-bold uppercase tracking-wide text-foreground transition-colors hover:bg-primary/10 hover:text-primary"
                   href={link.href}
                   onClick={() => setOpen(false)}
                 >
@@ -91,16 +91,18 @@ export function MobileNav() {
               Interactive Tools & Simulators
             </p>
             <div className="grid grid-cols-1 gap-1">
-              {MOBILE_TOOL_LINKS.map(link => (
+              {MOBILE_TOOL_LINKS.map((link) => (
                 <Link
                   key={link.href}
                   aria-label={`Navigate to ${link.label}`}
-                  className='flex items-center justify-between p-2 font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
+                  className="flex items-center justify-between p-2 font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                   href={link.href}
                   onClick={() => setOpen(false)}
                 >
                   <span>{link.label}</span>
-                  <span className="font-mono text-[9px] border border-border px-1 py-0.2 bg-muted/40">TOOL</span>
+                  <span className="font-mono text-[9px] border border-border px-1 py-0.2 bg-muted/40">
+                    TOOL
+                  </span>
                 </Link>
               ))}
             </div>
@@ -112,11 +114,11 @@ export function MobileNav() {
               Architecture & Reference
             </p>
             <div className="grid grid-cols-1 gap-1">
-              {MOBILE_BLUEPRINT_LINKS.map(link => (
+              {MOBILE_BLUEPRINT_LINKS.map((link) => (
                 <Link
                   key={link.href}
                   aria-label={`Navigate to ${link.label}`}
-                  className='flex items-center justify-between p-2 font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
+                  className="flex items-center justify-between p-2 font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                   href={link.href}
                   onClick={() => setOpen(false)}
                 >
@@ -127,10 +129,10 @@ export function MobileNav() {
           </div>
 
           {/* CTAs */}
-          <div className='space-y-2.5 border-t-2 border-border pt-4'>
+          <div className="space-y-2.5 border-t-2 border-border pt-4">
             <Button
               asChild
-              className='min-h-[44px] w-full rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card'
+              className="min-h-[44px] w-full rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card"
             >
               <Link
                 aria-label={siteContent.positioning.primaryCTA.label}
@@ -142,8 +144,8 @@ export function MobileNav() {
             </Button>
             <Button
               asChild
-              className='min-h-[44px] w-full rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-widest'
-              variant='outline'
+              className="min-h-[44px] w-full rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-widest"
+              variant="outline"
             >
               <Link
                 aria-label={siteContent.positioning.secondaryCTA.label}
@@ -159,4 +161,3 @@ export function MobileNav() {
     </Sheet>
   );
 }
-

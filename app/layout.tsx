@@ -1,111 +1,113 @@
-import './globals.css';
-import Script from 'next/script';
-import type { Metadata, Viewport } from 'next';
-import { ReactNode } from 'react';
-import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
+import "./globals.css";
+import Script from "next/script";
+import type { Metadata, Viewport } from "next";
+import { ReactNode } from "react";
+import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 
 const fontHeading = Space_Grotesk({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-heading',
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-heading",
 });
 
 const fontBody = JetBrains_Mono({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-body',
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-body",
 });
 
-import { Footer } from '@/components/layout/footer';
-import { Header } from '@/components/layout/header';
+import { Footer } from "@/components/layout/footer";
+import { Header } from "@/components/layout/header";
 import {
   OrganizationSchema,
   ProfessionalServiceSchema,
   WebSiteSchema,
-} from '@/components/seo/structured-data';
-import { ThemeProvider } from '@/components/theme-provider';
-import { AnalyticsRuntime } from '@/components/analytics/analytics-runtime';
+} from "@/components/seo/structured-data";
+import { ThemeProvider } from "@/components/theme-provider";
+import { AnalyticsRuntime } from "@/components/analytics/analytics-runtime";
 
-import { Toaster } from '@/components/ui/toaster';
-import { getOptionalEnv } from '@/lib/env';
-import { EnhancedErrorBoundary } from '@/lib/error-handling/error-boundary-enhanced';
-import { generateMetadata as generateSEOMetadata, SITE_URL } from '@/lib/seo/metadata';
-import { MESSAGING_CONTRACT, TAGLINE_TITLE_TEMPLATE } from '@/content/constants';
+import { Toaster } from "@/components/ui/toaster";
+import { getOptionalEnv } from "@/lib/env";
+import { EnhancedErrorBoundary } from "@/lib/error-handling/error-boundary-enhanced";
+import {
+  generateMetadata as generateSEOMetadata,
+  SITE_URL,
+} from "@/lib/seo/metadata";
+import {
+  MESSAGING_CONTRACT,
+  TAGLINE_TITLE_TEMPLATE,
+} from "@/content/constants";
 
 const ogImageUrl = `${SITE_URL}/og-image.png`;
 
 export const viewport: Viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  viewportFit: 'cover',
-  themeColor: '#FF4D1A',
+  viewportFit: "cover",
+  themeColor: "#FF4D1A",
 };
 
 export const metadata: Metadata = {
   ...generateSEOMetadata({
     title: TAGLINE_TITLE_TEMPLATE,
     description: MESSAGING_CONTRACT.metadataDescription,
-    canonical: '/',
+    canonical: "/",
     keywords: [
-      'agentic automation',
-      'agentic automation consultancy',
-      'workflow automation',
-      'AI agents',
-      'automation training',
-      'systems thinking',
-      'human-in-the-loop',
-      'operational reliability',
-      'deterministic automation systems',
-      'enterprise automation',
-      'governance and guardrails',
+      "agentic automation",
+      "agentic automation consultancy",
+      "workflow automation",
+      "AI agents",
+      "automation training",
+      "systems thinking",
+      "human-in-the-loop",
+      "operational reliability",
+      "deterministic automation systems",
+      "enterprise automation",
+      "governance and guardrails",
     ],
   }),
-  authors: [{ name: 'AI Automated Systems', url: SITE_URL }],
-  creator: 'AI Automated Systems',
-  publisher: 'AI Automated Systems',
-  applicationName: 'AI Automated Systems',
-  category: 'Technology',
-  classification: 'Business Software',
-  icons: [
-    { rel: 'icon', url: '/favicon.ico' },
-  ],
-  manifest: '/manifest.json',
+  authors: [{ name: "AI Automated Systems", url: SITE_URL }],
+  creator: "AI Automated Systems",
+  publisher: "AI Automated Systems",
+  applicationName: "AI Automated Systems",
+  category: "Technology",
+  classification: "Business Software",
+  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  manifest: "/manifest.json",
   metadataBase: new URL(SITE_URL),
   alternates: {
-    canonical: '/',
+    canonical: "/",
     languages: {
-      'en-US': '/',
-      'en-CA': '/',
+      "en-US": "/",
+      "en-CA": "/",
     },
   },
   openGraph: {
     title: TAGLINE_TITLE_TEMPLATE,
     description: MESSAGING_CONTRACT.metadataDescription,
-    type: 'website',
+    type: "website",
     url: SITE_URL,
-    siteName: 'AI Automated Systems',
-    locale: 'en_US',
-    alternateLocale: ['en_CA'],
+    siteName: "AI Automated Systems",
+    locale: "en_US",
+    alternateLocale: ["en_CA"],
     images: [
       {
         url: ogImageUrl,
         width: 1200,
         height: 630,
         alt: TAGLINE_TITLE_TEMPLATE,
-        type: 'image/png',
+        type: "image/png",
       },
     ],
   },
   twitter: {
-    card: 'summary_large_image',
+    card: "summary_large_image",
     title: TAGLINE_TITLE_TEMPLATE,
     description: MESSAGING_CONTRACT.metadataDescription,
-    creator: '@aias_platform',
-    site: '@aias_platform',
-    images: [
-      ogImageUrl,
-    ],
+    creator: "@aias_platform",
+    site: "@aias_platform",
+    images: [ogImageUrl],
   },
   robots: {
     index: true,
@@ -113,60 +115,59 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
   verification: {
-    google: getOptionalEnv('NEXT_PUBLIC_GOOGLE_VERIFICATION'),
-    yandex: getOptionalEnv('NEXT_PUBLIC_YANDEX_VERIFICATION'),
-    yahoo: getOptionalEnv('NEXT_PUBLIC_YAHOO_VERIFICATION'),
+    google: getOptionalEnv("NEXT_PUBLIC_GOOGLE_VERIFICATION"),
+    yandex: getOptionalEnv("NEXT_PUBLIC_YANDEX_VERIFICATION"),
+    yahoo: getOptionalEnv("NEXT_PUBLIC_YAHOO_VERIFICATION"),
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
-    title: 'AI Automated Systems',
+    statusBarStyle: "default",
+    title: "AI Automated Systems",
   },
   formatDetection: {
     telephone: false,
   },
   other: {
-    'mobile-web-app-capable': 'yes',
+    "mobile-web-app-capable": "yes",
   },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  const locale = 'en';
+  const locale = "en";
   const isRTL = false;
 
   return (
-    <html suppressHydrationWarning dir={isRTL ? 'rtl' : 'ltr'} lang={locale}>
+    <html suppressHydrationWarning dir={isRTL ? "rtl" : "ltr"} lang={locale}>
       <head>
-        <link href='https://fonts.googleapis.com' rel='preconnect' />
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
         <link
-          crossOrigin='anonymous'
-          href='https://fonts.gstatic.com'
-          rel='preconnect'
+          crossOrigin="anonymous"
+          href="https://fonts.gstatic.com"
+          rel="preconnect"
         />
-        <link href='/manifest.json' rel='manifest' />
-
-
-
+        <link href="/manifest.json" rel="manifest" />
 
         <OrganizationSchema />
         <ProfessionalServiceSchema />
         <WebSiteSchema hasSiteSearch={false} />
       </head>
-      <body className={`min-h-dvh antialiased ${fontHeading.variable} ${fontBody.variable}`}>
+      <body
+        className={`min-h-dvh antialiased ${fontHeading.variable} ${fontBody.variable}`}
+      >
         <EnhancedErrorBoundary>
           <ThemeProvider>
             <Header />
             <main
-              aria-label='Main content'
-              className='min-h-[calc(100vh-8rem)]'
-              id='main'
-              role='main'
+              aria-label="Main content"
+              className="min-h-[calc(100vh-8rem)]"
+              id="main"
+              role="main"
             >
               {children}
             </main>
@@ -185,7 +186,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               }
             `,
               }}
-              id='service-worker-registration'
+              id="service-worker-registration"
             />
           </ThemeProvider>
         </EnhancedErrorBoundary>

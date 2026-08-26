@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { CheckCircle2, FileText, Target } from 'lucide-react';
+import { motion } from "framer-motion";
+import { CheckCircle2, FileText, Target } from "lucide-react";
 
-import { Card, CardContent } from '@/components/ui/card';
-import { TYPOGRAPHY } from '@/lib/design-tokens';
+import { Card, CardContent } from "@/components/ui/card";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 interface TestimonialCardProps {
   title: string;
@@ -22,7 +22,7 @@ export function TestimonialCard({
   challenge,
   solution,
   results,
-  deliverables = 'Discovery map, workflow blueprint, runbook, and handoff plan.',
+  deliverables = "Discovery map, workflow blueprint, runbook, and handoff plan.",
   index = 0,
 }: TestimonialCardProps) {
   return (

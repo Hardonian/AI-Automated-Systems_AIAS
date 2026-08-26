@@ -1,17 +1,17 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
+import type { Metadata } from "next";
+import Link from "next/link";
 
-import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
-import { CheckCircle2, Circle, ArrowRight } from 'lucide-react';
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
+import { CheckCircle2, Circle, ArrowRight } from "lucide-react";
 
-import { WorkflowDiagram } from '@/components/visual/WorkflowDiagram';
-import { getPrimaryCtaHref, siteContent } from '@/src/content/site';
+import { WorkflowDiagram } from "@/components/visual/WorkflowDiagram";
+import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Process | AI Automated Systems',
+  title: "Process | AI Automated Systems",
   description:
-    'Our proven methodology for delivering agentic automation: Discover, Map, Automate, Ship, Monitor.',
-  canonical: '/process',
+    "Our proven methodology for delivering agentic automation: Discover, Map, Automate, Ship, Monitor.",
+  canonical: "/process",
 });
 
 export default function ProcessPage() {
@@ -28,8 +28,8 @@ export default function ProcessPage() {
               From discovery to deployment
             </h1>
             <p className="mt-4 text-lg text-muted-foreground">
-              A battle-tested methodology for delivering deterministic automation 
-              that your team can trust and operate.
+              A battle-tested methodology for delivering deterministic
+              automation that your team can trust and operate.
             </p>
             <div className="mt-6 flex justify-center gap-3">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
@@ -63,7 +63,9 @@ export default function ProcessPage() {
                 </div>
                 <div className="pb-8">
                   <h2 className="text-xl font-semibold">{step.title}</h2>
-                  <p className="mt-2 text-muted-foreground">{step.description}</p>
+                  <p className="mt-2 text-muted-foreground">
+                    {step.description}
+                  </p>
                   <div className="mt-4 flex items-center gap-2 text-sm font-medium text-primary">
                     <span>Learn more</span>
                     <ArrowRight className="h-4 w-4" />
@@ -78,8 +80,8 @@ export default function ProcessPage() {
             <div className="rounded-2xl border bg-card p-6">
               <h3 className="text-lg font-semibold">Workflow Engine</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                See how our agentic system processes inputs through classification, 
-                planning, and execution.
+                See how our agentic system processes inputs through
+                classification, planning, and execution.
               </p>
               <div className="mt-6">
                 <WorkflowDiagram />
@@ -90,14 +92,18 @@ export default function ProcessPage() {
               <h3 className="text-lg font-semibold">Timeline</h3>
               <div className="mt-4 space-y-4">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Discovery to Pilot</span>
+                  <span className="text-muted-foreground">
+                    Discovery to Pilot
+                  </span>
                   <span className="font-semibold">2-4 weeks</span>
                 </div>
                 <div className="h-2 rounded-full bg-muted">
                   <div className="h-full w-1/3 rounded-full bg-primary" />
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Pilot to Production</span>
+                  <span className="text-muted-foreground">
+                    Pilot to Production
+                  </span>
                   <span className="font-semibold">4-8 weeks</span>
                 </div>
                 <div className="h-2 rounded-full bg-muted">
@@ -117,7 +123,7 @@ export default function ProcessPage() {
               Ready to start your automation journey?
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Book a free strategy call to discuss your workflows and identify 
+              Book a free strategy call to discuss your workflows and identify
               high-impact automation opportunities.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">

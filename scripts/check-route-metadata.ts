@@ -1,5 +1,5 @@
-import { readFileSync, readdirSync } from 'node:fs';
-import path from 'node:path';
+import { readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
 
 function getRouteFiles(dir: string): string[] {
   const routeFiles: string[] = [];
@@ -15,7 +15,7 @@ function getRouteFiles(dir: string): string[] {
         continue;
       }
 
-      if (entry.isFile() && entry.name === 'page.tsx') {
+      if (entry.isFile() && entry.name === "page.tsx") {
         routeFiles.push(entryPath);
       }
     }
@@ -25,16 +25,16 @@ function getRouteFiles(dir: string): string[] {
   return routeFiles;
 }
 
-const routeFiles = getRouteFiles('app');
+const routeFiles = getRouteFiles("app");
 
 const failures: string[] = [];
 
 for (const routeFile of routeFiles) {
-  const source = readFileSync(routeFile, 'utf8');
+  const source = readFileSync(routeFile, "utf8");
   const hasExplicitMetadata =
-    source.includes('generateSEOMetadata(') ||
-    source.includes('export const metadata: Metadata') ||
-    source.includes('export async function generateMetadata(');
+    source.includes("generateSEOMetadata(") ||
+    source.includes("export const metadata: Metadata") ||
+    source.includes("export async function generateMetadata(");
 
   if (!hasExplicitMetadata) {
     failures.push(routeFile);
@@ -42,7 +42,7 @@ for (const routeFile of routeFiles) {
 }
 
 if (failures.length > 0) {
-  console.error('Missing metadata exports in routes:');
+  console.error("Missing metadata exports in routes:");
   for (const failure of failures) {
     console.error(`- ${failure}`);
   }

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Sliders,
   Sparkles,
@@ -13,58 +13,66 @@ import {
   Layers,
   ShieldCheck,
   Zap,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 
 export function HireScopingWizard() {
-  const [industry, setIndustry] = useState<string>('ecommerce');
-  const [bottleneck, setBottleneck] = useState<string>('triage');
-  const [volume, setVolume] = useState<string>('mid');
-  const [autonomyTier, setAutonomyTier] = useState<string>('gated');
+  const [industry, setIndustry] = useState<string>("ecommerce");
+  const [bottleneck, setBottleneck] = useState<string>("triage");
+  const [volume, setVolume] = useState<string>("mid");
+  const [autonomyTier, setAutonomyTier] = useState<string>("gated");
 
   // Computed Proposal
   const getProposal = () => {
-    if (bottleneck === 'flaky') {
+    if (bottleneck === "flaky") {
       return {
-        track: 'Stabilization & Hardening Sprint',
-        timeline: '2 to 3 weeks',
-        architecturePattern: 'Deterministic Policy Wrapper + Retry Budget Matrix',
-        coreDeliverable: 'Zero-hallucination policy gates and incident recovery playbooks',
+        track: "Stabilization & Hardening Sprint",
+        timeline: "2 to 3 weeks",
+        architecturePattern:
+          "Deterministic Policy Wrapper + Retry Budget Matrix",
+        coreDeliverable:
+          "Zero-hallucination policy gates and incident recovery playbooks",
         idealEngagement:
-          'Rapid 2-3 week remediation of existing agents to stop silent failures and protect production data.',
+          "Rapid 2-3 week remediation of existing agents to stop silent failures and protect production data.",
       };
     }
 
-    if (bottleneck === 'triage' && volume === 'high') {
+    if (bottleneck === "triage" && volume === "high") {
       return {
-        track: 'Full-Stack Deterministic Automation Build',
-        timeline: '4 to 6 weeks',
-        architecturePattern: 'High-Throughput Intake Controller + Operator Console',
-        coreDeliverable: 'Turnkey ingestion and routing pipeline with sub-minute SLAs',
+        track: "Full-Stack Deterministic Automation Build",
+        timeline: "4 to 6 weeks",
+        architecturePattern:
+          "High-Throughput Intake Controller + Operator Console",
+        coreDeliverable:
+          "Turnkey ingestion and routing pipeline with sub-minute SLAs",
         idealEngagement:
-          'Complete custom build replacing manual queue sorting with deterministic policy-gated triage.',
+          "Complete custom build replacing manual queue sorting with deterministic policy-gated triage.",
       };
     }
 
-    if (bottleneck === 'custom') {
+    if (bottleneck === "custom") {
       return {
-        track: 'Full-Stack Deterministic Automation Build',
-        timeline: '6 to 8 weeks',
-        architecturePattern: 'Multi-Agent Orchestration Fabric + Private Connectors',
-        coreDeliverable: 'Custom bespoke intelligent operating system with full IP ownership',
+        track: "Full-Stack Deterministic Automation Build",
+        timeline: "6 to 8 weeks",
+        architecturePattern:
+          "Multi-Agent Orchestration Fabric + Private Connectors",
+        coreDeliverable:
+          "Custom bespoke intelligent operating system with full IP ownership",
         idealEngagement:
-          'End-to-end bespoke system engineered for your proprietary business logic and legacy databases.',
+          "End-to-end bespoke system engineered for your proprietary business logic and legacy databases.",
       };
     }
 
     return {
-      track: 'AI Clarity Audit & Decision Mapping',
-      timeline: '1 to 2 weeks',
-      architecturePattern: 'Decision Boundary Specification + Failure Mode Matrix',
-      coreDeliverable: 'Clear build-vs-kill decision brief and implementation roadmap',
+      track: "AI Clarity Audit & Decision Mapping",
+      timeline: "1 to 2 weeks",
+      architecturePattern:
+        "Decision Boundary Specification + Failure Mode Matrix",
+      coreDeliverable:
+        "Clear build-vs-kill decision brief and implementation roadmap",
       idealEngagement:
-        'Comprehensive architectural scoping session to map high-ROI automation targets before investing build budget.',
+        "Comprehensive architectural scoping session to map high-ROI automation targets before investing build budget.",
     };
   };
 
@@ -81,7 +89,8 @@ export function HireScopingWizard() {
           Generate an Instant Custom Build Scope
         </h2>
         <p className="mt-2 text-xs font-mono text-muted-foreground uppercase">
-          Select your operational parameters to configure the recommended engineering blueprint.
+          Select your operational parameters to configure the recommended
+          engineering blueprint.
         </p>
       </div>
 
@@ -95,18 +104,18 @@ export function HireScopingWizard() {
             </label>
             <div className="grid grid-cols-2 gap-2">
               {[
-                { id: 'ecommerce', label: 'E-Commerce & Retail' },
-                { id: 'operations', label: 'Logistics & Ops' },
-                { id: 'finance', label: 'FinTech & Invoicing' },
-                { id: 'saas', label: 'B2B Software / SaaS' },
+                { id: "ecommerce", label: "E-Commerce & Retail" },
+                { id: "operations", label: "Logistics & Ops" },
+                { id: "finance", label: "FinTech & Invoicing" },
+                { id: "saas", label: "B2B Software / SaaS" },
               ].map((item) => (
                 <button
                   key={item.id}
                   onClick={() => setIndustry(item.id)}
                   className={`border-2 p-2.5 text-left font-mono text-xs font-bold uppercase transition-all cursor-pointer ${
                     industry === item.id
-                      ? 'border-primary bg-primary/10 text-primary'
-                      : 'border-border bg-background text-muted-foreground hover:border-foreground hover:text-foreground'
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border bg-background text-muted-foreground hover:border-foreground hover:text-foreground"
                   }`}
                   type="button"
                 >
@@ -126,10 +135,19 @@ export function HireScopingWizard() {
               onChange={(e) => setBottleneck(e.target.value)}
               className="w-full border-2 border-border bg-background px-3 py-2.5 font-mono text-xs font-bold uppercase text-foreground focus:border-primary focus:outline-none"
             >
-              <option value="triage">Manual Intake Triage & Queue Sorting (Too slow)</option>
-              <option value="flaky">Flaky AI Agents / Production Hallucinations (Unreliable)</option>
-              <option value="custom">Bespoke Intelligent System / New Platform Build (No off-the-shelf fit)</option>
-              <option value="audit">Need Scoping & Feasibility Analysis (Decision roadmap)</option>
+              <option value="triage">
+                Manual Intake Triage & Queue Sorting (Too slow)
+              </option>
+              <option value="flaky">
+                Flaky AI Agents / Production Hallucinations (Unreliable)
+              </option>
+              <option value="custom">
+                Bespoke Intelligent System / New Platform Build (No
+                off-the-shelf fit)
+              </option>
+              <option value="audit">
+                Need Scoping & Feasibility Analysis (Decision roadmap)
+              </option>
             </select>
           </div>
 
@@ -198,7 +216,9 @@ export function HireScopingWizard() {
                   <p className="font-mono text-[10px] font-bold uppercase text-muted-foreground">
                     Architecture Pattern:
                   </p>
-                  <p className="text-xs font-bold text-foreground">{proposal.architecturePattern}</p>
+                  <p className="text-xs font-bold text-foreground">
+                    {proposal.architecturePattern}
+                  </p>
                 </div>
               </div>
 
@@ -208,7 +228,9 @@ export function HireScopingWizard() {
                   <p className="font-mono text-[10px] font-bold uppercase text-muted-foreground">
                     Key Outcome Deliverable:
                   </p>
-                  <p className="text-xs font-bold text-foreground">{proposal.coreDeliverable}</p>
+                  <p className="text-xs font-bold text-foreground">
+                    {proposal.coreDeliverable}
+                  </p>
                 </div>
               </div>
             </div>
@@ -219,7 +241,11 @@ export function HireScopingWizard() {
               asChild
               className="w-full rounded-none border-2 border-primary bg-primary py-5 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card hover:-translate-y-0.5 transition-transform"
             >
-              <Link href="https://calendly.com/scottrmhardie" target="_blank" rel="noopener noreferrer">
+              <Link
+                href="https://calendly.com/scottrmhardie"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Book Strategy Call with this Scope
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>

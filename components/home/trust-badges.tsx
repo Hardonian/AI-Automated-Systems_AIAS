@@ -1,5 +1,5 @@
-'use client';
-import { motion } from 'framer-motion';
+"use client";
+import { motion } from "framer-motion";
 import {
   Shield,
   Award,
@@ -11,93 +11,93 @@ import {
   Target,
   FileText,
   Zap,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from "@/components/ui/card";
 import {
   getSectionClasses,
   getContainerClasses,
   TYPOGRAPHY,
   GRID_GAPS,
-} from '@/lib/design-tokens';
+} from "@/lib/design-tokens";
 
 const deliverables = [
   {
     icon: FileText,
-    title: 'Workflow Blueprints',
-    description: 'FSM + triggers + guardrails documented',
+    title: "Workflow Blueprints",
+    description: "FSM + triggers + guardrails documented",
   },
   {
     icon: Target,
-    title: 'Agent Runbooks',
-    description: 'Prompt contracts and operational procedures',
+    title: "Agent Runbooks",
+    description: "Prompt contracts and operational procedures",
   },
   {
     icon: Zap,
-    title: 'Connector Maps',
-    description: 'APIs, webhooks, and queues defined',
+    title: "Connector Maps",
+    description: "APIs, webhooks, and queues defined",
   },
   {
     icon: Shield,
-    title: 'Observability Setup',
-    description: 'Logs, alerts, and error budgets',
+    title: "Observability Setup",
+    description: "Logs, alerts, and error budgets",
   },
 ];
 
 const guardrails = [
   {
     icon: Lock,
-    title: 'Least Privilege',
-    description: 'Agents access only the minimum required permissions',
+    title: "Least Privilege",
+    description: "Agents access only the minimum required permissions",
   },
   {
     icon: Shield,
-    title: 'PII Handling',
-    description: 'Sensitive data masked and properly protected',
+    title: "PII Handling",
+    description: "Sensitive data masked and properly protected",
   },
   {
     icon: CheckCircle2,
-    title: 'Audit Trails',
-    description: 'Every action traceable for compliance',
+    title: "Audit Trails",
+    description: "Every action traceable for compliance",
   },
   {
     icon: Users,
-    title: 'Human-in-the-Loop',
-    description: 'Critical decisions require human approval',
+    title: "Human-in-the-Loop",
+    description: "Critical decisions require human approval",
   },
 ];
 
 const reliability = [
   {
     icon: Clock,
-    title: 'Retries + Backoff',
-    description: 'Graceful handling of transient failures',
+    title: "Retries + Backoff",
+    description: "Graceful handling of transient failures",
   },
   {
     icon: Award,
-    title: 'Circuit Breakers',
-    description: 'Prevent cascade failures across systems',
+    title: "Circuit Breakers",
+    description: "Prevent cascade failures across systems",
   },
   {
     icon: Target,
-    title: 'Idempotency Keys',
-    description: 'Safe retries without duplicate actions',
+    title: "Idempotency Keys",
+    description: "Safe retries without duplicate actions",
   },
 ];
 
 export function TrustBadges() {
   return (
     <section
-      aria-label='Deliverables and responsible AI practices'
-      className={getSectionClasses('default', 'default')}
+      aria-label="Deliverables and responsible AI practices"
+      className={getSectionClasses("default", "default")}
     >
-      <div className={getContainerClasses('wide')}>
+      <div className={getContainerClasses("wide")}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
-          className='mb-16'
+          className="mb-16"
         >
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -131,18 +131,18 @@ export function TrustBadges() {
                   whileHover={{ y: -4 }}
                   whileInView={{ opacity: 1, y: 0 }}
                 >
-                  <Card className='h-full border transition-all hover:border-primary/50'>
-                    <CardContent className='px-4 pb-6 pt-6'>
-                      <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10'>
+                  <Card className="h-full border transition-all hover:border-primary/50">
+                    <CardContent className="px-4 pb-6 pt-6">
+                      <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                         <Icon
-                          aria-hidden='true'
-                          className='h-6 w-6 text-primary'
+                          aria-hidden="true"
+                          className="h-6 w-6 text-primary"
                         />
                       </div>
                       <div className={`font-bold ${TYPOGRAPHY.bodySmall} mb-1`}>
                         {item.title}
                       </div>
-                      <div className='text-sm text-muted-foreground'>
+                      <div className="text-sm text-muted-foreground">
                         {item.description}
                       </div>
                     </CardContent>
@@ -158,7 +158,7 @@ export function TrustBadges() {
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
-          className='mb-16'
+          className="mb-16"
         >
           <motion.h3
             initial={{ opacity: 0, y: 20 }}
@@ -192,22 +192,22 @@ export function TrustBadges() {
                   whileHover={{ y: -4, scale: 1.02 }}
                   whileInView={{ opacity: 1, y: 0 }}
                 >
-                  <Card className='h-full border-2 transition-all hover:border-primary/50 hover:shadow-lg'>
-                    <CardContent className='px-4 pb-6 pt-6'>
-                      <div className='flex items-center gap-4'>
-                        <div className='flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10'>
+                  <Card className="h-full border-2 transition-all hover:border-primary/50 hover:shadow-lg">
+                    <CardContent className="px-4 pb-6 pt-6">
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
                           <Icon
-                            aria-hidden='true'
-                            className='h-6 w-6 text-primary'
+                            aria-hidden="true"
+                            className="h-6 w-6 text-primary"
                           />
                         </div>
-                        <div className='flex-1'>
+                        <div className="flex-1">
                           <div
                             className={`font-bold ${TYPOGRAPHY.bodySmall} mb-1`}
                           >
                             {item.title}
                           </div>
-                          <div className='text-sm text-muted-foreground'>
+                          <div className="text-sm text-muted-foreground">
                             {item.description}
                           </div>
                         </div>
@@ -225,7 +225,7 @@ export function TrustBadges() {
           transition={{ duration: 0.6, delay: 0.3 }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
-          className='mb-12'
+          className="mb-12"
         >
           <motion.h4
             initial={{ opacity: 0, y: 20 }}
@@ -250,18 +250,18 @@ export function TrustBadges() {
                   whileHover={{ y: -4, scale: 1.02 }}
                   whileInView={{ opacity: 1, y: 0 }}
                 >
-                  <Card className='h-full border-2 text-center transition-all hover:border-primary/50 hover:shadow-lg'>
-                    <CardContent className='px-4 pb-6 pt-6'>
-                      <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10'>
+                  <Card className="h-full border-2 text-center transition-all hover:border-primary/50 hover:shadow-lg">
+                    <CardContent className="px-4 pb-6 pt-6">
+                      <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                         <Icon
-                          aria-hidden='true'
-                          className='h-6 w-6 text-primary'
+                          aria-hidden="true"
+                          className="h-6 w-6 text-primary"
                         />
                       </div>
                       <div className={`font-bold ${TYPOGRAPHY.bodySmall} mb-1`}>
                         {item.title}
                       </div>
-                      <div className='text-sm text-muted-foreground'>
+                      <div className="text-sm text-muted-foreground">
                         {item.description}
                       </div>
                     </CardContent>
@@ -277,21 +277,21 @@ export function TrustBadges() {
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
-          className='mt-12 pt-8 border-t border-border'
+          className="mt-12 pt-8 border-t border-border"
         >
           <div
             className={`flex flex-wrap items-center justify-center gap-4 md:gap-6 ${TYPOGRAPHY.bodySmall}`}
           >
-            <div className='flex items-center gap-2 font-semibold text-foreground'>
-              <Globe aria-hidden='true' className='h-5 w-5 text-primary' />
+            <div className="flex items-center gap-2 font-semibold text-foreground">
+              <Globe aria-hidden="true" className="h-5 w-5 text-primary" />
               <span>🇨🇦 Canadian Operations</span>
             </div>
-            <div className='flex items-center gap-2 font-semibold text-foreground'>
-              <Lock aria-hidden='true' className='h-5 w-5 text-primary' />
+            <div className="flex items-center gap-2 font-semibold text-foreground">
+              <Lock aria-hidden="true" className="h-5 w-5 text-primary" />
               <span>Privacy-First Approach</span>
             </div>
-            <div className='flex items-center gap-2 font-semibold text-foreground'>
-              <Award aria-hidden='true' className='h-5 w-5 text-primary' />
+            <div className="flex items-center gap-2 font-semibold text-foreground">
+              <Award aria-hidden="true" className="h-5 w-5 text-primary" />
               <span>Systems Thinking Methodology</span>
             </div>
           </div>

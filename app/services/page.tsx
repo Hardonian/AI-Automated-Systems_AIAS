@@ -102,32 +102,43 @@ export default function ServicesPage() {
           />
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2">
-          {siteContent.services.map((service, index) => (
-            <FadeIn key={service.title} delay={index * 0.05}>
-              <SurfaceCard className="p-7">
-                <FeatureIllustration
-                  className="mb-5 h-24 opacity-90"
-                  type={serviceVisuals[service.title] || "automation"}
-                />
-                <h2 className="text-2xl font-semibold">{service.title}</h2>
-                <p className="mt-3 text-muted-foreground">
-                  {service.description}
-                </p>
-                <p className="mt-4 text-sm font-semibold text-primary">
-                  {service.outcome}
-                </p>
-                <ul className="mt-5 space-y-2 text-sm text-muted-foreground">
-                  {service.deliverables.map((deliverable) => (
-                    <li key={deliverable} className="flex items-start gap-2">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 text-primary" />
-                      {deliverable}
-                    </li>
-                  ))}
-                </ul>
-              </SurfaceCard>
-            </FadeIn>
-          ))}
+        <div className="grid gap-6 md:grid-cols-3">
+          {siteContent.services.map((service, index) => {
+            // Bento logic: 0 spans 2, 1 spans 1, 2 spans 1, 3 spans 2
+            const spanClass = 
+              index % 4 === 0 || index % 4 === 3 
+                ? "md:col-span-2" 
+                : "md:col-span-1";
+            
+            return (
+              <FadeIn key={service.title} delay={index * 0.05} className={spanClass}>
+                <SurfaceCard className="h-full p-8 flex flex-col group overflow-hidden relative border-border/50">
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <FeatureIllustration
+                    className="mb-6 h-20 opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                    type={serviceVisuals[service.title] || "automation"}
+                  />
+                  <h2 className="text-2xl font-bold tracking-tight relative z-10">{service.title}</h2>
+                  <p className="mt-3 text-muted-foreground flex-grow relative z-10">
+                    {service.description}
+                  </p>
+                  <div className="mt-6 border-t border-border/50 pt-5 relative z-10">
+                    <p className="text-sm font-bold text-cyan-500 mb-3 uppercase tracking-widest text-[10px]">
+                      {service.outcome}
+                    </p>
+                    <ul className="space-y-2.5 text-xs text-muted-foreground">
+                      {service.deliverables.map((deliverable) => (
+                        <li key={deliverable} className="flex items-start gap-2.5">
+                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 text-cyan-500 flex-shrink-0" />
+                          <span className="leading-snug">{deliverable}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </SurfaceCard>
+              </FadeIn>
+            );
+          })}
         </div>
       </PageSection>
 

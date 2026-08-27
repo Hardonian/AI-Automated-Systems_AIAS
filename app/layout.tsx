@@ -25,6 +25,7 @@ import {
 } from "@/components/seo/structured-data";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AnalyticsRuntime } from "@/components/analytics/analytics-runtime";
+import { NoiseOverlay } from "@/components/ui/noise-overlay";
 
 import { Toaster } from "@/components/ui/toaster";
 import { getOptionalEnv } from "@/lib/env";
@@ -162,6 +163,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       >
         <EnhancedErrorBoundary>
           <ThemeProvider>
+            <NoiseOverlay />
             <Header />
             <main
               aria-label="Main content"

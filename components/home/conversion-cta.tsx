@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
 import { track } from "@/lib/analytics";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 
 export function ConversionCTA() {
   return (
@@ -26,21 +27,23 @@ export function ConversionCTA() {
           {siteContent.contact.responseTime}
         </p>
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button
-            asChild
-            size="lg"
-            className="rounded-none border-2 border-primary bg-primary px-10 font-mono text-base font-bold uppercase tracking-wider text-primary-foreground shadow-card transition-all hover:-translate-y-1 hover:shadow-lg"
-          >
-            <Link
-              href={getPrimaryCtaHref()}
-              onClick={() =>
-                track("primary_cta_clicked", { location: "conversion_cta" })
-              }
+          <MagneticButton strength={25}>
+            <Button
+              asChild
+              size="lg"
+              className="rounded-none border-2 border-cyan-500 bg-cyan-500/10 px-10 font-mono text-base font-bold uppercase tracking-wider text-cyan-400 shadow-[4px_4px_0px_0px_rgba(6,182,212,0.5)] transition-all hover:bg-cyan-500 hover:text-white hover:shadow-[6px_6px_0px_0px_rgba(6,182,212,1)] backdrop-blur-sm"
             >
-              {siteContent.positioning.primaryCTA.label}
-              <ArrowRight className="ml-3 h-5 w-5" />
-            </Link>
-          </Button>
+              <Link
+                href={getPrimaryCtaHref()}
+                onClick={() =>
+                  track("primary_cta_clicked", { location: "conversion_cta" })
+                }
+              >
+                {siteContent.positioning.primaryCTA.label}
+                <ArrowRight className="ml-3 h-5 w-5" />
+              </Link>
+            </Button>
+          </MagneticButton>
           <Button
             asChild
             size="lg"

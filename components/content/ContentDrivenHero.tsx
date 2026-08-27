@@ -8,6 +8,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import type { HeroContent } from "@/components/content/types";
 import { useSafeReducedMotion } from "@/lib/style/motion";
+import { InteractiveTerminal } from "@/components/ui/interactive-terminal";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   clock: Clock,
@@ -74,15 +76,9 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
                 ? { duration: 0 }
                 : { duration: 0.4, ease: "easeOut" }
             }
-            className="mb-12 relative w-full max-w-lg aspect-[16/9] border-2 border-border bg-card p-2 shadow-lg"
+            className="mb-12 w-full max-w-2xl mx-auto"
           >
-            <div className="absolute inset-0 bg-primary/5 z-0" />
-            <Image
-              src="/images/esoteric_schema.png"
-              alt="Structural AI workflow schema"
-              fill
-              className="object-cover img-crisp opacity-90 mix-blend-multiply"
-            />
+            <InteractiveTerminal />
           </motion.div>
 
           <motion.div
@@ -141,16 +137,18 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
             }
           >
             {content.primaryCta?.visible && (
-              <Button
-                asChild
-                size="lg"
-                className="rounded-none border-2 border-primary bg-primary px-10 py-6 font-mono text-lg font-bold uppercase tracking-wider text-primary-foreground shadow-card transition-all hover:-translate-y-1 hover:shadow-lg"
-              >
-                <Link href={content.primaryCta.href}>
-                  {content.primaryCta.label}
-                  <ArrowRight className="ml-3 h-5 w-5" />
-                </Link>
-              </Button>
+              <MagneticButton strength={25}>
+                <Button
+                  asChild
+                  size="lg"
+                  className="rounded-none border-2 border-cyan-500 bg-cyan-500/10 px-10 py-6 font-mono text-lg font-bold uppercase tracking-wider text-cyan-400 shadow-[4px_4px_0px_0px_rgba(6,182,212,0.5)] transition-all hover:bg-cyan-500 hover:text-white hover:shadow-[6px_6px_0px_0px_rgba(6,182,212,1)] backdrop-blur-sm"
+                >
+                  <Link href={content.primaryCta.href}>
+                    {content.primaryCta.label}
+                    <ArrowRight className="ml-3 h-5 w-5" />
+                  </Link>
+                </Button>
+              </MagneticButton>
             )}
             {content.secondaryCta?.visible && (
               <Button

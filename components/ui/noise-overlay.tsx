@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 
-export const NoiseOverlay = memo(function NoiseOverlay() {
+export const NoiseOverlay = memo(() => {
   return (
     <div className="pointer-events-none fixed inset-0 z-50 h-full w-full opacity-[0.03] mix-blend-overlay">
       <svg
@@ -27,3 +27,5 @@ export const NoiseOverlay = memo(function NoiseOverlay() {
     </div>
   );
 });
+
+NoiseOverlay.displayName = "NoiseOverlay";

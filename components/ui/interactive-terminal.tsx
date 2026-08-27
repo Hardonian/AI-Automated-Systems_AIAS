@@ -19,7 +19,7 @@ export function InteractiveTerminal() {
   const [lines, setLines] = useState<number[]>([]);
 
   useEffect(() => {
-    let timeouts: NodeJS.Timeout[] = [];
+    const timeouts: NodeJS.Timeout[] = [];
     
     TERMINAL_LINES.forEach((line, index) => {
       const timeout = setTimeout(() => {
@@ -51,6 +51,7 @@ export function InteractiveTerminal() {
         <div className="space-y-2">
           {lines.map((lineIndex) => {
             const line = TERMINAL_LINES[lineIndex];
+            if (!line) return null;
             return (
               <motion.div
                 key={lineIndex}

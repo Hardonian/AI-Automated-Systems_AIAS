@@ -50,7 +50,7 @@ jobs:
         with:
           format: spdx-json
           output-file: sbom.spdx.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: sbom
           path: sbom.spdx.json
@@ -75,7 +75,7 @@ jobs:
         run: |
           make build 2>/dev/null || cargo build --release --workspace --locked 2>/dev/null || go build -trimpath -ldflags="-s -w" ./... 2>/dev/null || npm ci && npm run build 2>/dev/null || true
           find . -name "*.exe" -o -name "*.bin" -o -name "dist" -type f -executable 2>/dev/null | head -5 | xargs -I{} sha256sum {} > build-hash.txt || echo "no binaries" > build-hash.txt
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: build-hash
           path: build-hash.txt
@@ -89,7 +89,7 @@ jobs:
         run: |
           docker build --no-cache --pull -t $(basename ${{ github.repository }}):local .
           docker save $(basename ${{ github.repository }}):local | sha256sum > docker-hash.txt
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: docker-hash
           path: docker-hash.txt

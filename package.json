@@ -142,7 +142,7 @@
     "tsx": "^4.23.10",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.66.0",
-    "undici": "^8.10.0",
+    "undici": "^8.10.1",
     "vite": "^8.2.1",
     "vitest": "^4.1.10"
   },

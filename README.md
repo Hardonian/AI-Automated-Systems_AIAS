@@ -2,6 +2,10 @@
 
 AIAS is a static-first authority surface for agentic automation consulting that converts operational pain into governed, production-ready systems.
 
+<!-- BEGIN: REPO HERO -->
+![Repository hero generated locally on the GPU stack](assets/repo-hero.png)
+<!-- END: REPO HERO -->
+
 ## Ecosystem Positioning
 
 AIAS is the advisory and orchestration layer in a broader delivery ecosystem:

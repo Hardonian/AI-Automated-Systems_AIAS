@@ -1,0 +1,15 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-09-07T08:13:16Z",
+    "tools": [
+      {
+        "vendor": "Hardonia Ops Agent",
+        "name": "Weekly Maintenance"
+      }
+    ]
+  },
+  "components": {}
+}

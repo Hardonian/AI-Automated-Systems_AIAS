@@ -388,7 +388,7 @@ export function IntakeForm() {
             <div className="space-y-2">
               <Label htmlFor="orgType">Organization type</Label>
               <Select
-                value={values.orgType}
+                value={values.orgType ?? ""}
                 onValueChange={(value) =>
                   updateValue("orgType", value as IntakeSubmission["orgType"])
                 }
@@ -420,7 +420,7 @@ export function IntakeForm() {
             <div className="space-y-2">
               <Label htmlFor="problemCategory">Primary problem category</Label>
               <Select
-                value={values.problemCategory}
+                value={values.problemCategory ?? ""}
                 onValueChange={(value) =>
                   updateValue(
                     "problemCategory",
@@ -462,7 +462,7 @@ export function IntakeForm() {
             <div className="space-y-2">
               <Label htmlFor="aiStack">Current AI stack</Label>
               <Select
-                value={values.aiStack}
+                value={values.aiStack ?? ""}
                 onValueChange={(value) =>
                   updateValue("aiStack", value as IntakeSubmission["aiStack"])
                 }
@@ -494,7 +494,7 @@ export function IntakeForm() {
             <div className="space-y-2">
               <Label htmlFor="modelMix">Model mix</Label>
               <Select
-                value={values.modelMix}
+                value={values.modelMix ?? ""}
                 onValueChange={(value) =>
                   updateValue("modelMix", value as IntakeSubmission["modelMix"])
                 }
@@ -526,7 +526,7 @@ export function IntakeForm() {
             <div className="space-y-2">
               <Label htmlFor="failureMode">Current failure mode</Label>
               <Select
-                value={values.failureMode}
+                value={values.failureMode ?? ""}
                 onValueChange={(value) =>
                   updateValue(
                     "failureMode",
@@ -561,7 +561,7 @@ export function IntakeForm() {
             <div className="space-y-2">
               <Label htmlFor="governanceMaturity">Governance maturity</Label>
               <Select
-                value={values.governanceMaturity}
+                value={values.governanceMaturity ?? ""}
                 onValueChange={(value) =>
                   updateValue(
                     "governanceMaturity",

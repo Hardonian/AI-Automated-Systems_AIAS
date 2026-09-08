@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 
+import { siteContent } from "../../src/content/site";
+
 test.describe("@smoke Reality Mode Smoke Test", () => {
   test.beforeEach(async ({ page }) => {
     test.setTimeout(60000);
@@ -8,7 +10,7 @@ test.describe("@smoke Reality Mode Smoke Test", () => {
 
   test("Landing page has unified CTAs", async ({ page }) => {
     const primaryCTA = page
-      .getByRole("link", { name: /Book (a )?Strategy Call|Book Diagnostic/i })
+      .getByRole("link", { name: siteContent.positioning.primaryCTA.label })
       .first();
     await expect(primaryCTA).toBeVisible();
     const href = await primaryCTA.getAttribute("href");
@@ -17,17 +19,21 @@ test.describe("@smoke Reality Mode Smoke Test", () => {
 
     const secondaryCTA = page
       .getByRole("link", {
-        name: /Try the Workflow Sandbox|What AIAS Actually Does/i,
+        name: siteContent.positioning.secondaryCTA.label,
       })
       .first();
     await expect(secondaryCTA).toBeVisible();
+    await expect(secondaryCTA).toHaveAttribute(
+      "href",
+      siteContent.positioning.secondaryCTA.href,
+    );
   });
 
   test("Route-first navigation pages render", async ({ page }) => {
     await page.goto("/services");
     await expect(
       page.getByRole("heading", {
-        name: "Deterministic automation services built for production teams",
+        name: siteContent.servicesPage.hero.title,
       }),
     ).toBeVisible();
 
@@ -38,10 +44,10 @@ test.describe("@smoke Reality Mode Smoke Test", () => {
 
     await page.goto("/dashboard");
     await expect(
-      page.getByRole("heading", { name: /Dashboard access is invite-only/i }),
+      page.getByRole("heading", { name: "Operations & Workload Dashboard" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: /No active session detected/i }),
+      page.getByRole("heading", { name: "Request Provisioned Client Access" }),
     ).toBeVisible();
   });
 
@@ -69,31 +75,39 @@ test.describe("@smoke Reality Mode Smoke Test", () => {
   test("New ecosystem and demo routes render", async ({ page }) => {
     await page.goto("/ecosystem");
     await expect(
-      page.getByRole("heading", { name: "Layered system diagram" }),
+      page.getByRole("heading", {
+        name: siteContent.ecosystemPage.diagram.title,
+      }),
     ).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Governance principles" }),
+      page.getByRole("heading", {
+        name: siteContent.ecosystemPage.narrative.governancePrinciples.title,
+      }),
     ).toBeVisible();
 
     await page.goto("/automation-demo");
     await expect(
-      page.getByRole("heading", { name: "Architecture diagram" }),
+      page.getByRole("heading", {
+        name: "Live Automation Engine & Control-Plane",
+      }),
     ).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Governance Review" }),
+      page.getByRole("heading", {
+        name: "How Deterministic Boundaries Protect Production",
+      }),
     ).toBeVisible();
 
     await page.goto("/readiness-checklist");
     await expect(
       page
         .getByRole("heading", {
-          name: /AI Systems Readiness Checklist|AI Governance Checklist/i,
+          name: "AI Governance & Systems Readiness",
         })
         .first(),
     ).toBeVisible();
     await expect(
       page.getByRole("link", {
-        name: /Download checklist \(.md\)|Download Governance Checklist \(.md\)/i,
+        name: "Download Checklist (.md)",
       }),
     ).toHaveAttribute("href", "/downloads/ai-systems-readiness-checklist.md");
   });

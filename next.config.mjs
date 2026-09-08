@@ -19,10 +19,6 @@ const nextConfig = {
     tsconfigPath: "./tsconfig.json",
   },
 
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-
   images: {
     unoptimized: true,
     formats: ["image/avif", "image/webp"],

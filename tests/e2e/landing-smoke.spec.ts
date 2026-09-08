@@ -1,16 +1,17 @@
 import { test, expect } from "@playwright/test";
 
+import { siteContent } from "../../src/content/site";
+
 test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
   test("Home page loads with key sections", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveTitle(/AIAS|AI Automated Systems/);
-    await expect(page.locator("h1").first()).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: /Agentic Automation Consultancy/i }),
+      page.getByRole("heading", { name: siteContent.brand.tagline }),
     ).toBeVisible();
 
     const cta = page
-      .getByRole("link", { name: /Book (a )?Strategy Call|Book Diagnostic/i })
+      .getByRole("link", { name: siteContent.positioning.primaryCTA.label })
       .first();
     await expect(cta).toBeVisible();
     const href = await cta.getAttribute("href");
@@ -51,20 +52,32 @@ test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
   test("Route-first nav and footer integrity", async ({ page }) => {
     await page.goto("/");
 
+    const servicesNav = siteContent.navigation.primary.find(
+      (item) => item.href === "/services",
+    );
+    const processNav = siteContent.navigation.primary.find(
+      (item) => item.href === "/how-it-works",
+    );
+
+    expect(servicesNav).toBeDefined();
+    expect(processNav).toBeDefined();
+
     await expect(
-      page.getByRole("link", { name: "Navigate to Services" }).first(),
-    ).toHaveAttribute("href", "/services");
+      page
+        .getByRole("link", { name: `Navigate to ${servicesNav?.label}` })
+        .first(),
+    ).toHaveAttribute("href", servicesNav?.href ?? "");
     await expect(
       page
         .getByRole("link", {
-          name: /Navigate to Process|Navigate to What AIAS Does/i,
+          name: `Navigate to ${processNav?.label}`,
         })
         .first(),
-    ).toBeVisible();
+    ).toHaveAttribute("href", processNav?.href ?? "");
 
     await expect(page.locator("footer")).toBeVisible();
     await expect(
-      page.locator("footer").getByText("Built in Canada 🇨🇦", { exact: false }),
+      page.locator("footer").getByText("Built in Canada", { exact: false }),
     ).toBeVisible();
     await expect(
       page

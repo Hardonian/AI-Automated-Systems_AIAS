@@ -379,3 +379,125 @@ export function WebApplicationSchema({
     />
   );
 }
+
+/* ========================================
+   Item 53: BreadcrumbList JSON-LD
+   ======================================== */
+interface BreadcrumbItem {
+  name: string;
+  href: string;
+}
+
+interface BreadcrumbListSchemaProps {
+  items: BreadcrumbItem[];
+}
+
+export function BreadcrumbListSchema({ items }: BreadcrumbListSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://aiautomatedsystems.ca",
+      },
+      ...items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 2,
+        name: item.name,
+        item: `https://aiautomatedsystems.ca${item.href}`,
+      })),
+    ],
+  };
+
+  return (
+    <Script
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      id="breadcrumb-schema"
+      type="application/ld+json"
+    />
+  );
+}
+
+/* ========================================
+   Item 54: FAQPage JSON-LD
+   ======================================== */
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface FAQPageSchemaProps {
+  faqs: FAQItem[];
+}
+
+export function FAQPageSchema({ faqs }: FAQPageSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+
+  return (
+    <Script
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      id="faq-page-schema"
+      type="application/ld+json"
+    />
+  );
+}
+
+/* ========================================
+   Item 55: HowTo JSON-LD
+   ======================================== */
+interface HowToStep {
+  name: string;
+  text: string;
+  estimatedTime?: string;
+}
+
+interface HowToSchemaProps {
+  name: string;
+  description: string;
+  steps: HowToStep[];
+  totalTime?: string;
+}
+
+export function HowToSchema({
+  name,
+  description,
+  steps,
+  totalTime = "P1D",
+}: HowToSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name,
+    description,
+    totalTime,
+    step: steps.map((step, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+      ...(step.estimatedTime ? { timeRequired: step.estimatedTime } : {}),
+    })),
+  };
+
+  return (
+    <Script
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      id="how-to-schema"
+      type="application/ld+json"
+    />
+  );
+}

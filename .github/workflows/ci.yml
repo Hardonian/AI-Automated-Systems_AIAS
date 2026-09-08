@@ -1,59 +1,59 @@
 name: CI
 on: [push, pull_request]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build-test:
+  verify:
+    name: Lint + Typecheck + Build + Validate
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Setup toolchain
-        uses: actions/setup-go@v5
-        with:
-          go-version: "stable"
-          cache: true
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
           node-version: "lts/*"
-          cache: "npm"
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt, clippy
-      - name: Build & Test
-        run: |
-          make build 2>/dev/null || cargo build --workspace 2>/dev/null || go build ./... 2>/dev/null || npm ci && npm run build 2>/dev/null || true
-          make test 2>/dev/null || cargo test --workspace 2>/dev/null || go test ./... 2>/dev/null || npm test 2>/dev/null || true
-      - name: npm audit
-        run: npm audit --audit-level=high
-      - name: TypeScript check
-        run: npx tsc --noEmit
-      - name: Next.js build
-        run: npm run build
-      - name: ESLint
-        run: |
-          make lint 2>/dev/null || cargo clippy --workspace --all-targets -- -D warnings 2>/dev/null || golangci-lint run 2>/dev/null || npm run lint 2>/dev/null || true
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Full verification suite
+        run: pnpm verify
 
   security:
+    name: Security Scanning
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - uses: trufflesecurity/trufflehog@main
         with:
           path: ./
           base: main
           head: HEAD
+
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
           format: spdx-json
           output-file: sbom.spdx.json
+
       - uses: actions/upload-artifact@v7
         with:
           name: sbom
           path: sbom.spdx.json
+
       - name: Semgrep security scan
         uses: semgrep/semgrep-action@v1
         with:
@@ -68,28 +68,31 @@ jobs:
             p/xss
 
   reproducibility:
+    name: Reproducible Build Hash
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - name: Build in clean environment
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "lts/*"
+          cache: "pnpm"
+
+      - name: Install & build
         run: |
-          make build 2>/dev/null || cargo build --release --workspace --locked 2>/dev/null || go build -trimpath -ldflags="-s -w" ./... 2>/dev/null || npm ci && npm run build 2>/dev/null || true
-          find . -name "*.exe" -o -name "*.bin" -o -name "dist" -type f -executable 2>/dev/null | head -5 | xargs -I{} sha256sum {} > build-hash.txt || echo "no binaries" > build-hash.txt
+          pnpm install --frozen-lockfile
+          pnpm build
+
+      - name: Generate build hash
+        run: |
+          find out -type f -name "*.html" -o -name "*.js" -o -name "*.css" 2>/dev/null | sort | head -20 | xargs sha256sum > build-hash.txt || echo "no output" > build-hash.txt
+
       - uses: actions/upload-artifact@v7
         with:
           name: build-hash
           path: build-hash.txt
-
-  docker:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build deterministic Docker image
-        if: hashFiles('Dockerfile') != ''
-        run: |
-          docker build --no-cache --pull -t $(basename ${{ github.repository }}):local .
-          docker save $(basename ${{ github.repository }}):local | sha256sum > docker-hash.txt
-      - uses: actions/upload-artifact@v7
-        with:
-          name: docker-hash
-          path: docker-hash.txt

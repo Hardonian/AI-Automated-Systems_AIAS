@@ -469,4 +469,106 @@
     image-rendering: crisp-edges;
     image-rendering: -webkit-optimize-contrast;
   }
+
+  /* ========================================
+     ITEM 32: GLOBAL FOCUS-VISIBLE OUTLINES
+     Industrial hazard-orange focus ring for
+     all interactive elements (WCAG 2.2 AAA)
+     ======================================== */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+
+  /* Remove default outlines when not focus-visible */
+  *:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* ========================================
+     ITEM 34: HIGH-CONTRAST TERMINAL TEXT
+     Boosted to 7:1+ AAA ratio on dark bg
+     ======================================== */
+  .text-aaa {
+    color: #d4d4d8;
+  }
+
+  .text-aaa-muted {
+    color: #a1a1aa;
+  }
+
+  /* ========================================
+     ITEM 26: TOUCH TARGET MINIMUM (48x48)
+     ======================================== */
+  .touch-target {
+    position: relative;
+    min-width: 48px;
+    min-height: 48px;
+  }
+
+  .touch-target::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    pointer-events: auto;
+  }
+
+  /* ========================================
+     ITEM 47: CLS-SAFE SKELETON CONTAINERS
+     ======================================== */
+  .cls-safe {
+    contain: layout style;
+  }
+
+  .cls-safe-hero {
+    min-height: 480px;
+    contain: layout style;
+  }
+
+  .cls-safe-card {
+    min-height: 200px;
+    contain: layout style;
+  }
+
+  .cls-safe-terminal {
+    min-height: 360px;
+    contain: layout style;
+  }
+
+  /* ========================================
+     ITEM 37: COLORBLIND-SAFE INDICATORS
+     Shape-coded status beyond color alone
+     ======================================== */
+  .status-success::before {
+    content: '●';
+    margin-right: 0.375rem;
+  }
+
+  .status-warning::before {
+    content: '▲';
+    margin-right: 0.375rem;
+  }
+
+  .status-error::before {
+    content: '■';
+    margin-right: 0.375rem;
+  }
+
+  /* ========================================
+     ITEM 88: ANIMATED COUNTER ROLL-UP
+     ======================================== */
+  @keyframes count-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-count-up {
+    animation: count-up 0.6s ease-out forwards;
+  }
 }

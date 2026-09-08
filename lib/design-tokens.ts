@@ -38,15 +38,15 @@ export const TYPOGRAPHY = {
 } as const;
 
 export const BORDER_RADIUS = {
-  card: "rounded-2xl",
-  pill: "rounded-full",
-  soft: "rounded-xl",
+  card: "rounded-none",
+  pill: "rounded-none",
+  soft: "rounded-none",
 } as const;
 
 export const CARD_SHADOWS = {
-  card: "shadow-sm",
-  elevated: "shadow-lg",
-  glow: "shadow-[0_0_35px_rgba(59,130,246,0.18)]",
+  card: "shadow-[4px_4px_0px_0px_hsl(var(--text))]",
+  elevated: "shadow-[6px_6px_0px_0px_hsl(var(--primary))]",
+  glow: "shadow-[0_0_25px_hsl(var(--primary-glow))]",
 } as const;
 
 export const SECTION_BACKGROUNDS = {

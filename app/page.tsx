@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import { ContentDrivenHero } from "@/components/content/ContentDrivenHero";
 import { ThreeProngedSection } from "@/components/home/three-pronged-section";
+import { SystemTopologyVisualizer } from "@/components/visual/SystemTopologyVisualizer";
 import { HowWeWorkSection } from "@/components/content/how-we-work-section";
 import { ProofSection } from "@/components/home/proof-section";
 import { ConversionCTA } from "@/components/home/conversion-cta";
@@ -73,6 +74,29 @@ export default function HomePage() {
       <ContentDrivenHero content={heroContent} />
 
       <ThreeProngedSection />
+
+      {/* Live Mission Control Architecture Bus Section */}
+      <section
+        className="border-b-2 border-border bg-surface-muted py-20 relative overflow-hidden"
+        id="control-plane-topology"
+      >
+        <div className="container relative z-10 mx-auto max-w-6xl px-4">
+          <FadeIn>
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 border-2 border-primary/40 bg-primary/10 px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-primary mb-3">
+                <span>Mission Control // Architecture Bus</span>
+              </div>
+              <h2 className="text-3xl font-black uppercase tracking-tighter sm:text-5xl text-foreground">
+                DETERMINISTIC CONTROL-PLANE TOPOLOGY
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl font-mono text-sm sm:text-base text-muted-foreground">
+                Trace live requests through strict Zod contracts, constrained model execution, and deterministic policy guardrails with zero unhandled edge states.
+              </p>
+            </div>
+          </FadeIn>
+          <SystemTopologyVisualizer />
+        </div>
+      </section>
 
       {/* Problem Statement — Why AI Projects Fail */}
       <section className="border-b-2 border-border bg-background py-24 relative overflow-hidden">

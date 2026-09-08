@@ -28,6 +28,7 @@ import { AnalyticsRuntime } from "@/components/analytics/analytics-runtime";
 import { NoiseOverlay } from "@/components/ui/noise-overlay";
 
 import { Toaster } from "@/components/ui/toaster";
+import { MobileStickyCTA } from "@/components/layout/mobile-sticky-cta";
 import { getOptionalEnv } from "@/lib/env";
 import { EnhancedErrorBoundary } from "@/lib/error-handling/error-boundary-enhanced";
 import {
@@ -175,6 +176,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </main>
             <Footer />
             <AnalyticsRuntime />
+            <MobileStickyCTA />
             <Toaster />
             <Script
               dangerouslySetInnerHTML={{

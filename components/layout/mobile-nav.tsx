@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { SoundToggle } from "@/components/layout/sound-toggle";
 import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
 
 const MOBILE_TOOL_LINKS = [
@@ -49,13 +50,16 @@ export function MobileNav() {
         id="mobile-navigation"
         side="right"
       >
-        <div className="flex items-center gap-2 pb-4 border-b-2 border-border">
-          <span className="flex h-7 w-7 items-center justify-center border border-primary bg-primary/10 text-xs font-mono font-bold text-primary">
-            {"//"}
-          </span>
-          <span className="font-mono text-sm font-black uppercase tracking-wider text-foreground">
-            AIAS Platform
-          </span>
+        <div className="flex items-center justify-between pb-4 border-b-2 border-border">
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center border border-primary bg-primary/10 text-xs font-mono font-bold text-primary">
+              {"//"}
+            </span>
+            <span className="font-mono text-sm font-black uppercase tracking-wider text-foreground">
+              AIAS Platform
+            </span>
+          </div>
+          <SoundToggle />
         </div>
 
         <nav

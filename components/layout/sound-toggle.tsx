@@ -1,29 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import { isSoundEnabled, toggleSound } from "@/lib/audio/sound-fx";
 
+function subscribe(callback: () => void) {
+  if (typeof window === "undefined") return () => {};
+  window.addEventListener("aias_sfx_change", callback);
+  return () => window.removeEventListener("aias_sfx_change", callback);
+}
+
+function getSnapshot() {
+  return isSoundEnabled();
+}
+
+function getServerSnapshot() {
+  return true;
+}
+
 export function SoundToggle({ className = "" }: { className?: string }) {
-  const [enabled, setEnabled] = useState(true);
-
-  useEffect(() => {
-    setEnabled(isSoundEnabled());
-
-    const handleSfxChange = (e: Event) => {
-      const customEvent = e as CustomEvent<{ enabled: boolean }>;
-      if (customEvent.detail) {
-        setEnabled(customEvent.detail.enabled);
-      }
-    };
-
-    window.addEventListener("aias_sfx_change", handleSfxChange);
-    return () => window.removeEventListener("aias_sfx_change", handleSfxChange);
-  }, []);
+  const enabled = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const handleToggle = () => {
-    const next = toggleSound();
-    setEnabled(next);
+    toggleSound();
   };
 
   return (

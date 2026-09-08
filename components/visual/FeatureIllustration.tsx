@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Cpu, ShieldCheck, Database, GitBranch } from "lucide-react";
 
 interface FeatureIllustrationProps {
   type: "agents" | "automation" | "security" | "integration";
@@ -11,289 +12,102 @@ export function FeatureIllustration({
   type,
   className = "",
 }: FeatureIllustrationProps) {
-  const coordinate = (value: number) => Number(value.toFixed(3));
-
   const illustrations = {
     agents: (
-      <svg viewBox="0 0 200 150" className="h-full w-full">
-        <defs>
-          <linearGradient id="agentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#3b82f6" />
-            <stop offset="100%" stopColor="#8b5cf6" />
-          </linearGradient>
-        </defs>
-        <motion.circle
-          cx="100"
-          cy="75"
-          r="40"
-          fill="none"
-          stroke="url(#agentGrad)"
-          strokeWidth="2"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.5 }}
-        />
-        <motion.circle
-          cx="100"
-          cy="75"
-          r="25"
-          fill="url(#agentGrad)"
-          fillOpacity="0.2"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.5, type: "spring" }}
-        />
-        <motion.circle
-          cx="100"
-          cy="75"
-          r="8"
-          fill="#3b82f6"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.7, type: "spring" }}
-        />
-        {[0, 60, 120, 180, 240, 300].map((angle, i) => {
-          const radians = (angle * Math.PI) / 180;
-          const x2 = coordinate(100 + 55 * Math.cos(radians));
-          const y2 = coordinate(75 + 55 * Math.sin(radians));
-
-          return (
-            <motion.line
-              key={angle}
-              x1="100"
-              y1="75"
-              x2={x2}
-              y2={y2}
-              stroke="#64748b"
-              strokeWidth="1"
-              strokeDasharray="4 2"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ delay: 0.8 + i * 0.1 }}
-            />
-          );
-        })}
-        {[0, 72, 144, 216, 288].map((angle, i) => {
-          const radians = (angle * Math.PI) / 180;
-          const cx = coordinate(100 + 70 * Math.cos(radians));
-          const cy = coordinate(75 + 70 * Math.sin(radians));
-
-          return (
-            <motion.circle
-              key={angle}
-              cx={cx}
-              cy={cy}
-              r="6"
-              fill="#64748b"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 1 + i * 0.1 }}
-            />
-          );
-        })}
-      </svg>
+      <div className="flex h-full w-full flex-col justify-between border-2 border-border bg-background p-4">
+        <div className="flex items-center justify-between border-b border-border/50 pb-2">
+          <span className="font-mono text-[10px] font-bold uppercase text-primary">
+            Agentic Orchestration
+          </span>
+          <Cpu className="h-4 w-4 text-primary" />
+        </div>
+        <div className="my-2 space-y-1 font-mono text-[11px] text-muted-foreground">
+          <div className="flex justify-between">
+            <span>Context Clamp:</span>
+            <span className="font-bold text-foreground">Active</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Temperature:</span>
+            <span className="font-bold text-foreground">0.0 (Deterministic)</span>
+          </div>
+        </div>
+        <div className="border-t border-border/40 pt-2 font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
+          ✓ Structured JSON Output Enforced
+        </div>
+      </div>
     ),
     automation: (
-      <svg viewBox="0 0 200 150" className="h-full w-full">
-        <defs>
-          <linearGradient id="autoGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#10b981" />
-            <stop offset="100%" stopColor="#06b6d4" />
-          </linearGradient>
-        </defs>
-        <motion.rect
-          x="20"
-          y="60"
-          width="40"
-          height="30"
-          rx="4"
-          fill="none"
-          stroke="url(#autoGrad)"
-          strokeWidth="2"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring" }}
-        />
-        <motion.rect
-          x="140"
-          y="60"
-          width="40"
-          height="30"
-          rx="4"
-          fill="none"
-          stroke="url(#autoGrad)"
-          strokeWidth="2"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.3, type: "spring" }}
-        />
-        <motion.path
-          d="M 60 75 L 90 75 L 90 55 L 110 55 L 110 75 L 140 75"
-          fill="none"
-          stroke="#64748b"
-          strokeWidth="2"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-        />
-        <motion.circle
-          cx="100"
-          cy="45"
-          r="15"
-          fill="url(#autoGrad)"
-          fillOpacity="0.2"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.8, type: "spring" }}
-        />
-        <text
-          x="40"
-          y="78"
-          textAnchor="middle"
-          className="fill-slate-400 text-xs"
-        >
-          Input
-        </text>
-        <text
-          x="160"
-          y="78"
-          textAnchor="middle"
-          className="fill-slate-400 text-xs"
-        >
-          Output
-        </text>
-        <text
-          x="100"
-          y="49"
-          textAnchor="middle"
-          className="fill-emerald-400 text-xs font-bold"
-        >
-          AI
-        </text>
-      </svg>
+      <div className="flex h-full w-full flex-col justify-between border-2 border-border bg-background p-4">
+        <div className="flex items-center justify-between border-b border-border/50 pb-2">
+          <span className="font-mono text-[10px] font-bold uppercase text-primary">
+            Pipeline Execution
+          </span>
+          <Database className="h-4 w-4 text-primary" />
+        </div>
+        <div className="my-2 space-y-1 font-mono text-[11px] text-muted-foreground">
+          <div className="flex justify-between">
+            <span>Latency (P95):</span>
+            <span className="font-bold text-foreground">142ms</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Circuit Breaker:</span>
+            <span className="font-bold text-foreground">Enabled</span>
+          </div>
+        </div>
+        <div className="border-t border-border/40 pt-2 font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
+          ✓ Automated Retry & Dead-Letter Queue
+        </div>
+      </div>
     ),
     security: (
-      <svg viewBox="0 0 200 150" className="h-full w-full">
-        <defs>
-          <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#6366f1" />
-            <stop offset="100%" stopColor="#ec4899" />
-          </linearGradient>
-        </defs>
-        <motion.path
-          d="M100 20 L160 45 L160 85 Q160 125 100 140 Q40 125 40 85 L40 45 Z"
-          fill="none"
-          stroke="url(#shieldGrad)"
-          strokeWidth="2"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.2 }}
-        />
-        <motion.path
-          d="M100 40 L140 58 L140 82 Q140 108 100 120 Q60 108 60 82 L60 58 Z"
-          fill="url(#shieldGrad)"
-          fillOpacity="0.15"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.6, type: "spring" }}
-        />
-        <motion.path
-          d="M85 75 L95 85 L115 60"
-          fill="none"
-          stroke="#10b981"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ delay: 1, duration: 0.5 }}
-        />
-      </svg>
+      <div className="flex h-full w-full flex-col justify-between border-2 border-border bg-background p-4">
+        <div className="flex items-center justify-between border-b border-border/50 pb-2">
+          <span className="font-mono text-[10px] font-bold uppercase text-primary">
+            Governance Gate
+          </span>
+          <ShieldCheck className="h-4 w-4 text-primary" />
+        </div>
+        <div className="my-2 space-y-1 font-mono text-[11px] text-muted-foreground">
+          <div className="flex justify-between">
+            <span>Data Boundary:</span>
+            <span className="font-bold text-foreground">Canadian / PIPEDA</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Entropy Scan:</span>
+            <span className="font-bold text-foreground">0 PII Leakage</span>
+          </div>
+        </div>
+        <div className="border-t border-border/40 pt-2 font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
+          ✓ Cryptographic Audit Receipt
+        </div>
+      </div>
     ),
     integration: (
-      <svg viewBox="0 0 200 150" className="h-full w-full">
-        <defs>
-          <linearGradient id="intGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#f59e0b" />
-            <stop offset="100%" stopColor="#ef4444" />
-          </linearGradient>
-        </defs>
-        {[40, 100, 160].map((x, i) => (
-          <motion.rect
-            key={x}
-            x={x - 20}
-            y="60"
-            width="40"
-            height="30"
-            rx="4"
-            fill="none"
-            stroke={i === 1 ? "url(#intGrad)" : "#64748b"}
-            strokeWidth={i === 1 ? "2" : "1"}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: i * 0.2, type: "spring" }}
-          />
-        ))}
-        <motion.line
-          x1="60"
-          y1="75"
-          x2="80"
-          y2="75"
-          stroke="#64748b"
-          strokeWidth="1"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ delay: 0.6 }}
-        />
-        <motion.line
-          x1="120"
-          y1="75"
-          x2="140"
-          y2="75"
-          stroke="#64748b"
-          strokeWidth="1"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ delay: 0.8 }}
-        />
-        <motion.circle
-          cx="100"
-          cy="75"
-          r="12"
-          fill="url(#intGrad)"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 1, type: "spring" }}
-        />
-        <text
-          x="40"
-          y="78"
-          textAnchor="middle"
-          className="fill-slate-400 text-[8px]"
-        >
-          CRM
-        </text>
-        <text
-          x="100"
-          y="78"
-          textAnchor="middle"
-          className="fill-white text-[8px] font-bold"
-        >
-          Hub
-        </text>
-        <text
-          x="160"
-          y="78"
-          textAnchor="middle"
-          className="fill-slate-400 text-[8px]"
-        >
-          ERP
-        </text>
-      </svg>
+      <div className="flex h-full w-full flex-col justify-between border-2 border-border bg-background p-4">
+        <div className="flex items-center justify-between border-b border-border/50 pb-2">
+          <span className="font-mono text-[10px] font-bold uppercase text-primary">
+            System Connectors
+          </span>
+          <GitBranch className="h-4 w-4 text-primary" />
+        </div>
+        <div className="my-2 space-y-1 font-mono text-[11px] text-muted-foreground">
+          <div className="flex justify-between">
+            <span>Contracts:</span>
+            <span className="font-bold text-foreground">Strict Zod Schemas</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Handoff:</span>
+            <span className="font-bold text-foreground">Human-in-the-Loop</span>
+          </div>
+        </div>
+        <div className="border-t border-border/40 pt-2 font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
+          ✓ Bi-directional Webhook Dispatch
+        </div>
+      </div>
     ),
   };
 
   return (
-    <div className={`h-32 w-full ${className}`}>{illustrations[type]}</div>
+    <div className={`h-36 w-full ${className}`}>{illustrations[type]}</div>
   );
 }

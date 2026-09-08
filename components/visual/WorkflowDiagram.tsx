@@ -1,76 +1,74 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { CheckCircle2, ShieldCheck, ArrowRight } from "lucide-react";
 
-const nodes = [
-  { id: 1, label: "Input", x: 50, y: 20, color: "bg-blue-500" },
-  { id: 2, label: "Classify", x: 50, y: 40, color: "bg-purple-500" },
-  { id: 3, label: "Plan", x: 30, y: 60, color: "bg-amber-500" },
-  { id: 4, label: "Execute", x: 70, y: 60, color: "bg-green-500" },
-  { id: 5, label: "Verify", x: 50, y: 80, color: "bg-rose-500" },
+interface WorkflowStep {
+  id: string;
+  name: string;
+  type: "Deterministic" | "Constrained AI" | "Policy Gate";
+  desc: string;
+}
+
+const WORKFLOW_STEPS: WorkflowStep[] = [
+  { id: "01", name: "Input Contract", type: "Deterministic", desc: "Zod validation" },
+  { id: "02", name: "Model Extract", type: "Constrained AI", desc: "Zero-temp inference" },
+  { id: "03", name: "Policy Verify", type: "Policy Gate", desc: "Math & PII guardrails" },
+  { id: "04", name: "Runbook Post", type: "Deterministic", desc: "Signed audit receipt" },
 ];
-
-const connections = [
-  { from: 1, to: 2 },
-  { from: 2, to: 3 },
-  { from: 2, to: 4 },
-  { from: 3, to: 5 },
-  { from: 4, to: 5 },
-];
-
-const nodeMap = new Map(nodes.map((n) => [n.id, n]));
 
 export function WorkflowDiagram() {
   return (
-    <div className="relative h-64 w-full rounded-xl bg-gradient-to-br from-slate-900 to-slate-800 p-4">
-      <svg
-        className="absolute inset-0 h-full w-full"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <defs>
-          <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#6366f1" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.5" />
-          </linearGradient>
-        </defs>
-        {connections.map((conn, i) => {
-          const fromNode = nodeMap.get(conn.from);
-          const toNode = nodeMap.get(conn.to);
-          if (!fromNode || !toNode) return null;
+    <div className="border-2 border-border bg-card p-6 shadow-[4px_4px_0px_0px_hsl(var(--text))]">
+      <div className="flex items-center justify-between border-b-2 border-border pb-3 mb-6">
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-primary" />
+          <span className="font-mono text-xs font-bold uppercase tracking-wider text-foreground">
+            Deterministic Workflow Topology
+          </span>
+        </div>
+        <span className="font-mono text-[10px] font-bold uppercase text-primary border border-primary/40 px-2 py-0.5 bg-primary/10">
+          State Machine
+        </span>
+      </div>
 
-          return (
-            <motion.line
-              key={i}
-              x1={fromNode.x}
-              y1={fromNode.y}
-              x2={toNode.x}
-              y2={toNode.y}
-              stroke="url(#lineGrad)"
-              strokeWidth="0.5"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 1, delay: i * 0.2 }}
-            />
-          );
-        })}
-      </svg>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {WORKFLOW_STEPS.map((step, idx) => (
+          <div
+            key={step.id}
+            className="relative flex flex-col justify-between border-2 border-border bg-background p-4 transition-all hover:border-primary"
+          >
+            <div>
+              <div className="flex items-center justify-between border-b border-border/50 pb-2 mb-2">
+                <span className="font-mono text-xs font-black text-primary">
+                  {step.id}
+                </span>
+                <span className="font-mono text-[10px] uppercase text-muted-foreground">
+                  {step.type}
+                </span>
+              </div>
+              <h4 className="font-mono text-sm font-bold uppercase text-foreground">
+                {step.name}
+              </h4>
+              <p className="mt-1 text-xs font-mono text-muted-foreground">
+                {step.desc}
+              </p>
+            </div>
 
-      {nodes.map((node, i) => (
-        <motion.div
-          key={node.id}
-          className={`absolute flex h-10 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-lg ${node.color} text-xs font-bold text-white shadow-lg`}
-          style={{ left: `${node.x}%`, top: `${node.y}%` }}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: i * 0.15, type: "spring" }}
-        >
-          {node.label}
-        </motion.div>
-      ))}
+            <div className="mt-4 flex items-center gap-1.5 pt-2 border-t border-border/40 font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
+              <CheckCircle2 className="h-3 w-3" />
+              <span>Gated Transition</span>
+            </div>
 
-      <div className="absolute bottom-2 left-2 text-xs text-slate-400">
-        Agentic Workflow Engine
+            {idx < WORKFLOW_STEPS.length - 1 && (
+              <div className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 z-10">
+                <span className="flex h-5 w-5 items-center justify-center border border-border bg-card text-muted-foreground">
+                  <ArrowRight className="h-3 w-3" />
+                </span>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

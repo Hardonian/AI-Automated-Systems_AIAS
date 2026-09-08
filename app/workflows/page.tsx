@@ -16,6 +16,8 @@ import {
   PageSection,
   SurfaceCard,
 } from "@/components/ui/section-primitives";
+import { Breadcrumbs } from "@/components/layout/breadcrumbs";
+import { WorkflowSandbox } from "@/components/home/workflow-sandbox";
 import { Button } from "@/components/ui/button";
 import { getPrimaryCtaHref } from "@/src/content/site";
 
@@ -93,11 +95,18 @@ const workflowTypes = [
 export default function WorkflowsPage() {
   return (
     <>
+      <div className="container mx-auto px-4 pt-6 max-w-6xl">
+        <Breadcrumbs items={[{ label: "Workflows", href: "/workflows" }]} />
+      </div>
+
       <PageHero
         eyebrow="Workflow Builder"
         title="Design workflows that run themselves"
         description="From idea to deployment: build deterministic AI workflows with built-in governance, reliability, and operational visibility."
       />
+
+      <WorkflowSandbox />
+
 
       <PageSection>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

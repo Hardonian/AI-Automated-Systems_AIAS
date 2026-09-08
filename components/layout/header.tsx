@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { SoundToggle } from "@/components/layout/sound-toggle";
 import { CommandPalette } from "@/components/layout/command-palette";
 import { Button } from "@/components/ui/button";
 import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
@@ -167,11 +168,13 @@ export function Header() {
             </Button>
           </motion.div>
 
+          <SoundToggle />
           <ThemeToggle />
         </nav>
 
-        <div className="flex items-center gap-3 md:hidden">
+        <div className="flex items-center gap-2 md:hidden">
           <CommandPalette />
+          <SoundToggle className="px-2" />
           <ThemeToggle />
           <MobileNav />
         </div>

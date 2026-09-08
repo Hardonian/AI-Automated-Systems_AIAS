@@ -198,20 +198,18 @@ export function Footer() {
           </div>
 
           {/* Trust signals — clean icons, no emoji */}
-          <div className="mb-8 flex flex-wrap justify-center gap-4">
+          <div className="mb-8 flex flex-wrap justify-center gap-3">
             {trustSignals.map((badge, index) => (
               <motion.div
                 key={badge.text}
-                initial={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2, delay: index * 0.05 }}
                 viewport={{ once: true }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 shadow-sm transition-all hover:border-primary/30 hover:shadow-md"
+                className="inline-flex items-center gap-2 border-2 border-border bg-card px-3.5 py-1.5 font-mono text-xs font-bold uppercase text-foreground shadow-[2px_2px_0px_0px_hsl(var(--text))] transition-all hover:border-primary"
               >
-                <badge.icon className="h-3.5 w-3.5 text-muted-foreground" />
-                <span className="text-xs font-medium text-foreground">
-                  {badge.text}
-                </span>
+                <badge.icon className="h-3.5 w-3.5 text-primary" />
+                <span>{badge.text}</span>
               </motion.div>
             ))}
           </div>

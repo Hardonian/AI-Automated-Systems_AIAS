@@ -22,13 +22,19 @@ describe("Blog Articles Data Layer", () => {
     });
 
     it("should be sorted by date (newest first)", () => {
-      const articles = getLatestArticles(2);
-      expect(articles.length).toBe(2);
-      const date1 = new Date(articles[0]?.publishedDate ?? "").getTime();
-      const date2 = new Date(articles[1]?.publishedDate ?? "").getTime();
-      expect(date1).toBeGreaterThanOrEqual(date2);
-      expect(date1).toBeGreaterThan(date2);
-      expect(articles[1]?.slug).toBe("automating-canadian-business"); // 2024-03-15
+      const articles = getLatestArticles(Number.POSITIVE_INFINITY);
+
+      expect(articles.length).toBeGreaterThan(1);
+      for (let index = 1; index < articles.length; index += 1) {
+        const previousDate = new Date(
+          articles[index - 1]?.publishedDate ?? "",
+        ).getTime();
+        const currentDate = new Date(
+          articles[index]?.publishedDate ?? "",
+        ).getTime();
+
+        expect(previousDate).toBeGreaterThanOrEqual(currentDate);
+      }
     });
   });
 

@@ -1,15 +1,31 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import * as child_process from "node:child_process";
-import * as fs from "node:fs";
 
-vi.mock("node:child_process", () => ({
-  execSync: vi.fn(),
+const { mockExecSync, mockExistsSync, mockStatSync } = vi.hoisted(() => ({
+  mockExecSync: vi.fn(),
+  mockExistsSync: vi.fn(),
+  mockStatSync: vi.fn(),
 }));
 
-vi.mock("node:fs", () => ({
-  existsSync: vi.fn(),
-  statSync: vi.fn(),
-}));
+vi.mock("node:child_process", async () => {
+  const actual = await vi.importActual<typeof import("node:child_process")>(
+    "node:child_process",
+  );
+
+  return {
+    ...actual,
+    execSync: mockExecSync,
+  };
+});
+
+vi.mock("node:fs", async () => {
+  const actual = await vi.importActual<typeof import("node:fs")>("node:fs");
+
+  return {
+    ...actual,
+    existsSync: mockExistsSync,
+    statSync: mockStatSync,
+  };
+});
 
 vi.mock("@/lib/blog/articles", () => ({
   getLatestArticles: vi.fn(() => []),
@@ -40,14 +56,14 @@ describe("sitemap", () => {
   });
 
   it("should handle execSync throwing an error and fallback gracefully", async () => {
-    vi.mocked(child_process.execSync).mockImplementation(() => {
+    mockExecSync.mockImplementation(() => {
       throw new Error("Command failed");
     });
 
-    vi.mocked(fs.existsSync).mockReturnValue(true);
-    vi.mocked(fs.statSync).mockReturnValue({
+    mockExistsSync.mockReturnValue(true);
+    mockStatSync.mockReturnValue({
       mtime: new Date("2024-01-01"),
-    } as any);
+    });
 
     // Dynamic import to ensure module is evaluated AFTER mocks are set up,
     // because `resolveLastModified` is called during module execution
@@ -58,7 +74,7 @@ describe("sitemap", () => {
 
     expect(result).toBeDefined();
     expect(Array.isArray(result)).toBe(true);
-    expect(child_process.execSync).toHaveBeenCalled();
+    expect(mockExecSync).toHaveBeenCalled();
     expect(result?.[0]?.lastModified).toEqual(new Date("2024-01-01"));
   });
 });

@@ -86,4 +86,19 @@ test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
         .first(),
     ).toBeVisible();
   });
+
+  test("Header stays within the viewport at compact desktop widths", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/");
+
+    await expect(page.getByTestId("mobile-nav-trigger")).toBeVisible();
+    await expect(page.getByTestId("header-primary-nav")).toBeHidden();
+
+    const horizontalOverflow = await page
+      .locator("header")
+      .evaluate((header) => header.scrollWidth - header.clientWidth);
+    expect(horizontalOverflow).toBeLessThanOrEqual(0);
+  });
 });

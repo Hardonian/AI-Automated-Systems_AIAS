@@ -73,7 +73,7 @@ export function Header() {
 
         <nav
           aria-label="Primary"
-          className="hidden items-center gap-5 lg:gap-6 md:flex"
+          className="hidden items-center gap-5 2xl:flex 2xl:gap-6"
           data-testid="header-primary-nav"
         >
           {siteContent.navigation.primary.map((item, index) => (
@@ -174,7 +174,7 @@ export function Header() {
           <ThemeToggle />
         </nav>
 
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-2 2xl:hidden">
           <CommandPalette />
           <SoundToggle className="px-2" />
           <ThemeToggle />

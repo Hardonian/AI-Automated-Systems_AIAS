@@ -1,13 +1,14 @@
 {
   "name": "AI Automated Systems",
   "short_name": "AIAS",
-  "description": "Enterprise-grade AI automation platform with custom AI agents and workflow automation",
+  "description": "AI systems consultancy building deterministic, auditable automation with governance, guardrails, and measurable operational outcomes.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#3b82f6",
-  "orientation": "portrait-primary",
+  "background_color": "#090a0f",
+  "theme_color": "#FF4D1A",
+  "orientation": "any",
   "scope": "/",
+  "id": "/",
   "icons": [
     {
       "src": "/favicon.ico",
@@ -18,34 +19,48 @@
       "src": "/favicon.ico",
       "sizes": "192x192",
       "type": "image/x-icon",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "/favicon.ico",
       "sizes": "512x512",
       "type": "image/x-icon",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ],
   "categories": ["business", "productivity", "utilities"],
   "screenshots": [],
   "shortcuts": [
     {
-      "name": "Dashboard",
-      "short_name": "Dashboard",
-      "description": "View your dashboard",
-      "url": "/dashboard",
+      "name": "ROI Calculator",
+      "short_name": "ROI",
+      "description": "Calculate automation ROI savings",
+      "url": "/roi-calculator",
       "icons": [{ "src": "/favicon.ico", "sizes": "192x192" }]
     },
     {
-      "name": "Workflows",
+      "name": "Workflow Builder",
       "short_name": "Workflows",
-      "description": "Manage workflows",
+      "description": "Design deterministic AI workflows",
       "url": "/workflows",
+      "icons": [{ "src": "/favicon.ico", "sizes": "192x192" }]
+    },
+    {
+      "name": "Quick Tools",
+      "short_name": "Tools",
+      "description": "Self-serve automation tools and diagnostics",
+      "url": "/tools",
+      "icons": [{ "src": "/favicon.ico", "sizes": "192x192" }]
+    },
+    {
+      "name": "Book Discovery Call",
+      "short_name": "Book",
+      "description": "Schedule a free strategy call",
+      "url": "/book",
       "icons": [{ "src": "/favicon.ico", "sizes": "192x192" }]
     }
   ],
   "prefer_related_applications": false,
   "dir": "ltr",
-  "lang": "en-US"
+  "lang": "en-CA"
 }

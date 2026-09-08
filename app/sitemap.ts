@@ -6,6 +6,7 @@ import { existsSync, statSync } from "node:fs";
 import type { MetadataRoute } from "next";
 
 import { getLatestArticles } from "@/lib/blog/articles";
+import { resolveLastModified as readLastModified } from "@/lib/seo/last-modified";
 import { SITE_URL } from "@/lib/seo/metadata";
 import { INDEXABLE_ROUTE_MANIFEST } from "@/lib/seo/route-manifest";
 import { caseStudies } from "@/src/content/caseStudies";
@@ -21,27 +22,15 @@ const resolveLastModified = (filePath: string) => {
     return cache.get(filePath) as Date;
   }
 
-  try {
-    const gitTimestamp = execSync(`git log -1 --format=%cI -- ${filePath}`, {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    }).trim();
-
-    if (gitTimestamp) {
-      const gitDate = new Date(gitTimestamp);
-      if (!Number.isNaN(gitDate.getTime())) {
-        cache.set(filePath, gitDate);
-        return gitDate;
-      }
-    }
-  } catch {
-    // gracefully fall through to file mtime
-  }
-
-  let result = fallbackLastModified;
-  if (existsSync(filePath)) {
-    result = statSync(filePath).mtime;
-  }
+  const result = readLastModified(filePath, fallbackLastModified, {
+    readGitTimestamp: (path) =>
+      execSync(`git log -1 --format=%cI -- ${path}`, {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+      }),
+    fileExists: existsSync,
+    readFileTimestamp: (path) => statSync(path).mtime,
+  });
 
   cache.set(filePath, result);
   return result;

@@ -1,80 +1,48 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-const { mockExecSync, mockExistsSync, mockStatSync } = vi.hoisted(() => ({
-  mockExecSync: vi.fn(),
-  mockExistsSync: vi.fn(),
-  mockStatSync: vi.fn(),
-}));
+import { resolveLastModified } from "@/lib/seo/last-modified";
 
-vi.mock("node:child_process", async () => {
-  const actual = await vi.importActual<typeof import("node:child_process")>(
-    "node:child_process",
-  );
+describe("resolveLastModified", () => {
+  const fallback = new Date("2024-01-01T00:00:00.000Z");
 
-  return {
-    ...actual,
-    execSync: mockExecSync,
-  };
-});
+  it("prefers a valid Git timestamp", () => {
+    const fileExists = vi.fn(() => true);
+    const readFileTimestamp = vi.fn(() => fallback);
 
-vi.mock("node:fs", async () => {
-  const actual = await vi.importActual<typeof import("node:fs")>("node:fs");
+    const result = resolveLastModified("app/page.tsx", fallback, {
+      readGitTimestamp: () => "2026-08-22T14:47:32-04:00\n",
+      fileExists,
+      readFileTimestamp,
+    });
 
-  return {
-    ...actual,
-    existsSync: mockExistsSync,
-    statSync: mockStatSync,
-  };
-});
-
-vi.mock("@/lib/blog/articles", () => ({
-  getLatestArticles: vi.fn(() => []),
-}));
-
-vi.mock("@/lib/seo/metadata", () => ({
-  SITE_URL: "https://example.com",
-}));
-
-vi.mock("@/lib/seo/route-manifest", () => ({
-  INDEXABLE_ROUTE_MANIFEST: [
-    { path: "/", priority: 1, changeFrequency: "daily" },
-  ],
-}));
-
-vi.mock("@/src/content/caseStudies", () => ({
-  caseStudies: [],
-}));
-
-vi.mock("@/src/content/moat", () => ({
-  blueprints: [],
-}));
-
-describe("sitemap", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    vi.resetModules();
+    expect(result).toEqual(new Date("2026-08-22T18:47:32.000Z"));
+    expect(fileExists).not.toHaveBeenCalled();
+    expect(readFileTimestamp).not.toHaveBeenCalled();
   });
 
-  it("should handle execSync throwing an error and fallback gracefully", async () => {
-    mockExecSync.mockImplementation(() => {
-      throw new Error("Command failed");
+  it("uses the filesystem timestamp when Git lookup fails", () => {
+    const fileTimestamp = new Date("2025-05-27T00:40:23.000Z");
+
+    const result = resolveLastModified("app/page.tsx", fallback, {
+      readGitTimestamp: () => {
+        throw new Error("Command failed");
+      },
+      fileExists: () => true,
+      readFileTimestamp: () => fileTimestamp,
     });
 
-    mockExistsSync.mockReturnValue(true);
-    mockStatSync.mockReturnValue({
-      mtime: new Date("2024-01-01"),
+    expect(result).toEqual(fileTimestamp);
+  });
+
+  it("uses the deterministic fallback when no source is available", () => {
+    const result = resolveLastModified("missing.ts", fallback, {
+      readGitTimestamp: () => "",
+      fileExists: () => false,
+      readFileTimestamp: () => {
+        throw new Error("File is missing");
+      },
     });
 
-    // Dynamic import to ensure module is evaluated AFTER mocks are set up,
-    // because `resolveLastModified` is called during module execution
-    const sitemapModule = await import("@/app/sitemap");
-    const sitemap = sitemapModule.default;
-
-    const result = sitemap();
-
-    expect(result).toBeDefined();
-    expect(Array.isArray(result)).toBe(true);
-    expect(mockExecSync).toHaveBeenCalled();
-    expect(result?.[0]?.lastModified).toEqual(new Date("2024-01-01"));
+    expect(result).toEqual(fallback);
   });
 });

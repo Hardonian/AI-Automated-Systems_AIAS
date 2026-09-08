@@ -87,7 +87,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
-    const Comp = asChild ? Slot : motion.button;
     // Safe SSR: use hook to defer motion preference check to after hydration
     const shouldReduceMotion = useSafeReducedMotion();
     const isDisabled = disabled || loading;
@@ -133,7 +132,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
 
     if (asChild) {
-      const child = React.Children.only(children);
+      // React Server Components can deserialize a single JSX child as a
+      // one-item array. Normalize it before cloning instead of relying on
+      // Children.only(), which rejects arrays regardless of their length.
+      const childNodes = React.Children.toArray(children);
+      const child = childNodes.length === 1 ? childNodes[0] : null;
       if (React.isValidElement(child)) {
         const childType = child.type;
         const childIsFragment = childType === React.Fragment;

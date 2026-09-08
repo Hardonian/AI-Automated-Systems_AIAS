@@ -19,14 +19,12 @@ export function useHashState<T extends string>(
   key: string,
   defaultValue: T
 ): [T, (value: T) => void] {
-  const [value, setValue] = useState<T>(defaultValue);
-
-  useEffect(() => {
+  const [value, setValue] = useState<T>(() => {
+    if (typeof window === "undefined") return defaultValue;
     const hash = window.location.hash.slice(1);
     const params = new URLSearchParams(hash);
-    const stored = params.get(key) as T | null;
-    if (stored) setValue(stored);
-  }, [key]);
+    return (params.get(key) as T | null) ?? defaultValue;
+  });
 
   const setHashValue = useCallback(
     (newValue: T) => {
@@ -188,16 +186,15 @@ export function useLocalStorage<T>(
   key: string,
   defaultValue: T
 ): [T, (value: T | ((prev: T) => T)) => void] {
-  const [storedValue, setStoredValue] = useState<T>(defaultValue);
-
-  useEffect(() => {
+  const [storedValue, setStoredValue] = useState<T>(() => {
+    if (typeof window === "undefined") return defaultValue;
     try {
       const item = window.localStorage.getItem(key);
-      if (item) setStoredValue(JSON.parse(item) as T);
+      return item ? (JSON.parse(item) as T) : defaultValue;
     } catch {
-      // Ignore parse errors
+      return defaultValue;
     }
-  }, [key]);
+  });
 
   const setValue = useCallback(
     (value: T | ((prev: T) => T)) => {
@@ -225,16 +222,15 @@ export function useSessionProgress<T>(
   defaultState: T
 ): [T, (update: Partial<T>) => void, () => void] {
   const storageKey = `aias_wizard_${wizardId}`;
-  const [state, setState] = useState<T>(defaultState);
-
-  useEffect(() => {
+  const [state, setState] = useState<T>(() => {
+    if (typeof window === "undefined") return defaultState;
     try {
       const stored = window.sessionStorage.getItem(storageKey);
-      if (stored) setState(JSON.parse(stored) as T);
+      return stored ? (JSON.parse(stored) as T) : defaultState;
     } catch {
-      // Ignore
+      return defaultState;
     }
-  }, [storageKey]);
+  });
 
   const updateProgress = useCallback(
     (update: Partial<T>) => {

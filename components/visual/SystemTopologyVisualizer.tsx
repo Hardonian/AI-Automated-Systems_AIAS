@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Shield,
@@ -18,7 +18,12 @@ import {
   Layers,
   ArrowRight,
 } from "lucide-react";
-import { playClick, playTelemetryTone, playWarning, playSuccess } from "@/lib/audio/sound-fx";
+import {
+  playClick,
+  playTelemetryTone,
+  playWarning,
+  playSuccess,
+} from "@/lib/audio/sound-fx";
 import { Button } from "@/components/ui/button";
 
 interface TopologyStage {
@@ -61,13 +66,15 @@ const TOPOLOGY_STAGES: TopologyStage[] = [
       "Reject undefined payload keys immediately",
     ],
     normalTelemetry: {
-      inputSummary: 'Payload: {"account": "Apex Corp", "action": "ingest_lead"}',
+      inputSummary:
+        'Payload: {"account": "Apex Corp", "action": "ingest_lead"}',
       actionSummary: "Zod parse valid: 0 contract errors detected.",
       outputSummary: "Normalized Typed Object emitted to Bus [ID: aias-8841]",
       assertionCode: "assert(schema.safeParse(req).success === true);",
     },
     interceptTelemetry: {
-      inputSummary: 'Payload: {"account": "Apex Corp", "unverified_flag": true}',
+      inputSummary:
+        'Payload: {"account": "Apex Corp", "unverified_flag": true}',
       actionSummary: "Syntax valid, payload passed to inference runtime.",
       outputSummary: "Normalized Typed Object emitted with risk metadata.",
       assertionCode: "assert(schema.safeParse(req).success === true);",
@@ -89,13 +96,15 @@ const TOPOLOGY_STAGES: TopologyStage[] = [
     ],
     normalTelemetry: {
       inputSummary: "Scoped system prompt + validated prospect text.",
-      actionSummary: "Extracted entities: 18 line items, complexity score 44.2.",
+      actionSummary:
+        "Extracted entities: 18 line items, complexity score 44.2.",
       outputSummary: "Structured JSON proposed draft ready for policy review.",
       assertionCode: "model.generate({ temperature: 0.0, format: 'json' });",
     },
     interceptTelemetry: {
       inputSummary: "Scoped system prompt + unverified parameter injection.",
-      actionSummary: "Entity extracted with potential compliance boundary ambiguity.",
+      actionSummary:
+        "Entity extracted with potential compliance boundary ambiguity.",
       outputSummary: "Proposed draft marked with RISK_FLAG_POLICY_REVIEW.",
       assertionCode: "model.generate({ temperature: 0.0, format: 'json' });",
     },
@@ -123,7 +132,8 @@ const TOPOLOGY_STAGES: TopologyStage[] = [
     interceptTelemetry: {
       inputSummary: "Model proposal contains multi-tenant boundary ambiguity.",
       actionSummary: "SAFETY ASSERTION TRIGGERED: Rule #14 boundary violation.",
-      outputSummary: "INTERCEPTED: Execution halted. Routing to human architect.",
+      outputSummary:
+        "INTERCEPTED: Execution halted. Routing to human architect.",
       assertionCode: "if (hasAmbiguity) throw SafetyEscalation();",
     },
   },
@@ -150,7 +160,8 @@ const TOPOLOGY_STAGES: TopologyStage[] = [
     interceptTelemetry: {
       inputSummary: "Safety Intercept bundle from Policy Gate #03.",
       actionSummary: "Incident packet locked and signed with exception code.",
-      outputSummary: "Escalated to Senior Architect on-call queue. Production safe.",
+      outputSummary:
+        "Escalated to Senior Architect on-call queue. Production safe.",
       assertionCode: "auditLedger.recordIncident(receipt); notifyHuman();",
     },
   },
@@ -170,6 +181,38 @@ export function SystemTopologyVisualizer() {
     playClick();
     setActiveStageId(id);
   };
+
+  /* Item 35: Keyboard arrow navigation between stage nodes */
+  const handleStageKeyDown = useCallback(
+    (e: React.KeyboardEvent, currentIdx: number) => {
+      let nextIdx = currentIdx;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        nextIdx = Math.min(currentIdx + 1, TOPOLOGY_STAGES.length - 1);
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        nextIdx = Math.max(currentIdx - 1, 0);
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        nextIdx = 0;
+      } else if (e.key === "End") {
+        e.preventDefault();
+        nextIdx = TOPOLOGY_STAGES.length - 1;
+      } else {
+        return;
+      }
+      const nextStage = TOPOLOGY_STAGES[nextIdx];
+      if (nextStage) {
+        setActiveStageId(nextStage.id);
+        playClick();
+        const nextButton = document.querySelector<HTMLButtonElement>(
+          `[data-stage-index="${nextIdx}"]`,
+        );
+        nextButton?.focus();
+      }
+    },
+    [],
+  );
 
   const handleToggleIntercept = (checked: boolean) => {
     if (checked) {
@@ -220,7 +263,49 @@ export function SystemTopologyVisualizer() {
     <div
       className="hud-panel relative overflow-hidden border-2 border-border bg-card shadow-[6px_6px_0px_0px_hsl(var(--text))] text-foreground"
       id="system-topology-visualizer"
+      role="region"
+      aria-label="System Topology Visualizer"
     >
+      {/* Item 31: Screen-reader live announcements */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {`Stage ${activeStage.number}: ${activeStage.name} — ${activeStage.subname}. Latency: ${activeStage.latency}. Status: ${
+          simulateIntercept && activeStage.id === "policy-guardrail"
+            ? "INTERCEPTED"
+            : activeStage.status
+        }.`}
+      </div>
+
+      {/* Item 36: Screen-reader data table fallback */}
+      <table
+        className="sr-only"
+        role="table"
+        aria-label="Pipeline stage specifications"
+      >
+        <caption>AIAS Deterministic Pipeline Stages</caption>
+        <thead>
+          <tr>
+            <th scope="col">Stage</th>
+            <th scope="col">Name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Latency</th>
+            <th scope="col">Memory</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {TOPOLOGY_STAGES.map((stage) => (
+            <tr key={stage.id}>
+              <td>{stage.number}</td>
+              <td>{stage.name}</td>
+              <td>{stage.category}</td>
+              <td>{stage.latency}</td>
+              <td>{stage.memoryLimit}</td>
+              <td>{stage.status}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
       {/* HUD Telemetry Top Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-border bg-muted/40 px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
@@ -317,7 +402,12 @@ export function SystemTopologyVisualizer() {
       {/* Main Interactive Topology Flow Canvas */}
       <div className="p-4 sm:p-6 lg:p-8">
         {/* Stages Grid */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {/* Item 35: role=radiogroup enables arrow-key navigation semantics */}
+        <div
+          className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4"
+          role="radiogroup"
+          aria-label="Pipeline stages"
+        >
           {TOPOLOGY_STAGES.map((stage, idx) => {
             const isSelected = activeStageId === stage.id;
             const isPulsing = pulseActive && activeStepIndex === idx;
@@ -327,7 +417,13 @@ export function SystemTopologyVisualizer() {
               <button
                 key={stage.id}
                 type="button"
+                role="radio"
+                aria-checked={isSelected}
+                aria-label={`Stage ${stage.number}: ${stage.name}`}
+                data-stage-index={idx}
+                tabIndex={isSelected ? 0 : -1}
                 onClick={() => handleStageSelect(stage.id)}
+                onKeyDown={(e) => handleStageKeyDown(e, idx)}
                 className={`relative flex flex-col items-start p-4 text-left border-2 transition-all cursor-pointer ${
                   isSelected
                     ? "border-primary bg-primary/5 shadow-[4px_4px_0px_0px_hsl(var(--primary))] -translate-y-1"
@@ -478,7 +574,8 @@ export function SystemTopologyVisualizer() {
                     </span>
                     <p
                       className={`p-1.5 border font-bold ${
-                        simulateIntercept && activeStage.id === "policy-guardrail"
+                        simulateIntercept &&
+                        activeStage.id === "policy-guardrail"
                           ? "border-destructive bg-destructive/10 text-destructive"
                           : "border-border/60 bg-muted/40 text-foreground"
                       }`}

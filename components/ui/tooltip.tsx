@@ -8,10 +8,16 @@ import { cn } from "@/lib/utils";
 const TooltipProvider = TooltipPrimitive.Provider;
 const Tooltip = TooltipPrimitive.Root;
 const TooltipTrigger = TooltipPrimitive.Trigger;
+
+/**
+ * Item 39: Tooltip with explicit Escape key dismissal (WCAG 1.4.13).
+ * Radix handles this natively, but we add the explicit prop for
+ * documentation clarity and future-proofing.
+ */
 const TooltipContent = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => (
+>(({ className, sideOffset = 4, onEscapeKeyDown, ...props }, ref) => (
   <TooltipPrimitive.Content
     ref={ref}
     className={cn(
@@ -19,6 +25,7 @@ const TooltipContent = React.forwardRef<
       className,
     )}
     sideOffset={sideOffset}
+    onEscapeKeyDown={onEscapeKeyDown}
     {...props}
   />
 ));

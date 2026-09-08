@@ -19,6 +19,7 @@ import {
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { WorkflowSandbox } from "@/components/home/workflow-sandbox";
 import { Button } from "@/components/ui/button";
+import { HowToSchema } from "@/components/seo/structured-data";
 import { getPrimaryCtaHref } from "@/src/content/site";
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -95,6 +96,39 @@ const workflowTypes = [
 export default function WorkflowsPage() {
   return (
     <>
+      {/* Item 55: HowTo JSON-LD structured data */}
+      <HowToSchema
+        name="How to Build Deterministic AI Workflows with AIAS"
+        description="Design, build, and deploy deterministic AI workflows with governance, guardrails, and operational reliability using the AIAS methodology."
+        steps={[
+          {
+            name: "Discovery Call",
+            text: "Schedule a free 30-minute call to map current processes and identify automation opportunities.",
+            estimatedTime: "PT30M",
+          },
+          {
+            name: "Workflow Design",
+            text: "Map complex business processes into deterministic workflow blueprints with governance checkpoints.",
+            estimatedTime: "P3D",
+          },
+          {
+            name: "Agentic Automation Build",
+            text: "Implement AI agents that handle triage, routing, and decision support with clear escalation paths.",
+            estimatedTime: "P14D",
+          },
+          {
+            name: "Policy & Guardrails Integration",
+            text: "Add built-in policy enforcement, audit trails, and human-in-the-loop checkpoints.",
+            estimatedTime: "P7D",
+          },
+          {
+            name: "Deploy & Verify",
+            text: "Deploy with deterministic execution, retry logic, error handling, and operational visibility.",
+            estimatedTime: "P3D",
+          },
+        ]}
+        totalTime="P28D"
+      />
       <div className="container mx-auto px-4 pt-6 max-w-6xl">
         <Breadcrumbs items={[{ label: "Workflows", href: "/workflows" }]} />
       </div>
@@ -106,7 +140,6 @@ export default function WorkflowsPage() {
       />
 
       <WorkflowSandbox />
-
 
       <PageSection>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

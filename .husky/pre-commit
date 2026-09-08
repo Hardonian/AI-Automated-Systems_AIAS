@@ -1,2 +1,5 @@
 #!/usr/bin/env sh
+# Item 91: Strict PNPM pre-commit hook
+# Runs lint-staged for staged files, then validates the route manifest
+pnpm lint-staged
 pnpm validate:route-manifest

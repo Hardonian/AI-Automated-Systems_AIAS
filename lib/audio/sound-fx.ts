@@ -67,10 +67,26 @@ export function toggleSound(): boolean {
 }
 
 /**
+ * Item 23: Haptic feedback via Vibration API
+ * Fires alongside audio for a multi-sensory tactile experience.
+ * Gracefully no-ops on devices/browsers without vibration support.
+ */
+function hapticPulse(pattern: number | number[]): void {
+  if (typeof navigator !== "undefined" && navigator.vibrate) {
+    try {
+      navigator.vibrate(pattern);
+    } catch {
+      // Vibration not supported or blocked — silent fallback
+    }
+  }
+}
+
+/**
  * Play an ultra-short, crisp tactile mechanical click (tactile switch feel)
  */
 export function playClick(): void {
   if (!soundEnabled) return;
+  hapticPulse(10); // Single 10ms tap
   const ctx = getAudioContext();
   if (!ctx) return;
 
@@ -101,6 +117,7 @@ export function playClick(): void {
  */
 export function playTelemetryTone(): void {
   if (!soundEnabled) return;
+  hapticPulse(15); // Single 15ms pulse
   const ctx = getAudioContext();
   if (!ctx) return;
 
@@ -131,6 +148,7 @@ export function playTelemetryTone(): void {
  */
 export function playWarning(): void {
   if (!soundEnabled) return;
+  hapticPulse([20, 30, 20]); // Double-pulse warning tap
   const ctx = getAudioContext();
   if (!ctx) return;
 
@@ -161,6 +179,7 @@ export function playWarning(): void {
  */
 export function playSuccess(): void {
   if (!soundEnabled) return;
+  hapticPulse([15, 20, 15, 20, 15]); // Triple-pulse confirmation
   const ctx = getAudioContext();
   if (!ctx) return;
 

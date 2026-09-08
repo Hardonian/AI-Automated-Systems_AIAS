@@ -3,6 +3,7 @@ import { FAQSection } from "@/components/content/faq-section";
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
 import { PageHero, PageSection } from "@/components/ui/section-primitives";
 import { RelatedPages } from "@/components/content/related-pages";
+import { FAQPageSchema } from "@/components/seo/structured-data";
 import { siteContent } from "@/src/content/site";
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -15,6 +16,8 @@ export const metadata: Metadata = generateSEOMetadata({
 export default function FAQPage() {
   return (
     <>
+      {/* Item 54: FAQPage JSON-LD structured data */}
+      <FAQPageSchema faqs={siteContent.faq} />
       <PageHero
         eyebrow="Engagement clarity"
         title="Frequently Asked Questions"

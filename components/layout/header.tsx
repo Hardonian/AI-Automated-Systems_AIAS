@@ -8,6 +8,7 @@ import { MobileNav } from "@/components/layout/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SoundToggle } from "@/components/layout/sound-toggle";
 import { CommandPalette } from "@/components/layout/command-palette";
+import { SprintAvailabilityHUD } from "@/components/layout/sprint-availability-hud";
 import { Button } from "@/components/ui/button";
 import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
 
@@ -169,6 +170,7 @@ export function Header() {
           </motion.div>
 
           <SoundToggle />
+          <SprintAvailabilityHUD />
           <ThemeToggle />
         </nav>
 

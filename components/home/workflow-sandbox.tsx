@@ -52,8 +52,8 @@ export function WorkflowSandbox() {
   const [values, setValues] = useState<Record<string, string>>(initialState);
   const [submitted, setSubmitted] = useState(true); // Default to live preview
   const [activeOutputTab, setActiveOutputTab] = useState<
-    "markdown" | "checklist" | "json"
-  >("markdown");
+    "specification" | "checklist" | "json"
+  >("specification");
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
 
   const timestamp = useMemo(() => new Date().toISOString(), []);
@@ -72,7 +72,7 @@ export function WorkflowSandbox() {
   );
 
   const output = useMemo(() => {
-    const markdown = replaceTokens(
+    const specification = replaceTokens(
       workflowSandbox.output.markdownTemplate,
       normalizedValues,
     );
@@ -80,13 +80,27 @@ export function WorkflowSandbox() {
       workflowSandbox.output.checklistTemplate,
       normalizedValues,
     );
-    const artifactJson = replaceTokens(
-      workflowSandbox.output.artifactJsonTemplate,
-      normalizedValues,
+    const artifactJson = JSON.stringify(
+      {
+        artifact_version: workflowSandbox.output.artifactModel.version,
+        generated_at: normalizedValues.timestamp,
+        workflow: {
+          domain: normalizedValues.problem,
+          operating_constraint: normalizedValues.constraints,
+          declared_systems: normalizedValues.stack,
+        },
+        state_model: workflowSandbox.output.artifactModel.stateModel,
+        policy_gates: workflowSandbox.output.artifactModel.policyGates,
+        verification_criteria:
+          workflowSandbox.output.artifactModel.verificationCriteria,
+        status: "draft_for_operator_review",
+      },
+      null,
+      2,
     );
 
     return {
-      markdown,
+      specification,
       checklist,
       artifactJson,
     };
@@ -260,15 +274,15 @@ export function WorkflowSandbox() {
                 {/* Tabs */}
                 <div className="flex gap-2 mb-4">
                   <button
-                    onClick={() => setActiveOutputTab("markdown")}
+                    onClick={() => setActiveOutputTab("specification")}
                     className={`flex items-center gap-1.5 px-3 py-1 font-mono text-xs font-bold uppercase border transition-colors cursor-pointer ${
-                      activeOutputTab === "markdown"
+                      activeOutputTab === "specification"
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-border bg-card text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     <FileText className="h-3 w-3" />
-                    Markdown
+                    Specification
                   </button>
                   <button
                     onClick={() => setActiveOutputTab("checklist")}
@@ -296,8 +310,10 @@ export function WorkflowSandbox() {
 
                 {/* Tab Previews */}
                 <div className="border-2 border-border bg-muted/40 p-4 font-mono text-xs text-foreground max-h-80 overflow-auto leading-relaxed">
-                  {activeOutputTab === "markdown" && (
-                    <pre className="whitespace-pre-wrap">{output.markdown}</pre>
+                  {activeOutputTab === "specification" && (
+                    <pre className="whitespace-pre-wrap">
+                      {output.specification}
+                    </pre>
                   )}
                   {activeOutputTab === "checklist" && (
                     <pre className="whitespace-pre-wrap">
@@ -322,8 +338,8 @@ export function WorkflowSandbox() {
                     className="flex-1 rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-wider hover:border-foreground"
                     onClick={() =>
                       handleCopy(
-                        activeOutputTab === "markdown"
-                          ? output.markdown
+                        activeOutputTab === "specification"
+                          ? output.specification
                           : activeOutputTab === "checklist"
                             ? output.checklist
                             : output.artifactJson,

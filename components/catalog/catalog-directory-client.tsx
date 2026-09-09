@@ -136,16 +136,16 @@ export function CatalogDirectoryClient({
             <div className="flex flex-col h-full">
               {/* Card Image Header */}
               {product.thumbnailSrc && (
-                <div className="relative h-48 w-full border-b-2 border-border bg-black/50 overflow-hidden group">
+                <div className="relative h-48 w-full overflow-hidden border-b-2 border-border bg-surface-muted group">
                   <Image
                     src={product.thumbnailSrc}
                     alt={product.title}
                     fill
                     preload={index === 0}
-                    className="object-cover opacity-80 mix-blend-screen transition-transform duration-700 group-hover:scale-105 group-hover:opacity-100"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/25 via-transparent to-transparent" />
                 </div>
               )}
 

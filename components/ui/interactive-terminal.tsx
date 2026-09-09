@@ -13,7 +13,12 @@ import {
   RotateCcw,
   Zap,
 } from "lucide-react";
-import { playClick, playTelemetryTone, playWarning, playSuccess } from "@/lib/audio/sound-fx";
+import {
+  playClick,
+  playTelemetryTone,
+  playWarning,
+  playSuccess,
+} from "@/lib/audio/sound-fx";
 
 interface TerminalCommand {
   id: string;
@@ -32,14 +37,46 @@ const TERMINAL_COMMANDS: TerminalCommand[] = [
     name: "01 // Ingest & Gate",
     command: "aias run --contract=zod-strict --verify",
     lines: [
-      { text: "> INITIALIZING AIAS CORE RUNTIME...", type: "system", delay: 100 },
-      { text: "Loading deterministic orchestration fabric v1.1", type: "info", delay: 400 },
-      { text: "[OK] Zero-trust context established (PIPEDA sovereign)", type: "success", delay: 800 },
-      { text: "> INGESTING WORKFLOW DATA (0 CONTRACT ERRORS)", type: "system", delay: 1300 },
-      { text: "Applying post-inference assertion checks...", type: "info", delay: 1800 },
-      { text: "[OK] Variance: 0.00% | PII: 0 leaks | Budget: Clean", type: "success", delay: 2300 },
-      { text: "> IMMUTABLE AUDIT RECEIPT SIGNED: SHA256-d7a8f9c1...02b3", type: "system", delay: 2800 },
-      { text: "[OK] Pipeline stabilized. Output dispatched safely.", type: "success", delay: 3300 },
+      {
+        text: "> INITIALIZING AIAS CORE RUNTIME...",
+        type: "system",
+        delay: 100,
+      },
+      {
+        text: "Loading deterministic orchestration fabric v1.1",
+        type: "info",
+        delay: 400,
+      },
+      {
+        text: "[OK] Zero-trust context established (PIPEDA sovereign)",
+        type: "success",
+        delay: 800,
+      },
+      {
+        text: "> INGESTING WORKFLOW DATA (0 CONTRACT ERRORS)",
+        type: "system",
+        delay: 1300,
+      },
+      {
+        text: "Applying post-inference assertion checks...",
+        type: "info",
+        delay: 1800,
+      },
+      {
+        text: "[OK] Variance: 0.00% | PII: 0 leaks | Budget: Clean",
+        type: "success",
+        delay: 2300,
+      },
+      {
+        text: "> IMMUTABLE AUDIT RECEIPT SIGNED: SHA256-d7a8f9c1...02b3",
+        type: "system",
+        delay: 2800,
+      },
+      {
+        text: "[OK] Pipeline stabilized. Output dispatched safely.",
+        type: "success",
+        delay: 3300,
+      },
     ],
   },
   {
@@ -47,13 +84,41 @@ const TERMINAL_COMMANDS: TerminalCommand[] = [
     name: "02 // Policy Intercept",
     command: "aias test --inject-anomaly --guardrail=strict",
     lines: [
-      { text: "> TESTING BOUNDARY GUARDRAIL INTERCEPT...", type: "system", delay: 100 },
-      { text: "Simulating unverified multi-tenant payload injection...", type: "info", delay: 400 },
-      { text: "Warning: Ambiguous authorization boundary detected", type: "warning", delay: 800 },
-      { text: "[SAFETY GATE TRIGGERED]: Rule #14 boundary assertion", type: "warning", delay: 1400 },
-      { text: "Automated execution blocked. Zero hard-500 crash.", type: "info", delay: 1900 },
-      { text: "[OK] Cryptographic incident bundle logged to audit store", type: "success", delay: 2400 },
-      { text: "> ESCALATED: Assigned to Senior Architect diagnostic queue.", type: "system", delay: 2900 },
+      {
+        text: "> TESTING BOUNDARY GUARDRAIL INTERCEPT...",
+        type: "system",
+        delay: 100,
+      },
+      {
+        text: "Simulating unverified multi-tenant payload injection...",
+        type: "info",
+        delay: 400,
+      },
+      {
+        text: "Warning: Ambiguous authorization boundary detected",
+        type: "warning",
+        delay: 800,
+      },
+      {
+        text: "[SAFETY GATE TRIGGERED]: Rule #14 boundary assertion",
+        type: "warning",
+        delay: 1400,
+      },
+      {
+        text: "Automated execution blocked. Zero hard-500 crash.",
+        type: "info",
+        delay: 1900,
+      },
+      {
+        text: "[OK] Cryptographic incident bundle logged to audit store",
+        type: "success",
+        delay: 2400,
+      },
+      {
+        text: "> ESCALATED: Assigned to Senior Architect diagnostic queue.",
+        type: "system",
+        delay: 2900,
+      },
     ],
   },
   {
@@ -61,26 +126,56 @@ const TERMINAL_COMMANDS: TerminalCommand[] = [
     name: "03 // Cryptographic Trace",
     command: "aias audit --receipt=latest --verify-sla",
     lines: [
-      { text: "> QUERYING AUDIT LEDGER RECEIPT...", type: "system", delay: 100 },
-      { text: "Verifying cryptographic proof chain across 4 gates...", type: "info", delay: 400 },
-      { text: "[OK] Gate 01: Zod Schema Contract [PASSED]", type: "success", delay: 800 },
-      { text: "[OK] Gate 02: Model Scoped Inference [PASSED]", type: "success", delay: 1200 },
-      { text: "[OK] Gate 03: Deterministic Policy Check [PASSED]", type: "success", delay: 1600 },
-      { text: "[OK] Gate 04: Immutable Runbook Ledger [SIGNED]", type: "success", delay: 2000 },
-      { text: "> SLA LATENCY: 384ms (P95 < 500ms target satisfied)", type: "system", delay: 2500 },
+      {
+        text: "> QUERYING AUDIT LEDGER RECEIPT...",
+        type: "system",
+        delay: 100,
+      },
+      {
+        text: "Verifying cryptographic proof chain across 4 gates...",
+        type: "info",
+        delay: 400,
+      },
+      {
+        text: "[OK] Gate 01: Zod Schema Contract [PASSED]",
+        type: "success",
+        delay: 800,
+      },
+      {
+        text: "[OK] Gate 02: Model Scoped Inference [PASSED]",
+        type: "success",
+        delay: 1200,
+      },
+      {
+        text: "[OK] Gate 03: Deterministic Policy Check [PASSED]",
+        type: "success",
+        delay: 1600,
+      },
+      {
+        text: "[OK] Gate 04: Immutable Runbook Ledger [SIGNED]",
+        type: "success",
+        delay: 2000,
+      },
+      {
+        text: "> SLA LATENCY: 384ms (P95 < 500ms target satisfied)",
+        type: "system",
+        delay: 2500,
+      },
     ],
   },
 ];
 
 export function InteractiveTerminal() {
-  const [selectedCommandId, setSelectedCommandId] = useState<string>("run-pipeline");
+  const [selectedCommandId, setSelectedCommandId] =
+    useState<string>("run-pipeline");
   const [visibleCount, setVisibleCount] = useState<number>(0);
   const [copied, setCopied] = useState<boolean>(false);
   const [isRunning, setIsRunning] = useState<boolean>(false);
 
   const fallbackCommand: TerminalCommand = TERMINAL_COMMANDS[0]!;
   const activeCommand: TerminalCommand =
-    TERMINAL_COMMANDS.find((c) => c.id === selectedCommandId) ?? fallbackCommand;
+    TERMINAL_COMMANDS.find((c) => c.id === selectedCommandId) ??
+    fallbackCommand;
 
   useEffect(() => {
     let cancelled = false;
@@ -184,7 +279,7 @@ export function InteractiveTerminal() {
             onClick={() => handleCommandSwitch(cmd.id)}
             className={`px-2.5 py-1 font-mono text-[11px] font-bold uppercase transition-all cursor-pointer border ${
               selectedCommandId === cmd.id
-                ? "border-primary bg-primary/20 text-primary"
+                ? "border-primary bg-primary/20 text-primary-foreground"
                 : "border-zinc-800 bg-black/40 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
             }`}
           >
@@ -197,7 +292,9 @@ export function InteractiveTerminal() {
       <div className="p-4 font-mono text-xs sm:text-[13px] h-[260px] overflow-y-auto flex flex-col justify-end bg-black/95">
         <div className="mb-2 text-zinc-500 text-[11px] flex items-center gap-2">
           <span className="text-emerald-400">$</span>
-          <span className="text-zinc-300 font-bold">{activeCommand.command}</span>
+          <span className="text-zinc-300 font-bold">
+            {activeCommand.command}
+          </span>
         </div>
 
         <div className="space-y-1.5 overflow-hidden">
@@ -208,7 +305,7 @@ export function InteractiveTerminal() {
               animate={{ opacity: 1, x: 0 }}
               className={`flex items-start gap-2 ${
                 line.type === "system"
-                  ? "text-primary font-bold"
+                  ? "text-orange-400 font-bold"
                   : line.type === "success"
                     ? "text-emerald-400"
                     : line.type === "warning"
@@ -223,7 +320,7 @@ export function InteractiveTerminal() {
                 <ShieldAlert className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-amber-400" />
               )}
               {line.type === "system" && (
-                <Cpu className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-primary opacity-80" />
+                <Cpu className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-orange-400 opacity-80" />
               )}
               <span className="leading-snug break-all">{line.text}</span>
             </motion.div>

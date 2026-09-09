@@ -359,7 +359,7 @@ export function SystemTopologyVisualizer() {
           </div>
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <span>INVARIANT:</span>
-            <span className="border border-primary/40 bg-primary/10 px-1.5 py-0.2 font-bold text-primary">
+            <span className="border border-primary/40 bg-primary/10 px-1.5 py-0.2 font-bold text-foreground">
               ZERO_HARD_500
             </span>
           </div>
@@ -511,7 +511,7 @@ export function SystemTopologyVisualizer() {
               {/* Left Column: Stage Contract & Invariant Assertions */}
               <div className="lg:w-1/2 space-y-4">
                 <div className="flex items-center gap-2">
-                  <span className="border border-primary bg-primary/10 px-2 py-0.5 font-mono text-xs font-bold uppercase text-primary">
+                  <span className="border border-primary bg-primary/10 px-2 py-0.5 font-mono text-xs font-bold uppercase text-foreground">
                     STAGE {activeStage.number} SPECIFICATION
                   </span>
                   <span className="font-mono text-xs font-bold uppercase text-muted-foreground">
@@ -537,7 +537,7 @@ export function SystemTopologyVisualizer() {
                   <span className="font-mono text-[11px] font-bold uppercase text-muted-foreground">
                     Execution Assertion Logic:
                   </span>
-                  <div className="mt-1 border border-border bg-background p-2.5 font-mono text-xs text-emerald-600 dark:text-emerald-400">
+                  <div className="mt-1 border border-border bg-background p-2.5 font-mono text-xs text-emerald-700 dark:text-emerald-400">
                     <code>{telemetryData.assertionCode}</code>
                   </div>
                 </div>
@@ -554,7 +554,7 @@ export function SystemTopologyVisualizer() {
                     className={`font-mono text-[10px] font-bold uppercase px-2 py-0.2 border ${
                       simulateIntercept && activeStage.id === "policy-guardrail"
                         ? "border-destructive bg-destructive/10 text-destructive"
-                        : "border-emerald-600 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                        : "border-emerald-600 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
                     }`}
                   >
                     {simulateIntercept && activeStage.id === "policy-guardrail"

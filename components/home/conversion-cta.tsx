@@ -31,7 +31,7 @@ export function ConversionCTA() {
             <Button
               asChild
               size="lg"
-              className="rounded-none border-2 border-cyan-500 bg-cyan-500/10 px-10 font-mono text-base font-bold uppercase tracking-wider text-cyan-400 shadow-[4px_4px_0px_0px_rgba(6,182,212,0.5)] transition-all hover:bg-cyan-500 hover:text-white hover:shadow-[6px_6px_0px_0px_rgba(6,182,212,1)] backdrop-blur-sm"
+              className="rounded-none border-2 border-cyan-500 bg-cyan-500/10 px-10 font-mono text-base font-bold uppercase tracking-wider text-cyan-700 shadow-[4px_4px_0px_0px_rgba(6,182,212,0.5)] transition-all hover:bg-cyan-500 hover:text-white hover:shadow-[6px_6px_0px_0px_rgba(6,182,212,1)] backdrop-blur-sm dark:text-cyan-300"
             >
               <Link
                 href={getPrimaryCtaHref()}

@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import * as motion from "framer-motion/client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -34,41 +33,17 @@ export function PageHero({
       )}
     >
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-900/20 via-background to-background pointer-events-none" />
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className={cn(getContainerClasses("default"), "relative z-10")}
-      >
+      <div className={cn(getContainerClasses("default"), "relative z-10")}>
         <header className="mx-auto max-w-3xl text-center">
           {eyebrow && (
-            <motion.p 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.1, duration: 0.4 }}
-              className={cn(TYPOGRAPHY.eyebrow, "text-primary")}
-            >
-              {eyebrow}
-            </motion.p>
+            <p className={cn(TYPOGRAPHY.eyebrow, "text-primary")}>{eyebrow}</p>
           )}
-          <motion.h1 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className={cn(TYPOGRAPHY.h2, "mt-3")}
-          >
-            {title}
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className={cn(TYPOGRAPHY.body, "mt-4 text-muted-foreground")}
-          >
+          <h1 className={cn(TYPOGRAPHY.h2, "mt-3")}>{title}</h1>
+          <p className={cn(TYPOGRAPHY.body, "mt-4 text-muted-foreground")}>
             {description}
-          </motion.p>
+          </p>
         </header>
-      </motion.div>
+      </div>
     </section>
   );
 }
@@ -86,17 +61,13 @@ export function PageSection({
 }) {
   return (
     <section
-      className={cn(getSectionClasses("default", background), "relative", className)}
+      className={cn(
+        getSectionClasses("default", background),
+        "relative",
+        className,
+      )}
     >
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className={getContainerClasses(width)}
-      >
-        {children}
-      </motion.div>
+      <div className={getContainerClasses(width)}>{children}</div>
     </section>
   );
 }

@@ -105,6 +105,8 @@
     "test:critical": "pnpm typecheck && pnpm test:unit",
     "deploy:guard": "pnpm verify",
     "test:visual": "playwright test --project=visual-desktop --project=visual-tablet --project=visual-mobile --project=visual-landscape-mobile",
+    "test:audit": "playwright test tests/e2e/ui-consistency-audit.spec.ts --project=chromium --workers=1",
+    "test:a11y": "playwright test tests/e2e/accessibility.spec.ts --project=chromium --workers=1",
     "test:visual:update": "playwright test --project=visual-desktop --project=visual-tablet --project=visual-mobile --project=visual-landscape-mobile --update-snapshots",
     "lint:markdown": "pnpm exec tsx scripts/lint-markdown.ts",
     "scan:secrets": "pnpm exec tsx scripts/scan-secrets.ts",

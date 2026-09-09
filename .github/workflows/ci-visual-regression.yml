@@ -529,7 +529,7 @@ jobs:
           PORT: "3000"
 
       - name: Run accessibility tests
-        run: pnpm test:e2e --grep @accessibility
+        run: pnpm test:a11y
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true

@@ -60,7 +60,20 @@ export async function disableAnimations(page: Page): Promise<void> {
         visibility: hidden !important;
       }
     `;
-    document.head.appendChild(style);
+    const appendStyle = () => {
+      const target = document.head || document.documentElement;
+      if (target) {
+        target.appendChild(style);
+      }
+    };
+
+    if (document.head || document.documentElement) {
+      appendStyle();
+    } else {
+      document.addEventListener("DOMContentLoaded", appendStyle, {
+        once: true,
+      });
+    }
   });
 
   // Disable JavaScript animations (framer-motion, GSAP, etc.)

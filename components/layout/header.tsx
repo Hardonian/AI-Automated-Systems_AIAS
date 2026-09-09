@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 
@@ -54,11 +53,7 @@ export function Header() {
       role="banner"
     >
       <div className="container flex h-16 items-center justify-between px-4">
-        <motion.div
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.2 }}
-        >
+        <div>
           <Link
             aria-label="AI Automated Systems - Home"
             className="group flex items-center gap-3 text-lg font-black uppercase tracking-widest text-foreground hover:text-primary md:text-xl"
@@ -69,23 +64,15 @@ export function Header() {
             </span>
             <span>AIAS</span>
           </Link>
-        </motion.div>
+        </div>
 
         <nav
           aria-label="Primary"
           className="hidden items-center gap-5 2xl:flex 2xl:gap-6"
           data-testid="header-primary-nav"
         >
-          {siteContent.navigation.primary.map((item, index) => (
-            <motion.div
-              key={item.href}
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.2,
-                delay: index * 0.05,
-              }}
-            >
+          {siteContent.navigation.primary.map((item) => (
+            <div key={item.href}>
               <Link
                 aria-label={`Navigate to ${item.label}`}
                 className="group relative flex items-center justify-center font-mono text-sm font-bold uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
@@ -93,18 +80,11 @@ export function Header() {
               >
                 {item.label}
               </Link>
-            </motion.div>
+            </div>
           ))}
 
           {/* Resources & Tools Dropdown */}
-          <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.2,
-              delay: siteContent.navigation.primary.length * 0.05,
-            }}
-          >
+          <div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="group flex items-center gap-1 font-mono text-sm font-bold uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary focus:outline-none cursor-pointer">
@@ -144,17 +124,13 @@ export function Header() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-          </motion.div>
+          </div>
 
           {/* Command Palette Search Trigger */}
           <CommandPalette />
 
           {/* Primary CTA */}
-          <motion.div
-            animate={{ opacity: 1, scale: 1 }}
-            initial={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.2, delay: 0.3 }}
-          >
+          <div>
             <Button
               asChild
               className="rounded-none border-2 border-primary bg-primary px-5 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card transition-all hover:-translate-y-0.5 hover:shadow-lg"
@@ -167,7 +143,7 @@ export function Header() {
                 {siteContent.positioning.primaryCTA.label}
               </Link>
             </Button>
-          </motion.div>
+          </div>
 
           <SoundToggle />
           <SprintAvailabilityHUD />

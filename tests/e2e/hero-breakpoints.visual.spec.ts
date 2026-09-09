@@ -31,21 +31,19 @@ test.describe("Visual Regression - Hero breakpoints", () => {
       scale: "css",
     });
 
-    const impactCardContainer = hero
-      .getByTestId("hero-impact-card-container")
-      .first();
-    await expect(impactCardContainer).toBeVisible();
-    await expect(impactCardContainer).toHaveScreenshot(
-      "hero-impact-card-container.png",
+    const socialProofGrid = hero.getByTestId("hero-social-proof-grid").first();
+    await expect(socialProofGrid).toBeVisible();
+    await expect(socialProofGrid).toHaveScreenshot(
+      "hero-social-proof-grid.png",
       {
         animations: "disabled",
         scale: "css",
       },
     );
 
-    const trustBadgeCard = hero.getByTestId("hero-trust-badge-card").first();
-    await expect(trustBadgeCard).toBeVisible();
-    await expect(trustBadgeCard).toHaveScreenshot("hero-trust-badge-card.png", {
+    const trustBadgeGrid = hero.getByTestId("hero-trust-badge-grid").first();
+    await expect(trustBadgeGrid).toBeVisible();
+    await expect(trustBadgeGrid).toHaveScreenshot("hero-trust-badge-grid.png", {
       animations: "disabled",
       scale: "css",
     });

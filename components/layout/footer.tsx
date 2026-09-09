@@ -1,5 +1,3 @@
-"use client";
-import { motion } from "framer-motion";
 import {
   ArrowRight,
   Calendar,
@@ -86,13 +84,7 @@ export function Footer() {
     >
       <div className="container">
         <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5 md:gap-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="lg:col-span-1"
-          >
+          <div className="lg:col-span-1">
             <div className="mb-4 flex items-center gap-2.5">
               <span className="flex h-8 w-8 items-center justify-center border-2 border-border bg-black text-xs font-mono font-black text-primary">
                 {"//"}
@@ -138,16 +130,10 @@ export function Footer() {
                 Zero Hard-500s
               </span>
             </div>
-          </motion.div>
+          </div>
 
-          {FOOTER_COLUMNS.map((section, index) => (
-            <motion.div
-              key={section.title}
-              initial={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.5, delay: (index + 1) * 0.08 }}
-              viewport={{ once: true }}
-              whileInView={{ opacity: 1, y: 0 }}
-            >
+          {FOOTER_COLUMNS.map((section) => (
+            <div key={section.title}>
               <h4 className="mb-4 font-mono text-xs font-bold uppercase tracking-widest text-foreground">
                 {section.title}
               </h4>
@@ -164,17 +150,11 @@ export function Footer() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1 }}
-          className="mt-12 border-t border-border pt-8"
-        >
+        <div className="mt-12 border-t border-border pt-8">
           <div
             className="mb-8 flex flex-wrap justify-center gap-4 text-xs text-muted-foreground"
             data-testid="footer-legal-links"
@@ -199,18 +179,14 @@ export function Footer() {
 
           {/* Trust signals — clean icons, no emoji */}
           <div className="mb-8 flex flex-wrap justify-center gap-3">
-            {trustSignals.map((badge, index) => (
-              <motion.div
+            {trustSignals.map((badge) => (
+              <div
                 key={badge.text}
-                initial={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.2, delay: index * 0.05 }}
-                viewport={{ once: true }}
-                whileInView={{ opacity: 1, scale: 1 }}
                 className="inline-flex items-center gap-2 border-2 border-border bg-card px-3.5 py-1.5 font-mono text-xs font-bold uppercase text-foreground shadow-[2px_2px_0px_0px_hsl(var(--text))] transition-all hover:border-primary"
               >
                 <badge.icon className="h-3.5 w-3.5 text-primary" />
                 <span>{badge.text}</span>
-              </motion.div>
+              </div>
             ))}
           </div>
 
@@ -245,7 +221,7 @@ export function Footer() {
               </span>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </footer>
   );

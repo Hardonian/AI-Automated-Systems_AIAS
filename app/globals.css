@@ -44,11 +44,11 @@
     /* ========================================
        PRIMARY BRAND - Technical Accent (Neon Orange/Red)
        ======================================== */
-    --primary: 15 100% 55%;
-    --primary-hover: 15 100% 45%;
+    --primary: 15 100% 42%;
+    --primary-hover: 15 100% 35%;
     --primary-foreground: 0 0% 100%;
     --primary-subtle: 15 100% 95%;
-    --primary-glow: 15 100% 55% / 0.15;
+    --primary-glow: 15 100% 42% / 0.15;
 
     /* ========================================
        SECONDARY / ACCENT

@@ -4,8 +4,8 @@
       "staticDistDir": "./out",
       "url": [
         "http://localhost/",
-        "http://localhost/pricing/",
-        "http://localhost/contact/"
+        "http://localhost/pricing.html",
+        "http://localhost/contact.html"
       ],
       "numberOfRuns": 1
     },

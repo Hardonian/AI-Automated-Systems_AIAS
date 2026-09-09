@@ -461,7 +461,7 @@ export function SystemTopologyVisualizer() {
                       INTERCEPT
                     </span>
                   ) : (
-                    <span className="flex items-center gap-1 border border-emerald-600/40 bg-emerald-500/10 px-1.5 py-0.2 font-mono text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+                    <span className="flex items-center gap-1 border border-emerald-600/40 bg-emerald-500/10 px-1.5 py-0.2 font-mono text-[10px] font-bold text-emerald-700 dark:text-emerald-400">
                       <CheckCircle2 className="h-3 w-3" />
                       GATED
                     </span>

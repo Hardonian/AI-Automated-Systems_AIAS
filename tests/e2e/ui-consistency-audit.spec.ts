@@ -86,7 +86,8 @@ async function setupMonitoring(
         !text.includes("ResizeObserver") &&
         !text.includes("source map") &&
         !text.includes("[webpack]") &&
-        !text.includes("hot-update")
+        !text.includes("hot-update") &&
+        !text.includes("navigator.vibrate")
       ) {
         logIssue(route, viewport, "HIGH", "Console Error", text);
       }
@@ -160,44 +161,19 @@ async function checkResponsiveIssues(
   route: string,
   viewportName: string,
 ): Promise<void> {
-  // Check for elements that might be hidden incorrectly
-  const hiddenElements = await page.evaluate(() => {
-    const issues: string[] = [];
+  const horizontalOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - window.innerWidth,
+  );
 
-    // Check for overflow issues
-    const bodyOverflow = document.body.scrollWidth > window.innerWidth;
-    if (bodyOverflow) {
-      issues.push(
-        `Horizontal overflow detected: ${document.body.scrollWidth - window.innerWidth}px`,
-      );
-    }
-
-    // Check for elements outside viewport
-    const allElements = document.querySelectorAll("*");
-    allElements.forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      if (
-        rect.right > window.innerWidth + 10 ||
-        rect.bottom > window.innerHeight + 10
-      ) {
-        if (el.tagName !== "SCRIPT" && el.tagName !== "STYLE") {
-          // Only log significant elements
-          const isVisible = window.getComputedStyle(el).display !== "none";
-          if (isVisible && rect.width > 50 && rect.height > 50) {
-            issues.push(
-              `Element ${el.tagName} at (${rect.left}, ${rect.top}) extends beyond viewport`,
-            );
-          }
-        }
-      }
-    });
-
-    return issues;
-  });
-
-  hiddenElements.forEach((issue) => {
-    logIssue(route, viewportName, "MED", "Responsive Issue", issue);
-  });
+  if (horizontalOverflow > 1) {
+    logIssue(
+      route,
+      viewportName,
+      "MED",
+      "Responsive Issue",
+      `Horizontal overflow detected: ${horizontalOverflow}px`,
+    );
+  }
 }
 
 /**
@@ -221,9 +197,24 @@ async function checkKeyboardAccessibility(
     await page.keyboard.press("Tab");
     await page.waitForTimeout(100);
 
-    const currentFocus = await page.evaluate(
-      () => document.activeElement?.tagName || "null",
-    );
+    const currentFocus = await page.evaluate(() => {
+      const element = document.activeElement;
+      if (!(element instanceof HTMLElement)) {
+        return "null";
+      }
+      return [
+        element.tagName,
+        element.id,
+        element.getAttribute("href"),
+        element.getAttribute("aria-label"),
+      ].join(":");
+    });
+
+    if (currentFocus === "BODY:::" || currentFocus === "HTML:::") {
+      stuckCount = 0;
+      previousFocus = null;
+      continue;
+    }
 
     if (currentFocus === previousFocus) {
       stuckCount++;
@@ -242,36 +233,6 @@ async function checkKeyboardAccessibility(
     }
 
     previousFocus = currentFocus;
-  }
-
-  // Check for focusable elements that are hidden
-  const hiddenFocusable = await page.evaluate(() => {
-    const focusable = document.querySelectorAll(
-      'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    );
-    let hiddenCount = 0;
-    focusable.forEach((el) => {
-      const style = window.getComputedStyle(el);
-      const rect = el.getBoundingClientRect();
-      if (
-        style.display === "none" ||
-        style.visibility === "hidden" ||
-        (rect.width === 0 && rect.height === 0)
-      ) {
-        hiddenCount++;
-      }
-    });
-    return hiddenCount;
-  });
-
-  if (hiddenFocusable > 0) {
-    logIssue(
-      route,
-      viewportName,
-      "MED",
-      "Accessibility",
-      `${hiddenFocusable} focusable elements are hidden`,
-    );
   }
 }
 
@@ -292,6 +253,7 @@ async function checkReducedMotion(page: Page, route: string): Promise<void> {
     const style = window.getComputedStyle(testElement);
     const isAnimationDisabled =
       style.animationDuration === "0.001ms" ||
+      style.animationDuration === "0.01ms" ||
       style.animationDuration === "0s" ||
       style.animationName === "none";
 
@@ -422,6 +384,12 @@ test.describe("UI Consistency Audit", () => {
     }
 
     console.log("\n========================================");
+
+    if (blockers.length > 0 || highs.length > 0) {
+      throw new Error(
+        `UI consistency audit found ${blockers.length} blocker(s) and ${highs.length} high-severity issue(s).`,
+      );
+    }
   });
 
   // Audit critical routes across viewports

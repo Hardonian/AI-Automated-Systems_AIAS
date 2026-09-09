@@ -120,7 +120,7 @@ export function CatalogDirectoryClient({
 
       {/* Product Cards Grid */}
       <div className="grid gap-8 md:grid-cols-2">
-        {filteredProducts.map((product) => (
+        {filteredProducts.map((product, index) => (
           <motion.div
             key={product.id}
             layout
@@ -141,6 +141,7 @@ export function CatalogDirectoryClient({
                     src={product.thumbnailSrc}
                     alt={product.title}
                     fill
+                    preload={index === 0}
                     className="object-cover opacity-80 mix-blend-screen transition-transform duration-700 group-hover:scale-105 group-hover:opacity-100"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
@@ -150,114 +151,114 @@ export function CatalogDirectoryClient({
 
               <div className="p-6 md:p-8 flex flex-col flex-grow">
                 {/* Card Header */}
-              <div className="flex items-center justify-between border-b-2 border-border pb-4">
-                <span className="border border-border bg-surface-muted px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase text-foreground">
-                  {product.category}
-                </span>
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`border px-2 py-0.5 font-mono text-[10px] font-black uppercase ${
-                      product.license === "Open Source"
-                        ? "border-green-500 bg-green-500/10 text-green-500"
-                        : "border-cyan-500 bg-cyan-500/10 text-cyan-500"
-                    }`}
-                  >
-                    {product.license}
+                <div className="flex items-center justify-between border-b-2 border-border pb-4">
+                  <span className="border border-border bg-surface-muted px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase text-foreground">
+                    {product.category}
                   </span>
-                  <span className="border border-border bg-card px-2 py-0.5 font-mono text-[10px] font-bold text-muted-foreground">
-                    {product.badge}
-                  </span>
-                </div>
-              </div>
-
-              {/* Title & Description */}
-              <h3 className="mt-5 font-mono text-lg font-black uppercase text-foreground">
-                {product.title}
-              </h3>
-              <p className="mt-1 font-mono text-xs font-semibold text-cyan-500">
-                {product.subtitle}
-              </p>
-              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-                {product.description}
-              </p>
-
-              {/* Tech Stack Chips */}
-              <div className="mt-4 flex flex-wrap gap-1.5">
-                {product.techStack.map((tech) => (
-                  <span
-                    key={tech}
-                    className="border border-border bg-surface-muted px-2 py-0.5 font-mono text-[10px] font-medium text-muted-foreground"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-
-              {/* Features List */}
-              <div className="mt-6 border-t border-border/60 pt-4">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
-                  Core Architecture Features:
-                </p>
-                <ul className="space-y-1.5">
-                  {product.keyFeatures.map((feat, idx) => (
-                    <li
-                      key={idx}
-                      className="flex items-start gap-2 text-xs text-foreground"
-                    >
-                      <CheckCircle className="h-3.5 w-3.5 text-cyan-500 flex-shrink-0 mt-0.5" />
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Included Artifacts */}
-              <div className="mt-4 border-t border-border/60 pt-3">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
-                  Included Artifacts:
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {product.includedArtifacts.map((art) => (
+                  <div className="flex items-center gap-2">
                     <span
-                      key={art}
-                      className="border border-border/80 bg-background px-2 py-0.5 font-mono text-[10px] text-muted-foreground"
+                      className={`border px-2 py-0.5 font-mono text-[10px] font-black uppercase ${
+                        product.license === "Open Source"
+                          ? "border-green-500 bg-green-500/10 text-green-500"
+                          : "border-cyan-500 bg-cyan-500/10 text-cyan-500"
+                      }`}
                     >
-                      {art}
+                      {product.license}
+                    </span>
+                    <span className="border border-border bg-card px-2 py-0.5 font-mono text-[10px] font-bold text-muted-foreground">
+                      {product.badge}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Title & Description */}
+                <h3 className="mt-5 font-mono text-lg font-black uppercase text-foreground">
+                  {product.title}
+                </h3>
+                <p className="mt-1 font-mono text-xs font-semibold text-cyan-500">
+                  {product.subtitle}
+                </p>
+                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                  {product.description}
+                </p>
+
+                {/* Tech Stack Chips */}
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  {product.techStack.map((tech) => (
+                    <span
+                      key={tech}
+                      className="border border-border bg-surface-muted px-2 py-0.5 font-mono text-[10px] font-medium text-muted-foreground"
+                    >
+                      {tech}
                     </span>
                   ))}
                 </div>
-              </div>
-            </div>
 
-            {/* Action Buttons */}
-            <div className="p-6 md:p-8 pt-0 flex flex-col sm:flex-row items-center gap-3">
-              {product.liveDemoHref && (
+                {/* Features List */}
+                <div className="mt-6 border-t border-border/60 pt-4">
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
+                    Core Architecture Features:
+                  </p>
+                  <ul className="space-y-1.5">
+                    {product.keyFeatures.map((feat, idx) => (
+                      <li
+                        key={idx}
+                        className="flex items-start gap-2 text-xs text-foreground"
+                      >
+                        <CheckCircle className="h-3.5 w-3.5 text-cyan-500 flex-shrink-0 mt-0.5" />
+                        <span>{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Included Artifacts */}
+                <div className="mt-4 border-t border-border/60 pt-3">
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                    Included Artifacts:
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {product.includedArtifacts.map((art) => (
+                      <span
+                        key={art}
+                        className="border border-border/80 bg-background px-2 py-0.5 font-mono text-[10px] text-muted-foreground"
+                      >
+                        {art}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="p-6 md:p-8 pt-0 flex flex-col sm:flex-row items-center gap-3">
+                {product.liveDemoHref && (
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full sm:w-auto flex-1 rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-wider hover:border-foreground hover:bg-surface-muted transition-colors"
+                  >
+                    <Link href={product.liveDemoHref}>
+                      Try Live Demo
+                      <Zap className="ml-1.5 h-3.5 w-3.5" />
+                    </Link>
+                  </Button>
+                )}
+
                 <Button
                   asChild
-                  variant="outline"
-                  className="w-full sm:w-auto flex-1 rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-wider hover:border-foreground hover:bg-surface-muted transition-colors"
+                  className="w-full sm:w-auto flex-1 rounded-none border-2 border-cyan-500 bg-cyan-500/10 font-mono text-xs font-bold uppercase tracking-widest text-cyan-400 shadow-[2px_2px_0px_0px_rgba(6,182,212,0.5)] hover:bg-cyan-500 hover:text-white hover:shadow-[4px_4px_0px_0px_rgba(6,182,212,1)] hover:-translate-y-0.5 transition-all backdrop-blur-sm"
                 >
-                  <Link href={product.liveDemoHref}>
-                    Try Live Demo
-                    <Zap className="ml-1.5 h-3.5 w-3.5" />
+                  <Link
+                    href={product.storeHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Hardonia Store
+                    <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
                   </Link>
                 </Button>
-              )}
-
-              <Button
-                asChild
-                className="w-full sm:w-auto flex-1 rounded-none border-2 border-cyan-500 bg-cyan-500/10 font-mono text-xs font-bold uppercase tracking-widest text-cyan-400 shadow-[2px_2px_0px_0px_rgba(6,182,212,0.5)] hover:bg-cyan-500 hover:text-white hover:shadow-[4px_4px_0px_0px_rgba(6,182,212,1)] hover:-translate-y-0.5 transition-all backdrop-blur-sm"
-              >
-                <Link
-                  href={product.storeHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Hardonia Store
-                  <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
-                </Link>
-              </Button>
-            </div>
+              </div>
             </div>
           </motion.div>
         ))}

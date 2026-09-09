@@ -4,6 +4,7 @@ import { ChevronDown } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
+import { MobileNav } from "@/components/layout/mobile-nav";
 import { Button } from "@/components/ui/button";
 import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
 
@@ -21,11 +22,6 @@ const CommandPalette = dynamic(
     import("@/components/layout/command-palette").then(
       (module) => module.CommandPalette,
     ),
-  { ssr: false },
-);
-const MobileNav = dynamic(
-  () =>
-    import("@/components/layout/mobile-nav").then((module) => module.MobileNav),
   { ssr: false },
 );
 const SoundToggle = dynamic(

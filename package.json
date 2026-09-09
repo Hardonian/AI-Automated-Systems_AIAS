@@ -70,8 +70,8 @@
     "start": "next start",
     "lint": "eslint . --ignore-pattern out --ignore-pattern .next",
     "typecheck": "tsc --noEmit",
-    "test:e2e": "pnpm exec playwright install --with-deps chromium && playwright test tests/e2e/smoke.spec.ts tests/e2e/landing-smoke.spec.ts tests/e2e/link-crawl.spec.ts tests/e2e/case-studies-attribution.spec.ts --project=chromium",
-    "verify": "pnpm lint && pnpm typecheck && pnpm test:unit && pnpm lint:markdown && pnpm scan:secrets && pnpm check:security-invariants && pnpm build && pnpm check:bundle-size && pnpm validate:links && pnpm check:route-metadata && pnpm validate:seo && pnpm validate:route-manifest && pnpm validate:metadata-vs-manifest && pnpm validate:schema && pnpm validate:jsonld-smoke && pnpm validate:schema-org && pnpm audit:twitter-cards && pnpm lint:canonical-urls && pnpm check:static-first && pnpm pricing-language-check && pnpm audit:messaging",
+    "test:e2e": "pnpm exec playwright install --with-deps chromium && playwright test tests/e2e/smoke.spec.ts tests/e2e/landing-smoke.spec.ts tests/e2e/link-crawl.spec.ts tests/e2e/case-studies-attribution.spec.ts tests/e2e/catalog-assets.spec.ts --project=chromium",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test:unit && pnpm lint:markdown && pnpm scan:secrets && pnpm check:security-invariants && pnpm check:catalog-assets && pnpm build && pnpm check:bundle-size && pnpm validate:links && pnpm check:route-metadata && pnpm validate:seo && pnpm validate:route-manifest && pnpm validate:metadata-vs-manifest && pnpm validate:schema && pnpm validate:jsonld-smoke && pnpm validate:schema-org && pnpm audit:twitter-cards && pnpm lint:canonical-urls && pnpm check:static-first && pnpm pricing-language-check && pnpm audit:messaging",
     "vercel-build": "pnpm doctor && pnpm verify",
     "build:analyze": "ANALYZE=true vite build",
     "preview": "next start",
@@ -116,7 +116,8 @@
     "generate:feeds": "pnpm exec tsx scripts/generate-feeds.ts",
     "collect:static-metrics": "pnpm exec tsx scripts/collect-static-metrics.ts",
     "indexnow": "pnpm exec tsx scripts/submit-indexnow.ts",
-    "check:bundle-size": "pnpm exec tsx scripts/check-bundle-size.ts"
+    "check:bundle-size": "pnpm exec tsx scripts/check-bundle-size.ts",
+    "check:catalog-assets": "pnpm exec tsx scripts/check-catalog-assets.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

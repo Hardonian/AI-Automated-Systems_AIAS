@@ -1,13 +1,9 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 
-import { MobileNav } from "@/components/layout/mobile-nav";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { SoundToggle } from "@/components/layout/sound-toggle";
-import { CommandPalette } from "@/components/layout/command-palette";
-import { SprintAvailabilityHUD } from "@/components/layout/sprint-availability-hud";
 import { Button } from "@/components/ui/button";
 import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
 
@@ -19,6 +15,38 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+const CommandPalette = dynamic(
+  () =>
+    import("@/components/layout/command-palette").then(
+      (module) => module.CommandPalette,
+    ),
+  { ssr: false },
+);
+const MobileNav = dynamic(
+  () =>
+    import("@/components/layout/mobile-nav").then((module) => module.MobileNav),
+  { ssr: false },
+);
+const SoundToggle = dynamic(
+  () =>
+    import("@/components/layout/sound-toggle").then(
+      (module) => module.SoundToggle,
+    ),
+  { ssr: false },
+);
+const SprintAvailabilityHUD = dynamic(
+  () =>
+    import("@/components/layout/sprint-availability-hud").then(
+      (module) => module.SprintAvailabilityHUD,
+    ),
+  { ssr: false },
+);
+const ThemeToggle = dynamic(
+  () =>
+    import("@/components/theme-toggle").then((module) => module.ThemeToggle),
+  { ssr: false },
+);
 
 const RESOURCE_GROUPS = [
   {

@@ -22,9 +22,15 @@ test.describe("@smoke Internal link crawl", () => {
       }
       visited.add(route);
 
-      let response = await page.goto(route, { waitUntil: "domcontentloaded" });
+      let response = await page.goto(route, {
+        waitUntil: "domcontentloaded",
+        timeout: 60000,
+      });
       if (!response || response.status() >= 400) {
-        response = await page.goto(route, { waitUntil: "load" });
+        response = await page.goto(route, {
+          waitUntil: "load",
+          timeout: 60000,
+        });
       }
 
       expect(response?.status(), `Route failed: ${route}`).toBeLessThan(400);

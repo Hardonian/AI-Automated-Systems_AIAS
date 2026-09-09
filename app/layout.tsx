@@ -151,6 +151,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html suppressHydrationWarning dir={isRTL ? "rtl" : "ltr"} lang={locale}>
       <head>
         <link href="/manifest.json" rel="manifest" />
+        <link
+          href="/rss.xml"
+          rel="alternate"
+          title="AIAS RSS"
+          type="application/rss+xml"
+        />
+        <link
+          href="/atom.xml"
+          rel="alternate"
+          title="AIAS Atom"
+          type="application/atom+xml"
+        />
 
         <OrganizationSchema />
         <ProfessionalServiceSchema />

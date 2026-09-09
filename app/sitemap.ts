@@ -84,5 +84,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: entry.lastModified,
     changeFrequency: entry.changeFrequency,
     priority: entry.priority,
+    images:
+      entry.route === ""
+        ? [`${baseUrl}/opengraph-image`]
+        : entry.route.startsWith("/case-studies/")
+          ? [`${baseUrl}${entry.route}/opengraph-image`]
+          : entry.route === "/catalog"
+            ? [`${baseUrl}/images/catalog/hardonia_suite_ops.avif`]
+            : undefined,
   }));
 }

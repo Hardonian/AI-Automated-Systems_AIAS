@@ -66,7 +66,7 @@
   },
   "scripts": {
     "dev": "next dev --turbo",
-    "build": "next build",
+    "build": "pnpm generate:feeds && next build",
     "start": "next start",
     "lint": "eslint . --ignore-pattern out --ignore-pattern .next",
     "typecheck": "tsc --noEmit",
@@ -111,6 +111,8 @@
     "scan:secrets:staged": "pnpm exec tsx scripts/scan-secrets.ts --staged",
     "check:security-invariants": "pnpm exec tsx scripts/check-security-invariants.ts",
     "images:avif": "node scripts/convert-images-to-avif.mjs",
+    "generate:feeds": "pnpm exec tsx scripts/generate-feeds.ts",
+    "indexnow": "pnpm exec tsx scripts/submit-indexnow.ts",
     "check:bundle-size": "pnpm exec tsx scripts/check-bundle-size.ts"
   },
   "devDependencies": {

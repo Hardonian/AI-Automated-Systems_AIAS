@@ -41,7 +41,7 @@ function ArchitectureDiagram({ nodes }: { nodes: string[] }) {
   return (
     <svg
       aria-label="Blueprint architecture diagram"
-      className="h-auto w-full rounded-md border bg-background p-4"
+      className="h-auto w-full border bg-muted/40 p-4 text-foreground"
       viewBox="0 0 640 220"
     >
       {nodes.map((node, index) => {
@@ -49,21 +49,29 @@ function ArchitectureDiagram({ nodes }: { nodes: string[] }) {
         return (
           <g key={node}>
             <rect
-              fill="currentColor"
-              fillOpacity="0.06"
+              fill="hsl(var(--primary) / 0.16)"
               height="70"
-              rx="10"
+              rx="0"
+              stroke="hsl(var(--primary) / 0.8)"
+              strokeWidth="1.5"
               width="130"
               x={x}
               y={75}
             />
-            <text fontSize="13" textAnchor="middle" x={x + 65} y={110}>
+            <text
+              fill="hsl(var(--text))"
+              fontSize="13"
+              fontWeight="600"
+              textAnchor="middle"
+              x={x + 65}
+              y={110}
+            >
               {node}
             </text>
             {index < nodes.length - 1 ? (
               <line
-                stroke="currentColor"
-                strokeOpacity="0.5"
+                stroke="hsl(var(--primary) / 0.9)"
+                strokeWidth="2"
                 x1={x + 130}
                 x2={x + 150}
                 y1={110}

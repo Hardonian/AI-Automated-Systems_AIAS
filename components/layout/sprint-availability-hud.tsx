@@ -24,7 +24,7 @@ const statusConfig = {
   ACCEPTING: {
     label: "SLOTS OPEN",
     dotClass: "bg-emerald-500",
-    textClass: "text-emerald-600 dark:text-emerald-400",
+    textClass: "text-emerald-700 dark:text-emerald-300",
     borderClass: "border-emerald-600/40",
     bgClass: "bg-emerald-500/10",
   },

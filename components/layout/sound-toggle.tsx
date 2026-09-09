@@ -19,7 +19,11 @@ function getServerSnapshot() {
 }
 
 export function SoundToggle({ className = "" }: { className?: string }) {
-  const enabled = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const enabled = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
 
   const handleToggle = () => {
     toggleSound();
@@ -29,11 +33,19 @@ export function SoundToggle({ className = "" }: { className?: string }) {
     <button
       type="button"
       onClick={handleToggle}
-      aria-label={enabled ? "Mute interface sound effects" : "Enable interface sound effects"}
-      title={enabled ? "SFX: Enabled (Click to mute)" : "SFX: Muted (Click to enable)"}
+      aria-label={
+        enabled
+          ? "Mute interface sound effects"
+          : "Enable interface sound effects"
+      }
+      title={
+        enabled
+          ? "SFX: Enabled (Click to mute)"
+          : "SFX: Muted (Click to enable)"
+      }
       className={`group flex items-center gap-1.5 px-2.5 py-1.5 font-mono text-xs font-bold uppercase transition-all cursor-pointer border-2 ${
         enabled
-          ? "border-primary/40 bg-primary/5 text-primary hover:border-primary hover:bg-primary/10"
+          ? "border-primary/40 bg-primary/5 text-foreground hover:border-primary hover:bg-primary/10"
           : "border-border bg-card text-muted-foreground hover:border-foreground/50 hover:text-foreground"
       } ${className}`}
     >

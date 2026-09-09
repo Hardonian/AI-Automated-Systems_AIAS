@@ -8,13 +8,10 @@ import { test, expect } from "@playwright/test";
 import { injectAxe, checkA11y } from "axe-playwright";
 
 test.describe("Accessibility Tests", () => {
-  test.beforeEach(async ({ page }) => {
-    // Inject axe-core into the page
-    await injectAxe(page);
-  });
-
   test("homepage should be accessible", async ({ page }) => {
     await page.goto("/");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await injectAxe(page);
     await checkA11y(page, undefined, {
       detailedReport: true,
       detailedReportOptions: { html: true },
@@ -23,6 +20,8 @@ test.describe("Accessibility Tests", () => {
 
   test("privacy page should be accessible", async ({ page }) => {
     await page.goto("/privacy");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await injectAxe(page);
     await checkA11y(page, undefined, {
       detailedReport: true,
       detailedReportOptions: { html: true },
@@ -31,6 +30,8 @@ test.describe("Accessibility Tests", () => {
 
   test("blog page should be accessible", async ({ page }) => {
     await page.goto("/blog");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await injectAxe(page);
     await checkA11y(page, undefined, {
       detailedReport: true,
       detailedReportOptions: { html: true },
@@ -39,6 +40,8 @@ test.describe("Accessibility Tests", () => {
 
   test("terms page should be accessible", async ({ page }) => {
     await page.goto("/terms");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await injectAxe(page);
     await checkA11y(page, undefined, {
       detailedReport: true,
       detailedReportOptions: { html: true },
@@ -47,6 +50,8 @@ test.describe("Accessibility Tests", () => {
 
   test("metrics page should be accessible", async ({ page }) => {
     await page.goto("/metrics");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await injectAxe(page);
     await checkA11y(page, undefined, {
       detailedReport: true,
       detailedReportOptions: { html: true },
@@ -55,6 +60,8 @@ test.describe("Accessibility Tests", () => {
 
   test("how-it-works page should be accessible", async ({ page }) => {
     await page.goto("/how-it-works");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await injectAxe(page);
     await checkA11y(page, undefined, {
       detailedReport: true,
       detailedReportOptions: { html: true },
@@ -63,6 +70,8 @@ test.describe("Accessibility Tests", () => {
 
   test("roi-calculator page should be accessible", async ({ page }) => {
     await page.goto("/roi-calculator");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await injectAxe(page);
     await checkA11y(page, undefined, {
       detailedReport: true,
       detailedReportOptions: { html: true },
@@ -133,6 +142,8 @@ test.describe("Accessibility Tests", () => {
 
   test("color contrast should meet WCAG AA", async ({ page }) => {
     await page.goto("/");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await injectAxe(page);
 
     // This would require additional tooling to check actual contrast ratios
     // For now, we rely on axe-core to catch contrast issues

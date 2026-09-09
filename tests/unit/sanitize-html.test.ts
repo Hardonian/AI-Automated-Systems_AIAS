@@ -3,9 +3,9 @@ import { sanitizeHTMLServer } from "../../lib/utils/sanitize-html";
 
 describe("sanitizeHTMLServer", () => {
   it("sanitizes basic HTML", () => {
-    const input = '<div onclick="alert(1)">Hello <b>world</b>!</div>';
+    const input = '<p onclick="alert(1)">Hello <strong>world</strong>!</p>';
     const result = sanitizeHTMLServer(input);
-    expect(result).toBe("<div>Hello <b>world</b>!</div>");
+    expect(result).toBe("<p>Hello <strong>world</strong>!</p>");
   });
 
   it("strips script tags", () => {

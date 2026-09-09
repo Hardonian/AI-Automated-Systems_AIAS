@@ -179,6 +179,7 @@ export function RoiCalculator() {
 
   return (
     <div className="w-full space-y-8" id="roi-calculator-root">
+      <h2 className="sr-only">ROI projection calculator</h2>
       {/* Preset Scenarios */}
       <div>
         <p className="font-mono text-xs font-bold uppercase tracking-widest text-primary mb-3">
@@ -230,14 +231,18 @@ export function RoiCalculator() {
             <div className="space-y-6">
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="font-mono text-xs font-bold uppercase text-foreground">
+                  <label
+                    className="font-mono text-xs font-bold uppercase text-foreground"
+                    htmlFor="roi-team-size"
+                  >
                     Team Size (FTEs Affected)
-                  </span>
+                  </label>
                   <span className="font-mono text-xs font-black text-primary px-2 py-0.5 border border-primary/40 bg-primary/5">
                     {teamSize} People
                   </span>
                 </div>
                 <Input
+                  id="roi-team-size"
                   min={1}
                   max={500}
                   type="number"
@@ -251,14 +256,18 @@ export function RoiCalculator() {
 
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="font-mono text-xs font-bold uppercase text-foreground">
+                  <label
+                    className="font-mono text-xs font-bold uppercase text-foreground"
+                    htmlFor="roi-labor-rate"
+                  >
                     Blended Compensation Rate (CAD / resource unit)
-                  </span>
+                  </label>
                   <span className="font-mono text-xs font-black text-primary px-2 py-0.5 border border-primary/40 bg-primary/5">
                     ${laborRate} CAD
                   </span>
                 </div>
                 <Input
+                  id="roi-labor-rate"
                   min={1}
                   type="number"
                   value={laborRate}
@@ -271,14 +280,18 @@ export function RoiCalculator() {
 
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="font-mono text-xs font-bold uppercase text-foreground">
+                  <label
+                    className="font-mono text-xs font-bold uppercase text-foreground"
+                    htmlFor="roi-manual-hours"
+                  >
                     Manual Routine Hours / Week / Person
-                  </span>
+                  </label>
                   <span className="font-mono text-xs font-black text-primary px-2 py-0.5 border border-primary/40 bg-primary/5">
                     {manualHours} hrs/wk
                   </span>
                 </div>
                 <Input
+                  id="roi-manual-hours"
                   min={1}
                   max={40}
                   type="number"
@@ -300,6 +313,7 @@ export function RoiCalculator() {
                   </span>
                 </div>
                 <Slider
+                  thumbAriaLabel="Workflow repetition rate"
                   min={10}
                   max={100}
                   step={1}
@@ -323,6 +337,7 @@ export function RoiCalculator() {
                   </span>
                 </div>
                 <Slider
+                  thumbAriaLabel="Target automation maturity"
                   min={10}
                   max={100}
                   step={1}

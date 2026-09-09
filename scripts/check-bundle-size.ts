@@ -11,9 +11,10 @@
 
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import path from "node:path";
+import { gzipSync } from "node:zlib";
 
 const BUDGETS = {
-  firstLoadJsMax: 250 * 1024, // 250 KB per route (first-load JS gzipped)
+  largestChunkGzipMax: 250 * 1024,
   totalChunksMax: 3 * 1024 * 1024, // 3 MB total JS chunks (uncompressed, ~60 routes)
 };
 
@@ -37,15 +38,15 @@ function findBuildManifest(): Record<string, unknown> | null {
 
 function measureChunkSizes(): {
   totalSize: number;
-  largestChunk: { name: string; size: number };
+  largestChunk: { name: string; gzipSize: number };
 } {
   const chunksDir = path.join(BUILD_DIR, "static", "chunks");
   if (!existsSync(chunksDir)) {
-    return { totalSize: 0, largestChunk: { name: "N/A", size: 0 } };
+    return { totalSize: 0, largestChunk: { name: "N/A", gzipSize: 0 } };
   }
 
   let totalSize = 0;
-  let largestChunk = { name: "", size: 0 };
+  let largestChunk = { name: "", gzipSize: 0 };
 
   const walkDir = (dir: string) => {
     const entries = readdirSync(dir, { withFileTypes: true });
@@ -56,8 +57,9 @@ function measureChunkSizes(): {
       } else if (entry.name.endsWith(".js")) {
         const content = readFileSync(fullPath);
         totalSize += content.length;
-        if (content.length > largestChunk.size) {
-          largestChunk = { name: entry.name, size: content.length };
+        const gzipSize = gzipSync(content).length;
+        if (gzipSize > largestChunk.gzipSize) {
+          largestChunk = { name: entry.name, gzipSize };
         }
       }
     }
@@ -87,9 +89,9 @@ console.log(
   `Total JS chunks:  ${formatBytes(totalSize)} (budget: ${formatBytes(BUDGETS.totalChunksMax)})`,
 );
 console.log(
-  `Largest chunk:    ${largestChunk.name} (${formatBytes(largestChunk.size)})`,
+  `Largest gzip chunk: ${largestChunk.name} (${formatBytes(largestChunk.gzipSize)})`,
 );
-console.log(`Per-route budget: ${formatBytes(BUDGETS.firstLoadJsMax)}`);
+console.log(`Gzip chunk budget: ${formatBytes(BUDGETS.largestChunkGzipMax)}`);
 
 // Check total JS chunks budget
 if (totalSize > BUDGETS.totalChunksMax) {
@@ -99,9 +101,9 @@ if (totalSize > BUDGETS.totalChunksMax) {
 }
 
 // Check largest single chunk
-if (largestChunk.size > BUDGETS.firstLoadJsMax) {
+if (largestChunk.gzipSize > BUDGETS.largestChunkGzipMax) {
   failures.push(
-    `Largest chunk "${largestChunk.name}" (${formatBytes(largestChunk.size)}) exceeds per-route budget (${formatBytes(BUDGETS.firstLoadJsMax)})`,
+    `Largest gzip chunk "${largestChunk.name}" (${formatBytes(largestChunk.gzipSize)}) exceeds budget (${formatBytes(BUDGETS.largestChunkGzipMax)})`,
   );
 }
 

@@ -173,19 +173,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       >
         <EnhancedErrorBoundary>
           <ThemeProvider>
-            {/* Item 33: Multi-target skip navigation (WCAG 2.4.1) */}
-            <a
-              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[9999] focus:border-2 focus:border-primary focus:bg-background focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:font-bold focus:uppercase focus:text-primary focus:shadow-[4px_4px_0px_0px_hsl(var(--text))]"
-              href="#main"
-            >
-              [ Skip to Main Content ]
-            </a>
-            <a
-              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-14 focus:z-[9999] focus:border-2 focus:border-primary focus:bg-background focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:font-bold focus:uppercase focus:text-primary focus:shadow-[4px_4px_0px_0px_hsl(var(--text))]"
-              href="#system-topology-visualizer"
-            >
-              [ Skip to Architecture Terminal ]
-            </a>
+            {/* Item 33: Skip navigation (WCAG 2.4.1) */}
+            <nav aria-label="Skip links">
+              <a
+                className="skip-link sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[9999] focus:border-2 focus:border-primary focus:bg-background focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:font-bold focus:uppercase focus:text-primary focus:shadow-[4px_4px_0px_0px_hsl(var(--text))]"
+                href="#main"
+              >
+                [ Skip to Main Content ]
+              </a>
+            </nav>
             <NoiseOverlay />
             <RouteBreadcrumbSchema />
             <Header />
@@ -194,6 +190,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               className="min-h-[calc(100vh-8rem)]"
               id="main"
               role="main"
+              tabIndex={-1}
             >
               {children}
             </main>

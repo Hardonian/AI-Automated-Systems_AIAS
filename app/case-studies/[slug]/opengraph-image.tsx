@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getCaseStudyBySlug, caseStudies } from "@/lib/case-studies-generator";
 
+export const dynamic = "force-static";
 export const alt = "AIAS Case Study";
 export const size = {
   width: 1200,

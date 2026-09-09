@@ -51,7 +51,6 @@ export function PerformanceRuntime() {
       observer.observe({
         type: "event",
         buffered: true,
-        durationThreshold: 40,
       });
     } catch {
       return;

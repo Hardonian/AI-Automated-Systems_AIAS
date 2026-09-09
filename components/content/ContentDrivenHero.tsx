@@ -17,9 +17,9 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 function MetricCard({ icon, text }: { icon: string; text: string }) {
   const Icon = iconMap[icon] || CheckCircle2;
   return (
-    <div className="group relative border-2 border-border bg-card p-4 transition-all hover:border-primary hover:shadow-[4px_4px_0px_0px_hsl(var(--primary))]">
+    <div className="research-panel group relative p-4 transition-all duration-300 hover:-translate-y-1 hover:border-primary/70 hover:shadow-lg">
       <div className="flex items-start gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center border-2 border-border bg-black text-primary">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-primary/35 bg-primary/10 text-primary">
           <Icon className="h-4 w-4" />
         </div>
         <p className="font-mono text-xs font-bold leading-snug text-foreground uppercase tracking-tight">
@@ -33,54 +33,43 @@ function MetricCard({ icon, text }: { icon: string; text: string }) {
 export function ContentDrivenHero({ content }: { content: HeroContent }) {
   return (
     <section
-      className="relative overflow-hidden border-b-2 border-border bg-background py-12 md:py-20"
+      className="research-field relative overflow-hidden border-b border-border bg-background py-10 md:py-16"
       id="top"
     >
-      {/* Background Matrix Grid */}
-      <div
-        className="pointer-events-none absolute inset-0 z-0 opacity-15"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
-        }}
-      />
-
       <div className="container relative z-10 mx-auto px-4">
-        {/* Telemetry Ticker Ribbon */}
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-3 border-2 border-border bg-card p-2 px-3 sm:px-4 text-xs font-mono">
+        <div className="research-readout mb-10 flex flex-wrap items-center justify-between gap-3 px-3 py-2.5 text-xs font-mono sm:px-4">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-            <span className="font-black uppercase tracking-wider text-foreground">
-              [ {content.badgeText || "SYS_INIT"} {"//"} CONTROL PLANE ONLINE ]
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            <span className="font-black uppercase tracking-[0.14em] text-foreground">
+              INDEX_01 / {content.badgeText || "SYSTEMS RESEARCH"}
             </span>
           </div>
-          <div className="hidden sm:flex items-center gap-4 text-muted-foreground text-[11px]">
-            <span>STATIC-FIRST: 100% PASS</span>
-            <span>DATA RESIDENCY: CANADIAN PIPEDA</span>
-            <span>RUNTIME: ZERO HARD-500s</span>
+          <div className="hidden sm:flex items-center gap-4 text-[10px] uppercase tracking-[0.13em] text-muted-foreground">
+            <span>Method: static systems</span>
+            <span>Region: Canada / remote</span>
+            <span>Edition: 2026.09</span>
           </div>
         </div>
 
-        {/* Hero Two-Column Command Layout */}
-        <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
-          {/* Left Column: Mission Statement & Direct CTAs (7 cols) */}
+        <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-7 flex flex-col items-start text-left">
-            <h1 className="text-4xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-7xl leading-[1.05]">
+            <p className="research-kicker mb-5">
+              Applied AI systems lab / field note 001
+            </p>
+            <h1 className="max-w-4xl font-heading text-4xl font-black uppercase tracking-[-0.055em] sm:text-6xl md:text-7xl lg:text-7xl leading-[0.98]">
               <span className="block text-foreground">{content.title}</span>
             </h1>
 
-            <p className="mt-6 font-mono text-base font-bold text-primary sm:text-lg md:text-xl uppercase tracking-tight">
+            <p className="mt-7 max-w-3xl font-mono text-sm font-bold uppercase tracking-[0.04em] text-primary sm:text-base md:text-lg">
               {content.subtitle}
             </p>
 
-            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base font-sans">
+            <p className="mt-5 max-w-2xl font-sans text-sm leading-relaxed text-muted-foreground sm:text-base">
               {content.description}
             </p>
 
-            {/* CTAs */}
             <div
-              className="mt-8 flex flex-wrap items-center gap-4"
+              className="mt-9 flex flex-wrap items-center gap-4"
               data-testid="hero-cta-group"
             >
               {content.primaryCta?.visible && (
@@ -88,7 +77,7 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
                   <Button
                     asChild
                     size="lg"
-                    className="rounded-none border-2 border-primary bg-primary px-8 py-6 font-mono text-sm sm:text-base font-black uppercase tracking-wider text-primary-foreground shadow-[4px_4px_0px_0px_hsl(var(--text))] transition-all hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_hsl(var(--text))]"
+                    className="rounded-none border border-primary bg-primary px-8 py-6 font-mono text-sm font-black uppercase tracking-wider text-primary-foreground shadow-lg transition-all hover:-translate-y-0.5 hover:bg-primary-hover sm:text-base"
                   >
                     <Link href={content.primaryCta.href}>
                       {content.primaryCta.label}
@@ -102,7 +91,7 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="rounded-none border-2 border-border bg-card px-8 py-6 font-mono text-sm sm:text-base font-bold uppercase tracking-wider text-foreground shadow-[4px_4px_0px_0px_hsl(var(--text))] transition-all hover:-translate-y-0.5 hover:border-foreground"
+                  className="rounded-none border border-border bg-card/80 px-8 py-6 font-mono text-sm font-bold uppercase tracking-wider text-foreground shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/70 sm:text-base"
                 >
                   <Link href={content.secondaryCta.href}>
                     {content.secondaryCta.label}
@@ -112,16 +101,18 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
             </div>
           </div>
 
-          {/* Right Column: Interactive Developer Command Console (5 cols) */}
-          <div className="lg:col-span-5 w-full">
+          <div className="w-full lg:col-span-5 lg:pl-4">
+            <div className="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+              <span>Live research console</span>
+              <span className="text-primary">signal / stable</span>
+            </div>
             <InteractiveTerminal />
           </div>
         </div>
 
-        {/* Impact Metrics Strip */}
         {content.socialProof && content.socialProof.length > 0 && (
           <div
-            className="mt-16 grid gap-4 grid-cols-2 md:grid-cols-4"
+            className="mt-14 grid grid-cols-2 gap-px border border-border bg-border md:grid-cols-4"
             data-testid="hero-social-proof-grid"
           >
             {content.socialProof.map((item) => (
@@ -130,13 +121,14 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
           </div>
         )}
 
-        {/* Trust Badges */}
         {content.trustBadges && content.trustBadges.length > 0 && (
           <div
-            className="mt-12 flex flex-wrap items-center justify-center gap-6 font-mono text-xs uppercase tracking-widest text-muted-foreground border-t border-border/60 pt-6"
+            className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 border-t border-border/60 pt-6 font-mono text-xs uppercase tracking-widest text-muted-foreground"
             data-testid="hero-trust-badge-grid"
           >
-            <span className="font-bold text-foreground">SYSTEM_TRUST //</span>
+            <span className="font-bold text-foreground">
+              Research constraints //
+            </span>
             {content.trustBadges.map((item) => (
               <span
                 key={item.text}

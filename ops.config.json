@@ -8,9 +8,7 @@
     "uptime_pct": 99.9
   },
   "budgets": {
-    "vercel_usd": 50,
-    "supabase_usd": 35,
-    "expo_usd": 15
+    "vercel_usd": 50
   },
   "webhooks": {
     "reliability": "RELIABILITY_ALERT_WEBHOOK",
@@ -25,11 +23,7 @@
     "cron_light": "5 */12 * * *",
     "cron_heavy": "15 3 * * 1"
   },
-  "migration": {
-    "canary_flag": "MIGRATION_CANARY",
-    "require_canary_for_destructive": true
-  },
   "telemetry": {
-    "expo_tti_enabled": "EXPO_PUBLIC_TELEMETRY"
+    "static_analytics_enabled": "NEXT_PUBLIC_ANALYTICS_ID"
   }
 }

@@ -279,7 +279,7 @@ export function InteractiveTerminal() {
             onClick={() => handleCommandSwitch(cmd.id)}
             className={`px-2.5 py-1 font-mono text-[11px] font-bold uppercase transition-all cursor-pointer border ${
               selectedCommandId === cmd.id
-                ? "border-primary bg-primary/20 text-primary-foreground"
+                ? "border-primary bg-primary/20 text-primary"
                 : "border-zinc-800 bg-black/40 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
             }`}
           >

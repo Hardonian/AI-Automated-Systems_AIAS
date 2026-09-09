@@ -76,7 +76,7 @@ const RESOURCE_GROUPS = [
 export function Header() {
   return (
     <header
-      className="sticky top-0 z-50 border-b-2 border-border bg-background shadow-none"
+      className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl"
       data-testid="header-nav-cluster"
       role="banner"
     >
@@ -84,11 +84,11 @@ export function Header() {
         <div>
           <Link
             aria-label="AI Automated Systems - Home"
-            className="group flex items-center gap-3 text-lg font-black uppercase tracking-widest text-foreground hover:text-primary md:text-xl"
+            className="group flex items-center gap-3 text-lg font-black uppercase tracking-[0.16em] text-foreground hover:text-primary md:text-xl"
             href="/"
           >
-            <span className="flex h-8 w-8 items-center justify-center border-2 border-border bg-black text-xs font-bold text-primary transition-colors group-hover:border-primary">
-              {"//"}
+            <span className="flex h-8 w-8 items-center justify-center border border-primary/40 bg-primary/10 font-mono text-[10px] font-bold text-primary transition-colors group-hover:border-primary">
+              {"A/"}
             </span>
             <span>AIAS</span>
           </Link>

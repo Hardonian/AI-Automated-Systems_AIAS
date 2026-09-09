@@ -1,74 +1,47 @@
-name: Weekly Benchmarks
+name: Weekly Static Build Metrics
 
 on:
   schedule:
-    # Every Monday at 04:20 UTC
     - cron: "20 4 * * 1"
   workflow_dispatch:
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-  NODE_VERSION: "22"
-  PNPM_VERSION: "8.15.0"
+permissions:
+  contents: read
 
 jobs:
   benchmarks:
-    name: Run Benchmarks
+    name: Build and record static metrics
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
+        with:
+          version: 8.15.9
 
       - name: Setup Node.js
-        uses: actions/setup-node@v7
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: "22"
           cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run benchmarks
-        run: |
-          # Create benchmark results directory
-          mkdir -p bench/results
+      - name: Build static site
+        run: pnpm build
 
-          # Run benchmarks (example - adjust based on actual benchmark files)
-          # pnpm tsx bench/example.bench.ts > bench/results/latest.json || true
+      - name: Collect build metrics
+        run: pnpm collect:static-metrics bench/results/latest.json
 
-          # For now, create placeholder result
-          echo '[]' > bench/results/latest.json
-
-      - name: Analyze trends
-        run: |
-          node scripts/bench-trend.js analyze bench/results/latest.json || true
+      - name: Enforce JavaScript budget
+        run: pnpm check:bundle-size
 
       - name: Upload benchmark results
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
-          name: benchmark-results
-          path: |
-            bench/results/*.json
+          name: static-build-metrics
+          path: bench/results/latest.json
           retention-days: 90
-
-      - name: Comment on PR if regression detected
-        if: failure()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '⚠️ Performance regression detected in benchmarks. Please review.'
-            })

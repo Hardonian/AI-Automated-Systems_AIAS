@@ -1,19 +1,9 @@
-name: Unified Hardonia Agent
+name: Static Quality Sweep
 
 on:
   schedule:
-    # Run every 12 hours at :05 (matches schedule_cron_light from ops.config.json)
     - cron: "5 */12 * * *"
   workflow_dispatch:
-    inputs:
-      mode:
-        description: "Agent mode"
-        required: false
-        default: "full"
-        type: choice
-        options:
-          - full
-          - quick
   push:
     branches:
       - main
@@ -23,104 +13,40 @@ on:
       - "**.tsx"
       - "**.js"
       - "**.jsx"
+      - "**.css"
       - "package.json"
-      - "package-lock.json"
       - "pnpm-lock.yaml"
 
-jobs:
-  unified-agent:
-    name: Unified Hardonia Agent
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      issues: read
+permissions:
+  contents: read
 
+jobs:
+  quality-sweep:
+    name: Verify static release contract
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-        with:
-          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
+        with:
+          version: 8.15.9
 
       - name: Setup Node.js
-        uses: actions/setup-node@v7
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+        uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: "pnpm"
 
       - name: Install dependencies
-        run: |
-          pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
-      - name: Run Unified Agent
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_OWNER: ${{ github.repository_owner }}
-          GITHUB_REPO: ${{ github.event.repository.name }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-        run: |
-          npm run agent:unified || echo "Agent run completed with warnings"
+      - name: Verify static release candidate
+        run: pnpm verify
 
-      - name: Check for changes
-        id: changes
+      - name: Publish quality summary
         run: |
-          git diff --exit-code || echo "has_changes=true" >> $GITHUB_OUTPUT
-
-      - name: Create PR with artifacts
-        if: steps.changes.outputs.has_changes == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          BRANCH_NAME="auto/agent-updates-$(date +%s)"
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git checkout -b "$BRANCH_NAME"
-          git add admin/ security/ docs/intent-log.md roadmap/ auto/ .cursor/config/master-agent.json
-          if git diff --staged --quiet; then
-            echo "No changes to commit."
-          else
-            git commit -m "🤖 Autonomous improvement cycle: Update artifacts and recommendations"
-            git push origin "$BRANCH_NAME"
-            gh pr create \
-              --title "🤖 Autonomous Improvement Cycle" \
-              --body "Automated updates from the Unified Hardonia Agent. This PR includes updated artifacts and recommendations. Please review and merge." \
-              --label "auto/agent-run" \
-              --base "${{ github.ref_name }}"
-          fi
-
-      - name: Create summary
-        if: always()
-        run: |
-          echo "## Unified Agent Run Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Timestamp:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
-          echo "- **Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          if [ -f "admin/reliability.json" ]; then
-            echo "### Reliability" >> $GITHUB_STEP_SUMMARY
-            echo "- Artifacts generated successfully" >> $GITHUB_STEP_SUMMARY
-          fi
-          if [ -f "security/sbom.json" ]; then
-            echo "### SBOM" >> $GITHUB_STEP_SUMMARY
-            echo "- Software Bill of Materials generated" >> $GITHUB_STEP_SUMMARY
-          fi
-          if [ -f "auto/next-steps.md" ]; then
-            echo "### Recommendations" >> $GITHUB_STEP_SUMMARY
-            echo "- Auto-improvement recommendations available" >> $GITHUB_STEP_SUMMARY
-          fi
+          echo "## Static Quality Sweep" >> $GITHUB_STEP_SUMMARY
+          echo "- Static-first contract: verified" >> $GITHUB_STEP_SUMMARY
+          echo "- Build, content, schema, link, and security checks: verified" >> $GITHUB_STEP_SUMMARY

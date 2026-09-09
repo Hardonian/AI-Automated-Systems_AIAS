@@ -146,7 +146,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const isRTL = false;
 
   return (
-    <html suppressHydrationWarning dir={isRTL ? "rtl" : "ltr"} lang={locale}>
+    <html
+      className="dark"
+      suppressHydrationWarning
+      dir={isRTL ? "rtl" : "ltr"}
+      lang={locale}
+    >
       <head>
         <link href="/manifest.json" rel="manifest" />
         <link

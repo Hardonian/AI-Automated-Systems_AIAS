@@ -78,7 +78,7 @@ export function Footer() {
   return (
     <footer
       aria-label="Site footer"
-      className="mt-auto border-t-2 border-border bg-gradient-to-b from-background to-muted/30 py-12 text-sm text-muted-foreground md:py-16"
+      className="mt-auto border-t border-border bg-gradient-to-b from-background via-surface to-muted/40 py-12 text-sm text-muted-foreground md:py-16"
       data-testid="footer-legal-cluster"
       role="contentinfo"
     >
@@ -86,11 +86,11 @@ export function Footer() {
         <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5 md:gap-10">
           <div className="lg:col-span-1">
             <div className="mb-4 flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center border-2 border-border bg-black text-xs font-mono font-black text-primary">
-                {"//"}
+              <span className="flex h-8 w-8 items-center justify-center border border-primary/40 bg-primary/10 text-xs font-mono font-black text-primary">
+                {"A/"}
               </span>
               <h3 className="font-mono text-base font-black uppercase tracking-wider text-foreground">
-                AIAS Platform
+                AIAS / Systems Lab
               </h3>
             </div>
             <p className="mb-6 max-w-sm text-xs leading-relaxed text-muted-foreground">
@@ -120,14 +120,14 @@ export function Footer() {
             </div>
 
             <div className="flex flex-wrap gap-1.5 text-[10px] font-mono">
-              <span className="border border-border bg-card px-2 py-0.5 font-bold uppercase text-foreground">
+              <span className="border border-border bg-card/70 px-2 py-0.5 font-bold uppercase tracking-[0.1em] text-foreground">
                 Deterministic
               </span>
-              <span className="border border-border bg-card px-2 py-0.5 font-bold uppercase text-foreground">
+              <span className="border border-border bg-card/70 px-2 py-0.5 font-bold uppercase tracking-[0.1em] text-foreground">
                 Static-First
               </span>
-              <span className="border border-border bg-card px-2 py-0.5 font-bold uppercase text-foreground">
-                Zero Hard-500s
+              <span className="border border-border bg-card/70 px-2 py-0.5 font-bold uppercase tracking-[0.1em] text-foreground">
+                Applied Research
               </span>
             </div>
           </div>

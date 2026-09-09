@@ -130,7 +130,7 @@ export interface SiteConfig {
     description: string;
   }>;
   agenticWorkflow: {
-    heroImage: string; // Path to image or placeholder
+    heroImage: string; // Path to image asset
     steps: Array<{
       title: string;
       description: string;
@@ -339,8 +339,8 @@ const rawSiteContent: SiteConfig = {
   },
   positioning: {
     subheading: MESSAGING_CONTRACT.heroSubheading,
-    badgeText: "Production AI Workflows",
-    impactCardsLabel: "Measured outcomes",
+    badgeText: "Applied Systems Research",
+    impactCardsLabel: "Observed outcomes",
     primaryCTA: {
       label: "Book Free Diagnostic",
       href: "https://calendly.com/scottrmhardie",

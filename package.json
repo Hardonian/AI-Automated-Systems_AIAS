@@ -29,7 +29,7 @@
     "typescript",
     "react",
     "nextjs",
-    "supabase"
+    "static-site"
   ],
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.20",
@@ -114,6 +114,7 @@
     "check:security-invariants": "pnpm exec tsx scripts/check-security-invariants.ts",
     "images:avif": "node scripts/convert-images-to-avif.mjs",
     "generate:feeds": "pnpm exec tsx scripts/generate-feeds.ts",
+    "collect:static-metrics": "pnpm exec tsx scripts/collect-static-metrics.ts",
     "indexnow": "pnpm exec tsx scripts/submit-indexnow.ts",
     "check:bundle-size": "pnpm exec tsx scripts/check-bundle-size.ts"
   },

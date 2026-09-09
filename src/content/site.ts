@@ -22,11 +22,7 @@ export interface QuickToolItem {
   id: string;
   title: string;
   category:
-    | "Simulators"
-    | "Calculators"
-    | "Diagnostics"
-    | "Builders"
-    | "Studios";
+    "Simulators" | "Calculators" | "Diagnostics" | "Builders" | "Studios";
   badge: string;
   description: string;
   outcome: string;
@@ -727,7 +723,7 @@ const rawSiteContent: SiteConfig = {
       liveDemoHref: "/dashboard",
       storeHref: "https://store.hardonia.com/products/hardonia-suite-ops",
       featured: true,
-      thumbnailSrc: "/images/catalog/hardonia_suite_ops.jpg",
+      thumbnailSrc: "/images/catalog/hardonia_suite_ops.avif",
     },
     {
       id: "settler-deployment-fabric",
@@ -763,7 +759,7 @@ const rawSiteContent: SiteConfig = {
       liveDemoHref: "/how-it-works",
       storeHref: "https://store.hardonia.com/products/settler-fabric",
       featured: true,
-      thumbnailSrc: "/images/catalog/settler_deployment_fabric.jpg",
+      thumbnailSrc: "/images/catalog/settler_deployment_fabric.avif",
     },
     {
       id: "zeo-ingestion-engine",
@@ -793,7 +789,7 @@ const rawSiteContent: SiteConfig = {
       liveDemoHref: "/automation-demo",
       storeHref: "https://store.hardonia.com/products/zeo-engine",
       featured: true,
-      thumbnailSrc: "/images/catalog/zeo_ingestion_engine.jpg",
+      thumbnailSrc: "/images/catalog/zeo_ingestion_engine.avif",
     },
     {
       id: "reach-demand-accelerator",
@@ -822,7 +818,7 @@ const rawSiteContent: SiteConfig = {
       ],
       liveDemoHref: "/contact",
       storeHref: "https://store.hardonia.com/products/reach-accelerator",
-      thumbnailSrc: "/images/catalog/reach_demand_accelerator.jpg",
+      thumbnailSrc: "/images/catalog/reach_demand_accelerator.avif",
     },
     {
       id: "tokpulse-growth-core",
@@ -851,7 +847,7 @@ const rawSiteContent: SiteConfig = {
       ],
       liveDemoHref: "/work",
       storeHref: "https://store.hardonia.com/products/tokpulse-core",
-      thumbnailSrc: "/images/catalog/abstract_cyber_product.jpg",
+      thumbnailSrc: "/images/catalog/abstract_cyber_product.avif",
     },
     {
       id: "policy-guardrail-kit",
@@ -881,7 +877,7 @@ const rawSiteContent: SiteConfig = {
       liveDemoHref: "/tools/policy-studio",
       storeHref: "https://store.hardonia.com/products/policy-guardrail-kit",
       featured: true,
-      thumbnailSrc: "/images/catalog/abstract_cyber_product.jpg",
+      thumbnailSrc: "/images/catalog/abstract_cyber_product.avif",
     },
     {
       id: "operator-console-kit",
@@ -916,7 +912,7 @@ const rawSiteContent: SiteConfig = {
       ],
       liveDemoHref: "/operator-demo",
       storeHref: "https://store.hardonia.com/products/operator-console-kit",
-      thumbnailSrc: "/images/catalog/abstract_cyber_product.jpg",
+      thumbnailSrc: "/images/catalog/abstract_cyber_product.avif",
     },
     {
       id: "invoice-document-parser",
@@ -945,7 +941,7 @@ const rawSiteContent: SiteConfig = {
       ],
       liveDemoHref: "/blueprints",
       storeHref: "https://store.hardonia.com/products/invoice-parser",
-      thumbnailSrc: "/images/catalog/abstract_cyber_product.jpg",
+      thumbnailSrc: "/images/catalog/abstract_cyber_product.avif",
     },
   ],
   services: [

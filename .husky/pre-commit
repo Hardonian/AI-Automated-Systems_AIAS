@@ -2,4 +2,5 @@
 # Item 91: Strict PNPM pre-commit hook
 # Runs lint-staged for staged files, then validates the route manifest
 pnpm lint-staged
+pnpm scan:secrets:staged
 pnpm validate:route-manifest

@@ -1,5 +1,3 @@
-import Script from "next/script";
-
 import { MESSAGING_CONTRACT } from "@/content/constants";
 
 interface ProfessionalServiceSchemaProps {
@@ -32,7 +30,7 @@ export function ProfessionalServiceSchema({
   };
 
   return (
-    <Script
+    <script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="professional-service-schema"
       type="application/ld+json"
@@ -72,7 +70,7 @@ export function OrganizationSchema({
   };
 
   return (
-    <Script
+    <script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="organization-schema"
       type="application/ld+json"
@@ -114,7 +112,7 @@ export function WebSiteSchema({
   };
 
   return (
-    <Script
+    <script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="website-schema"
       type="application/ld+json"
@@ -142,7 +140,7 @@ export function BreadcrumbSchema({ items }: BreadcrumbSchemaProps) {
   };
 
   return (
-    <Script
+    <script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="breadcrumb-schema"
       type="application/ld+json"
@@ -188,7 +186,7 @@ export function ServiceSchema({
   };
 
   return (
-    <Script
+    <script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id={`service-schema-${idSuffix}`}
       type="application/ld+json"
@@ -221,7 +219,7 @@ export function ServiceListSchema({ services }: ServiceListSchemaProps) {
   };
 
   return (
-    <Script
+    <script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="service-list-schema"
       type="application/ld+json"
@@ -251,7 +249,7 @@ export function FAQSchema({ faqs }: FAQSchemaProps) {
   };
 
   return (
-    <Script
+    <script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="faq-schema"
       type="application/ld+json"
@@ -284,7 +282,7 @@ export function BlogCollectionSchema({
   };
 
   return (
-    <Script
+    <script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="blog-collection-schema"
       type="application/ld+json"
@@ -328,7 +326,7 @@ export function CaseStudySchema({
   };
 
   return (
-    <Script
+    <script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id={`case-study-schema-${title.toLowerCase().replace(/\s+/g, "-")}`}
       type="application/ld+json"
@@ -372,7 +370,7 @@ export function WebApplicationSchema({
   };
 
   return (
-    <Script
+    <script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id={`web-app-schema-${name.toLowerCase().replace(/[^a-z0-9]/g, "-")}`}
       type="application/ld+json"
@@ -413,7 +411,7 @@ export function BreadcrumbListSchema({ items }: BreadcrumbListSchemaProps) {
   };
 
   return (
-    <Script
+    <script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="breadcrumb-schema"
       type="application/ld+json"
@@ -448,7 +446,7 @@ export function FAQPageSchema({ faqs }: FAQPageSchemaProps) {
   };
 
   return (
-    <Script
+    <script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="faq-page-schema"
       type="application/ld+json"
@@ -494,7 +492,7 @@ export function HowToSchema({
   };
 
   return (
-    <Script
+    <script
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       id="how-to-schema"
       type="application/ld+json"

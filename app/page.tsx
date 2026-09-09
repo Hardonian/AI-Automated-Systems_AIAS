@@ -90,7 +90,9 @@ export default function HomePage() {
                 DETERMINISTIC CONTROL-PLANE TOPOLOGY
               </h2>
               <p className="mx-auto mt-4 max-w-2xl font-mono text-sm sm:text-base text-muted-foreground">
-                Trace live requests through strict Zod contracts, constrained model execution, and deterministic policy guardrails with zero unhandled edge states.
+                Trace live requests through strict Zod contracts, constrained
+                model execution, and deterministic policy guardrails with zero
+                unhandled edge states.
               </p>
             </div>
           </FadeIn>
@@ -119,7 +121,7 @@ export default function HomePage() {
             <div className="lg:col-span-1 hidden lg:block relative w-full aspect-square border-2 border-border bg-card p-2 shadow-lg mix-blend-multiply opacity-90">
               <div className="absolute inset-0 bg-primary/5 z-0" />
               <Image
-                src="/images/workflow_schema.png"
+                src="/images/workflow_schema.avif"
                 alt="Workflow bottleneck schema"
                 fill
                 className="object-cover img-crisp mix-blend-multiply"

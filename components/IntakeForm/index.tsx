@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 
 import {
@@ -195,6 +195,50 @@ export function IntakeForm() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [progressRestored, setProgressRestored] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    try {
+      const stored = window.sessionStorage.getItem("aias_intake_progress");
+      if (stored) {
+        const candidate = JSON.parse(stored) as {
+          stepIndex?: unknown;
+          values?: unknown;
+        };
+        const parsedValues = formSchema.partial().safeParse(candidate.values);
+        queueMicrotask(() => {
+          if (!active) return;
+          if (parsedValues.success) setValues(parsedValues.data);
+          if (typeof candidate.stepIndex === "number") {
+            setStepIndex(
+              Math.max(
+                0,
+                Math.min(Math.trunc(candidate.stepIndex), steps.length - 1),
+              ),
+            );
+          }
+          setProgressRestored(true);
+        });
+      } else {
+        queueMicrotask(() => active && setProgressRestored(true));
+      }
+    } catch {
+      window.sessionStorage.removeItem("aias_intake_progress");
+      queueMicrotask(() => active && setProgressRestored(true));
+    }
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!progressRestored || submitted) return;
+    window.sessionStorage.setItem(
+      "aias_intake_progress",
+      JSON.stringify({ stepIndex, values }),
+    );
+  }, [progressRestored, stepIndex, submitted, values]);
 
   const activeStep = steps[Math.min(stepIndex, steps.length - 1)]!;
 
@@ -300,6 +344,7 @@ export function IntakeForm() {
     } finally {
       setIsSubmitting(false);
       setSubmitted(true);
+      window.sessionStorage.removeItem("aias_intake_progress");
       setValues({ ...intake, email: intake.email });
     }
   };

@@ -5,7 +5,6 @@ import {
   PageSection,
   SurfaceCard,
 } from "@/components/ui/section-primitives";
-import { BreadcrumbSchema } from "@/components/seo/structured-data";
 import { RelatedPages } from "@/components/content/related-pages";
 
 const principles = [
@@ -51,15 +50,6 @@ export const metadata: Metadata = generateSEOMetadata({
 export default function PointOfViewPage() {
   return (
     <>
-      <BreadcrumbSchema
-        items={[
-          { name: "Home", url: "https://aiautomatedsystems.ca/" },
-          {
-            name: "Point of View",
-            url: "https://aiautomatedsystems.ca/point-of-view",
-          },
-        ]}
-      />
       <PageHero
         eyebrow="AIAS doctrine"
         title="What We Believe About AI Systems"

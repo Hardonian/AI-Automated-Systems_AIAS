@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Cpu, ShoppingBag, ArrowRight } from "lucide-react";
 
 import { PageHero, PageSection } from "@/components/ui/section-primitives";
@@ -7,6 +8,13 @@ import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
 import { siteContent } from "@/src/content/site";
 import { ToolsDirectoryClient } from "@/components/tools/tools-directory-client";
+import { WorkspaceConsole } from "@/components/tools/workspace-console";
+
+const AdvancedEngineLab = dynamic(() =>
+  import("@/components/tools/advanced-engine-lab").then(
+    (module) => module.AdvancedEngineLab,
+  ),
+);
 
 export const metadata: Metadata = generateSEOMetadata({
   title: "Interactive AI Automation Tools & Simulators | AIAS",
@@ -33,6 +41,12 @@ export default function ToolsHubPage() {
       <PageSection>
         {/* Interactive Client-side Directory with Category Filters, Search, and Live Tool Cards */}
         <ToolsDirectoryClient tools={tools} />
+        <div className="mt-16">
+          <WorkspaceConsole />
+        </div>
+        <div className="mt-16">
+          <AdvancedEngineLab />
+        </div>
 
         {/* Cross-Prong Launch Banner */}
         <div className="mt-16 grid gap-6 md:grid-cols-2">

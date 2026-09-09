@@ -25,10 +25,13 @@ import {
 } from "@/components/seo/structured-data";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AnalyticsRuntime } from "@/components/analytics/analytics-runtime";
+import { PerformanceRuntime } from "@/components/analytics/performance-runtime";
 import { NoiseOverlay } from "@/components/ui/noise-overlay";
+import { RouteBreadcrumbSchema } from "@/components/seo/route-breadcrumb-schema";
 
 import { Toaster } from "@/components/ui/toaster";
 import { MobileStickyCTA } from "@/components/layout/mobile-sticky-cta";
+import { ExperienceControls } from "@/components/layout/experience-controls";
 import { getOptionalEnv } from "@/lib/env";
 import { EnhancedErrorBoundary } from "@/lib/error-handling/error-boundary-enhanced";
 import {
@@ -147,12 +150,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html suppressHydrationWarning dir={isRTL ? "rtl" : "ltr"} lang={locale}>
       <head>
-        <link href="https://fonts.googleapis.com" rel="preconnect" />
-        <link
-          crossOrigin="anonymous"
-          href="https://fonts.gstatic.com"
-          rel="preconnect"
-        />
         <link href="/manifest.json" rel="manifest" />
 
         <OrganizationSchema />
@@ -178,6 +175,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               [ Skip to Architecture Terminal ]
             </a>
             <NoiseOverlay />
+            <RouteBreadcrumbSchema />
             <Header />
             <main
               aria-label="Main content"
@@ -189,7 +187,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </main>
             <Footer />
             <AnalyticsRuntime />
+            <PerformanceRuntime />
             <MobileStickyCTA />
+            <ExperienceControls />
             <Toaster />
             <Script
               dangerouslySetInnerHTML={{

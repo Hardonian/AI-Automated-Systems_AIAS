@@ -20,6 +20,7 @@ import {
   ServiceSchema,
   FAQSchema,
 } from "@/components/seo/structured-data";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
 
 export function generateStaticParams() {
   return caseStudies.map((study) => ({ slug: study.slug }));
@@ -39,15 +40,17 @@ export async function generateMetadata({
     };
   }
 
+  const title = `${study.title} | AIAS Case Study`;
+  const description = `Deep dive into the architecture and impact of the ${study.title} implementation by AIAS.`;
+  const metadata = generateSEOMetadata({
+    title,
+    description,
+    canonical: `/case-studies/${slug}`,
+  });
+
   return {
-    title: `${study.title} | AIAS Case Study`,
-    description: `Deep dive into the architecture and impact of the ${study.title} implementation by AIAS.`,
-    openGraph: {
-      title: `${study.title} | AIAS Case Study`,
-      description: `Deep dive into the architecture and impact of the ${study.title} implementation by AIAS.`,
-      type: "article",
-      url: `https://aiautomatedsystems.ca/case-studies/${slug}`,
-    },
+    ...metadata,
+    openGraph: { ...metadata.openGraph, type: "article" },
   };
 }
 

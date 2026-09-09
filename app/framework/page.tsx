@@ -5,7 +5,6 @@ import {
   PageSection,
   SurfaceCard,
 } from "@/components/ui/section-primitives";
-import { BreadcrumbSchema } from "@/components/seo/structured-data";
 import { RelatedPages } from "@/components/content/related-pages";
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
 
@@ -27,12 +26,6 @@ export const metadata: Metadata = generateSEOMetadata({
 export default function FrameworkPage() {
   return (
     <>
-      <BreadcrumbSchema
-        items={[
-          { name: "Home", url: "https://aiautomatedsystems.ca/" },
-          { name: "Framework", url: "https://aiautomatedsystems.ca/framework" },
-        ]}
-      />
       <PageHero
         eyebrow="Signature framework"
         title="AIAS Diagnostic Architecture Framework"

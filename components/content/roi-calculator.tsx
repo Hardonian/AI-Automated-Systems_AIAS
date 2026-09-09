@@ -19,6 +19,7 @@ import { SurfaceCard } from "@/components/ui/section-primitives";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
+import { simulateRoi } from "@/lib/calculators/roi-monte-carlo";
 
 const WEEKS_PER_YEAR = 48;
 const BASELINE_IMPLEMENTATION_COST = 48000;
@@ -141,6 +142,18 @@ export function RoiCalculator() {
           : "Moderate baseline maturity indicates governance and safety guardrails should precede scaling.",
     },
   };
+
+  const monteCarlo = useMemo(
+    () =>
+      simulateRoi({
+        annualSavings: model.annualCostSavings,
+        maturityPercent: maturity,
+        repetitionPercent: repetitionRate,
+      }),
+    [maturity, model.annualCostSavings, repetitionRate],
+  );
+
+  Object.assign(summary.outputs, { monteCarlo });
 
   const downloadSummary = () => {
     const blob = new Blob([JSON.stringify(summary, null, 2)], {
@@ -377,6 +390,34 @@ export function RoiCalculator() {
 
               {/* Break-even and Risk Score */}
               <div className="space-y-4 border-t border-border pt-4">
+                <div className="border-2 border-border bg-background p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="font-mono text-xs font-bold uppercase text-primary">
+                      Monte Carlo · {monteCarlo.trials.toLocaleString()} trials
+                    </span>
+                    <span className="font-mono text-xs font-black">
+                      {monteCarlo.probabilityPositive}% positive ROI
+                    </span>
+                  </div>
+                  <div className="mt-3 grid grid-cols-3 gap-2 text-center font-mono text-xs">
+                    <div>
+                      <span className="block text-muted-foreground">P10</span>$
+                      {monteCarlo.p10.toLocaleString()}
+                    </div>
+                    <div>
+                      <span className="block text-muted-foreground">P50</span>$
+                      {monteCarlo.p50.toLocaleString()}
+                    </div>
+                    <div>
+                      <span className="block text-muted-foreground">P90</span>$
+                      {monteCarlo.p90.toLocaleString()}
+                    </div>
+                  </div>
+                  <p className="mt-2 text-[10px] text-muted-foreground">
+                    Net first-year value after the baseline implementation
+                    budget; deterministic seed keeps exports reproducible.
+                  </p>
+                </div>
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-xs text-muted-foreground uppercase">
                     Estimated Payback Period:

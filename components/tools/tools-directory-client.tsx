@@ -24,6 +24,7 @@ import {
 import { QuickToolItem } from "@/src/content/site";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useHashState, useLocalStorage } from "@/lib/utils/client-engines";
 
 const ICON_MAP = {
   ShieldAlert,
@@ -45,8 +46,11 @@ const CATEGORIES = [
 ] as const;
 
 export function ToolsDirectoryClient({ tools }: { tools: QuickToolItem[] }) {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useHashState<string>(
+    "category",
+    "All",
+  );
+  const [searchQuery, setSearchQuery] = useLocalStorage("aias_tool_search", "");
 
   // Interactive Mini-Scanner state
   const [scannerDomain, setScannerDomain] = useState<string>("operations");

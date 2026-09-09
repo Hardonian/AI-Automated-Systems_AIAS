@@ -397,6 +397,16 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
     changeFrequency: "monthly",
     indexable: false,
   },
+  {
+    path: "/offline",
+    title: "Offline Workspace | AI Automated Systems",
+    description:
+      "Offline fallback for cached AIAS blueprints and browser-based planning tools.",
+    canonical: "/offline",
+    priority: 0.2,
+    changeFrequency: "monthly",
+    indexable: false,
+  },
 ];
 
 export const INDEXABLE_ROUTE_MANIFEST = ROUTE_MANIFEST.filter(

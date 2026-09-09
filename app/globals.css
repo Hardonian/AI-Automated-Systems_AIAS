@@ -181,6 +181,42 @@
     --grid-line: 0 0% 100% / 0.05;
     --grid-line-dense: 0 0% 100% / 0.08;
   }
+
+  .crt-amber {
+    --bg: 42 100% 3%;
+    --surface: 40 65% 6%;
+    --surface-muted: 39 45% 10%;
+    --text: 42 100% 74%;
+    --text-muted: 40 55% 60%;
+    --primary: 38 100% 50%;
+    --primary-hover: 42 100% 62%;
+    --primary-foreground: 42 100% 4%;
+    --border: 38 70% 30%;
+    --card: 42 100% 4%;
+    --card-foreground: 42 100% 74%;
+    --popover: 42 100% 4%;
+    --popover-foreground: 42 100% 74%;
+    filter: sepia(0.12);
+  }
+
+  .colorblind-safe {
+    --primary: 210 100% 42%;
+    --primary-hover: 210 100% 34%;
+    --success: 190 100% 28%;
+    --warning: 44 100% 42%;
+    --destructive: 322 72% 42%;
+    --chart-1: 210 100% 42%;
+    --chart-2: 44 100% 42%;
+    --chart-3: 190 100% 28%;
+    --chart-4: 322 72% 42%;
+  }
+
+  .dyslexic-font body {
+    font-family: Arial, Verdana, sans-serif;
+    letter-spacing: 0.045em;
+    word-spacing: 0.12em;
+    line-height: 1.7;
+  }
 }
 
 @layer base {
@@ -395,12 +431,28 @@
   }
 
   .matrix-dot {
-    background-image: radial-gradient(hsl(var(--text) / 0.15) 1px, transparent 0);
+    background-image: radial-gradient(
+      hsl(var(--text) / 0.15) 1px,
+      transparent 0
+    );
     background-size: 20px 20px;
   }
 }
 
 @layer utilities {
+  @media (orientation: landscape) and (max-height: 500px) {
+    .container {
+      max-width: 100%;
+    }
+
+    main {
+      scroll-padding-top: 3.5rem;
+    }
+
+    [data-radix-dialog-content] {
+      max-height: 92dvh;
+    }
+  }
   /* ========================================
      ACCESSIBILITY: Skip link
      ======================================== */
@@ -507,7 +559,7 @@
   }
 
   .touch-target::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: -6px;
     pointer-events: auto;
@@ -540,17 +592,17 @@
      Shape-coded status beyond color alone
      ======================================== */
   .status-success::before {
-    content: '●';
+    content: "●";
     margin-right: 0.375rem;
   }
 
   .status-warning::before {
-    content: '▲';
+    content: "▲";
     margin-right: 0.375rem;
   }
 
   .status-error::before {
-    content: '■';
+    content: "■";
     margin-right: 0.375rem;
   }
 

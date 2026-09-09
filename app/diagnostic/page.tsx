@@ -4,7 +4,6 @@ import {
   PageSection,
   SurfaceCard,
 } from "@/components/ui/section-primitives";
-import { BreadcrumbSchema } from "@/components/seo/structured-data";
 import { RelatedPages } from "@/components/content/related-pages";
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
 
@@ -25,15 +24,6 @@ export const metadata: Metadata = generateSEOMetadata({
 export default function DiagnosticPage() {
   return (
     <>
-      <BreadcrumbSchema
-        items={[
-          { name: "Home", url: "https://aiautomatedsystems.ca/" },
-          {
-            name: "Diagnostic",
-            url: "https://aiautomatedsystems.ca/diagnostic",
-          },
-        ]}
-      />
       <PageHero
         eyebrow="Discovery engagement"
         title="AI Clarity Diagnostic"

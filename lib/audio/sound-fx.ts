@@ -9,6 +9,8 @@
 
 let audioCtx: AudioContext | null = null;
 let soundEnabled = true;
+let consecutiveClick = 0;
+let lastClickAt = 0;
 
 // Initialize preference from localStorage if available
 if (typeof window !== "undefined") {
@@ -92,11 +94,15 @@ export function playClick(): void {
 
   try {
     const now = ctx.currentTime;
+    const timestamp = performance.now();
+    consecutiveClick = timestamp - lastClickAt < 900 ? consecutiveClick + 1 : 0;
+    lastClickAt = timestamp;
+    const pitch = 1080 + (consecutiveClick % 6) * 85;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
     osc.type = "sine";
-    osc.frequency.setValueAtTime(1200, now);
+    osc.frequency.setValueAtTime(pitch, now);
     osc.frequency.exponentialRampToValueAtTime(300, now + 0.025);
 
     gain.gain.setValueAtTime(0.04, now);

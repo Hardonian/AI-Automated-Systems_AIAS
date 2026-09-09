@@ -25,6 +25,7 @@ import {
   playSuccess,
 } from "@/lib/audio/sound-fx";
 import { Button } from "@/components/ui/button";
+import { TopologyWebGlCanvas } from "@/components/visual/topology-webgl-canvas";
 
 interface TopologyStage {
   id: string;
@@ -173,6 +174,17 @@ export function SystemTopologyVisualizer() {
   const [pulseActive, setPulseActive] = useState<boolean>(false);
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
 
+  useEffect(() => {
+    const reset = () => {
+      setActiveStageId("schema-gate");
+      setSimulateIntercept(false);
+      setPulseActive(false);
+      setActiveStepIndex(0);
+    };
+    window.addEventListener("aias:telemetry-reset", reset);
+    return () => window.removeEventListener("aias:telemetry-reset", reset);
+  }, []);
+
   const fallbackStage: TopologyStage = TOPOLOGY_STAGES[0]!;
   const activeStage: TopologyStage =
     TOPOLOGY_STAGES.find((s) => s.id === activeStageId) ?? fallbackStage;
@@ -305,6 +317,8 @@ export function SystemTopologyVisualizer() {
           ))}
         </tbody>
       </table>
+
+      <TopologyWebGlCanvas />
 
       {/* HUD Telemetry Top Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-border bg-muted/40 px-4 py-3 sm:px-6">

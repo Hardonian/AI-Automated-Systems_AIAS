@@ -17,7 +17,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
    ======================================== */
 export function useHashState<T extends string>(
   key: string,
-  defaultValue: T
+  defaultValue: T,
 ): [T, (value: T) => void] {
   const [value, setValue] = useState<T>(() => {
     if (typeof window === "undefined") return defaultValue;
@@ -25,6 +25,15 @@ export function useHashState<T extends string>(
     const params = new URLSearchParams(hash);
     return (params.get(key) as T | null) ?? defaultValue;
   });
+
+  useEffect(() => {
+    const readHash = () => {
+      const params = new URLSearchParams(window.location.hash.slice(1));
+      setValue((params.get(key) as T | null) ?? defaultValue);
+    };
+    window.addEventListener("hashchange", readHash);
+    return () => window.removeEventListener("hashchange", readHash);
+  }, [defaultValue, key]);
 
   const setHashValue = useCallback(
     (newValue: T) => {
@@ -34,7 +43,7 @@ export function useHashState<T extends string>(
       params.set(key, newValue);
       window.history.replaceState(null, "", `#${params.toString()}`);
     },
-    [key]
+    [key],
   );
 
   return [value, setHashValue];
@@ -50,8 +59,7 @@ interface ShareData {
 }
 
 export function useWebShare() {
-  const canShare =
-    typeof navigator !== "undefined" && "share" in navigator;
+  const canShare = typeof navigator !== "undefined" && "share" in navigator;
 
   const share = useCallback(
     async (data: ShareData): Promise<boolean> => {
@@ -71,7 +79,7 @@ export function useWebShare() {
         return false;
       }
     },
-    [canShare]
+    [canShare],
   );
 
   return { canShare, share };
@@ -82,26 +90,29 @@ export function useWebShare() {
    ======================================== */
 export function useBroadcastChannel<T>(
   channelName: string,
-  onMessage?: (data: T) => void
+  onMessage?: (data: T) => void,
 ) {
   const channelRef = useRef<BroadcastChannel | null>(null);
+  const onMessageRef = useRef(onMessage);
+
+  useEffect(() => {
+    onMessageRef.current = onMessage;
+  }, [onMessage]);
 
   useEffect(() => {
     if (typeof BroadcastChannel === "undefined") return;
     const channel = new BroadcastChannel(channelName);
     channelRef.current = channel;
 
-    if (onMessage) {
-      channel.onmessage = (event: MessageEvent<T>) => {
-        onMessage(event.data);
-      };
-    }
+    channel.onmessage = (event: MessageEvent<T>) => {
+      onMessageRef.current?.(event.data);
+    };
 
     return () => {
       channel.close();
       channelRef.current = null;
     };
-  }, [channelName, onMessage]);
+  }, [channelName]);
 
   const postMessage = useCallback((data: T) => {
     channelRef.current?.postMessage(data);
@@ -155,7 +166,7 @@ export function generateDiagnosticMailto(options?: {
    via Web Crypto API
    ======================================== */
 export async function generateSHA256Receipt(
-  content: string
+  content: string,
 ): Promise<{ hash: string; timestamp: string; receipt: string }> {
   const timestamp = new Date().toISOString();
   const payload = `${timestamp}::${content}`;
@@ -184,17 +195,26 @@ export async function generateSHA256Receipt(
    ======================================== */
 export function useLocalStorage<T>(
   key: string,
-  defaultValue: T
+  defaultValue: T,
 ): [T, (value: T | ((prev: T) => T)) => void] {
-  const [storedValue, setStoredValue] = useState<T>(() => {
-    if (typeof window === "undefined") return defaultValue;
+  const defaultValueRef = useRef(defaultValue);
+  const [storedValue, setStoredValue] = useState<T>(defaultValue);
+
+  useEffect(() => {
+    let active = true;
     try {
       const item = window.localStorage.getItem(key);
-      return item ? (JSON.parse(item) as T) : defaultValue;
+      if (item) {
+        const parsed = JSON.parse(item) as T;
+        queueMicrotask(() => active && setStoredValue(parsed));
+      }
     } catch {
-      return defaultValue;
+      queueMicrotask(() => active && setStoredValue(defaultValueRef.current));
     }
-  });
+    return () => {
+      active = false;
+    };
+  }, [key]);
 
   const setValue = useCallback(
     (value: T | ((prev: T) => T)) => {
@@ -208,7 +228,7 @@ export function useLocalStorage<T>(
         return newValue;
       });
     },
-    [key]
+    [key],
   );
 
   return [storedValue, setValue];
@@ -219,18 +239,27 @@ export function useLocalStorage<T>(
    ======================================== */
 export function useSessionProgress<T>(
   wizardId: string,
-  defaultState: T
+  defaultState: T,
 ): [T, (update: Partial<T>) => void, () => void] {
   const storageKey = `aias_wizard_${wizardId}`;
-  const [state, setState] = useState<T>(() => {
-    if (typeof window === "undefined") return defaultState;
+  const defaultStateRef = useRef(defaultState);
+  const [state, setState] = useState<T>(defaultState);
+
+  useEffect(() => {
+    let active = true;
     try {
       const stored = window.sessionStorage.getItem(storageKey);
-      return stored ? (JSON.parse(stored) as T) : defaultState;
+      if (stored) {
+        const parsed = JSON.parse(stored) as T;
+        queueMicrotask(() => active && setState(parsed));
+      }
     } catch {
-      return defaultState;
+      queueMicrotask(() => active && setState(defaultStateRef.current));
     }
-  });
+    return () => {
+      active = false;
+    };
+  }, [storageKey]);
 
   const updateProgress = useCallback(
     (update: Partial<T>) => {
@@ -244,17 +273,69 @@ export function useSessionProgress<T>(
         return next;
       });
     },
-    [storageKey]
+    [storageKey],
   );
 
   const resetProgress = useCallback(() => {
-    setState(defaultState);
+    setState(defaultStateRef.current);
     try {
       window.sessionStorage.removeItem(storageKey);
     } catch {
       // Ignore
     }
-  }, [storageKey, defaultState]);
+  }, [storageKey]);
 
   return [state, updateProgress, resetProgress];
+}
+
+export interface EncryptedClientExport {
+  algorithm: "AES-GCM";
+  ciphertext: string;
+  iv: string;
+  salt: string;
+  iterations: 210_000;
+}
+
+const bytesToBase64 = (bytes: Uint8Array) => {
+  let binary = "";
+  bytes.forEach((byte) => (binary += String.fromCharCode(byte)));
+  return btoa(binary);
+};
+
+/** Creates a portable AES-GCM export without sending state off-device. */
+export async function encryptClientState(
+  state: unknown,
+  passphrase: string,
+): Promise<EncryptedClientExport> {
+  if (passphrase.length < 12) {
+    throw new Error("Use a passphrase of at least 12 characters.");
+  }
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const material = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(passphrase),
+    "PBKDF2",
+    false,
+    ["deriveKey"],
+  );
+  const key = await crypto.subtle.deriveKey(
+    { name: "PBKDF2", hash: "SHA-256", salt, iterations: 210_000 },
+    material,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["encrypt"],
+  );
+  const ciphertext = await crypto.subtle.encrypt(
+    { name: "AES-GCM", iv },
+    key,
+    new TextEncoder().encode(JSON.stringify(state)),
+  );
+  return {
+    algorithm: "AES-GCM",
+    ciphertext: bytesToBase64(new Uint8Array(ciphertext)),
+    iv: bytesToBase64(iv),
+    salt: bytesToBase64(salt),
+    iterations: 210_000,
+  };
 }

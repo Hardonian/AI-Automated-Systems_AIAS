@@ -13,7 +13,7 @@ const stepColors = [
   "from-indigo-500/20 to-indigo-600/10",
   "from-violet-500/20 to-violet-600/10",
   "from-purple-500/20 to-purple-600/10",
-  "from-fuchsia-500/20 to-fuchsia-600/10",
+  "from-cyan-500/20 to-cyan-600/10",
 ];
 
 export function HowWeWorkSection({ steps }: { steps: ProcessStep[] }) {

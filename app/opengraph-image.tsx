@@ -23,8 +23,8 @@ export default function OpenGraphImage() {
     >
       <div
         style={{
-          border: "5px solid #ff4d1a",
-          boxShadow: "16px 16px 0 #ff4d1a",
+          border: "5px solid #2563eb",
+          boxShadow: "16px 16px 0 #2563eb",
           display: "flex",
           flexDirection: "column",
           padding: 54,
@@ -33,7 +33,7 @@ export default function OpenGraphImage() {
       >
         <div
           style={{
-            color: "#ff4d1a",
+            color: "#60a5fa",
             display: "flex",
             fontSize: 26,
             letterSpacing: 5,

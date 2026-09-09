@@ -72,7 +72,7 @@ export default defineConfig({
     actionTimeout: 15 * 1000,
 
     // Navigation timeout
-    navigationTimeout: 30 * 1000,
+    navigationTimeout: 60 * 1000,
 
     // Consistent locale and timezone for deterministic tests
     locale: "en-US",

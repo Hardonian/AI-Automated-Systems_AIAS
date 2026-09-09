@@ -26,9 +26,7 @@ import {
 import { ThemeProvider } from "@/components/theme-provider";
 import { AnalyticsRuntime } from "@/components/analytics/analytics-runtime";
 import { PerformanceRuntime } from "@/components/analytics/performance-runtime";
-import { NoiseOverlay } from "@/components/ui/noise-overlay";
 import { RouteBreadcrumbSchema } from "@/components/seo/route-breadcrumb-schema";
-
 import { Toaster } from "@/components/ui/toaster";
 import { MobileStickyCTA } from "@/components/layout/mobile-sticky-cta";
 import { ExperienceControls } from "@/components/layout/experience-controls";
@@ -50,7 +48,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   viewportFit: "cover",
-  themeColor: "#FF4D1A",
+  themeColor: "#1e56a0",
 };
 
 export const metadata: Metadata = {
@@ -182,7 +180,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 [ Skip to Main Content ]
               </a>
             </nav>
-            <NoiseOverlay />
             <RouteBreadcrumbSchema />
             <Header />
             <main

@@ -305,7 +305,7 @@ export function InteractiveTerminal() {
               animate={{ opacity: 1, x: 0 }}
               className={`flex items-start gap-2 ${
                 line.type === "system"
-                  ? "text-orange-400 font-bold"
+                  ? "text-sky-300 font-bold"
                   : line.type === "success"
                     ? "text-emerald-400"
                     : line.type === "warning"
@@ -320,7 +320,7 @@ export function InteractiveTerminal() {
                 <ShieldAlert className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-amber-400" />
               )}
               {line.type === "system" && (
-                <Cpu className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-orange-400 opacity-80" />
+                <Cpu className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-sky-300 opacity-80" />
               )}
               <span className="leading-snug break-all">{line.text}</span>
             </motion.div>

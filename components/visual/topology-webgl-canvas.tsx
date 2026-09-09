@@ -167,7 +167,7 @@ export function TopologyWebGlCanvas() {
         ref={canvasRef}
         role="img"
       />
-      <span className="pointer-events-none absolute bottom-2 left-3 font-mono text-[10px] font-black uppercase text-orange-400">
+      <span className="pointer-events-none absolute bottom-2 left-3 font-mono text-[10px] font-black uppercase text-sky-300">
         WebGL topology · drag / wheel / pinch
       </span>
     </div>

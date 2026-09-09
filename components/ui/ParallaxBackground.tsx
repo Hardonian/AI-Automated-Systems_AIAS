@@ -73,13 +73,13 @@ export function ParallaxBackground({
         speed={0.3}
       />
       <Blob
-        className="right-1/4 top-1/4 h-80 w-80 bg-purple-500/20"
+        className="right-1/4 top-1/4 h-80 w-80 bg-sky-500/15"
         initialX={0}
         initialY={0}
         speed={0.4}
       />
       <Blob
-        className="bottom-1/4 left-1/3 h-72 w-72 bg-pink-500/20"
+        className="bottom-1/4 left-1/3 h-72 w-72 bg-indigo-500/15"
         initialX={0}
         initialY={0}
         speed={0.5}

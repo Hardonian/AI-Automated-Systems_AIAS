@@ -44,16 +44,16 @@ export default function BlogPage() {
             RSS feed of AI and tech news with systems thinking analysis.
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
-            <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+            <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-foreground">
               📰 Daily Publishing
             </span>
-            <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+            <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-foreground">
               🧠 Systems Thinking Focus
             </span>
-            <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+            <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-foreground">
               🤖 AI & Tech News RSS
             </span>
-            <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+            <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-foreground">
               💬 AI-Moderated Comments
             </span>
           </div>

@@ -367,7 +367,7 @@ export function RoiCalculator() {
                     Estimated Business Impact
                   </h3>
                 </div>
-                <span className="font-mono text-xs font-black uppercase px-2.5 py-1 border border-primary text-primary bg-primary/10">
+                <span className="font-mono text-xs font-black uppercase px-2.5 py-1 border border-primary text-foreground bg-primary/10">
                   {model.roiMultiplier}x First-Year ROI
                 </span>
               </div>
@@ -448,7 +448,7 @@ export function RoiCalculator() {
                   <span className="font-mono text-xs text-muted-foreground uppercase">
                     Operational Variance Risk Reduction:
                   </span>
-                  <span className="font-mono text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                  <span className="font-mono text-sm font-bold text-emerald-700 dark:text-emerald-400">
                     {model.riskReduction}%
                   </span>
                 </div>

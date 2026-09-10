@@ -6,6 +6,7 @@
 - Carried catalog selections into a qualified four-step contact brief with required workflow context, honest delivery-state reporting, local JSON evidence, and email/booking handoffs when no intake endpoint is configured.
 - Replaced the legacy Lovable heart favicon with a cohesive AI slash identity across SVG/ICO favicons, Apple/PWA icons, metadata, manifest, structured logo, header, and footer.
 - Stabilized local end-to-end verification under cold Next.js route compilation and refreshed inspected responsive baselines for the catalog and AI identity mark.
+- Corrected the Vercel framework/output contract, pinned the production Node major, and removed a tracked obsolete Vite/backend environment reference that caused deployment warnings and stale configuration drift.
 - Converted unsupported benchmark, uptime, certification-readiness, confidentiality, and client-result statements into explicit scenarios, measurement contracts, or scope-dependent commitments.
 - Standardized Next.js production output so bundle budgets read the fresh build, added a dependency-free static preview server, and repaired CI browser jobs that previously started no server.
 - Replaced duplicated and ineffective visual tests with 24 reviewed baselines spanning six critical surfaces across desktop, tablet, mobile, and short landscape viewports.

@@ -1,8 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
   "buildCommand": "pnpm build",
   "installCommand": "pnpm install --no-frozen-lockfile",
-  "outputDirectory": "out",
+  "outputDirectory": null,
   "build": {
     "env": {
       "NODE_OPTIONS": "--max-old-space-size=4096 --no-warnings",

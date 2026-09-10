@@ -214,7 +214,7 @@ export function RoiCalculator() {
       {/* Main Interactive Grid */}
       <div className="grid gap-8 lg:grid-cols-12">
         {/* Left Column: Interactive Sliders & Inputs (6 cols) */}
-        <div className="space-y-6 lg:col-span-6">
+        <div className="min-w-0 space-y-6 lg:col-span-6">
           <SurfaceCard className="p-6 sm:p-8 border-2 border-border">
             <div className="flex items-center justify-between border-b-2 border-border pb-4 mb-6">
               <div>
@@ -355,7 +355,7 @@ export function RoiCalculator() {
         </div>
 
         {/* Right Column: Calculated Outputs & Financial Forecast (6 cols) */}
-        <div className="space-y-6 lg:col-span-6">
+        <div className="min-w-0 space-y-6 lg:col-span-6">
           <SurfaceCard className="p-6 sm:p-8 border-2 border-primary bg-card h-full flex flex-col justify-between shadow-card">
             <div>
               <div className="flex items-center justify-between border-b-2 border-border pb-4 mb-6">

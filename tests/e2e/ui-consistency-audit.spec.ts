@@ -166,12 +166,29 @@ async function checkResponsiveIssues(
   );
 
   if (horizontalOverflow > 1) {
+    const offenders = await page.evaluate(() => {
+      const viewportWidth = document.documentElement.clientWidth;
+
+      return Array.from(document.querySelectorAll("body *"))
+        .map((element) => {
+          const rect = element.getBoundingClientRect();
+          return {
+            element: `${element.tagName.toLowerCase()}.${Array.from(element.classList).slice(0, 3).join(".")}`,
+            left: Math.round(rect.left),
+            right: Math.round(rect.right),
+            width: Math.round(rect.width),
+          };
+        })
+        .filter((item) => item.left < -1 || item.right > viewportWidth + 1)
+        .slice(0, 6);
+    });
+
     logIssue(
       route,
       viewportName,
       "MED",
       "Responsive Issue",
-      `Horizontal overflow detected: ${horizontalOverflow}px`,
+      `Horizontal overflow detected: ${horizontalOverflow}px; offenders: ${JSON.stringify(offenders)}`,
     );
   }
 }
@@ -245,21 +262,29 @@ async function checkReducedMotion(page: Page, route: string): Promise<void> {
   await waitForPageStability(page);
 
   // Check if animations are properly disabled
-  const hasReducedMotionSupport = await page.evaluate(() => {
+  const motionState = await page.evaluate(() => {
     const testElement = document.createElement("div");
     testElement.style.animation = "test 1s infinite";
     document.body.appendChild(testElement);
 
     const style = window.getComputedStyle(testElement);
-    const isAnimationDisabled =
-      style.animationDuration === "0.001ms" ||
-      style.animationDuration === "0.01ms" ||
-      style.animationDuration === "0s" ||
-      style.animationName === "none";
+    const state = {
+      duration: style.animationDuration,
+      mediaMatches: window.matchMedia("(prefers-reduced-motion: reduce)")
+        .matches,
+      name: style.animationName,
+    };
 
     document.body.removeChild(testElement);
-    return isAnimationDisabled;
+    return state;
   });
+
+  const durationInMilliseconds = motionState.duration.endsWith("ms")
+    ? Number.parseFloat(motionState.duration)
+    : Number.parseFloat(motionState.duration) * 1000;
+  const hasReducedMotionSupport =
+    motionState.mediaMatches &&
+    (motionState.name === "none" || durationInMilliseconds <= 0.01);
 
   if (!hasReducedMotionSupport) {
     logIssue(
@@ -267,7 +292,7 @@ async function checkReducedMotion(page: Page, route: string): Promise<void> {
       "desktop",
       "MED",
       "Accessibility",
-      "Reduced motion preferences not fully supported",
+      `Reduced motion preferences not fully supported: ${JSON.stringify(motionState)}`,
     );
   }
 }

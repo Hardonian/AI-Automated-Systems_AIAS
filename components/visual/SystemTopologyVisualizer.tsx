@@ -287,36 +287,19 @@ export function SystemTopologyVisualizer() {
         }.`}
       </div>
 
-      {/* Item 36: Screen-reader data table fallback */}
-      <table
-        className="sr-only"
-        role="table"
-        aria-label="Pipeline stage specifications"
-      >
-        <caption>AIAS Deterministic Pipeline Stages</caption>
-        <thead>
-          <tr>
-            <th scope="col">Stage</th>
-            <th scope="col">Name</th>
-            <th scope="col">Category</th>
-            <th scope="col">Latency</th>
-            <th scope="col">Memory</th>
-            <th scope="col">Status</th>
-          </tr>
-        </thead>
-        <tbody>
+      {/* Screen-reader topology fallback without table min-content overflow. */}
+      <div className="sr-only" aria-label="Pipeline stage specifications">
+        <p>AIAS Deterministic Pipeline Stages</p>
+        <ol>
           {TOPOLOGY_STAGES.map((stage) => (
-            <tr key={stage.id}>
-              <td>{stage.number}</td>
-              <td>{stage.name}</td>
-              <td>{stage.category}</td>
-              <td>{stage.latency}</td>
-              <td>{stage.memoryLimit}</td>
-              <td>{stage.status}</td>
-            </tr>
+            <li key={stage.id}>
+              Stage {stage.number}: {stage.name}. Category: {stage.category}.
+              Latency: {stage.latency}. Memory: {stage.memoryLimit}. Status:
+              {stage.status}.
+            </li>
           ))}
-        </tbody>
-      </table>
+        </ol>
+      </div>
 
       <TopologyWebGlCanvas />
 

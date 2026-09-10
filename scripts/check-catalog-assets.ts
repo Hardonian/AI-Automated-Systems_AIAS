@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import path from "node:path";
 
@@ -7,17 +8,38 @@ const catalogAssets = siteContent.catalogProducts
   .map((product) => product.thumbnailSrc)
   .filter((thumbnailSrc): thumbnailSrc is string => Boolean(thumbnailSrc));
 
-const missingAssets = catalogAssets.filter((asset) => {
-  if (!asset.startsWith("/images/catalog/")) {
-    return true;
-  }
+const releasableAssets = new Set(
+  execFileSync(
+    "git",
+    [
+      "ls-files",
+      "--cached",
+      "--others",
+      "--exclude-standard",
+      "--",
+      "public/images/catalog",
+    ],
+    { cwd: process.cwd(), encoding: "utf8" },
+  )
+    .split(/\r?\n/)
+    .filter(Boolean)
+    .map((asset) => asset.replaceAll("\\", "/")),
+);
 
-  return !existsSync(path.join(process.cwd(), "public", asset));
+const invalidAssets = catalogAssets.filter((asset) => {
+  const publicPath = `public${asset}`;
+
+  return (
+    !asset.startsWith("/images/catalog/") ||
+    path.extname(asset).toLowerCase() !== ".avif" ||
+    !existsSync(path.join(process.cwd(), publicPath)) ||
+    !releasableAssets.has(publicPath)
+  );
 });
 
-if (missingAssets.length > 0) {
-  console.error("Missing catalog image assets:");
-  missingAssets.forEach((asset) => console.error(`- ${asset}`));
+if (invalidAssets.length > 0) {
+  console.error("Catalog images must be present, releasable AVIF assets:");
+  invalidAssets.forEach((asset) => console.error(`- ${asset}`));
   process.exit(1);
 }
 

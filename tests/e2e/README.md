@@ -26,7 +26,7 @@ pnpm test:audit
 
 ### Files
 
-- `critical-surfaces.visual.spec.ts` - Visual baselines for five critical public surfaces
+- `critical-surfaces.visual.spec.ts` - Visual baselines for six critical public surfaces
 - `ui-consistency-audit.spec.ts` - Comprehensive UI audit (console errors, hydration, responsive issues)
 - `utils/visual-helpers.ts` - Shared utilities for stable, deterministic screenshots
 

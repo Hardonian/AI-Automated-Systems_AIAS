@@ -262,7 +262,7 @@ export function ThreeProngedSection() {
                   {activePillar.id === "catalog" && (
                     <div className="mt-4 space-y-3">
                       <p className="font-mono text-xs text-muted-foreground">
-                        Featured Hardonia Store Products:
+                        Featured System Modules:
                       </p>
                       <div className="space-y-2">
                         {siteContent.catalogProducts

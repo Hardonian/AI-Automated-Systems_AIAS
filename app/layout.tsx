@@ -108,8 +108,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: TAGLINE_TITLE_TEMPLATE,
     description: MESSAGING_CONTRACT.metadataDescription,
-    creator: "@aias_platform",
-    site: "@aias_platform",
     images: [ogImageUrl],
   },
   robots: {

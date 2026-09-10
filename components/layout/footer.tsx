@@ -44,7 +44,7 @@ const FOOTER_COLUMNS = [
   {
     title: "Product Catalog",
     links: [
-      { label: "Hardonia Store Gateway", href: "/catalog" },
+      { label: "Systems & Module Catalog", href: "/catalog" },
       { label: "Blueprints Library", href: "/blueprints" },
       {
         label: "Governed Intake Router",
@@ -195,7 +195,7 @@ export function Footer() {
               <a
                 aria-label="Visit our GitHub repository"
                 className="text-muted-foreground transition-colors hover:text-foreground"
-                href="https://github.com/shardie-github/aias"
+                href="https://github.com/Hardonian/AI-Automated-Systems_AIAS"
                 rel="noopener noreferrer"
                 target="_blank"
               >

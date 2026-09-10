@@ -1,6 +1,6 @@
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer } from "node:http";
-import { extname, resolve, sep } from "node:path";
+import { basename, dirname, extname, resolve, sep } from "node:path";
 
 const root = resolve(process.argv[2] || "out");
 const port = Number(process.argv[3] || 3000);
@@ -35,10 +35,20 @@ const fileFor = (pathname) => {
   }
   const relativePath = decoded.replace(/^\/+/, "");
   const base = resolve(root, relativePath);
-  const nextPageData = resolve(
-    root,
-    relativePath.replace(/\.__PAGE__\.txt$/, "/__PAGE__.txt"),
-  );
+  const pageDataName = basename(relativePath, ".__PAGE__.txt");
+  const pageDataParts = pageDataName.split(".");
+  const nextPageData =
+    relativePath.endsWith(".__PAGE__.txt") &&
+    pageDataParts[0] === "__next" &&
+    pageDataParts.length >= 2
+      ? resolve(
+          root,
+          dirname(relativePath),
+          `${pageDataParts[0]}.${pageDataParts[1]}`,
+          ...pageDataParts.slice(2),
+          "__PAGE__.txt",
+        )
+      : base;
 
   if (base !== root && !base.startsWith(`${root}${sep}`)) return undefined;
 

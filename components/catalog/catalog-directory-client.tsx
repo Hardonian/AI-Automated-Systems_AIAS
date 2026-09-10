@@ -3,23 +3,9 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Search,
-  ShoppingBag,
-  ExternalLink,
-  CheckCircle,
-  Code2,
-  Layers,
-  Sparkles,
-  ChevronRight,
-  ShieldCheck,
-  Zap,
-  ArrowRight,
-  Download,
-} from "lucide-react";
+import { Search, CheckCircle, Zap, ArrowRight } from "lucide-react";
 
-import { CatalogProduct } from "@/src/content/site";
+import type { CatalogProduct } from "@/src/content/site";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -30,14 +16,18 @@ const CATEGORIES = [
   "Governance Kits",
   "UI Kits",
 ] as const;
+const LICENSES = ["All", "Commercial", "Open Source"] as const;
+
+type Category = (typeof CATEGORIES)[number];
+type License = (typeof LICENSES)[number];
 
 export function CatalogDirectoryClient({
   products,
 }: {
   products: CatalogProduct[];
 }) {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [selectedLicense, setSelectedLicense] = useState<string>("All");
+  const [selectedCategory, setSelectedCategory] = useState<Category>("All");
+  const [selectedLicense, setSelectedLicense] = useState<License>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const filteredProducts = useMemo(() => {
@@ -62,6 +52,28 @@ export function CatalogDirectoryClient({
 
   return (
     <div className="space-y-10">
+      <h2 className="sr-only">Catalog modules</h2>
+
+      <div className="grid border-2 border-border bg-background sm:grid-cols-3">
+        {[
+          ["Catalog", `${products.length} reference scopes`],
+          ["Delivery", "Adapted to your stack"],
+          ["Next step", "Fit review + scoped plan"],
+        ].map(([label, value]) => (
+          <div
+            className="border-b-2 border-border p-4 last:border-b-0 sm:border-b-0 sm:border-r-2 sm:last:border-r-0"
+            key={label}
+          >
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+              {label}
+            </p>
+            <p className="mt-1 font-mono text-xs font-bold uppercase text-foreground">
+              {value}
+            </p>
+          </div>
+        ))}
+      </div>
+
       {/* Category and Search Filter Bar */}
       <div className="flex flex-col gap-4 border-2 border-border bg-card p-6 shadow-card">
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
@@ -73,7 +85,7 @@ export function CatalogDirectoryClient({
                 onClick={() => setSelectedCategory(category)}
                 className={`border-2 px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   selectedCategory === category
-                    ? "border-cyan-500 bg-cyan-500 text-white"
+                    ? "border-cyan-400 bg-cyan-800 text-cyan-50"
                     : "border-border bg-background text-muted-foreground hover:border-foreground hover:text-foreground"
                 }`}
                 type="button"
@@ -101,7 +113,7 @@ export function CatalogDirectoryClient({
           <span className="font-mono text-[11px] font-bold uppercase text-muted-foreground">
             License Type:
           </span>
-          {["All", "Commercial", "Open Source"].map((lic) => (
+          {LICENSES.map((lic) => (
             <button
               key={lic}
               onClick={() => setSelectedLicense(lic)}
@@ -120,13 +132,9 @@ export function CatalogDirectoryClient({
 
       {/* Product Cards Grid */}
       <div className="grid gap-8 md:grid-cols-2">
-        {filteredProducts.map((product, index) => (
-          <motion.div
+        {filteredProducts.map((product) => (
+          <div
             key={product.id}
-            layout
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.2 }}
             className={`flex flex-col justify-between border-2 bg-card overflow-hidden transition-all hover:-translate-y-1 ${
               product.featured
                 ? "border-cyan-500 shadow-[4px_4px_0px_0px_hsl(var(--secondary))]"
@@ -141,7 +149,7 @@ export function CatalogDirectoryClient({
                     src={product.thumbnailSrc}
                     alt={product.title}
                     fill
-                    preload={index === 0}
+                    loading="eager"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
@@ -182,6 +190,15 @@ export function CatalogDirectoryClient({
                   {product.description}
                 </p>
 
+                <div className="mt-5 border-l-2 border-cyan-500 bg-background p-4">
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-500">
+                    Architecture
+                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                    {product.architectureSummary}
+                  </p>
+                </div>
+
                 {/* Tech Stack Chips */}
                 <div className="mt-4 flex flex-wrap gap-1.5">
                   {product.techStack.map((tech) => (
@@ -200,9 +217,9 @@ export function CatalogDirectoryClient({
                     Core Architecture Features:
                   </p>
                   <ul className="space-y-1.5">
-                    {product.keyFeatures.map((feat, idx) => (
+                    {product.keyFeatures.map((feat) => (
                       <li
-                        key={idx}
+                        key={feat}
                         className="flex items-start gap-2 text-xs text-foreground"
                       >
                         <CheckCircle className="h-3.5 w-3.5 text-cyan-500 flex-shrink-0 mt-0.5" />
@@ -249,18 +266,14 @@ export function CatalogDirectoryClient({
                   asChild
                   className="w-full sm:w-auto flex-1 rounded-none border-2 border-cyan-500 bg-cyan-500/10 font-mono text-xs font-bold uppercase tracking-widest text-cyan-400 shadow-[2px_2px_0px_0px_rgba(6,182,212,0.5)] hover:bg-cyan-500 hover:text-white hover:shadow-[4px_4px_0px_0px_rgba(6,182,212,1)] hover:-translate-y-0.5 transition-all backdrop-blur-sm"
                 >
-                  <Link
-                    href={product.storeHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Hardonia Store
-                    <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
+                  <Link href={product.inquiryHref}>
+                    Request Scope
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                   </Link>
                 </Button>
               </div>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
 

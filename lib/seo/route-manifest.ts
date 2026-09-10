@@ -92,9 +92,9 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   },
   {
     path: "/catalog",
-    title: "Product Catalog & Hardonia Store Gateway | AIAS",
+    title: "AI Systems & Module Catalog | AIAS",
     description:
-      "Browse ready-to-deploy automation software engines, deterministic workflow packs, and Hardonia ecosystem products.",
+      "Explore reference automation engines, governed workflow packs, and implementation-ready module scopes.",
     canonical: "/catalog",
     priority: 0.85,
     changeFrequency: "weekly",

@@ -28,6 +28,11 @@ const sourceFiles = [
 ];
 const contentFiles = walk("content", new Set([".json", ".md", ".ts", ".tsx"]));
 
+for (const path of ["public/logo.svg", "public/og-image.png"]) {
+  if (!existsSync(join(root, path)))
+    failures.push(`${path}: required asset missing`);
+}
+
 for (const path of sourceFiles) {
   if (/href\s*=\s*["']#["']/.test(read(path))) {
     failures.push(`${path}: placeholder hash link`);
@@ -39,6 +44,8 @@ const unsupportedPublicPatterns: Array<[RegExp, string]> = [
   [/\bSOC\s*2[- ]ready\b/i, "unsupported assurance claim"],
   [/\bbank-grade security\b/i, "unsupported security claim"],
   [/\b100% confidential under NDA\b/i, "unsupported confidentiality claim"],
+  [/store\.hardonia\.com/i, "unavailable catalog destination"],
+  [/github\.com\/shardie-github\/aias/i, "legacy repository destination"],
 ];
 
 for (const path of [...sourceFiles, ...contentFiles]) {
@@ -126,9 +133,9 @@ for (const path of workflowFiles) {
 }
 
 const visualBaselines = walk("tests/e2e/__screenshots__", new Set([".png"]));
-if (visualBaselines.length !== 20) {
+if (visualBaselines.length !== 24) {
   failures.push(
-    `tests/e2e/__screenshots__: expected 20 critical visual baselines, found ${visualBaselines.length}`,
+    `tests/e2e/__screenshots__: expected 24 critical visual baselines, found ${visualBaselines.length}`,
   );
 }
 

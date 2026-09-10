@@ -114,6 +114,8 @@ public/docs/*
 !public/docs/trust/
 public/docs/trust/*
 !public/docs/trust/*.md
+!public/logo.svg
+!public/og-image.png
 !public/images/
 public/images/*
 !public/images/catalog/

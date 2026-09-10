@@ -67,7 +67,7 @@ export interface CatalogProduct {
   architectureSummary: string;
   includedArtifacts: string[];
   liveDemoHref?: string;
-  storeHref: string;
+  inquiryHref: string;
   featured?: boolean;
   thumbnailSrc?: string;
 }
@@ -342,9 +342,7 @@ export interface SiteConfig {
     }>;
   };
   socials: {
-    twitter: string;
-    linkedin: string;
-    github?: string;
+    github: string;
   };
   footer: {
     tagline: string;
@@ -416,7 +414,7 @@ const rawSiteContent: SiteConfig = {
     resources: [
       { label: "Quick Tools Hub", href: "/tools" },
       { label: "Policy Studio", href: "/tools/policy-studio" },
-      { label: "Hardonia Store & Catalog", href: "/catalog" },
+      { label: "Systems Catalog", href: "/catalog" },
       { label: "Hire to Build", href: "/hire" },
       { label: "ROI Calculator", href: "/roi-calculator" },
       { label: "Readiness Scorecard", href: "/readiness-checklist" },
@@ -477,7 +475,7 @@ const rawSiteContent: SiteConfig = {
     },
     {
       id: "catalog",
-      title: "Hardonia Store & Product Catalog",
+      title: "Systems & Module Catalog",
       badge: "Prong 03 // Turnkey Software & Ecosystem",
       tagline: "Pre-Built Modules, Automation Packs & Starter Kits",
       description:
@@ -490,8 +488,8 @@ const rawSiteContent: SiteConfig = {
       ],
       ctaLabel: "Browse Product Catalog",
       ctaHref: "/catalog",
-      secondaryLabel: "Visit Hardonia Store",
-      secondaryHref: "https://store.hardonia.com",
+      secondaryLabel: "Discuss a Module",
+      secondaryHref: "/contact?ref=catalog",
       iconName: "ShoppingBag",
       accentColor: "text-cyan-500 border-cyan-500",
       stats: { label: "Deployable Modules", value: "8 Ready Packs" },
@@ -761,7 +759,7 @@ const rawSiteContent: SiteConfig = {
         "Operator Runbooks",
       ],
       liveDemoHref: "/dashboard",
-      storeHref: "https://store.hardonia.com/products/hardonia-suite-ops",
+      inquiryHref: "/contact?ref=catalog&product=hardonia-suite-ops",
       featured: true,
       thumbnailSrc: "/images/catalog/hardonia_suite_ops.avif",
     },
@@ -797,7 +795,7 @@ const rawSiteContent: SiteConfig = {
         "Documentation",
       ],
       liveDemoHref: "/how-it-works",
-      storeHref: "https://store.hardonia.com/products/settler-fabric",
+      inquiryHref: "/contact?ref=catalog&product=settler-deployment-fabric",
       featured: true,
       thumbnailSrc: "/images/catalog/settler_deployment_fabric.avif",
     },
@@ -827,7 +825,7 @@ const rawSiteContent: SiteConfig = {
         "Integration Guides",
       ],
       liveDemoHref: "/automation-demo",
-      storeHref: "https://store.hardonia.com/products/zeo-engine",
+      inquiryHref: "/contact?ref=catalog&product=zeo-ingestion-engine",
       featured: true,
       thumbnailSrc: "/images/catalog/zeo_ingestion_engine.avif",
     },
@@ -840,16 +838,16 @@ const rawSiteContent: SiteConfig = {
       badge: "Conversion Booster",
       license: "Commercial",
       description:
-        "Eliminates manual lead sorting by enriching inbound submissions, classifying project intent, evaluating constraints, and routing to the optimal sales architect instantly.",
+        "Models how inbound submissions can be enriched, classified against explicit constraints, and routed to an accountable owner.",
       techStack: ["TypeScript", "Next.js App Router", "Zod", "CRM Webhooks"],
       keyFeatures: [
-        "45-second inbound intake classification and enrichment",
+        "Configurable intake classification and enrichment budget",
         "Deterministic qualification score based on organizational constraints",
         "Automated calendar routing with pre-populated strategy dossiers",
-        "Full PIPEDA/GDPR-compliant data handling with zero lead leakage",
+        "Privacy-requirement mapping with explicit retention and access controls",
       ],
       architectureSummary:
-        "Web-native intake controller with deterministic scoring matrix and real-time CRM webhook dispatch.",
+        "Web-native intake controller with a deterministic scoring matrix and client-approved CRM connector boundary.",
       includedArtifacts: [
         "Next.js Component Suite",
         "Scoring Matrices",
@@ -857,7 +855,7 @@ const rawSiteContent: SiteConfig = {
         "Setup Guide",
       ],
       liveDemoHref: "/contact",
-      storeHref: "https://store.hardonia.com/products/reach-accelerator",
+      inquiryHref: "/contact?ref=catalog&product=reach-demand-accelerator",
       thumbnailSrc: "/images/catalog/reach_demand_accelerator.avif",
     },
     {
@@ -886,8 +884,8 @@ const rawSiteContent: SiteConfig = {
         "Documentation",
       ],
       liveDemoHref: "/work",
-      storeHref: "https://store.hardonia.com/products/tokpulse-core",
-      thumbnailSrc: "/images/catalog/tokpulse_growth_core.png",
+      inquiryHref: "/contact?ref=catalog&product=tokpulse-growth-core",
+      thumbnailSrc: "/images/catalog/tokpulse_growth_core_v2.avif",
     },
     {
       id: "policy-guardrail-kit",
@@ -915,9 +913,9 @@ const rawSiteContent: SiteConfig = {
         "MIT License",
       ],
       liveDemoHref: "/tools/policy-studio",
-      storeHref: "https://store.hardonia.com/products/policy-guardrail-kit",
+      inquiryHref: "/contact?ref=catalog&product=policy-guardrail-kit",
       featured: true,
-      thumbnailSrc: "/images/catalog/policy_guardrail_kit.png",
+      thumbnailSrc: "/images/catalog/policy_guardrail_kit_v2.avif",
     },
     {
       id: "operator-console-kit",
@@ -951,8 +949,8 @@ const rawSiteContent: SiteConfig = {
         "Figma Tokens",
       ],
       liveDemoHref: "/operator-demo",
-      storeHref: "https://store.hardonia.com/products/operator-console-kit",
-      thumbnailSrc: "/images/catalog/operator_console_kit.png",
+      inquiryHref: "/contact?ref=catalog&product=operator-console-kit",
+      thumbnailSrc: "/images/catalog/operator_console_kit_v2.avif",
     },
     {
       id: "invoice-document-parser",
@@ -963,7 +961,7 @@ const rawSiteContent: SiteConfig = {
       badge: "Workflow Pack",
       license: "Commercial",
       description:
-        "End-to-end accounts payable automation workflow. Ingests PDF invoices from email, extracts line items with 99%+ accuracy, reconciles with PO numbers, and drafts approval batches.",
+        "Reference accounts-payable workflow for ingesting PDF invoices, validating extracted line items, reconciling purchase-order records, and drafting approval batches with confidence-based review.",
       techStack: ["n8n / LangGraph", "TypeScript", "Zod", "ERP Webhooks"],
       keyFeatures: [
         "Multi-currency line item and tax extraction",
@@ -980,8 +978,8 @@ const rawSiteContent: SiteConfig = {
         "Setup Guide",
       ],
       liveDemoHref: "/blueprints",
-      storeHref: "https://store.hardonia.com/products/invoice-parser",
-      thumbnailSrc: "/images/catalog/invoice_document_parser.png",
+      inquiryHref: "/contact?ref=catalog&product=invoice-document-parser",
+      thumbnailSrc: "/images/catalog/invoice_document_parser_v2.avif",
     },
   ],
   services: [
@@ -1882,9 +1880,7 @@ The workflow is complete only when the output schema is valid, policy receipts a
     ],
   },
   socials: {
-    twitter: "https://twitter.com/aias_platform",
-    linkedin: "https://linkedin.com/company/aias-platform",
-    github: "https://github.com/shardie-github/aias",
+    github: "https://github.com/Hardonian/AI-Automated-Systems_AIAS",
   },
   footer: {
     tagline: MESSAGING_CONTRACT.primaryTagline,

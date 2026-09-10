@@ -188,16 +188,15 @@ const COMMAND_ITEMS: CommandItem[] = [
   },
   {
     id: "srv-catalog",
-    title: "Hardonia Store & Product Catalog",
+    title: "AI Systems & Module Catalog",
     description:
-      "Browse ready-to-deploy software packages, workflow packs, and Hardonia ecosystem software.",
+      "Explore reference systems, governed workflow packs, and module scopes.",
     category: "Services",
     href: "/catalog",
     icon: ShoppingBag,
     badge: "Catalog",
     keywords: [
       "catalog",
-      "store",
       "hardonia",
       "products",
       "software",

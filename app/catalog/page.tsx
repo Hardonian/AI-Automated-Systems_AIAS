@@ -10,14 +10,14 @@ import { CatalogDirectoryClient } from "@/components/catalog/catalog-directory-c
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: "Product Catalog & Hardonia Store Gateway | AIAS",
+  title: "AI Systems & Module Catalog | AIAS",
   description:
-    "Browse ready-to-deploy automation software engines, deterministic workflow packs, and Hardonia ecosystem products.",
+    "Explore reference automation engines, governed workflow packs, and implementation-ready module scopes.",
   canonical: "/catalog",
 });
 
 export default function ProductCatalogPage() {
-  const products = siteContent.catalogProducts || [];
+  const products = siteContent.catalogProducts;
 
   return (
     <>
@@ -26,12 +26,21 @@ export default function ProductCatalogPage() {
       </div>
 
       <PageHero
-        eyebrow="Prong 03 // Turnkey Software & Hardonia Store"
-        title="Software Engines & Product Catalog"
-        description="Browse our tested library of deployable automation engines, deterministic governance kits, and Hardonia ecosystem software. Engineered for immediate integration with full code ownership."
+        eyebrow="Prong 03 // Reference Systems & Modules"
+        title="AI Systems & Module Catalog"
+        description="Explore implementation-ready reference scopes for automation engines, deterministic governance kits, and operator tooling. Each module is adapted to your constraints before production use."
       />
 
       <PageSection>
+        <div className="mb-8 border-l-2 border-primary bg-card px-5 py-4 text-sm leading-relaxed text-muted-foreground">
+          <strong className="font-mono text-xs uppercase tracking-wider text-foreground">
+            Catalog status:
+          </strong>{" "}
+          These are implementation reference scopes, not one-click software
+          purchases. A fit review confirms integrations, controls, ownership,
+          and delivery boundaries before work begins.
+        </div>
+
         {/* Interactive Filterable Catalog Directory */}
         <CatalogDirectoryClient products={products} />
 
@@ -46,9 +55,9 @@ export default function ProductCatalogPage() {
               Hire AIAS Engineers to Adapt Any Catalog Module
             </h2>
             <p className="mt-2 text-xs text-muted-foreground max-w-2xl leading-relaxed">
-              Every software engine and workflow pack can be customized,
-              integrated into legacy systems, and hardened for enterprise data
-              residency by our senior architects.
+              Catalog entries are reference scopes. We can adapt the relevant
+              architecture to your systems, control requirements, ownership
+              model, and deployment boundary.
             </p>
           </div>
           <Button

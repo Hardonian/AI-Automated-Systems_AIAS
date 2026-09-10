@@ -116,8 +116,14 @@ async function setupMonitoring(
   // Monitor network failures
   page.on("requestfailed", (request: Request) => {
     const url = request.url();
+    const errorText = request.failure()?.errorText ?? "unknown error";
+    const wasSpeculativeRequestCanceled =
+      errorText.includes("net::ERR_ABORTED") ||
+      errorText.includes("NS_BINDING_ABORTED");
+
     // Filter out non-critical failures
     if (
+      !wasSpeculativeRequestCanceled &&
       !url.includes("favicon") &&
       !url.includes(".map") &&
       !url.includes("hot-update")
@@ -127,7 +133,7 @@ async function setupMonitoring(
         viewport,
         "HIGH",
         "Network Failure",
-        `Failed to load: ${url}`,
+        `Failed to load: ${url} (${errorText})`,
       );
     }
   });
@@ -424,6 +430,7 @@ test.describe("UI Consistency Audit", () => {
     { path: "/privacy", name: "privacy" },
     { path: "/terms", name: "terms" },
     { path: "/services", name: "services" },
+    { path: "/catalog", name: "catalog" },
     { path: "/ecosystem", name: "ecosystem" },
     { path: "/metrics", name: "metrics" },
     { path: "/roi-calculator", name: "roi-calculator" },

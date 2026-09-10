@@ -359,7 +359,7 @@ export function ProofSection() {
                 Want to verify? Clone the repo and run these commands.
               </span>
               <a
-                href="https://github.com/shardie-github/aias"
+                href="https://github.com/Hardonian/AI-Automated-Systems_AIAS"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-primary hover:underline"

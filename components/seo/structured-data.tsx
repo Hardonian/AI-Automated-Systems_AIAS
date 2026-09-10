@@ -23,10 +23,7 @@ export function ProfessionalServiceSchema({
       addressLocality: "Toronto",
       addressRegion: "ON",
     },
-    sameAs: [
-      "https://github.com/shardie-github/aias",
-      "https://linkedin.com/company/aias-platform",
-    ],
+    sameAs: ["https://github.com/Hardonian/AI-Automated-Systems_AIAS"],
   };
 
   return (
@@ -48,7 +45,7 @@ interface OrganizationSchemaProps {
 export function OrganizationSchema({
   name = "AI Automated Systems",
   url = "https://aiautomatedsystems.ca",
-  logo = "https://aiautomatedsystems.ca/logo.png",
+  logo = "https://aiautomatedsystems.ca/logo.svg",
   email = "inquiries@aiautomatedsystems.ca",
 }: OrganizationSchemaProps) {
   const schema = {
@@ -62,11 +59,7 @@ export function OrganizationSchema({
       "@type": "PostalAddress",
       addressCountry: "CA",
     },
-    sameAs: [
-      "https://github.com/shardie-github/aias",
-      "https://twitter.com/aias_platform",
-      "https://linkedin.com/company/aias-platform",
-    ],
+    sameAs: ["https://github.com/Hardonian/AI-Automated-Systems_AIAS"],
   };
 
   return (
@@ -320,7 +313,7 @@ export function CaseStudySchema({
       name: "AI Automated Systems",
       logo: {
         "@type": "ImageObject",
-        url: "https://aiautomatedsystems.ca/logo.png",
+        url: "https://aiautomatedsystems.ca/logo.svg",
       },
     },
   };

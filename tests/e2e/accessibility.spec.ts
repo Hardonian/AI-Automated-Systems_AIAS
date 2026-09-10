@@ -38,6 +38,16 @@ test.describe("Accessibility Tests", () => {
     });
   });
 
+  test("catalog page should be accessible", async ({ page }) => {
+    await page.goto("/catalog");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await injectAxe(page);
+    await checkA11y(page, undefined, {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+    });
+  });
+
   test("blog page should be accessible", async ({ page }) => {
     await page.goto("/blog");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();

@@ -11,6 +11,7 @@ const criticalSurfaces = [
   { name: "homepage", path: "/" },
   { name: "documentation", path: "/docs" },
   { name: "case-studies", path: "/case-studies" },
+  { name: "catalog", path: "/catalog" },
   { name: "roi-calculator", path: "/roi-calculator" },
   { name: "privacy", path: "/privacy" },
 ] as const;

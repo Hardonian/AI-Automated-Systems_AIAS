@@ -90,14 +90,14 @@ export default function ToolsHubPage() {
                   Prong 03 // Turnkey Software
                 </p>
                 <h2 className="font-mono text-lg font-black uppercase text-foreground">
-                  Hardonia Store & Product Catalog
+                  AI Systems & Module Catalog
                 </h2>
               </div>
             </div>
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-              Looking for pre-built modules, deployment fabrics, or governance
-              kits? Browse our tested catalog of ready-to-deploy software
-              packages.
+              Looking for module scopes, deployment fabrics, or governance kits?
+              Explore reference architectures and start a scoped implementation
+              conversation.
             </p>
             <div className="mt-6">
               <Link

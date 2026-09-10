@@ -4,7 +4,9 @@
 
 - Converted unsupported benchmark, uptime, certification-readiness, confidentiality, and client-result statements into explicit scenarios, measurement contracts, or scope-dependent commitments.
 - Standardized Next.js production output so bundle budgets read the fresh build, added a dependency-free static preview server, and repaired CI browser jobs that previously started no server.
-- Replaced duplicated and ineffective visual tests with 20 reviewed baselines spanning five critical surfaces across desktop, tablet, mobile, and short landscape viewports.
+- Replaced duplicated and ineffective visual tests with 24 reviewed baselines spanning six critical surfaces across desktop, tablet, mobile, and short landscape viewports.
+- Repaired the catalog release path with four deployable AVIF illustrations, internal product inquiry links, rendered architecture summaries, and checks that reject ignored or non-AVIF catalog assets.
+- Added deterministic social-card generation and valid logo/Open Graph assets so shared links no longer reference missing files.
 - Added visual regression to the release workflow and hardened the visual harness to reveal viewport-triggered content before full-page capture.
 - Corrected package/repository metadata, removed the conflicting npm lockfile and stale shadow content, and updated the architecture ADR to the actual Next.js 16 static-first system.
 - Closed mobile overflow and reduced-motion defects identified by the responsive consistency audit.

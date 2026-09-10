@@ -35,7 +35,7 @@ The public surface now has deterministic release gates, a constrained CI model, 
 4. Added dependency governance, automated dependency review, weekly security audit, and SBOM evidence.
 5. Consolidated dozens of duplicate or backend-dependent workflows into six reviewed static-site workflows.
 6. Added a release-integrity check that blocks placeholder links, stale trust templates, missing workflow scripts, and backend CI drift.
-7. Added 20 committed visual baselines and production-export browser serving so CI exercises the same static artifact that ships.
+7. Added 24 committed visual baselines across six critical surfaces and production-export browser serving so CI exercises the same static artifact that ships.
 
 ## Honest residual boundaries
 

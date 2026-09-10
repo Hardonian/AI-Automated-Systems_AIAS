@@ -254,14 +254,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         aria-busy={loading}
         aria-disabled={isDisabled}
-        aria-label={ariaLabel || (isIconOnly ? undefined : ariaLabel)}
+        aria-label={ariaLabel}
         disabled={isDisabled}
         {...motionProps}
-        {...({
-          className: cn(buttonVariants({ variant, size }), className),
-          ...safeProps,
-          onClick: handleClick,
-        } as any)}
+        className={cn(buttonVariants({ variant, size }), className)}
+        {...safeProps}
+        onClick={handleClick}
       >
         {buttonContent}
       </motion.button>

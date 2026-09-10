@@ -9,18 +9,20 @@ interface RelatedPageLink {
 
 export function RelatedPages({
   links,
+  title = "Related pages",
   headingClassName = "text-2xl font-bold",
   navAriaLabel,
   linkAriaLabelPrefix,
 }: {
   links: RelatedPageLink[];
+  title?: string;
   headingClassName?: string;
   navAriaLabel?: string;
   linkAriaLabelPrefix?: string;
 }) {
   return (
     <SurfaceCard>
-      <h2 className={headingClassName}>Related pages</h2>
+      <h2 className={headingClassName}>{title}</h2>
       <nav aria-label={navAriaLabel ?? "Related pages"} className="mt-4">
         <div className="flex flex-wrap gap-3 text-sm">
           {links.map((link, index) => {

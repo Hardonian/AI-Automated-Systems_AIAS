@@ -130,7 +130,7 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
     path: "/docs",
     title: "Documentation | AI Automated Systems",
     description:
-      "Guides, references, and resources for building and operating AI-powered automation systems.",
+      "Working guides, blueprints, governance notes, evidence standards, and operational boundaries for reliable AI automation.",
     canonical: "/docs",
     priority: 0.55,
     changeFrequency: "monthly",

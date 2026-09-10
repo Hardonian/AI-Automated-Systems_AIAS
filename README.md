@@ -3,6 +3,7 @@
 AIAS is a static-first authority surface for agentic automation consulting that converts operational pain into governed, production-ready systems.
 
 <!-- BEGIN: REPO HERO -->
+
 ![Repository hero generated locally on the GPU stack](assets/repo-hero.png)
 <!-- END: REPO HERO -->
 
@@ -36,6 +37,14 @@ Detailed method: [`docs/CONSULTING_METHOD.md`](docs/CONSULTING_METHOD.md).
 - Every automation path includes fallback and replayability.
 
 Security and operating baseline: [`docs/SECURITY_POSTURE.md`](docs/SECURITY_POSTURE.md).
+
+Public diligence artifacts are available through the `/docs` knowledge base and as portable markdown:
+
+- [`Security posture`](public/docs/trust/SECURITY.md)
+- [`Managed-service response framework`](public/docs/trust/SLO_SLA.md)
+- [`Operational continuity`](public/docs/trust/CONTINUITY.md)
+- [`Dependency governance`](public/docs/trust/DEPENDENCY_GOVERNANCE.md)
+- [`Trust and claims policy`](public/docs/trust/TRUST.md)
 
 ## Governance Principles
 
@@ -115,7 +124,11 @@ pnpm test:e2e
 pnpm verify
 ```
 
-`pnpm verify` runs lint → typecheck → test → build → smoke e2e + internal link crawl.
+`pnpm verify` runs lint, typecheck, unit tests, release-integrity checks, the static production build, bundle budgets, and content/SEO/link/schema audits. `pnpm test:e2e` separately runs browser smoke tests and the rendered-site link crawl.
+
+## CI model
+
+Six reviewed workflows cover release verification, browser smoke tests, dependency review, security/SBOM evidence, performance budgets, and scheduled static metrics. `pnpm check:release-integrity` rejects workflow drift back to missing scripts or backend-only infrastructure.
 
 ## Frontend Invariants
 

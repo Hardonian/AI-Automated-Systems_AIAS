@@ -1,45 +1,29 @@
-# Trust Documentation
+# Trust and Claims Policy
 
-## Our Commitment
+Last reviewed: September 10, 2026
 
-AI Automated Systems is built on trust. We are committed to transparency, security, and protecting your data.
+## What visitors can verify
 
-## Data Privacy
+- The public site is static-first and builds without a required backend.
+- Business content is typed and release checks validate routes, metadata, schema, links, secrets, and static architecture.
+- Published blueprints and browser tools can be inspected without an account.
+- Case studies distinguish evidence level and should be read with their stated constraints.
+- Engagements emphasize explicit decision boundaries, human review, handoff artifacts, and client ownership.
 
-- **Canadian Data Residency**: All customer data is stored in Canada
-- **PIPEDA Compliant**: We adhere to Canadian privacy legislation
-- **Data Ownership**: You own your data and can export it at any time
-- **No Data Selling**: We never sell your data to third parties
+## What AIAS does not imply
 
-## Security Standards
+- No certification or independent attestation is claimed unless a current report is named and linked.
+- No case-study result, calculator output, availability percentage, or delivery timeline is a universal guarantee.
+- AI-generated or AI-assisted output is not final decision authority unless a signed scope defines a bounded, tested automation path.
+- Public documentation does not override a signed agreement.
+- References to ecosystem products describe delivery roles and do not imply ownership of third-party trademarks.
 
-- Enterprise-grade security infrastructure
-- Regular security audits and penetration testing
-- 99.9% uptime SLA
-- Automated backups and disaster recovery
+## Claim review standard
 
-## Transparency
+Material claims should identify their basis: observed, measured, modeled, target, or contract-scoped. Quantitative claims require a defined baseline, measurement window, and responsible owner. Unsupported absolute language is removed during release review.
 
-- Public status page for service availability
-- Regular security and compliance updates
-- Clear privacy policy and terms of service
-- Open communication about incidents
+## Data handling
 
-## Compliance
+The public site does not require visitors to create an account or submit data to an AIAS backend. Email, scheduling, hosting, analytics, and other external providers apply their own terms. Client-project data handling, residency, subprocessors, retention, and deletion obligations are defined per engagement.
 
-- PIPEDA (Personal Information Protection and Electronic Documents Act)
-- SOC 2 Type II (in progress)
-- Canadian data residency requirements
-
-## Your Rights
-
-Under PIPEDA and similar regulations, you have the right to:
-- Access your personal data
-- Request correction of inaccurate data
-- Request deletion of your data
-- Export your data in a machine-readable format
-- Object to certain types of processing
-
-## Contact
-
-For trust and privacy inquiries: privacy@aiautomatedsystems.ca
+Questions about this policy can be sent to `inquiries@aiautomatedsystems.ca`.

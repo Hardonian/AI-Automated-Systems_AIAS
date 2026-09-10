@@ -1,6 +1,6 @@
 # AIAS Advisory Disclaimer (Repository Reference)
 
-Last updated: 2026-02-18
+Last updated: 2026-09-10
 
 ## Advisory nature
 
@@ -17,3 +17,7 @@ AI-assisted outputs may contain errors, omissions, or context mismatch. Clients 
 ## Certification and compliance statements
 
 No statement on this site should be interpreted as confirmed certification (including SOC 2 or ISO standards) unless explicitly documented as achieved.
+
+## External services
+
+Links to scheduling, email, hosting, analytics, ecosystem products, and other third-party services do not create an uptime, privacy, security, or performance guarantee by AIAS. Review the provider terms that apply to your use.

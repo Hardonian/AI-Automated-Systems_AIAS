@@ -1,47 +1,37 @@
-# Service Level Objectives (SLO) and Service Level Agreement (SLA)
+# Managed-Service Response Framework
 
-## Uptime Commitment
+Last reviewed: September 10, 2026
 
-**99.9% Uptime SLA**
+## Contract boundary
 
-We guarantee 99.9% uptime for AIAS Platform, measured monthly.
+This is a reference framework for managed engagements, not a universal service-level agreement. A target becomes binding only when a signed statement of work or support schedule names the covered system, support window, measurement method, exclusions, and remedy.
 
-## Service Level Objectives
+The public AIAS site is a static information surface and is not sold as an always-on application platform.
 
-### Availability
-- **Target**: 99.9% uptime
-- **Measurement**: Monthly availability percentage
-- **Exclusions**: Scheduled maintenance, force majeure events
+## Severity model
 
-### Response Time
-- **API Response Time**: < 200ms (p95)
-- **Page Load Time**: < 2 seconds (p95)
+| Severity | Example impact                                                                                  | Target acknowledgement                      | Communication target               |
+| -------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------- | ---------------------------------- |
+| SEV-1    | Covered production workflow unavailable or creating material unsafe outcomes with no workaround | 1 hour during the contracted support window | Every 60 minutes while active      |
+| SEV-2    | Major capability degraded; a documented workaround exists                                       | 4 business hours                            | Each business day until contained  |
+| SEV-3    | Limited defect with no material production impact                                               | 1 business day                              | At agreed delivery checkpoints     |
+| SEV-4    | Question, enhancement, or documentation request                                                 | 2 business days                             | Through the normal backlog cadence |
 
-### Support Response Times
-- **Critical Issues**: < 1 hour
-- **High Priority**: < 4 hours
-- **Standard**: < 24 hours
-- **Low Priority**: < 48 hours
+Acknowledgement means triage has started. It is not a promise of resolution within that window.
 
-## Service Credits
+## Availability and performance objectives
 
-If we fail to meet our uptime SLA:
-- **99.0% - 99.9%**: 10% service credit
-- **95.0% - 99.0%**: 25% service credit
-- **< 95.0%**: 50% service credit
+Where an engagement includes managed operations, the signed schedule should define:
 
-Service credits are applied to your next billing cycle.
+- the service boundary and measurement source;
+- target availability and planned-maintenance treatment;
+- latency and throughput indicators tied to the actual workflow;
+- data freshness, queue depth, and error-budget thresholds;
+- escalation contacts and support hours;
+- service-credit or other remedy terms, if any.
 
-## Scheduled Maintenance
+No availability percentage, latency target, or service credit applies unless it appears in that signed schedule.
 
-We provide at least 48 hours notice for scheduled maintenance. Maintenance windows are typically scheduled during low-traffic periods.
+## Incident closeout
 
-## Monitoring
-
-- 24/7 monitoring and alerting
-- Real-time status page updates
-- Automated incident detection and response
-
-## Contact
-
-For SLA-related inquiries: support@aiautomatedsystems.ca
+For material incidents within a managed scope, the delivery team records the timeline, impact, contributing conditions, recovery actions, evidence links, and follow-up controls. Post-incident timing is agreed according to severity and client reporting obligations.

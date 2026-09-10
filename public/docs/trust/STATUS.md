@@ -1,42 +1,24 @@
-# Status Page Documentation
+# Service Status and Incident Communication
 
-## Service Status
+Last reviewed: September 10, 2026
 
-Our status page provides real-time information about the availability and performance of AIAS Platform services.
+## Public surface
 
-## Status Levels
+AIAS does not currently publish a real-time multi-service status dashboard. The public website is statically generated and hosted through external infrastructure. A reachable site is not evidence that a separately managed client workflow is healthy.
 
-- **Operational**: All systems operating normally
-- **Degraded Performance**: Service is available but experiencing issues
-- **Partial Outage**: Some services are unavailable
-- **Major Outage**: Significant service disruption
+## Client systems
 
-## Incident Communication
+Status communication for a client system is defined in its operating runbook and support schedule. At minimum, a managed engagement identifies:
 
-When incidents occur, we provide:
-1. **Initial Notification**: Within 15 minutes of detection
-2. **Status Updates**: Every 30 minutes during active incidents
-3. **Resolution Notice**: When the incident is resolved
-4. **Post-Incident Report**: Within 5 business days
+- the owner who declares and closes an incident;
+- the channels used for acknowledgement and updates;
+- the source of truth for system health;
+- severity-specific update cadence;
+- customer, privacy, security, and regulatory notification duties;
+- the post-incident review owner and due date.
 
-## Monitoring
+## Public notices
 
-We monitor:
-- API availability and response times
-- Database performance
-- Third-party service integrations
-- Infrastructure health
+If a material issue affects the public site or a broadly used published asset, AIAS may publish a dated notice in the public build log. Client-specific incidents remain in the agreed private channel unless disclosure is required or approved.
 
-## Subscribe to Updates
-
-- Email notifications for status changes
-- RSS feed for status updates
-- Twitter: @aias_platform
-
-## Historical Status
-
-View our status history and incident reports on our [Status Page](/status).
-
-## Contact
-
-For status-related inquiries: status@aiautomatedsystems.ca
+For a suspected security issue, use `security@aiautomatedsystems.ca`. For a general service question, use `inquiries@aiautomatedsystems.ca`.

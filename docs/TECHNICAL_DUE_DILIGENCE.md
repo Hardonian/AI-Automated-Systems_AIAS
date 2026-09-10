@@ -1,67 +1,49 @@
-# AIAS Series A Technical + Operational Due Diligence Simulation
+# AIAS Technical + Operational Due Diligence
+
+Last reviewed: 2026-09-10
 
 ## Review frame
 
-This simulation evaluates AIAS as an investor would: execution scalability, technical defensibility, delivery repeatability, and operational risk concentration.
+This repository is evaluated as the static public authority surface for a systems consultancy. It is not evaluated as a multi-tenant SaaS control plane, and repository evidence cannot substitute for client contracts, production telemetry, financial records, personnel plans, or independent audits.
 
-## Overall diligence readiness
+## Current readiness
 
-**Readiness score: 72 / 100 (PARTIAL)**
+**Repository status: READY WITH CONTRACT-SCOPED CONTROLS**
 
-AIAS demonstrates strong architecture discipline for a public static-first surface and clear ecosystem positioning. The largest gaps are enterprise-operational maturity signals (formalized SLA tiers, incident transparency artifacts, and concentration risk around founder-led execution).
+The public surface now has deterministic release gates, a constrained CI model, working documentation routes, explicit claim boundaries, an operational continuity baseline, a managed-service response framework, and supply-chain evidence generation. Enterprise readiness still depends on executed scope, named operators, client-environment controls, and current third-party evidence.
 
----
+## Evidence matrix
 
-## Scored diligence matrix
+| Category               | Status          | Repository evidence                                                                          | Remaining deal evidence                                        |
+| ---------------------- | --------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Business model clarity | DOCUMENTED      | Consultancy, implementation, handoff, and managed-refinement paths are described             | Pipeline, retention, margin, and capacity data                 |
+| Delivery repeatability | DOCUMENTED      | Methodology, blueprints, acceptance patterns, runbooks, and handoff baseline                 | Engagement-level cycle time and rework history                 |
+| Technical boundaries   | PASS            | Static export, typed content, no required backend, schema/link/route checks                  | Client architecture and threat model                           |
+| CI/CD discipline       | PASS            | One authoritative release workflow plus browser, security, performance, and metrics evidence | Branch-protection and deployment-provider settings             |
+| Security posture       | DOCUMENTED      | Static public boundary, secret scan, security invariants, CodeQL, disclosure channel         | Client IAM, logging, hosting, data-flow, and control evidence  |
+| Dependency governance  | PASS            | Lockfile, dependency review, high-severity audit, bundle budgets, scheduled SBOM             | Reviewed exceptions and historical remediation timing          |
+| Claim integrity        | PASS            | Release-integrity guard and published non-certification/outcome boundaries                   | Evidence packs for each material commercial claim              |
+| Service levels         | CONTRACT-SCOPED | Published severity and acknowledgement framework                                             | Executed support schedule, hours, remedies, and measurements   |
+| Operational continuity | DOCUMENTED      | Handoff, credential, backup-operator, recovery, and exit baseline                            | Named personnel, tested recovery objectives, and last exercise |
+| Client data handling   | CONTRACT-SCOPED | Public privacy and external-provider boundaries are explicit                                 | Subprocessor list, residency, retention, and deletion schedule |
 
-| Category                                     | Status  | Notes                                                                                                                          |
-| -------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Revenue model clarity                        | PARTIAL | Clear consulting/service framing, but no public packaging of recurring revenue mechanics beyond managed refinement narratives. |
-| Delivery scalability                         | PARTIAL | Deterministic workflows and handoff language exist, but staffing/throughput model is not publicly quantified.                  |
-| Automation leverage vs human dependency      | PARTIAL | Strong AI governance narrative; still consultancy-heavy and person-dependent for strategy and implementation.                  |
-| Technical moat (Reach/Zeo/Settler ecosystem) | PASS    | Role-defined ecosystem and governance-first differentiation are explicit.                                                      |
-| DevOps maturity                              | PARTIAL | Verify scripts and route checks are strong for static app; production incident/SRE signals are limited in public artifacts.    |
-| CI/CD discipline                             | PASS    | Deterministic verify workflow with lint/type/build and architecture checks.                                                    |
-| Hosting security posture                     | PARTIAL | Static-first lowers risk; optional webhook and external integrations shift risk to process controls.                           |
-| Performance profile                          | PASS    | Static-first route discipline and metadata/link checks indicate good baseline hygiene.                                         |
-| Dependency risk                              | PARTIAL | Modern stack with overrides present; no dedicated license/SBOM artifact in repo.                                               |
-| Single-founder risk mitigation               | GAP     | No explicit continuity plan, key-person runbook, or succession/escrow statement found in current docs.                         |
+## Resolved repository gaps
 
----
+1. Replaced placeholder documentation links with sixteen working guides, tools, blueprints, and trust artifacts.
+2. Removed unsupported public claims about certification, guaranteed uptime, data residency, review volume, and platform capabilities.
+3. Published operational continuity and service-response frameworks with clear contract boundaries.
+4. Added dependency governance, automated dependency review, weekly security audit, and SBOM evidence.
+5. Consolidated dozens of duplicate or backend-dependent workflows into six reviewed static-site workflows.
+6. Added a release-integrity check that blocks placeholder links, stale trust templates, missing workflow scripts, and backend CI drift.
 
-## Investor-style findings
+## Honest residual boundaries
 
-### 1) Business and operating model
+- A repository cannot prove revenue quality, staffing depth, support coverage, insurance, or customer satisfaction.
+- Response and recovery targets are not binding without a signed schedule.
+- Compliance readiness is control-oriented; no third-party certification is implied.
+- Case-study metrics remain subject to their evidence labels, baselines, and client permissions.
+- External hosting, scheduling, email, analytics, and webhook providers retain their own operational risk.
 
-- AIAS is clearly positioned as consultancy + systems integrator + governance authority.
-- Recurring value proposition exists (managed refinement/governance cycles), but investor-grade predictability would benefit from explicit operating cadence metrics and retention indicators.
+## Diligence request list
 
-### 2) Technical defensibility
-
-- Defensibility is narrative/architecture-driven (deterministic + governed AI + ecosystem role separation), not pure proprietary software lock-in.
-- This is credible for services-led Series A stories if supported by repeatable playbooks and measurable deployment velocity.
-
-### 3) Operational rigor
-
-- Repository shows strong static-route controls and validation practices.
-- Missing investor-grade evidence artifacts: runbook index, incident taxonomy, RTO/RPO framing, and published security review cadence.
-
-### 4) Security/compliance posture
-
-- Technical attack surface is intentionally constrained.
-- Legal/marketing language currently needs stronger non-certification qualifiers to avoid diligence pushback.
-
-### 5) Key-person dependency
-
-- Public materials prominently route to a single contact identity.
-- No explicit continuity/governance structure is published for delivery if key personnel become unavailable.
-
----
-
-## Diligence-ready remediation priorities
-
-1. Publish an operational continuity note (coverage model, handoff artifacts, escalation ownership).
-2. Add explicit non-certification language and compliance-claims policy in legal docs.
-3. Publish a minimal SLA framework (response times, severity classes, communication commitments) for managed engagements.
-4. Add dependency governance artifact (SBOM/license report cadence).
-5. Add public “engagement boundaries” section linking AI advisory limits to contract terms.
+For an enterprise or investor review, pair this repository with current contracts, claim evidence, security questionnaires, insurance, subprocessor inventory, incident history, recovery-test evidence, staffing coverage, delivery metrics, and financial records.

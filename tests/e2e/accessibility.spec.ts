@@ -28,6 +28,16 @@ test.describe("Accessibility Tests", () => {
     });
   });
 
+  test("documentation page should be accessible", async ({ page }) => {
+    await page.goto("/docs");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await injectAxe(page);
+    await checkA11y(page, undefined, {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+    });
+  });
+
   test("blog page should be accessible", async ({ page }) => {
     await page.goto("/blog");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -148,9 +158,11 @@ test.describe("Accessibility Tests", () => {
     // This would require additional tooling to check actual contrast ratios
     // For now, we rely on axe-core to catch contrast issues
     await checkA11y(page, undefined, {
-      rules: {
-        "color-contrast": { enabled: true },
+      axeOptions: {
+        rules: {
+          "color-contrast": { enabled: true },
+        },
       },
-    } as any);
+    });
   });
 });

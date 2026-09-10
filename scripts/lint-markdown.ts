@@ -2,9 +2,13 @@ import { existsSync, readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import path from "node:path";
 
-const files = execFileSync("git", ["ls-files", "*.md"], { encoding: "utf8" })
+const files = execFileSync(
+  "git",
+  ["ls-files", "--cached", "--others", "--exclude-standard", "*.md"],
+  { encoding: "utf8" },
+)
   .split(/\r?\n/)
-  .filter(Boolean);
+  .filter((file) => Boolean(file) && existsSync(file));
 const failures: string[] = [];
 for (const file of files) {
   const lines = readFileSync(file, "utf8").split(/\r?\n/);

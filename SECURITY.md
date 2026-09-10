@@ -1,6 +1,6 @@
 # AIAS Security Disclosure (Repository Reference)
 
-Last updated: 2026-02-18
+Last updated: 2026-09-10
 
 ## Security model summary
 
@@ -20,5 +20,5 @@ AIAS public site follows a static-first model with minimal server-side attack su
 
 ## Vulnerability reporting
 
-Report suspected vulnerabilities to: scottrmhardie@gmail.com.
+Report suspected vulnerabilities to: security@aiautomatedsystems.ca.
 Include reproduction steps and impact assessment where possible.

@@ -1,70 +1,75 @@
-name: verify
+name: Verify
+
 on:
   pull_request:
   push:
-    branches: [main, master]
+    branches: [main]
+  workflow_dispatch:
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-  NODE_VERSION: "22"
-  PNPM_VERSION: "8.15.0"
+permissions:
+  contents: read
 
 concurrency:
   group: verify-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  verify:
+  release-contract:
+    name: Static release contract
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v5
-
-      - uses: actions/setup-node@v7
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
+          version: 8.15.9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: pnpm lint
+      - name: Verify static release candidate
+        run: pnpm verify
 
-      - name: Typecheck
-        run: pnpm typecheck
+      - name: Upload static export
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-export
+          path: out/
+          retention-days: 7
 
-      - name: Validate route manifest order/format
-        run: pnpm validate:route-manifest
+  browser-smoke:
+    name: Browser smoke and link crawl
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Enforce canonical route manifest ordering
-        run: pnpm fix:route-manifest --dry-run
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+        with:
+          version: 8.15.9
 
-      - name: Build
-        run: pnpm build
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-          NODE_OPTIONS: --max-old-space-size=4096
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
 
-      - name: Verify build output
-        run: |
-          echo "Checking build artifacts..."
-          if [ ! -d "out" ]; then
-            echo "::error::Build output directory 'out' not found"
-            exit 1
-          fi
-          if [ ! -f "out/index.html" ]; then
-            echo "::error::out/index.html not found"
-            exit 1
-          fi
-          echo "✅ Build artifacts verified"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run smoke suite
+        run: pnpm test:e2e

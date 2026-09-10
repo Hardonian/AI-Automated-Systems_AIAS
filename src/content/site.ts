@@ -309,6 +309,38 @@ export interface SiteConfig {
       aiBoundary: string;
     }>;
   };
+  docsPage: {
+    hero: {
+      eyebrow: string;
+      title: string;
+      description: string;
+    };
+    categories: Array<{
+      icon: "book" | "code" | "shield" | "evidence";
+      title: string;
+      description: string;
+      links: Array<{
+        label: string;
+        description: string;
+        href: string;
+        format: "page" | "markdown";
+      }>;
+    }>;
+    operatingModel: {
+      eyebrow: string;
+      title: string;
+      description: string;
+      commitments: Array<{
+        title: string;
+        detail: string;
+      }>;
+    };
+    resources: Array<{
+      title: string;
+      description: string;
+      href: string;
+    }>;
+  };
   socials: {
     twitter: string;
     linkedin: string;
@@ -1641,6 +1673,214 @@ The workflow is complete only when the output schema is valid, policy receipts a
       },
     ],
   },
+  docsPage: {
+    hero: {
+      eyebrow: "Knowledge base",
+      title: "The operating system behind reliable automation",
+      description:
+        "Use these field guides, working blueprints, governance notes, and evidence standards to evaluate an AIAS engagement before you commit to one.",
+    },
+    categories: [
+      {
+        icon: "book",
+        title: "Start with the system",
+        description:
+          "Understand the AIAS point of view, delivery sequence, and diagnostic method before choosing tools or models.",
+        links: [
+          {
+            label: "What AIAS actually does",
+            description:
+              "Capability map, engagement formats, outputs, and explicit non-fit criteria.",
+            href: "/what-aias-does",
+            format: "page",
+          },
+          {
+            label: "How delivery works",
+            description:
+              "A transparent walkthrough of tooling, control boundaries, security, and deployment patterns.",
+            href: "/how-it-works",
+            format: "page",
+          },
+          {
+            label: "Diagnostic framework",
+            description:
+              "Five steps for mapping decisions, constraints, failure modes, and acceptance criteria.",
+            href: "/framework",
+            format: "page",
+          },
+          {
+            label: "Consulting methodology",
+            description:
+              "The discovery-to-handoff method used to keep implementation bounded and operable.",
+            href: "/methodology",
+            format: "page",
+          },
+        ],
+      },
+      {
+        icon: "code",
+        title: "Build from working patterns",
+        description:
+          "Inspect reusable architecture patterns and test the decision logic in client-side tools before implementation.",
+        links: [
+          {
+            label: "Blueprint library",
+            description:
+              "Downloadable reference architectures for intake, control planes, and resilient agent releases.",
+            href: "/blueprints",
+            format: "page",
+          },
+          {
+            label: "Workflow builder",
+            description:
+              "Model states, approvals, fallbacks, and verification criteria in the browser.",
+            href: "/workflows",
+            format: "page",
+          },
+          {
+            label: "Policy studio",
+            description:
+              "Exercise deterministic rules, PII filters, and escalation thresholds against sample inputs.",
+            href: "/tools/policy-studio",
+            format: "page",
+          },
+          {
+            label: "Public build log",
+            description:
+              "Review shipped changes, corrected assumptions, and operational lessons.",
+            href: "/build-log",
+            format: "page",
+          },
+        ],
+      },
+      {
+        icon: "shield",
+        title: "Trust and operational boundaries",
+        description:
+          "Read the control posture, support framework, continuity model, and claim limitations without marketing shorthand.",
+        links: [
+          {
+            label: "Security posture",
+            description:
+              "Controls for the static public surface and the separate safeguards expected in client delivery environments.",
+            href: "/docs/trust/SECURITY.md",
+            format: "markdown",
+          },
+          {
+            label: "Service-level framework",
+            description:
+              "Severity definitions, target acknowledgement windows, exclusions, and contractual boundaries.",
+            href: "/docs/trust/SLO_SLA.md",
+            format: "markdown",
+          },
+          {
+            label: "Operational continuity",
+            description:
+              "Handoff, credential ownership, recovery artifacts, and key-person risk controls.",
+            href: "/docs/trust/CONTINUITY.md",
+            format: "markdown",
+          },
+          {
+            label: "Trust and claims policy",
+            description:
+              "What is verified, what is contract-scoped, and what AIAS does not claim.",
+            href: "/docs/trust/TRUST.md",
+            format: "markdown",
+          },
+        ],
+      },
+      {
+        icon: "evidence",
+        title: "Evidence and decision support",
+        description:
+          "Evaluate outcomes, operating metrics, engagement boundaries, and supply-chain governance.",
+        links: [
+          {
+            label: "Case studies",
+            description:
+              "Outcome narratives with evidence levels, constraints, governance changes, and reusable patterns.",
+            href: "/case-studies",
+            format: "page",
+          },
+          {
+            label: "What we measure",
+            description:
+              "Reliability, evaluation integrity, cycle-time, cost, and governance coverage definitions.",
+            href: "/what-we-measure",
+            format: "page",
+          },
+          {
+            label: "Why we say no",
+            description:
+              "Decline criteria, misuse boundaries, and cases where an internal hire is the better answer.",
+            href: "/why-we-say-no",
+            format: "page",
+          },
+          {
+            label: "Dependency governance",
+            description:
+              "Release audit, SBOM, license review, and remediation cadence for the public surface.",
+            href: "/docs/trust/DEPENDENCY_GOVERNANCE.md",
+            format: "markdown",
+          },
+        ],
+      },
+    ],
+    operatingModel: {
+      eyebrow: "Published commitments",
+      title: "Boundaries you can plan around",
+      description:
+        "Public documentation describes the baseline. Signed statements of work define the enforceable scope, service levels, data handling, acceptance tests, and ownership for each engagement.",
+      commitments: [
+        {
+          title: "Static public surface",
+          detail:
+            "The consultancy site renders without a database, mandatory API, account, or hidden runtime service.",
+        },
+        {
+          title: "Client-owned operation",
+          detail:
+            "Handoff includes source, runbooks, decision records, credential transfer, and operator training defined by scope.",
+        },
+        {
+          title: "Contract-scoped service levels",
+          detail:
+            "Response targets and support windows apply only when a signed managed-service schedule names them.",
+        },
+        {
+          title: "Control-oriented claims",
+          detail:
+            "AIAS does not imply third-party certification, guaranteed outcomes, or autonomous authority without evidence and written terms.",
+        },
+      ],
+    },
+    resources: [
+      {
+        title: "Readiness checklist",
+        description:
+          "A 16-point browser scorecard with a portable markdown checklist.",
+        href: "/readiness-checklist",
+      },
+      {
+        title: "Automation simulator",
+        description:
+          "Trace a request through policy gates, constrained model work, and deterministic fallbacks.",
+        href: "/automation-demo",
+      },
+      {
+        title: "Engagement simulator",
+        description:
+          "Generate a local, exportable engagement brief from your constraints.",
+        href: "/engagement-simulator",
+      },
+      {
+        title: "FAQ",
+        description:
+          "Direct answers about fit, timelines, data access, deployment, and ownership.",
+        href: "/faq",
+      },
+    ],
+  },
   socials: {
     twitter: "https://twitter.com/aias_platform",
     linkedin: "https://linkedin.com/company/aias-platform",
@@ -1657,7 +1897,7 @@ The workflow is complete only when the output schema is valid, policy receipts a
   legal: {
     privacy: {
       title: "Privacy Policy",
-      lastUpdated: "January 2026",
+      lastUpdated: "September 10, 2026",
       sections: [
         {
           heading: "Overview",
@@ -1665,21 +1905,33 @@ The workflow is complete only when the output schema is valid, policy receipts a
         },
         {
           heading: "What We Collect",
-          body: "Contact details you provide via email or scheduling links, plus usage analytics for our website. We avoid collecting sensitive data unless explicitly required for an engagement.",
+          body: "The public site does not require an account. We may receive contact details and business context you deliberately send through email, scheduling links, or the optional intake flow, plus limited website analytics when enabled. Do not submit sensitive, regulated, financial, or production data through public forms.",
         },
         {
           heading: "How We Use Data",
-          body: "We use data to respond to requests, manage projects, and deliver operational insights. Data is retained only as long as needed for the engagement and compliance requirements.",
+          body: "We use information to respond to requests, assess engagement fit, deliver contracted work, protect the service, and improve our materials. Public intake classification runs in the browser; if an optional third-party webhook is configured, the form identifies the downstream submission path before use.",
+        },
+        {
+          heading: "Providers and Cross-Border Processing",
+          body: "Hosting, analytics, email, scheduling, and client-approved delivery providers may process information under their own terms and in the regions they operate. Data residency, subprocessors, access controls, and transfer requirements for client work are defined in the signed engagement documents.",
+        },
+        {
+          heading: "Retention and Security",
+          body: "We keep inquiry and engagement records only as long as reasonably needed for communication, delivery, security, legal obligations, and defensible business records. Safeguards are proportionate to the data and contracted scope; no public-site statement should be read as a certification or guarantee of absolute security.",
+        },
+        {
+          heading: "Cookies and Analytics",
+          body: "The site may use essential browser storage for interface preferences and optional privacy-conscious analytics for aggregate performance. You can restrict storage and analytics through browser controls, although some preferences may no longer persist.",
         },
         {
           heading: "Your Rights",
-          body: "You can request access, updates, or deletion of your information by emailing inquiries@aiautomatedsystems.ca.",
+          body: "Subject to applicable law and legitimate retention obligations, you can request access, correction, or deletion of information associated with you by emailing inquiries@aiautomatedsystems.ca. We may need to verify the request before acting.",
         },
       ],
     },
     terms: {
       title: "Terms of Service",
-      lastUpdated: "January 2026",
+      lastUpdated: "September 10, 2026",
       sections: [
         {
           heading: "Engagement Scope",
@@ -1687,15 +1939,35 @@ The workflow is complete only when the output schema is valid, policy receipts a
         },
         {
           heading: "Client Responsibilities",
-          body: "Clients provide timely access to required stakeholders, data, and systems. Delays in access may affect timelines and outcomes.",
+          body: "Clients provide accurate requirements, timely stakeholder and system access, and qualified review of outputs. Clients remain responsible for production deployment, policy acceptance, lawful data use, and high-impact decisions unless a signed agreement explicitly reallocates a responsibility.",
         },
         {
           heading: "Confidentiality",
           body: "Both parties agree to keep confidential information private and secure. We handle data in line with PIPEDA-informed practices.",
         },
         {
+          heading: "Advisory and AI Output Boundary",
+          body: "Public content, simulations, calculator results, and AI-assisted outputs are informational and may contain errors or context mismatch. They are not legal, financial, compliance, or production advice. Deterministic acceptance obligations exist only when a signed scope defines them.",
+        },
+        {
+          heading: "Outcomes and Service Levels",
+          body: "Case-study results, delivery timelines, performance examples, and modeled savings are context-dependent and not universal guarantees. Availability, response targets, remedies, and support windows apply only when they are written into an executed service schedule.",
+        },
+        {
+          heading: "Intellectual Property",
+          body: "Unless the parties agree otherwise in writing, the client owns bespoke deliverables developed and paid for under the engagement. AIAS retains pre-existing methods, reusable frameworks, templates, tools, and generalized know-how. Third-party and open-source materials remain subject to their respective licenses.",
+        },
+        {
+          heading: "Security and Compliance Claims",
+          body: "AIAS describes control-oriented practices but does not claim SOC 2, ISO 27001, PIPEDA certification, or another independent attestation unless a current verification is explicitly named. Client-specific compliance conclusions require the client's legal and compliance review.",
+        },
+        {
+          heading: "Case Studies and Confidentiality",
+          body: "AIAS does not publish confidential client details without permission or another lawful basis. Published examples may be sanitized, aggregated, or described as patterns; each case study should be read with its stated evidence level and constraints.",
+        },
+        {
           heading: "Liability",
-          body: "We strive for reliable systems, but final deployment decisions remain with the client. Liability is limited to the fees paid for the applicable engagement.",
+          body: "To the maximum extent permitted by applicable law, liability is limited as defined in the executed agreement and non-waivable legal obligations continue to apply. Public website content does not create a warranty or service contract.",
         },
       ],
     },

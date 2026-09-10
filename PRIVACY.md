@@ -1,6 +1,6 @@
 # AIAS Privacy Notice (Repository Reference)
 
-Last updated: 2026-02-18
+Last updated: 2026-09-10
 
 ## 1. Data we collect
 
@@ -34,4 +34,6 @@ AIAS does not sell personal data. Data may be shared with subprocessors required
 
 ## 6. Rights and contact
 
-For access, correction, or deletion requests, contact: scottrmhardie@gmail.com.
+For access, correction, or deletion requests, contact: inquiries@aiautomatedsystems.ca.
+
+AIAS may need to verify a request and may retain records where required for security, legal obligations, or defensible business operations.

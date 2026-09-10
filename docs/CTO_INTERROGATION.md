@@ -1,53 +1,53 @@
-# AIAS Enterprise CTO Interrogation Simulation
+# AIAS Enterprise CTO Interrogation
 
-## Format
+Last reviewed: 2026-09-10
 
-Skeptical CTO questions with rigorous, non-marketing responses grounded in current repository posture.
+## Skeptical questions, repository-grounded answers
 
-### Q1) Are you a consultancy or a product company?
+### Are you a consultancy or a product company?
 
-**Answer:** AIAS is primarily a consultancy/systems integrator with structured automation assets. The current public platform is a static authority surface plus intake and advisory workflows, not a multi-tenant SaaS control plane. Engagement value is delivered through scoped consulting and implementation programs.
+AIAS is a systems consultancy and integrator with reusable tools, blueprints, and delivery assets. This repository is a static public authority surface, not a multi-tenant SaaS control plane.
 
-### Q2) What happens if you disappear?
+### What happens if key personnel disappear?
 
-**Answer:** Current posture emphasizes handoff artifacts and client ownership language, but continuity assurance is only partially formalized in public docs. For enterprise confidence, continuity terms should be contractually codified: documentation escrow, credential transfer process, runbooks, and designated backup operators.
+The published continuity baseline requires client-controlled source and deployment access, credential inventory, architecture records, operating and recovery runbooks, acceptance tests, training, backup contacts, open-risk ownership, and an explicit exit transfer. A buyer should still verify named coverage and completed exercises in the engagement plan.
 
-### Q3) How do you guarantee build quality?
+### How do you control build quality?
 
-**Answer:** Quality is controlled through deterministic architecture constraints, typed content, lint/type/build verification, and static-route guardrails. That is strong engineering hygiene, but “guarantee” should be contractually defined via acceptance criteria, test plans, and support obligations per engagement.
+Strict TypeScript, typed content, unit tests, security checks, static export, bundle budgets, metadata/schema/link audits, browser smoke tests, and a release-integrity guard form the repository contract. Client implementations add workflow-specific acceptance tests and operating evidence.
 
-### Q4) Why not hire internally instead?
+### Why not hire internally?
 
-**Answer:** Internal teams are often optimal for long-term ownership; AIAS value proposition is speed-to-governed-implementation, architecture framing, and cross-system integration acceleration. A defensible answer is co-build enablement that intentionally transfers capability instead of creating lock-in.
+Internal ownership is usually the desired steady state. AIAS is useful when a team needs a bounded discovery, architecture, stabilization, or implementation sprint and wants capability transferred through source, runbooks, and training rather than permanent vendor lock-in.
 
-### Q5) What is your security posture?
+### What is the security posture?
 
-**Answer:** Public site surface is static-first with minimal backend attack area. Intake uses client-side validation and graceful fallback. Security claims should remain control-focused and avoid implying formal certifications unless earned and documented.
+The public surface has no required database, account system, server action, or runtime API. Client systems are scoped separately around least privilege, client-owned identities, validation, approval gates, logging, rollback, and incident procedures. No certification is implied.
 
-### Q6) What is your SLA maturity?
+### What service level do you provide?
 
-**Answer:** No public SLA matrix is currently published in this repository. SLA maturity therefore appears engagement-defined rather than standardized. Enterprise deals should include severity levels, response targets, and communication cadence in contract attachments.
+The public framework defines severity and target acknowledgement windows. It is not a blanket SLA. Binding targets, coverage hours, measurement, exclusions, escalation, and remedies must appear in an executed support schedule.
 
-### Q7) How do you prevent AI hallucination risk?
+### How do you manage hallucination risk?
 
-**Answer:** AIAS positioning centers on deterministic boundaries first, with AI constrained to advisory/bounded roles and escalation controls. Hallucination risk is mitigated by policy gates and human review, not eliminated.
+Models do not own policy or state transitions by default. Deterministic contracts, confidence thresholds, evidence checks, human review, and fallback paths limit impact. They reduce risk; they do not make probabilistic output infallible.
 
-### Q8) What certifications do you hold?
+### What certifications do you hold?
 
-**Answer:** Based on repository evidence, formal certifications are not explicitly documented as achieved. Therefore responses should avoid claiming SOC 2/ISO certification status unless independently verified and published.
+This repository makes no claim of an achieved SOC 2, ISO 27001, or similar third-party certification. Control mapping and certification support can be scoped, but a current independent report is the only acceptable proof of certification.
 
-### Q9) How do you handle client IP ownership?
+### Who owns client IP?
 
-**Answer:** Current terms language indicates engagement-scoped deliverables and liability boundaries, but explicit IP split should be stated: client-owned bespoke deliverables; AIAS-retained pre-existing methods/frameworks unless contract overrides.
+The published baseline assigns paid-for bespoke deliverables to the client while AIAS retains pre-existing methods, templates, tools, and generalized know-how. Executed terms control if a project needs a different split.
 
-### Q10) What is your long-term roadmap?
+### How do you manage supply-chain risk?
 
-**Answer:** Repository positioning suggests a governed ecosystem model (AIAS + Reach + Zeo + Settler) where AIAS remains architecture authority while execution scales via specialized surfaces. Roadmap credibility increases when paired with measurable repeatability metrics and continuity planning.
+The project locks dependencies, reviews dependency changes, blocks high-severity release findings, scans repository controls, enforces bundle budgets, and produces scheduled CodeQL and SBOM evidence. Exceptions require time-bounded human review.
 
----
+### What remains outside repository proof?
 
-## CTO readiness summary
+Revenue, staffing depth, support coverage, incident history, insurance, customer references, production telemetry, recovery exercises, and client-environment controls require current off-repository evidence.
 
-- **Technically credible:** yes, for static-first advisory + systems integration posture.
-- **Enterprise-ready without contract detail:** no.
-- **Most important close gaps:** explicit SLA framework, continuity planning, certification claim controls, and stronger legal boundary language.
+## Readiness conclusion
+
+The repository is technically credible and internally consistent for a static consultancy surface. Enterprise readiness is conditional on the signed scope and current operational evidence, not inferred from marketing copy.

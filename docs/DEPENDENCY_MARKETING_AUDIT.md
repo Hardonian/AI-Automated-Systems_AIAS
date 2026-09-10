@@ -1,55 +1,44 @@
 # AIAS Dependency + Marketing Claim Audit
 
-## Dependency risk snapshot
+Last reviewed: 2026-09-10
 
-### Observations
+## Dependency posture
 
-- Stack is modern and active (`next`, `react`, `zod`, Radix ecosystem, Playwright).
-- `pnpm` overrides are present to constrain known vulnerable transitive packages.
-- An audit command exists (`audit:ci`) for high-severity production dependency checks.
+### Implemented controls
 
-### Risks
+- The pnpm lockfile is the authoritative resolved dependency graph.
+- Pull requests receive dependency-diff review and fail on high-severity findings.
+- The security workflow audits production dependencies, runs repository security controls, performs CodeQL analysis, and archives an SPDX SBOM.
+- `pnpm verify` enforces strict types, unit tests, static architecture, secret and security checks, a production build, route/schema/link validation, and bundle budgets.
+- Package overrides constrain known transitive risk and remain visible in `package.json`.
+- The public dependency-governance document defines severity and exception handling.
 
-1. **Supply-chain volatility** from large transitive frontend ecosystem.
-2. **License governance gap**: no dedicated SBOM/license-report artifact committed.
-3. **Operational drift** if audit cadence is not enforced in CI for every release.
+### Residual risks
 
-### Recommendation
+- A frontend dependency graph changes as packages and advisories evolve.
+- SBOM and audit artifacts are time-bound evidence, not proof that future builds are vulnerability-free.
+- License interpretation and exploitability can require human review.
 
-- Add automated license report + SBOM generation in CI and archive outputs with release artifacts.
+## Marketing claim integrity
 
----
+The release posture now uses these boundaries:
 
-## Marketing claim integrity findings
+- security statements describe controls, not an unearned certification;
+- PIPEDA is treated as legislation rather than a product certification;
+- service levels apply only through executed support schedules;
+- outcome metrics are contextual observations or models, not universal promises;
+- case studies identify evidence strength and constraints;
+- public calculators disclose assumptions.
 
-### High-risk statements requiring precision
+The public trust policy, security posture, service-response framework, privacy notice, terms, and disclaimer carry these boundaries in visitor-accessible language.
 
-- “SOC 2 Ready”
-- “PIPEDA Compliant”
-- “Enterprise Secure”
-- “10x Faster Deployment”
-- “10+ hrs/week saved per employee”
+## Regression protection
 
-### Why they are risky
+`pnpm check:release-integrity` rejects public trust templates, placeholder hash links, unsupported certification/availability language in trust documents, unreviewed workflows, missing workflow scripts, non-blocking release checks, and backend workflow dependencies.
 
-- Certification-adjacent language can imply completed attestation.
-- Performance claims can be interpreted as guaranteed across all clients.
+## Review cadence
 
-### Defensible correction pattern
-
-- Reframe to **control-oriented** statements: “SOC 2-aligned controls available per engagement scope.”
-- Add explicit qualifier: “Outcomes vary by workflow complexity, baseline process maturity, and client adoption constraints.”
-- Keep a claim-to-evidence map internally for investor/customer diligence.
-
----
-
-## SEO and metadata integrity
-
-- Route metadata coverage is programmatically enforced.
-- No evidence of hardcoded false compliance badges in metadata fields was found in route files.
-- Primary inflation risk is business copy in centralized content, not technical metadata plumbing.
-
-## Compliance non-implication check
-
-- This repository should not imply SOC2/ISO certification status unless officially achieved and documented.
-- Legal docs now include explicit non-certification language to reduce ambiguity.
+- Every code release: deterministic verification and claim audit.
+- Every dependency pull request: dependency-diff review.
+- Weekly: production dependency audit, CodeQL, and SBOM refresh.
+- On any material business or certification change: trust documents and claim evidence reviewed before publication.

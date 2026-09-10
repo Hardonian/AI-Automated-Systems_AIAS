@@ -1,6 +1,6 @@
 # AIAS Terms of Service (Repository Reference)
 
-Last updated: 2026-02-18
+Last updated: 2026-09-10
 
 ## 1. Scope
 
@@ -48,3 +48,11 @@ To the maximum extent permitted by law, AIAS liability is limited to fees paid f
 ## 10. Case studies and references
 
 AIAS will not publish confidential client details in case studies without permission or lawful basis.
+
+## 11. Open-source and third-party services
+
+Open-source components remain subject to their respective licenses. Hosting, scheduling, email, analytics, and other third-party services apply their own terms and availability commitments.
+
+## 12. Continuity and exit
+
+Handoff artifacts, credential transfer, transition assistance, support windows, and recovery obligations are defined by the executed engagement documents. Public continuity guidance is a baseline, not a substitute for those terms.

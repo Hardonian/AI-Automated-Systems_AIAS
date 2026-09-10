@@ -1,48 +1,41 @@
-# Security Documentation
+# Security Posture
 
-## Overview
+Last reviewed: September 10, 2026
 
-AI Automated Systems is committed to maintaining the highest standards of security for our platform and customer data.
+## Scope
 
-## Security Measures
+This document describes the public AIAS consultancy site in this repository. It does not describe every client delivery environment, and it is not a third-party certification or attestation.
 
-### Data Encryption
-- All data in transit is encrypted using TLS 1.3
-- All data at rest is encrypted using AES-256
-- Database connections use SSL/TLS encryption
+## Public-site architecture
 
-### Access Control
-- Multi-factor authentication (MFA) available
-- Role-based access control (RBAC)
-- API key authentication with rate limiting
-- Regular security audits and access reviews
+- The site is exported as static HTML, CSS, and JavaScript.
+- Public routes do not require a database, account system, server action, or runtime API.
+- Interactive tools process user inputs in the browser unless a user deliberately follows an external contact or scheduling link.
+- Build checks reject server routes, database clients, unresolved internal links, exposed secrets, and material metadata drift.
 
-### Infrastructure Security
-- Hosted on secure cloud infrastructure
-- Regular security patches and updates
-- Network segmentation and firewalls
-- DDoS protection and mitigation
+This design reduces the public attack surface. It does not make browsers, hosting providers, analytics providers, or linked third-party services risk-free.
 
-### Compliance
-- PIPEDA compliant (Canadian data residency)
-- SOC 2 Type II (in progress)
-- Regular third-party security audits
-- Vulnerability disclosure program
+## Delivery-environment baseline
 
-## Incident Response
+Client implementations are separately scoped. Depending on the system and statement of work, the baseline may include:
 
-In the event of a security incident, we will:
-1. Immediately investigate and contain the threat
-2. Notify affected customers within 24 hours
-3. Provide regular updates on remediation progress
-4. Conduct a post-incident review
+- least-privilege identities and connector scopes;
+- environment-separated credentials owned by the client;
+- encryption in transit and provider-managed encryption at rest;
+- schema validation before state transitions;
+- human approval for high-impact or low-confidence actions;
+- tamper-evident or replayable operating records;
+- rollback, retry, and incident-response procedures;
+- dependency, secret, and release checks.
 
-## Reporting Security Issues
+Specific controls, hosting regions, retention periods, recovery objectives, and audit obligations must be named in the signed engagement documents.
 
-If you discover a security vulnerability, please report it to: security@aiautomatedsystems.ca
+## Compliance and certification boundary
 
-We follow responsible disclosure practices and will acknowledge and work with security researchers.
+AIAS uses control-oriented practices and can map controls to a client's requirements. AIAS does not claim SOC 2, ISO 27001, PIPEDA certification, or any other independent certification unless a current verification is explicitly published. PIPEDA is legislation, not a product certification.
 
-## Contact
+## Vulnerability reporting
 
-For security-related inquiries: security@aiautomatedsystems.ca
+Report a suspected vulnerability privately to `security@aiautomatedsystems.ca`. Include the affected URL or artifact, reproduction steps, likely impact, and a safe contact channel. Do not include live client data or secrets.
+
+AIAS will acknowledge a valid report as soon as practical, triage its scope, and coordinate remediation and disclosure based on severity and affected-party obligations.

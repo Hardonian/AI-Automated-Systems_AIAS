@@ -1,195 +1,185 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  ArrowRight,
+  type LucideIcon,
+  ArrowUpRight,
   BookOpen,
+  Braces,
+  CheckCircle2,
+  FileCheck2,
   FileText,
-  Video,
-  Code,
-  HelpCircle,
-  Zap,
-  Shield,
+  ShieldCheck,
 } from "lucide-react";
 
-import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
+import { RelatedPages } from "@/components/content/related-pages";
 import {
   PageHero,
   PageSection,
   SurfaceCard,
 } from "@/components/ui/section-primitives";
-import { Button } from "@/components/ui/button";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
+import { siteContent } from "@/src/content/site";
 
 export const metadata: Metadata = generateSEOMetadata({
   title: "Documentation | AI Automated Systems",
   description:
-    "Guides, references, and resources for building and operating AI-powered automation systems.",
+    "Working guides, blueprints, governance notes, evidence standards, and operational boundaries for reliable AI automation.",
   canonical: "/docs",
 });
 
-const docCategories = [
-  {
-    icon: BookOpen,
-    title: "Getting Started",
-    description:
-      "Learn the fundamentals of agentic automation and how to get started with your first workflow.",
-    links: [
-      { label: "What is Agentic Automation?", href: "#" },
-      { label: "Understanding Workflows", href: "#" },
-      { label: "Quick Start Guide", href: "#" },
-    ],
-  },
-  {
-    icon: Code,
-    title: "Developer Guides",
-    description:
-      "Technical documentation for developers building custom automation solutions.",
-    links: [
-      { label: "API Reference", href: "#" },
-      { label: "Webhook Integration", href: "#" },
-      { label: "Custom Actions", href: "#" },
-    ],
-  },
-  {
-    icon: Shield,
-    title: "Governance & Security",
-    description:
-      "Best practices for securing your automation systems and maintaining compliance.",
-    links: [
-      { label: "Security Overview", href: "#" },
-      { label: "Access Control", href: "#" },
-      { label: "Audit Logging", href: "#" },
-    ],
-  },
-  {
-    icon: Zap,
-    title: "Workflow Patterns",
-    description:
-      "Common automation patterns and how to implement them effectively.",
-    links: [
-      { label: "Approval Workflows", href: "#" },
-      { label: "Data Processing Pipelines", href: "#" },
-      { label: "Error Handling Strategies", href: "#" },
-    ],
-  },
-];
-
-const resources = [
-  {
-    icon: Video,
-    title: "Video Tutorials",
-    description: "Step-by-step video guides for common automation tasks.",
-  },
-  {
-    icon: FileText,
-    title: "Case Studies",
-    description:
-      "Real-world examples of successful automation implementations.",
-  },
-  {
-    icon: HelpCircle,
-    title: "FAQ",
-    description: "Answers to frequently asked questions about our services.",
-  },
-];
+const categoryIcons: Record<
+  (typeof siteContent.docsPage.categories)[number]["icon"],
+  LucideIcon
+> = {
+  book: BookOpen,
+  code: Braces,
+  shield: ShieldCheck,
+  evidence: FileCheck2,
+};
 
 export default function DocsPage() {
+  const { categories, hero, operatingModel, resources } = siteContent.docsPage;
+
   return (
     <>
       <PageHero
-        eyebrow="Documentation"
-        title="Learn how to build reliable automation"
-        description="Comprehensive guides, references, and resources for designing, building, and operating AI-powered workflows."
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+        description={hero.description}
       />
 
       <PageSection>
-        <div className="grid gap-6 md:grid-cols-2">
-          {docCategories.map((category) => (
-            <SurfaceCard
-              key={category.title}
-              className="p-6 transition-all duration-300 hover:shadow-lg"
-            >
-              <category.icon
-                className="h-8 w-8 text-primary mb-4"
-                aria-hidden="true"
-              />
-              <h2 className="text-lg font-semibold">{category.title}</h2>
-              <p className="mt-2 text-sm text-muted-foreground mb-4">
-                {category.description}
-              </p>
-              <ul className="space-y-2">
-                {category.links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-primary underline underline-offset-2 hover:no-underline transition-colors inline-flex items-center gap-1"
-                    >
-                      {link.label}
-                      <ArrowRight className="h-3 w-3" aria-hidden="true" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </SurfaceCard>
-          ))}
+        <div className="grid gap-6 lg:grid-cols-2">
+          {categories.map((category) => {
+            const CategoryIcon = categoryIcons[category.icon];
+
+            return (
+              <SurfaceCard
+                key={category.title}
+                className="flex h-full flex-col"
+              >
+                <div className="flex items-start gap-4 border-b border-border pb-5">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center border border-primary/40 bg-primary/10 text-primary">
+                    <CategoryIcon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <div>
+                    <h2 className="text-xl font-bold">{category.title}</h2>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {category.description}
+                    </p>
+                  </div>
+                </div>
+
+                <ul className="mt-2 divide-y divide-border/70">
+                  {category.links.map((item) => (
+                    <li key={item.href}>
+                      <Link
+                        className="group flex items-start justify-between gap-4 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                        href={item.href}
+                      >
+                        <span>
+                          <span className="flex items-center gap-2 font-semibold text-foreground transition-colors group-hover:text-primary">
+                            {item.label}
+                            {item.format === "markdown" ? (
+                              <span className="border border-border px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                                MD
+                              </span>
+                            ) : null}
+                          </span>
+                          <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+                            {item.description}
+                          </span>
+                        </span>
+                        <ArrowUpRight
+                          className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
+                          aria-hidden="true"
+                        />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </SurfaceCard>
+            );
+          })}
         </div>
       </PageSection>
 
       <PageSection background="muted">
-        <div className="mx-auto max-w-3xl text-center mb-12">
-          <h2 className="text-3xl font-bold">Additional Resources</h2>
-          <p className="mt-4 text-muted-foreground">
-            Explore more ways to learn about agentic automation.
-          </p>
-        </div>
-        <div className="grid gap-6 md:grid-cols-3">
-          {resources.map((resource) => (
-            <SurfaceCard
-              key={resource.title}
-              className="p-6 text-center transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
-            >
-              <resource.icon
-                className="h-8 w-8 text-primary mx-auto mb-4"
-                aria-hidden="true"
-              />
-              <h3 className="font-semibold">{resource.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {resource.description}
-              </p>
-            </SurfaceCard>
-          ))}
+        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-primary">
+              {operatingModel.eyebrow}
+            </p>
+            <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
+              {operatingModel.title}
+            </h2>
+            <p className="mt-5 leading-relaxed text-muted-foreground">
+              {operatingModel.description}
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {operatingModel.commitments.map((commitment) => (
+              <SurfaceCard key={commitment.title} className="h-full">
+                <CheckCircle2
+                  className="h-5 w-5 text-primary"
+                  aria-hidden="true"
+                />
+                <h3 className="mt-4 font-bold">{commitment.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {commitment.detail}
+                </p>
+              </SurfaceCard>
+            ))}
+          </div>
         </div>
       </PageSection>
 
-      <PageSection width="narrow">
-        <SurfaceCard className="text-center p-8">
-          <h2 className="text-2xl font-bold mb-4">
-            Need personalized guidance?
-          </h2>
-          <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
-            Our team is here to help you navigate the documentation and find the
-            right solutions for your specific needs.
+      <PageSection>
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            Interactive resources
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              asChild
-              size="lg"
-              className="transition-transform duration-200 hover:scale-105"
+          <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
+            Move from reading to a decision
+          </h2>
+          <p className="mt-4 text-muted-foreground">
+            Run the tools locally in your browser. No account, database, or
+            backend submission is required.
+          </p>
+        </div>
+
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {resources.map((resource) => (
+            <Link
+              className="group block h-full"
+              href={resource.href}
+              key={resource.href}
             >
-              <Link href="/contact">
-                Contact Support
-                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="transition-all duration-200 hover:bg-muted"
-            >
-              <Link href="/book">Book a consultation</Link>
-            </Button>
-          </div>
-        </SurfaceCard>
+              <SurfaceCard className="h-full transition-colors group-hover:border-primary/60">
+                <FileText className="h-5 w-5 text-primary" aria-hidden="true" />
+                <h3 className="mt-4 font-bold transition-colors group-hover:text-primary">
+                  {resource.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {resource.description}
+                </p>
+              </SurfaceCard>
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-12">
+          <RelatedPages
+            title="Ready to apply the framework?"
+            links={[
+              { label: "Run the diagnostic", href: "/diagnostic" },
+              { label: "Review services", href: "/services" },
+              { label: "See engagement models", href: "/pricing" },
+              { label: "Start an intake", href: "/contact" },
+            ]}
+          />
+        </div>
       </PageSection>
     </>
   );

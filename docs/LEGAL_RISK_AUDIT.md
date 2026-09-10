@@ -1,101 +1,49 @@
 # AIAS Legal Liability & Consulting Risk Audit
 
+Last reviewed: 2026-09-10
+
 ## Objective
 
-Assess legal and commercial liability exposure in current AIAS public positioning, with focus on advisory liability, claim integrity, data handling statements, and ecosystem/trademark clarity.
+Review public positioning for advisory liability, claim integrity, data handling, ownership, service levels, and ecosystem references. This is an internal risk review, not legal advice.
 
-## Executive summary
+## Current posture
 
-- AIAS already includes meaningful terms/privacy language and messaging constraints against absolute guarantees.
-- Primary exposure is **claim overreach** in selected trust/marketing phrases that can be interpreted as certification or guaranteed outcomes.
-- Contract boundary clarity exists at high level, but investor/enterprise diligence will expect stronger explicit statements on IP ownership, SLAs, and advisory-only AI output boundaries.
+The visitor-facing privacy and terms pages, repository terms, disclaimer, security disclosure, and public trust documents now share the same baseline:
 
----
+- public materials do not form a service contract;
+- AI and calculator outputs are advisory and require validation;
+- results, timelines, availability, and savings are not universally guaranteed;
+- certifications are not claimed without current independent evidence;
+- client responsibilities and final production authority are explicit;
+- bespoke paid deliverables and pre-existing AIAS materials have a default ownership split;
+- service levels and recovery obligations are contract-scoped;
+- third-party and open-source terms continue to apply.
 
-## Claims vs technical reality
+## Risk register
 
-### Observed strengths
+| Area                  | Control now present                                                                           | Residual action                                                          |
+| --------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Marketing claims      | Claim audit, trust policy, non-certification and outcome qualifiers                           | Maintain evidence for every material quantitative claim                  |
+| AI advisory liability | Terms and disclaimer require client validation and distinguish deterministic acceptance terms | Repeat the boundary in proposals and acceptance plans                    |
+| Data handling         | Static/browser boundary, optional webhook disclosure, provider and sensitive-data warnings    | Name subprocessors, residency, retention, and deletion per engagement    |
+| Intellectual property | Default bespoke-deliverable/pre-existing-IP split                                             | Confirm exceptions in each executed statement of work                    |
+| Service levels        | Published reference severity framework with non-binding boundary                              | Execute system-specific coverage, measurements, exclusions, and remedies |
+| Continuity            | Published handoff, credential, backup-owner, recovery, and exit baseline                      | Name owners and test objectives for each managed system                  |
+| Case studies          | Evidence-level and confidentiality standards                                                  | Retain client permission and measurement support                         |
+| Ecosystem references  | Public terms avoid implied ownership of third-party marks                                     | Review naming and attribution when relationships change                  |
 
-- Messaging contract explicitly forbids hype and guaranteed outcomes language.
-- Public architecture is static-first and avoids implied always-on backend processing.
-- Terms copy limits liability and places deployment decisions with client.
-
-### Liability-relevant gaps
-
-1. **Certification implication risk**
-   - Phrases such as “SOC 2 Ready” and “PIPEDA Compliant” can be interpreted as formal attestation.
-   - Without independent audit/cert evidence, these should be framed as “aligned practices” rather than achieved certification.
-
-2. **Performance outcome implication risk**
-   - Statements like “10x Faster Deployment” and “10+ hrs/week saved per employee” can be construed as universal outcomes.
-   - Should be explicitly labeled as case-dependent examples.
-
-3. **Security assurance ambiguity**
-   - “Enterprise Secure” is broad and potentially interpreted as enterprise certification/compliance coverage.
-
----
-
-## AI advisory disclaimers and consulting boundaries
-
-### Required clarifications (must be explicit in legal docs)
-
-- AI outputs are **advisory and probabilistic** unless a specific contract/SOW defines deterministic acceptance criteria.
-- No deterministic operational or financial guarantees are implied by marketing copy.
-- Security/compliance posture is **control-oriented**, not equivalent to third-party certification unless explicitly listed as achieved.
-- Client remains final decision authority for production deployment, policy acceptance, and risk acceptance.
-
-### Engagement boundary risks
-
-- If consultation recommendations are adopted without client validation, disputes may arise over implied warranty.
-- If case-study narratives resemble reusable architecture patterns, ensure non-disclosure boundaries are explicit and client-identifying details are permissioned.
-
----
-
-## IP ownership and reuse posture
-
-### Risk themes
-
-- Ambiguity over who owns custom workflows, scripts, and architecture artifacts.
-- Potential conflict between reusable accelerators and client-exclusive deliverables.
-
-### Recommended legal baseline
-
-- Default: client owns paid-for project deliverables unless contract carves out pre-existing IP/tools.
-- AIAS retains ownership of pre-existing frameworks, templates, and generalized know-how.
-- Case-study publication requires client approval for any non-public architecture detail.
-
----
-
-## Open-source and ecosystem/trademark clarity
-
-- Public references to Reach, Zeo, and Settler should state role definitions without implying ownership of third-party marks unless owned by AIAS.
-- Repository/license clarity is present at package level (MIT), but enterprise legal review also expects explicit statement that open-source components are used under their respective licenses.
-
----
-
-## Required file presence status
-
-The following governance/legal files are now present in this repository and should be maintained with contract-level alignment:
+## Required maintained files
 
 - `TERMS.md`
 - `PRIVACY.md`
 - `SECURITY.md`
 - `DISCLAIMER.md`
+- `public/docs/trust/SECURITY.md`
+- `public/docs/trust/SLO_SLA.md`
+- `public/docs/trust/CONTINUITY.md`
+- `public/docs/trust/DEPENDENCY_GOVERNANCE.md`
+- `public/docs/trust/TRUST.md`
 
----
+## Defensible representation
 
-## Priority risk register
-
-| Area                           | Risk                                                    | Severity | Recommended action                                                                |
-| ------------------------------ | ------------------------------------------------------- | -------: | --------------------------------------------------------------------------------- |
-| Marketing claims               | Certification/performance implication beyond evidence   |     High | Add explicit “not certified unless stated” language and “results vary” qualifiers |
-| AI advisory liability          | Users interpret outputs as guaranteed or autonomous     |     High | Keep explicit advisory-only disclaimer in legal docs and proposal templates       |
-| Data handling                  | Optional webhook may send inquiry data to third parties |   Medium | Add explicit intake notice and downstream processor disclosure                    |
-| IP ownership                   | Scope ambiguity on deliverables vs pre-existing IP      |   Medium | Define ownership split in terms + SOW templates                                   |
-| Trademark/ecosystem references | Implied affiliation/ownership ambiguity                 |   Medium | Add trademark usage/ownership note in legal docs                                  |
-
-## Defensible legal posture target
-
-AIAS should represent itself as:
-
-> A consultancy and systems integrator that provides governed automation architecture and implementation support, where final guarantees, SLAs, certifications, and ownership terms are established only in signed contracts.
+AIAS is a consultancy and systems integrator providing governed automation architecture and implementation support. Guarantees, service levels, certifications, data obligations, acceptance criteria, and ownership terms exist only when supported by current evidence or an executed agreement.

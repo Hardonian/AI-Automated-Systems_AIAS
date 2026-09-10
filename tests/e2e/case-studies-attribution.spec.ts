@@ -61,7 +61,7 @@ test.describe("@smoke Case studies route coverage", () => {
     ).toBeVisible();
     await expect(
       page.getByRole("heading", {
-        name: /06 \/ Measurable Impact|7\) Performance Results/i,
+        name: /06 \/ Validation Plan|7\) Performance Results/i,
       }),
     ).toBeVisible();
   });

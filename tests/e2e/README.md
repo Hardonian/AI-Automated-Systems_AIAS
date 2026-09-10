@@ -38,7 +38,7 @@ pnpm test:audit
 
 ### Routes Covered
 
-1. **Homepage** (`/`)
+1. **Homepage hero** (`/`)
 2. **Documentation** (`/docs`)
 3. **Case-study evidence** (`/case-studies`)
 4. **ROI calculator** (`/roi-calculator`)

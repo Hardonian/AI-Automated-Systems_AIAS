@@ -35,10 +35,19 @@ const fileFor = (pathname) => {
   }
   const relativePath = decoded.replace(/^\/+/, "");
   const base = resolve(root, relativePath);
+  const nextPageData = resolve(
+    root,
+    relativePath.replace(/\.__PAGE__\.txt$/, "/__PAGE__.txt"),
+  );
 
   if (base !== root && !base.startsWith(`${root}${sep}`)) return undefined;
 
-  const candidates = [base, `${base}.html`, resolve(base, "index.html")];
+  const candidates = [
+    base,
+    nextPageData,
+    `${base}.html`,
+    resolve(base, "index.html"),
+  ];
 
   return candidates.find(
     (candidate) => existsSync(candidate) && statSync(candidate).isFile(),

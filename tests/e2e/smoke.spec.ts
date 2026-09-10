@@ -44,7 +44,7 @@ test.describe("@smoke Reality Mode Smoke Test", () => {
 
     await page.goto("/dashboard");
     await expect(
-      page.getByRole("heading", { name: "Operations & Workload Dashboard" }),
+      page.getByRole("heading", { name: "Operations Workspace Reference" }),
     ).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "Request Provisioned Client Access" }),

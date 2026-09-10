@@ -6,6 +6,7 @@ test.describe("@smoke Documentation knowledge base", () => {
     request,
   }) => {
     const browserErrors: string[] = [];
+    const failedResponses: string[] = [];
 
     page.on("console", (message) => {
       if (message.type() === "error") {
@@ -13,8 +14,16 @@ test.describe("@smoke Documentation knowledge base", () => {
       }
     });
     page.on("pageerror", (error) => browserErrors.push(error.message));
+    page.on("response", (response) => {
+      if (response.status() >= 400) {
+        const url = new URL(response.url());
+        failedResponses.push(
+          `${response.status()} ${url.pathname}${url.search}`,
+        );
+      }
+    });
 
-    await page.goto("/docs", { waitUntil: "networkidle" });
+    await page.goto("/docs", { waitUntil: "domcontentloaded" });
 
     await expect(
       page.getByRole("heading", {
@@ -56,6 +65,9 @@ test.describe("@smoke Documentation knowledge base", () => {
       viewportWidth: document.documentElement.clientWidth,
     }));
     expect(viewport.bodyWidth).toBeLessThanOrEqual(viewport.viewportWidth);
-    expect(browserErrors).toEqual([]);
+    expect(
+      { browserErrors, failedResponses },
+      "Documentation route should not emit browser errors or failed resource responses",
+    ).toEqual({ browserErrors: [], failedResponses: [] });
   });
 });

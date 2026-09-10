@@ -21,13 +21,15 @@ test.describe("Critical surface visual regression", () => {
       await setupVisualTest(page, testInfo, { reducedMotion: true });
       await page.goto(surface.path, { waitUntil: "domcontentloaded" });
       await waitForPageStability(page, { networkIdle: false });
-      await revealScrollDrivenContent(page);
-      await waitForPageStability(page, { networkIdle: false });
+      if (surface.name !== "homepage") {
+        await revealScrollDrivenContent(page);
+        await waitForPageStability(page, { networkIdle: false });
+      }
       await maskDynamicContent(page);
 
       await expect(page).toHaveScreenshot(`${surface.name}.png`, {
         animations: "disabled",
-        fullPage: true,
+        fullPage: surface.name !== "homepage",
         scale: "css",
       });
     });

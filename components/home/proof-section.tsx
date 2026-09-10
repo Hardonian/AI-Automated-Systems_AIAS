@@ -183,7 +183,7 @@ export function ProofSection() {
     <section
       aria-label="Proof and verification"
       id="proof"
-      className={getSectionClasses("large", "default")}
+      className={`${getSectionClasses("large", "default")} overflow-hidden`}
     >
       <div className={getContainerClasses("wide")}>
         {/* Section Header */}

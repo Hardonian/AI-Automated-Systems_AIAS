@@ -24,7 +24,7 @@ test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
 
     await expect(
       page.getByRole("heading", {
-        name: /Start with a focused automation conversation/i,
+        name: /Turn one blocked workflow into a decision-ready next step/i,
       }),
     ).toBeVisible();
     await expect(

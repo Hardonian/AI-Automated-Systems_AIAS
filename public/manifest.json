@@ -5,27 +5,28 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#090a0f",
-  "theme_color": "#FF4D1A",
+  "theme_color": "#070A12",
   "orientation": "any",
   "scope": "/",
   "id": "/",
   "icons": [
     {
-      "src": "/favicon.ico",
+      "src": "/favicon.svg",
       "sizes": "any",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "/favicon.ico",
-      "sizes": "192x192",
-      "type": "image/x-icon",
+      "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "/favicon.ico",
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/x-icon",
-      "purpose": "maskable"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
   "categories": ["business", "productivity", "utilities"],
@@ -36,28 +37,28 @@
       "short_name": "ROI",
       "description": "Calculate automation ROI savings",
       "url": "/roi-calculator",
-      "icons": [{ "src": "/favicon.ico", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Workflow Builder",
       "short_name": "Workflows",
       "description": "Design deterministic AI workflows",
       "url": "/workflows",
-      "icons": [{ "src": "/favicon.ico", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Quick Tools",
       "short_name": "Tools",
       "description": "Self-serve automation tools and diagnostics",
       "url": "/tools",
-      "icons": [{ "src": "/favicon.ico", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Book Discovery Call",
       "short_name": "Book",
       "description": "Schedule a free strategy call",
       "url": "/book",
-      "icons": [{ "src": "/favicon.ico", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ],
   "prefer_related_applications": false,

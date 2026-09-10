@@ -84,7 +84,7 @@ export function Header() {
             href="/"
           >
             <span className="flex h-8 w-8 items-center justify-center border border-primary/40 bg-primary/10 font-mono text-[10px] font-bold text-primary transition-colors group-hover:border-primary">
-              {"A/"}
+              {"AI/"}
             </span>
             <span>AIAS</span>
           </Link>

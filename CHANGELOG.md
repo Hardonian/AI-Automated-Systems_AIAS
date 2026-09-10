@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Rebuilt the catalog as a decision-grade lead path with operating-pressure routing, deterministic system boundaries, success signals, non-fit criteria, three-item shortlisting, delivery evidence, and technical buyer FAQs.
+- Carried catalog selections into a qualified four-step contact brief with required workflow context, honest delivery-state reporting, local JSON evidence, and email/booking handoffs when no intake endpoint is configured.
+- Replaced the legacy Lovable heart favicon with a cohesive AI slash identity across SVG/ICO favicons, Apple/PWA icons, metadata, manifest, structured logo, header, and footer.
+- Stabilized local end-to-end verification under cold Next.js route compilation and refreshed inspected responsive baselines for the catalog and AI identity mark.
 - Converted unsupported benchmark, uptime, certification-readiness, confidentiality, and client-result statements into explicit scenarios, measurement contracts, or scope-dependent commitments.
 - Standardized Next.js production output so bundle budgets read the fresh build, added a dependency-free static preview server, and repaired CI browser jobs that previously started no server.
 - Replaced duplicated and ineffective visual tests with 24 reviewed baselines spanning six critical surfaces across desktop, tablet, mobile, and short landscape viewports.

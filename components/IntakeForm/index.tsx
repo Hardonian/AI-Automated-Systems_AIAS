@@ -28,6 +28,8 @@ import {
 import { SurfaceCard } from "@/components/ui/section-primitives";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { track } from "@/lib/analytics";
 
 const formSchema = z.object({
   orgType: z.enum(ORG_TYPES, { error: "Select organization type." }),
@@ -49,19 +51,36 @@ const formSchema = z.object({
   budgetFlexibility: z.enum(BUDGET_FLEXIBILITY_RANGES, {
     error: "Select budget flexibility.",
   }),
-  email: z
+  name: z.string().trim().min(2, "Enter your name.").max(100),
+  organization: z.string().trim().min(2, "Enter your organization.").max(120),
+  workflowSummary: z
     .string()
-    .email("Enter a valid email or leave blank.")
-    .optional()
-    .or(z.literal("")),
+    .trim()
+    .min(20, "Describe the workflow in at least 20 characters.")
+    .max(1200),
+  email: z.string().trim().email("Enter a valid work email."),
   website: z.string().max(0).optional(),
 });
 
 type FormValues = Partial<IntakeSubmission> & {
+  name?: string;
+  organization?: string;
+  workflowSummary?: string;
   email?: string;
   website?: string;
 };
 type FormErrors = Partial<Record<keyof FormValues, string>>;
+
+interface CatalogOption {
+  id: string;
+  title: string;
+}
+
+interface IntakeFormProps {
+  bookingHref: string;
+  catalogOptions: ReadonlyArray<CatalogOption>;
+  contactEmail: string;
+}
 
 const orgTypeLabels: Record<IntakeSubmission["orgType"], string> = {
   startup: "Startup / founding team",
@@ -151,8 +170,14 @@ const steps: ReadonlyArray<{
   },
   {
     id: 4,
-    title: "Budget and contact preferences",
-    fields: ["budgetFlexibility", "email"],
+    title: "Workflow brief and contact",
+    fields: [
+      "budgetFlexibility",
+      "name",
+      "organization",
+      "workflowSummary",
+      "email",
+    ],
   },
 ];
 
@@ -189,12 +214,19 @@ function downloadJsonArtifact(payload: unknown) {
   URL.revokeObjectURL(url);
 }
 
-export function IntakeForm() {
+export function IntakeForm({
+  bookingHref,
+  catalogOptions,
+  contactEmail,
+}: IntakeFormProps) {
   const [stepIndex, setStepIndex] = useState(0);
   const [values, setValues] = useState<FormValues>({});
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [deliveryState, setDeliveryState] = useState<
+    "idle" | "sent" | "prepared"
+  >("idle");
+  const [catalogSelection, setCatalogSelection] = useState<string[]>([]);
   const [progressRestored, setProgressRestored] = useState(false);
 
   useEffect(() => {
@@ -233,12 +265,40 @@ export function IntakeForm() {
   }, []);
 
   useEffect(() => {
-    if (!progressRestored || submitted) return;
+    let active = true;
+    const search = new URLSearchParams(window.location.search);
+    const requestedIds = [
+      search.get("product") ?? "",
+      ...(search.get("products") ?? "").split(","),
+    ].filter(Boolean);
+    const availableIds = new Set(catalogOptions.map((option) => option.id));
+    const validIds = [...new Set(requestedIds)].filter((id) =>
+      availableIds.has(id),
+    );
+
+    queueMicrotask(() => {
+      if (!active) return;
+      setCatalogSelection(validIds);
+      if (validIds.length > 0) {
+        track("catalog_contact_context_loaded", {
+          products: validIds.join("|"),
+          product_count: validIds.length,
+        });
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [catalogOptions]);
+
+  useEffect(() => {
+    if (!progressRestored || deliveryState !== "idle") return;
     window.sessionStorage.setItem(
       "aias_intake_progress",
       JSON.stringify({ stepIndex, values }),
     );
-  }, [progressRestored, stepIndex, submitted, values]);
+  }, [deliveryState, progressRestored, stepIndex, values]);
 
   const activeStep = steps[Math.min(stepIndex, steps.length - 1)]!;
 
@@ -281,6 +341,9 @@ export function IntakeForm() {
         "urgency",
         "scope",
         "budgetFlexibility",
+        "name",
+        "organization",
+        "workflowSummary",
         "email",
       ]);
       setErrors(allErrors);
@@ -288,7 +351,6 @@ export function IntakeForm() {
     }
 
     if (parsed.data.website) {
-      setSubmitted(true);
       return;
     }
 
@@ -310,6 +372,13 @@ export function IntakeForm() {
       type: "lead-intake",
       submittedAt: new Date().toISOString(),
       contactAvailable: Boolean(intake.email),
+      contact: {
+        name: parsed.data.name,
+        organization: parsed.data.organization,
+        email: parsed.data.email,
+      },
+      workflowSummary: parsed.data.workflowSummary,
+      catalogSelection,
       intake,
       classification,
       tags: [
@@ -317,12 +386,14 @@ export function IntakeForm() {
         `failure:${intake.failureMode}`,
         `maturity:${intake.governanceMaturity}`,
         `tier:${classification.tier}`,
+        ...catalogSelection.map((product) => `catalog:${product}`),
       ],
     };
 
     const endpoint = process.env.NEXT_PUBLIC_INTAKE_WEBHOOK_URL;
 
     setIsSubmitting(true);
+    let delivered = false;
     try {
       if (endpoint) {
         const response = await fetch(endpoint, {
@@ -332,24 +403,30 @@ export function IntakeForm() {
           },
           body: JSON.stringify(payload),
         });
-
-        if (!response.ok) {
-          // Silently fail - artifact already downloaded
-        }
+        delivered = response.ok;
       }
-      downloadJsonArtifact(payload);
     } catch {
-      // Silently fail - artifact already downloaded
-      downloadJsonArtifact(payload);
+      delivered = false;
     } finally {
+      downloadJsonArtifact(payload);
       setIsSubmitting(false);
-      setSubmitted(true);
+      setDeliveryState(delivered ? "sent" : "prepared");
       window.sessionStorage.removeItem("aias_intake_progress");
-      setValues({ ...intake, email: intake.email });
+      setValues({
+        ...intake,
+        email: parsed.data.email,
+        name: parsed.data.name,
+        organization: parsed.data.organization,
+        workflowSummary: parsed.data.workflowSummary,
+      });
+      track(delivered ? "intake_delivered" : "intake_prepared", {
+        catalog_product_count: catalogSelection.length,
+        tier: classification.tier,
+      });
     }
   };
 
-  if (submitted) {
+  if (deliveryState !== "idle") {
     const intake = formSchema.parse({ ...values, website: "" });
     const result = classifyIntake({
       orgType: intake.orgType,
@@ -363,11 +440,30 @@ export function IntakeForm() {
       budgetFlexibility: intake.budgetFlexibility,
       email: intake.email || undefined,
     });
+    const selectedProducts = catalogOptions.filter((option) =>
+      catalogSelection.includes(option.id),
+    );
+    const emailSubject = `AIAS fit brief — ${intake.organization}`;
+    const emailBody = [
+      `Name: ${intake.name}`,
+      `Organization: ${intake.organization}`,
+      `Email: ${intake.email}`,
+      selectedProducts.length > 0
+        ? `Catalog shortlist: ${selectedProducts.map((product) => product.title).join(", ")}`
+        : "Catalog shortlist: open to recommendation",
+      `Recommended path: ${result.recommendedPath.title}`,
+      `Workflow: ${intake.workflowSummary}`,
+      "",
+      "Please reply with fit, material risks, and the smallest useful next step.",
+    ].join("\n");
+    const emailHref = `mailto:${contactEmail}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
 
     return (
       <SurfaceCard>
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
-          Intake submitted
+          {deliveryState === "sent"
+            ? "Intake delivered"
+            : "Fit brief prepared locally"}
         </p>
         <h2 className="mt-3 text-2xl font-bold">
           {result.recommendedPath.title}
@@ -376,9 +472,9 @@ export function IntakeForm() {
           {result.recommendedPath.summary}
         </p>
         <p className="mt-4 text-sm text-muted-foreground">
-          {intake.email
-            ? `Follow-up can be sent to ${intake.email}.`
-            : "No email provided. Downloaded JSON artifact can be shared manually."}
+          {deliveryState === "sent"
+            ? `The configured intake channel accepted the brief. Follow-up can be sent to ${intake.email}.`
+            : "No intake endpoint is configured, so nothing was silently claimed as submitted. Your structured JSON was downloaded; email the prepared summary or book a diagnostic to deliver the context."}
         </p>
         <div className="mt-6 rounded-lg border bg-muted/40 p-4">
           <p className="text-sm font-semibold">Why this path</p>
@@ -388,12 +484,63 @@ export function IntakeForm() {
             ))}
           </ul>
         </div>
+        {selectedProducts.length > 0 && (
+          <div className="mt-5 border-2 border-border bg-background p-4">
+            <p className="font-mono text-xs font-bold uppercase text-foreground">
+              Catalog context carried forward
+            </p>
+            <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
+              {selectedProducts.map((product) => (
+                <li key={product.id}>{product.title}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+          <Button asChild>
+            <a
+              href={emailHref}
+              onClick={() =>
+                track("intake_email_handoff_clicked", {
+                  catalog_product_count: catalogSelection.length,
+                })
+              }
+            >
+              Email this fit brief
+            </a>
+          </Button>
+          <Button asChild variant="outline">
+            <a
+              href={bookingHref}
+              onClick={() => track("intake_booking_handoff_clicked")}
+            >
+              Book diagnostic
+            </a>
+          </Button>
+        </div>
       </SurfaceCard>
     );
   }
 
   return (
     <SurfaceCard>
+      {catalogSelection.length > 0 && (
+        <div className="mb-6 border-2 border-primary bg-primary/5 p-4">
+          <p className="font-mono text-xs font-black uppercase tracking-wider text-primary">
+            Catalog shortlist received
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {catalogOptions
+              .filter((option) => catalogSelection.includes(option.id))
+              .map((option) => option.title)
+              .join(" · ")}
+          </p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            Your answers will qualify this shortlist against the operating
+            context. Selection does not lock the recommendation.
+          </p>
+        </div>
+      )}
       <div className="mb-6" aria-live="polite">
         <p className="text-sm text-muted-foreground">
           Step {stepIndex + 1} of {steps.length}
@@ -741,25 +888,109 @@ export function IntakeForm() {
               )}
             </fieldset>
 
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="name">Your name</Label>
+                <Input
+                  autoComplete="name"
+                  id="name"
+                  placeholder="Name"
+                  value={values.name || ""}
+                  onChange={(event) => updateValue("name", event.target.value)}
+                  aria-invalid={Boolean(errors.name)}
+                  aria-describedby={errors.name ? "name-error" : undefined}
+                />
+                {errors.name && (
+                  <p id="name-error" className="text-sm text-destructive">
+                    {errors.name}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="organization">Organization</Label>
+                <Input
+                  autoComplete="organization"
+                  id="organization"
+                  placeholder="Organization"
+                  value={values.organization || ""}
+                  onChange={(event) =>
+                    updateValue("organization", event.target.value)
+                  }
+                  aria-invalid={Boolean(errors.organization)}
+                  aria-describedby={
+                    errors.organization ? "organization-error" : undefined
+                  }
+                />
+                {errors.organization && (
+                  <p
+                    id="organization-error"
+                    className="text-sm text-destructive"
+                  >
+                    {errors.organization}
+                  </p>
+                )}
+              </div>
+            </div>
+
             <div className="space-y-2">
-              <Label htmlFor="email">Email (optional)</Label>
+              <Label htmlFor="workflowSummary">
+                Workflow, volume, and current failure
+              </Label>
+              <Textarea
+                id="workflowSummary"
+                maxLength={1200}
+                placeholder="Example: We reconcile 2,000 invoices each month across NetSuite and email. Duplicate detection and PO exceptions consume two operator-days per week."
+                rows={5}
+                value={values.workflowSummary || ""}
+                onChange={(event) =>
+                  updateValue("workflowSummary", event.target.value)
+                }
+                aria-invalid={Boolean(errors.workflowSummary)}
+                aria-describedby={
+                  errors.workflowSummary
+                    ? "workflowSummary-error"
+                    : "workflowSummary-help"
+                }
+              />
+              {errors.workflowSummary && (
+                <p
+                  id="workflowSummary-error"
+                  className="text-sm text-destructive"
+                >
+                  {errors.workflowSummary}
+                </p>
+              )}
+              <p
+                className="text-xs text-muted-foreground"
+                id="workflowSummary-help"
+              >
+                Use approximate volumes and sanitized context. Do not include
+                credentials, personal data, or production records.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Work email</Label>
               <Input
+                autoComplete="email"
                 id="email"
                 type="email"
                 placeholder="you@company.com"
                 value={values.email || ""}
                 onChange={(event) => updateValue("email", event.target.value)}
                 aria-invalid={Boolean(errors.email)}
-                aria-describedby={errors.email ? "email-error" : undefined}
+                aria-describedby={errors.email ? "email-error" : "email-help"}
               />
               {errors.email && (
                 <p id="email-error" className="text-sm text-destructive">
                   {errors.email}
                 </p>
               )}
-              <p className="text-xs text-muted-foreground">
-                If omitted, we still classify your intake and export structured
-                JSON locally.
+              <p className="text-xs text-muted-foreground" id="email-help">
+                The page states whether the configured intake channel accepted
+                the brief. A local JSON copy is always generated for your
+                records.
               </p>
             </div>
           </>
@@ -778,7 +1009,7 @@ export function IntakeForm() {
             {stepIndex === steps.length - 1
               ? isSubmitting
                 ? "Submitting..."
-                : "Submit intake"
+                : "Prepare fit brief"
               : "Continue"}
           </Button>
         </div>

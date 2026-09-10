@@ -48,7 +48,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   viewportFit: "cover",
-  themeColor: "#1e56a0",
+  themeColor: "#070A12",
 };
 
 export const metadata: Metadata = {
@@ -76,7 +76,13 @@ export const metadata: Metadata = {
   applicationName: "AI Automated Systems",
   category: "Technology",
   classification: "Business Software",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "32x32", type: "image/x-icon" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
   manifest: "/manifest.json",
   metadataBase: new URL(SITE_URL),
   alternates: {
@@ -146,9 +152,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       className="dark"
-      suppressHydrationWarning
+      data-scroll-behavior="smooth"
       dir={isRTL ? "rtl" : "ltr"}
       lang={locale}
+      suppressHydrationWarning
     >
       <head>
         <link href="/manifest.json" rel="manifest" />

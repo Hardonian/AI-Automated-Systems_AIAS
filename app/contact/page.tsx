@@ -20,12 +20,18 @@ export const metadata: Metadata = generateSEOMetadata({
 });
 
 export default function ContactPage() {
+  const bookingHref = getPrimaryCtaHref();
+  const catalogOptions = siteContent.catalogProducts.map(({ id, title }) => ({
+    id,
+    title,
+  }));
+
   return (
     <>
       <PageHero
         eyebrow="Contact"
-        title="Start with a focused automation conversation"
-        description="Tell us what workflow is blocking your team. We will map options and recommend the right engagement shape without forcing fixed packages."
+        title="Turn one blocked workflow into a decision-ready next step"
+        description="Bring the workflow, approximate volume, failure pattern, accountable owner, and current systems. We will qualify the opportunity, name material risks, and recommend the smallest useful next step—even when that recommendation is not to build."
       />
 
       <PageSection>
@@ -42,7 +48,7 @@ export default function ContactPage() {
               30 minutes • no-pressure planning call
             </p>
             <Button asChild className="mt-6 w-full" size="lg">
-              <a href={getPrimaryCtaHref()}>Book Diagnostic</a>
+              <a href={bookingHref}>Book Diagnostic</a>
             </Button>
           </SurfaceCard>
 
@@ -67,22 +73,55 @@ export default function ContactPage() {
         </div>
       </PageSection>
 
+      <PageSection background="muted">
+        <div className="grid gap-6 md:grid-cols-3">
+          {[
+            {
+              title: "Operating evidence",
+              body: "Approximate volume, cycle time, exception rate, manual effort, and the business consequence of failure.",
+            },
+            {
+              title: "System boundary",
+              body: "Authoritative sources, current tools, downstream actions, access constraints, and the person who owns the outcome.",
+            },
+            {
+              title: "Decision constraint",
+              body: "Urgency, acceptable review load, security or retention requirements, and what would make the work not worth doing.",
+            },
+          ].map((item) => (
+            <SurfaceCard key={item.title}>
+              <h2 className="font-mono text-sm font-black uppercase text-foreground">
+                {item.title}
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {item.body}
+              </p>
+            </SurfaceCard>
+          ))}
+        </div>
+      </PageSection>
+
       <PageSection width="narrow">
-        <IntakeForm />
+        <IntakeForm
+          bookingHref={bookingHref}
+          catalogOptions={catalogOptions}
+          contactEmail={siteContent.contact.email}
+        />
       </PageSection>
 
       <PageSection background="muted" width="narrow">
         <SurfaceCard>
-          <h2 className="text-2xl font-bold">
-            What you get after reaching out
-          </h2>
+          <h2 className="text-2xl font-bold">What happens after the brief</h2>
           <ol className="mt-5 space-y-3 text-muted-foreground">
-            <li>1. Workflow discovery and constraint review.</li>
+            <li>1. Fit response and clarification questions.</li>
             <li>
-              2. Recommended engagement shape (consultation, pilot, managed, or
-              enablement).
+              2. Recommended proof boundary, material risks, and explicit
+              non-goals.
             </li>
-            <li>3. Clear next actions and ownership plan.</li>
+            <li>
+              3. Proposed engagement shape, decision owner, and measurement
+              contract.
+            </li>
           </ol>
           <Link
             className="mt-6 inline-block font-semibold text-primary underline underline-offset-4"

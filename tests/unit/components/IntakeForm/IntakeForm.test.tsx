@@ -3,6 +3,14 @@ import { vi, describe, it, expect, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { IntakeForm } from "../../../../components/IntakeForm";
 
+const intakeFormProps = {
+  bookingHref: "https://calendly.com/test",
+  catalogOptions: [
+    { id: "policy-guardrail-kit", title: "Policy Guardrail Kit" },
+  ],
+  contactEmail: "hello@example.com",
+};
+
 // Mock the environment variable
 process.env.NEXT_PUBLIC_INTAKE_WEBHOOK_URL = "http://test.com/webhook";
 
@@ -89,9 +97,15 @@ async function fillAndSubmitForm(user: ReturnType<typeof userEvent.setup>) {
   await user.click(
     screen.getByLabelText("Constrained — need a focused outcome"),
   );
+  await user.type(screen.getByLabelText(/Your name/i), "Test Buyer");
+  await user.type(screen.getByLabelText(/Organization/i), "Example Co");
+  await user.type(
+    screen.getByLabelText(/Workflow, volume, and current failure/i),
+    "We manually review recurring exceptions and need a governed workflow.",
+  );
   await user.type(screen.getByLabelText(/Email/i), "test@example.com");
 
-  await user.click(screen.getByRole("button", { name: "Submit intake" }));
+  await user.click(screen.getByRole("button", { name: "Prepare fit brief" }));
 }
 
 describe("IntakeForm", () => {
@@ -100,13 +114,13 @@ describe("IntakeForm", () => {
   });
 
   it("renders correctly", () => {
-    render(<IntakeForm />);
+    render(<IntakeForm {...intakeFormProps} />);
     expect(screen.getByText("Organization type")).toBeInTheDocument();
   });
 
   it("downloads artifact on network failure (fetch throws)", async () => {
     const user = userEvent.setup();
-    render(<IntakeForm />);
+    render(<IntakeForm {...intakeFormProps} />);
 
     mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
@@ -122,7 +136,7 @@ describe("IntakeForm", () => {
 
   it("downloads artifact on network failure (fetch returns !ok)", async () => {
     const user = userEvent.setup();
-    render(<IntakeForm />);
+    render(<IntakeForm {...intakeFormProps} />);
 
     mockFetch.mockResolvedValueOnce({ ok: false, status: 500 });
 

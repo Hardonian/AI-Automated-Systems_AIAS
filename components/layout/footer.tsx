@@ -87,7 +87,7 @@ export function Footer() {
           <div className="lg:col-span-1">
             <div className="mb-4 flex items-center gap-2.5">
               <span className="flex h-8 w-8 items-center justify-center border border-primary/40 bg-primary/10 text-xs font-mono font-black text-primary">
-                {"A/"}
+                {"AI/"}
               </span>
               <h3 className="font-mono text-base font-black uppercase tracking-wider text-foreground">
                 AIAS / Systems Lab

@@ -3,11 +3,22 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, CheckCircle, Zap, ArrowRight } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  CheckCircle,
+  ListPlus,
+  Search,
+  ShieldCheck,
+  Target,
+  X,
+  Zap,
+} from "lucide-react";
 
-import type { CatalogProduct } from "@/src/content/site";
+import type { CatalogPageContent, CatalogProduct } from "@/src/content/site";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { track } from "@/lib/analytics";
 
 const CATEGORIES = [
   "All",
@@ -23,12 +34,20 @@ type License = (typeof LICENSES)[number];
 
 export function CatalogDirectoryClient({
   products,
+  buyerPaths,
+  proofBar,
 }: {
   products: CatalogProduct[];
+  buyerPaths: CatalogPageContent["buyerPaths"];
+  proofBar: CatalogPageContent["proofBar"];
 }) {
   const [selectedCategory, setSelectedCategory] = useState<Category>("All");
   const [selectedLicense, setSelectedLicense] = useState<License>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedPathId, setSelectedPathId] = useState<string>("all");
+  const [shortlist, setShortlist] = useState<string[]>([]);
+
+  const selectedPath = buyerPaths.find((path) => path.id === selectedPathId);
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
@@ -45,23 +64,132 @@ export function CatalogDirectoryClient({
         product.techStack.some((t) =>
           t.toLowerCase().includes(searchQuery.toLowerCase()),
         );
+      const matchesBuyerPath =
+        !selectedPath || selectedPath.productIds.includes(product.id);
 
-      return matchesCategory && matchesLicense && matchesSearch;
+      return (
+        matchesCategory && matchesLicense && matchesSearch && matchesBuyerPath
+      );
     });
-  }, [products, selectedCategory, selectedLicense, searchQuery]);
+  }, [products, selectedCategory, selectedLicense, searchQuery, selectedPath]);
+
+  const shortlistedProducts = useMemo(
+    () => products.filter((product) => shortlist.includes(product.id)),
+    [products, shortlist],
+  );
+
+  const shortlistHref =
+    shortlist.length > 0
+      ? `/contact?ref=catalog&products=${encodeURIComponent(shortlist.join(","))}`
+      : "/contact?ref=catalog";
+
+  const toggleShortlist = (product: CatalogProduct) => {
+    setShortlist((current) => {
+      const isSelected = current.includes(product.id);
+      if (!isSelected && current.length >= 3) return current;
+
+      const next = isSelected
+        ? current.filter((id) => id !== product.id)
+        : [...current, product.id];
+
+      track(
+        isSelected ? "catalog_shortlist_removed" : "catalog_shortlist_added",
+        {
+          product: product.id,
+          shortlist_size: next.length,
+        },
+      );
+      return next;
+    });
+  };
 
   return (
     <div className="space-y-10">
+      <section aria-labelledby="catalog-path-title" className="space-y-5">
+        <div className="max-w-3xl">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary">
+            Decision route 01 // Start with the pressure
+          </p>
+          <h2
+            className="mt-2 text-2xl font-black uppercase tracking-tight text-foreground sm:text-3xl"
+            id="catalog-path-title"
+          >
+            Which operating problem needs to move?
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            Choose the closest pressure to narrow the catalog. The result is a
+            starting hypothesis—not an automated architecture decision.
+          </p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {buyerPaths.map((path) => {
+            const isSelected = selectedPathId === path.id;
+            return (
+              <button
+                aria-pressed={isSelected}
+                className={`border-2 p-5 text-left transition-colors ${
+                  isSelected
+                    ? "border-cyan-400 bg-cyan-950/70"
+                    : "border-border bg-card hover:border-primary"
+                }`}
+                key={path.id}
+                onClick={() => {
+                  setSelectedPathId(path.id);
+                  track("catalog_buyer_path_selected", { path: path.id });
+                }}
+                type="button"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="font-mono text-sm font-black uppercase text-foreground">
+                      {path.title}
+                    </p>
+                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                      {path.description}
+                    </p>
+                  </div>
+                  <Target
+                    aria-hidden="true"
+                    className={`h-5 w-5 shrink-0 ${isSelected ? "text-cyan-300" : "text-primary"}`}
+                  />
+                </div>
+                <ul className="mt-4 space-y-1.5">
+                  {path.signals.map((signal) => (
+                    <li
+                      className="flex gap-2 text-xs text-muted-foreground"
+                      key={signal}
+                    >
+                      <CheckCircle
+                        aria-hidden="true"
+                        className="mt-0.5 h-3.5 w-3.5 shrink-0 text-cyan-400"
+                      />
+                      {signal}
+                    </li>
+                  ))}
+                </ul>
+              </button>
+            );
+          })}
+        </div>
+
+        {selectedPath && (
+          <button
+            className="font-mono text-xs font-bold uppercase text-primary underline underline-offset-4"
+            onClick={() => setSelectedPathId("all")}
+            type="button"
+          >
+            Clear operational-priority filter
+          </button>
+        )}
+      </section>
+
       <h2 className="sr-only">Catalog modules</h2>
 
-      <div className="grid border-2 border-border bg-background sm:grid-cols-3">
-        {[
-          ["Catalog", `${products.length} reference scopes`],
-          ["Delivery", "Adapted to your stack"],
-          ["Next step", "Fit review + scoped plan"],
-        ].map(([label, value]) => (
+      <div className="grid border-2 border-border bg-background sm:grid-cols-2 lg:grid-cols-4">
+        {proofBar.map(({ label, value }) => (
           <div
-            className="border-b-2 border-border p-4 last:border-b-0 sm:border-b-0 sm:border-r-2 sm:last:border-r-0"
+            className="border-b-2 border-border p-4 last:border-b-0 sm:border-r-2 sm:even:border-r-0 sm:[&:nth-last-child(-n+2)]:border-b-0 lg:border-b-0 lg:border-r-2 lg:even:border-r-2 lg:last:border-r-0"
             key={label}
           >
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
@@ -99,6 +227,7 @@ export function CatalogDirectoryClient({
           <div className="relative w-full md:w-72">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
             <Input
+              aria-label="Search catalog"
               type="text"
               placeholder="SEARCH CATALOG..."
               value={searchQuery}
@@ -127,6 +256,61 @@ export function CatalogDirectoryClient({
               {lic}
             </button>
           ))}
+        </div>
+      </div>
+
+      <div className="sticky top-20 z-20 border-2 border-primary bg-background/95 p-4 shadow-[4px_4px_0px_0px_hsl(var(--primary))] backdrop-blur md:p-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <ListPlus aria-hidden="true" className="h-4 w-4 text-primary" />
+              <p className="font-mono text-xs font-black uppercase tracking-wider text-foreground">
+                Solution shortlist · {shortlist.length}/3
+              </p>
+            </div>
+            {shortlistedProducts.length > 0 ? (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {shortlistedProducts.map((product) => (
+                  <button
+                    aria-label={`Remove ${product.title} from shortlist`}
+                    className="inline-flex items-center gap-1.5 border border-border bg-card px-2.5 py-1 font-mono text-[10px] font-bold uppercase text-foreground hover:border-primary"
+                    key={product.id}
+                    onClick={() => toggleShortlist(product)}
+                    type="button"
+                  >
+                    {product.title}
+                    <X aria-hidden="true" className="h-3 w-3" />
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-2 text-xs text-muted-foreground">
+                Compare up to three systems, then carry the exact shortlist into
+                a fit review.
+              </p>
+            )}
+          </div>
+          {shortlist.length > 0 ? (
+            <Button asChild className="shrink-0">
+              <Link
+                href={shortlistHref}
+                onClick={() =>
+                  track("catalog_shortlist_fit_review_clicked", {
+                    shortlist_size: shortlist.length,
+                    products: shortlist.join("|"),
+                  })
+                }
+              >
+                Review this shortlist
+                <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          ) : (
+            <Button className="shrink-0" disabled type="button">
+              Review this shortlist
+              <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
+            </Button>
+          )}
         </div>
       </div>
 
@@ -192,7 +376,36 @@ export function CatalogDirectoryClient({
 
                 <div className="mt-5 border-l-2 border-cyan-500 bg-background p-4">
                   <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-500">
-                    Architecture
+                    Operational outcome
+                  </p>
+                  <p className="mt-1 text-sm font-semibold leading-relaxed text-foreground">
+                    {product.operationalOutcome}
+                  </p>
+                </div>
+
+                <div className="mt-5">
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                    Strongest fit
+                  </p>
+                  <ul className="mt-2 space-y-1.5">
+                    {product.bestFit.map((fit) => (
+                      <li
+                        className="flex items-start gap-2 text-xs text-muted-foreground"
+                        key={fit}
+                      >
+                        <Target
+                          aria-hidden="true"
+                          className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary"
+                        />
+                        {fit}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="mt-5 border-l-2 border-border bg-background p-4">
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-primary">
+                    Architecture boundary
                   </p>
                   <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                     {product.architectureSummary}
@@ -245,15 +458,105 @@ export function CatalogDirectoryClient({
                     ))}
                   </div>
                 </div>
+
+                <details className="group mt-5 border-2 border-border bg-background">
+                  <summary className="cursor-pointer list-none px-4 py-3 font-mono text-xs font-black uppercase tracking-wider text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span className="flex items-center justify-between gap-3">
+                      Review technical delivery brief
+                      <span aria-hidden="true" className="text-primary">
+                        +
+                      </span>
+                    </span>
+                  </summary>
+                  <div className="space-y-5 border-t-2 border-border p-4">
+                    {[
+                      ["Inputs", product.inputs],
+                      ["Deterministic controls", product.controlPoints],
+                      ["Outputs", product.outputs],
+                    ].map(([label, items]) => (
+                      <div key={label as string}>
+                        <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-primary">
+                          {label}
+                        </p>
+                        <ul className="mt-2 space-y-1.5">
+                          {(items as string[]).map((item) => (
+                            <li
+                              className="flex gap-2 text-xs text-muted-foreground"
+                              key={item}
+                            >
+                              <span aria-hidden="true" className="text-primary">
+                                →
+                              </span>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+
+                    <div>
+                      <p className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-foreground">
+                        <ShieldCheck
+                          aria-hidden="true"
+                          className="h-3.5 w-3.5 text-primary"
+                        />
+                        Measurement contract
+                      </p>
+                      <ul className="mt-2 space-y-1.5">
+                        {product.successSignals.map((signal) => (
+                          <li
+                            className="text-xs text-muted-foreground"
+                            key={signal}
+                          >
+                            {signal}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="border-l-2 border-amber-500 bg-amber-500/5 p-3">
+                      <p className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-amber-300">
+                        <AlertTriangle
+                          aria-hidden="true"
+                          className="h-3.5 w-3.5"
+                        />
+                        Not a fit when
+                      </p>
+                      {product.nonFit.map((item) => (
+                        <p
+                          className="mt-1 text-xs text-muted-foreground"
+                          key={item}
+                        >
+                          {item}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                </details>
               </div>
 
               {/* Action Buttons */}
-              <div className="p-6 md:p-8 pt-0 flex flex-col sm:flex-row items-center gap-3">
+              <div className="grid gap-3 p-6 pt-0 md:grid-cols-2 md:p-8 md:pt-0">
+                <Button
+                  aria-pressed={shortlist.includes(product.id)}
+                  className="w-full"
+                  disabled={
+                    shortlist.length >= 3 && !shortlist.includes(product.id)
+                  }
+                  onClick={() => toggleShortlist(product)}
+                  type="button"
+                  variant="outline"
+                >
+                  {shortlist.includes(product.id)
+                    ? "Shortlisted"
+                    : "Add to shortlist"}
+                  <ListPlus aria-hidden="true" className="ml-2 h-4 w-4" />
+                </Button>
                 {product.liveDemoHref && (
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full sm:w-auto flex-1 rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-wider hover:border-foreground hover:bg-surface-muted transition-colors"
+                    className="w-full rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-wider hover:border-foreground hover:bg-surface-muted transition-colors"
                   >
                     <Link href={product.liveDemoHref}>
                       Try Live Demo
@@ -264,9 +567,16 @@ export function CatalogDirectoryClient({
 
                 <Button
                   asChild
-                  className="w-full sm:w-auto flex-1 rounded-none border-2 border-cyan-500 bg-cyan-500/10 font-mono text-xs font-bold uppercase tracking-widest text-cyan-400 shadow-[2px_2px_0px_0px_rgba(6,182,212,0.5)] hover:bg-cyan-500 hover:text-white hover:shadow-[4px_4px_0px_0px_rgba(6,182,212,1)] hover:-translate-y-0.5 transition-all backdrop-blur-sm"
+                  className="w-full rounded-none border-2 border-cyan-500 bg-cyan-500/10 font-mono text-xs font-bold uppercase tracking-widest text-cyan-400 shadow-[2px_2px_0px_0px_rgba(6,182,212,0.5)] hover:bg-cyan-700 hover:text-white hover:shadow-[4px_4px_0px_0px_rgba(6,182,212,1)] hover:-translate-y-0.5 transition-all backdrop-blur-sm"
                 >
-                  <Link href={product.inquiryHref}>
+                  <Link
+                    href={product.inquiryHref}
+                    onClick={() =>
+                      track("catalog_product_scope_clicked", {
+                        product: product.id,
+                      })
+                    }
+                  >
                     Request Scope
                     <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                   </Link>

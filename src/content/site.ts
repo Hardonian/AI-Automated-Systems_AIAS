@@ -62,14 +62,39 @@ export interface CatalogProduct {
   badge: string;
   license: "Commercial" | "Open Source" | "Enterprise License";
   description: string;
+  operationalOutcome: string;
+  bestFit: string[];
   techStack: string[];
   keyFeatures: string[];
   architectureSummary: string;
+  inputs: string[];
+  controlPoints: string[];
+  outputs: string[];
+  successSignals: string[];
+  nonFit: string[];
   includedArtifacts: string[];
   liveDemoHref?: string;
   inquiryHref: string;
   featured?: boolean;
   thumbnailSrc?: string;
+}
+
+export interface CatalogPageContent {
+  proofBar: Array<{ label: string; value: string }>;
+  buyerPaths: Array<{
+    id: string;
+    title: string;
+    description: string;
+    signals: string[];
+    productIds: string[];
+  }>;
+  deliverySteps: Array<{
+    step: string;
+    title: string;
+    description: string;
+    exitEvidence: string;
+  }>;
+  faqs: Array<{ question: string; answer: string }>;
 }
 
 export interface SiteConfig {
@@ -117,6 +142,7 @@ export interface SiteConfig {
   quickTools: QuickToolItem[];
   consultancyTracks: ConsultancyTrack[];
   catalogProducts: CatalogProduct[];
+  catalogPage: CatalogPageContent;
   services: Array<{
     title: string;
     description: string;
@@ -737,6 +763,12 @@ const rawSiteContent: SiteConfig = {
       license: "Commercial",
       description:
         "Complete operational backbone connecting multi-channel storefronts, warehouse inventory feeds, order triage, and automated supplier routing with deterministic reconciliation.",
+      operationalOutcome:
+        "Create one reconciled operating picture across orders, inventory, exceptions, and supplier actions.",
+      bestFit: [
+        "Multi-channel commerce teams reconciling storefront and warehouse state",
+        "Operators spending recurring time on stock, order, or supplier exceptions",
+      ],
       techStack: [
         "TypeScript",
         "Next.js",
@@ -752,6 +784,29 @@ const rawSiteContent: SiteConfig = {
       ],
       architectureSummary:
         "Decoupled event-driven architecture with deterministic policy gates on stock allocation and supplier dispatch.",
+      inputs: [
+        "Storefront orders, refunds, and fulfillment events",
+        "Warehouse and inventory availability feeds",
+        "Supplier rules, lead times, and catalog data",
+      ],
+      controlPoints: [
+        "Idempotency and duplicate-event suppression",
+        "Stock allocation and fraud policy gates",
+        "Approval thresholds before supplier dispatch",
+      ],
+      outputs: [
+        "Reconciled order and inventory state",
+        "Approval-ready supplier purchase orders",
+        "Owned exception queue with decision history",
+      ],
+      successSignals: [
+        "Oversell and reconciliation-gap rate",
+        "Manual exception minutes per order",
+        "Traceable allocation and supplier decisions",
+      ],
+      nonFit: [
+        "Single-store operations without recurring reconciliation volume",
+      ],
       includedArtifacts: [
         "Full Source Repository",
         "Deployment Dockerfiles",
@@ -773,6 +828,12 @@ const rawSiteContent: SiteConfig = {
       license: "Commercial",
       description:
         "Production deployment control plane built for static-first and edge-native applications. Enforces verification suites, schema integrity, and rollback triggers designed to minimize disruption.",
+      operationalOutcome:
+        "Turn release policy into an enforceable path from verified artifact to observable rollback.",
+      bestFit: [
+        "Teams shipping multiple static, edge, or containerized services",
+        "Platforms where failed releases require faster, evidence-backed recovery",
+      ],
       techStack: [
         "Node.js",
         "TypeScript",
@@ -788,6 +849,27 @@ const rawSiteContent: SiteConfig = {
       ],
       architectureSummary:
         "Stateful release orchestrator enforcing CI/CD gates and health probe telemetry before traffic routing.",
+      inputs: [
+        "Versioned build artifacts and provenance",
+        "Test, schema, and security verification results",
+        "Environment contracts and health telemetry",
+      ],
+      controlPoints: [
+        "Preflight policy and artifact-integrity gates",
+        "Canary health thresholds and observation windows",
+        "Deterministic rollback and promotion conditions",
+      ],
+      outputs: [
+        "Promotion or rollback decision",
+        "Signed release receipt and changelog evidence",
+        "Incident-ready deployment timeline",
+      ],
+      successSignals: [
+        "Failed-deployment escape rate",
+        "Mean time to detect and recover",
+        "Manual release coordination minutes",
+      ],
+      nonFit: ["Low-change brochure sites without meaningful release risk"],
       includedArtifacts: [
         "CLI Tooling",
         "CI/CD Workflows",
@@ -809,6 +891,12 @@ const rawSiteContent: SiteConfig = {
       license: "Commercial",
       description:
         "Transforms messy incoming invoices, shipping manifests, and PDF contracts into validated, strictly typed JSON records with human escalation on low-confidence extractions.",
+      operationalOutcome:
+        "Convert document variability into typed records with measurable extraction quality and owned exceptions.",
+      bestFit: [
+        "Teams processing recurring document families at operational volume",
+        "Workflows with known schemas and reviewers for ambiguous fields",
+      ],
       techStack: ["Python", "TypeScript", "Zod", "OCR Engine", "FastAPI"],
       keyFeatures: [
         "Multi-format ingestion (PDF, scan images, CSV, webhook streams)",
@@ -818,6 +906,29 @@ const rawSiteContent: SiteConfig = {
       ],
       architectureSummary:
         "Dual-phase pipeline: AI extraction followed by strict deterministic schema validation and policy gating.",
+      inputs: [
+        "PDFs, scans, CSVs, or webhook payloads",
+        "Target schemas and field-level validation rules",
+        "Representative fixtures and reviewer corrections",
+      ],
+      controlPoints: [
+        "File, source, and duplicate validation",
+        "Field confidence and cross-field consistency gates",
+        "Schema rejection with human review routing",
+      ],
+      outputs: [
+        "Typed and source-linked JSON records",
+        "Low-confidence review queue",
+        "ERP, CRM, or warehouse-ready exports",
+      ],
+      successSignals: [
+        "Field accuracy by document family",
+        "Touchless acceptance rate at approved thresholds",
+        "Median review time per exception",
+      ],
+      nonFit: [
+        "Unbounded document types without representative fixtures or ground truth",
+      ],
       includedArtifacts: [
         "FastAPI Service Code",
         "Schema Definitions",
@@ -839,6 +950,12 @@ const rawSiteContent: SiteConfig = {
       license: "Commercial",
       description:
         "Models how inbound submissions can be enriched, classified against explicit constraints, and routed to an accountable owner.",
+      operationalOutcome:
+        "Move qualified demand to the right owner faster while keeping scoring and enrichment explainable.",
+      bestFit: [
+        "Revenue teams with multiple lead sources and routing rules",
+        "Organizations losing time to manual research and inconsistent qualification",
+      ],
       techStack: ["TypeScript", "Next.js App Router", "Zod", "CRM Webhooks"],
       keyFeatures: [
         "Configurable intake classification and enrichment budget",
@@ -848,6 +965,29 @@ const rawSiteContent: SiteConfig = {
       ],
       architectureSummary:
         "Web-native intake controller with a deterministic scoring matrix and client-approved CRM connector boundary.",
+      inputs: [
+        "Inbound forms, referrals, and campaign context",
+        "Approved firmographic or intent enrichment sources",
+        "Qualification rules, territories, and owner capacity",
+      ],
+      controlPoints: [
+        "Explicit scoring weights and disqualification reasons",
+        "Per-source enrichment budget and retention rules",
+        "Owner, territory, and fallback routing constraints",
+      ],
+      outputs: [
+        "Scored lead with decision explanation",
+        "Research dossier and recommended next action",
+        "CRM record assigned to an accountable owner",
+      ],
+      successSignals: [
+        "Median speed to qualified owner",
+        "Qualified-to-meeting conversion by source",
+        "Routing exception and reassignment rate",
+      ],
+      nonFit: [
+        "Teams without defined qualification criteria or follow-up ownership",
+      ],
       includedArtifacts: [
         "Next.js Component Suite",
         "Scoring Matrices",
@@ -868,6 +1008,12 @@ const rawSiteContent: SiteConfig = {
       license: "Commercial",
       description:
         "Autonomous analytics engine designed for modern e-commerce brands scaling TikTok and multi-channel social storefronts with predictive inventory recommendations.",
+      operationalOutcome:
+        "Connect content momentum to SKU demand and inventory decisions before signals disappear into channel dashboards.",
+      bestFit: [
+        "Commerce brands publishing consistent short-form campaign volume",
+        "Teams linking social performance, product demand, and replenishment decisions",
+      ],
       techStack: ["Python", "TypeScript", "Next.js", "FastAPI", "PostgreSQL"],
       keyFeatures: [
         "Trend velocity scoring and social product interest tracking",
@@ -877,6 +1023,29 @@ const rawSiteContent: SiteConfig = {
       ],
       architectureSummary:
         "Stream processing analytics engine linked to social commerce APIs with automated trend alerts.",
+      inputs: [
+        "Approved social performance and campaign metrics",
+        "Product catalog, SKU mappings, and margin context",
+        "Inventory position and replenishment constraints",
+      ],
+      controlPoints: [
+        "Attribution windows and confidence thresholds",
+        "Platform rate, spend, and access budgets",
+        "Brand-policy checks for generated suggestions",
+      ],
+      outputs: [
+        "Trend-velocity and anomaly alerts",
+        "Content-to-SKU attribution views",
+        "Inventory and campaign action recommendations",
+      ],
+      successSignals: [
+        "Signal-to-decision latency",
+        "Demand forecast error by SKU cohort",
+        "Recommendation adoption and measured outcome rate",
+      ],
+      nonFit: [
+        "Brands without stable content, catalog, or inventory identifiers",
+      ],
       includedArtifacts: [
         "Full Web App Source",
         "API Microservice",
@@ -896,7 +1065,13 @@ const rawSiteContent: SiteConfig = {
       badge: "Open / Pro Pack",
       license: "Open Source",
       description:
-        "The core governance architecture used by AIAS across all client deployments. Enforces policy validation before execution, scrubs PII, and generates replayable audit records.",
+        "Reusable governance reference architecture for validating actions before execution, reducing exposed sensitive data, and producing replayable decision records.",
+      operationalOutcome:
+        "Stop invalid or high-risk AI actions before execution and leave a replayable decision record.",
+      bestFit: [
+        "Engineering teams adding tools or actions to LLM workflows",
+        "Operators who need consistent schemas, escalation, and audit evidence",
+      ],
       techStack: ["TypeScript", "Zod", "Vitest"],
       keyFeatures: [
         "Pre-built Zod schemas for system inputs, actions, and outputs",
@@ -906,6 +1081,29 @@ const rawSiteContent: SiteConfig = {
       ],
       architectureSummary:
         "Zero-dependency TypeScript module designed to wrap any LLM or automation pipeline with deterministic gates.",
+      inputs: [
+        "Model requests, tool calls, and proposed actions",
+        "Typed policy schemas and approval thresholds",
+        "PII patterns, roles, and environment context",
+      ],
+      controlPoints: [
+        "Input, action, and output schema validation",
+        "Policy, confidence, and human-review gates",
+        "PII detection, redaction, and deny rules",
+      ],
+      outputs: [
+        "Allow, deny, transform, or escalate decision",
+        "Validated or redacted payload",
+        "Replayable audit event with reason codes",
+      ],
+      successSignals: [
+        "Invalid actions blocked before execution",
+        "Human override and false-positive rate",
+        "Audit-record completeness across decision paths",
+      ],
+      nonFit: [
+        "Organizations expecting a code library alone to confer compliance",
+      ],
       includedArtifacts: [
         "TypeScript NPM Package Source",
         "Unit Test Suite",
@@ -927,6 +1125,12 @@ const rawSiteContent: SiteConfig = {
       license: "Commercial",
       description:
         "High-contrast neo-brutalist dashboard components for operators managing AI exceptions, pipeline approvals, risk score reviews, and lead qualification queues.",
+      operationalOutcome:
+        "Give every automation exception an owner, evidence trail, decision path, and service-level clock.",
+      bestFit: [
+        "Teams operating sustained review, approval, or exception queues",
+        "Systems where human decisions must be attributable and replayable",
+      ],
       techStack: [
         "React 19",
         "Next.js",
@@ -942,6 +1146,29 @@ const rawSiteContent: SiteConfig = {
       ],
       architectureSummary:
         "Accessible React UI components built with Radix primitives and Tailwind CSS token architecture.",
+      inputs: [
+        "Queue events, risk scores, and service-level timestamps",
+        "Source payloads, diffs, and supporting evidence",
+        "Operator roles, permissions, and escalation policy",
+      ],
+      controlPoints: [
+        "Role-aware actions and decision permissions",
+        "Dual-approval or escalation requirements",
+        "Queue aging, timeout, and reassignment rules",
+      ],
+      outputs: [
+        "Approve, reject, revise, or escalate decisions",
+        "Timestamped notes and operator rationale",
+        "Queue health and resolution telemetry",
+      ],
+      successSignals: [
+        "Oldest-item age and service-level attainment",
+        "Median resolution and escalation time",
+        "Reopen, override, and reassignment rate",
+      ],
+      nonFit: [
+        "Workflows without sustained exception volume or named reviewers",
+      ],
       includedArtifacts: [
         "React Components",
         "Tailwind Theme Config",
@@ -962,6 +1189,12 @@ const rawSiteContent: SiteConfig = {
       license: "Commercial",
       description:
         "Reference accounts-payable workflow for ingesting PDF invoices, validating extracted line items, reconciling purchase-order records, and drafting approval batches with confidence-based review.",
+      operationalOutcome:
+        "Turn incoming invoices into validated draft payables while keeping posting authority with accountable reviewers.",
+      bestFit: [
+        "Accounts-payable teams with repeatable PO-backed invoice volume",
+        "Organizations measuring exception cost and approval-cycle time",
+      ],
       techStack: ["n8n / LangGraph", "TypeScript", "Zod", "ERP Webhooks"],
       keyFeatures: [
         "Multi-currency line item and tax extraction",
@@ -971,6 +1204,29 @@ const rawSiteContent: SiteConfig = {
       ],
       architectureSummary:
         "Event-driven workflow DAG with deterministic three-way matching logic and approval escalation.",
+      inputs: [
+        "Invoices, credit notes, and vendor documents",
+        "Purchase orders, receipts, and vendor master data",
+        "Tax, currency, tolerance, and approval policy",
+      ],
+      controlPoints: [
+        "Duplicate, vendor, tax, and total validation",
+        "Confidence-gated three-way matching",
+        "Approval limits before any ERP posting step",
+      ],
+      outputs: [
+        "Validated invoice and normalized line items",
+        "Draft bill or owned exception case",
+        "Approval notification and decision record",
+      ],
+      successSignals: [
+        "Touchless match rate at approved tolerances",
+        "Cost and manual minutes per invoice",
+        "Exception and approval cycle time",
+      ],
+      nonFit: [
+        "Uncontrolled auto-posting without purchase records or approval owners",
+      ],
       includedArtifacts: [
         "n8n Workflow JSON",
         "LangGraph Python Code",
@@ -982,6 +1238,148 @@ const rawSiteContent: SiteConfig = {
       thumbnailSrc: "/images/catalog/invoice_document_parser_v2.avif",
     },
   ],
+  catalogPage: {
+    proofBar: [
+      { label: "Architecture", value: "Deterministic control boundaries" },
+      { label: "Delivery", value: "Proof → hardening → transfer" },
+      { label: "Ownership", value: "Source, tests, and runbooks" },
+      { label: "Measurement", value: "Baseline before outcome claims" },
+    ],
+    buyerPaths: [
+      {
+        id: "operations",
+        title: "Reduce operational load",
+        description:
+          "Normalize high-volume work, automate deterministic decisions, and route exceptions instead of hiding them.",
+        signals: [
+          "Teams reconcile the same records repeatedly",
+          "Exceptions move through inboxes or spreadsheets",
+          "Throughput depends on a few experienced operators",
+        ],
+        productIds: [
+          "hardonia-suite-ops",
+          "zeo-ingestion-engine",
+          "invoice-document-parser",
+          "operator-console-kit",
+        ],
+      },
+      {
+        id: "governance",
+        title: "Govern AI actions",
+        description:
+          "Put typed policy, evidence, approvals, and replay around probabilistic model behavior.",
+        signals: [
+          "Tool-calling agents can change external systems",
+          "Teams cannot explain why an action was allowed",
+          "Review and escalation rules differ by workflow",
+        ],
+        productIds: [
+          "policy-guardrail-kit",
+          "operator-console-kit",
+          "settler-deployment-fabric",
+        ],
+      },
+      {
+        id: "revenue",
+        title: "Improve revenue operations",
+        description:
+          "Turn fragmented demand signals into explainable qualification, prioritization, and owned follow-up.",
+        signals: [
+          "Lead research and routing consume selling time",
+          "Channel data does not connect to product decisions",
+          "Conversion handoffs lack clear service levels",
+        ],
+        productIds: [
+          "reach-demand-accelerator",
+          "tokpulse-growth-core",
+          "operator-console-kit",
+        ],
+      },
+      {
+        id: "reliability",
+        title: "Ship and recover reliably",
+        description:
+          "Make verification, promotion, rollback, ownership, and incident evidence part of the delivery path.",
+        signals: [
+          "Release approval is mostly tribal knowledge",
+          "Rollback decisions arrive after customer impact",
+          "Build evidence is scattered across CI tools",
+        ],
+        productIds: [
+          "settler-deployment-fabric",
+          "policy-guardrail-kit",
+          "hardonia-suite-ops",
+        ],
+      },
+    ],
+    deliverySteps: [
+      {
+        step: "01",
+        title: "Fit and boundary review",
+        description:
+          "Map the workflow, decision owner, source systems, constraints, and the smallest valuable proof boundary.",
+        exitEvidence:
+          "Signed-off problem frame, source inventory, risk register, and measurement plan.",
+      },
+      {
+        step: "02",
+        title: "Representative proof",
+        description:
+          "Run real but controlled fixtures through the proposed path and expose every reject, escalation, and cost decision.",
+        exitEvidence:
+          "Reproducible fixtures, baseline comparison, failure evidence, and a build-or-stop decision.",
+      },
+      {
+        step: "03",
+        title: "Production hardening",
+        description:
+          "Add idempotency, policy gates, observability, access boundaries, runbooks, and rollback behavior around the core workflow.",
+        exitEvidence:
+          "Acceptance results, operator walkthrough, release plan, and owned incident paths.",
+      },
+      {
+        step: "04",
+        title: "Transfer and measured rollout",
+        description:
+          "Release against agreed thresholds, train accountable operators, and compare live results with the original baseline.",
+        exitEvidence:
+          "Source and artifact transfer, operating cadence, outcome review, and prioritized next decisions.",
+      },
+    ],
+    faqs: [
+      {
+        question:
+          "Are these finished SaaS products or reference implementations?",
+        answer:
+          "They are implementation-ready reference scopes: reusable architecture, controls, test patterns, and delivery artifacts adapted to your systems. They are not one-click subscriptions, and the site does not imply that an unconfigured module is production-ready for every environment.",
+      },
+      {
+        question: "Can AIAS work with our existing stack?",
+        answer:
+          "Usually. The fit review identifies authoritative sources, integration contracts, identity boundaries, observability, and ownership before selecting adapters. A module is reshaped around those constraints rather than forcing a platform replacement.",
+      },
+      {
+        question: "How do you prove value without inventing ROI?",
+        answer:
+          "We agree on a baseline and measurement contract first: volume, cycle time, exception rate, quality thresholds, operating cost, and who validates each result. Public examples are planning references; outcome claims belong to the measured engagement context.",
+      },
+      {
+        question: "What remains human-owned?",
+        answer:
+          "Policy approval, exception resolution, sensitive access, material external actions, and go-live acceptance remain assigned to named people. Automation can prepare evidence and recommendations without obscuring accountability.",
+      },
+      {
+        question: "What do you need for an initial fit review?",
+        answer:
+          "A representative workflow, approximate volume, current tools, the accountable owner, known failure modes, and any security or retention constraints. Sanitized examples are enough for the first conversation; do not submit production secrets or regulated data through the public site.",
+      },
+      {
+        question: "What if the selected module is not the right fit?",
+        answer:
+          "We will say so. The shortlist starts the conversation, not the architecture decision. The appropriate next step may be a smaller diagnostic, a different module combination, process cleanup before automation, or no build at all.",
+      },
+    ],
+  },
   services: [
     {
       title: "AI Clarity Audit",

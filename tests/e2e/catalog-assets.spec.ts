@@ -25,9 +25,9 @@ test.describe("@smoke Catalog assets", () => {
       )
       .toBe(true);
 
-    await expect(page.getByText("Architecture", { exact: true })).toHaveCount(
-      8,
-    );
+    await expect(
+      page.getByText("Architecture boundary", { exact: true }),
+    ).toHaveCount(8);
 
     const scopeLinks = page.getByRole("link", { name: "Request Scope" });
     await expect(scopeLinks).toHaveCount(8);
@@ -43,5 +43,28 @@ test.describe("@smoke Catalog assets", () => {
     ).toBe(true);
 
     await expect(page.locator('a[href*="store.hardonia.com"]')).toHaveCount(0);
+
+    const addButtons = page.getByRole("button", { name: "Add to shortlist" });
+    await expect(addButtons).toHaveCount(8);
+    await addButtons.first().click();
+    await addButtons.first().click();
+
+    await expect(page.getByText("Solution shortlist · 2/3")).toBeVisible();
+    const reviewLink = page.getByRole("link", {
+      name: "Review this shortlist",
+    });
+    await expect(reviewLink).toHaveAttribute(
+      "href",
+      /\/contact\?ref=catalog&products=/,
+    );
+
+    await reviewLink.click();
+    await expect(page).toHaveURL(/\/contact\?ref=catalog&products=/);
+    await expect(page.getByText("Catalog shortlist received")).toBeVisible();
+    await expect(
+      page.getByText("Hardonia Suite Client Operations Fabric", {
+        exact: false,
+      }),
+    ).toBeVisible();
   });
 });

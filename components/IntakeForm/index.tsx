@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 
 import {
@@ -30,6 +30,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { track } from "@/lib/analytics";
+import {
+  buildLeadBriefMarkdown,
+  downloadTextArtifact,
+  readLeadAttribution,
+  type LeadAttribution,
+} from "@/lib/lead-brief";
 
 const formSchema = z.object({
   orgType: z.enum(ORG_TYPES, { error: "Select organization type." }),
@@ -70,6 +76,16 @@ type FormValues = Partial<IntakeSubmission> & {
   website?: string;
 };
 type FormErrors = Partial<Record<keyof FormValues, string>>;
+
+const emptyAttribution: LeadAttribution = {
+  landingPath: "",
+  referrer: "",
+  source: "",
+  medium: "",
+  campaign: "",
+  content: "",
+  term: "",
+};
 
 interface CatalogOption {
   id: string;
@@ -228,6 +244,10 @@ export function IntakeForm({
   >("idle");
   const [catalogSelection, setCatalogSelection] = useState<string[]>([]);
   const [progressRestored, setProgressRestored] = useState(false);
+  const [attribution, setAttribution] =
+    useState<LeadAttribution>(emptyAttribution);
+  const interactionStarted = useRef(false);
+  const formMountedAt = useRef(Date.now());
 
   useEffect(() => {
     let active = true;
@@ -267,6 +287,29 @@ export function IntakeForm({
   useEffect(() => {
     let active = true;
     const search = new URLSearchParams(window.location.search);
+    const storedAttribution = window.sessionStorage.getItem(
+      "aias_lead_attribution",
+    );
+    const currentAttribution = readLeadAttribution({
+      search: window.location.search,
+      referrer: document.referrer,
+      landingPath: window.location.pathname,
+    });
+    let mergedAttribution = currentAttribution;
+    if (storedAttribution) {
+      try {
+        const parsed = JSON.parse(storedAttribution) as Partial<LeadAttribution>;
+        mergedAttribution = {
+          ...emptyAttribution,
+          ...parsed,
+          ...Object.fromEntries(
+            Object.entries(currentAttribution).filter(([, value]) => value),
+          ),
+        };
+      } catch {
+        window.sessionStorage.removeItem("aias_lead_attribution");
+      }
+    }
     const requestedIds = [
       search.get("product") ?? "",
       ...(search.get("products") ?? "").split(","),
@@ -278,6 +321,11 @@ export function IntakeForm({
 
     queueMicrotask(() => {
       if (!active) return;
+      setAttribution(mergedAttribution);
+      window.sessionStorage.setItem(
+        "aias_lead_attribution",
+        JSON.stringify(mergedAttribution),
+      );
       setCatalogSelection(validIds);
       if (validIds.length > 0) {
         track("catalog_contact_context_loaded", {
@@ -311,6 +359,13 @@ export function IntakeForm({
     key: K,
     value: FormValues[K],
   ) => {
+    if (!interactionStarted.current) {
+      interactionStarted.current = true;
+      track("intake_started", {
+        catalog_product_count: catalogSelection.length,
+        source: attribution.source || "direct",
+      });
+    }
     setValues((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: undefined }));
   };
@@ -319,8 +374,13 @@ export function IntakeForm({
     const nextErrors = validateFields(values, activeStep.fields);
     if (Object.keys(nextErrors).length > 0) {
       setErrors((current) => ({ ...current, ...nextErrors }));
+      track("intake_validation_blocked", {
+        step: activeStep.id,
+        error_count: Object.keys(nextErrors).length,
+      });
       return;
     }
+    track("intake_step_completed", { step: activeStep.id });
     setStepIndex((current) => Math.min(current + 1, steps.length - 1));
   };
 
@@ -347,6 +407,10 @@ export function IntakeForm({
         "email",
       ]);
       setErrors(allErrors);
+      track("intake_validation_blocked", {
+        step: activeStep.id,
+        error_count: Object.keys(allErrors).length,
+      });
       return;
     }
 
@@ -379,8 +443,18 @@ export function IntakeForm({
       },
       workflowSummary: parsed.data.workflowSummary,
       catalogSelection,
+      attribution,
       intake,
       classification,
+      delivery: {
+        provider: process.env.NEXT_PUBLIC_INTAKE_PROVIDER ?? "none",
+        requestedFollowUp: "fit-review",
+        preferredReplyTo: parsed.data.email,
+      },
+      antiAutomation: {
+        elapsedMs: Date.now() - formMountedAt.current,
+        honeypotClear: true,
+      },
       tags: [
         `problem:${intake.problemCategory}`,
         `failure:${intake.failureMode}`,
@@ -390,19 +464,38 @@ export function IntakeForm({
       ],
     };
 
+    const provider = process.env.NEXT_PUBLIC_INTAKE_PROVIDER ?? "none";
     const endpoint = process.env.NEXT_PUBLIC_INTAKE_WEBHOOK_URL;
 
     setIsSubmitting(true);
     let delivered = false;
     try {
-      if (endpoint) {
+      if (provider !== "none" && endpoint) {
+        const requestBody =
+          provider === "formspree"
+            ? {
+                name: parsed.data.name,
+                organization: parsed.data.organization,
+                email: parsed.data.email,
+                message: parsed.data.workflowSummary,
+                _subject: `AIAS fit request — ${parsed.data.organization}`,
+                aias_payload: JSON.stringify(payload),
+              }
+            : payload;
+        const controller = new AbortController();
+        const timeoutId = window.setTimeout(() => controller.abort(), 8000);
         const response = await fetch(endpoint, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Accept: "application/json",
           },
-          body: JSON.stringify(payload),
+          body: JSON.stringify(requestBody),
+          credentials: "omit",
+          referrerPolicy: "strict-origin-when-cross-origin",
+          signal: controller.signal,
         });
+        window.clearTimeout(timeoutId);
         delivered = response.ok;
       }
     } catch {
@@ -422,6 +515,8 @@ export function IntakeForm({
       track(delivered ? "intake_delivered" : "intake_prepared", {
         catalog_product_count: catalogSelection.length,
         tier: classification.tier,
+        provider,
+        source: attribution.source || "direct",
       });
     }
   };
@@ -457,6 +552,29 @@ export function IntakeForm({
       "Please reply with fit, material risks, and the smallest useful next step.",
     ].join("\n");
     const emailHref = `mailto:${contactEmail}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+    const leadBrief = buildLeadBriefMarkdown({
+      contact: {
+        name: intake.name,
+        organization: intake.organization,
+        email: intake.email,
+      },
+      workflowSummary: intake.workflowSummary,
+      catalogTitles: selectedProducts.map((product) => product.title),
+      intake: {
+        orgType: intake.orgType,
+        problemCategory: intake.problemCategory,
+        aiStack: intake.aiStack,
+        modelMix: intake.modelMix,
+        failureMode: intake.failureMode,
+        governanceMaturity: intake.governanceMaturity,
+        urgency: intake.urgency,
+        scope: intake.scope,
+        budgetFlexibility: intake.budgetFlexibility,
+        email: intake.email,
+      },
+      classification: result,
+      attribution,
+    });
 
     return (
       <SurfaceCard>
@@ -517,6 +635,21 @@ export function IntakeForm({
               Book diagnostic
             </a>
           </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              downloadTextArtifact({
+                content: leadBrief,
+                filename: `aias-fit-brief-${new Date().toISOString().slice(0, 10)}.md`,
+              });
+              track("intake_decision_brief_downloaded", {
+                catalog_product_count: catalogSelection.length,
+              });
+            }}
+          >
+            Download decision brief
+          </Button>
         </div>
       </SurfaceCard>
     );
@@ -565,6 +698,11 @@ export function IntakeForm({
           onNext();
         }}
       >
+        <p className="text-xs text-muted-foreground">
+          Submit sanitized business context only. If a delivery provider is
+          configured, the validated brief is sent directly from your browser;
+          otherwise it remains local and downloads for your records.
+        </p>
         <input
           autoComplete="off"
           className="hidden"

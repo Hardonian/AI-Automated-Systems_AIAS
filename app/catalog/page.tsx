@@ -18,6 +18,47 @@ export const metadata: Metadata = generateSEOMetadata({
 
 export default function ProductCatalogPage() {
   const { catalogPage, catalogProducts: products } = siteContent;
+  const listingProducts = products.map(
+    ({
+      id,
+      title,
+      subtitle,
+      category,
+      badge,
+      license,
+      description,
+      operationalOutcome,
+      bestFit,
+      techStack,
+      keyFeatures,
+      architectureSummary,
+      successSignals,
+      nonFit,
+      liveDemoHref,
+      inquiryHref,
+      featured,
+      thumbnailSrc,
+    }) => ({
+      id,
+      title,
+      subtitle,
+      category,
+      badge,
+      license,
+      description,
+      operationalOutcome,
+      bestFit,
+      techStack,
+      keyFeatures,
+      architectureSummary,
+      successSignals,
+      nonFit,
+      liveDemoHref,
+      inquiryHref,
+      featured,
+      thumbnailSrc,
+    }),
+  );
 
   return (
     <>
@@ -44,7 +85,7 @@ export default function ProductCatalogPage() {
         {/* Interactive Filterable Catalog Directory */}
         <CatalogDirectoryClient
           buyerPaths={catalogPage.buyerPaths}
-          products={products}
+          products={listingProducts}
           proofBar={catalogPage.proofBar}
         />
       </PageSection>

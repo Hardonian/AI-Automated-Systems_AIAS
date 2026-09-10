@@ -4,12 +4,11 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  AlertTriangle,
   ArrowRight,
   CheckCircle,
+  GitCompareArrows,
   ListPlus,
   Search,
-  ShieldCheck,
   Target,
   X,
   Zap,
@@ -31,13 +30,34 @@ const LICENSES = ["All", "Commercial", "Open Source"] as const;
 
 type Category = (typeof CATEGORIES)[number];
 type License = (typeof LICENSES)[number];
+type CatalogListingProduct = Pick<
+  CatalogProduct,
+  | "id"
+  | "title"
+  | "subtitle"
+  | "category"
+  | "badge"
+  | "license"
+  | "description"
+  | "operationalOutcome"
+  | "bestFit"
+  | "techStack"
+  | "keyFeatures"
+  | "architectureSummary"
+  | "successSignals"
+  | "nonFit"
+  | "liveDemoHref"
+  | "inquiryHref"
+  | "featured"
+  | "thumbnailSrc"
+>;
 
 export function CatalogDirectoryClient({
   products,
   buyerPaths,
   proofBar,
 }: {
-  products: CatalogProduct[];
+  products: CatalogListingProduct[];
   buyerPaths: CatalogPageContent["buyerPaths"];
   proofBar: CatalogPageContent["proofBar"];
 }) {
@@ -46,6 +66,7 @@ export function CatalogDirectoryClient({
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedPathId, setSelectedPathId] = useState<string>("all");
   const [shortlist, setShortlist] = useState<string[]>([]);
+  const [showComparison, setShowComparison] = useState(false);
 
   const selectedPath = buyerPaths.find((path) => path.id === selectedPathId);
 
@@ -83,7 +104,7 @@ export function CatalogDirectoryClient({
       ? `/contact?ref=catalog&products=${encodeURIComponent(shortlist.join(","))}`
       : "/contact?ref=catalog";
 
-  const toggleShortlist = (product: CatalogProduct) => {
+  const toggleShortlist = (product: CatalogListingProduct) => {
     setShortlist((current) => {
       const isSelected = current.includes(product.id);
       if (!isSelected && current.length >= 3) return current;
@@ -290,33 +311,123 @@ export function CatalogDirectoryClient({
               </p>
             )}
           </div>
-          {shortlist.length > 0 ? (
-            <Button asChild className="shrink-0">
-              <Link
-                href={shortlistHref}
-                onClick={() =>
-                  track("catalog_shortlist_fit_review_clicked", {
-                    shortlist_size: shortlist.length,
-                    products: shortlist.join("|"),
-                  })
-                }
-              >
+          <div className="flex flex-wrap gap-2">
+            <Button
+              disabled={shortlist.length < 2}
+              onClick={() => {
+                setShowComparison((current) => !current);
+                track("catalog_comparison_toggled", {
+                  shortlist_size: shortlist.length,
+                });
+              }}
+              type="button"
+              variant="outline"
+            >
+              <GitCompareArrows aria-hidden="true" className="mr-2 h-4 w-4" />
+              {showComparison ? "Hide comparison" : "Compare systems"}
+            </Button>
+            {shortlist.length > 0 ? (
+              <Button asChild className="shrink-0">
+                <Link
+                  href={shortlistHref}
+                  onClick={() =>
+                    track("catalog_shortlist_fit_review_clicked", {
+                      shortlist_size: shortlist.length,
+                      products: shortlist.join("|"),
+                    })
+                  }
+                >
+                  Review this shortlist
+                  <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            ) : (
+              <Button className="shrink-0" disabled type="button">
                 Review this shortlist
                 <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          ) : (
-            <Button className="shrink-0" disabled type="button">
-              Review this shortlist
-              <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
-            </Button>
-          )}
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 
+      {showComparison && shortlistedProducts.length >= 2 && (
+        <section
+          aria-labelledby="catalog-comparison-title"
+          className="border-2 border-border bg-card p-5 shadow-card md:p-7"
+        >
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary">
+            Decision route 02 // Compare boundaries
+          </p>
+          <h2
+            className="mt-2 text-2xl font-black uppercase text-foreground"
+            id="catalog-comparison-title"
+          >
+            Shortlist comparison
+          </h2>
+          <div className="mt-5 overflow-x-auto">
+            <table className="min-w-[760px] border-collapse text-left text-xs">
+              <thead>
+                <tr>
+                  <th className="border border-border bg-background p-3 font-mono uppercase text-muted-foreground">
+                    Decision field
+                  </th>
+                  {shortlistedProducts.map((product) => (
+                    <th
+                      className="border border-border bg-background p-3 font-mono uppercase text-foreground"
+                      key={product.id}
+                    >
+                      {product.title}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  {
+                    label: "Outcome",
+                    render: (product: CatalogListingProduct) =>
+                      product.operationalOutcome,
+                  },
+                  {
+                    label: "Strongest fit",
+                    render: (product: CatalogListingProduct) =>
+                      product.bestFit.join(" · "),
+                  },
+                  {
+                    label: "Success signals",
+                    render: (product: CatalogListingProduct) =>
+                      product.successSignals.join(" · "),
+                  },
+                  {
+                    label: "Non-fit boundary",
+                    render: (product: CatalogListingProduct) =>
+                      product.nonFit.join(" · "),
+                  },
+                ].map((row) => (
+                  <tr key={row.label}>
+                    <th className="border border-border p-3 font-mono uppercase text-primary">
+                      {row.label}
+                    </th>
+                    {shortlistedProducts.map((product) => (
+                      <td
+                        className="border border-border p-3 align-top leading-relaxed text-muted-foreground"
+                        key={product.id}
+                      >
+                        {row.render(product)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
       {/* Product Cards Grid */}
       <div className="grid gap-8 md:grid-cols-2">
-        {filteredProducts.map((product) => (
+        {filteredProducts.map((product, productIndex) => (
           <div
             key={product.id}
             className={`flex flex-col justify-between border-2 bg-card overflow-hidden transition-all hover:-translate-y-1 ${
@@ -333,7 +444,7 @@ export function CatalogDirectoryClient({
                     src={product.thumbnailSrc}
                     alt={product.title}
                     fill
-                    loading="eager"
+                    loading={productIndex < 2 ? "eager" : "lazy"}
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
@@ -442,97 +553,6 @@ export function CatalogDirectoryClient({
                   </ul>
                 </div>
 
-                {/* Included Artifacts */}
-                <div className="mt-4 border-t border-border/60 pt-3">
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
-                    Included Artifacts:
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {product.includedArtifacts.map((art) => (
-                      <span
-                        key={art}
-                        className="border border-border/80 bg-background px-2 py-0.5 font-mono text-[10px] text-muted-foreground"
-                      >
-                        {art}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <details className="group mt-5 border-2 border-border bg-background">
-                  <summary className="cursor-pointer list-none px-4 py-3 font-mono text-xs font-black uppercase tracking-wider text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-                    <span className="flex items-center justify-between gap-3">
-                      Review technical delivery brief
-                      <span aria-hidden="true" className="text-primary">
-                        +
-                      </span>
-                    </span>
-                  </summary>
-                  <div className="space-y-5 border-t-2 border-border p-4">
-                    {[
-                      ["Inputs", product.inputs],
-                      ["Deterministic controls", product.controlPoints],
-                      ["Outputs", product.outputs],
-                    ].map(([label, items]) => (
-                      <div key={label as string}>
-                        <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-primary">
-                          {label}
-                        </p>
-                        <ul className="mt-2 space-y-1.5">
-                          {(items as string[]).map((item) => (
-                            <li
-                              className="flex gap-2 text-xs text-muted-foreground"
-                              key={item}
-                            >
-                              <span aria-hidden="true" className="text-primary">
-                                →
-                              </span>
-                              {item}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-
-                    <div>
-                      <p className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-foreground">
-                        <ShieldCheck
-                          aria-hidden="true"
-                          className="h-3.5 w-3.5 text-primary"
-                        />
-                        Measurement contract
-                      </p>
-                      <ul className="mt-2 space-y-1.5">
-                        {product.successSignals.map((signal) => (
-                          <li
-                            className="text-xs text-muted-foreground"
-                            key={signal}
-                          >
-                            {signal}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="border-l-2 border-amber-500 bg-amber-500/5 p-3">
-                      <p className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-amber-300">
-                        <AlertTriangle
-                          aria-hidden="true"
-                          className="h-3.5 w-3.5"
-                        />
-                        Not a fit when
-                      </p>
-                      {product.nonFit.map((item) => (
-                        <p
-                          className="mt-1 text-xs text-muted-foreground"
-                          key={item}
-                        >
-                          {item}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                </details>
               </div>
 
               {/* Action Buttons */}
@@ -551,6 +571,12 @@ export function CatalogDirectoryClient({
                     ? "Shortlisted"
                     : "Add to shortlist"}
                   <ListPlus aria-hidden="true" className="ml-2 h-4 w-4" />
+                </Button>
+                <Button asChild className="w-full" variant="outline">
+                  <Link href={`/catalog/${product.id}`}>
+                    Technical profile
+                    <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
+                  </Link>
                 </Button>
                 {product.liveDemoHref && (
                   <Button

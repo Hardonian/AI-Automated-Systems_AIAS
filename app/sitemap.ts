@@ -11,6 +11,7 @@ import { SITE_URL } from "@/lib/seo/metadata";
 import { INDEXABLE_ROUTE_MANIFEST } from "@/lib/seo/route-manifest";
 import { caseStudies } from "@/src/content/caseStudies";
 import { blueprints } from "@/src/content/moat";
+import { siteContent } from "@/src/content/site";
 
 const baseUrl = SITE_URL;
 const fallbackLastModified = new Date();
@@ -74,11 +75,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: blueprintLastModified,
   }));
 
+  const catalogLastModified = resolveLastModified("src/content/site.ts");
+  const catalogRoutes = siteContent.catalogProducts.map((product) => ({
+    route: `/catalog/${product.id}`,
+    priority: 0.75,
+    changeFrequency: "weekly" as const,
+    lastModified: catalogLastModified,
+    image: product.thumbnailSrc,
+  }));
+
   return [
     ...staticRoutes,
     ...caseStudyRoutes,
     ...blogRoutes,
     ...blueprintRoutes,
+    ...catalogRoutes,
   ].map((entry) => ({
     url: `${baseUrl}${entry.route}`,
     lastModified: entry.lastModified,
@@ -89,7 +100,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
         ? [`${baseUrl}/opengraph-image`]
         : entry.route.startsWith("/case-studies/")
           ? [`${baseUrl}${entry.route}/opengraph-image`]
-          : entry.route === "/catalog"
+          : "image" in entry && entry.image
+            ? [`${baseUrl}${entry.image}`]
+            : entry.route === "/catalog"
             ? [`${baseUrl}/images/catalog/hardonia_suite_ops.avif`]
             : undefined,
   }));

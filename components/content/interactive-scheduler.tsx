@@ -496,7 +496,8 @@ export function InteractiveScheduler() {
             </div>
 
             <p className="mt-6 text-center font-mono text-[11px] text-muted-foreground border-t border-border pt-4">
-              🔒 No sales pressure. 100% confidential under NDA practices.
+              🔒 No sales pressure. Form details remain in your browser unless
+              you choose an external scheduling link.
             </p>
           </SurfaceCard>
         </div>

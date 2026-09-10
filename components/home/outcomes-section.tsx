@@ -9,32 +9,32 @@ const outcomes = [
     label: "Repetitive tasks replaced",
     description:
       "Triage, routing, and coordination tasks move into governed automation flows with human review checkpoints.",
-    stat: "78%",
-    statLabel: "faster intake",
+    stat: "Baseline",
+    statLabel: "measured first",
   },
   {
     icon: Shield,
     label: "Human-in-the-loop built in",
     description:
       "Critical decisions stay with your team. Automation handles preparation, routing, and verification.",
-    stat: "100%",
-    statLabel: "policy-gated",
+    stat: "Policy",
+    statLabel: "before action",
   },
   {
     icon: Zap,
     label: "Faster time to production",
     description:
       "Focused pilot scopes accelerate implementation without redesigning your core stack.",
-    stat: "2–4",
-    statLabel: "week pilots",
+    stat: "Pilot",
+    statLabel: "scope-dependent",
   },
   {
     icon: TrendingUp,
     label: "Measurable improvement loops",
     description:
       "Operational telemetry and quarterly reviews drive continuous optimization after launch.",
-    stat: "99.2%",
-    statLabel: "success rate",
+    stat: "Review",
+    statLabel: "evidence-led",
   },
 ];
 
@@ -62,8 +62,8 @@ const deliverables = [
     title: "Governance & Security",
     items: [
       "Audit trails & event logs",
-      "SOC2-ready controls",
-      "PIPEDA compliance framework",
+      "Control mapping for assurance reviews",
+      "Privacy requirements mapped with client counsel",
     ],
   },
 ];

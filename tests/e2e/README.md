@@ -1,6 +1,8 @@
 # Visual Regression Testing
 
-This directory contains comprehensive visual regression tests using Playwright.
+This directory contains a focused visual regression suite for the highest-risk
+public surfaces. Expected screenshots are versioned so CI compares the same
+evidence used during local review.
 
 ## Quick Start
 
@@ -24,10 +26,9 @@ pnpm test:audit
 
 ### Files
 
-- `visual-suite.spec.ts` - Main visual regression tests for critical routes
+- `critical-surfaces.visual.spec.ts` - Visual baselines for five critical public surfaces
 - `ui-consistency-audit.spec.ts` - Comprehensive UI audit (console errors, hydration, responsive issues)
 - `utils/visual-helpers.ts` - Shared utilities for stable, deterministic screenshots
-- `visual-regression.spec.ts` - Legacy tests (deprecated, kept for compatibility)
 
 ### Viewport Coverage
 
@@ -38,11 +39,10 @@ pnpm test:audit
 ### Routes Covered
 
 1. **Homepage** (`/`)
-2. **Legal** (`/privacy`, `/terms`)
-3. **Content** (`/blog`)
-4. **Workflow Sandbox** (`/#workflow-sandbox`)
-5. **Error States** (404 page)
-6. **Components** (header, footer)
+2. **Documentation** (`/docs`)
+3. **Case-study evidence** (`/case-studies`)
+4. **ROI calculator** (`/roi-calculator`)
+5. **Privacy** (`/privacy`)
 
 ## Deterministic Testing
 
@@ -87,10 +87,8 @@ test("my new page - desktop", async ({ page }, testInfo) => {
 
 ## CI Integration
 
-Visual tests run automatically on:
-
-- Pull requests to `main` and `develop`
-- Pushes to `main` and `develop`
+Visual tests run in the main verification workflow on pull requests and pushes
+to `main`.
 
 ### Workflow
 
@@ -100,15 +98,8 @@ Visual tests run automatically on:
 4. Upload results as artifacts
 5. Comment on PR if tests fail
 
-### Updating Baselines in CI
-
-⚠️ **Baselines should be updated locally and committed, not in CI.**
-
-For emergency baseline updates, use the manual workflow:
-
-1. Go to Actions → Update Visual Regression Baselines
-2. Select branch and provide reason
-3. Run workflow
+Baselines are updated locally with `pnpm test:visual:update`, reviewed, and
+committed with the intentional UI change. CI never rewrites expected images.
 
 ## Debugging Failed Tests
 

@@ -75,7 +75,7 @@ export default function AutomationDemoPage() {
       <PageHero
         eyebrow="Interactive Demo"
         title="Live Automation Engine & Control-Plane"
-        description="Experience deterministic workflow execution in real time. Switch scenarios, inspect live telemetry, and test how safety guardrails intercept failure states."
+        description="Run a deterministic workflow simulation in your browser. Switch scenarios, inspect illustrative telemetry, and test how safety guardrails intercept failure states."
       />
 
       {/* Main Interactive Simulator Section */}

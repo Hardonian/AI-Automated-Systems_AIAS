@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, type LucideIcon } from "lucide-react";
 
 import {
   PageCta,
@@ -41,7 +41,7 @@ export async function generateMetadata({
   }
 
   const title = `${study.title} | AIAS Case Study`;
-  const description = `Deep dive into the architecture and impact of the ${study.title} implementation by AIAS.`;
+  const description = `Reference scenario for the architecture, constraints, and validation plan behind ${study.title}.`;
   const metadata = generateSEOMetadata({
     title,
     description,
@@ -61,7 +61,7 @@ function SectionList({
 }: {
   title: string;
   items: string[];
-  icon?: any;
+  icon?: LucideIcon;
 }) {
   return (
     <SurfaceCard>
@@ -136,9 +136,9 @@ export default async function CaseStudyDetailPage({
       </div>
 
       <PageHero
-        eyebrow="Case Study Deep Dive"
+        eyebrow="Representative Architecture Scenario"
         title={study.title}
-        description="Implementation evidence, architectural constraints, and measured outcomes."
+        description="A reference scenario covering architectural constraints, implementation choices, and the evidence required to validate outcomes in a real engagement."
       />
 
       <PageSection width="narrow">
@@ -179,7 +179,7 @@ export default async function CaseStudyDetailPage({
             items={study.automationWins}
           />
           <SectionList
-            title="06 / Measurable Impact"
+            title="06 / Validation Plan"
             items={study.measurableImpact}
           />
         </div>

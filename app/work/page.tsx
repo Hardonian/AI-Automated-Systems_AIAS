@@ -16,7 +16,7 @@ import { caseStudies } from "@/src/content/caseStudies";
 export const metadata: Metadata = generateSEOMetadata({
   title: "Work | AI Automated Systems",
   description:
-    "Explore our portfolio of successful automation engagements and client outcomes.",
+    "Explore representative automation engagement patterns, controls, and measurement plans.",
   canonical: "/work",
 });
 
@@ -32,8 +32,8 @@ export default function WorkPage() {
         />
       ))}
       <PageHero
-        eyebrow="Client outcomes"
-        title="Work that ships and scales"
+        eyebrow="Representative engagement scenarios"
+        title="Work patterns designed to ship and scale"
         description="Each engagement starts with workflow mapping, then moves into deterministic implementation and measurable operational outcomes."
       />
 

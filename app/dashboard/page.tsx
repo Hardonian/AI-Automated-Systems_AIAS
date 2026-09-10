@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 export const metadata: Metadata = generateSEOMetadata({
   title: "Client Operations Dashboard | AI Automated Systems",
   description:
-    "Protected client control-plane workspace showcasing live workload telemetry, evaluation scorecards, and audit runbooks.",
+    "Interactive reference workspace demonstrating workload telemetry, evaluation scorecards, and audit runbooks.",
   canonical: "/dashboard",
 });
 
@@ -25,7 +25,7 @@ export default function DashboardPage() {
     <>
       <WebApplicationSchema
         name="AIAS Client Operations Dashboard"
-        description="Client control-plane workspace showcasing live workload telemetry, evaluation scorecards, and audit runbooks."
+        description="Interactive reference workspace demonstrating workload telemetry, evaluation scorecards, and audit runbooks."
         url="https://aiautomatedsystems.ca/dashboard"
         applicationCategory="BusinessApplication"
       />
@@ -41,8 +41,8 @@ export default function DashboardPage() {
 
       <PageHero
         eyebrow="Client Control-Plane"
-        title="Operations & Workload Dashboard"
-        description="Monitor active deterministic agent fleets, continuous evaluation integrity, latency budgets, and compliance audit logs in real time."
+        title="Operations Workspace Reference"
+        description="Explore how a governed client workspace can organize workload state, evaluation integrity, latency budgets, and audit-ready runbooks. The data shown here is illustrative."
       />
 
       {/* Interactive Workspace Preview */}
@@ -61,9 +61,10 @@ export default function DashboardPage() {
             Request Provisioned Client Access
           </h2>
           <p className="mt-3 max-w-xl mx-auto text-sm text-muted-foreground leading-relaxed">
-            Dedicated multi-tenant client instances are provisioned alongside
-            our architecture diagnostic. Every active workspace maps to your
-            dedicated Git repositories and private VPC endpoints.
+            Production workspace boundaries, repositories, network controls,
+            telemetry, and access policies are scoped to each client during the
+            architecture diagnostic. This public route is an interactive design
+            reference, not a connected production console.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-4">
             <Button

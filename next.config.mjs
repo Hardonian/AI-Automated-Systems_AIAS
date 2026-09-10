@@ -12,7 +12,6 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
   output: "export",
-  distDir: "out",
 
   typescript: {
     ignoreBuildErrors: false,

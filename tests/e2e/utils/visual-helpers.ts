@@ -76,55 +76,10 @@ export async function disableAnimations(page: Page): Promise<void> {
     }
   });
 
-  // Disable JavaScript animations (framer-motion, GSAP, etc.)
+  // Freeze nondeterministic values without replacing browser scheduling or
+  // observers; motion libraries still need those primitives to reveal
+  // viewport-driven content before the screenshot is taken.
   await page.addInitScript(() => {
-    // Override requestAnimationFrame to freeze animations
-    const originalRAF = window.requestAnimationFrame;
-    let rafId = 0;
-    const rafCallbacks = new Map<number, FrameRequestCallback>();
-
-    window.requestAnimationFrame = (callback: FrameRequestCallback): number => {
-      const id = ++rafId;
-      rafCallbacks.set(id, callback);
-      // Execute immediately but don't loop
-      setTimeout(() => {
-        if (rafCallbacks.has(id)) {
-          callback(performance.now());
-          rafCallbacks.delete(id);
-        }
-      }, 0);
-      return id;
-    };
-
-    window.cancelAnimationFrame = (id: number): void => {
-      rafCallbacks.delete(id);
-    };
-
-    // Disable IntersectionObserver to prevent lazy-loading race conditions
-    if (window.IntersectionObserver) {
-      const OriginalIntersectionObserver = window.IntersectionObserver;
-      window.IntersectionObserver = class extends OriginalIntersectionObserver {
-        constructor(
-          callback: IntersectionObserverCallback,
-          options?: IntersectionObserverInit,
-        ) {
-          // Immediately trigger callback with all elements intersecting
-          const wrappedCallback: IntersectionObserverCallback = (
-            entries,
-            observer,
-          ) => {
-            const modifiedEntries = entries.map((entry) => ({
-              ...entry,
-              isIntersecting: true,
-              intersectionRatio: 1,
-            }));
-            callback(modifiedEntries, observer);
-          };
-          super(wrappedCallback, { ...options, threshold: 0 });
-        }
-      };
-    }
-
     // Freeze Date for consistent timestamps
     const frozenDate = new Date("2024-06-15T12:00:00.000Z");
     const OriginalDate = window.Date;
@@ -304,6 +259,26 @@ export async function waitForPageStability(
       }
     });
   }
+}
+
+/**
+ * Traverses the document so viewport-triggered content reaches its settled
+ * state before a full-page screenshot is captured.
+ */
+export async function revealScrollDrivenContent(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    const step = Math.max(Math.floor(window.innerHeight * 0.75), 240);
+    const bottom = document.documentElement.scrollHeight - window.innerHeight;
+
+    for (let position = 0; position <= bottom; position += step) {
+      window.scrollTo(0, position);
+      await new Promise((resolve) => window.setTimeout(resolve, 30));
+    }
+
+    window.scrollTo(0, bottom);
+    await new Promise((resolve) => window.setTimeout(resolve, 60));
+    window.scrollTo(0, 0);
+  });
 }
 
 /**

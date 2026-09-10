@@ -1,4 +1,4 @@
-import { appendFileSync, readdirSync, statSync } from "node:fs";
+import { appendFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 
 const chunks: Array<{ file: string; size: number }> = [];
 const walk = (directory: string) => {
@@ -32,5 +32,6 @@ const report = [
   "Generated from the production Next.js build.",
 ].join("\n");
 const target = process.env.GITHUB_STEP_SUMMARY || "bundle-report.md";
-appendFileSync(target, report);
+if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(target, `${report}\n`);
+else writeFileSync(target, `${report}\n`);
 console.log(report);

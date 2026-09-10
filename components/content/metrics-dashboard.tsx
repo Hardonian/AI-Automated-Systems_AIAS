@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import { useId, useState } from "react";
 
 import { SurfaceCard } from "@/components/ui/section-primitives";
 
@@ -22,41 +22,6 @@ interface Comparison {
   before: string;
   after: string;
   impact: string;
-}
-
-const seriesFor = (label: string) => {
-  const seed = [...label].reduce(
-    (sum, character) => sum + character.charCodeAt(0),
-    0,
-  );
-  return Array.from(
-    { length: 12 },
-    (_, index) => 28 + ((seed * (index + 3) + index * index * 7) % 62),
-  );
-};
-
-function Sparkline({ label }: { label: string }) {
-  const values = useMemo(() => seriesFor(label), [label]);
-  const points = values
-    .map((value, index) => `${index * 10},${100 - value}`)
-    .join(" ");
-  return (
-    <svg
-      aria-label={`${label} twelve-period trend`}
-      className="h-12 w-full"
-      role="img"
-      viewBox="0 0 110 100"
-      preserveAspectRatio="none"
-    >
-      <polyline
-        fill="none"
-        points={points}
-        stroke="currentColor"
-        strokeWidth="4"
-        vectorEffect="non-scaling-stroke"
-      />
-    </svg>
-  );
 }
 
 function ComparisonSlider({ comparison }: { comparison: Comparison }) {
@@ -138,31 +103,6 @@ export function MetricsDashboard({
                       {metric.delta}
                     </p>
                   </div>
-                  <div className="mt-2 text-primary">
-                    <Sparkline label={metric.label} />
-                  </div>
-                  {metric.label.toLowerCase().includes("time") ? (
-                    <div className="mt-2">
-                      <label
-                        className="font-mono text-[10px] uppercase"
-                        htmlFor={`latency-${metric.label.replace(/\W/g, "-")}`}
-                      >
-                        Latency budget
-                      </label>
-                      <meter
-                        className="block h-3 w-full accent-primary"
-                        id={`latency-${metric.label.replace(/\W/g, "-")}`}
-                        min={0}
-                        max={190}
-                        low={60}
-                        high={140}
-                        optimum={0}
-                        value={42}
-                      >
-                        42 of 190 seconds
-                      </meter>
-                    </div>
-                  ) : null}
                   <p className="mt-2 text-xs text-muted-foreground">
                     {metric.note}
                   </p>

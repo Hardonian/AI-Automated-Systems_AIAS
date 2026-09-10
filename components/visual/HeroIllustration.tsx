@@ -52,7 +52,9 @@ export function HeroIllustration() {
 
       <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between font-mono text-[11px] text-muted-foreground">
         <span>Zero Unchecked LLM Actions</span>
-        <span className="text-primary font-bold">100% Policy Intercept Coverage</span>
+        <span className="text-primary font-bold">
+          Policy Intercept Telemetry
+        </span>
       </div>
     </div>
   );

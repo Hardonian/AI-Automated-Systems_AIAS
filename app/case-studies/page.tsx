@@ -13,16 +13,16 @@ import { Button } from "@/components/ui/button";
 import { caseStudies } from "@/lib/case-studies-generator";
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: "AI Automation Case Studies — Real Outcomes, Real Workflows | AIAS",
+  title: "AI Automation Architecture Scenarios & Evidence Plans | AIAS",
   description:
-    "Implementation proof with metrics, before/after patterns, and governance maturity progression for AI control-plane programs.",
+    "Representative architecture scenarios with constraints, controls, measurement plans, and governance maturity progression.",
   canonical: "/case-studies",
 });
 
 const metrics = [
-  { label: "Reliability improvement", value: "+31%" },
-  { label: "Inference + ops cost reduction", value: "-24%" },
-  { label: "Evaluation pass-rate lift", value: "+27%" },
+  { label: "Reliability", value: "Baseline → target" },
+  { label: "Cost", value: "Per successful run" },
+  { label: "Evaluation", value: "Release-gated" },
 ];
 
 const maturityScale = ["Ad hoc", "Repeatable", "Defined", "Controlled"];
@@ -32,8 +32,8 @@ export default function CaseStudiesPage() {
     <>
       <PageHero
         eyebrow="Proof engine"
-        title="Case studies with measurable architecture outcomes"
-        description="Where client details are confidential, we publish transparent architecture-backed scenario studies labeled as representative."
+        title="Architecture scenarios with measurable evidence plans"
+        description="Architecture-backed scenario studies showing the constraints, controls, and evidence plans we use. Representative material is labeled and is not presented as verified client performance."
       />
 
       <PageSection>
@@ -132,12 +132,12 @@ export default function CaseStudiesPage() {
       <PageSection background="muted" width="narrow">
         <SurfaceCard>
           <h2 className="text-2xl font-bold">
-            Case study template (transparent scenario format)
+            Evidence standard for every scenario
           </h2>
           <p className="mt-3 text-muted-foreground">
-            Template fields: Context → Failure Modes → Control-Plane Changes →
-            Eval/Cost Metrics → Governance Progression. Scenario studies are
-            explicitly labeled when anonymized.
+            Context → Failure Modes → Control-Plane Changes → Measurement Plan →
+            Governance Progression. Numeric outcomes are published only when a
+            current, attributable evidence source can be disclosed.
           </p>
         </SurfaceCard>
       </PageSection>

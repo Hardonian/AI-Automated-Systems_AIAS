@@ -83,9 +83,9 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   },
   {
     path: "/case-studies",
-    title: "AI Automation Case Studies — Real Outcomes, Real Workflows | AIAS",
+    title: "AI Automation Architecture Scenarios & Evidence Plans | AIAS",
     description:
-      "Implementation proof with metrics, before/after patterns, and governance maturity progression for AI control-plane programs.",
+      "Representative architecture scenarios with constraints, controls, measurement plans, and governance maturity progression.",
     canonical: "/case-studies",
     priority: 0.8,
     changeFrequency: "weekly",
@@ -202,7 +202,7 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
     path: "/metrics",
     title: "Automation Metrics | AI Automated Systems",
     description:
-      "Automation benchmark metrics for latency, conversion, reliability, and governance coverage.",
+      "A practical measurement contract for automation latency, quality, reliability, cost, and governance coverage.",
     canonical: "/metrics",
     priority: 0.7,
     changeFrequency: "monthly",
@@ -374,7 +374,7 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
     path: "/work",
     title: "Work | AI Automated Systems",
     description:
-      "Explore our portfolio of successful automation engagements and client outcomes.",
+      "Explore representative automation engagement patterns, controls, and measurement plans.",
     canonical: "/work",
     priority: 0.8,
     changeFrequency: "weekly",
@@ -390,8 +390,9 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   },
   {
     path: "/dashboard",
-    title: "Dashboard | AI Automated Systems",
-    description: "Protected workspace entry for client and team operations.",
+    title: "Client Operations Dashboard | AI Automated Systems",
+    description:
+      "Interactive reference workspace demonstrating workload telemetry, evaluation scorecards, and audit runbooks.",
     canonical: "/dashboard",
     priority: 0.1,
     changeFrequency: "monthly",

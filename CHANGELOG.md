@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Converted unsupported benchmark, uptime, certification-readiness, confidentiality, and client-result statements into explicit scenarios, measurement contracts, or scope-dependent commitments.
+- Standardized Next.js production output so bundle budgets read the fresh build, added a dependency-free static preview server, and repaired CI browser jobs that previously started no server.
+- Replaced duplicated and ineffective visual tests with 20 reviewed baselines spanning five critical surfaces across desktop, tablet, mobile, and short landscape viewports.
+- Added visual regression to the release workflow and hardened the visual harness to reveal viewport-triggered content before full-page capture.
+- Corrected package/repository metadata, removed the conflicting npm lockfile and stale shadow content, and updated the architecture ADR to the actual Next.js 16 static-first system.
+- Closed mobile overflow and reduced-motion defects identified by the responsive consistency audit.
 - Rebuilt the documentation route as a content-driven knowledge base with working guides, blueprints, trust artifacts, operational commitments, and interactive decision tools.
 - Replaced stale public trust templates with scoped security, service-response, status, continuity, dependency-governance, and claim-integrity documentation.
 - Expanded visitor-facing privacy and terms copy to cover client authority, AI advisory limits, providers, retention, service levels, IP ownership, open-source licensing, and case-study boundaries.

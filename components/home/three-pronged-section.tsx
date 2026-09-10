@@ -291,7 +291,7 @@ export function ThreeProngedSection() {
                   <div className="mt-5 border-t border-border pt-4">
                     <div className="flex items-center gap-2 text-[11px] font-mono text-muted-foreground">
                       <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-                      <span>100% Policy-Gated · Zero Vendor Lock-in</span>
+                      <span>Policy-Gated Actions · Portable Handoff</span>
                     </div>
                   </div>
                 </div>

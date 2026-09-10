@@ -14,18 +14,18 @@ The public surface now has deterministic release gates, a constrained CI model, 
 
 ## Evidence matrix
 
-| Category               | Status          | Repository evidence                                                                          | Remaining deal evidence                                        |
-| ---------------------- | --------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Business model clarity | DOCUMENTED      | Consultancy, implementation, handoff, and managed-refinement paths are described             | Pipeline, retention, margin, and capacity data                 |
-| Delivery repeatability | DOCUMENTED      | Methodology, blueprints, acceptance patterns, runbooks, and handoff baseline                 | Engagement-level cycle time and rework history                 |
-| Technical boundaries   | PASS            | Static export, typed content, no required backend, schema/link/route checks                  | Client architecture and threat model                           |
-| CI/CD discipline       | PASS            | One authoritative release workflow plus browser, security, performance, and metrics evidence | Branch-protection and deployment-provider settings             |
-| Security posture       | DOCUMENTED      | Static public boundary, secret scan, security invariants, CodeQL, disclosure channel         | Client IAM, logging, hosting, data-flow, and control evidence  |
-| Dependency governance  | PASS            | Lockfile, dependency review, high-severity audit, bundle budgets, scheduled SBOM             | Reviewed exceptions and historical remediation timing          |
-| Claim integrity        | PASS            | Release-integrity guard and published non-certification/outcome boundaries                   | Evidence packs for each material commercial claim              |
-| Service levels         | CONTRACT-SCOPED | Published severity and acknowledgement framework                                             | Executed support schedule, hours, remedies, and measurements   |
-| Operational continuity | DOCUMENTED      | Handoff, credential, backup-operator, recovery, and exit baseline                            | Named personnel, tested recovery objectives, and last exercise |
-| Client data handling   | CONTRACT-SCOPED | Public privacy and external-provider boundaries are explicit                                 | Subprocessor list, residency, retention, and deletion schedule |
+| Category               | Status          | Repository evidence                                                                                  | Remaining deal evidence                                        |
+| ---------------------- | --------------- | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Business model clarity | DOCUMENTED      | Consultancy, implementation, handoff, and managed-refinement paths are described                     | Pipeline, retention, margin, and capacity data                 |
+| Delivery repeatability | DOCUMENTED      | Methodology, blueprints, acceptance patterns, runbooks, and handoff baseline                         | Engagement-level cycle time and rework history                 |
+| Technical boundaries   | PASS            | Static export, typed content, no required backend, schema/link/route checks                          | Client architecture and threat model                           |
+| CI/CD discipline       | PASS            | One authoritative release workflow plus browser, visual, security, performance, and metrics evidence | Branch-protection and deployment-provider settings             |
+| Security posture       | DOCUMENTED      | Static public boundary, secret scan, security invariants, CodeQL, disclosure channel                 | Client IAM, logging, hosting, data-flow, and control evidence  |
+| Dependency governance  | PASS            | Lockfile, dependency review, high-severity audit, bundle budgets, scheduled SBOM                     | Reviewed exceptions and historical remediation timing          |
+| Claim integrity        | PASS            | Release-integrity guard and published non-certification/outcome boundaries                           | Evidence packs for each material commercial claim              |
+| Service levels         | CONTRACT-SCOPED | Published severity and acknowledgement framework                                                     | Executed support schedule, hours, remedies, and measurements   |
+| Operational continuity | DOCUMENTED      | Handoff, credential, backup-operator, recovery, and exit baseline                                    | Named personnel, tested recovery objectives, and last exercise |
+| Client data handling   | CONTRACT-SCOPED | Public privacy and external-provider boundaries are explicit                                         | Subprocessor list, residency, retention, and deletion schedule |
 
 ## Resolved repository gaps
 
@@ -35,6 +35,7 @@ The public surface now has deterministic release gates, a constrained CI model, 
 4. Added dependency governance, automated dependency review, weekly security audit, and SBOM evidence.
 5. Consolidated dozens of duplicate or backend-dependent workflows into six reviewed static-site workflows.
 6. Added a release-integrity check that blocks placeholder links, stale trust templates, missing workflow scripts, and backend CI drift.
+7. Added 20 committed visual baselines and production-export browser serving so CI exercises the same static artifact that ships.
 
 ## Honest residual boundaries
 

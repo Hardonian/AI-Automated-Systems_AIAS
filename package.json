@@ -1,7 +1,7 @@
 {
   "name": "aias-platform",
   "version": "1.1.0",
-  "description": "Enterprise-grade AI consultancy platform showcasing custom AI agents, workflow automation, and intelligent business solutions",
+  "description": "Static-first consultancy site for governed AI systems, workflow automation, and operational architecture",
   "private": true,
   "license": "MIT",
   "author": {
@@ -12,10 +12,10 @@
   "homepage": "https://aiautomatedsystems.ca",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shardie-github/aias.git"
+    "url": "https://github.com/Hardonian/AI-Automated-Systems_AIAS.git"
   },
   "bugs": {
-    "url": "https://github.com/shardie-github/aias/issues",
+    "url": "https://github.com/Hardonian/AI-Automated-Systems_AIAS/issues",
     "email": "support@aiautomatedsystems.ca"
   },
   "keywords": [
@@ -23,8 +23,8 @@
     "artificial-intelligence",
     "automation",
     "workflow",
-    "saas",
-    "multi-tenant",
+    "consultancy",
+    "governance",
     "enterprise",
     "typescript",
     "react",
@@ -70,16 +70,17 @@
     "start": "next start",
     "lint": "eslint . --ignore-pattern out --ignore-pattern .next",
     "typecheck": "tsc --noEmit",
-    "test:e2e": "pnpm exec playwright install --with-deps chromium && playwright test tests/e2e/smoke.spec.ts tests/e2e/landing-smoke.spec.ts tests/e2e/link-crawl.spec.ts tests/e2e/case-studies-attribution.spec.ts tests/e2e/catalog-assets.spec.ts tests/e2e/docs.spec.ts --project=chromium",
+    "test:e2e": "playwright test tests/e2e/smoke.spec.ts tests/e2e/landing-smoke.spec.ts tests/e2e/link-crawl.spec.ts tests/e2e/case-studies-attribution.spec.ts tests/e2e/catalog-assets.spec.ts tests/e2e/docs.spec.ts --project=chromium",
     "verify": "pnpm lint && pnpm typecheck && pnpm test:unit && pnpm lint:markdown && pnpm scan:secrets && pnpm check:security-invariants && pnpm check:release-integrity && pnpm check:catalog-assets && pnpm build && pnpm check:bundle-size && pnpm validate:links && pnpm check:route-metadata && pnpm validate:seo && pnpm validate:route-manifest && pnpm validate:metadata-vs-manifest && pnpm validate:schema && pnpm validate:jsonld-smoke && pnpm validate:schema-org && pnpm audit:twitter-cards && pnpm lint:canonical-urls && pnpm check:static-first && pnpm pricing-language-check && pnpm audit:messaging",
     "vercel-build": "pnpm doctor && pnpm verify",
     "build:analyze": "pnpm build && pnpm check:bundle-size && pnpm exec tsx scripts/write-bundle-report.ts",
-    "preview": "next start",
+    "preview": "pnpm serve:static",
+    "serve:static": "node scripts/serve-static.mjs out 3000",
     "prepare": "husky install || true",
     "test": "pnpm test:unit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:visual:landscape-smoke": "playwright test tests/e2e/hero-breakpoints.visual.spec.ts tests/e2e/landscape-critical.visual.spec.ts --project=visual-landscape-mobile",
+    "test:visual:landscape-smoke": "playwright test tests/e2e/critical-surfaces.visual.spec.ts --project=visual-landscape-mobile",
     "clean": "rm -rf .next out node_modules/.cache coverage playwright-report test-results",
     "ci:install": "pnpm install --frozen-lockfile --prefer-offline",
     "doctor": "pnpm exec tsx scripts/doctor.ts",
@@ -104,10 +105,13 @@
     "lint:critical": "pnpm lint",
     "test:critical": "pnpm typecheck && pnpm test:unit",
     "deploy:guard": "pnpm verify",
-    "test:visual": "playwright test --project=visual-desktop --project=visual-tablet --project=visual-mobile --project=visual-landscape-mobile",
+    "test:visual": "playwright test --project=visual-desktop --project=visual-tablet --project=visual-mobile --project=visual-landscape-mobile --workers=4",
+    "test:visual:desktop": "playwright test --project=visual-desktop",
+    "test:visual:tablet": "playwright test --project=visual-tablet",
+    "test:visual:mobile": "playwright test --project=visual-mobile",
     "test:audit": "playwright test tests/e2e/ui-consistency-audit.spec.ts --project=chromium --workers=1",
     "test:a11y": "playwright test tests/e2e/accessibility.spec.ts --project=chromium --workers=1",
-    "test:visual:update": "playwright test --project=visual-desktop --project=visual-tablet --project=visual-mobile --project=visual-landscape-mobile --update-snapshots",
+    "test:visual:update": "playwright test --project=visual-desktop --project=visual-tablet --project=visual-mobile --project=visual-landscape-mobile --workers=4 --update-snapshots",
     "lint:markdown": "pnpm exec tsx scripts/lint-markdown.ts",
     "scan:secrets": "pnpm exec tsx scripts/scan-secrets.ts",
     "scan:secrets:staged": "pnpm exec tsx scripts/scan-secrets.ts --staged",
@@ -173,10 +177,6 @@
     "postcss": ">=8.5.15"
   },
   "packageManager": "pnpm@8.15.9",
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/your-org"
-  },
   "publishConfig": {
     "access": "restricted"
   },

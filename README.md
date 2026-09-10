@@ -121,14 +121,17 @@ pnpm typecheck
 pnpm test
 pnpm build
 pnpm test:e2e
+pnpm test:a11y
+pnpm test:audit
+pnpm test:visual
 pnpm verify
 ```
 
-`pnpm verify` runs lint, typecheck, unit tests, release-integrity checks, the static production build, bundle budgets, and content/SEO/link/schema audits. `pnpm test:e2e` separately runs browser smoke tests and the rendered-site link crawl.
+`pnpm verify` runs lint, typecheck, unit tests, release-integrity checks, the static production build, bundle budgets, and content/SEO/link/schema audits. The browser commands separately cover critical flows, accessibility, responsive consistency, reduced motion, and committed visual baselines.
 
 ## CI model
 
-Six reviewed workflows cover release verification, browser smoke tests, dependency review, security/SBOM evidence, performance budgets, and scheduled static metrics. `pnpm check:release-integrity` rejects workflow drift back to missing scripts or backend-only infrastructure.
+Six reviewed workflows cover release verification, browser and visual regression, dependency review, security/SBOM evidence, performance budgets, and scheduled static metrics. CI serves the production export through the dependency-free static preview used by browser gates. `pnpm check:release-integrity` rejects workflow drift back to missing scripts, insecure action overrides, unsupported public claims, absent visual baselines, or backend-only infrastructure.
 
 ## Frontend Invariants
 

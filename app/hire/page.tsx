@@ -46,7 +46,7 @@ export default function HireConsultancyPage() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-16">
           {[
             {
-              title: "100% IP & Code Ownership",
+              title: "Contract-Defined IP & Code Ownership",
               description:
                 "You own every line of code, schema definition, and Docker configuration.",
               icon: Lock,

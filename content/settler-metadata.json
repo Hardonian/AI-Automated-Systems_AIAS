@@ -7,12 +7,12 @@
     "Repeatable operational handoff"
   ],
   "capabilities": [
-    "PCI DSS compliant orchestration",
+    "Payment-control-aware orchestration",
     "Real-time settlement monitoring",
     "Auditable change management"
   ],
   "impactSignals": [
-    "Bank-grade security posture",
+    "Explicit security control mapping",
     "Minimized post-launch regression",
     "Automated compliance evidence gathering"
   ]

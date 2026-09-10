@@ -390,10 +390,10 @@ const rawSiteContent: SiteConfig = {
       href: "/how-it-works",
     },
     socialProof: [
-      { icon: "zap", text: "78% faster lead triage across client cohorts" },
-      { icon: "shield", text: "99.2% workflow success rate in production" },
-      { icon: "clock", text: "2–4 week Discover-to-Pilot cycle" },
-      { icon: "check", text: "Zero uncontrolled high-impact actions shipped" },
+      { icon: "zap", text: "Operational baselines before automation" },
+      { icon: "shield", text: "Policy gates before high-impact actions" },
+      { icon: "clock", text: "Smallest-safe pilot scoped from discovery" },
+      { icon: "check", text: "Named owners, fallbacks, and acceptance tests" },
     ],
     trustBadges: [
       { icon: "shield", text: "SOC 2-aligned controls" },
@@ -473,7 +473,7 @@ const rawSiteContent: SiteConfig = {
       secondaryHref: "https://calendly.com/scottrmhardie",
       iconName: "Cpu",
       accentColor: "text-primary border-primary",
-      stats: { label: "Production Success Rate", value: "99.2% Uptime" },
+      stats: { label: "Release Standard", value: "Evidence Gated" },
     },
     {
       id: "catalog",
@@ -627,7 +627,7 @@ const rawSiteContent: SiteConfig = {
         "Prioritized Implementation Brief & ROI Projection",
       ],
       slaGuarantees: [
-        "100% Deterministic boundary definitions",
+        "Deterministic boundary definitions for in-scope actions",
         "Zero vendor lock-in; open-standard architectural artifacts",
         "Executive & technical stakeholder sign-off alignment",
       ],
@@ -688,7 +688,7 @@ const rawSiteContent: SiteConfig = {
         "Hands-on Operator Enablement Sessions & Complete Documentation",
       ],
       slaGuarantees: [
-        "100% Code & IP ownership transferred to your organization",
+        "Contract-defined ownership of custom deliverables",
         "Policy-before-execution guarantees on all state transitions",
         "Full test suite coverage for automated regression prevention",
       ],
@@ -774,7 +774,7 @@ const rawSiteContent: SiteConfig = {
       badge: "Ecosystem Partner",
       license: "Commercial",
       description:
-        "Production deployment control plane built for static-first and edge-native applications. Enforces verification suites, schema integrity, and zero-downtime rollback triggers.",
+        "Production deployment control plane built for static-first and edge-native applications. Enforces verification suites, schema integrity, and rollback triggers designed to minimize disruption.",
       techStack: [
         "Node.js",
         "TypeScript",
@@ -1305,9 +1305,9 @@ The workflow is complete only when the output schema is valid, policy receipts a
       solution:
         "Implemented automation-ready operating patterns and advisory sprints for execution consistency.",
       results: [
-        "40% fewer manual coordination touches",
-        "GTM launch cadence cut from 3 weeks to 5 days",
-        "Standardized playbooks adopted across 3 teams",
+        "Scenario measure: coordination touches per approved launch",
+        "Scenario measure: elapsed time from brief approval to release",
+        "Scenario evidence: playbook adoption and exception records",
       ],
       projectUrl:
         "https://settler.dev/?utm_source=aias&utm_medium=case-study&utm_campaign=website",
@@ -1322,9 +1322,9 @@ The workflow is complete only when the output schema is valid, policy receipts a
       solution:
         "Delivered phased engagement planning, technical advisory, and prioritized workflow opportunities.",
       results: [
-        "Automation backlog prioritized to 12 high-impact workflows",
-        "60% improvement in delivery confidence scores",
-        "Cross-team alignment achieved in under 2 weeks",
+        "Scenario measure: ranked workflows with owners and constraints",
+        "Scenario measure: pre/post delivery-confidence rubric",
+        "Scenario evidence: signed decisions and unresolved-risk log",
       ],
       projectUrl:
         "https://ready-layer.com/?utm_source=aias&utm_medium=case-study&utm_campaign=website",
@@ -1485,81 +1485,81 @@ The workflow is complete only when the output schema is valid, policy receipts a
   },
   metricsPage: {
     hero: {
-      eyebrow: "Automation proof",
-      title: "Measured outcomes from deterministic automation programs",
+      eyebrow: "Measurement contract",
+      title: "Prove automation outcomes with evidence you can audit",
       description:
-        "Representative benchmark data across delivery cohorts showing latency, conversion, reliability, and governance performance.",
+        "A practical scorecard for defining baselines, targets, exclusions, owners, and review cadence before an automation claim is published.",
     },
     statGroups: [
       {
-        category: "Automation latency reduction",
-        period: "Q1-Q4 benchmark cohort",
+        category: "Reliability evidence",
+        period: "Measured per workflow run",
         metrics: [
           {
-            label: "Lead intake-to-triage time",
-            value: "42s median",
-            delta: "-78%",
-            note: "From 3m 10s manual review baseline",
+            label: "Completion rate",
+            value: "Per run",
+            delta: "Required",
+            note: "Successful eligible runs divided by attempted eligible runs, with exclusions documented.",
           },
           {
-            label: "Exception routing turnaround",
-            value: "2.8 min",
-            delta: "-64%",
-            note: "Across finance and support automations",
+            label: "Recovery time",
+            value: "Per incident",
+            delta: "Owned",
+            note: "Elapsed time from detection to restored service, with owner and severity recorded.",
           },
         ],
       },
       {
-        category: "Conversion improvements",
-        period: "90-day post-launch average",
+        category: "Outcome evidence",
+        period: "Compared with an agreed baseline",
         metrics: [
           {
-            label: "Qualified form conversion",
-            value: "11.4%",
-            delta: "+3.6 pts",
-            note: "Governed routing and intent enrichment",
+            label: "Cycle time",
+            value: "Median + p95",
+            delta: "Scoped",
+            note: "Start and stop events, comparison window, and manual work are defined before measurement.",
           },
           {
-            label: "Demo-to-opportunity progression",
-            value: "37%",
-            delta: "+9 pts",
-            note: "Faster follow-up with deterministic handoff",
+            label: "Human effort",
+            value: "Minutes / unit",
+            delta: "Scoped",
+            note: "Review, correction, and exception-handling effort are included—not hidden as automation.",
           },
         ],
       },
       {
-        category: "Execution reliability stats",
-        period: "Last 30 days",
+        category: "Evaluation integrity",
+        period: "Checked before every promotion",
         metrics: [
           {
-            label: "Workflow success rate",
-            value: "99.2%",
-            delta: "+1.1 pts",
-            note: "After fallback and retry hardening",
+            label: "Critical-path coverage",
+            value: "Route mapped",
+            delta: "Gated",
+            note: "Happy paths, known failure modes, fallbacks, and high-impact transitions receive explicit checks.",
           },
           {
-            label: "Mean time to recovery (MTTR)",
-            value: "7m 40s",
-            delta: "-52%",
-            note: "Alerting + runbook automation applied",
+            label: "Change attribution",
+            value: "Versioned",
+            delta: "Gated",
+            note: "Model, prompt, policy, tool, schema, and dataset versions travel with evaluation evidence.",
           },
         ],
       },
       {
-        category: "Governance coverage metrics",
-        period: "Control framework v2",
+        category: "Cost and governance",
+        period: "Reviewed on an agreed cadence",
         metrics: [
           {
-            label: "Policy-gated transitions",
-            value: "100%",
-            delta: "+12 pts",
-            note: "No uncontrolled high-impact actions",
+            label: "Unit cost",
+            value: "Per success",
+            delta: "Tracked",
+            note: "Model, tool, infrastructure, and human-review costs are tied to successful business units.",
           },
           {
-            label: "Replayable audit artifacts",
-            value: "98.7%",
-            delta: "+18 pts",
-            note: "Gap is legacy run payload normalization",
+            label: "Trace completeness",
+            value: "Required fields",
+            delta: "Tracked",
+            note: "Decision inputs, policy result, actor, outcome, and exception state are checked for completeness.",
           },
         ],
       },
@@ -1568,21 +1568,21 @@ The workflow is complete only when the output schema is valid, policy receipts a
       {
         workflow: "Revenue operations triage",
         before: "Manual queue sorting every 2 hours",
-        after: "Deterministic triage with AI-assisted enrichment in 45 seconds",
-        impact: "88% faster first-response loop and higher lead SLA adherence",
+        after: "Deterministic triage with bounded AI-assisted enrichment",
+        impact: "Measure: median and p95 time to an owned next action",
       },
       {
         workflow: "Invoice exception handling",
         before: "Spreadsheet reconciliation and email routing",
         after: "Rule-based exception classification with confidence thresholds",
-        impact: "61% lower handling effort and fewer escalations",
+        impact:
+          "Measure: human minutes and exception rate per approved invoice",
       },
       {
         workflow: "Support escalation governance",
         before: "Ad-hoc analyst judgment and delayed approvals",
         after: "Policy-gated escalation paths with review checkpoints",
-        impact:
-          "43% reduction in escalation cycle time and full audit visibility",
+        impact: "Measure: escalation cycle time and trace completeness",
       },
     ],
   },

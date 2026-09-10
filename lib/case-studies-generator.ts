@@ -7,8 +7,8 @@ import { caseStudies as legacyCaseStudies } from "../src/content/caseStudies";
 /**
  * Transforms project metadata into a structured CaseStudy
  */
-function transformProjectToCaseStudy(meta: any): CaseStudy {
-  const pMeta = meta as ProjectMetadata & { impactSignals: string[] };
+function transformProjectToCaseStudy(meta: ProjectMetadata): CaseStudy {
+  const pMeta = meta;
   return {
     slug: pMeta.name.toLowerCase(),
     title: `${pMeta.name} — ${pMeta.role}`,
@@ -17,9 +17,9 @@ function transformProjectToCaseStudy(meta: any): CaseStudy {
     implementationHighlights: pMeta.focus,
     automationWins: pMeta.impactSignals,
     measurableImpact: [
-      `100% adherence to ${pMeta.name} governance protocols`,
-      `Validated impact in ${pMeta.focus[0]}`,
-      `Zero-downtime deployment capability`,
+      `${pMeta.name} acceptance criteria defined before implementation`,
+      `Baseline and target measures established for ${(pMeta.focus[0] ?? "the primary workflow").toLowerCase()}`,
+      "Operational evidence reviewed before production promotion",
     ],
     technologies: [
       pMeta.name,
@@ -72,12 +72,14 @@ export const caseStudies: CaseStudy[] = [
       ],
       automationWins: [
         ...legacy.whatNext,
-        ...metadataToUse.flatMap((m) => (m as any).impactSignals).slice(0, 3),
+        ...metadataToUse
+          .flatMap((metadata) => metadata.impactSignals)
+          .slice(0, 3),
       ],
       measurableImpact: legacy.performanceResults,
       technologies: Array.from(
         new Set([
-          ...metadataToUse.map((m) => (m as any).name),
+          ...metadataToUse.map((metadata) => metadata.name),
           "Next.js",
           "TypeScript",
           "Tailwind CSS",

@@ -61,7 +61,7 @@ const systems = [
     description:
       "Pre-built and custom integrations with your existing tools. API-first design with webhook support.",
     features: [
-      "50+ pre-built connectors",
+      "Reusable connector patterns",
       "Custom API framework",
       "Webhook event routing",
       "Rate limiting and quotas",

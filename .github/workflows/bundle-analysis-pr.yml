@@ -13,14 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v5
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm check:bundle-size
-      - run: pnpm exec tsx scripts/write-bundle-report.ts > bundle-report.md
+      - run: pnpm exec tsx scripts/write-bundle-report.ts
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: aias-bundle-analysis

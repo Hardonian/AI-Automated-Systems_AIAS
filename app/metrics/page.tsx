@@ -8,7 +8,7 @@ import { MetricsDashboard } from "@/components/content/metrics-dashboard";
 export const metadata: Metadata = generateSEOMetadata({
   title: "Automation Metrics | AI Automated Systems",
   description:
-    "Automation benchmark metrics for latency, conversion, reliability, and governance coverage.",
+    "A practical measurement contract for automation latency, quality, reliability, cost, and governance coverage.",
   canonical: "/metrics",
 });
 

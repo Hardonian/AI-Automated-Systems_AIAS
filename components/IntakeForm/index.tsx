@@ -16,6 +16,7 @@ import {
   classifyIntake,
   type IntakeSubmission,
 } from "@/lib/intakeClassifier";
+import { Sparkles, TrendingUp, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -243,6 +244,12 @@ export function IntakeForm({
     "idle" | "sent" | "prepared"
   >("idle");
   const [catalogSelection, setCatalogSelection] = useState<string[]>([]);
+  const [roiContext, setRoiContext] = useState<{
+    savings?: number;
+    hours?: number;
+    team?: number;
+    ref?: string;
+  } | null>(null);
   const [progressRestored, setProgressRestored] = useState(false);
   const [attribution, setAttribution] =
     useState<LeadAttribution>(emptyAttribution);
@@ -322,6 +329,21 @@ export function IntakeForm({
       availableIds.has(id),
     );
 
+    const savingsParam = search.get("savings");
+    const hoursParam = search.get("hours");
+    const teamParam = search.get("team");
+    const refParam = search.get("ref");
+
+    const contextFound =
+      savingsParam || hoursParam || teamParam || refParam
+        ? {
+            savings: savingsParam ? parseInt(savingsParam, 10) : undefined,
+            hours: hoursParam ? parseInt(hoursParam, 10) : undefined,
+            team: teamParam ? parseInt(teamParam, 10) : undefined,
+            ref: refParam ?? undefined,
+          }
+        : null;
+
     queueMicrotask(() => {
       if (!active) return;
       setAttribution(mergedAttribution);
@@ -335,6 +357,24 @@ export function IntakeForm({
           products: validIds.join("|"),
           product_count: validIds.length,
         });
+      }
+      if (contextFound) {
+        setRoiContext(contextFound);
+        if (contextFound.savings) {
+          const savingsFormatted = contextFound.savings.toLocaleString();
+          const teamLabel = contextFound.team
+            ? `${contextFound.team} FTEs`
+            : "our squad";
+          const hoursLabel = contextFound.hours
+            ? `${contextFound.hours} hrs/week`
+            : "recurrent engineering hours";
+          setValues((prev) => ({
+            ...prev,
+            workflowSummary:
+              prev.workflowSummary ||
+              `Targeting automation capacity across ${teamLabel} to recover ~${hoursLabel} with projected annual efficiency value of $${savingsFormatted}.`,
+          }));
+        }
       }
     });
 
@@ -660,6 +700,33 @@ export function IntakeForm({
 
   return (
     <SurfaceCard>
+      {roiContext && (
+        <div className="mb-6 border-2 border-cyan-500/60 bg-cyan-500/10 p-4 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
+          <div className="flex items-center gap-2 font-mono text-xs font-black uppercase tracking-wider text-cyan-400">
+            <Sparkles className="h-4 w-4" />
+            <span>
+              {roiContext.ref === "roi-sizer"
+                ? "Target Efficiency Model Attached"
+                : "System Diagnostic Context Attached"}
+            </span>
+          </div>
+          {roiContext.savings ? (
+            <p className="mt-2 text-sm font-mono font-bold text-foreground">
+              Target Annual Efficiency:{" "}
+              <span className="text-cyan-400">
+                ${roiContext.savings.toLocaleString()}/yr
+              </span>
+              {roiContext.hours && roiContext.team
+                ? ` (~${Math.round(roiContext.hours * roiContext.team * 0.65 * 48).toLocaleString()} hours recovered across ${roiContext.team} FTEs)`
+                : ""}
+            </p>
+          ) : null}
+          <p className="mt-1 text-xs text-muted-foreground font-mono">
+            Intake and scope engineering will be structured directly against
+            this capacity target.
+          </p>
+        </div>
+      )}
       {catalogSelection.length > 0 && (
         <div className="mb-6 border-2 border-primary bg-primary/5 p-4">
           <p className="font-mono text-xs font-black uppercase tracking-wider text-primary">

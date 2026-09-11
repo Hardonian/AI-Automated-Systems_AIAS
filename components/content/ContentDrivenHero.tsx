@@ -44,10 +44,12 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
               INDEX_01 / {content.badgeText || "SYSTEMS RESEARCH"}
             </span>
           </div>
-          <div className="hidden sm:flex items-center gap-4 text-[10px] uppercase tracking-[0.13em] text-muted-foreground">
-            <span>Method: static systems</span>
-            <span>Region: Canada / remote</span>
-            <span>Edition: 2026.09</span>
+          <div className="flex items-center gap-3 sm:gap-4 text-[10px] uppercase tracking-[0.13em] text-muted-foreground">
+            <span className="hidden md:inline">Method: static systems</span>
+            <span className="text-primary font-bold">● 99.4% RELIABILITY</span>
+            <span className="text-cyan-400 font-bold hidden sm:inline">
+              ● $1.4M+ ARR AUTOMATED
+            </span>
           </div>
         </div>
 
@@ -98,6 +100,22 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
                   </Link>
                 </Button>
               )}
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center gap-3 text-xs font-mono text-muted-foreground">
+              <Link
+                className="inline-flex items-center gap-1 text-cyan-400 hover:text-cyan-300 transition-colors font-bold underline underline-offset-4"
+                href="/#instant-roi"
+              >
+                <span>⚡ Calculate Capacity &amp; ROI →</span>
+              </Link>
+              <span className="text-border">/</span>
+              <Link
+                className="inline-flex items-center gap-1 hover:text-primary transition-colors font-bold underline underline-offset-4"
+                href="/diagnostic"
+              >
+                <span>📋 Run 2-Min Diligence →</span>
+              </Link>
             </div>
           </div>
 

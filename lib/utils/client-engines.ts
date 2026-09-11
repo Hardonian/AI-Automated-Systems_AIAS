@@ -302,6 +302,15 @@ const bytesToBase64 = (bytes: Uint8Array) => {
   return btoa(binary);
 };
 
+const base64ToBytes = (base64: string): Uint8Array => {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+};
+
 /** Creates a portable AES-GCM export without sending state off-device. */
 export async function encryptClientState(
   state: unknown,
@@ -338,4 +347,56 @@ export async function encryptClientState(
     salt: bytesToBase64(salt),
     iterations: 210_000,
   };
+}
+
+/** Decrypts an EncryptedClientExport locally using Web Crypto PBKDF2 and AES-GCM. */
+export async function decryptClientState<T = unknown>(
+  encrypted: EncryptedClientExport,
+  passphrase: string,
+): Promise<T> {
+  if (!passphrase || passphrase.length < 12) {
+    throw new Error("Invalid passphrase (minimum 12 characters required).");
+  }
+  if (encrypted.algorithm !== "AES-GCM") {
+    throw new Error(`Unsupported encryption algorithm: ${encrypted.algorithm}`);
+  }
+
+  const salt = base64ToBytes(encrypted.salt);
+  const iv = base64ToBytes(encrypted.iv);
+  const ciphertext = base64ToBytes(encrypted.ciphertext);
+
+  const material = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(passphrase),
+    "PBKDF2",
+    false,
+    ["deriveKey"],
+  );
+
+  const key = await crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      hash: "SHA-256",
+      salt: salt as unknown as BufferSource,
+      iterations: encrypted.iterations || 210_000,
+    },
+    material,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["decrypt"],
+  );
+
+  try {
+    const decryptedBuffer = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv: iv as unknown as BufferSource },
+      key,
+      ciphertext as unknown as BufferSource,
+    );
+    const decoded = new TextDecoder().decode(decryptedBuffer);
+    return JSON.parse(decoded) as T;
+  } catch {
+    throw new Error(
+      "Decryption failed. Incorrect passphrase or corrupt payload.",
+    );
+  }
 }

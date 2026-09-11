@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { defineConfig, devices } from "@playwright/test";
 
 /**
@@ -246,7 +247,9 @@ export default defineConfig({
   webServer: process.env.CI
     ? undefined // In CI, server should already be running
     : {
-        command: "pnpm run dev",
+        command: existsSync("out/index.html")
+          ? "node scripts/serve-static.mjs out 3000"
+          : "pnpm run dev",
         url: "http://localhost:3000",
         reuseExistingServer: !process.env.CI,
         timeout: 120 * 1000,

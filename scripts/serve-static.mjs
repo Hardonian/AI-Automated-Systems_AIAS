@@ -85,6 +85,7 @@ createServer((request, response) => {
     "Content-Type": contentTypes[extension] || "application/octet-stream",
   });
   createReadStream(file).pipe(response);
-}).listen(port, "127.0.0.1", () => {
-  console.log(`Static preview ready at http://127.0.0.1:${port}`);
+}).listen(port, () => {
+  console.log(`Static preview ready at http://localhost:${port}`);
 });
+

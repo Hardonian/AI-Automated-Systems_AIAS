@@ -2,7 +2,12 @@
 
 ## Unreleased
 
+- Integrated master pack canonical sub-agent definitions (`/agents/*.md`), generative prompts (`/prompts/*.md`), visual standards (`/design/VISUAL_SYSTEM.md`), and `MODEL_SPEC.md`, cleaned up temporary extraction artifacts, and removed accidental CLI files.
+- Built and integrated an interactive AI Clarity Diagnostic assessment wizard on `/diagnostic` enabling self-serve architectural boundary mapping, failure mode evaluation, and downloadable JSON/Markdown decision briefs with prefilled intake routing.
+- Expanded client-engines cryptographic capabilities with PBKDF2/AES-GCM `decryptClientState` round-trip functionality and added vault import/decryption support to the architecture workspace console.
+- Hardened the Playwright test harness by preferring the deterministic static preview server when built and enabling dual-stack IPv4/IPv6 socket binding in `serve-static.mjs` for Windows localhost resilience.
 - Made the Vitest launcher force React's test runtime even when Vercel supplies `NODE_ENV=production`, eliminating environment-dependent `React.act` deployment failures.
+
 - Made Vercel execute the complete `vercel-build` verification contract instead of build-only compilation, preventing deployment before tests, security, assets, links, and SEO checks pass.
 - Fixed non-catalog production images that existed locally but were excluded from Git/Vercel, and added a whole-site release gate that rejects every missing or ignored referenced asset.
 - Added eight statically generated catalog technical profiles, responsive shortlist comparison, first-touch attribution, and a smaller catalog client payload with below-fold image deferral.

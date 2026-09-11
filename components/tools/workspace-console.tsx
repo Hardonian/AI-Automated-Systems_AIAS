@@ -1,16 +1,26 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import { Check, Copy, Download, Hash, Mail, Share2 } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
+import {
+  Check,
+  Copy,
+  Download,
+  Hash,
+  Mail,
+  Share2,
+  Upload,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
+  decryptClientState,
   encryptClientState,
   generateDiagnosticMailto,
   generateSHA256Receipt,
   useBroadcastChannel,
   useLocalStorage,
   useWebShare,
+  type EncryptedClientExport,
 } from "@/lib/utils/client-engines";
 
 type Status = "idle" | "copied" | "hashed" | "encrypted" | "error";
@@ -89,6 +99,8 @@ export function WorkspaceConsole() {
     setStatus("hashed");
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const encryptedExport = async () => {
     try {
       const payload = await encryptClientState(
@@ -102,6 +114,31 @@ export function WorkspaceConsole() {
       setStatus("encrypted");
     } catch {
       setStatus("error");
+    }
+  };
+
+  const encryptedImport = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const encrypted = JSON.parse(text) as EncryptedClientExport;
+      const decrypted = await decryptClientState<{ notes: string }>(
+        encrypted,
+        passphrase,
+      );
+      if (decrypted && typeof decrypted.notes === "string") {
+        updateNotes(decrypted.notes);
+        setStatus("idle");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    } finally {
+      event.target.value = "";
     }
   };
 
@@ -228,6 +265,22 @@ export function WorkspaceConsole() {
         <Button onClick={encryptedExport} type="button">
           <Download className="mr-2 h-4 w-4" />
           Encrypted export
+        </Button>
+        <input
+          accept=".json"
+          aria-label="Upload encrypted workspace vault"
+          className="hidden"
+          onChange={encryptedImport}
+          ref={fileInputRef}
+          type="file"
+        />
+        <Button
+          onClick={() => fileInputRef.current?.click()}
+          type="button"
+          variant="outline"
+        >
+          <Upload className="mr-2 h-4 w-4" />
+          Decrypt import
         </Button>
       </div>
 

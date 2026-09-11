@@ -19,9 +19,10 @@ test.describe("@smoke Catalog assets", () => {
       await thumbnail.scrollIntoViewIfNeeded();
       await expect
         .poll(() =>
-          thumbnail.evaluate(
-            (image) => image.complete && image.naturalWidth > 0,
-          ),
+          thumbnail.evaluate((image) => {
+            const catalogImage = image as HTMLImageElement;
+            return catalogImage.complete && catalogImage.naturalWidth > 0;
+          }),
         )
         .toBe(true);
     }

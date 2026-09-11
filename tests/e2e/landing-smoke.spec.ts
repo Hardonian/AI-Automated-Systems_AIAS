@@ -17,6 +17,19 @@ test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
     const href = await cta.getAttribute("href");
     expect(href).toBeTruthy();
     expect(href ?? "").toMatch(/calendly|mailto|\/book/);
+
+    const workflowImage = page.locator(
+      'img[src="/images/workflow_schema.avif"]',
+    );
+    await workflowImage.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() =>
+        workflowImage.evaluate((image) => {
+          const schemaImage = image as HTMLImageElement;
+          return schemaImage.complete && schemaImage.naturalWidth > 0;
+        }),
+      )
+      .toBe(true);
   });
 
   test("Contact intake flow is functional", async ({ page }) => {

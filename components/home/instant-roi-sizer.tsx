@@ -96,7 +96,7 @@ export function InstantRoiSizer() {
       timestamp: new Date().toISOString(),
       teamSize,
       hoursPerWeekLost: hours,
-      loadedHourlyRate: rate,
+      blendedCompensationRate: rate,
       projectedAnnualHoursRecovered: calculations.annualHoursSaved,
       projectedAnnualCapitalRecovered: calculations.annualSavings,
       estimatedBreakevenVelocityDays: calculations.breakEvenDays,
@@ -243,14 +243,14 @@ export function InstantRoiSizer() {
                     className="text-xs font-bold uppercase text-foreground"
                     htmlFor={`${formId}-rate`}
                   >
-                    Loaded Hourly Rate ($CAD)
+                    Blended Compensation Rate ($CAD / unit)
                   </label>
                   <span className="text-sm font-black text-cyan-400 bg-cyan-500/10 px-2.5 py-0.5 border border-cyan-500/30">
-                    ${rate} / Hour
+                    ${rate} CAD
                   </span>
                 </div>
                 <Slider
-                  aria-label="Loaded Hourly Rate"
+                  aria-label="Blended Compensation Rate"
                   className="py-2"
                   id={`${formId}-rate`}
                   max={150}

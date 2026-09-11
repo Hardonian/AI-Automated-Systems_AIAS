@@ -28,9 +28,49 @@ const sourceFiles = [
 ];
 const contentFiles = walk("content", new Set([".json", ".md", ".ts", ".tsx"]));
 
-for (const path of ["public/logo.svg", "public/og-image.png"]) {
+for (const path of [
+  "public/logo.svg",
+  "public/og-image.png",
+  "public/favicon.svg",
+  "public/favicon.ico",
+]) {
   if (!existsSync(join(root, path)))
     failures.push(`${path}: required asset missing`);
+}
+
+const faviconSvg = read("public/favicon.svg");
+if (!/AI Automated Systems AI slash mark/i.test(faviconSvg)) {
+  failures.push("public/favicon.svg: expected branded AI slash mark title");
+}
+if (/heart|lovable/i.test(faviconSvg)) {
+  failures.push("public/favicon.svg: legacy heart/Lovable branding detected");
+}
+
+const vercelConfig = JSON.parse(read("vercel.json")) as {
+  framework?: unknown;
+  outputDirectory?: unknown;
+  headers?: Array<{ headers?: Array<{ key?: string; value?: string }> }>;
+};
+if (vercelConfig.framework !== "nextjs") {
+  failures.push("vercel.json: framework must remain nextjs");
+}
+if (vercelConfig.outputDirectory !== null) {
+  failures.push(
+    "vercel.json: outputDirectory must remain null for Next.js detection",
+  );
+}
+const csp = vercelConfig.headers
+  ?.flatMap((rule) => rule.headers ?? [])
+  .find((header) => header.key === "Content-Security-Policy")?.value;
+if (!csp?.includes("https://formspree.io")) {
+  failures.push(
+    "vercel.json: Formspree intake delivery is not CSP allowlisted",
+  );
+}
+
+const catalogDetailPage = read("app/catalog/[slug]/page.tsx");
+if (!catalogDetailPage.includes("generateStaticParams")) {
+  failures.push("app/catalog/[slug]/page.tsx: static catalog params missing");
 }
 
 for (const path of sourceFiles) {

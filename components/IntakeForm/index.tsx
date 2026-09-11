@@ -247,10 +247,11 @@ export function IntakeForm({
   const [attribution, setAttribution] =
     useState<LeadAttribution>(emptyAttribution);
   const interactionStarted = useRef(false);
-  const formMountedAt = useRef(Date.now());
+  const formMountedAt = useRef(0);
 
   useEffect(() => {
     let active = true;
+    formMountedAt.current = Date.now();
     try {
       const stored = window.sessionStorage.getItem("aias_intake_progress");
       if (stored) {
@@ -298,7 +299,9 @@ export function IntakeForm({
     let mergedAttribution = currentAttribution;
     if (storedAttribution) {
       try {
-        const parsed = JSON.parse(storedAttribution) as Partial<LeadAttribution>;
+        const parsed = JSON.parse(
+          storedAttribution,
+        ) as Partial<LeadAttribution>;
         mergedAttribution = {
           ...emptyAttribution,
           ...parsed,
@@ -432,6 +435,9 @@ export function IntakeForm({
     };
 
     const classification = classifyIntake(intake);
+    const endpoint = process.env.NEXT_PUBLIC_INTAKE_WEBHOOK_URL;
+    const provider =
+      process.env.NEXT_PUBLIC_INTAKE_PROVIDER ?? (endpoint ? "custom" : "none");
     const payload = {
       type: "lead-intake",
       submittedAt: new Date().toISOString(),
@@ -447,7 +453,7 @@ export function IntakeForm({
       intake,
       classification,
       delivery: {
-        provider: process.env.NEXT_PUBLIC_INTAKE_PROVIDER ?? "none",
+        provider,
         requestedFollowUp: "fit-review",
         preferredReplyTo: parsed.data.email,
       },
@@ -463,9 +469,6 @@ export function IntakeForm({
         ...catalogSelection.map((product) => `catalog:${product}`),
       ],
     };
-
-    const provider = process.env.NEXT_PUBLIC_INTAKE_PROVIDER ?? "none";
-    const endpoint = process.env.NEXT_PUBLIC_INTAKE_WEBHOOK_URL;
 
     setIsSubmitting(true);
     let delivered = false;
@@ -935,7 +938,7 @@ export function IntakeForm({
             <fieldset className="space-y-3">
               <legend className="text-sm font-medium">Urgency</legend>
               <RadioGroup
-                value={values.urgency}
+                value={values.urgency ?? ""}
                 onValueChange={(value) =>
                   updateValue("urgency", value as IntakeSubmission["urgency"])
                 }
@@ -961,7 +964,7 @@ export function IntakeForm({
             <fieldset className="space-y-3">
               <legend className="text-sm font-medium">Engagement scope</legend>
               <RadioGroup
-                value={values.scope}
+                value={values.scope ?? ""}
                 onValueChange={(value) =>
                   updateValue("scope", value as IntakeSubmission["scope"])
                 }
@@ -993,7 +996,7 @@ export function IntakeForm({
                 Budget flexibility
               </legend>
               <RadioGroup
-                value={values.budgetFlexibility}
+                value={values.budgetFlexibility ?? ""}
                 onValueChange={(value) =>
                   updateValue(
                     "budgetFlexibility",

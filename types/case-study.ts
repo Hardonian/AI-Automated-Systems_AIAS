@@ -7,6 +7,13 @@ export interface CaseStudy {
   automationWins: string[];
   measurableImpact: string[];
   technologies: string[];
+  evidence: {
+    level: "representative" | "client-approved";
+    basis: string;
+    sources: string[];
+    reviewedAt: string;
+    approvedBy?: string;
+  };
 }
 
 export interface ProjectMetadata {

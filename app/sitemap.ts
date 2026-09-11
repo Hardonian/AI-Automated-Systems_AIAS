@@ -103,7 +103,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
           : "image" in entry && entry.image
             ? [`${baseUrl}${entry.image}`]
             : entry.route === "/catalog"
-            ? [`${baseUrl}/images/catalog/hardonia_suite_ops.avif`]
-            : undefined,
+              ? [`${baseUrl}/images/catalog/hardonia_suite_ops.avif`]
+              : undefined,
   }));
 }

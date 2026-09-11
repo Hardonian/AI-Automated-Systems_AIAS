@@ -28,6 +28,13 @@ function transformProjectToCaseStudy(meta: ProjectMetadata): CaseStudy {
       "Tailwind CSS",
       "Framer Motion",
     ],
+    evidence: {
+      level: "representative",
+      basis:
+        "Derived from repository-managed product metadata and expressed as an architecture scenario; it is not a claim of verified client performance.",
+      sources: [`content/${pMeta.name.toLowerCase()}.json`],
+      reviewedAt: "2026-09-10",
+    },
   };
 }
 
@@ -86,6 +93,13 @@ export const caseStudies: CaseStudy[] = [
           "Framer Motion",
         ]),
       ),
+      evidence: {
+        level: "representative" as const,
+        basis:
+          "Derived from the typed scenario library and ecosystem metadata; performance statements are validation targets, not attributed client results.",
+        sources: ["src/content/caseStudies.ts"],
+        reviewedAt: "2026-09-10",
+      },
     };
   }),
 ];

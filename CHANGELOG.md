@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added eight statically generated catalog technical profiles, responsive shortlist comparison, first-touch attribution, and a smaller catalog client payload with below-fold image deferral.
+- Upgraded intake into a provider-ready conversion path with funnel events, bounded delivery timeouts, Formspree/custom adapters, honest local fallback, and downloadable JSON plus Markdown decision briefs.
+- Added enforceable case-study evidence levels and approval requirements so representative scenarios cannot be mistaken for verified client results.
+- Established one owner route for each core buyer intent and added automated checks against duplicate content ownership or missing conversion paths.
+- Expanded Lighthouse coverage to catalog and detail routes with three-run LCP, CLS, TBT, accessibility, SEO, and best-practice budgets.
+- Added deployment-contract checks for the Next.js Vercel configuration, branded AI slash favicon, intake CSP, and static catalog generation; replaced the obsolete backend-heavy environment template with the actual static-first variables.
 - Rebuilt the catalog as a decision-grade lead path with operating-pressure routing, deterministic system boundaries, success signals, non-fit criteria, three-item shortlisting, delivery evidence, and technical buyer FAQs.
 - Carried catalog selections into a qualified four-step contact brief with required workflow context, honest delivery-state reporting, local JSON evidence, and email/booking handoffs when no intake endpoint is configured.
 - Replaced the legacy Lovable heart favicon with a cohesive AI slash identity across SVG/ICO favicons, Apple/PWA icons, metadata, manifest, structured logo, header, and footer.

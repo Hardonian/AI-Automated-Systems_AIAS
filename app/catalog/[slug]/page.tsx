@@ -80,7 +80,9 @@ export default async function CatalogProductPage({
   const { slug } = await params;
   const product = siteContent.catalogProducts.find((item) => item.id === slug);
 
-  if (!product) notFound();
+  if (!product) {
+    notFound();
+  }
 
   const productSchema = {
     "@context": "https://schema.org",
@@ -243,7 +245,7 @@ export default async function CatalogProductPage({
           {siteContent.catalogPage.deliverySteps.map((step) => (
             <li className="border-2 border-border bg-card p-5" key={step.step}>
               <p className="font-mono text-xs font-bold uppercase text-primary">
-                {step.step} // {step.title}
+                {step.step} / {step.title}
               </p>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                 {step.description}

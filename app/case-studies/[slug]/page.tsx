@@ -143,6 +143,18 @@ export default async function CaseStudyDetailPage({
 
       <PageSection width="narrow">
         <div className="space-y-6">
+          <SurfaceCard className="border-primary/30 bg-primary/5">
+            <p className="font-mono text-xs font-bold uppercase tracking-wider text-primary">
+              Evidence level · {study.evidence.level.replace("-", " ")}
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              {study.evidence.basis}
+            </p>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Sources: {study.evidence.sources.join(", ")} · reviewed{" "}
+              {study.evidence.reviewedAt}
+            </p>
+          </SurfaceCard>
           <SurfaceCard>
             <h2 className="text-2xl font-bold tracking-tight italic text-primary/80">
               01 / The Problem

@@ -53,8 +53,11 @@ This threat model evaluates the current public AIAS site architecture as impleme
 
 **Mitigation status**
 
-- Strong client schema validation (`zod`) and bounded enums for most inputs.
+- Strong client schema validation (`zod`), length bounds, and bounded enums.
 - Honeypot field blocks simplistic bots.
+- Submission duration is recorded as an anti-automation signal for downstream review.
+- Requests omit credentials, use an eight-second abort window, and expose a truthful local fallback.
+- Analytics receives bounded funnel labels, never contact data or free-text workflow content.
 - Graceful degradation avoids hard failures and keeps UX predictable.
 
 **Residual risk**: **Medium** when webhook is configured; **Low-Medium** in pure static mode.
@@ -192,9 +195,6 @@ No admin panel or authenticated back-office surface is implemented in this repo.
 
 ## Priority hardening recommendations
 
-1. Add explicit intake data-handling notice near submit button (what is transmitted, retention expectation, and no sensitive data request).
-2. If webhook is used in production, require downstream auth (signed requests), server-side validation, and rate limiting.
-3. Remove payload-level `console.info` in production builds or gate behind dev flag.
-4. Add anti-automation controls on intake (time-based honeypot check or challenge) without breaking static-first behavior.
-5. Add a repository check preventing unreviewed introduction of API routes/server actions.
-6. Add a documented incident-response contact and abuse-report process to reduce social-engineering impact.
+1. Before enabling a webhook, require downstream schema validation, abuse throttling, retention limits, and monitoring; client-side controls are not a trust boundary.
+2. For high-volume abuse, add a privacy-preserving challenge or move delivery behind an explicitly reviewed edge boundary.
+3. Add a documented incident-response contact and abuse-report process to reduce social-engineering impact.

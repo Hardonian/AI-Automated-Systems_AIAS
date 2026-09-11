@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -18,6 +18,7 @@ import type { CatalogPageContent, CatalogProduct } from "@/src/content/site";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { track } from "@/lib/analytics";
+import { readLeadAttribution } from "@/lib/lead-brief";
 
 const CATEGORIES = [
   "All",
@@ -67,6 +68,25 @@ export function CatalogDirectoryClient({
   const [selectedPathId, setSelectedPathId] = useState<string>("all");
   const [shortlist, setShortlist] = useState<string[]>([]);
   const [showComparison, setShowComparison] = useState(false);
+
+  useEffect(() => {
+    const attribution = readLeadAttribution({
+      search: window.location.search,
+      referrer: document.referrer,
+      landingPath: window.location.pathname,
+    });
+    if (
+      attribution.source ||
+      attribution.medium ||
+      attribution.campaign ||
+      attribution.referrer
+    ) {
+      window.sessionStorage.setItem(
+        "aias_lead_attribution",
+        JSON.stringify(attribution),
+      );
+    }
+  }, []);
 
   const selectedPath = buyerPaths.find((path) => path.id === selectedPathId);
 
@@ -552,7 +572,6 @@ export function CatalogDirectoryClient({
                     ))}
                   </ul>
                 </div>
-
               </div>
 
               {/* Action Buttons */}

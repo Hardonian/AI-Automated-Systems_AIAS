@@ -14,16 +14,17 @@ test.describe("@smoke Catalog assets", () => {
     const thumbnails = page.locator('main img[src^="/images/catalog/"]');
     await expect(thumbnails).toHaveCount(8);
 
-    await expect
-      .poll(async () =>
-        thumbnails.evaluateAll((images) =>
-          images.every((image) => {
-            const thumbnail = image as HTMLImageElement;
-            return thumbnail.complete && thumbnail.naturalWidth > 0;
-          }),
-        ),
-      )
-      .toBe(true);
+    for (let index = 0; index < (await thumbnails.count()); index += 1) {
+      const thumbnail = thumbnails.nth(index);
+      await thumbnail.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() =>
+          thumbnail.evaluate(
+            (image) => image.complete && image.naturalWidth > 0,
+          ),
+        )
+        .toBe(true);
+    }
 
     await expect(
       page.getByText("Architecture boundary", { exact: true }),
@@ -31,6 +32,9 @@ test.describe("@smoke Catalog assets", () => {
 
     const scopeLinks = page.getByRole("link", { name: "Request Scope" });
     await expect(scopeLinks).toHaveCount(8);
+    await expect(
+      page.getByRole("link", { name: "Technical profile" }),
+    ).toHaveCount(8);
 
     const scopeDestinations = await scopeLinks.evaluateAll((links) =>
       links.map((link) => (link as HTMLAnchorElement).getAttribute("href")),
@@ -50,6 +54,13 @@ test.describe("@smoke Catalog assets", () => {
     await addButtons.first().click();
 
     await expect(page.getByText("Solution shortlist · 2/3")).toBeVisible();
+    await page.getByRole("button", { name: "Compare systems" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Shortlist comparison" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("row", { name: /Success signals/ }),
+    ).toBeVisible();
     const reviewLink = page.getByRole("link", {
       name: "Review this shortlist",
     });
@@ -66,5 +77,29 @@ test.describe("@smoke Catalog assets", () => {
         exact: false,
       }),
     ).toBeVisible();
+  });
+
+  test("catalog detail exposes a complete technical decision surface", async ({
+    page,
+  }) => {
+    await page.goto("/catalog/hardonia-suite-ops");
+
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "Hardonia Suite Client Operations Fabric",
+    );
+    await expect(page.getByRole("heading", { name: "Inputs" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Deterministic controls" }),
+    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Outputs" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Included artifacts" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /Request fit review/ }),
+    ).toHaveAttribute(
+      "href",
+      /\/contact\?ref=catalog&product=hardonia-suite-ops/,
+    );
   });
 });

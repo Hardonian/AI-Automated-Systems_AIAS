@@ -48,6 +48,11 @@ export default function CaseStudiesPage() {
                   {study.problem}
                 </p>
 
+                <p className="mt-4 border-l-2 border-primary pl-3 font-mono text-[11px] font-bold uppercase tracking-wider text-primary">
+                  Evidence: {study.evidence.level.replace("-", " ")} · reviewed{" "}
+                  {study.evidence.reviewedAt}
+                </p>
+
                 <div className="mt-6 flex flex-wrap gap-2">
                   {study.technologies.slice(0, 3).map((tech) => (
                     <span

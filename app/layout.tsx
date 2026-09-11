@@ -29,6 +29,7 @@ import { PerformanceRuntime } from "@/components/analytics/performance-runtime";
 import { RouteBreadcrumbSchema } from "@/components/seo/route-breadcrumb-schema";
 import { Toaster } from "@/components/ui/toaster";
 import { MobileStickyCTA } from "@/components/layout/mobile-sticky-cta";
+import { FloatingTelemetryDock } from "@/components/layout/floating-telemetry-dock";
 import { ExperienceControls } from "@/components/layout/experience-controls";
 import { getOptionalEnv } from "@/lib/env";
 import { EnhancedErrorBoundary } from "@/lib/error-handling/error-boundary-enhanced";
@@ -205,6 +206,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <AnalyticsRuntime />
             <PerformanceRuntime />
             <MobileStickyCTA />
+            <FloatingTelemetryDock />
             <ExperienceControls />
             <Toaster />
             <Script

@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import { ContentDrivenHero } from "@/components/content/ContentDrivenHero";
 import { ThreeProngedSection } from "@/components/home/three-pronged-section";
+import { InstantRoiSizer } from "@/components/home/instant-roi-sizer";
 import { SystemTopologyVisualizer } from "@/components/visual/SystemTopologyVisualizer";
 import { HowWeWorkSection } from "@/components/content/how-we-work-section";
 import { ProofSection } from "@/components/home/proof-section";
@@ -74,6 +75,8 @@ export default function HomePage() {
       <ContentDrivenHero content={heroContent} />
 
       <ThreeProngedSection />
+
+      <InstantRoiSizer />
 
       {/* Live Mission Control Architecture Bus Section */}
       <section

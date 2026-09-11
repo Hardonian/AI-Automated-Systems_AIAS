@@ -191,6 +191,15 @@ if (!verifyWorkflow.includes("pnpm test:visual")) {
   failures.push(".github/workflows/verify.yml: visual regression gate missing");
 }
 
+const packageJson = JSON.parse(read("package.json")) as {
+  scripts?: Record<string, string>;
+};
+if (packageJson.scripts?.["test:unit"] !== "node scripts/run-unit-tests.mjs") {
+  failures.push(
+    "package.json: unit tests must use the cross-environment NODE_ENV=test runner",
+  );
+}
+
 if (failures.length > 0) {
   console.error("Release integrity check failed:\n");
   for (const failure of failures) console.error(`- ${failure}`);

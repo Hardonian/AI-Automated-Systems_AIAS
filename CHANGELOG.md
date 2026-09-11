@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Made the Vitest launcher force React's test runtime even when Vercel supplies `NODE_ENV=production`, eliminating environment-dependent `React.act` deployment failures.
 - Made Vercel execute the complete `vercel-build` verification contract instead of build-only compilation, preventing deployment before tests, security, assets, links, and SEO checks pass.
 - Fixed non-catalog production images that existed locally but were excluded from Git/Vercel, and added a whole-site release gate that rejects every missing or ignored referenced asset.
 - Added eight statically generated catalog technical profiles, responsive shortlist comparison, first-touch attribution, and a smaller catalog client payload with below-fold image deferral.

@@ -101,7 +101,7 @@
     "lint:canonical-urls": "pnpm exec tsx scripts/lint-canonical-urls.ts",
     "validate:route-manifest": "pnpm exec tsx scripts/validate-route-manifest.ts && pnpm exec prettier --check lib/seo/route-manifest.ts",
     "fix:route-manifest": "pnpm exec tsx scripts/fix-route-manifest.ts",
-    "test:unit": "pnpm exec vitest run",
+    "test:unit": "node scripts/run-unit-tests.mjs",
     "lint:critical": "pnpm lint",
     "test:critical": "pnpm typecheck && pnpm test:unit",
     "deploy:guard": "pnpm verify",

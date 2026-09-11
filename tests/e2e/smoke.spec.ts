@@ -111,4 +111,74 @@ test.describe("@smoke Reality Mode Smoke Test", () => {
       }),
     ).toHaveAttribute("href", "/downloads/ai-systems-readiness-checklist.md");
   });
+
+  test("Diagnostic wizard diligence and intake handoff", async ({ page }) => {
+    await page.goto("/diagnostic");
+    await expect(
+      page
+        .getByRole("heading", {
+          name: /AI Clarity Diagnostic/i,
+        })
+        .first(),
+    ).toBeVisible();
+
+    // Step 1: select category
+    await page.getByText("Financial & Invoicing Ops").click();
+    await page
+      .getByRole("button", { name: /Next: Boundary Allocation/i })
+      .click();
+
+    // Step 2: Boundary mapping
+    await expect(page.getByText("Step 2 of 4")).toBeVisible();
+    await page.getByRole("button", { name: /Next: Risk Ceilings/i }).click();
+
+    // Step 3: Risk Ceilings
+    await expect(page.getByText("Step 3 of 4")).toBeVisible();
+    await page
+      .getByRole("button", { name: /Generate Architecture Brief/i })
+      .click();
+
+    // Step 4: Results & Handoff
+    await expect(page.getByText("Step 4 of 4")).toBeVisible();
+    await expect(page.getByText(/AIAS Diligence Result/i)).toBeVisible();
+
+    // Verify handoff link to contact
+    const intakeLink = page.getByRole("link", {
+      name: /Schedule Diligence Review/i,
+    });
+    await expect(intakeLink).toBeVisible();
+    const href = await intakeLink.getAttribute("href");
+    expect(href).toContain("/contact?ref=diagnostic");
+  });
+
+  test("Instant ROI Sizer on home and prefilled intake context", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const roiHeading = page.getByRole("heading", {
+      name: /CALCULATE YOUR ANNUAL AUTOMATION CAPACITY/i,
+    });
+    await expect(roiHeading).toBeVisible();
+
+    // Click enterprise preset
+    await page.getByRole("button", { name: /Scaleup Operations/i }).click();
+
+    // Click Proposal CTA
+    const requestCta = page.getByRole("link", {
+      name: /Lock In This Efficiency/i,
+    });
+    await expect(requestCta).toBeVisible();
+    const href = await requestCta.getAttribute("href");
+    expect(href).toContain("/contact?ref=roi-sizer");
+
+    // Navigate to contact with parameters
+    await requestCta.click();
+    await page.waitForURL(/\/contact\?ref=roi-sizer/);
+
+    // Verify ROI Target badge is visible in the intake form
+    await expect(
+      page.getByText(/Target Efficiency Model Attached/i),
+    ).toBeVisible();
+    await expect(page.getByText(/Target Annual Efficiency:/i)).toBeVisible();
+  });
 });

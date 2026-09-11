@@ -2,37 +2,37 @@
   {
     "name": "minScore",
     "expected": 0.9,
-    "actual": 0.64,
-    "values": [0.64],
+    "actual": 0.65,
+    "values": [0.65],
     "operator": ">=",
     "passed": false,
     "auditProperty": "performance",
     "auditId": "categories",
     "level": "error",
-    "url": "http://localhost:51553/"
+    "url": "http://localhost:56354/"
   },
   {
     "name": "minScore",
     "expected": 0.9,
-    "actual": 0.84,
-    "values": [0.84],
+    "actual": 0.87,
+    "values": [0.87],
     "operator": ">=",
     "passed": false,
     "auditProperty": "performance",
     "auditId": "categories",
     "level": "error",
-    "url": "http://localhost:51553/pricing.html"
+    "url": "http://localhost:56354/pricing.html"
   },
   {
     "name": "minScore",
     "expected": 0.9,
-    "actual": 0.79,
-    "values": [0.79],
+    "actual": 0.76,
+    "values": [0.76],
     "operator": ">=",
     "passed": false,
     "auditProperty": "performance",
     "auditId": "categories",
     "level": "error",
-    "url": "http://localhost:51553/contact.html"
+    "url": "http://localhost:56354/contact.html"
   }
 ]

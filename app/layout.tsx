@@ -6,13 +6,13 @@ import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 
 const fontHeading = Space_Grotesk({
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
   variable: "--font-heading",
 });
 
 const fontBody = JetBrains_Mono({
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
   variable: "--font-body",
 });
 

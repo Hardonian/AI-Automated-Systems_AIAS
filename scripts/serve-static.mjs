@@ -88,4 +88,3 @@ createServer((request, response) => {
 }).listen(port, () => {
   console.log(`Static preview ready at http://localhost:${port}`);
 });
-

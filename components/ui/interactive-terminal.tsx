@@ -13,12 +13,7 @@ import {
   RotateCcw,
   Zap,
 } from "lucide-react";
-import {
-  playClick,
-  playTelemetryTone,
-  playWarning,
-  playSuccess,
-} from "@/lib/audio/sound-fx";
+import { playClick } from "@/lib/audio/sound-fx";
 
 interface TerminalCommand {
   id: string;
@@ -185,19 +180,13 @@ export function InteractiveTerminal() {
       if (cancelled) return;
       setIsRunning(true);
       setVisibleCount(0);
-      playClick();
 
       activeCommand.lines.forEach((line, index) => {
         const lineTimer = setTimeout(() => {
           if (cancelled) return;
           setVisibleCount(index + 1);
-          if (line.type === "warning") {
-            playWarning();
-          } else if (index === activeCommand.lines.length - 1) {
-            playSuccess();
+          if (index === activeCommand.lines.length - 1) {
             setIsRunning(false);
-          } else {
-            playTelemetryTone();
           }
         }, line.delay);
         timers.push(lineTimer);
@@ -213,6 +202,7 @@ export function InteractiveTerminal() {
 
   const handleCommandSwitch = (id: string) => {
     if (isRunning) return;
+    playClick();
     setSelectedCommandId(id);
   };
 

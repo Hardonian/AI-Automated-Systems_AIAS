@@ -48,11 +48,15 @@ if (/heart|lovable/i.test(faviconSvg)) {
 
 const vercelConfig = JSON.parse(read("vercel.json")) as {
   framework?: unknown;
+  buildCommand?: unknown;
   outputDirectory?: unknown;
   headers?: Array<{ headers?: Array<{ key?: string; value?: string }> }>;
 };
 if (vercelConfig.framework !== "nextjs") {
   failures.push("vercel.json: framework must remain nextjs");
+}
+if (vercelConfig.buildCommand !== "pnpm vercel-build") {
+  failures.push("vercel.json: deployment must run the full vercel-build gate");
 }
 if (vercelConfig.outputDirectory !== null) {
   failures.push(

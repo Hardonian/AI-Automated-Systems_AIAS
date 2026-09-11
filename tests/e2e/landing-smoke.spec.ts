@@ -18,9 +18,7 @@ test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
     expect(href).toBeTruthy();
     expect(href ?? "").toMatch(/calendly|mailto|\/book/);
 
-    const workflowImage = page.locator(
-      'img[src="/images/workflow_schema.avif"]',
-    );
+    const workflowImage = page.locator('img[src*="workflow_schema.avif"]');
     await workflowImage.scrollIntoViewIfNeeded();
     await expect
       .poll(() =>

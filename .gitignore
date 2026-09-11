@@ -122,8 +122,10 @@ public/docs/trust/*
 !public/icon-192.png
 !public/icon-512.png
 !public/og-image.png
+!public/placeholder.svg
 !public/images/
 public/images/*
+!public/images/workflow_schema.avif
 !public/images/catalog/
 public/images/catalog/*
 !public/images/catalog/*.avif

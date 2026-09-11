@@ -9,7 +9,11 @@
         "http://localhost/catalog.html",
         "http://localhost/catalog/hardonia-suite-ops.html"
       ],
-      "numberOfRuns": 3
+      "numberOfRuns": 3,
+      "settings": {
+        "preset": "desktop",
+        "throttlingMethod": "provided"
+      }
     },
     "assert": {
       "assertions": {

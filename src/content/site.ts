@@ -1470,7 +1470,7 @@ const rawSiteContent: SiteConfig = {
     },
   ],
   agenticWorkflow: {
-    heroImage: "/images/workflow-diagram.svg",
+    heroImage: "/images/workflow_schema.avif",
     steps: [
       {
         title: "Input Analysis",

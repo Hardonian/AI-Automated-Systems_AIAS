@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Fixed non-catalog production images that existed locally but were excluded from Git/Vercel, and added a whole-site release gate that rejects every missing or ignored referenced asset.
 - Added eight statically generated catalog technical profiles, responsive shortlist comparison, first-touch attribution, and a smaller catalog client payload with below-fold image deferral.
 - Upgraded intake into a provider-ready conversion path with funnel events, bounded delivery timeouts, Formspree/custom adapters, honest local fallback, and downloadable JSON plus Markdown decision briefs.
 - Added enforceable case-study evidence levels and approval requirements so representative scenarios cannot be mistaken for verified client results.

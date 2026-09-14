@@ -37,7 +37,7 @@ jobs:
         run: pnpm collect:static-metrics systems/static-quality.json
 
       - name: Upload quality snapshot
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: static-quality-snapshot
           path: systems/static-quality.json

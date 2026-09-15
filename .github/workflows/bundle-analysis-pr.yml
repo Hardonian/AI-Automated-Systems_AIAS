@@ -21,7 +21,7 @@ jobs:
       - run: pnpm build
       - run: pnpm check:bundle-size
       - run: pnpm exec tsx scripts/write-bundle-report.ts
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@v3
         with:
           header: aias-bundle-analysis
           path: bundle-report.md

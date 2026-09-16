@@ -1,16 +1,25 @@
 import reachMeta from "../content/reach.json";
 import zeoMeta from "../content/zeo.json";
 import settlerMeta from "../content/settler-metadata.json";
+import cogMeta from "../content/canada-economic-opportunity-graph.json";
 import { CaseStudy, ProjectMetadata } from "../types/case-study";
 import { caseStudies as legacyCaseStudies } from "../src/content/caseStudies";
 
 /**
  * Transforms project metadata into a structured CaseStudy
  */
+function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 function transformProjectToCaseStudy(meta: ProjectMetadata): CaseStudy {
   const pMeta = meta;
   return {
-    slug: pMeta.name.toLowerCase(),
+    slug: slugify(pMeta.name),
     title: `${pMeta.name} — ${pMeta.role}`,
     problem: `Enterprises face significant friction in ${pMeta.focus.join(", ").toLowerCase()}. This fragmentation creates operational risk and slows delivery cycles.`,
     architecture: pMeta.capabilities,
@@ -48,6 +57,7 @@ export const caseStudies: CaseStudy[] = [
   transformProjectToCaseStudy(reachMeta),
   transformProjectToCaseStudy(zeoMeta),
   transformProjectToCaseStudy(settlerMeta),
+  transformProjectToCaseStudy(cogMeta),
 
   // Map legacy case studies
   ...legacyCaseStudies.map((legacy) => {

@@ -1,5 +1,66 @@
 [
   {
+    "weekOf": "2026-09-15",
+    "entries": [
+      {
+        "date": "2026-09-15",
+        "title": "Shipped Canada Economic Opportunity Graph case study",
+        "summary": "Added a representative architecture scenario for the open CEGS reference implementation, including deterministic scoring and evidence-linked provenance.",
+        "category": "ship",
+        "links": [
+          { "label": "Case study", "href": "/case-studies/canada-economic-opportunity-graph" }
+        ]
+      },
+      {
+        "date": "2026-09-15",
+        "title": "Extended the opportunity graph with four federal sources",
+        "summary": "Added Bank of Canada Valet, Open.Canada federal contracts, the federal lobbyist registry, and CMHC housing indicators — each fixture-first, key-free, and provenance-hashed.",
+        "category": "ship"
+      },
+      {
+        "date": "2026-09-15",
+        "title": "Connected reconciliation intelligence to the graph",
+        "summary": "Added an opt-in Canada-COG connector so reconciliation runs can read deterministic project scores alongside financial flows.",
+        "category": "ship"
+      },
+      {
+        "date": "2026-09-15",
+        "title": "Isolated the three GPUs onto dedicated inference lanes",
+        "summary": "Pinned large, medium, and small model traffic to separate cards with health and thermal watchdogs so one workload cannot starve another.",
+        "category": "ship"
+      },
+      {
+        "date": "2026-09-15",
+        "title": "Made live ingestion opt-in and never-silent",
+        "summary": "Learned that a fixture-first default with an explicit live flag keeps builds deterministic while still allowing real upstream fetches under test.",
+        "category": "learn"
+      }
+    ]
+  },
+  {
+    "weekOf": "2026-09-08",
+    "entries": [
+      {
+        "date": "2026-09-12",
+        "title": "Cleared TypeScript 6.0 deprecation failures across the stack",
+        "summary": "Fixed build-breaking deprecations so the toolchain upgrade landed without touching runtime behaviour.",
+        "category": "fix"
+      },
+      {
+        "date": "2026-09-10",
+        "title": "Exported GPU telemetry without a heavyweight agent",
+        "summary": "Shipped a minimal metrics endpoint that exposes utilisation, memory, temperature, and power for every card.",
+        "category": "ship"
+      },
+      {
+        "date": "2026-09-09",
+        "title": "Stopped treating missing values as zero",
+        "summary": "Killed a class of silent substitutions so unknown observations stay unknown instead of poisoning analytical totals.",
+        "category": "kill"
+      }
+    ]
+  },
+  {
     "weekOf": "2026-02-10",
     "entries": [
       {

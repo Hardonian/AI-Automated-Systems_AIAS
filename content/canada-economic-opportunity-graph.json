@@ -1,0 +1,23 @@
+{
+  "name": "Canada Economic Opportunity Graph",
+  "role": "Open-data Economic Intelligence Platform",
+  "focus": [
+    "Deterministic scoring of Canadian capital projects",
+    "Evidence-linked provenance for every factual assertion",
+    "Multi-jurisdiction reconciliation across federal, provincial, and Indigenous registries"
+  ],
+  "capabilities": [
+    "Buildability, Investability, Supplierability, and Strategicity scoring (0-100, deterministic)",
+    "Canadian AI Sovereignty Index with residency, US CLOUD Act immunity, and Quebec Law 25 compliance",
+    "Opportunity propagation: upstream project announcements derive downstream industrial demand",
+    "Merkle log of evidence hashes for tamper-evident provenance",
+    "CEGS 1.0 schema compliance — open, implementation-neutral data specification",
+    "13+ verified source adapters across Statistics Canada, Bank of Canada, NRCan, CER, IAAC, OECD, World Bank, SEC, GDELT"
+  ],
+  "impactSignals": [
+    "Decisions trace to a primary-source Evidence record with SHA-256 content hash",
+    "Zero substitution of 0 for unknown monetary facts across analytical totals",
+    "GraphQL API plus 12+ REST endpoints; Rust and Python SDKs",
+    "40+ Go packages; race-clean test suite; CEGS conformance (36 tests, 9 resource types)"
+  ]
+}

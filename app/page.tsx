@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { ContentDrivenHero } from "@/components/content/ContentDrivenHero";
+import { LiveLabStatus } from "@/components/home/live-lab-status";
 import { ThreeProngedSection } from "@/components/home/three-pronged-section";
 import { InstantRoiSizer } from "@/components/home/instant-roi-sizer";
 import { SystemTopologyVisualizer } from "@/components/visual/SystemTopologyVisualizer";
@@ -73,6 +74,8 @@ export default function HomePage() {
       />
       <FAQSchema faqs={siteContent.faq.slice(0, 5)} />
       <ContentDrivenHero content={heroContent} />
+
+      <LiveLabStatus />
 
       <ThreeProngedSection />
 

@@ -59,6 +59,22 @@ export function ConversionCTA() {
               Email your challenge directly
             </Link>
           </Button>
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="rounded-none border-2 border-violet-500 bg-violet-500/10 px-10 font-mono text-base font-bold uppercase tracking-wider text-violet-700 shadow-[4px_4px_0px_0px_rgba(139,92,246,0.5)] transition-all hover:bg-violet-500 hover:text-white hover:shadow-[6px_6px_0px_0px_rgba(139,92,246,1)] backdrop-blur-sm dark:text-violet-300"
+          >
+            <Link
+              href="/audit"
+              onClick={() =>
+                track("audit_cta_clicked", { location: "conversion_cta" })
+              }
+            >
+              Run Free AI Lab Audit
+              <ArrowRight className="ml-3 h-5 w-5" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AuditRedirectClient } from "./audit-redirect-client";
+import { RedirectClient } from "@/components/shared/redirect-client";
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -10,5 +10,10 @@ export const metadata: Metadata = generateSEOMetadata({
 });
 
 export default function AuditPage() {
-  return <AuditRedirectClient />;
+  return (
+    <RedirectClient
+      target="https://api.aiautomatedsystems.ca/audit/"
+      label="AI Lab Audit"
+    />
+  );
 }

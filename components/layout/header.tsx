@@ -67,6 +67,14 @@ const RESOURCE_GROUPS = [
       { label: "FAQ", href: "/faq" },
     ],
   },
+  {
+    category: "Live Lab",
+    items: [
+      { label: "★ Free AI Lab Audit", href: "/audit" },
+      { label: "GPU Compute API", href: "https://compute.aiautomatedsystems.ca" },
+      { label: "Private Inference", href: "https://api.aiautomatedsystems.ca/p/private-inference-access" },
+    ],
+  },
 ];
 
 export function Header() {

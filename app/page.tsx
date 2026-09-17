@@ -4,6 +4,8 @@ import Image from "next/image";
 
 import { ContentDrivenHero } from "@/components/content/ContentDrivenHero";
 import { LiveLabStatus } from "@/components/home/live-lab-status";
+import { LiveProductsShowcase } from "@/components/home/live-products-showcase";
+import { LeadCaptureForm } from "@/components/home/lead-capture-form";
 import { ThreeProngedSection } from "@/components/home/three-pronged-section";
 import { InstantRoiSizer } from "@/components/home/instant-roi-sizer";
 import { SystemTopologyVisualizer } from "@/components/visual/SystemTopologyVisualizer";
@@ -244,11 +246,15 @@ export default function HomePage() {
         </div>
       </section>
 
+      <LiveProductsShowcase />
+
       <ProofSection />
 
       <Testimonials />
 
       <HowWeWorkSection steps={siteContent.process} />
+
+      <LeadCaptureForm />
 
       <ConversionCTA />
     </>

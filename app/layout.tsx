@@ -225,6 +225,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             />
           </ThemeProvider>
         </EnhancedErrorBoundary>
+        <Script
+          src={`https://chat.aiautomatedsystems.ca/widget.js?tenant=ebe5b024-b6dc-4233-9713-04ac268b87d3`}
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );

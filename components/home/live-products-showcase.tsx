@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface Product {
   slug: string;
@@ -72,12 +73,12 @@ export function LiveProductsShowcase() {
         </div>
 
         <div className="mt-10 text-center">
-          <a
+          <Link
             href="/catalog"
             className="font-mono text-sm font-bold uppercase tracking-widest text-primary underline decoration-2 underline-offset-8 transition-colors hover:text-foreground"
           >
             VIEW FULL CATALOG //
-          </a>
+          </Link>
         </div>
       </div>
     </section>

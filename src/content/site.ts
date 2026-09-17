@@ -523,6 +523,22 @@ const rawSiteContent: SiteConfig = {
   ],
   quickTools: [
     {
+      id: "self-hosted-privacy-audit",
+      title: "Self-Hosted AI Privacy Audit",
+      category: "Diagnostics",
+      badge: "LIVE // Free, No Signup",
+      description:
+        "Instant, privacy-redacted audit of a self-hosted AI stack: does inference actually stay on your box, is auth enforced, is billing metered, and are secrets exposed. Paste a stack description and get a score plus findings.",
+      outcome:
+        "A 0-100 sovereignty score with prioritized findings and concrete next actions.",
+      estimatedTime: "1 min",
+      inputs: ["Stack description or system snapshot"],
+      outputs: ["Sovereignty score", "Prioritized findings", "Next actions"],
+      href: "https://audit.aiautomatedsystems.ca/",
+      iconName: "ShieldAlert",
+      featured: true,
+    },
+    {
       id: "policy-studio",
       title: "Policy & Guardrail Studio",
       category: "Studios",

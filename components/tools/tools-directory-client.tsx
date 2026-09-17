@@ -345,10 +345,21 @@ export function ToolsDirectoryClient({ tools }: { tools: QuickToolItem[] }) {
                   asChild
                   className="w-full rounded-none border-2 border-border bg-background font-mono text-xs font-bold uppercase tracking-wider text-foreground transition-all group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground"
                 >
-                  <Link href={tool.href}>
-                    Launch Tool
-                    <ChevronRight className="ml-1.5 h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </Link>
+                  {/^https?:\/\//.test(tool.href) ? (
+                    <a
+                      href={tool.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Launch Tool
+                      <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
+                    </a>
+                  ) : (
+                    <Link href={tool.href}>
+                      Launch Tool
+                      <ChevronRight className="ml-1.5 h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
+                  )}
                 </Button>
               </div>
             </motion.div>

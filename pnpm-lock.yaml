@@ -14,225 +14,227 @@ overrides:
   js-yaml@>=3.0.0 <3.15.2: '>=3.15.2'
   js-yaml@>=4.0.0 <4.3.2: '>=4.3.2'
 
-dependencies:
-  '@radix-ui/react-accordion':
-    specifier: ^1.2.20
-    version: 1.2.20(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-checkbox':
-    specifier: ^1.3.11
-    version: 1.3.11(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-collapsible':
-    specifier: ^1.1.20
-    version: 1.1.20(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-dialog':
-    specifier: ^1.1.23
-    version: 1.1.23(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-dropdown-menu':
-    specifier: ^2.1.24
-    version: 2.1.24(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-label':
-    specifier: ^2.1.15
-    version: 2.1.15(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-popover':
-    specifier: ^1.1.23
-    version: 1.1.23(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-progress':
-    specifier: ^1.1.16
-    version: 1.1.16(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-radio-group':
-    specifier: ^1.4.7
-    version: 1.4.7(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-scroll-area':
-    specifier: ^1.2.18
-    version: 1.2.18(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-select':
-    specifier: ^2.3.7
-    version: 2.3.7(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-slider':
-    specifier: ^1.4.7
-    version: 1.4.7(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-slot':
-    specifier: ^1.3.3
-    version: 1.3.3(@types/react@19.3.0)(react@19.3.0)
-  '@radix-ui/react-switch':
-    specifier: ^1.3.7
-    version: 1.3.7(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-tabs':
-    specifier: ^1.1.21
-    version: 1.1.21(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-toast':
-    specifier: ^1.2.23
-    version: 1.2.23(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@radix-ui/react-tooltip':
-    specifier: ^1.2.16
-    version: 1.2.16(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@tailwindcss/typography':
-    specifier: ^0.5.20
-    version: 0.5.20(tailwindcss@3.4.19)
-  '@vercel/analytics':
-    specifier: ^2.0.1
-    version: 2.0.1(next@16.3.5)(react@19.3.0)
-  '@vercel/speed-insights':
-    specifier: ^1.3.1
-    version: 1.3.1(next@16.3.5)(react@19.3.0)
-  class-variance-authority:
-    specifier: ^0.7.1
-    version: 0.7.1
-  clsx:
-    specifier: ^2.1.1
-    version: 2.1.1
-  dompurify:
-    specifier: ^3.4.15
-    version: 3.4.15
-  framer-motion:
-    specifier: ^13.4.0
-    version: 13.4.0(react-dom@19.3.0)(react@19.3.0)
-  lucide-react:
-    specifier: ^1.47.0
-    version: 1.47.0(react@19.3.0)
-  next:
-    specifier: ^16.3.5
-    version: 16.3.5(@babel/core@7.29.7)(@playwright/test@1.63.0)(@types/node@26.6.2)(react-dom@19.3.0)(react@19.3.0)
-  react:
-    specifier: ^19.3.0
-    version: 19.3.0
-  react-dom:
-    specifier: ^19.3.0
-    version: 19.3.0(react@19.3.0)
-  tailwind-merge:
-    specifier: ^3.7.0
-    version: 3.7.0
-  tailwindcss-animate:
-    specifier: ^1.0.7
-    version: 1.0.7(tailwindcss@3.4.19)
-  zod:
-    specifier: ^4.6.5
-    version: 4.6.5
+importers:
 
-devDependencies:
-  '@eslint/js':
-    specifier: ^9.39.2
-    version: 9.39.5
-  '@lhci/cli':
-    specifier: ^0.15.1
-    version: 0.15.1
-  '@next/eslint-plugin-next':
-    specifier: ^16.3.5
-    version: 16.3.5(eslint@9.39.5)
-  '@playwright/test':
-    specifier: ^1.63.0
-    version: 1.63.0
-  '@testing-library/dom':
-    specifier: ^10.4.2
-    version: 10.4.2
-  '@testing-library/jest-dom':
-    specifier: ^7.0.1
-    version: 7.0.1(@testing-library/dom@10.4.2)(vitest@4.1.11)
-  '@testing-library/react':
-    specifier: ^16.3.3
-    version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
-  '@testing-library/user-event':
-    specifier: ^14.6.7
-    version: 14.6.7(@testing-library/dom@10.4.2)
-  '@types/jsdom':
-    specifier: ^30.0.0
-    version: 30.0.0
-  '@types/node':
-    specifier: ^26.6.2
-    version: 26.6.2
-  '@types/react':
-    specifier: ^19.3.0
-    version: 19.3.0
-  '@types/react-dom':
-    specifier: ^19.3.0
-    version: 19.3.0(@types/react@19.3.0)
-  '@vitejs/plugin-react':
-    specifier: ^6.1.1
-    version: 6.1.1(vite@8.3.0)
-  '@vitest/coverage-v8':
-    specifier: ^4.1.10
-    version: 4.1.11(vitest@4.1.11)
-  autoprefixer:
-    specifier: ^10.6.1
-    version: 10.6.1(postcss@8.5.28)
-  axe-playwright:
-    specifier: ^1.2.3
-    version: 1.2.3(playwright@1.63.0)
-  esbuild:
-    specifier: 0.28.2
-    version: 0.28.2
-  eslint:
-    specifier: ^9.39.2
-    version: 9.39.5
-  eslint-plugin-import:
-    specifier: ^2.32.0
-    version: 2.32.0(@typescript-eslint/parser@8.70.0)(eslint@9.39.5)
-  eslint-plugin-jsx-a11y:
-    specifier: ^6.10.2
-    version: 6.10.2(eslint@9.39.5)
-  eslint-plugin-react:
-    specifier: ^7.37.5
-    version: 7.37.5(eslint@9.39.5)
-  eslint-plugin-react-hooks:
-    specifier: ^7.1.1
-    version: 7.1.1(eslint@9.39.5)
-  eslint-plugin-react-refresh:
-    specifier: ^0.5.7
-    version: 0.5.7(eslint@9.39.5)
-  eslint-plugin-unused-imports:
-    specifier: ^4.4.1
-    version: 4.4.1(eslint@9.39.5)
-  globals:
-    specifier: ^17.12.0
-    version: 17.12.0
-  happy-dom:
-    specifier: ^20.14.5
-    version: 20.14.5
-  husky:
-    specifier: ^8.0.3
-    version: 8.0.3
-  jsdom:
-    specifier: ^30.1.0
-    version: 30.1.0
-  lint-staged:
-    specifier: ^15.5.2
-    version: 15.5.2
-  next-router-mock:
-    specifier: ^1.0.5
-    version: 1.0.5(next@16.3.5)(react@19.3.0)
-  playwright:
-    specifier: ^1.63.0
-    version: 1.63.0
-  postcss:
-    specifier: '>=8.5.15'
-    version: 8.5.28
-  prettier:
-    specifier: ^3.9.8
-    version: 3.9.8
-  sharp:
-    specifier: 0.35.4
-    version: 0.35.4(@types/node@26.6.2)
-  tailwindcss:
-    specifier: ^3.4.17
-    version: 3.4.19(tsx@4.23.13)
-  tsx:
-    specifier: ^4.23.13
-    version: 4.23.13
-  typescript:
-    specifier: ^6.0.3
-    version: 6.0.3
-  typescript-eslint:
-    specifier: ^8.70.0
-    version: 8.70.0(eslint@9.39.5)(typescript@6.0.3)
-  undici:
-    specifier: ^8.10.2
-    version: 8.10.2
-  vite:
-    specifier: ^8.3.0
-    version: 8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(tsx@4.23.13)
-  vitest:
-    specifier: ^4.1.10
-    version: 4.1.11(@types/node@26.6.2)(@vitest/coverage-v8@4.1.11)(happy-dom@20.14.5)(jsdom@30.1.0)(vite@8.3.0)
+  .:
+    dependencies:
+      '@radix-ui/react-accordion':
+        specifier: ^1.2.20
+        version: 1.2.20(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-checkbox':
+        specifier: ^1.3.11
+        version: 1.3.11(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-collapsible':
+        specifier: ^1.1.20
+        version: 1.1.20(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-dialog':
+        specifier: ^1.1.23
+        version: 1.1.23(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-dropdown-menu':
+        specifier: ^2.1.24
+        version: 2.1.24(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-label':
+        specifier: ^2.1.15
+        version: 2.1.15(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-popover':
+        specifier: ^1.1.23
+        version: 1.1.23(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-progress':
+        specifier: ^1.1.16
+        version: 1.1.16(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-radio-group':
+        specifier: ^1.4.7
+        version: 1.4.7(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-scroll-area':
+        specifier: ^1.2.18
+        version: 1.2.18(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-select':
+        specifier: ^2.3.7
+        version: 2.3.7(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-slider':
+        specifier: ^1.4.7
+        version: 1.4.7(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-slot':
+        specifier: ^1.3.3
+        version: 1.3.3(@types/react@19.3.0)(react@19.3.0)
+      '@radix-ui/react-switch':
+        specifier: ^1.3.7
+        version: 1.3.7(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-tabs':
+        specifier: ^1.1.21
+        version: 1.1.21(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-toast':
+        specifier: ^1.2.23
+        version: 1.2.23(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@radix-ui/react-tooltip':
+        specifier: ^1.2.16
+        version: 1.2.16(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@tailwindcss/typography':
+        specifier: ^0.5.20
+        version: 0.5.20(tailwindcss@3.4.19)
+      '@vercel/analytics':
+        specifier: ^2.0.1
+        version: 2.0.1(next@16.3.5)(react@19.3.0)
+      '@vercel/speed-insights':
+        specifier: ^1.3.1
+        version: 1.3.1(next@16.3.5)(react@19.3.0)
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      dompurify:
+        specifier: ^3.4.16
+        version: 3.4.16
+      framer-motion:
+        specifier: ^13.4.0
+        version: 13.4.0(react-dom@19.3.0)(react@19.3.0)
+      lucide-react:
+        specifier: ^1.47.0
+        version: 1.47.0(react@19.3.0)
+      next:
+        specifier: ^16.3.5
+        version: 16.3.5(@babel/core@7.29.7)(@playwright/test@1.63.0)(@types/node@26.6.2)(react-dom@19.3.0)(react@19.3.0)
+      react:
+        specifier: ^19.3.0
+        version: 19.3.0
+      react-dom:
+        specifier: ^19.3.0
+        version: 19.3.0(react@19.3.0)
+      tailwind-merge:
+        specifier: ^3.7.0
+        version: 3.7.0
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@3.4.19)
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@eslint/js':
+        specifier: ^9.39.2
+        version: 9.39.5
+      '@lhci/cli':
+        specifier: ^0.15.1
+        version: 0.15.1
+      '@next/eslint-plugin-next':
+        specifier: ^16.3.5
+        version: 16.3.5(eslint@9.39.5)
+      '@playwright/test':
+        specifier: ^1.63.0
+        version: 1.63.0
+      '@testing-library/dom':
+        specifier: ^10.4.2
+        version: 10.4.2
+      '@testing-library/jest-dom':
+        specifier: ^7.0.1
+        version: 7.0.1(@testing-library/dom@10.4.2)(vitest@4.1.11)
+      '@testing-library/react':
+        specifier: ^16.3.3
+        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
+      '@testing-library/user-event':
+        specifier: ^14.6.7
+        version: 14.6.7(@testing-library/dom@10.4.2)
+      '@types/jsdom':
+        specifier: ^30.0.0
+        version: 30.0.0
+      '@types/node':
+        specifier: ^26.6.2
+        version: 26.6.2
+      '@types/react':
+        specifier: ^19.3.0
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: ^19.3.0
+        version: 19.3.0(@types/react@19.3.0)
+      '@vitejs/plugin-react':
+        specifier: ^6.1.1
+        version: 6.1.1(vite@8.3.0)
+      '@vitest/coverage-v8':
+        specifier: ^4.1.10
+        version: 4.1.11(vitest@4.1.11)
+      autoprefixer:
+        specifier: ^10.6.1
+        version: 10.6.1(postcss@8.5.28)
+      axe-playwright:
+        specifier: ^1.2.3
+        version: 1.2.3(playwright@1.63.0)
+      esbuild:
+        specifier: 0.28.2
+        version: 0.28.2
+      eslint:
+        specifier: ^9.39.2
+        version: 9.39.5
+      eslint-plugin-import:
+        specifier: ^2.32.0
+        version: 2.32.0(@typescript-eslint/parser@8.70.0)(eslint@9.39.5)
+      eslint-plugin-jsx-a11y:
+        specifier: ^6.10.2
+        version: 6.10.2(eslint@9.39.5)
+      eslint-plugin-react:
+        specifier: ^7.37.5
+        version: 7.37.5(eslint@9.39.5)
+      eslint-plugin-react-hooks:
+        specifier: ^7.1.1
+        version: 7.1.1(eslint@9.39.5)
+      eslint-plugin-react-refresh:
+        specifier: ^0.5.7
+        version: 0.5.7(eslint@9.39.5)
+      eslint-plugin-unused-imports:
+        specifier: ^4.4.1
+        version: 4.4.1(eslint@9.39.5)
+      globals:
+        specifier: ^17.12.0
+        version: 17.12.0
+      happy-dom:
+        specifier: ^20.14.5
+        version: 20.14.5
+      husky:
+        specifier: ^8.0.3
+        version: 8.0.3
+      jsdom:
+        specifier: ^30.1.0
+        version: 30.1.0
+      lint-staged:
+        specifier: ^15.5.2
+        version: 15.5.2
+      next-router-mock:
+        specifier: ^1.0.5
+        version: 1.0.5(next@16.3.5)(react@19.3.0)
+      playwright:
+        specifier: ^1.63.0
+        version: 1.63.0
+      postcss:
+        specifier: '>=8.5.15'
+        version: 8.5.28
+      prettier:
+        specifier: ^3.9.8
+        version: 3.9.8
+      sharp:
+        specifier: 0.35.4
+        version: 0.35.4(@types/node@26.6.2)
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.19(tsx@4.23.13)
+      tsx:
+        specifier: ^4.23.13
+        version: 4.23.13
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      typescript-eslint:
+        specifier: ^8.70.0
+        version: 8.70.0(eslint@9.39.5)(typescript@6.0.3)
+      undici:
+        specifier: ^8.10.2
+        version: 8.10.2
+      vite:
+        specifier: ^8.3.0
+        version: 8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(tsx@4.23.13)
+      vitest:
+        specifier: ^4.1.10
+        version: 4.1.11(@types/node@26.6.2)(@vitest/coverage-v8@4.1.11)(happy-dom@20.14.5)(jsdom@30.1.0)(vite@8.3.0)
 
 packages:
 
@@ -3233,8 +3235,8 @@ packages:
         optional: true
     dev: true
 
-  /bare-fs@4.8.1:
-    resolution: {integrity: sha512-N1nnXdHZAOSstz0XiHikGS4HGMH4CnSwhqWdGQQMqqdvp4Jybm9sE3R1WVnpWVd4SFkc8ryPDBLViNLwiEqECg==}
+  /bare-fs@4.8.2:
+    resolution: {integrity: sha512-+ZI68KHMUvosXfKbg/UOHK0tbCdRnegbvPEdEcZ3Nd6TetieQsJPRXBRXPdLyy8+3VSEbPXtsumTpEtt78xv9w==}
     engines: {bare: '>=1.28.0'}
     peerDependencies:
       bare-buffer: '*'
@@ -3865,8 +3867,8 @@ packages:
     resolution: {integrity: sha512-7ZgogeTnjuHbo+ct10G9Ffp0mif17idi0IyWNVA/wcwcm7NPOD/WEHVP3n7n3MhXqxoIYm8d6MuZohYWIZ4T3w==}
     dev: true
 
-  /dompurify@3.4.15:
-    resolution: {integrity: sha512-EUBjM+B+lkDE41iE82DDSCfkoPGfXx8IxFxPMjNzm/Uk4xDet77rTN9wqlxlVg71kK7XGuUMv6wUxJUwwv+Xyw==}
+  /dompurify@3.4.16:
+    resolution: {integrity: sha512-sqo+pNp3qRhCIpbgRi1y8Tgk27Bo2Ry7w0dC1NBeNTdZChWjz9Xb/KOoZbRP/R6pQZ80Qw8YhXw13hWWBbMRnQ==}
     optionalDependencies:
       '@types/trusted-types': 2.0.7
     dev: false
@@ -7425,7 +7427,7 @@ packages:
       pump: 3.0.4
       tar-stream: 3.2.0
     optionalDependencies:
-      bare-fs: 4.8.1
+      bare-fs: 4.8.2
       bare-path: 3.1.2
     transitivePeerDependencies:
       - bare-abort-controller
@@ -7437,7 +7439,7 @@ packages:
     resolution: {integrity: sha512-ojzvCvVaNp6aOTFmG7jaRD0meowIAuPc3cMMhSgKiVWws1GyHbGd/xvnyuRKcKlMpt3qvxx6r0hreCNITP9hIg==}
     dependencies:
       b4a: 1.8.1
-      bare-fs: 4.8.1
+      bare-fs: 4.8.2
       fast-fifo: 1.3.2
       streamx: 2.28.0
     transitivePeerDependencies:

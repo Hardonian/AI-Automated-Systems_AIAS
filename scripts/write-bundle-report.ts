@@ -34,4 +34,7 @@ const report = [
 const target = process.env.GITHUB_STEP_SUMMARY || "bundle-report.md";
 if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(target, `${report}\n`);
 else writeFileSync(target, `${report}\n`);
+// Always also write the standalone file — the sticky PR comment action reads
+// bundle-report.md, and GITHUB_STEP_SUMMARY alone left it missing in CI.
+writeFileSync("bundle-report.md", `${report}\n`);
 console.log(report);

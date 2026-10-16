@@ -139,6 +139,7 @@ const allowedWorkflows = new Set([
   ".github/workflows/bundle-analysis-pr.yml",
   ".github/workflows/dependency-review.yml",
   ".github/workflows/performance.yml",
+  ".github/workflows/refresh-visual-baselines.yml",
   ".github/workflows/security.yml",
   ".github/workflows/systems-metrics.yml",
   ".github/workflows/verify.yml",

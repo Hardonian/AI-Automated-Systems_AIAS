@@ -59,6 +59,14 @@ const FOOTER_COLUMNS = [
         href: "/blueprints/resilient-agent-release-pipeline",
       },
       { label: "Certification Path", href: "/certification" },
+      {
+        label: "Store — Tools, Packs & Audits",
+        href: "https://hardonia.store",
+      },
+      {
+        label: "Live Platform Truth",
+        href: "https://hardonia.store/platform-truth",
+      },
     ],
   },
   {

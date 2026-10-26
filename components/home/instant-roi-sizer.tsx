@@ -150,21 +150,33 @@ export function InstantRoiSizer() {
           <span className="font-mono text-xs font-bold uppercase text-muted-foreground mr-1">
             Quick Presets:
           </span>
-          {PRESETS.map((p) => (
-            <button
-              className={`px-4 py-2 font-mono text-xs font-bold uppercase border-2 transition-all ${
-                activePreset === p.id
-                  ? "border-cyan-500 bg-cyan-500/15 text-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.3)]"
-                  : "border-border bg-background/60 text-muted-foreground hover:border-foreground hover:text-foreground"
-              }`}
-              key={p.id}
-              onClick={() => applyPreset(p)}
-              type="button"
-            >
-              {p.name}{" "}
-              <span className="opacity-70 font-normal">({p.badge})</span>
-            </button>
-          ))}
+          {PRESETS.map((p) => {
+            const isActive = activePreset === p.id;
+            return (
+              <button
+                aria-pressed={isActive}
+                className={`px-4 py-2 font-mono text-xs font-bold uppercase border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 ${
+                  isActive
+                    ? "border-cyan-500 bg-cyan-500/15 text-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.3)]"
+                    : "border-border bg-card text-foreground hover:border-cyan-500/60 hover:text-foreground"
+                }`}
+                key={p.id}
+                onClick={() => applyPreset(p)}
+                type="button"
+              >
+                {p.name}{" "}
+                <span
+                  className={
+                    isActive
+                      ? "text-cyan-300 font-normal"
+                      : "text-muted-foreground font-normal"
+                  }
+                >
+                  ({p.badge})
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Main 2-Column Sizer Layout */}

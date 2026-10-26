@@ -75,10 +75,8 @@ export function PageSection({
 export function SurfaceCard({
   children,
   className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
+  ...props
+}: React.ComponentPropsWithoutRef<"article">) {
   return (
     <article
       className={cn(
@@ -87,6 +85,7 @@ export function SurfaceCard({
         "border bg-card p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_hsl(var(--primary))] hover:border-primary backdrop-blur-sm",
         className,
       )}
+      {...props}
     >
       {children}
     </article>

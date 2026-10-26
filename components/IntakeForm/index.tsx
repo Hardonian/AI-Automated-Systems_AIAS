@@ -249,6 +249,10 @@ export function IntakeForm({
     hours?: number;
     team?: number;
     ref?: string;
+    grade?: string;
+    score?: number;
+    workload?: string;
+    track?: string;
   } | null>(null);
   const [progressRestored, setProgressRestored] = useState(false);
   const [attribution, setAttribution] =
@@ -333,14 +337,27 @@ export function IntakeForm({
     const hoursParam = search.get("hours");
     const teamParam = search.get("team");
     const refParam = search.get("ref");
+    const gradeParam = search.get("grade");
+    const scoreParam = search.get("score");
+    const workloadParam = search.get("workload");
+    const trackParam = search.get("track");
 
     const contextFound =
-      savingsParam || hoursParam || teamParam || refParam
+      savingsParam ||
+      hoursParam ||
+      teamParam ||
+      refParam ||
+      gradeParam ||
+      scoreParam
         ? {
             savings: savingsParam ? parseInt(savingsParam, 10) : undefined,
             hours: hoursParam ? parseInt(hoursParam, 10) : undefined,
             team: teamParam ? parseInt(teamParam, 10) : undefined,
             ref: refParam ?? undefined,
+            grade: gradeParam ?? undefined,
+            score: scoreParam ? parseInt(scoreParam, 10) : undefined,
+            workload: workloadParam ?? undefined,
+            track: trackParam ?? undefined,
           }
         : null;
 
@@ -373,6 +390,19 @@ export function IntakeForm({
             workflowSummary:
               prev.workflowSummary ||
               `Targeting automation capacity across ${teamLabel} to recover ~${hoursLabel} with projected annual efficiency value of $${savingsFormatted}.`,
+          }));
+        } else if (contextFound.grade && contextFound.score) {
+          const workloadLabel = contextFound.workload
+            ? ` for ${contextFound.workload}`
+            : "";
+          const trackLabel = contextFound.track
+            ? ` (${contextFound.track})`
+            : "";
+          setValues((prev) => ({
+            ...prev,
+            workflowSummary:
+              prev.workflowSummary ||
+              `AIAS Diagnostic Assessment attached${workloadLabel}: Grade ${contextFound.grade} (${contextFound.score}/100)${trackLabel}. Requesting technical architecture review and boundary hardening roadmap.`,
           }));
         }
       }
@@ -721,6 +751,23 @@ export function IntakeForm({
                 : ""}
             </p>
           ) : null}
+          {roiContext.grade && roiContext.score ? (
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <span className="font-mono text-xs px-2 py-0.5 border border-cyan-400 bg-cyan-400/20 text-cyan-300 font-bold">
+                Grade {roiContext.grade} ({roiContext.score}/100)
+              </span>
+              {roiContext.workload ? (
+                <span className="font-mono text-xs text-foreground uppercase">
+                  Workload: {roiContext.workload}
+                </span>
+              ) : null}
+              {roiContext.track ? (
+                <span className="font-mono text-xs text-muted-foreground">
+                  · Track: {roiContext.track}
+                </span>
+              ) : null}
+            </div>
+          ) : null}
           <p className="mt-1 text-xs text-muted-foreground font-mono">
             Intake and scope engineering will be structured directly against
             this capacity target.
@@ -749,7 +796,14 @@ export function IntakeForm({
           Step {stepIndex + 1} of {steps.length}
         </p>
         <h2 className="text-2xl font-bold">{activeStep.title}</h2>
-        <div className="mt-3 h-2 w-full rounded-full bg-muted">
+        <div
+          aria-label="Intake wizard progress"
+          aria-valuemax={100}
+          aria-valuemin={0}
+          aria-valuenow={completion}
+          className="mt-3 h-2 w-full rounded-full bg-muted overflow-hidden"
+          role="progressbar"
+        >
           <div
             className="h-2 rounded-full bg-primary transition-all"
             style={{ width: `${completion}%` }}

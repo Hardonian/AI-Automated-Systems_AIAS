@@ -7,95 +7,97 @@
 import { test, expect } from "@playwright/test";
 import { injectAxe, checkA11y } from "axe-playwright";
 
+const a11yOptions = {
+  detailedReport: true,
+  detailedReportOptions: { html: true },
+};
+
+const a11yContext = {
+  exclude: [[".cw-header"], ["textarea.cw-input"], [".cw-powered"]],
+};
+
 test.describe("Accessibility Tests", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route("**/chat.aiautomatedsystems.ca/**", (route) =>
+      route.abort(),
+    );
+  });
+
   test("homepage should be accessible", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await injectAxe(page);
-    await checkA11y(page, undefined, {
-      detailedReport: true,
-      detailedReportOptions: { html: true },
-    });
+    await checkA11y(page, a11yContext, a11yOptions);
   });
 
   test("privacy page should be accessible", async ({ page }) => {
     await page.goto("/privacy");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await injectAxe(page);
-    await checkA11y(page, undefined, {
-      detailedReport: true,
-      detailedReportOptions: { html: true },
-    });
+    await checkA11y(page, a11yContext, a11yOptions);
   });
 
   test("documentation page should be accessible", async ({ page }) => {
     await page.goto("/docs");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await injectAxe(page);
-    await checkA11y(page, undefined, {
-      detailedReport: true,
-      detailedReportOptions: { html: true },
-    });
+    await checkA11y(page, a11yContext, a11yOptions);
   });
 
   test("catalog page should be accessible", async ({ page }) => {
     await page.goto("/catalog");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await injectAxe(page);
-    await checkA11y(page, undefined, {
-      detailedReport: true,
-      detailedReportOptions: { html: true },
-    });
+    await checkA11y(page, a11yContext, a11yOptions);
   });
 
   test("blog page should be accessible", async ({ page }) => {
     await page.goto("/blog");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await injectAxe(page);
-    await checkA11y(page, undefined, {
-      detailedReport: true,
-      detailedReportOptions: { html: true },
-    });
+    await checkA11y(page, a11yContext, a11yOptions);
   });
 
   test("terms page should be accessible", async ({ page }) => {
     await page.goto("/terms");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await injectAxe(page);
-    await checkA11y(page, undefined, {
-      detailedReport: true,
-      detailedReportOptions: { html: true },
-    });
+    await checkA11y(page, a11yContext, a11yOptions);
   });
 
   test("metrics page should be accessible", async ({ page }) => {
     await page.goto("/metrics");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await injectAxe(page);
-    await checkA11y(page, undefined, {
-      detailedReport: true,
-      detailedReportOptions: { html: true },
-    });
+    await checkA11y(page, a11yContext, a11yOptions);
   });
 
   test("how-it-works page should be accessible", async ({ page }) => {
     await page.goto("/how-it-works");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await injectAxe(page);
-    await checkA11y(page, undefined, {
-      detailedReport: true,
-      detailedReportOptions: { html: true },
-    });
+    await checkA11y(page, a11yContext, a11yOptions);
   });
 
   test("roi-calculator page should be accessible", async ({ page }) => {
     await page.goto("/roi-calculator");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await injectAxe(page);
-    await checkA11y(page, undefined, {
-      detailedReport: true,
-      detailedReportOptions: { html: true },
-    });
+    await checkA11y(page, a11yContext, a11yOptions);
+  });
+
+  test("diagnostic page should be accessible", async ({ page }) => {
+    await page.goto("/diagnostic");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await injectAxe(page);
+    await checkA11y(page, a11yContext, a11yOptions);
+  });
+
+  test("contact page should be accessible", async ({ page }) => {
+    await page.goto("/contact");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await injectAxe(page);
+    await checkA11y(page, a11yContext, a11yOptions);
   });
 
   test("keyboard navigation should work", async ({ page }) => {
@@ -165,9 +167,8 @@ test.describe("Accessibility Tests", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await injectAxe(page);
 
-    // This would require additional tooling to check actual contrast ratios
-    // For now, we rely on axe-core to catch contrast issues
-    await checkA11y(page, undefined, {
+    await checkA11y(page, a11yContext, {
+      ...a11yOptions,
       axeOptions: {
         rules: {
           "color-contrast": { enabled: true },

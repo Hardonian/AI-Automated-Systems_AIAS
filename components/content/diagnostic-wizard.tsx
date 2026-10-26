@@ -122,18 +122,30 @@ export function DiagnosticWizard() {
   ]);
 
   const [copied, setCopied] = useState(false);
+  const [rfcCopied, setRfcCopied] = useState(false);
+  const [announcement, setAnnouncement] = useState("");
   const formId = useId();
 
   const toggleRisk = (riskId: string) => {
-    setSelectedRisks((prev) =>
-      prev.includes(riskId)
+    setSelectedRisks((prev) => {
+      const exists = prev.includes(riskId);
+      const updated = exists
         ? prev.filter((r) => r !== riskId)
-        : [...prev, riskId],
-    );
+        : [...prev, riskId];
+      const item = FAILURE_MODES.find((f) => f.id === riskId);
+      setAnnouncement(
+        `${item?.label ?? riskId} ${exists ? "removed from" : "added to"} priority guardrails.`,
+      );
+      return updated;
+    });
   };
 
   const handleAllocationChange = (id: string, mode: AllocationMode) => {
     setAllocations((prev) => ({ ...prev, [id]: mode }));
+    const cap = DEFAULT_CAPABILITIES.find((c) => c.id === id);
+    setAnnouncement(
+      `Set ${cap?.label ?? id} to ${mode.toUpperCase()} execution.`,
+    );
   };
 
   // Evaluation algorithm based on deterministic engineering principles
@@ -175,6 +187,24 @@ export function DiagnosticWizard() {
     return { score, grade, status, recommendation, track };
   }, [allocations]);
 
+  const composition = useMemo(() => {
+    const total = DEFAULT_CAPABILITIES.length;
+    const values = Object.values(allocations);
+    const deterministicCount = values.filter(
+      (v) => v === "deterministic",
+    ).length;
+    const hybridCount = values.filter((v) => v === "hybrid").length;
+    const aiCount = values.filter((v) => v === "ai").length;
+    return {
+      deterministicPct: Math.round((deterministicCount / total) * 100),
+      hybridPct: Math.round((hybridCount / total) * 100),
+      aiPct: Math.round((aiCount / total) * 100),
+      deterministicCount,
+      hybridCount,
+      aiCount,
+    };
+  }, [allocations]);
+
   const briefMarkdown = useMemo(() => {
     return [
       "# AIAS Architecture Clarity Diagnostic Brief",
@@ -200,6 +230,7 @@ export function DiagnosticWizard() {
       `- **Maturity Score:** ${evaluation.score}/100 (Grade ${evaluation.grade})`,
       `- **Posture:** ${evaluation.status}`,
       `- **Recommended Track:** ${evaluation.track}`,
+      `- **Deterministic Balance:** ${composition.deterministicPct}% deterministic / ${composition.hybridPct}% hybrid / ${composition.aiPct}% probabilistic`,
       "",
       `## 5. Architectural Guidance`,
       evaluation.recommendation,
@@ -207,7 +238,59 @@ export function DiagnosticWizard() {
       "---",
       "*AI Automated Systems (AIAS) · aiautomatedsystems.ca*",
     ].join("\n");
-  }, [workload, volume, latency, allocations, selectedRisks, evaluation]);
+  }, [
+    workload,
+    volume,
+    latency,
+    allocations,
+    selectedRisks,
+    evaluation,
+    composition,
+  ]);
+
+  const rfcMarkdown = useMemo(() => {
+    return [
+      `# RFC: Architectural Governance & Boundary Isolation for ${workload.toUpperCase()}`,
+      `**Target Status:** ${evaluation.status} (Reliability Index: ${evaluation.score}/100, Grade ${evaluation.grade})`,
+      `**Recommended Track:** ${evaluation.track}`,
+      "",
+      "## 1. Problem Statement & Operational Boundary",
+      `Our current ${workload} workflow processes at **${volume} volume** with a **${latency} latency target**.`,
+      "To prevent silent non-deterministic failures, the boundary allocation must strictly separate deterministic code invariants from generative inference.",
+      "",
+      "## 2. Invariant Boundary Mapping",
+      ...DEFAULT_CAPABILITIES.map((cap) => {
+        const mode = allocations[cap.id] ?? cap.recommended;
+        return `- **${cap.label}**: \`${mode.toUpperCase()}\` ${mode === cap.recommended ? "✓ Target Standard" : "⚠ Risk Drift Detected"}`;
+      }),
+      "",
+      "## 3. High-Priority Guardrail Mitigations",
+      ...selectedRisks.map((r) => {
+        const item = FAILURE_MODES.find((m) => m.id === r);
+        return `- **${item?.label ?? r}**: Enforce explicit code-level circuit breakers and sanitization gates.`;
+      }),
+      "",
+      "## 4. Architecture Composition",
+      `- Deterministic Foundation: ${composition.deterministicPct}%`,
+      `- Hybrid Verification: ${composition.hybridPct}%`,
+      `- Generative Inference: ${composition.aiPct}%`,
+      "",
+      "## 5. Next Implementation Steps",
+      "1. Refactor core calculations and policy checks to deterministic functions.",
+      "2. Wrap LLM calls in strict Zod schema validation and automated fallback handlers.",
+      "3. Conduct a 15-minute engineering architecture review with AIAS specialists.",
+      "",
+      "Generated via AIAS Diligence Engine (https://aiautomatedsystems.ca/diagnostic)",
+    ].join("\n");
+  }, [
+    workload,
+    volume,
+    latency,
+    allocations,
+    selectedRisks,
+    evaluation,
+    composition,
+  ]);
 
   const handleDownload = (format: "json" | "md") => {
     const filename = `aias-diagnostic-brief.${format}`;
@@ -222,6 +305,7 @@ export function DiagnosticWizard() {
           volume,
           latency,
           allocations,
+          composition,
           selectedRisks,
           evaluation,
         },
@@ -241,12 +325,23 @@ export function DiagnosticWizard() {
     anchor.download = filename;
     anchor.click();
     URL.revokeObjectURL(url);
+    setAnnouncement(
+      `Downloaded diagnostic brief in ${format.toUpperCase()} format.`,
+    );
   };
 
   const copyBrief = async () => {
     await navigator.clipboard.writeText(briefMarkdown);
     setCopied(true);
+    setAnnouncement("Diagnostic brief copied to clipboard.");
     setTimeout(() => setCopied(false), 2500);
+  };
+
+  const copyRfc = async () => {
+    await navigator.clipboard.writeText(rfcMarkdown);
+    setRfcCopied(true);
+    setAnnouncement("Engineering RFC copied to clipboard.");
+    setTimeout(() => setRfcCopied(false), 2500);
   };
 
   const resetAll = () => {
@@ -257,27 +352,41 @@ export function DiagnosticWizard() {
       ),
     );
     setSelectedRisks(["hallucination", "pii-leak"]);
+    setAnnouncement("Diagnostic wizard reset to default configurations.");
   };
 
   return (
     <div className="w-full space-y-8" id="diagnostic-wizard-root">
+      {/* Screen Reader Announcement Live Region */}
+      <div aria-live="polite" className="sr-only" role="status">
+        {announcement}
+      </div>
+
       {/* Top Wizard Steps Header */}
-      <div className="border-2 border-border bg-card p-4 sm:p-6 shadow-card">
+      <div
+        aria-label="Diagnostic Assessment Navigation"
+        className="border-2 border-border bg-card p-4 sm:p-6 shadow-card"
+        role="region"
+      >
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border pb-4">
           <div>
             <p className="font-mono text-xs font-bold uppercase tracking-widest text-primary">
               Interactive Diligence Engine
             </p>
-            <h3 className="font-mono text-lg font-black uppercase text-foreground">
+            <h2 className="font-mono text-lg font-black uppercase text-foreground">
               AI Clarity Diagnostic Assessment
-            </h3>
+            </h2>
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-bold uppercase text-muted-foreground">
+            <span
+              aria-current="step"
+              className="font-mono text-xs font-bold uppercase text-muted-foreground"
+            >
               Step {step} of 4
             </span>
             <button
-              className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors ml-2"
+              aria-label="Reset diagnostic assessment to default values"
+              className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors ml-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               onClick={resetAll}
               type="button"
             >
@@ -288,7 +397,11 @@ export function DiagnosticWizard() {
         </div>
 
         {/* Step Indicator Badges */}
-        <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <div
+          aria-label="Diagnostic assessment progress"
+          className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2"
+          role="tablist"
+        >
           {[
             { s: 1, name: "1. Workload Surface" },
             { s: 2, name: "2. Boundary Map" },
@@ -296,15 +409,22 @@ export function DiagnosticWizard() {
             { s: 4, name: "4. Architecture Brief" },
           ].map((item) => (
             <button
-              className={`px-3 py-2 text-left font-mono text-xs font-bold uppercase border transition-all ${
+              aria-controls={`step-panel-${item.s}`}
+              aria-selected={step === item.s}
+              className={`px-3 py-2 text-left font-mono text-xs font-bold uppercase border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                 step === item.s
                   ? "border-primary bg-primary/10 text-primary"
                   : step > item.s
                     ? "border-border text-foreground hover:border-primary/50"
-                    : "border-border/40 text-muted-foreground/60"
+                    : "border-border bg-card text-muted-foreground hover:text-foreground hover:border-primary/40"
               }`}
+              id={`step-tab-${item.s}`}
               key={item.s}
-              onClick={() => setStep(item.s as 1 | 2 | 3 | 4)}
+              onClick={() => {
+                setStep(item.s as 1 | 2 | 3 | 4);
+                setAnnouncement(`Navigated to Step ${item.s}: ${item.name}`);
+              }}
+              role="tab"
               type="button"
             >
               {item.name}
@@ -315,341 +435,426 @@ export function DiagnosticWizard() {
 
       {/* Step 1: Workload & Operating Pressure */}
       {step === 1 && (
-        <SurfaceCard className="border-2 border-border p-6 sm:p-8 space-y-6">
-          <div>
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-primary">
-              Section 01 // Baseline Requirements
-            </span>
-            <h4 className="mt-1 font-mono text-xl font-bold uppercase text-foreground">
-              Define the Operating Pressure on Your System
-            </h4>
-            <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-              Every robust automation architecture begins with explicit
-              boundaries around volume, latency budgets, and compliance scope.
-            </p>
-          </div>
-
-          <div className="space-y-6">
+        <div aria-labelledby="step-tab-1" id="step-panel-1" role="tabpanel">
+          <SurfaceCard className="border-2 border-border p-6 sm:p-8 space-y-6">
             <div>
-              <label
-                className="font-mono text-xs font-bold uppercase block mb-3 text-foreground"
-                htmlFor={`${formId}-workload`}
-              >
-                Workload Domain:
-              </label>
-              <div
-                className="grid sm:grid-cols-2 gap-3"
-                id={`${formId}-workload`}
-              >
-                {[
-                  {
-                    id: "financial-ops",
-                    title: "Financial & Invoicing Ops",
-                    desc: "Ledger syncing, invoice reconciliation, budget approvals",
-                  },
-                  {
-                    id: "customer-support",
-                    title: "Customer Support & Triage",
-                    desc: "Inbound ticket classification, knowledge retrieval, drafting",
-                  },
-                  {
-                    id: "engineering-automation",
-                    title: "Engineering & Release Fabric",
-                    desc: "CI verification, documentation sync, code review automation",
-                  },
-                  {
-                    id: "compliance-audit",
-                    title: "Regulatory & Compliance Audit",
-                    desc: "Policy enforcement, audit trail verification, data governance",
-                  },
-                ].map((item) => (
-                  <button
-                    className={`p-4 text-left border-2 transition-all ${
-                      workload === item.id
-                        ? "border-primary bg-primary/5 text-foreground shadow-sm"
-                        : "border-border bg-card/50 text-muted-foreground hover:border-border hover:text-foreground"
-                    }`}
-                    key={item.id}
-                    onClick={() => setWorkload(item.id as WorkloadType)}
-                    type="button"
-                  >
-                    <div className="font-mono text-xs font-bold uppercase text-foreground flex items-center justify-between">
-                      {item.title}
-                      {workload === item.id && (
-                        <CheckCircle2 className="h-4 w-4 text-primary" />
-                      )}
-                    </div>
-                    <p className="mt-1.5 text-xs text-muted-foreground">
-                      {item.desc}
-                    </p>
-                  </button>
-                ))}
-              </div>
+              <span className="font-mono text-xs font-bold uppercase tracking-widest text-primary">
+                Section 01 // Baseline Requirements
+              </span>
+              <h3 className="mt-1 font-mono text-xl font-bold uppercase text-foreground">
+                Define the Operating Pressure on Your System
+              </h3>
+              <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                Every robust automation architecture begins with explicit
+                boundaries around volume, latency budgets, and compliance scope.
+              </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-6 pt-4 border-t border-border">
+            <div className="space-y-6">
               <div>
-                <label className="font-mono text-xs font-bold uppercase block mb-3 text-foreground">
-                  Transaction / Request Volume:
-                </label>
-                <div className="space-y-2">
-                  {[
-                    { id: "low", title: "Low (< 1,000 requests/day)" },
-                    {
-                      id: "medium",
-                      title: "Medium (1,000 – 50,000 requests/day)",
-                    },
-                    { id: "high", title: "High (50,000+ requests/day)" },
-                  ].map((lvl) => (
-                    <button
-                      className={`w-full p-3 text-left font-mono text-xs border transition-all ${
-                        volume === lvl.id
-                          ? "border-primary bg-primary/10 text-primary font-bold"
-                          : "border-border text-muted-foreground hover:text-foreground"
-                      }`}
-                      key={lvl.id}
-                      onClick={() => setVolume(lvl.id as VolumeLevel)}
-                      type="button"
-                    >
-                      {lvl.title}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="font-mono text-xs font-bold uppercase block mb-3 text-foreground">
-                  Latency Budget:
-                </label>
-                <div className="space-y-2">
-                  {[
-                    { id: "realtime", title: "Sub-Second (< 500ms real-time)" },
-                    {
-                      id: "near-realtime",
-                      title: "Near-Real-Time (1s – 5s response)",
-                    },
-                    {
-                      id: "async",
-                      title: "Asynchronous (Queue & batch processing)",
-                    },
-                  ].map((lat) => (
-                    <button
-                      className={`w-full p-3 text-left font-mono text-xs border transition-all ${
-                        latency === lat.id
-                          ? "border-primary bg-primary/10 text-primary font-bold"
-                          : "border-border text-muted-foreground hover:text-foreground"
-                      }`}
-                      key={lat.id}
-                      onClick={() => setLatency(lat.id as LatencyTier)}
-                      type="button"
-                    >
-                      {lat.title}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-4 flex justify-end">
-            <Button
-              className="font-mono text-xs font-bold uppercase tracking-wider"
-              onClick={() => setStep(2)}
-              type="button"
-            >
-              Next: Boundary Allocation
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-        </SurfaceCard>
-      )}
-
-      {/* Step 2: Deterministic vs AI Boundary Allocation */}
-      {step === 2 && (
-        <SurfaceCard className="border-2 border-border p-6 sm:p-8 space-y-6">
-          <div>
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-primary">
-              Section 02 // Architectural Boundary Mapping
-            </span>
-            <h4 className="mt-1 font-mono text-xl font-bold uppercase text-foreground">
-              Map Deterministic vs. Probabilistic Components
-            </h4>
-            <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-              The #1 source of AI production failure is assigning
-              mission-critical invariants (math, permissions, schema
-              enforcement) to language models. Assign each pillar carefully.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            {DEFAULT_CAPABILITIES.map((cap) => {
-              const current = allocations[cap.id] ?? cap.recommended;
-              return (
-                <div
-                  className="p-4 border-2 border-border bg-card/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
-                  key={cap.id}
+                <label
+                  className="font-mono text-xs font-bold uppercase block mb-3 text-foreground"
+                  id={`${formId}-workload-label`}
                 >
-                  <div className="max-w-md">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold uppercase text-foreground">
-                        {cap.label}
-                      </span>
-                      {current === cap.recommended && (
-                        <span className="font-mono text-[10px] px-1.5 py-0.5 border border-primary/40 bg-primary/10 text-primary font-bold uppercase">
-                          Target Standard
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {cap.description}
-                    </p>
-                  </div>
+                  Workload Domain:
+                </label>
+                <div
+                  aria-labelledby={`${formId}-workload-label`}
+                  className="grid sm:grid-cols-2 gap-3"
+                  id={`${formId}-workload`}
+                  role="radiogroup"
+                >
+                  {[
+                    {
+                      id: "financial-ops",
+                      title: "Financial & Invoicing Ops",
+                      desc: "Ledger syncing, invoice reconciliation, budget approvals",
+                    },
+                    {
+                      id: "customer-support",
+                      title: "Customer Support & Triage",
+                      desc: "Inbound ticket classification, knowledge retrieval, drafting",
+                    },
+                    {
+                      id: "engineering-automation",
+                      title: "Engineering & Release Fabric",
+                      desc: "CI verification, documentation sync, code review automation",
+                    },
+                    {
+                      id: "compliance-audit",
+                      title: "Regulatory & Compliance Audit",
+                      desc: "Policy enforcement, audit trail verification, data governance",
+                    },
+                  ].map((item) => (
+                    <button
+                      aria-checked={workload === item.id}
+                      className={`p-4 text-left border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                        workload === item.id
+                          ? "border-primary bg-primary/5 text-foreground shadow-sm"
+                          : "border-border bg-card/50 text-muted-foreground hover:border-border hover:text-foreground"
+                      }`}
+                      key={item.id}
+                      onClick={() => {
+                        setWorkload(item.id as WorkloadType);
+                        setAnnouncement(`Selected workload: ${item.title}`);
+                      }}
+                      role="radio"
+                      type="button"
+                    >
+                      <div className="font-mono text-xs font-bold uppercase text-foreground flex items-center justify-between">
+                        {item.title}
+                        {workload === item.id && (
+                          <CheckCircle2 className="h-4 w-4 text-primary" />
+                        )}
+                      </div>
+                      <p className="mt-1.5 text-xs text-muted-foreground">
+                        {item.desc}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-                  <div className="flex items-center gap-1 shrink-0 w-full md:w-auto">
+              <div className="grid sm:grid-cols-2 gap-6 pt-4 border-t border-border">
+                <div>
+                  <label
+                    className="font-mono text-xs font-bold uppercase block mb-3 text-foreground"
+                    id={`${formId}-volume-label`}
+                  >
+                    Transaction / Request Volume:
+                  </label>
+                  <div
+                    aria-labelledby={`${formId}-volume-label`}
+                    className="space-y-2"
+                    role="radiogroup"
+                  >
                     {[
+                      { id: "low", title: "Low (< 1,000 requests/day)" },
                       {
-                        mode: "deterministic",
-                        label: "Deterministic",
-                        tag: "Code & Rules",
+                        id: "medium",
+                        title: "Medium (1,000 – 50,000 requests/day)",
                       },
-                      {
-                        mode: "hybrid",
-                        label: "Hybrid Gate",
-                        tag: "AI + Review",
-                      },
-                      {
-                        mode: "ai",
-                        label: "Model Only",
-                        tag: "Probabilistic",
-                      },
-                    ].map((opt) => (
+                      { id: "high", title: "High (50,000+ requests/day)" },
+                    ].map((lvl) => (
                       <button
-                        className={`flex-1 md:flex-none px-3 py-2 text-center border font-mono text-xs transition-all ${
-                          current === opt.mode
-                            ? "border-primary bg-primary text-primary-foreground font-bold shadow"
-                            : "border-border bg-card text-muted-foreground hover:border-foreground hover:text-foreground"
+                        aria-checked={volume === lvl.id}
+                        className={`w-full p-3 text-left font-mono text-xs border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                          volume === lvl.id
+                            ? "border-primary bg-primary/10 text-primary font-bold"
+                            : "border-border text-muted-foreground hover:text-foreground"
                         }`}
-                        key={opt.mode}
-                        onClick={() =>
-                          handleAllocationChange(
-                            cap.id,
-                            opt.mode as AllocationMode,
-                          )
-                        }
+                        key={lvl.id}
+                        onClick={() => {
+                          setVolume(lvl.id as VolumeLevel);
+                          setAnnouncement(
+                            `Selected transaction volume: ${lvl.title}`,
+                          );
+                        }}
+                        role="radio"
                         type="button"
                       >
-                        <div className="text-[11px] uppercase">{opt.label}</div>
-                        <div className="text-[9px] opacity-75">{opt.tag}</div>
+                        {lvl.title}
                       </button>
                     ))}
                   </div>
                 </div>
-              );
-            })}
-          </div>
 
-          <div className="pt-4 flex items-center justify-between border-t border-border">
-            <Button
-              className="font-mono text-xs font-bold uppercase"
-              onClick={() => setStep(1)}
-              type="button"
-              variant="outline"
-            >
-              Back
-            </Button>
-            <Button
-              className="font-mono text-xs font-bold uppercase tracking-wider"
-              onClick={() => setStep(3)}
-              type="button"
-            >
-              Next: Risk Ceilings
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-        </SurfaceCard>
+                <div>
+                  <label
+                    className="font-mono text-xs font-bold uppercase block mb-3 text-foreground"
+                    id={`${formId}-latency-label`}
+                  >
+                    Latency Budget:
+                  </label>
+                  <div
+                    aria-labelledby={`${formId}-latency-label`}
+                    className="space-y-2"
+                    role="radiogroup"
+                  >
+                    {[
+                      {
+                        id: "realtime",
+                        title: "Sub-Second (< 500ms real-time)",
+                      },
+                      {
+                        id: "near-realtime",
+                        title: "Near-Real-Time (1s – 5s response)",
+                      },
+                      {
+                        id: "async",
+                        title: "Asynchronous (Queue & batch processing)",
+                      },
+                    ].map((lat) => (
+                      <button
+                        aria-checked={latency === lat.id}
+                        className={`w-full p-3 text-left font-mono text-xs border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                          latency === lat.id
+                            ? "border-primary bg-primary/10 text-primary font-bold"
+                            : "border-border text-muted-foreground hover:text-foreground"
+                        }`}
+                        key={lat.id}
+                        onClick={() => {
+                          setLatency(lat.id as LatencyTier);
+                          setAnnouncement(
+                            `Selected latency target: ${lat.title}`,
+                          );
+                        }}
+                        role="radio"
+                        type="button"
+                      >
+                        {lat.title}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4 flex justify-end">
+              <Button
+                className="font-mono text-xs font-bold uppercase tracking-wider"
+                onClick={() => {
+                  setStep(2);
+                  setAnnouncement("Navigated to Step 2: Boundary Map.");
+                }}
+                type="button"
+              >
+                Next: Boundary Allocation
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </SurfaceCard>
+        </div>
+      )}
+
+      {/* Step 2: Deterministic vs AI Boundary Allocation */}
+      {step === 2 && (
+        <div aria-labelledby="step-tab-2" id="step-panel-2" role="tabpanel">
+          <SurfaceCard className="border-2 border-border p-6 sm:p-8 space-y-6">
+            <div>
+              <span className="font-mono text-xs font-bold uppercase tracking-widest text-primary">
+                Section 02 // Architectural Boundary Mapping
+              </span>
+              <h3 className="mt-1 font-mono text-xl font-bold uppercase text-foreground">
+                Map Deterministic vs. Probabilistic Components
+              </h3>
+              <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                The #1 source of AI production failure is assigning
+                mission-critical invariants (math, permissions, schema
+                enforcement) to language models. Assign each pillar carefully.
+              </p>
+            </div>
+
+            <ul className="space-y-4" role="list">
+              {DEFAULT_CAPABILITIES.map((cap) => {
+                const current = allocations[cap.id] ?? cap.recommended;
+                return (
+                  <li
+                    className="p-4 border-2 border-border bg-card/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+                    key={cap.id}
+                  >
+                    <div className="max-w-md">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-xs font-bold uppercase text-foreground">
+                          {cap.label}
+                        </span>
+                        {current === cap.recommended && (
+                          <span className="font-mono text-[10px] px-1.5 py-0.5 border border-primary/40 bg-primary/10 text-primary font-bold uppercase">
+                            Target Standard
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {cap.description}
+                      </p>
+                    </div>
+
+                    <div
+                      aria-label={`Execution model for ${cap.label}`}
+                      className="flex items-center gap-1 shrink-0 w-full md:w-auto"
+                      role="radiogroup"
+                    >
+                      {[
+                        {
+                          mode: "deterministic",
+                          label: "Deterministic",
+                          tag: "Code & Rules",
+                        },
+                        {
+                          mode: "hybrid",
+                          label: "Hybrid Gate",
+                          tag: "AI + Review",
+                        },
+                        {
+                          mode: "ai",
+                          label: "Model Only",
+                          tag: "Probabilistic",
+                        },
+                      ].map((opt) => (
+                        <button
+                          aria-checked={current === opt.mode}
+                          className={`flex-1 md:flex-none px-3 py-2 text-center border font-mono text-xs transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                            current === opt.mode
+                              ? "border-primary bg-primary text-primary-foreground font-bold shadow"
+                              : "border-border bg-card text-muted-foreground hover:border-foreground hover:text-foreground"
+                          }`}
+                          key={opt.mode}
+                          onClick={() =>
+                            handleAllocationChange(
+                              cap.id,
+                              opt.mode as AllocationMode,
+                            )
+                          }
+                          role="radio"
+                          type="button"
+                        >
+                          <div className="text-[11px] uppercase">
+                            {opt.label}
+                          </div>
+                          <div className="text-[9px] opacity-75">{opt.tag}</div>
+                        </button>
+                      ))}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+
+            <div className="pt-4 flex items-center justify-between border-t border-border">
+              <Button
+                className="font-mono text-xs font-bold uppercase"
+                onClick={() => {
+                  setStep(1);
+                  setAnnouncement("Navigated back to Step 1.");
+                }}
+                type="button"
+                variant="outline"
+              >
+                Back
+              </Button>
+              <Button
+                className="font-mono text-xs font-bold uppercase tracking-wider"
+                onClick={() => {
+                  setStep(3);
+                  setAnnouncement("Navigated to Step 3: Risk Ceilings.");
+                }}
+                type="button"
+              >
+                Next: Risk Ceilings
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </SurfaceCard>
+        </div>
       )}
 
       {/* Step 3: Risk Ceilings & Failure Modes */}
       {step === 3 && (
-        <SurfaceCard className="border-2 border-border p-6 sm:p-8 space-y-6">
-          <div>
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-primary">
-              Section 03 // Safety & Failure Mode Matrix
-            </span>
-            <h4 className="mt-1 font-mono text-xl font-bold uppercase text-foreground">
-              Select Your Top Operational Concerns
-            </h4>
-            <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-              Which failure modes present catastrophic legal, financial, or
-              reputational exposure if not bounded by deterministic safety
-              gates?
-            </p>
-          </div>
+        <div aria-labelledby="step-tab-3" id="step-panel-3" role="tabpanel">
+          <SurfaceCard className="border-2 border-border p-6 sm:p-8 space-y-6">
+            <div>
+              <span className="font-mono text-xs font-bold uppercase tracking-widest text-primary">
+                Section 03 // Safety & Failure Mode Matrix
+              </span>
+              <h3
+                className="mt-1 font-mono text-xl font-bold uppercase text-foreground"
+                id={`${formId}-risks-label`}
+              >
+                Select Your Top Operational Concerns
+              </h3>
+              <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                Which failure modes present catastrophic legal, financial, or
+                reputational exposure if not bounded by deterministic safety
+                gates?
+              </p>
+            </div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
-            {FAILURE_MODES.map((risk) => {
-              const active = selectedRisks.includes(risk.id);
-              return (
-                <button
-                  className={`p-5 text-left border-2 transition-all flex flex-col justify-between ${
-                    active
-                      ? "border-amber-500 bg-amber-500/5 text-foreground"
-                      : "border-border bg-card/60 text-muted-foreground hover:border-foreground"
-                  }`}
-                  key={risk.id}
-                  onClick={() => toggleRisk(risk.id)}
-                  type="button"
-                >
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs font-bold uppercase text-foreground">
-                        {risk.label}
-                      </span>
-                      {active ? (
-                        <ShieldAlert className="h-4 w-4 text-amber-500" />
-                      ) : (
-                        <ShieldCheck className="h-4 w-4 text-muted-foreground" />
-                      )}
+            <div
+              aria-labelledby={`${formId}-risks-label`}
+              className="grid sm:grid-cols-2 gap-4"
+              role="group"
+            >
+              {FAILURE_MODES.map((risk) => {
+                const active = selectedRisks.includes(risk.id);
+                return (
+                  <button
+                    aria-checked={active}
+                    className={`p-5 text-left border-2 transition-all flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 ${
+                      active
+                        ? "border-amber-500 bg-amber-500/5 text-foreground"
+                        : "border-border bg-card/60 text-muted-foreground hover:border-foreground"
+                    }`}
+                    key={risk.id}
+                    onClick={() => toggleRisk(risk.id)}
+                    role="checkbox"
+                    type="button"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold uppercase text-foreground">
+                          {risk.label}
+                        </span>
+                        {active ? (
+                          <ShieldAlert className="h-4 w-4 text-amber-500" />
+                        ) : (
+                          <ShieldCheck className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </div>
+                      <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                        {risk.description}
+                      </p>
                     </div>
-                    <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-                      {risk.description}
-                    </p>
-                  </div>
-                  <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between font-mono text-[10px] uppercase">
-                    <span>Priority Guardrail</span>
-                    <span className={active ? "text-amber-500 font-bold" : ""}>
-                      {active ? "Monitored ●" : "Inactive ○"}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+                    <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between font-mono text-[10px] uppercase">
+                      <span>Priority Guardrail</span>
+                      <span
+                        className={active ? "text-amber-500 font-bold" : ""}
+                      >
+                        {active ? "Monitored ●" : "Inactive ○"}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
 
-          <div className="pt-4 flex items-center justify-between border-t border-border">
-            <Button
-              className="font-mono text-xs font-bold uppercase"
-              onClick={() => setStep(2)}
-              type="button"
-              variant="outline"
-            >
-              Back
-            </Button>
-            <Button
-              className="font-mono text-xs font-bold uppercase tracking-wider"
-              onClick={() => setStep(4)}
-              type="button"
-            >
-              Generate Architecture Brief
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-        </SurfaceCard>
+            <div className="pt-4 flex items-center justify-between border-t border-border">
+              <Button
+                className="font-mono text-xs font-bold uppercase"
+                onClick={() => {
+                  setStep(2);
+                  setAnnouncement("Navigated back to Step 2.");
+                }}
+                type="button"
+                variant="outline"
+              >
+                Back
+              </Button>
+              <Button
+                className="font-mono text-xs font-bold uppercase tracking-wider"
+                onClick={() => {
+                  setStep(4);
+                  setAnnouncement(
+                    "Generated Architecture Brief and Scorecard.",
+                  );
+                }}
+                type="button"
+              >
+                Generate Architecture Brief
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </SurfaceCard>
+        </div>
       )}
 
       {/* Step 4: Diagnostic Decision Brief & Scorecard */}
       {step === 4 && (
-        <div className="space-y-6">
+        <div
+          aria-labelledby="step-tab-4"
+          className="space-y-6"
+          id="step-panel-4"
+          role="tabpanel"
+        >
           {/* Scorecard Hero Banner */}
           <div className="border-2 border-border bg-card p-6 sm:p-8 shadow-card">
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-6 border-b-2 border-border">
@@ -692,7 +897,59 @@ export function DiagnosticWizard() {
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Architecture Composition Balance Meter */}
+            <div className="mt-6 p-4 bg-background border border-border">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                <span className="font-mono text-xs font-bold uppercase tracking-wider text-foreground">
+                  Architecture Composition Matrix
+                </span>
+                <span className="font-mono text-[11px] text-muted-foreground">
+                  {composition.deterministicPct >= 50
+                    ? "✓ Governed & Production-Resilient"
+                    : "⚠ Fragile: Excessive Probabilistic Exposure"}
+                </span>
+              </div>
+              <div
+                aria-label="Composition balance meter"
+                aria-valuemax={100}
+                aria-valuemin={0}
+                aria-valuenow={composition.deterministicPct}
+                className="h-3 w-full flex rounded-full overflow-hidden bg-muted"
+                role="progressbar"
+              >
+                <div
+                  className="bg-emerald-500 transition-all"
+                  style={{ width: `${composition.deterministicPct}%` }}
+                  title={`Deterministic: ${composition.deterministicPct}%`}
+                />
+                <div
+                  className="bg-amber-500 transition-all"
+                  style={{ width: `${composition.hybridPct}%` }}
+                  title={`Hybrid Gate: ${composition.hybridPct}%`}
+                />
+                <div
+                  className="bg-rose-500 transition-all"
+                  style={{ width: `${composition.aiPct}%` }}
+                  title={`Model Only: ${composition.aiPct}%`}
+                />
+              </div>
+              <div className="mt-3 grid grid-cols-3 gap-2 text-center font-mono text-[11px]">
+                <div className="flex items-center justify-center gap-1.5 text-emerald-400">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                  <span>Deterministic: {composition.deterministicPct}%</span>
+                </div>
+                <div className="flex items-center justify-center gap-1.5 text-amber-400">
+                  <span className="h-2 w-2 rounded-full bg-amber-500" />
+                  <span>Hybrid Gate: {composition.hybridPct}%</span>
+                </div>
+                <div className="flex items-center justify-center gap-1.5 text-rose-400">
+                  <span className="h-2 w-2 rounded-full bg-rose-500" />
+                  <span>Model Only: {composition.aiPct}%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons & CRO Conversion CTA */}
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Button
                 className="font-mono text-xs font-bold uppercase"
@@ -722,13 +979,22 @@ export function DiagnosticWizard() {
                 {copied ? "Copied!" : "Copy Brief"}
               </Button>
               <Button
+                className="font-mono text-xs font-bold uppercase border-cyan-500/40 text-cyan-400 hover:bg-cyan-500/10"
+                onClick={copyRfc}
+                type="button"
+                variant="outline"
+              >
+                <Sparkles className="mr-2 h-4 w-4 text-cyan-400" />
+                {rfcCopied ? "RFC Copied!" : "Copy 1-Page RFC"}
+              </Button>
+              <Button
                 asChild
-                className="font-mono text-xs font-bold uppercase ml-auto"
+                className="font-mono text-xs font-bold uppercase ml-auto shadow-md"
               >
                 <Link
-                  href={`/contact?ref=diagnostic&grade=${evaluation.grade}&score=${evaluation.score}`}
+                  href={`/contact?ref=diagnostic&grade=${evaluation.grade}&score=${evaluation.score}&workload=${workload}&track=${encodeURIComponent(evaluation.track)}`}
                 >
-                  Schedule Diligence Review
+                  Schedule Diligence Review with Spec Attached
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

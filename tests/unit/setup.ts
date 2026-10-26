@@ -22,3 +22,19 @@ beforeEach(() => {
     })),
   });
 });
+
+if (
+  typeof window !== "undefined" &&
+  typeof (window as any).Animation !== "undefined"
+) {
+  const originalCancel = (window as any).Animation.prototype.cancel;
+  (window as any).Animation.prototype.cancel = function (
+    this: any,
+    ...args: any[]
+  ) {
+    if (this.finished && typeof this.finished.catch === "function") {
+      this.finished.catch(() => {});
+    }
+    return originalCancel.apply(this, args);
+  };
+}

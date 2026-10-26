@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import Link from "next/link";
 import {
   Terminal,
   CheckCircle2,
@@ -9,9 +10,9 @@ import {
   Cpu,
   Copy,
   Check,
-  Play,
   RotateCcw,
-  Zap,
+  FastForward,
+  ArrowRight,
 } from "lucide-react";
 import { playClick } from "@/lib/audio/sound-fx";
 
@@ -166,6 +167,7 @@ export function InteractiveTerminal() {
   const [visibleCount, setVisibleCount] = useState<number>(0);
   const [copied, setCopied] = useState<boolean>(false);
   const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [replayKey, setReplayKey] = useState<number>(0);
 
   const fallbackCommand: TerminalCommand = TERMINAL_COMMANDS[0]!;
   const activeCommand: TerminalCommand =
@@ -178,6 +180,17 @@ export function InteractiveTerminal() {
 
     const initTimer = setTimeout(() => {
       if (cancelled) return;
+
+      const prefersReducedMotion =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (prefersReducedMotion) {
+        setVisibleCount(activeCommand.lines.length);
+        setIsRunning(false);
+        return;
+      }
+
       setIsRunning(true);
       setVisibleCount(0);
 
@@ -198,12 +211,22 @@ export function InteractiveTerminal() {
       clearTimeout(initTimer);
       timers.forEach((t) => clearTimeout(t));
     };
-  }, [selectedCommandId, activeCommand]);
+  }, [selectedCommandId, activeCommand, replayKey]);
 
   const handleCommandSwitch = (id: string) => {
-    if (isRunning) return;
     playClick();
     setSelectedCommandId(id);
+  };
+
+  const handleReplay = () => {
+    playClick();
+    setReplayKey((k) => k + 1);
+  };
+
+  const handleFastForward = () => {
+    playClick();
+    setVisibleCount(activeCommand.lines.length);
+    setIsRunning(false);
   };
 
   const handleCopyText = async () => {
@@ -222,36 +245,72 @@ export function InteractiveTerminal() {
   };
 
   return (
-    <div className="w-full border-2 border-border bg-black shadow-[6px_6px_0px_0px_hsl(var(--text))] text-left overflow-hidden">
+    <div
+      role="region"
+      aria-label="Interactive architecture verification terminal"
+      className="w-full border-2 border-border bg-black shadow-[6px_6px_0px_0px_hsl(var(--text))] text-left overflow-hidden transition-all duration-200"
+    >
       {/* Terminal Title Bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-border bg-zinc-950 px-3 py-2 sm:px-4">
         <div className="flex items-center gap-2">
-          <div className="flex gap-1.5">
+          <div className="flex gap-1.5" aria-hidden="true">
             <span className="h-2.5 w-2.5 rounded-none bg-red-500 border border-black" />
             <span className="h-2.5 w-2.5 rounded-none bg-yellow-500 border border-black" />
             <span className="h-2.5 w-2.5 rounded-none bg-green-500 border border-black" />
           </div>
-          <span className="font-mono text-xs font-bold text-zinc-400 flex items-center gap-1.5 ml-2">
-            <Terminal className="h-3.5 w-3.5 text-primary" />
+          <span className="font-mono text-xs font-bold text-zinc-300 flex items-center gap-1.5 ml-2">
+            <Terminal className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
             aias-console // bash 80x24
           </span>
         </div>
 
         <div className="flex items-center gap-2">
+          {isRunning && (
+            <button
+              type="button"
+              onClick={handleFastForward}
+              aria-label="Skip terminal animation and reveal all logs"
+              className="flex items-center gap-1 font-mono text-[11px] text-zinc-400 hover:text-white transition-colors cursor-pointer px-1 py-0.5 rounded focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+              title="Skip animation"
+            >
+              <FastForward className="h-3 w-3" aria-hidden="true" />
+              <span className="hidden sm:inline">SKIP</span>
+            </button>
+          )}
+
+          {!isRunning && (
+            <button
+              type="button"
+              onClick={handleReplay}
+              aria-label="Re-run terminal verification command"
+              className="flex items-center gap-1 font-mono text-[11px] text-zinc-400 hover:text-white transition-colors cursor-pointer px-1 py-0.5 rounded focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+              title="Re-run command"
+            >
+              <RotateCcw className="h-3 w-3" aria-hidden="true" />
+              <span className="hidden sm:inline">REPLAY</span>
+            </button>
+          )}
+
           <button
             type="button"
             onClick={handleCopyText}
-            className="flex items-center gap-1 font-mono text-[11px] text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            aria-label={
+              copied ? "Output copied to clipboard" : "Copy terminal output"
+            }
+            className="flex items-center gap-1 font-mono text-[11px] text-zinc-400 hover:text-white transition-colors cursor-pointer px-1.5 py-0.5 rounded focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
             title="Copy terminal output"
           >
             {copied ? (
               <>
-                <Check className="h-3 w-3 text-emerald-400" />
-                <span className="text-emerald-400">COPIED</span>
+                <Check
+                  className="h-3 w-3 text-emerald-400"
+                  aria-hidden="true"
+                />
+                <span className="text-emerald-400 font-bold">COPIED</span>
               </>
             ) : (
               <>
-                <Copy className="h-3 w-3" />
+                <Copy className="h-3 w-3" aria-hidden="true" />
                 <span>COPY</span>
               </>
             )}
@@ -260,29 +319,44 @@ export function InteractiveTerminal() {
       </div>
 
       {/* Command Selector Buttons */}
-      <div className="flex flex-wrap border-b border-zinc-800 bg-zinc-900/60 p-1.5 gap-1.5">
-        {TERMINAL_COMMANDS.map((cmd) => (
-          <button
-            key={cmd.id}
-            type="button"
-            disabled={isRunning}
-            onClick={() => handleCommandSwitch(cmd.id)}
-            className={`px-2.5 py-1 font-mono text-[11px] font-bold uppercase transition-all cursor-pointer border ${
-              selectedCommandId === cmd.id
-                ? "border-primary bg-primary/20 text-primary"
-                : "border-zinc-800 bg-black/40 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
-            }`}
-          >
-            {cmd.name}
-          </button>
-        ))}
+      <div
+        role="tablist"
+        aria-label="Terminal simulation scenarios"
+        className="flex flex-wrap border-b border-zinc-800 bg-zinc-900/70 p-1.5 gap-1.5"
+      >
+        {TERMINAL_COMMANDS.map((cmd) => {
+          const isSelected = selectedCommandId === cmd.id;
+          return (
+            <button
+              key={cmd.id}
+              role="tab"
+              type="button"
+              aria-selected={isSelected}
+              onClick={() => handleCommandSwitch(cmd.id)}
+              className={`px-2.5 py-1 font-mono text-[11px] font-bold uppercase transition-all cursor-pointer border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                isSelected
+                  ? "border-primary bg-primary/20 text-primary shadow-sm"
+                  : "border-zinc-800 bg-black/40 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
+              }`}
+            >
+              {cmd.name}
+            </button>
+          );
+        })}
       </div>
 
       {/* Terminal Body */}
-      <div className="p-4 font-mono text-xs sm:text-[13px] h-[260px] overflow-y-auto flex flex-col justify-end bg-black/95">
-        <div className="mb-2 text-zinc-500 text-[11px] flex items-center gap-2">
-          <span className="text-emerald-400">$</span>
-          <span className="text-zinc-300 font-bold">
+      <div
+        role="log"
+        aria-live="polite"
+        aria-atomic="false"
+        className="p-4 font-mono text-xs sm:text-[13px] h-[260px] overflow-y-auto flex flex-col justify-end bg-black/95 select-text"
+      >
+        <div className="mb-2 text-zinc-400 text-[11px] flex items-center gap-2">
+          <span className="text-emerald-400 font-bold" aria-hidden="true">
+            $
+          </span>
+          <span className="text-zinc-200 font-bold tracking-tight">
             {activeCommand.command}
           </span>
         </div>
@@ -299,18 +373,27 @@ export function InteractiveTerminal() {
                   : line.type === "success"
                     ? "text-emerald-400"
                     : line.type === "warning"
-                      ? "text-amber-400"
+                      ? "text-amber-300 font-medium"
                       : "text-zinc-300"
               }`}
             >
               {line.type === "success" && (
-                <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-emerald-400" />
+                <CheckCircle2
+                  className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-emerald-400"
+                  aria-hidden="true"
+                />
               )}
               {line.type === "warning" && (
-                <ShieldAlert className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-amber-400" />
+                <ShieldAlert
+                  className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-amber-300"
+                  aria-hidden="true"
+                />
               )}
               {line.type === "system" && (
-                <Cpu className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-sky-300 opacity-80" />
+                <Cpu
+                  className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-sky-300 opacity-90"
+                  aria-hidden="true"
+                />
               )}
               <span className="leading-snug break-all">{line.text}</span>
             </motion.div>
@@ -321,9 +404,34 @@ export function InteractiveTerminal() {
               animate={{ opacity: [1, 0] }}
               transition={{ repeat: Infinity, duration: 0.7 }}
               className="w-2 h-4 bg-primary inline-block ml-1 mt-1"
+              aria-hidden="true"
             />
           )}
         </div>
+      </div>
+
+      {/* Actionable CRO Conversion Footer */}
+      <div className="flex flex-wrap items-center justify-between gap-2.5 border-t-2 border-border bg-zinc-950 px-3.5 py-2.5 text-xs font-mono">
+        <div className="flex items-center gap-2">
+          <span className="relative flex h-2 w-2" aria-hidden="true">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75 motion-reduce:hidden" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+          </span>
+          <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-300">
+            {isRunning ? "Running assertions..." : "Verification passed"}
+          </span>
+        </div>
+
+        <Link
+          href="/diagnostic"
+          className="group inline-flex items-center gap-1.5 border border-primary/70 bg-primary/15 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-primary hover:bg-primary hover:text-primary-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        >
+          <span>Audit Your Stack</span>
+          <ArrowRight
+            className="h-3 w-3 transition-transform group-hover:translate-x-0.5"
+            aria-hidden="true"
+          />
+        </Link>
       </div>
     </div>
   );

@@ -5,10 +5,7 @@ import Image from "next/image";
 import { ContentDrivenHero } from "@/components/content/ContentDrivenHero";
 import { LiveLabStatus } from "@/components/home/live-lab-status";
 import { LiveProductsShowcase } from "@/components/home/live-products-showcase";
-import { LeadCaptureForm } from "@/components/home/lead-capture-form";
 import { ThreeProngedSection } from "@/components/home/three-pronged-section";
-import { InstantRoiSizer } from "@/components/home/instant-roi-sizer";
-import { SystemTopologyVisualizer } from "@/components/visual/SystemTopologyVisualizer";
 import { HowWeWorkSection } from "@/components/content/how-we-work-section";
 import { ProofSection } from "@/components/home/proof-section";
 import { ConversionCTA } from "@/components/home/conversion-cta";
@@ -24,9 +21,27 @@ import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
 
 import { getPrimaryCtaHref, siteContent, SiteConfig } from "@/src/content/site";
 
+const InstantRoiSizer = dynamic(() =>
+  import("@/components/home/instant-roi-sizer").then(
+    (module) => module.InstantRoiSizer,
+  ),
+);
+
+const SystemTopologyVisualizer = dynamic(() =>
+  import("@/components/visual/SystemTopologyVisualizer").then(
+    (module) => module.SystemTopologyVisualizer,
+  ),
+);
+
 const Testimonials = dynamic(() =>
   import("@/components/home/testimonials").then(
     (module) => module.Testimonials,
+  ),
+);
+
+const LeadCaptureForm = dynamic(() =>
+  import("@/components/home/lead-capture-form").then(
+    (module) => module.LeadCaptureForm,
   ),
 );
 
@@ -85,7 +100,7 @@ export default function HomePage() {
 
       {/* Live Mission Control Architecture Bus Section */}
       <section
-        className="border-b-2 border-border bg-surface-muted py-20 relative overflow-hidden"
+        className="cv-section border-b-2 border-border bg-surface-muted py-20 relative overflow-hidden"
         id="control-plane-topology"
       >
         <div className="container relative z-10 mx-auto max-w-6xl px-4">
@@ -109,7 +124,7 @@ export default function HomePage() {
       </section>
 
       {/* Problem Statement — Why AI Projects Fail */}
-      <section className="border-b-2 border-border bg-background py-24 relative overflow-hidden">
+      <section className="cv-section border-b-2 border-border bg-background py-24 relative overflow-hidden">
         {/* Subtle grid accent */}
         <div className="absolute inset-0 z-0 grid-bg" />
         <div className="container relative z-10 mx-auto max-w-5xl px-4">
@@ -132,6 +147,7 @@ export default function HomePage() {
                 src="/images/workflow_schema.avif"
                 alt="Workflow bottleneck schema"
                 fill
+                sizes="(min-width: 1024px) 320px, 100vw"
                 className="object-cover img-crisp mix-blend-multiply"
               />
             </div>
@@ -196,7 +212,7 @@ export default function HomePage() {
       </section>
 
       {/* Services — Quick scan */}
-      <section className="border-b-2 border-border bg-surface-muted py-24">
+      <section className="cv-section border-b-2 border-border bg-surface-muted py-24">
         <div className="container mx-auto max-w-6xl px-4">
           <FadeIn>
             <div className="text-center">

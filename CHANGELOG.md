@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Executed additive performance and runtime optimizations: split below-the-fold client islands on `/`, removed `framer-motion` from `MobileStickyCTA`, wrapped sticky/dock scroll listeners in `requestAnimationFrame` throttle gates with state deduplication, added `IntersectionObserver` viewport gating and `webglcontextlost` recovery to `TopologyWebGlCanvas`, upgraded `PerformanceRuntime` with network-aware prefetching and live LCP/CLS/INP telemetry in `ExperienceControls`, and connected `InstantRoiSizer` to the cross-tab Handoff Console.
+- Upgraded the AI Clarity Diagnostic (`/diagnostic`), Hero self-serve paths, Workspace Console (`/tools`), and System Topology Visualizer with portable URL-encoded CTO permalinks, dual-depth readability toggles (`Executive View` vs `Architect Spec`), reference scenario presets, interactive fault-injection stress testing, and build-time `llms.txt` / `llms-full.txt` AEO feeds.
+- Fixed accessibility labels and offline-resilient local fallback on `LeadCaptureForm`, and added the AI Clarity Diagnostic to the Header Resources dropdown and `⌘K` Command Palette.
 - Integrated master pack canonical sub-agent definitions (`/agents/*.md`), generative prompts (`/prompts/*.md`), visual standards (`/design/VISUAL_SYSTEM.md`), and `MODEL_SPEC.md`, cleaned up temporary extraction artifacts, and removed accidental CLI files.
 - Built and integrated an interactive AI Clarity Diagnostic assessment wizard on `/diagnostic` enabling self-serve architectural boundary mapping, failure mode evaluation, and downloadable JSON/Markdown decision briefs with prefilled intake routing.
 - Expanded client-engines cryptographic capabilities with PBKDF2/AES-GCM `decryptClientState` round-trip functionality and added vault import/decryption support to the architecture workspace console.

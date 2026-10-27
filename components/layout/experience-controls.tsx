@@ -62,6 +62,15 @@ export function ExperienceControls() {
     },
   );
   const [errors, setErrors] = useState<ClientError[]>([]);
+  const [vitals, setVitals] = useState<{
+    lcpMs: number | null;
+    clsScore: number;
+    maxEventDurationMs: number;
+  }>({
+    lcpMs: null,
+    clsScore: 0,
+    maxEventDurationMs: 0,
+  });
   const [exitOpen, setExitOpen] = useState(false);
   const exitArmed = useRef(false);
 
@@ -113,9 +122,21 @@ export function ExperienceControls() {
       );
     window.addEventListener("error", onError);
     window.addEventListener("unhandledrejection", onRejection);
+    const onVitals = (event: Event) => {
+      const custom = event as CustomEvent<{
+        lcpMs: number | null;
+        clsScore: number;
+        maxEventDurationMs: number;
+      }>;
+      if (custom.detail) {
+        setVitals(custom.detail);
+      }
+    };
+    window.addEventListener("aias:vitals-update", onVitals);
     return () => {
       window.removeEventListener("error", onError);
       window.removeEventListener("unhandledrejection", onRejection);
+      window.removeEventListener("aias:vitals-update", onVitals);
     };
   }, []);
 
@@ -245,6 +266,31 @@ export function ExperienceControls() {
             </Button>
           </div>
           <div className="mt-6 border-t-2 border-border pt-4">
+            <h3 className="font-mono text-xs font-black uppercase">
+              Live Web Vitals Telemetry
+            </h3>
+            <div className="mt-2 grid grid-cols-3 gap-2 font-mono text-[10px]">
+              <div className="border border-border bg-card p-2">
+                <span className="block text-muted-foreground">LCP</span>
+                <span className="font-bold text-foreground">
+                  {vitals.lcpMs !== null ? `${vitals.lcpMs}ms` : "Measuring…"}
+                </span>
+              </div>
+              <div className="border border-border bg-card p-2">
+                <span className="block text-muted-foreground">CLS</span>
+                <span className="font-bold text-foreground">
+                  {vitals.clsScore.toFixed(3)}
+                </span>
+              </div>
+              <div className="border border-border bg-card p-2">
+                <span className="block text-muted-foreground">MAX INP</span>
+                <span className="font-bold text-foreground">
+                  {vitals.maxEventDurationMs}ms
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="mt-4 border-t-2 border-border pt-4">
             <div className="flex items-center justify-between">
               <h3 className="font-mono text-xs font-black uppercase">
                 <FileWarning className="mr-2 inline h-4 w-4" />

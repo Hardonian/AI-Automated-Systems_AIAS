@@ -5,7 +5,11 @@ import { Cpu, ShoppingBag, ArrowRight } from "lucide-react";
 
 import { PageHero, PageSection } from "@/components/ui/section-primitives";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
-import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
+import { WebApplicationSchema } from "@/components/seo/structured-data";
+import {
+  generateMetadata as generateSEOMetadata,
+  SITE_URL,
+} from "@/lib/seo/metadata";
 import { siteContent } from "@/src/content/site";
 import { ToolsDirectoryClient } from "@/components/tools/tools-directory-client";
 import { WorkspaceConsole } from "@/components/tools/workspace-console";
@@ -28,6 +32,12 @@ export default function ToolsHubPage() {
 
   return (
     <>
+      <WebApplicationSchema
+        name="AIAS Interactive Automation Tools & Architecture Console"
+        description="Self-serve client-side AI diagnostic tools, ROI calculators, policy studios, and local-first cryptographic architecture handoff console."
+        url={`${SITE_URL}/tools`}
+        applicationCategory="DeveloperApplication"
+      />
       <div className="container pt-4">
         <Breadcrumbs items={[{ label: "Quick Tools" }]} />
       </div>

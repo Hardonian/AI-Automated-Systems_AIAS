@@ -31,11 +31,16 @@ export function TopologyWebGlCanvas() {
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const previousPinch = useRef(0);
   const frame = useRef<number | null>(null);
+  const isVisibleRef = useRef<boolean>(true);
   const drawRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const gl = canvas?.getContext("webgl", { antialias: true, alpha: false });
+    const gl = canvas?.getContext("webgl", {
+      antialias: true,
+      alpha: false,
+      powerPreference: "low-power",
+    });
     if (!canvas || !gl) return;
     const vertex = compile(gl, gl.VERTEX_SHADER, VERTEX_SHADER);
     const fragment = compile(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER);
@@ -80,7 +85,7 @@ export function TopologyWebGlCanvas() {
       gl.drawArrays(gl.POINTS, 0, 4);
     };
     drawRef.current = () => {
-      if (frame.current !== null) return;
+      if (frame.current !== null || !isVisibleRef.current) return;
       frame.current = requestAnimationFrame(() => {
         frame.current = null;
         draw();
@@ -89,8 +94,42 @@ export function TopologyWebGlCanvas() {
     draw();
     const observer = new ResizeObserver(drawRef.current);
     observer.observe(canvas);
+
+    const visibilityObserver =
+      typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            (entries) => {
+              const entry = entries[0];
+              if (entry) {
+                isVisibleRef.current = entry.isIntersecting;
+                if (entry.isIntersecting) {
+                  drawRef.current();
+                }
+              }
+            },
+            { rootMargin: "200px" },
+          )
+        : null;
+    visibilityObserver?.observe(canvas);
+
+    const onContextLost = (e: Event) => {
+      e.preventDefault();
+      if (frame.current !== null) {
+        cancelAnimationFrame(frame.current);
+        frame.current = null;
+      }
+    };
+    const onContextRestored = () => {
+      drawRef.current();
+    };
+    canvas.addEventListener("webglcontextlost", onContextLost);
+    canvas.addEventListener("webglcontextrestored", onContextRestored);
+
     return () => {
       observer.disconnect();
+      visibilityObserver?.disconnect();
+      canvas.removeEventListener("webglcontextlost", onContextLost);
+      canvas.removeEventListener("webglcontextrestored", onContextRestored);
       if (frame.current !== null) cancelAnimationFrame(frame.current);
       gl.deleteBuffer(buffer);
       gl.deleteProgram(program);

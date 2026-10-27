@@ -172,6 +172,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           title="AIAS Atom"
           type="application/atom+xml"
         />
+        <link
+          href="/llms.txt"
+          rel="alternate"
+          title="AIAS LLM Context"
+          type="text/plain"
+        />
+        <link
+          href="/llms-full.txt"
+          rel="alternate"
+          title="AIAS Full LLM Corpus"
+          type="text/plain"
+        />
 
         <OrganizationSchema />
         <ProfessionalServiceSchema />

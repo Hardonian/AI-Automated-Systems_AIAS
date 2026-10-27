@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -9,7 +9,10 @@ import {
   Download,
   FileCode2,
   FileText,
+  Layers,
+  Link2,
   RotateCcw,
+  Send,
   ShieldAlert,
   ShieldCheck,
   Sparkles,
@@ -17,88 +20,88 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { SurfaceCard } from "@/components/ui/section-primitives";
+import {
+  DEFAULT_DIAGNOSTIC_CAPABILITIES,
+  DIAGNOSTIC_FAILURE_MODES,
+  decodeDiagnosticState,
+  encodeDiagnosticState,
+  evaluateDiagnosticArchitecture,
+  useBroadcastChannel,
+  type DiagnosticAllocationMode,
+  type DiagnosticLatencyTier,
+  type DiagnosticVolumeLevel,
+  type DiagnosticWorkloadType,
+} from "@/lib/utils/client-engines";
 
-type WorkloadType =
-  | "customer-support"
-  | "financial-ops"
-  | "engineering-automation"
-  | "compliance-audit";
+type WorkloadType = DiagnosticWorkloadType;
+type VolumeLevel = DiagnosticVolumeLevel;
+type LatencyTier = DiagnosticLatencyTier;
+type AllocationMode = DiagnosticAllocationMode;
+type DepthMode = "executive" | "architect";
 
-type VolumeLevel = "low" | "medium" | "high";
-type LatencyTier = "realtime" | "near-realtime" | "async";
+const DEFAULT_CAPABILITIES = DEFAULT_DIAGNOSTIC_CAPABILITIES;
+const FAILURE_MODES = DIAGNOSTIC_FAILURE_MODES;
 
-type AllocationMode = "deterministic" | "ai" | "hybrid";
-
-interface BoundaryCapability {
+const SCENARIO_PRESETS: ReadonlyArray<{
   id: string;
   label: string;
-  description: string;
-  recommended: AllocationMode;
-  selected: AllocationMode;
-}
-
-const DEFAULT_CAPABILITIES: Omit<BoundaryCapability, "selected">[] = [
+  badge: string;
+  workload: WorkloadType;
+  volume: VolumeLevel;
+  latency: LatencyTier;
+  allocations: Record<string, AllocationMode>;
+  risks: string[];
+}> = [
   {
-    id: "schema-validation",
-    label: "Input Parsing & Schema Validation",
-    description:
-      "Validating structure, types, and required payload constraints.",
-    recommended: "deterministic",
+    id: "governed-finops",
+    label: "Governed FinOps Baseline",
+    badge: "Grade A Target",
+    workload: "financial-ops",
+    volume: "high",
+    latency: "near-realtime",
+    allocations: {
+      "schema-validation": "deterministic",
+      "unstructured-synthesis": "ai",
+      "authorization-policy": "deterministic",
+      "math-calculations": "deterministic",
+      "customer-messaging": "hybrid",
+      "audit-receipts": "deterministic",
+    },
+    risks: ["hallucination", "pii-leak"],
   },
   {
-    id: "unstructured-synthesis",
-    label: "Semantic Understanding & Synthesis",
-    description: "Extracting intent, summarization, and contextual reasoning.",
-    recommended: "ai",
+    id: "fragile-agent-audit",
+    label: "Fragile Prototype Audit",
+    badge: "Risk Drift Demo",
+    workload: "customer-support",
+    volume: "high",
+    latency: "realtime",
+    allocations: {
+      "schema-validation": "ai",
+      "unstructured-synthesis": "ai",
+      "authorization-policy": "ai",
+      "math-calculations": "ai",
+      "customer-messaging": "ai",
+      "audit-receipts": "hybrid",
+    },
+    risks: ["hallucination", "latency-spike", "pii-leak", "budget-runaway"],
   },
   {
-    id: "authorization-policy",
-    label: "Policy Gates & Permission Check",
-    description: "Enforcing roles, tenant isolation, and transaction limits.",
-    recommended: "deterministic",
-  },
-  {
-    id: "math-calculations",
-    label: "Calculations & Financial Math",
-    description:
-      "Invoicing math, interest rates, ledger entries, and tax rates.",
-    recommended: "deterministic",
-  },
-  {
-    id: "customer-messaging",
-    label: "Outbound Content Generation",
-    description: "Drafting messages, notifications, and tailored replies.",
-    recommended: "hybrid",
-  },
-  {
-    id: "audit-receipts",
-    label: "Audit Ledger & Receipts",
-    description: "Immutable hashing, execution logs, and replay receipts.",
-    recommended: "deterministic",
-  },
-];
-
-const FAILURE_MODES = [
-  {
-    id: "hallucination",
-    label: "Hallucination Risk",
-    description:
-      "Model outputs plausibly incorrect facts, IDs, or commitments.",
-  },
-  {
-    id: "latency-spike",
-    label: "Provider Outages & Latency Spikes",
-    description: "Upstream LLM API delays, 504 timeouts, or degraded status.",
-  },
-  {
-    id: "pii-leak",
-    label: "PII & Confidential Data Exposure",
-    description: "Unsanitized customer records sent to third-party endpoints.",
-  },
-  {
-    id: "budget-runaway",
-    label: "Cost & Token Runaway",
-    description: "Recursive agent loops or unbudgeted token consumption.",
+    id: "sovereign-compliance",
+    label: "PIPEDA Compliance Airlock",
+    badge: "Zero-Trust Gate",
+    workload: "compliance-audit",
+    volume: "medium",
+    latency: "async",
+    allocations: {
+      "schema-validation": "deterministic",
+      "unstructured-synthesis": "hybrid",
+      "authorization-policy": "deterministic",
+      "math-calculations": "deterministic",
+      "customer-messaging": "deterministic",
+      "audit-receipts": "deterministic",
+    },
+    risks: ["pii-leak", "hallucination"],
   },
 ];
 
@@ -107,6 +110,7 @@ export function DiagnosticWizard() {
   const [workload, setWorkload] = useState<WorkloadType>("financial-ops");
   const [volume, setVolume] = useState<VolumeLevel>("medium");
   const [latency, setLatency] = useState<LatencyTier>("near-realtime");
+  const [depthMode, setDepthMode] = useState<DepthMode>("executive");
 
   const [allocations, setAllocations] = useState<
     Record<string, AllocationMode>
@@ -123,8 +127,39 @@ export function DiagnosticWizard() {
 
   const [copied, setCopied] = useState(false);
   const [rfcCopied, setRfcCopied] = useState(false);
+  const [shareLinkCopied, setShareLinkCopied] = useState(false);
+  const [syncedToWorkspace, setSyncedToWorkspace] = useState(false);
   const [announcement, setAnnouncement] = useState("");
   const formId = useId();
+  const { postMessage } = useBroadcastChannel<{ notes: string }>(
+    "aias-workspace",
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const decoded = decodeDiagnosticState(window.location.search);
+    if (!decoded) return;
+    queueMicrotask(() => {
+      if (decoded.workload) setWorkload(decoded.workload);
+      if (decoded.volume) setVolume(decoded.volume);
+      if (decoded.latency) setLatency(decoded.latency);
+      if (decoded.allocations) setAllocations(decoded.allocations);
+      if (decoded.risks) setSelectedRisks(decoded.risks);
+      if (decoded.step) setStep(decoded.step);
+      setAnnouncement(
+        "Loaded diagnostic configuration from shared URL parameters.",
+      );
+    });
+  }, []);
+
+  const applyScenarioPreset = (preset: (typeof SCENARIO_PRESETS)[number]) => {
+    setWorkload(preset.workload);
+    setVolume(preset.volume);
+    setLatency(preset.latency);
+    setAllocations({ ...preset.allocations });
+    setSelectedRisks([...preset.risks]);
+    setAnnouncement(`Applied scenario preset: ${preset.label}.`);
+  };
 
   const toggleRisk = (riskId: string) => {
     setSelectedRisks((prev) => {
@@ -149,61 +184,19 @@ export function DiagnosticWizard() {
   };
 
   // Evaluation algorithm based on deterministic engineering principles
-  const evaluation = useMemo(() => {
-    let score = 100;
+  const evaluation = useMemo(
+    () =>
+      evaluateDiagnosticArchitecture(
+        allocations,
+        workload,
+        volume,
+        latency,
+        selectedRisks,
+      ),
+    [allocations, workload, volume, latency, selectedRisks],
+  );
 
-    // Deduct points for high-risk anti-patterns
-    if (allocations["math-calculations"] === "ai") score -= 25;
-    if (allocations["authorization-policy"] === "ai") score -= 25;
-    if (allocations["schema-validation"] === "ai") score -= 15;
-    if (allocations["audit-receipts"] === "ai") score -= 20;
-
-    // Bonus for proper boundary pairing
-    if (allocations["unstructured-synthesis"] === "ai") score += 5;
-    if (allocations["customer-messaging"] === "hybrid") score += 5;
-
-    score = Math.max(20, Math.min(100, score));
-
-    let grade = "A";
-    let status = "Production-Ready Boundary Separation";
-    let recommendation =
-      "Your target architecture demonstrates sound governance with deterministic control over money, policy, and data validity.";
-    let track = "Advisory & Co-Build Sprint";
-
-    if (score < 60) {
-      grade = "D";
-      status = "Critical Fragility: High Probability of Silent Failure";
-      recommendation =
-        "Core policy or math functions are assigned to probabilistic models. Immediate architectural intervention required to install deterministic guards.";
-      track = "Stabilization & Emergency Remediation";
-    } else if (score < 80) {
-      grade = "B";
-      status = "Moderate Fragility: Gaps in Enforcement Layer";
-      recommendation =
-        "Architecture has reasonable foundations but leaves edge states exposed. Strengthen schema validation and audit immutability.";
-      track = "Targeted Governance Hardening";
-    }
-
-    return { score, grade, status, recommendation, track };
-  }, [allocations]);
-
-  const composition = useMemo(() => {
-    const total = DEFAULT_CAPABILITIES.length;
-    const values = Object.values(allocations);
-    const deterministicCount = values.filter(
-      (v) => v === "deterministic",
-    ).length;
-    const hybridCount = values.filter((v) => v === "hybrid").length;
-    const aiCount = values.filter((v) => v === "ai").length;
-    return {
-      deterministicPct: Math.round((deterministicCount / total) * 100),
-      hybridPct: Math.round((hybridCount / total) * 100),
-      aiPct: Math.round((aiCount / total) * 100),
-      deterministicCount,
-      hybridCount,
-      aiCount,
-    };
-  }, [allocations]);
+  const composition = evaluation.composition;
 
   const briefMarkdown = useMemo(() => {
     return [
@@ -344,14 +337,62 @@ export function DiagnosticWizard() {
     setTimeout(() => setRfcCopied(false), 2500);
   };
 
+  const copyShareLink = async () => {
+    const query = encodeDiagnosticState({
+      workload,
+      volume,
+      latency,
+      allocations,
+      risks: selectedRisks,
+      step: 4,
+    });
+    const shareUrl =
+      typeof window !== "undefined"
+        ? `${window.location.origin}${window.location.pathname}?${query}`
+        : `https://aiautomatedsystems.ca/diagnostic?${query}`;
+    if (typeof window !== "undefined") {
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}?${query}`,
+      );
+    }
+    await navigator.clipboard.writeText(shareUrl);
+    setShareLinkCopied(true);
+    setAnnouncement("Shareable diagnostic permalink copied to clipboard.");
+    setTimeout(() => setShareLinkCopied(false), 2500);
+  };
+
+  const syncToWorkspace = () => {
+    const payload = depthMode === "architect" ? rfcMarkdown : briefMarkdown;
+    try {
+      window.localStorage.setItem(
+        "aias_workspace_notes",
+        JSON.stringify(payload),
+      );
+    } catch {
+      // Ignore storage quota errors
+    }
+    postMessage({ notes: payload });
+    setSyncedToWorkspace(true);
+    setAnnouncement("Diagnostic brief synchronized to local Handoff Console.");
+    setTimeout(() => setSyncedToWorkspace(false), 3000);
+  };
+
   const resetAll = () => {
     setStep(1);
+    setWorkload("financial-ops");
+    setVolume("medium");
+    setLatency("near-realtime");
     setAllocations(
       Object.fromEntries(
         DEFAULT_CAPABILITIES.map((cap) => [cap.id, cap.recommended]),
       ),
     );
     setSelectedRisks(["hallucination", "pii-leak"]);
+    if (typeof window !== "undefined" && window.location.search) {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
     setAnnouncement("Diagnostic wizard reset to default configurations.");
   };
 
@@ -377,10 +418,49 @@ export function DiagnosticWizard() {
               AI Clarity Diagnostic Assessment
             </h2>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Dual-Depth Readability Mode Toggle */}
+            <div
+              aria-label="Readability depth mode"
+              className="inline-flex items-center border border-border bg-background p-0.5 font-mono text-[10px] uppercase"
+              role="group"
+            >
+              <button
+                aria-pressed={depthMode === "executive"}
+                className={`px-2.5 py-1 font-bold transition-colors ${
+                  depthMode === "executive"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                onClick={() => {
+                  setDepthMode("executive");
+                  setAnnouncement("Switched to Executive Summary mode.");
+                }}
+                type="button"
+              >
+                Executive View
+              </button>
+              <button
+                aria-pressed={depthMode === "architect"}
+                className={`px-2.5 py-1 font-bold transition-colors ${
+                  depthMode === "architect"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                onClick={() => {
+                  setDepthMode("architect");
+                  setAnnouncement(
+                    "Switched to Systems Architect Contract mode.",
+                  );
+                }}
+                type="button"
+              >
+                Architect Spec
+              </button>
+            </div>
             <span
               aria-current="step"
-              className="font-mono text-xs font-bold uppercase text-muted-foreground"
+              className="font-mono text-xs font-bold uppercase text-muted-foreground ml-1"
             >
               Step {step} of 4
             </span>
@@ -437,17 +517,40 @@ export function DiagnosticWizard() {
       {step === 1 && (
         <div aria-labelledby="step-tab-1" id="step-panel-1" role="tabpanel">
           <SurfaceCard className="border-2 border-border p-6 sm:p-8 space-y-6">
-            <div>
-              <span className="font-mono text-xs font-bold uppercase tracking-widest text-primary">
-                Section 01 // Baseline Requirements
-              </span>
-              <h3 className="mt-1 font-mono text-xl font-bold uppercase text-foreground">
-                Define the Operating Pressure on Your System
-              </h3>
-              <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-                Every robust automation architecture begins with explicit
-                boundaries around volume, latency budgets, and compliance scope.
-              </p>
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-border pb-4">
+              <div>
+                <span className="font-mono text-xs font-bold uppercase tracking-widest text-primary">
+                  Section 01 // Baseline Requirements
+                </span>
+                <h3 className="mt-1 font-mono text-xl font-bold uppercase text-foreground">
+                  Define the Operating Pressure on Your System
+                </h3>
+                <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                  Every robust automation architecture begins with explicit
+                  boundaries around volume, latency budgets, and compliance
+                  scope.
+                </p>
+              </div>
+
+              {/* 1-Click Scenario Presets */}
+              <div className="flex flex-col gap-1.5 shrink-0">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Quick-Load Reference Scenarios:
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {SCENARIO_PRESETS.map((preset) => (
+                    <button
+                      className="border border-border bg-background px-2.5 py-1.5 font-mono text-[10px] font-bold uppercase text-foreground transition-all hover:border-primary hover:text-primary"
+                      key={preset.id}
+                      onClick={() => applyScenarioPreset(preset)}
+                      type="button"
+                    >
+                      {preset.label}{" "}
+                      <span className="text-primary">({preset.badge})</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <div className="space-y-6">
@@ -667,6 +770,11 @@ export function DiagnosticWizard() {
                       <p className="mt-1 text-xs text-muted-foreground">
                         {cap.description}
                       </p>
+                      {depthMode === "architect" && (
+                        <p className="mt-2 border-l-2 border-primary/60 pl-2 font-mono text-[11px] text-primary">
+                          Invariant: {cap.contractInvariant}
+                        </p>
+                      )}
                     </div>
 
                     <div
@@ -803,6 +911,11 @@ export function DiagnosticWizard() {
                       <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
                         {risk.description}
                       </p>
+                      {depthMode === "architect" && (
+                        <p className="mt-2 border-l-2 border-amber-500/60 pl-2 font-mono text-[11px] text-amber-400">
+                          Gate: {risk.mitigationGate}
+                        </p>
+                      )}
                     </div>
                     <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between font-mono text-[10px] uppercase">
                       <span>Priority Guardrail</span>
@@ -897,6 +1010,54 @@ export function DiagnosticWizard() {
               </div>
             </div>
 
+            {/* Operational Profile Telemetry Strip */}
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              <div className="border border-border bg-background/80 p-3.5">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Target P95 Latency Budget
+                </p>
+                <p className="mt-1 font-mono text-xs font-bold text-foreground">
+                  {evaluation.operationalProfile.targetP95Latency}
+                </p>
+              </div>
+              <div className="border border-border bg-background/80 p-3.5">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Est. Annual Capacity Reclaimed
+                </p>
+                <p className="mt-1 font-mono text-xs font-bold text-cyan-400">
+                  ~
+                  {evaluation.operationalProfile.estimatedHoursReclaimedPerYear.toLocaleString()}{" "}
+                  engineering &amp; ops hrs/yr
+                </p>
+              </div>
+              <div className="border border-border bg-background/80 p-3.5">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Primary Circuit-Breaker Pattern
+                </p>
+                <p className="mt-1 font-mono text-xs font-bold text-emerald-400">
+                  {evaluation.operationalProfile.circuitBreakerPattern}
+                </p>
+              </div>
+            </div>
+
+            {evaluation.operationalProfile.criticalDrifts.length > 0 && (
+              <div className="mt-4 border-2 border-amber-500/60 bg-amber-500/10 p-4 font-mono text-xs">
+                <p className="font-bold uppercase text-amber-400">
+                  ⚠ Critical Invariant Drift Detected (
+                  {evaluation.operationalProfile.criticalDrifts.length}{" "}
+                  boundaries exposed):
+                </p>
+                <p className="mt-1 text-muted-foreground">
+                  Assigned to probabilistic inference:{" "}
+                  <span className="font-bold text-foreground">
+                    {evaluation.operationalProfile.criticalDrifts.join(", ")}
+                  </span>
+                  . Refactor these pillars to Deterministic Code to eliminate
+                  silent failure risk.
+                </p>
+              </div>
+            )}
+
             {/* Architecture Composition Balance Meter */}
             <div className="mt-6 p-4 bg-background border border-border">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
@@ -988,6 +1149,26 @@ export function DiagnosticWizard() {
                 {rfcCopied ? "RFC Copied!" : "Copy 1-Page RFC"}
               </Button>
               <Button
+                className="font-mono text-xs font-bold uppercase border-primary/50 text-primary hover:bg-primary/10"
+                onClick={copyShareLink}
+                type="button"
+                variant="outline"
+              >
+                <Link2 className="mr-2 h-4 w-4" />
+                {shareLinkCopied ? "Permalink Copied!" : "Share CTO Permalink"}
+              </Button>
+              <Button
+                className="font-mono text-xs font-bold uppercase"
+                onClick={syncToWorkspace}
+                type="button"
+                variant="outline"
+              >
+                <Send className="mr-2 h-4 w-4" />
+                {syncedToWorkspace
+                  ? "Synced to Console ✓"
+                  : "Send to Handoff Console"}
+              </Button>
+              <Button
                 asChild
                 className="font-mono text-xs font-bold uppercase ml-auto shadow-md"
               >
@@ -1001,19 +1182,33 @@ export function DiagnosticWizard() {
             </div>
           </div>
 
-          {/* Formatted Markdown Preview */}
+          {/* Formatted Markdown Preview with Executive / Architect Switcher */}
           <SurfaceCard className="border-2 border-border p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-border pb-3">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
               <span className="font-mono text-xs font-bold uppercase text-muted-foreground flex items-center gap-2">
-                <FileText className="h-4 w-4 text-primary" />
-                Diagnostic Technical Report
+                {depthMode === "architect" ? (
+                  <Layers className="h-4 w-4 text-cyan-400" />
+                ) : (
+                  <FileText className="h-4 w-4 text-primary" />
+                )}
+                {depthMode === "architect"
+                  ? "Systems Engineering RFC & Boundary Specification"
+                  : "Diagnostic Technical Report (Executive Brief)"}
               </span>
-              <span className="font-mono text-[10px] uppercase text-muted-foreground">
-                Zero Off-Device Transmission · 100% Client-Side
-              </span>
+              <div className="flex items-center gap-3">
+                <Link
+                  className="font-mono text-[10px] font-bold uppercase text-primary underline underline-offset-4 hover:text-foreground"
+                  href="/tools#workspace-title"
+                >
+                  Open Handoff Console →
+                </Link>
+                <span className="font-mono text-[10px] uppercase text-muted-foreground">
+                  Zero Off-Device Transmission · 100% Client-Side
+                </span>
+              </div>
             </div>
             <pre className="p-4 bg-black/60 border border-border text-xs font-mono text-muted-foreground overflow-x-auto whitespace-pre-wrap leading-relaxed">
-              {briefMarkdown}
+              {depthMode === "architect" ? rfcMarkdown : briefMarkdown}
             </pre>
           </SurfaceCard>
         </div>

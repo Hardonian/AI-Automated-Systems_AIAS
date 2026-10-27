@@ -2,18 +2,20 @@
 
 import { useId, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowRight,
-  Calculator,
+  Check,
   Download,
   Flame,
+  Send,
   Sparkles,
   TrendingUp,
-  Zap,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { useBroadcastChannel } from "@/lib/utils/client-engines";
 
 const WEEKS_PER_YEAR = 48;
 const AUTOMATION_FACTOR = 0.65; // realistic conservative capture rate
@@ -60,7 +62,12 @@ export function InstantRoiSizer() {
   const [hours, setHours] = useState<number>(12);
   const [rate, setRate] = useState<number>(75);
   const [activePreset, setActivePreset] = useState<string | null>(null);
+  const [syncedToWorkspace, setSyncedToWorkspace] = useState<boolean>(false);
   const formId = useId();
+  const router = useRouter();
+  const { postMessage: postWorkspaceMessage } = useBroadcastChannel<{
+    notes: string;
+  }>("aias-workspace");
 
   const applyPreset = (preset: Preset) => {
     setTeamSize(preset.teamSize);
@@ -113,6 +120,31 @@ export function InstantRoiSizer() {
     a.download = `aias-roi-opportunity-brief-${teamSize}fte.json`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const inferredVolume =
+    teamSize >= 40 ? "high" : teamSize >= 15 ? "medium" : "low";
+
+  const syncRoiToWorkspace = () => {
+    const roiNotes = [
+      `Objective: Recover ${calculations.annualHoursSaved.toLocaleString()} hrs/yr ($${calculations.annualSavings.toLocaleString()} CAD/yr) across ${teamSize} FTEs.`,
+      `Constraints: ${hours} repetitive hrs/person/wk | $${rate} CAD blended rate | ~${calculations.breakEvenDays}-day breakeven target.`,
+      "Failure modes: Unvalidated manual handoffs, cross-system copy errors, and reactive triage bottlenecks.",
+      `Next decision: Run AI Clarity Diagnostic (${inferredVolume} volume tier) and scope 2-week Architecture Sprint.`,
+    ].join("\n");
+
+    try {
+      window.localStorage.setItem(
+        "aias_workspace_notes",
+        JSON.stringify(roiNotes),
+      );
+    } catch {
+      // Ignore storage errors
+    }
+    postWorkspaceMessage({ notes: roiNotes });
+    setSyncedToWorkspace(true);
+    setTimeout(() => setSyncedToWorkspace(false), 2500);
+    router.push("/tools#workspace-title");
   };
 
   return (
@@ -287,14 +319,30 @@ export function InstantRoiSizer() {
                 Model assumptions: 48 weeks/yr · 65% conservative automation
                 efficiency
               </span>
-              <button
-                className="text-primary hover:text-foreground transition-colors underline underline-offset-2 flex items-center gap-1"
-                onClick={downloadJsonBrief}
-                type="button"
-              >
-                <Download className="h-3 w-3" />
-                Export Brief JSON
-              </button>
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  className="text-cyan-400 hover:text-foreground transition-colors underline underline-offset-2 flex items-center gap-1 cursor-pointer"
+                  onClick={syncRoiToWorkspace}
+                  type="button"
+                >
+                  {syncedToWorkspace ? (
+                    <Check className="h-3 w-3 text-emerald-400" />
+                  ) : (
+                    <Send className="h-3 w-3" />
+                  )}
+                  {syncedToWorkspace
+                    ? "Synced to Console"
+                    : "Sync to Workspace"}
+                </button>
+                <button
+                  className="text-primary hover:text-foreground transition-colors underline underline-offset-2 flex items-center gap-1 cursor-pointer"
+                  onClick={downloadJsonBrief}
+                  type="button"
+                >
+                  <Download className="h-3 w-3" />
+                  Export Brief JSON
+                </button>
+              </div>
             </div>
           </div>
 
@@ -368,13 +416,19 @@ export function InstantRoiSizer() {
                 </Link>
               </Button>
 
-              <div className="flex items-center justify-between text-xs font-mono text-muted-foreground pt-1 px-1">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-muted-foreground pt-1 px-1">
                 <Link
                   className="hover:text-cyan-400 transition-colors underline underline-offset-4 flex items-center gap-1"
                   href="/roi-calculator"
                 >
                   <TrendingUp className="h-3.5 w-3.5" />
                   Full Monte-Carlo Engine →
+                </Link>
+                <Link
+                  className="hover:text-primary transition-colors underline underline-offset-4"
+                  href={`/diagnostic?volume=${inferredVolume}&step=2`}
+                >
+                  Audit {teamSize}-FTE Stack →
                 </Link>
                 <Link
                   className="hover:text-primary transition-colors underline underline-offset-4"

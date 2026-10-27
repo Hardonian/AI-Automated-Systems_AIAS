@@ -23,6 +23,17 @@ export function ProfessionalServiceSchema({
       addressLocality: "Toronto",
       addressRegion: "ON",
     },
+    areaServed: [
+      { "@type": "Country", name: "Canada" },
+      { "@type": "Country", name: "United States" },
+    ],
+    knowsAbout: [
+      "Deterministic Workflow Automation",
+      "Agentic AI Architecture",
+      "PIPEDA-Informed AI Governance",
+      "SOC 2-Aligned Audit Guardrails",
+      "Enterprise Systems Integration",
+    ],
     sameAs: ["https://github.com/Hardonian/AI-Automated-Systems_AIAS"],
   };
 
@@ -59,6 +70,19 @@ export function OrganizationSchema({
       "@type": "PostalAddress",
       addressCountry: "CA",
     },
+    contactPoint: {
+      "@type": "ContactPoint",
+      email,
+      contactType: "technical inquiries",
+      areaServed: ["CA", "US"],
+      availableLanguage: ["English"],
+    },
+    knowsAbout: [
+      "Deterministic Automation",
+      "Governed AI Pipelines",
+      "Systems Thinking",
+      "Human-in-the-Loop Guardrails",
+    ],
     sameAs: ["https://github.com/Hardonian/AI-Automated-Systems_AIAS"],
   };
 

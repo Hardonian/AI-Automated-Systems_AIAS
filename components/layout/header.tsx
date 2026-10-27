@@ -49,6 +49,7 @@ const RESOURCE_GROUPS = [
     category: "Quick Tools & Simulators",
     items: [
       { label: "Tools Hub", href: "/tools" },
+      { label: "AI Clarity Diagnostic", href: "/diagnostic" },
       { label: "Policy Studio", href: "/tools/policy-studio" },
       { label: "ROI Calculator", href: "/roi-calculator" },
       { label: "Readiness Scorecard", href: "/readiness-checklist" },
@@ -71,8 +72,14 @@ const RESOURCE_GROUPS = [
     category: "Live Lab",
     items: [
       { label: "★ Free AI Lab Audit", href: "/audit" },
-      { label: "GPU Compute API", href: "https://compute.aiautomatedsystems.ca" },
-      { label: "Private Inference", href: "https://api.aiautomatedsystems.ca/p/private-inference-access" },
+      {
+        label: "GPU Compute API",
+        href: "https://compute.aiautomatedsystems.ca",
+      },
+      {
+        label: "Private Inference",
+        href: "https://api.aiautomatedsystems.ca/p/private-inference-access",
+      },
     ],
   },
 ];

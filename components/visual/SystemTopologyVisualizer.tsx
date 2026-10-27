@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Shield,
@@ -36,6 +37,11 @@ interface TopologyStage {
   latency: string;
   memoryLimit: string;
   status: "ACTIVE" | "VERIFIED" | "INTERCEPTED" | "STANDBY";
+  executiveOutcome: {
+    businessGuarantee: string;
+    riskEliminated: string;
+    auditArtifact: string;
+  };
   contractRules: string[];
   normalTelemetry: {
     inputSummary: string;
@@ -61,6 +67,14 @@ const TOPOLOGY_STAGES: TopologyStage[] = [
     latency: "12ms",
     memoryLimit: "32MB",
     status: "VERIFIED",
+    executiveOutcome: {
+      businessGuarantee:
+        "100% of malformed or unexpected webhook payloads are rejected before incurring compute or model spend.",
+      riskEliminated:
+        "Prevents silent downstream database corruption and type-coercion bugs across CRM/ERP integrations.",
+      auditArtifact:
+        "Signed 422 Schema Validation Diff & Normalized Payload Hash.",
+    },
     contractRules: [
       "Runtime Zod Schema parse check",
       "Explicit field type assertions (0 `any`)",
@@ -90,6 +104,13 @@ const TOPOLOGY_STAGES: TopologyStage[] = [
     latency: "340ms",
     memoryLimit: "128MB",
     status: "ACTIVE",
+    executiveOutcome: {
+      businessGuarantee:
+        "Unstructured documents and tickets are converted into deterministic JSON proposals within a sovereign data boundary.",
+      riskEliminated:
+        "Eliminates prompt-injection privilege escalation and prevents sensitive client data from leaving your VPC residency.",
+      auditArtifact: "Scoped Prompt Context + Confidence-Scored JSON Proposal.",
+    },
     contractRules: [
       "Temperature clamped to 0.0 for deterministic outputs",
       "Context isolation (PIPEDA Canadian data boundary)",
@@ -119,6 +140,14 @@ const TOPOLOGY_STAGES: TopologyStage[] = [
     latency: "18ms",
     memoryLimit: "64MB",
     status: "VERIFIED",
+    executiveOutcome: {
+      businessGuarantee:
+        "Every AI proposal is verified by hard coded math, entitlement, and PII rules before any external system is mutated.",
+      riskEliminated:
+        "Eliminates hallucinated financial figures, unauthorized refunds, and accidental cross-tenant PII disclosure.",
+      auditArtifact:
+        "Zero-Trust Policy Verification Pass/Intercept Certificate.",
+    },
     contractRules: [
       "Mathematical variance ceiling <= 1.0% limit",
       "Entropy scan: 0 PII or unencrypted token leakage",
@@ -147,6 +176,14 @@ const TOPOLOGY_STAGES: TopologyStage[] = [
     latency: "24ms",
     memoryLimit: "48MB",
     status: "ACTIVE",
+    executiveOutcome: {
+      businessGuarantee:
+        "Every automated action or human escalation produces a tamper-evident SHA-256 cryptographic receipt.",
+      riskEliminated:
+        "Eliminates black-box compliance blindspots during SOC 2-aligned or PIPEDA-informed security reviews.",
+      auditArtifact:
+        "Immutable SHA-256 Ledger Entry & Operator Escalation Runbook.",
+    },
     contractRules: [
       "SHA-256 signed execution trace receipt",
       "Immutable append-only telemetry logging",
@@ -173,16 +210,30 @@ export function SystemTopologyVisualizer() {
   const [simulateIntercept, setSimulateIntercept] = useState<boolean>(false);
   const [pulseActive, setPulseActive] = useState<boolean>(false);
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
+  const [inspectorLens, setInspectorLens] = useState<"systems" | "executive">(
+    "systems",
+  );
+  const pulseIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     const reset = () => {
+      if (pulseIntervalRef.current) {
+        clearInterval(pulseIntervalRef.current);
+        pulseIntervalRef.current = null;
+      }
       setActiveStageId("schema-gate");
       setSimulateIntercept(false);
       setPulseActive(false);
       setActiveStepIndex(0);
     };
     window.addEventListener("aias:telemetry-reset", reset);
-    return () => window.removeEventListener("aias:telemetry-reset", reset);
+    return () => {
+      window.removeEventListener("aias:telemetry-reset", reset);
+      if (pulseIntervalRef.current) {
+        clearInterval(pulseIntervalRef.current);
+        pulseIntervalRef.current = null;
+      }
+    };
   }, []);
 
   const fallbackStage: TopologyStage = TOPOLOGY_STAGES[0]!;
@@ -242,6 +293,9 @@ export function SystemTopologyVisualizer() {
     setActiveStepIndex(0);
 
     let step = 0;
+    if (pulseIntervalRef.current) {
+      clearInterval(pulseIntervalRef.current);
+    }
     const interval = setInterval(() => {
       step += 1;
       if (step < TOPOLOGY_STAGES.length) {
@@ -257,6 +311,7 @@ export function SystemTopologyVisualizer() {
         }
       } else {
         clearInterval(interval);
+        pulseIntervalRef.current = null;
         setPulseActive(false);
         if (simulateIntercept) {
           playWarning();
@@ -265,6 +320,7 @@ export function SystemTopologyVisualizer() {
         }
       }
     }, 650);
+    pulseIntervalRef.current = interval;
   };
 
   const telemetryData = simulateIntercept
@@ -493,14 +549,76 @@ export function SystemTopologyVisualizer() {
             <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
               {/* Left Column: Stage Contract & Invariant Assertions */}
               <div className="lg:w-1/2 space-y-4">
-                <div className="flex items-center gap-2">
-                  <span className="border border-primary bg-primary/10 px-2 py-0.5 font-mono text-xs font-bold uppercase text-foreground">
-                    STAGE {activeStage.number} SPECIFICATION
-                  </span>
-                  <span className="font-mono text-xs font-bold uppercase text-muted-foreground">
-                    {activeStage.name}
-                  </span>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="border border-primary bg-primary/10 px-2 py-0.5 font-mono text-xs font-bold uppercase text-foreground">
+                      STAGE {activeStage.number} SPECIFICATION
+                    </span>
+                    <span className="font-mono text-xs font-bold uppercase text-muted-foreground">
+                      {activeStage.name}
+                    </span>
+                  </div>
+
+                  <div
+                    role="group"
+                    aria-label="Stage specification readability lens"
+                    className="inline-flex border border-border bg-card p-0.5 font-mono text-[10px]"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setInspectorLens("systems")}
+                      aria-pressed={inspectorLens === "systems"}
+                      className={`px-2 py-0.5 font-bold uppercase transition-colors cursor-pointer ${
+                        inspectorLens === "systems"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      Systems Spec
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setInspectorLens("executive")}
+                      aria-pressed={inspectorLens === "executive"}
+                      className={`px-2 py-0.5 font-bold uppercase transition-colors cursor-pointer ${
+                        inspectorLens === "executive"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      Executive Outcome
+                    </button>
+                  </div>
                 </div>
+
+                {inspectorLens === "executive" ? (
+                  <div className="space-y-2.5 border border-primary/40 bg-card p-3.5 font-mono text-xs">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                        Operational Guarantee:
+                      </span>
+                      <p className="mt-0.5 text-foreground leading-relaxed">
+                        {activeStage.executiveOutcome.businessGuarantee}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-500">
+                        Risk Eliminated:
+                      </span>
+                      <p className="mt-0.5 text-muted-foreground leading-relaxed">
+                        {activeStage.executiveOutcome.riskEliminated}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        Verifiable Audit Deliverable:
+                      </span>
+                      <p className="mt-0.5 font-bold text-foreground">
+                        {activeStage.executiveOutcome.auditArtifact}
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
 
                 <div>
                   <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-foreground">
@@ -523,6 +641,19 @@ export function SystemTopologyVisualizer() {
                   <div className="mt-1 border border-border bg-background p-2.5 font-mono text-xs text-emerald-700 dark:text-emerald-400">
                     <code>{telemetryData.assertionCode}</code>
                   </div>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/60 pt-3">
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                    Need this gate in your workflow?
+                  </span>
+                  <Link
+                    href="/diagnostic?step=2"
+                    className="inline-flex items-center gap-1.5 border border-primary bg-primary/10 px-3 py-1 font-mono text-[11px] font-bold uppercase text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                  >
+                    <span>Configure in Diagnostic Matrix</span>
+                    <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                  </Link>
                 </div>
               </div>
 

@@ -3,6 +3,11 @@ import {
   encryptClientState,
   decryptClientState,
   generateSHA256Receipt,
+  DEFAULT_DIAGNOSTIC_CAPABILITIES,
+  evaluateDiagnosticArchitecture,
+  encodeDiagnosticState,
+  decodeDiagnosticState,
+  type DiagnosticAllocationMode,
 } from "@/lib/utils/client-engines";
 
 describe("client-engines cryptographic suite", () => {
@@ -56,5 +61,81 @@ describe("client-engines cryptographic suite", () => {
     expect(receipt.timestamp).toBeTruthy();
     expect(receipt.receipt).toContain("AIAS RUNBOOK VERIFICATION RECEIPT");
     expect(receipt.receipt).toContain("INTEGRITY VERIFIED");
+  });
+
+  it("evaluates governed vs fragile diagnostic architectures deterministically", () => {
+    const governedAllocations = Object.fromEntries(
+      DEFAULT_DIAGNOSTIC_CAPABILITIES.map((c) => [c.id, c.recommended]),
+    ) as Record<string, DiagnosticAllocationMode>;
+
+    const governed = evaluateDiagnosticArchitecture(
+      governedAllocations,
+      "financial-ops",
+      "high",
+      "near-realtime",
+      ["hallucination", "pii-leak"],
+    );
+
+    expect(governed.score).toBeGreaterThanOrEqual(82);
+    expect(governed.grade).toBe("A");
+    expect(governed.operationalProfile.criticalDrifts).toHaveLength(0);
+    expect(
+      governed.operationalProfile.estimatedHoursReclaimedPerYear,
+    ).toBeGreaterThan(1000);
+
+    const fragileAllocations: Record<string, DiagnosticAllocationMode> = {
+      ...governedAllocations,
+      "schema-validation": "ai",
+      "math-calculations": "ai",
+      "authorization-policy": "ai",
+      "audit-receipts": "ai",
+    };
+
+    const fragile = evaluateDiagnosticArchitecture(
+      fragileAllocations,
+      "financial-ops",
+      "high",
+      "realtime",
+      ["hallucination", "pii-leak", "budget-runaway", "latency-spike"],
+    );
+
+    expect(fragile.score).toBeLessThan(governed.score);
+    expect(fragile.grade).toBe("D");
+    expect(fragile.operationalProfile.criticalDrifts.length).toBeGreaterThan(0);
+    expect(fragile.track).toContain("Stabilization");
+  });
+
+  it("encodes and decodes URL-safe diagnostic share states and rejects tampered inputs", () => {
+    const allocations = Object.fromEntries(
+      DEFAULT_DIAGNOSTIC_CAPABILITIES.map((c) => [c.id, c.recommended]),
+    ) as Record<string, DiagnosticAllocationMode>;
+
+    const originalState = {
+      workload: "compliance-audit" as const,
+      volume: "high" as const,
+      latency: "realtime" as const,
+      allocations,
+      risks: ["pii-leak", "hallucination"],
+    };
+
+    const encoded = encodeDiagnosticState(originalState);
+    const decoded = decodeDiagnosticState(encoded);
+
+    expect(decoded).not.toBeNull();
+    expect(decoded?.workload).toBe("compliance-audit");
+    expect(decoded?.volume).toBe("high");
+    expect(decoded?.latency).toBe("realtime");
+    expect(decoded?.allocations).toEqual(allocations);
+    expect(decoded?.risks).toEqual(["pii-leak", "hallucination"]);
+
+    // Tampered query string should sanitize unknown values
+    const tampered = decodeDiagnosticState(
+      "workload=invalid-workload&volume=bad&alloc=schema-validation:invalid,bad-id:deterministic&risks=pii-leak,fake-risk",
+    );
+    expect(tampered).not.toBeNull();
+    expect(tampered?.workload).toBeUndefined();
+    expect(tampered?.volume).toBeUndefined();
+    expect(tampered?.allocations).toBeUndefined();
+    expect(tampered?.risks).toEqual(["pii-leak"]);
   });
 });

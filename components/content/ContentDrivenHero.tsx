@@ -289,6 +289,40 @@ export function ContentDrivenHero({ content }: { content: HeroContent }) {
                   </div>
                 </Link>
               </div>
+
+              {/* 1-Click Bottleneck Deep-Links */}
+              <div className="mt-2.5 flex flex-wrap items-center gap-1.5 border-t border-border/60 pt-2.5">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mr-1">
+                  Target Bottleneck:
+                </span>
+                {[
+                  {
+                    label: "FinOps Ledger",
+                    href: "/diagnostic?workload=financial-ops&step=2",
+                  },
+                  {
+                    label: "Support Triage",
+                    href: "/diagnostic?workload=customer-support&step=2",
+                  },
+                  {
+                    label: "Release Fabric",
+                    href: "/diagnostic?workload=engineering-automation&step=2",
+                  },
+                  {
+                    label: "PIPEDA Airlock",
+                    href: "/diagnostic?workload=compliance-audit&step=2",
+                  },
+                ].map((preset) => (
+                  <Link
+                    key={preset.label}
+                    href={preset.href}
+                    className="inline-flex items-center gap-1 border border-border/70 bg-background/70 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:border-primary/70 hover:text-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                  >
+                    <span>{preset.label}</span>
+                    <span aria-hidden="true">↗</span>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
 

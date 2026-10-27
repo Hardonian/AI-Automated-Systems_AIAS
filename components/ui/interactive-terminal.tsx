@@ -20,6 +20,7 @@ interface TerminalCommand {
   id: string;
   name: string;
   command: string;
+  diagnosticHref: string;
   lines: Array<{
     text: string;
     type: "system" | "info" | "success" | "warning";
@@ -32,6 +33,7 @@ const TERMINAL_COMMANDS: TerminalCommand[] = [
     id: "run-pipeline",
     name: "01 // Ingest & Gate",
     command: "aias run --contract=zod-strict --verify",
+    diagnosticHref: "/diagnostic?workload=engineering-automation&step=2",
     lines: [
       {
         text: "> INITIALIZING AIAS CORE RUNTIME...",
@@ -79,6 +81,7 @@ const TERMINAL_COMMANDS: TerminalCommand[] = [
     id: "test-guardrail",
     name: "02 // Policy Intercept",
     command: "aias test --inject-anomaly --guardrail=strict",
+    diagnosticHref: "/diagnostic?workload=compliance-audit&step=2",
     lines: [
       {
         text: "> TESTING BOUNDARY GUARDRAIL INTERCEPT...",
@@ -121,6 +124,7 @@ const TERMINAL_COMMANDS: TerminalCommand[] = [
     id: "audit-trace",
     name: "03 // Cryptographic Trace",
     command: "aias audit --receipt=latest --verify-sla",
+    diagnosticHref: "/diagnostic?workload=financial-ops&step=2",
     lines: [
       {
         text: "> QUERYING AUDIT LEDGER RECEIPT...",
@@ -212,6 +216,26 @@ export function InteractiveTerminal() {
       timers.forEach((t) => clearTimeout(t));
     };
   }, [selectedCommandId, activeCommand, replayKey]);
+
+  useEffect(() => {
+    const handleExternalScenario = (event: Event) => {
+      const customEvent = event as CustomEvent<{ commandId?: string }>;
+      const targetId = customEvent.detail?.commandId;
+      if (targetId && TERMINAL_COMMANDS.some((c) => c.id === targetId)) {
+        setSelectedCommandId(targetId);
+      }
+    };
+    window.addEventListener(
+      "aias:select-terminal-scenario",
+      handleExternalScenario,
+    );
+    return () => {
+      window.removeEventListener(
+        "aias:select-terminal-scenario",
+        handleExternalScenario,
+      );
+    };
+  }, []);
 
   const handleCommandSwitch = (id: string) => {
     playClick();
@@ -423,7 +447,7 @@ export function InteractiveTerminal() {
         </div>
 
         <Link
-          href="/diagnostic"
+          href={activeCommand.diagnosticHref}
           className="group inline-flex items-center gap-1.5 border border-primary/70 bg-primary/15 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-primary hover:bg-primary hover:text-primary-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           <span>Audit Your Stack</span>

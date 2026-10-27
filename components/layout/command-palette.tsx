@@ -67,6 +67,26 @@ const COMMAND_ITEMS: CommandItem[] = [
     ],
   },
   {
+    id: "tool-diagnostic",
+    title: "AI Clarity & Architecture Diagnostic",
+    description:
+      "Interactive 4-step capability allocation matrix, risk scorer, and portable CTO permalink generator.",
+    category: "Tools",
+    href: "/diagnostic",
+    icon: ShieldAlert,
+    badge: "2-Min Audit",
+    keywords: [
+      "diagnostic",
+      "clarity",
+      "audit",
+      "score",
+      "risk",
+      "matrix",
+      "rfc",
+      "permalink",
+    ],
+  },
+  {
     id: "tool-policy-studio",
     title: "Policy & Guardrail Studio",
     description:
@@ -529,6 +549,7 @@ export function CommandPalette() {
             <input
               ref={inputRef}
               type="text"
+              aria-label="Search platform tools, blueprints, services, and case studies"
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);

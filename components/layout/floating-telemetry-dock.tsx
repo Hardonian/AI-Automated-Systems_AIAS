@@ -1,31 +1,51 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Calculator,
-  Calendar,
-  FileText,
-  Sparkles,
-  X,
-} from "lucide-react";
+import { ArrowRight, Calculator, Calendar, Sparkles, X } from "lucide-react";
+
+const DOCK_DISMISSED_KEY = "aias_telemetry_dock_dismissed";
 
 export function FloatingTelemetryDock() {
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+  const tickingRef = useRef(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (isDismissed) return;
-      // Show when scrolled down past initial hero view (> 350px)
+    try {
+      if (window.sessionStorage.getItem(DOCK_DISMISSED_KEY) === "1") {
+        queueMicrotask(() => setIsDismissed(true));
+        return;
+      }
+    } catch {
+      // Ignore storage access errors
+    }
+
+    const updateVisibility = () => {
       const shouldShow = window.scrollY > 350;
-      setIsVisible(shouldShow);
+      setIsVisible((prev) => (prev !== shouldShow ? shouldShow : prev));
+      tickingRef.current = false;
     };
 
+    const handleScroll = () => {
+      if (isDismissed || tickingRef.current) return;
+      tickingRef.current = true;
+      window.requestAnimationFrame(updateVisibility);
+    };
+
+    updateVisibility();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isDismissed]);
+
+  const handleDismiss = () => {
+    setIsDismissed(true);
+    try {
+      window.sessionStorage.setItem(DOCK_DISMISSED_KEY, "1");
+    } catch {
+      // Ignore storage errors
+    }
+  };
 
   if (isDismissed || !isVisible) {
     return null;
@@ -78,11 +98,11 @@ export function FloatingTelemetryDock() {
       {/* Dismiss Button */}
       <button
         aria-label="Dismiss quick dock for session"
-        className="ml-1 p-1 text-muted-foreground hover:text-foreground transition-colors"
-        onClick={() => setIsDismissed(true)}
+        className="ml-1 p-1 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+        onClick={handleDismiss}
         type="button"
       >
-        <X className="h-3.5 w-3.5" />
+        <X className="h-3.5 w-3.5" aria-hidden="true" />
       </button>
     </aside>
   );

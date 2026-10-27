@@ -111,9 +111,9 @@ export function PolicyStudioClient() {
 
   const [copiedCode, setCopiedCode] = useState<boolean>(false);
   const [syncedToWorkspace, setSyncedToWorkspace] = useState<boolean>(false);
-  const postWorkspaceMessage = useBroadcastChannel<{ notes: string }>(
-    "aias-workspace",
-  );
+  const { postMessage: postWorkspaceMessage } = useBroadcastChannel<{
+    notes: string;
+  }>("aias-workspace");
 
   const handleSelectPreset = (preset: PresetScenario) => {
     setSelectedPreset(preset);

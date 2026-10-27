@@ -59,9 +59,9 @@ export function AdvancedEngineLab() {
   const [pipeda, setPipeda] = useState([true, true, false, true, false]);
   const [grade, setGrade] = useState("Not graded");
   const [syncedToWorkspace, setSyncedToWorkspace] = useState(false);
-  const postWorkspaceMessage = useBroadcastChannel<{ notes: string }>(
-    "aias-workspace",
-  );
+  const { postMessage: postWorkspaceMessage } = useBroadcastChannel<{
+    notes: string;
+  }>("aias-workspace");
 
   const latency = useMemo(
     () => Math.round(250 + (tokens / Math.max(throughput, 1)) * 1_000),

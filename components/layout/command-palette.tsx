@@ -471,12 +471,7 @@ const DYNAMIC_CATALOG_ITEMS: CommandItem[] = siteContent.catalogProducts
     href: `/catalog/${product.id}`,
     icon: ShoppingBag,
     badge: product.category,
-    keywords: [
-      product.id,
-      product.category,
-      product.tagline,
-      ...product.techStack,
-    ],
+    keywords: [product.id, product.category, ...product.techStack],
   }));
 
 const DYNAMIC_CASE_STUDY_ITEMS: CommandItem[] = caseStudies

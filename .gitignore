@@ -129,6 +129,9 @@ public/images/*
 !public/images/catalog/
 public/images/catalog/*
 !public/images/catalog/*.avif
+!public/workers/
+public/workers/*
+!public/workers/analysis-worker.js
 
 # Storybook build outputs
 .out

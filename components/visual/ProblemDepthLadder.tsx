@@ -6,25 +6,29 @@ const levels = [
   {
     code: "LVL_01",
     level: "Surface Friction",
-    issue: "Manual rework and duplicate data entry across disjointed SaaS tools.",
+    issue:
+      "Manual rework and duplicate data entry across disjointed SaaS tools.",
     severity: "Operational Drag",
   },
   {
     code: "LVL_02",
     level: "System Brittleness",
-    issue: "Disconnected APIs and fragile webhook handoffs that break silently without alarms.",
+    issue:
+      "Disconnected APIs and fragile webhook handoffs that break silently without alarms.",
     severity: "Data Inconsistency",
   },
   {
     code: "LVL_03",
     level: "Control Void",
-    issue: "No deterministic checkpoints, validation bounds, or mathematical variance gates.",
+    issue:
+      "No deterministic checkpoints, validation bounds, or mathematical variance gates.",
     severity: "Financial & Risk Exposure",
   },
   {
     code: "LVL_04",
     level: "Strategic Governance",
-    issue: "AI agents deployed without clear escalation runbooks, audit ledgers, or human ownership.",
+    issue:
+      "AI agents deployed without clear escalation runbooks, audit ledgers, or human ownership.",
     severity: "Production Catastrophe",
   },
 ];

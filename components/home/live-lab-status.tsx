@@ -49,9 +49,8 @@ export function LiveLabStatus() {
         if (computeRes.status === "fulfilled" && computeRes.value.ok) {
           const data = await computeRes.value.json();
           result.computeOk =
-            data.status === "ok" || data.checks?.some(
-              (c: { status: string }) => c.status === "ok"
-            );
+            data.status === "ok" ||
+            data.checks?.some((c: { status: string }) => c.status === "ok");
         }
       } catch {
         // Silent — widget just stays hidden

@@ -1,6 +1,14 @@
-const CACHE_NAME = "aias-static-v3";
+const CACHE_NAME = "aias-static-v4";
 const OFFLINE_PAGE = "/offline";
-const PRECACHE = ["/", OFFLINE_PAGE, "/manifest.json", "/favicon.svg"];
+const PRECACHE = [
+  "/",
+  OFFLINE_PAGE,
+  "/tools",
+  "/diagnostic",
+  "/manifest.json",
+  "/favicon.svg",
+  "/workers/analysis-worker.js",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

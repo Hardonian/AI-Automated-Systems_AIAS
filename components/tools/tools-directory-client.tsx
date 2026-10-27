@@ -95,11 +95,19 @@ export function ToolsDirectoryClient({ tools }: { tools: QuickToolItem[] }) {
       });
     } else if (scannerBottleneck === "governance") {
       setScannerResult({
-        recommendedTool: "AI Governance Readiness Scorecard",
-        href: "/readiness-checklist",
+        recommendedTool: "AI Clarity & Architecture Diagnostic",
+        href: `/diagnostic?workload=${
+          scannerDomain === "finance"
+            ? "financial-ops"
+            : scannerDomain === "support"
+              ? "customer-support"
+              : scannerDomain === "engineering"
+                ? "engineering-automation"
+                : "compliance-audit"
+        }&step=2`,
         rationale:
-          "Your stack requires structural policy gates and audit logging before scaling to production.",
-        confidence: 96,
+          "Your stack requires structural policy gates, deterministic boundary allocation, and audit logging before scaling to production.",
+        confidence: 98,
       });
     } else {
       setScannerResult({

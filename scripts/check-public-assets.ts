@@ -7,7 +7,7 @@ const failures: string[] = [];
 const referencedAssets = new Map<string, Set<string>>();
 const sourceExtensions = new Set([".ts", ".tsx", ".css", ".json", ".md"]);
 const assetPattern =
-  /(?<!\/)\/(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+\.(?:avif|webp|png|jpe?g|svg|ico)/g;
+  /(?<!\/)\/(?:(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+\.(?:avif|webp|png|jpe?g|svg|ico)|(?:workers|blueprints|certification|downloads)\/[A-Za-z0-9._/-]+\.(?:js|md))/g;
 
 function walk(directory: string): string[] {
   const absoluteDirectory = join(root, directory);

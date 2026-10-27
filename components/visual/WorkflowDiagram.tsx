@@ -11,10 +11,30 @@ interface WorkflowStep {
 }
 
 const WORKFLOW_STEPS: WorkflowStep[] = [
-  { id: "01", name: "Input Contract", type: "Deterministic", desc: "Zod validation" },
-  { id: "02", name: "Model Extract", type: "Constrained AI", desc: "Zero-temp inference" },
-  { id: "03", name: "Policy Verify", type: "Policy Gate", desc: "Math & PII guardrails" },
-  { id: "04", name: "Runbook Post", type: "Deterministic", desc: "Signed audit receipt" },
+  {
+    id: "01",
+    name: "Input Contract",
+    type: "Deterministic",
+    desc: "Zod validation",
+  },
+  {
+    id: "02",
+    name: "Model Extract",
+    type: "Constrained AI",
+    desc: "Zero-temp inference",
+  },
+  {
+    id: "03",
+    name: "Policy Verify",
+    type: "Policy Gate",
+    desc: "Math & PII guardrails",
+  },
+  {
+    id: "04",
+    name: "Runbook Post",
+    type: "Deterministic",
+    desc: "Signed audit receipt",
+  },
 ];
 
 export function WorkflowDiagram() {

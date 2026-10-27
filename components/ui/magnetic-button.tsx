@@ -20,7 +20,10 @@ export function MagneticButton({
     const { height, width, left, top } = ref.current!.getBoundingClientRect();
     const middleX = clientX - (left + width / 2);
     const middleY = clientY - (top + height / 2);
-    setPosition({ x: middleX * (strength / 100), y: middleY * (strength / 100) });
+    setPosition({
+      x: middleX * (strength / 100),
+      y: middleY * (strength / 100),
+    });
   };
 
   const reset = () => {

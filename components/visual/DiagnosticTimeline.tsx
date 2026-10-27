@@ -6,22 +6,26 @@ const phases = [
   {
     code: "PHASE_01",
     name: "Diagnose",
-    detail: "Capture current state, bottlenecks, error budgets, and failure modes.",
+    detail:
+      "Capture current state, bottlenecks, error budgets, and failure modes.",
   },
   {
     code: "PHASE_02",
     name: "Design",
-    detail: "Define boundaries between deterministic logic and constrained AI assistance.",
+    detail:
+      "Define boundaries between deterministic logic and constrained AI assistance.",
   },
   {
     code: "PHASE_03",
     name: "Deploy",
-    detail: "Ship a scoped production pilot with strict QA gates and live telemetry.",
+    detail:
+      "Ship a scoped production pilot with strict QA gates and live telemetry.",
   },
   {
     code: "PHASE_04",
     name: "De-risk",
-    detail: "Run monitored rollout with incident, exception, and rollback playbooks.",
+    detail:
+      "Run monitored rollout with incident, exception, and rollback playbooks.",
   },
 ];
 

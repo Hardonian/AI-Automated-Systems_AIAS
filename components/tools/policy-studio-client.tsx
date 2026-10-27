@@ -17,9 +17,11 @@ import {
   ExternalLink,
   Lock,
   RefreshCw,
+  Send,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useBroadcastChannel } from "@/lib/utils/client-engines";
 
 interface PresetScenario {
   id: string;
@@ -108,6 +110,10 @@ export function PolicyStudioClient() {
   } | null>(null);
 
   const [copiedCode, setCopiedCode] = useState<boolean>(false);
+  const [syncedToWorkspace, setSyncedToWorkspace] = useState<boolean>(false);
+  const postWorkspaceMessage = useBroadcastChannel<{ notes: string }>(
+    "aias-workspace",
+  );
 
   const handleSelectPreset = (preset: PresetScenario) => {
     setSelectedPreset(preset);
@@ -216,6 +222,37 @@ export const ${selectedPreset.id.replace(/-/g, "_")}_policy = z.object({
       navigator.clipboard.writeText(evalResult.generatedCode);
       setCopiedCode(true);
       setTimeout(() => setCopiedCode(false), 2000);
+    }
+  };
+
+  const handleSyncToWorkspace = () => {
+    if (!evalResult) return;
+    const summaryBlock = [
+      `## Policy Studio Gate Spec (${selectedPreset.name})`,
+      `- Status: ${evalResult.status} (${evalResult.decisionTelemetry.deterministicRoute})`,
+      `- Confidence Threshold: ${confidenceThreshold}% (Simulated: ${evalResult.decisionTelemetry.confidenceScore}%)`,
+      `- Active Controls: PII Masking=${maskPii}, Financial Gate=${blockFinancials}, Strict Schema=${enforceSchema}, Operator Sign-Off=${requireHumanSignOff}`,
+      evalResult.violations.length > 0
+        ? `- Interceptions: ${evalResult.violations.join(" | ")}`
+        : `- Interceptions: None (all gates passed)`,
+      "",
+      "```typescript",
+      evalResult.generatedCode,
+      "```",
+    ].join("\n");
+
+    try {
+      const existing = window.localStorage.getItem("aias_workspace_notes");
+      const nextNotes =
+        existing && existing.trim().length > 0
+          ? `${existing.trim()}\n\n${summaryBlock}`
+          : `# AIAS Architecture Handoff Brief\n\n${summaryBlock}`;
+      window.localStorage.setItem("aias_workspace_notes", nextNotes);
+      postWorkspaceMessage({ notes: nextNotes });
+      setSyncedToWorkspace(true);
+      setTimeout(() => setSyncedToWorkspace(false), 3000);
+    } catch {
+      // Ignore storage quota errors
     }
   };
 
@@ -489,31 +526,51 @@ export const ${selectedPreset.id.replace(/-/g, "_")}_policy = z.object({
 
                 {/* Generated Schema Box */}
                 <div className="border-t-2 border-border pt-4">
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                     <div className="flex items-center gap-1.5">
                       <FileCode className="h-3.5 w-3.5 text-primary" />
                       <span className="font-mono text-xs font-bold uppercase text-foreground">
                         Generated Production Zod Policy Schema
                       </span>
                     </div>
-                    <Button
-                      onClick={handleCopyCode}
-                      size="sm"
-                      variant="outline"
-                      className="rounded-none border border-border font-mono text-[10px] uppercase h-7 px-2.5 cursor-pointer"
-                    >
-                      {copiedCode ? (
-                        <>
-                          <Check className="h-3 w-3 mr-1 text-green-500" />
-                          Copied
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="h-3 w-3 mr-1" />
-                          Copy Zod
-                        </>
-                      )}
-                    </Button>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button
+                        onClick={handleSyncToWorkspace}
+                        size="sm"
+                        variant="outline"
+                        className="rounded-none border border-primary/50 bg-primary/10 font-mono text-[10px] font-bold uppercase text-primary h-7 px-2.5 cursor-pointer hover:bg-primary hover:text-primary-foreground"
+                      >
+                        {syncedToWorkspace ? (
+                          <>
+                            <Check className="h-3 w-3 mr-1 text-green-500" />
+                            Synced to Brief
+                          </>
+                        ) : (
+                          <>
+                            <Send className="h-3 w-3 mr-1" />
+                            Append to Handoff Brief
+                          </>
+                        )}
+                      </Button>
+                      <Button
+                        onClick={handleCopyCode}
+                        size="sm"
+                        variant="outline"
+                        className="rounded-none border border-border font-mono text-[10px] uppercase h-7 px-2.5 cursor-pointer"
+                      >
+                        {copiedCode ? (
+                          <>
+                            <Check className="h-3 w-3 mr-1 text-green-500" />
+                            Copied
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="h-3 w-3 mr-1" />
+                            Copy Zod
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   </div>
                   <pre className="border border-border bg-black/90 p-3 font-mono text-[11px] text-green-400 overflow-x-auto">
                     {evalResult.generatedCode}

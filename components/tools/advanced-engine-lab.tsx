@@ -5,9 +5,11 @@ import Link from "next/link";
 import {
   ArrowDown,
   ArrowUp,
+  Check,
   Download,
   FileJson,
   Gauge,
+  Send,
   ShieldCheck,
 } from "lucide-react";
 import { z } from "zod";
@@ -20,6 +22,7 @@ import {
   downloadPdf,
   downloadText,
 } from "@/lib/client/artifact-export";
+import { useBroadcastChannel } from "@/lib/utils/client-engines";
 
 const sampleSchema = z
   .object({
@@ -55,6 +58,10 @@ export function AdvancedEngineLab() {
   const [throughput, setThroughput] = useState(55);
   const [pipeda, setPipeda] = useState([true, true, false, true, false]);
   const [grade, setGrade] = useState("Not graded");
+  const [syncedToWorkspace, setSyncedToWorkspace] = useState(false);
+  const postWorkspaceMessage = useBroadcastChannel<{ notes: string }>(
+    "aias-workspace",
+  );
 
   const latency = useMemo(
     () => Math.round(250 + (tokens / Math.max(throughput, 1)) * 1_000),
@@ -112,21 +119,68 @@ export function AdvancedEngineLab() {
     worker.postMessage({ type: "pipeda-grade", checks: pipeda });
   };
 
+  const syncLabToWorkspace = () => {
+    const labSummary = [
+      "## Deterministic Systems Lab Telemetry",
+      `- Execution Flow: ${nodes.join(" -> ")}`,
+      `- Zod Contract Status: ${schemaResult}`,
+      `- Estimated P95 Latency Budget: ~${(latency / 1_000).toFixed(1)}s (${tokens.toLocaleString()} context tokens @ ${throughput} tok/sec)`,
+      `- PIPEDA Readiness Grade: ${grade}`,
+      `- Deterministic Policy Rule: \`${rule}\``,
+    ].join("\n");
+
+    try {
+      const existing = window.localStorage.getItem("aias_workspace_notes");
+      const nextNotes =
+        existing && existing.trim().length > 0
+          ? `${existing.trim()}\n\n${labSummary}`
+          : `# AIAS Architecture Handoff Brief\n\n${labSummary}`;
+      window.localStorage.setItem("aias_workspace_notes", nextNotes);
+      postWorkspaceMessage({ notes: nextNotes });
+      setSyncedToWorkspace(true);
+      setTimeout(() => setSyncedToWorkspace(false), 2500);
+      document
+        .getElementById("workspace-title")
+        ?.scrollIntoView({ behavior: "smooth" });
+    } catch {
+      // Ignore storage quota errors
+    }
+  };
+
   return (
     <section aria-labelledby="engine-lab-title" className="space-y-6">
-      <div>
-        <p className="font-mono text-xs font-black uppercase tracking-widest text-primary">
-          Advanced browser engines
-        </p>
-        <h2
-          className="mt-1 font-mono text-2xl font-black uppercase"
-          id="engine-lab-title"
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="font-mono text-xs font-black uppercase tracking-widest text-primary">
+            Advanced browser engines
+          </p>
+          <h2
+            className="mt-1 font-mono text-2xl font-black uppercase"
+            id="engine-lab-title"
+          >
+            Deterministic systems lab
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            All calculations, validation, rendering, and exports run locally.
+          </p>
+        </div>
+        <Button
+          onClick={syncLabToWorkspace}
+          variant="outline"
+          className="rounded-none border-2 border-primary bg-primary/10 font-mono text-xs font-bold uppercase text-primary hover:bg-primary hover:text-primary-foreground"
         >
-          Deterministic systems lab
-        </h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          All calculations, validation, rendering, and exports run locally.
-        </p>
+          {syncedToWorkspace ? (
+            <>
+              <Check className="mr-2 h-3.5 w-3.5 text-emerald-500" />
+              Appended to Handoff Console
+            </>
+          ) : (
+            <>
+              <Send className="mr-2 h-3.5 w-3.5" />
+              Append Lab Specs to Handoff Brief
+            </>
+          )}
+        </Button>
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
         <SurfaceCard className="border-2 border-border">

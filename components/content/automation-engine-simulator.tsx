@@ -18,10 +18,7 @@ import { Button } from "@/components/ui/button";
 import { SurfaceCard } from "@/components/ui/section-primitives";
 
 type ScenarioKey =
-  | "lead-qualification"
-  | "invoice-audit"
-  | "governance-gate"
-  | "support-triage";
+  "lead-qualification" | "invoice-audit" | "governance-gate" | "support-triage";
 
 interface Stage {
   id: string;

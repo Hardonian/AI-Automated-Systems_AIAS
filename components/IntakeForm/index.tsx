@@ -254,6 +254,8 @@ export function IntakeForm({
     workload?: string;
     track?: string;
   } | null>(null);
+  const [workspaceBrief, setWorkspaceBrief] = useState<string | null>(null);
+  const [workspaceBriefImported, setWorkspaceBriefImported] = useState(false);
   const [progressRestored, setProgressRestored] = useState(false);
   const [attribution, setAttribution] =
     useState<LeadAttribution>(emptyAttribution);
@@ -361,8 +363,30 @@ export function IntakeForm({
           }
         : null;
 
+    let detectedWorkspaceNotes: string | null = null;
+    try {
+      const rawNotes = window.localStorage.getItem("aias_workspace_notes");
+      if (rawNotes) {
+        const parsedNotes = JSON.parse(rawNotes) as unknown;
+        if (
+          typeof parsedNotes === "string" &&
+          parsedNotes.trim().length >= 25 &&
+          !parsedNotes.startsWith(
+            "Objective:\nConstraints:\nFailure modes:\nNext decision:",
+          )
+        ) {
+          detectedWorkspaceNotes = parsedNotes.trim().slice(0, 1150);
+        }
+      }
+    } catch {
+      // Ignore storage parse issues
+    }
+
     queueMicrotask(() => {
       if (!active) return;
+      if (detectedWorkspaceNotes) {
+        setWorkspaceBrief(detectedWorkspaceNotes);
+      }
       setAttribution(mergedAttribution);
       window.sessionStorage.setItem(
         "aias_lead_attribution",
@@ -377,6 +401,25 @@ export function IntakeForm({
       }
       if (contextFound) {
         setRoiContext(contextFound);
+        const mappedProblem: IntakeSubmission["problemCategory"] | undefined =
+          contextFound.workload === "compliance-audit"
+            ? "compliance-risk"
+            : contextFound.workload === "customer-support"
+              ? "customer-experience"
+              : contextFound.workload === "financial-ops" ||
+                  contextFound.workload === "engineering-automation"
+                ? "manual-operations"
+                : undefined;
+        const mappedMaturity:
+          IntakeSubmission["governanceMaturity"] | undefined =
+          contextFound.grade === "A"
+            ? "defined"
+            : contextFound.grade === "B"
+              ? "repeatable"
+              : contextFound.grade === "D"
+                ? "ad-hoc"
+                : undefined;
+
         if (contextFound.savings) {
           const savingsFormatted = contextFound.savings.toLocaleString();
           const teamLabel = contextFound.team
@@ -387,6 +430,8 @@ export function IntakeForm({
             : "recurrent engineering hours";
           setValues((prev) => ({
             ...prev,
+            problemCategory: prev.problemCategory ?? mappedProblem,
+            governanceMaturity: prev.governanceMaturity ?? mappedMaturity,
             workflowSummary:
               prev.workflowSummary ||
               `Targeting automation capacity across ${teamLabel} to recover ~${hoursLabel} with projected annual efficiency value of $${savingsFormatted}.`,
@@ -400,6 +445,8 @@ export function IntakeForm({
             : "";
           setValues((prev) => ({
             ...prev,
+            problemCategory: prev.problemCategory ?? mappedProblem,
+            governanceMaturity: prev.governanceMaturity ?? mappedMaturity,
             workflowSummary:
               prev.workflowSummary ||
               `AIAS Diagnostic Assessment attached${workloadLabel}: Grade ${contextFound.grade} (${contextFound.score}/100)${trackLabel}. Requesting technical architecture review and boundary hardening roadmap.`,
@@ -772,6 +819,33 @@ export function IntakeForm({
             Intake and scope engineering will be structured directly against
             this capacity target.
           </p>
+        </div>
+      )}
+      {workspaceBrief && (
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-2 border-primary/50 bg-primary/5 p-4">
+          <div>
+            <p className="font-mono text-xs font-black uppercase tracking-wider text-primary">
+              Active Workspace Brief Detected
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              You have an architecture brief saved in your local Handoff Console
+              ({workspaceBrief.length} chars).
+            </p>
+          </div>
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              updateValue("workflowSummary", workspaceBrief);
+              setWorkspaceBriefImported(true);
+            }}
+            className="font-mono text-xs font-bold uppercase"
+          >
+            {workspaceBriefImported
+              ? "✓ Imported into Step 4"
+              : "Import Brief into Intake"}
+          </Button>
         </div>
       )}
       {catalogSelection.length > 0 && (

@@ -28,6 +28,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { caseStudies } from "@/lib/case-studies-generator";
+import { siteContent } from "@/src/content/site";
 
 export interface CommandItem {
   id: string;
@@ -457,6 +459,45 @@ const COMMAND_ITEMS: CommandItem[] = [
   },
 ];
 
+const STATIC_HREFS = new Set(COMMAND_ITEMS.map((item) => item.href));
+
+const DYNAMIC_CATALOG_ITEMS: CommandItem[] = siteContent.catalogProducts
+  .filter((product) => !STATIC_HREFS.has(`/catalog/${product.id}`))
+  .map((product) => ({
+    id: `cat-${product.id}`,
+    title: `Module: ${product.title}`,
+    description: product.operationalOutcome,
+    category: "Services" as const,
+    href: `/catalog/${product.id}`,
+    icon: ShoppingBag,
+    badge: product.category,
+    keywords: [
+      product.id,
+      product.category,
+      product.tagline,
+      ...product.techStack,
+    ],
+  }));
+
+const DYNAMIC_CASE_STUDY_ITEMS: CommandItem[] = caseStudies
+  .filter((study) => !STATIC_HREFS.has(`/case-studies/${study.slug}`))
+  .map((study) => ({
+    id: `cs-${study.slug}`,
+    title: `Case Study: ${study.title}`,
+    description: study.problem,
+    category: "Case Studies" as const,
+    href: `/case-studies/${study.slug}`,
+    icon: BookOpen,
+    badge: "Case Study",
+    keywords: [study.slug, study.title, ...study.technologies],
+  }));
+
+const ALL_COMMAND_ITEMS: CommandItem[] = [
+  ...COMMAND_ITEMS,
+  ...DYNAMIC_CATALOG_ITEMS,
+  ...DYNAMIC_CASE_STUDY_ITEMS,
+];
+
 export function CommandPalette() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -480,10 +521,10 @@ export function CommandPalette() {
   // Filter items based on query
   const filteredItems = useMemo(() => {
     if (!query.trim()) {
-      return COMMAND_ITEMS;
+      return ALL_COMMAND_ITEMS;
     }
     const cleanQuery = query.toLowerCase().trim();
-    return COMMAND_ITEMS.filter((item) => {
+    return ALL_COMMAND_ITEMS.filter((item) => {
       const matchTitle = item.title.toLowerCase().includes(cleanQuery);
       const matchDesc = item.description.toLowerCase().includes(cleanQuery);
       const matchCategory = item.category.toLowerCase().includes(cleanQuery);

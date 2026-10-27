@@ -16,18 +16,29 @@ try {
 const report = JSON.parse(raw);
 const advisories = Object.values(report.advisories ?? {});
 // pnpm signals "no patched release exists" with patched_versions === "<0.0.0".
-const unfixable = advisories.filter((a) => !a.patched_versions || a.patched_versions === "<0.0.0");
-const fixable = advisories.filter((a) => a.patched_versions && a.patched_versions !== "<0.0.0");
+const unfixable = advisories.filter(
+  (a) => !a.patched_versions || a.patched_versions === "<0.0.0",
+);
+const fixable = advisories.filter(
+  (a) => a.patched_versions && a.patched_versions !== "<0.0.0",
+);
 
 for (const a of unfixable) {
   console.warn(
     `WARN unfixable advisory: ${a.title} (${a.npm_id}) severity=${a.severity} — no patched release upstream yet; re-check weekly.`,
   );
 }
-const actionable = fixable.filter((a) => ["high", "critical"].includes(a.severity));
+const actionable = fixable.filter((a) =>
+  ["high", "critical"].includes(a.severity),
+);
 if (actionable.length) {
-  console.error(`FAIL ${actionable.length} fixable high/critical vulnerabilities:`);
-  for (const a of actionable) console.error(` - ${a.title} | ${a.module_name} | patched: ${a.patched_versions}`);
+  console.error(
+    `FAIL ${actionable.length} fixable high/critical vulnerabilities:`,
+  );
+  for (const a of actionable)
+    console.error(
+      ` - ${a.title} | ${a.module_name} | patched: ${a.patched_versions}`,
+    );
   process.exit(1);
 }
 console.log(

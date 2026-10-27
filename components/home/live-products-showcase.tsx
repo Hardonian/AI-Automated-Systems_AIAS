@@ -53,7 +53,10 @@ export function LiveProductsShowcase() {
           {products.map((p) => (
             <a
               key={p.slug}
-              href={p.checkout_url || `https://api.aiautomatedsystems.ca/p/${p.slug}`}
+              href={
+                p.checkout_url ||
+                `https://api.aiautomatedsystems.ca/p/${p.slug}`
+              }
               className="group flex flex-col border-2 border-border bg-card p-5 transition-all hover:-translate-y-1 hover:border-primary hover:shadow-[4px_4px_0px_0px_hsl(var(--primary))]"
             >
               <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">

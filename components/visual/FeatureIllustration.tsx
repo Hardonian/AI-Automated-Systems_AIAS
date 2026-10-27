@@ -28,7 +28,9 @@ export function FeatureIllustration({
           </div>
           <div className="flex justify-between">
             <span>Temperature:</span>
-            <span className="font-bold text-foreground">0.0 (Deterministic)</span>
+            <span className="font-bold text-foreground">
+              0.0 (Deterministic)
+            </span>
           </div>
         </div>
         <div className="border-t border-border/40 pt-2 font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
@@ -93,7 +95,9 @@ export function FeatureIllustration({
         <div className="my-2 space-y-1 font-mono text-[11px] text-muted-foreground">
           <div className="flex justify-between">
             <span>Contracts:</span>
-            <span className="font-bold text-foreground">Strict Zod Schemas</span>
+            <span className="font-bold text-foreground">
+              Strict Zod Schemas
+            </span>
           </div>
           <div className="flex justify-between">
             <span>Handoff:</span>

@@ -8,7 +8,10 @@
         "summary": "Added a representative architecture scenario for the open CEGS reference implementation, including deterministic scoring and evidence-linked provenance.",
         "category": "ship",
         "links": [
-          { "label": "Case study", "href": "/case-studies/canada-economic-opportunity-graph" }
+          {
+            "label": "Case study",
+            "href": "/case-studies/canada-economic-opportunity-graph"
+          }
         ]
       },
       {

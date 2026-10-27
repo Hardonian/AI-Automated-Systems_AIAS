@@ -439,6 +439,7 @@ const rawSiteContent: SiteConfig = {
     ],
     resources: [
       { label: "Quick Tools Hub", href: "/tools" },
+      { label: "AI Clarity Diagnostic", href: "/diagnostic" },
       { label: "Policy Studio", href: "/tools/policy-studio" },
       { label: "Systems Catalog", href: "/catalog" },
       { label: "Hire to Build", href: "/hire" },
@@ -522,6 +523,26 @@ const rawSiteContent: SiteConfig = {
     },
   ],
   quickTools: [
+    {
+      id: "ai-clarity-diagnostic",
+      title: "AI Clarity & Architecture Diagnostic",
+      category: "Diagnostics",
+      badge: "FLAGSHIP // 2-Min Audit",
+      description:
+        "Interactive 4-step capability allocation matrix and risk scorer. Map deterministic vs. AI boundaries, uncover critical invariant drift, and generate a portable CTO permalink or RFC brief.",
+      outcome:
+        "Readiness grade (A–D), P95 latency profile, and exportable Architecture RFC or Executive Brief.",
+      estimatedTime: "2 mins",
+      inputs: ["Workload Profile", "6 Capability Boundaries", "Failure Modes"],
+      outputs: [
+        "Readiness Score & Grade",
+        "Shareable CTO Permalink",
+        "Architecture RFC Brief",
+      ],
+      href: "/diagnostic",
+      iconName: "ShieldAlert",
+      featured: true,
+    },
     {
       id: "self-hosted-privacy-audit",
       title: "Self-Hosted AI Privacy Audit",

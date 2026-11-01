@@ -53,9 +53,9 @@ export function LiveLabStatus() {
   const [isProbing, setIsProbing] = useState(false);
 
   // Live Crypto Verifier State
-  const [cryptoPayload, setCryptoPayload] = useState("aias-manifest-v1.1.0");
+  const [cryptoPayload, setCryptoPayload] = useState("aias-manifest-v1.2.0");
   const [computedDigest, setComputedDigest] = useState<string>(
-    "fa20aab8f4af90ff750e0b178369f21f566b048f846fba7e7b4ce2bc00c4e3da",
+    "f9748a35f51bd884a9af05ba5d2c0f337b8746888d55f5f5343c8ae489428950",
   );
 
   useEffect(() => {

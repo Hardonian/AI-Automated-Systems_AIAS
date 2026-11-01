@@ -175,7 +175,9 @@ export function EngagementSimulator() {
       `- Estimated Scope: ~${manualHours}h manual toil/week | ${integrationCount} boundary integrations | ${riskTolerance.toUpperCase()} risk tolerance | Target timeline: ${timeline}`,
       `- Objective: ${outcome}`,
       "- Deliverables in Scope:",
-      ...MODE_DETAILS[recommendation.mode]?.deliverables.map((d) => `  * ${d}`),
+      ...(MODE_DETAILS[recommendation.mode]
+        ? MODE_DETAILS[recommendation.mode].deliverables.map((d) => `  * ${d}`)
+        : []),
       "- Architectural Rationale:",
       ...recommendation.rationale.map((r) => `  * ${r}`),
     ].join("\n");

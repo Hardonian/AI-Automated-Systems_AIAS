@@ -179,34 +179,6 @@ export function ReadinessScorecard() {
     notes: string;
   }>("aias-workspace");
 
-  const handleSyncToWorkspace = () => {
-    const scorecardSummary = [
-      "## AI Governance & Readiness Scorecard Audit",
-      `- Overall Score: ${stats.scorePercentage}% (${stats.tier.label})`,
-      `- Implemented Controls: ${stats.checkedCount} of ${stats.totalCount} standards (${stats.checkedPoints}/${stats.totalPoints} weighted points)`,
-      "- Pillar Breakdown:",
-      ...stats.pillars.map(
-        (p) =>
-          `  * ${p.name}: ${p.percent}% (${p.checked}/${p.total} implemented)`,
-      ),
-      `- Action Recommendation: ${stats.tier.recommendation}`,
-    ].join("\n");
-
-    try {
-      const existing = window.localStorage.getItem("aias_workspace_notes");
-      const nextNotes =
-        existing && existing.trim().length > 0
-          ? `${existing.trim()}\n\n${scorecardSummary}`
-          : `# AIAS Architecture Handoff Brief\n\n${scorecardSummary}`;
-      window.localStorage.setItem("aias_workspace_notes", nextNotes);
-      postWorkspaceMessage({ notes: nextNotes });
-      setSyncedToWorkspace(true);
-      setTimeout(() => setSyncedToWorkspace(false), 2500);
-    } catch {
-      // Ignore storage quota errors
-    }
-  };
-
   const toggleItem = (id: string) => {
     setCheckedIds((prev) => {
       const next = new Set(prev);
@@ -310,6 +282,34 @@ export function ReadinessScorecard() {
       tier,
     };
   }, [checkedIds]);
+
+  const handleSyncToWorkspace = () => {
+    const scorecardSummary = [
+      "## AI Governance & Readiness Scorecard Audit",
+      `- Overall Score: ${stats.scorePercentage}% (${stats.tier.label})`,
+      `- Implemented Controls: ${stats.checkedCount} of ${stats.totalCount} standards`,
+      "- Pillar Breakdown:",
+      ...stats.pillars.map(
+        (p) =>
+          `  * ${p.name}: ${p.percent}% (${p.checked}/${p.total} implemented)`,
+      ),
+      `- Action Recommendation: ${stats.tier.recommendation}`,
+    ].join("\n");
+
+    try {
+      const existing = window.localStorage.getItem("aias_workspace_notes");
+      const nextNotes =
+        existing && existing.trim().length > 0
+          ? `${existing.trim()}\n\n${scorecardSummary}`
+          : `# AIAS Architecture Handoff Brief\n\n${scorecardSummary}`;
+      window.localStorage.setItem("aias_workspace_notes", nextNotes);
+      postWorkspaceMessage({ notes: nextNotes });
+      setSyncedToWorkspace(true);
+      setTimeout(() => setSyncedToWorkspace(false), 2500);
+    } catch {
+      // Ignore storage quota errors
+    }
+  };
 
   const generateReportJson = () => {
     return {

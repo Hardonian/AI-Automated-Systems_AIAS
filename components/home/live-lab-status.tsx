@@ -137,7 +137,7 @@ export function LiveLabStatus() {
       const elapsed = Math.round(performance.now() - start);
       setProbeLatency(elapsed);
     } catch {
-      setProbeLatency(18); // Default fallback estimate
+      setProbeLatency(null);
     } finally {
       setIsProbing(false);
     }
@@ -155,7 +155,7 @@ export function LiveLabStatus() {
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
             </span>
             <span className="font-mono text-xs font-bold uppercase tracking-widest text-muted-foreground">
-              Live from the sovereign lab
+              Live from the lab
             </span>
           </div>
 
@@ -229,7 +229,9 @@ export function LiveLabStatus() {
                       Edge Response Time
                     </p>
                     <p className="mt-1 text-xl font-black text-foreground">
-                      {probeLatency !== null ? `${probeLatency}ms` : "Sub-30ms"}
+                      {probeLatency !== null
+                        ? `${probeLatency}ms`
+                        : "Not probed"}
                     </p>
                     <p className="mt-1 text-[10px] text-muted-foreground">
                       100% pre-rendered edge cache
@@ -260,7 +262,7 @@ export function LiveLabStatus() {
                     Zero unhandled 500 exceptions
                   </p>
                   <p className="mt-2 text-[9px] text-emerald-400 font-bold uppercase">
-                    Status: RELEASE_LOCKED ●
+                    Status: GATED IN CI
                   </p>
                 </div>
 
@@ -284,13 +286,13 @@ export function LiveLabStatus() {
                     Release Provenance
                   </p>
                   <p className="mt-1 text-xl font-black text-foreground">
-                    SHA-256 Sealed
+                    SHA-256 Gated
                   </p>
                   <p className="mt-1 font-mono text-[9px] text-muted-foreground truncate">
-                    sha256:d9b2e81...f4a7c0
+                    Computed per release in CI
                   </p>
                   <p className="mt-2 text-[9px] text-emerald-400 font-bold uppercase">
-                    Integrity: VERIFIED ●
+                    Integrity: CHECKED IN CI
                   </p>
                 </div>
               </div>

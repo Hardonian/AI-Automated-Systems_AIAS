@@ -56,7 +56,7 @@ const SYSTEMS: SystemScenario[] = [
   {
     id: "hardonia-ops",
     name: "Hardonia Operations Fabric",
-    badge: "Production Engine",
+    badge: "Reference Scenario",
     category: "Retail & Supply Chain",
     summary:
       "Deterministic operational backbone connecting Shopify storefronts, warehouse inventory feeds, and automated supplier routing with reconciled audit records.",
@@ -377,7 +377,7 @@ export const SovereignIntakeSchema = z.object({
       sha256:
         "91b8d2e4a6f7c0e1b3d5a7f9c2e4b6a8d0f2e4b6a8c0d2e4f6a8b0c2d4e6f8a0",
       evalAssertions:
-        "48/48 PIPEDA-aligned data residency and redaction proofs verified",
+        "48/48 PIPEDA-aligned data residency and redaction proofs planned",
       dataResidency:
         "Sovereign Canada Central (Local-first + Montreal Encrypted Storage)",
       ownershipModel: "100% Client-Owned Source & Self-Hostable IaC",
@@ -443,7 +443,7 @@ ${activeSystem.topologyNodes
 ${activeSystem.schemaCode}
 \`\`\`
 
-## Verified Production Telemetry
+## Illustrative Scenario Targets (not measured client results)
 - First-Pass Pass-Through Rate: ${activeSystem.telemetry.passThroughRate.after} (Baseline: ${activeSystem.telemetry.passThroughRate.before})
 - Unhandled 500 Exceptions: ${activeSystem.telemetry.unhandledErrors.after} (Baseline: ${activeSystem.telemetry.unhandledErrors.before})
 - Operator Triage Latency: ${activeSystem.telemetry.operatorLatency.after} (Baseline: ${activeSystem.telemetry.operatorLatency.before})
@@ -476,14 +476,15 @@ ${activeSystem.schemaCode}
         <div>
           <div className="inline-flex items-center gap-2 border border-primary/40 bg-primary/10 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest text-primary mb-2">
             <Cpu className="h-3 w-3" />
-            <span>Interactive Proof-of-Work Portfolio</span>
+            <span>Representative Architecture Scenarios</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-foreground">
             SYSTEM TEARSHEET &amp; ARCHITECTURE INSPECTOR
           </h2>
           <p className="mt-1 font-mono text-xs text-muted-foreground">
-            Inspect the exact topology, runtime Zod contracts, and verified
-            telemetry from our production deployments.
+            Inspect the topology, runtime Zod contracts, and target metrics of
+            representative architecture scenarios. Figures are validation
+            targets, not attributed client results.
           </p>
         </div>
 
@@ -598,7 +599,7 @@ ${activeSystem.schemaCode}
           }`}
         >
           <Activity className="h-3.5 w-3.5" />
-          3. Verified Telemetry
+          3. Scenario Targets
         </button>
 
         <button
@@ -613,7 +614,7 @@ ${activeSystem.schemaCode}
           }`}
         >
           <ShieldCheck className="h-3.5 w-3.5" />
-          4. Release Integrity
+          4. Release Contract
         </button>
       </div>
 
@@ -773,8 +774,8 @@ ${activeSystem.schemaCode}
         <div className="mt-6 space-y-4 animate-fade-in">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <p className="font-mono text-xs text-muted-foreground">
-              Production telemetry comparing brittle LLM scripts against AIAS
-              governed architecture:
+              Illustrative target metrics comparing ungoverned LLM scripts
+              against a governed architecture. Not measured client performance:
             </p>
             <button
               type="button"
@@ -784,7 +785,7 @@ ${activeSystem.schemaCode}
               <SlidersHorizontal className="h-3.5 w-3.5" />
               {showBaselineComparison
                 ? "Show Absolute Values Only"
-                : "Compare Baseline vs Governed"}
+                : "Compare Baseline vs Target"}
             </button>
           </div>
 
@@ -886,7 +887,7 @@ ${activeSystem.schemaCode}
           <div className="border-2 border-border bg-background p-4 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border pb-2 gap-1">
               <span className="text-muted-foreground uppercase text-[10px]">
-                Release SHA-256 Digest:
+                Example SHA-256 Digest (illustrative format):
               </span>
               <span className="text-primary font-bold break-all sm:text-right">
                 {activeSystem.verification.sha256}
@@ -894,7 +895,7 @@ ${activeSystem.schemaCode}
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border pb-2 gap-1">
               <span className="text-muted-foreground uppercase text-[10px]">
-                Evaluation Assertions:
+                Planned Evaluation Assertions:
               </span>
               <span className="text-foreground font-bold">
                 {activeSystem.verification.evalAssertions}
@@ -929,7 +930,7 @@ ${activeSystem.schemaCode}
               onClick={() => handleDownloadDossier("json")}
               className="font-mono text-xs uppercase"
             >
-              <Download className="mr-1.5 h-3.5 w-3.5" /> Download Cryptographic
+              <Download className="mr-1.5 h-3.5 w-3.5" /> Download Scenario
               Dossier
             </Button>
           </div>

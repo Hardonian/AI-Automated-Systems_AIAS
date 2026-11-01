@@ -66,7 +66,7 @@ export default function AutomationDemoPage() {
       <div className="container pt-4">
         <Breadcrumbs
           items={[
-            { label: "Tools", href: "/automation-demo" },
+            { label: "Tools", href: "/tools" },
             { label: "Automation Simulator" },
           ]}
         />

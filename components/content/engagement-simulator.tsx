@@ -13,12 +13,15 @@ import {
   Shield,
   Layers,
   Calendar,
+  Check,
+  Send,
 } from "lucide-react";
 
 import { SurfaceCard } from "@/components/ui/section-primitives";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useBroadcastChannel } from "@/lib/utils/client-engines";
 
 type Mode = "advisory" | "co-build" | "managed";
 
@@ -80,6 +83,10 @@ export function EngagementSimulator() {
     "Eliminate manual review bottlenecks while ensuring strict deterministic output guardrails.",
   );
   const [copied, setCopied] = useState(false);
+  const [syncedToWorkspace, setSyncedToWorkspace] = useState(false);
+  const { postMessage: postWorkspaceMessage } = useBroadcastChannel<{
+    notes: string;
+  }>("aias-workspace");
 
   const recommendation = useMemo((): { mode: Mode; rationale: string[] } => {
     const complexity = manualHours + integrationCount * 4;
@@ -159,6 +166,33 @@ export function EngagementSimulator() {
     link.download = `aias-engagement-brief-${recommendation.mode}.json`;
     link.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleSyncToWorkspace = () => {
+    const briefSummary = [
+      `## Engagement Simulator Scope Brief (${MODE_DETAILS[recommendation.mode]?.title})`,
+      `- Recommended Model: ${MODE_DETAILS[recommendation.mode]?.title} (${MODE_DETAILS[recommendation.mode]?.badge})`,
+      `- Estimated Scope: ~${manualHours}h manual toil/week | ${integrationCount} boundary integrations | ${riskTolerance.toUpperCase()} risk tolerance | Target timeline: ${timeline}`,
+      `- Objective: ${outcome}`,
+      "- Deliverables in Scope:",
+      ...MODE_DETAILS[recommendation.mode]?.deliverables.map((d) => `  * ${d}`),
+      "- Architectural Rationale:",
+      ...recommendation.rationale.map((r) => `  * ${r}`),
+    ].join("\n");
+
+    try {
+      const existing = window.localStorage.getItem("aias_workspace_notes");
+      const nextNotes =
+        existing && existing.trim().length > 0
+          ? `${existing.trim()}\n\n${briefSummary}`
+          : `# AIAS Architecture Handoff Brief\n\n${briefSummary}`;
+      window.localStorage.setItem("aias_workspace_notes", nextNotes);
+      postWorkspaceMessage({ notes: nextNotes });
+      setSyncedToWorkspace(true);
+      setTimeout(() => setSyncedToWorkspace(false), 2500);
+    } catch {
+      // Ignore storage quota errors
+    }
   };
 
   return (
@@ -396,6 +430,24 @@ export function EngagementSimulator() {
             {/* Brief JSON Export Actions */}
             <div className="flex flex-wrap gap-3 pt-2">
               <Button
+                onClick={handleSyncToWorkspace}
+                variant="outline"
+                size="sm"
+                className="rounded-none border-2 border-primary bg-primary/10 font-mono text-xs font-bold uppercase tracking-wider text-primary hover:bg-primary hover:text-primary-foreground transition-all"
+              >
+                {syncedToWorkspace ? (
+                  <>
+                    <Check className="mr-1.5 h-3.5 w-3.5 text-emerald-500" />
+                    Appended Scope to Brief
+                  </>
+                ) : (
+                  <>
+                    <Send className="mr-1.5 h-3.5 w-3.5" />
+                    Append Scope to Brief
+                  </>
+                )}
+              </Button>
+              <Button
                 onClick={handleCopyBrief}
                 variant="outline"
                 size="sm"
@@ -418,7 +470,7 @@ export function EngagementSimulator() {
         )}
 
         {/* Stepper Navigation Buttons */}
-        <div className="mt-8 border-t-2 border-border pt-6 flex justify-between items-center">
+        <div className="mt-8 border-t-2 border-border pt-6 flex flex-wrap justify-between items-center gap-3">
           <Button
             onClick={() => setStep((prev) => Math.max(1, prev - 1))}
             disabled={step === 1}
@@ -438,15 +490,28 @@ export function EngagementSimulator() {
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           ) : (
-            <Button
-              asChild
-              className="rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card hover:-translate-y-0.5 transition-all"
-            >
-              <Link href="/book">
-                Book Strategy Call with this Brief
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                asChild
+                variant="outline"
+                className="rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-widest hover:border-foreground transition-all"
+              >
+                <Link
+                  href={`/contact?mode=${recommendation.mode}&workload=${encodeURIComponent(outcome)}`}
+                >
+                  Submit Intake Directly
+                </Link>
+              </Button>
+              <Button
+                asChild
+                className="rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card hover:-translate-y-0.5 transition-all"
+              >
+                <Link href="/book">
+                  Book Strategy Call with this Brief
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
           )}
         </div>
       </SurfaceCard>

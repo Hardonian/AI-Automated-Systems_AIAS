@@ -31,7 +31,7 @@ export function ConversionCTA() {
             <Button
               asChild
               size="lg"
-              className="rounded-none border-2 border-cyan-500 bg-cyan-500/10 px-10 font-mono text-base font-bold uppercase tracking-wider text-cyan-700 shadow-[4px_4px_0px_0px_rgba(6,182,212,0.5)] transition-all hover:bg-cyan-500 hover:text-white hover:shadow-[6px_6px_0px_0px_rgba(6,182,212,1)] backdrop-blur-sm dark:text-cyan-300"
+              className="rounded-none border-2 border-primary bg-primary px-10 font-mono text-base font-bold uppercase tracking-wider text-primary-foreground shadow-card transition-all hover:-translate-y-0.5 hover:shadow-lg"
             >
               <Link
                 href={getPrimaryCtaHref()}
@@ -48,7 +48,7 @@ export function ConversionCTA() {
             asChild
             size="lg"
             variant="outline"
-            className="rounded-none border-2 border-border bg-transparent px-10 font-mono text-base font-bold uppercase tracking-wider text-foreground shadow-card transition-all hover:-translate-y-1 hover:border-foreground"
+            className="rounded-none border-2 border-border bg-card px-8 font-mono text-base font-bold uppercase tracking-wider text-foreground shadow-card transition-all hover:-translate-y-0.5 hover:border-foreground"
           >
             <Link
               href={`mailto:${siteContent.contact.email}`}
@@ -63,15 +63,15 @@ export function ConversionCTA() {
             asChild
             size="lg"
             variant="outline"
-            className="rounded-none border-2 border-violet-500 bg-violet-500/10 px-10 font-mono text-base font-bold uppercase tracking-wider text-violet-700 shadow-[4px_4px_0px_0px_rgba(139,92,246,0.5)] transition-all hover:bg-violet-500 hover:text-white hover:shadow-[6px_6px_0px_0px_rgba(139,92,246,1)] backdrop-blur-sm dark:text-violet-300"
+            className="rounded-none border-2 border-primary/40 bg-primary/10 px-8 font-mono text-base font-bold uppercase tracking-wider text-primary shadow-card transition-all hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-primary-foreground"
           >
             <Link
-              href="/audit"
+              href="/diagnostic"
               onClick={() =>
-                track("audit_cta_clicked", { location: "conversion_cta" })
+                track("diagnostic_cta_clicked", { location: "conversion_cta" })
               }
             >
-              Run Free AI Lab Audit
+              Self-Serve Diagnostic
               <ArrowRight className="ml-3 h-5 w-5" />
             </Link>
           </Button>

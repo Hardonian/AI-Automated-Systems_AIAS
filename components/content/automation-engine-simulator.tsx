@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Play,
@@ -13,9 +14,12 @@ import {
   Copy,
   Sparkles,
   Zap,
+  Check,
+  Send,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SurfaceCard } from "@/components/ui/section-primitives";
+import { useBroadcastChannel } from "@/lib/utils/client-engines";
 
 type ScenarioKey =
   "lead-qualification" | "invoice-audit" | "governance-gate" | "support-triage";
@@ -511,6 +515,10 @@ export function AutomationEngineSimulator() {
   const [completed, setCompleted] = useState(false);
   const [displayedLogs, setDisplayedLogs] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
+  const [syncedToWorkspace, setSyncedToWorkspace] = useState(false);
+  const { postMessage: postWorkspaceMessage } = useBroadcastChannel<{
+    notes: string;
+  }>("aias-workspace");
 
   const scenario = SCENARIOS[selectedScenarioKey];
   const activeData = simulateFailure
@@ -610,6 +618,34 @@ export function AutomationEngineSimulator() {
     link.download = `aias-runbook-${scenario.id}-${Date.now()}.json`;
     link.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleSyncToWorkspace = () => {
+    const simulationSummary = [
+      `## Automation Engine Simulator Audit (${scenario.title})`,
+      `- Scenario: ${scenario.title} (${scenario.badge})`,
+      `- Execution Mode: ${simulateFailure ? "Simulated Risk Intercept" : "Standard Production Run"}`,
+      `- Status: ${completed ? "Completed & Verified" : "In Progress / Standby"}`,
+      `- Pipeline Flow: ${scenario.stages.map((s) => `${s.name} [${s.type}]`).join(" -> ")}`,
+      "- Deterministic Policy Verifications:",
+      ...activeData.policyChecks.map(
+        (c) => `  * [${c.status.toUpperCase()}] ${c.name}: ${c.detail}`,
+      ),
+    ].join("\n");
+
+    try {
+      const existing = window.localStorage.getItem("aias_workspace_notes");
+      const nextNotes =
+        existing && existing.trim().length > 0
+          ? `${existing.trim()}\n\n${simulationSummary}`
+          : `# AIAS Architecture Handoff Brief\n\n${simulationSummary}`;
+      window.localStorage.setItem("aias_workspace_notes", nextNotes);
+      postWorkspaceMessage({ notes: nextNotes });
+      setSyncedToWorkspace(true);
+      setTimeout(() => setSyncedToWorkspace(false), 2500);
+    } catch {
+      // Ignore storage quota errors
+    }
   };
 
   return (
@@ -901,17 +937,34 @@ export function AutomationEngineSimulator() {
                     <p className="font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">
                       Structured Output Artifact
                     </p>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        onClick={handleSyncToWorkspace}
+                        className="flex items-center gap-1 font-mono text-[10px] font-bold uppercase text-primary hover:underline cursor-pointer"
+                        title="Append simulated runbook audit receipt to active Workspace Brief"
+                      >
+                        {syncedToWorkspace ? (
+                          <>
+                            <Check className="h-3 w-3 text-emerald-500" />
+                            Synced
+                          </>
+                        ) : (
+                          <>
+                            <Send className="h-3 w-3" />
+                            Brief
+                          </>
+                        )}
+                      </button>
                       <button
                         onClick={handleCopyArtifact}
-                        className="flex items-center gap-1 font-mono text-[10px] font-bold uppercase text-primary hover:underline cursor-pointer"
+                        className="flex items-center gap-1 font-mono text-[10px] font-bold uppercase text-muted-foreground hover:text-foreground cursor-pointer"
                       >
                         <Copy className="h-3 w-3" />
                         {copied ? "Copied" : "Copy"}
                       </button>
                       <button
                         onClick={handleDownloadRunbook}
-                        className="flex items-center gap-1 font-mono text-[10px] font-bold uppercase text-primary hover:underline cursor-pointer"
+                        className="flex items-center gap-1 font-mono text-[10px] font-bold uppercase text-muted-foreground hover:text-foreground cursor-pointer"
                       >
                         <Download className="h-3 w-3" />
                         Export
@@ -1012,10 +1065,10 @@ export function AutomationEngineSimulator() {
                 asChild
                 className="w-full rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card hover:-translate-y-0.5 hover:shadow-lg transition-all"
               >
-                <a href="/book">
+                <Link href="/book">
                   Book Architecture Diagnostic
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </a>
+                </Link>
               </Button>
             </div>
           </SurfaceCard>

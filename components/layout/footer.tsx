@@ -23,6 +23,7 @@ const FOOTER_COLUMNS = [
     title: "Quick Tools & Simulators",
     links: [
       { label: "Quick Tools Hub", href: "/tools" },
+      { label: "AI Clarity Diagnostic", href: "/diagnostic" },
       { label: "Policy & Guardrail Studio", href: "/tools/policy-studio" },
       { label: "ROI Calculator", href: "/roi-calculator" },
       { label: "Readiness Scorecard", href: "/readiness-checklist" },

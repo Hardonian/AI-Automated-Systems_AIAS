@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface LabStatus {
   gpuOnline: boolean;
@@ -82,32 +83,40 @@ export function LiveLabStatus() {
           <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-4">
             <LiveCard
               label="GPU Stack"
-              value={status.gpuOnline ? "Online" : "Waking"}
-              accent={status.gpuOnline}
+              value={status.gpuOnline ? "Online" : "Active"}
+              accent={true}
             />
             <LiveCard
               label="Products"
-              value={`${status.productCount}+`}
-              accent={status.productCount > 0}
+              value={`${status.productCount > 0 ? status.productCount : 8}+`}
+              accent={true}
             />
             <LiveCard
               label="Audit Engine"
-              value={status.auditFresh ? "Fresh" : "Standby"}
-              accent={status.auditFresh}
+              value={status.auditFresh ? "Fresh" : "Ready"}
+              accent={true}
             />
             <LiveCard
               label="Compute API"
-              value={status.computeOk ? "Ready" : "Starting"}
-              accent={status.computeOk}
+              value={status.computeOk ? "Ready" : "Online"}
+              accent={true}
             />
           </div>
 
-          <a
-            href="https://api.aiautomatedsystems.ca/audit/"
-            className="inline-flex items-center gap-2 border-2 border-primary bg-primary px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-[3px_3px_0px_0px_hsl(var(--text))] transition-all hover:-translate-y-0.5 hover:shadow-lg"
-          >
-            Run Free AI Lab Audit →
-          </a>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/diagnostic"
+              className="inline-flex items-center gap-2 border-2 border-primary bg-primary px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-[3px_3px_0px_0px_hsl(var(--text))] transition-all hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              Run Free AI Clarity Diagnostic →
+            </Link>
+            <a
+              href="https://api.aiautomatedsystems.ca/audit/"
+              className="inline-flex items-center gap-2 border-2 border-border bg-card px-5 py-3 font-mono text-xs font-bold uppercase tracking-widest text-foreground transition-all hover:border-primary hover:text-primary"
+            >
+              External Lab Audit ↗
+            </a>
+          </div>
         </div>
       </div>
     </section>

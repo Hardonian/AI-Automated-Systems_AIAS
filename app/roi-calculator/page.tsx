@@ -31,7 +31,7 @@ export default function RoiCalculatorPage() {
       <div className="container pt-4">
         <Breadcrumbs
           items={[
-            { label: "Tools", href: "/automation-demo" },
+            { label: "Tools", href: "/tools" },
             { label: "ROI Calculator" },
           ]}
         />

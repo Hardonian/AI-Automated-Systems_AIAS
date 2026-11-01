@@ -30,7 +30,7 @@ export default function EngagementSimulatorPage() {
       <div className="container pt-4">
         <Breadcrumbs
           items={[
-            { label: "Tools", href: "/automation-demo" },
+            { label: "Tools", href: "/tools" },
             { label: "Engagement Simulator" },
           ]}
         />

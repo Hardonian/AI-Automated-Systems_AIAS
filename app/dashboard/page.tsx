@@ -33,7 +33,7 @@ export default function DashboardPage() {
       <div className="container pt-4">
         <Breadcrumbs
           items={[
-            { label: "Tools", href: "/automation-demo" },
+            { label: "Tools", href: "/tools" },
             { label: "Operations Dashboard" },
           ]}
         />

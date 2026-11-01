@@ -16,9 +16,12 @@ import {
   Activity,
   Layers,
   FileCheck,
+  Check,
+  Send,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SurfaceCard } from "@/components/ui/section-primitives";
+import { useBroadcastChannel } from "@/lib/utils/client-engines";
 
 interface ChecklistItem {
   id: string;
@@ -171,6 +174,38 @@ export function ReadinessScorecard() {
     () => new Set(["data-1", "boundary-1", "gov-1"]),
   );
   const [copied, setCopied] = useState(false);
+  const [syncedToWorkspace, setSyncedToWorkspace] = useState(false);
+  const { postMessage: postWorkspaceMessage } = useBroadcastChannel<{
+    notes: string;
+  }>("aias-workspace");
+
+  const handleSyncToWorkspace = () => {
+    const scorecardSummary = [
+      "## AI Governance & Readiness Scorecard Audit",
+      `- Overall Score: ${stats.scorePercentage}% (${stats.tier.label})`,
+      `- Implemented Controls: ${stats.checkedCount} of ${stats.totalCount} standards (${stats.checkedPoints}/${stats.totalPoints} weighted points)`,
+      "- Pillar Breakdown:",
+      ...stats.pillars.map(
+        (p) =>
+          `  * ${p.name}: ${p.percent}% (${p.checked}/${p.total} implemented)`,
+      ),
+      `- Action Recommendation: ${stats.tier.recommendation}`,
+    ].join("\n");
+
+    try {
+      const existing = window.localStorage.getItem("aias_workspace_notes");
+      const nextNotes =
+        existing && existing.trim().length > 0
+          ? `${existing.trim()}\n\n${scorecardSummary}`
+          : `# AIAS Architecture Handoff Brief\n\n${scorecardSummary}`;
+      window.localStorage.setItem("aias_workspace_notes", nextNotes);
+      postWorkspaceMessage({ notes: nextNotes });
+      setSyncedToWorkspace(true);
+      setTimeout(() => setSyncedToWorkspace(false), 2500);
+    } catch {
+      // Ignore storage quota errors
+    }
+  };
 
   const toggleItem = (id: string) => {
     setCheckedIds((prev) => {
@@ -397,27 +432,47 @@ export function ReadinessScorecard() {
             {stats.tier.description}
           </p>
 
-          <div className="mt-6 flex gap-2 w-full">
+          <div className="mt-6 flex flex-col gap-2 w-full">
             <Button
-              onClick={handleCopyReport}
+              onClick={handleSyncToWorkspace}
               variant="outline"
               size="sm"
-              className="flex-1 rounded-none border-2 border-border font-mono text-[10px] font-bold uppercase tracking-wider"
-              aria-label="Copy audit scorecard JSON"
+              className="w-full rounded-none border border-primary/50 bg-primary/10 font-mono text-[10px] font-bold uppercase tracking-wider text-primary hover:bg-primary hover:text-primary-foreground"
             >
-              <Copy className="mr-1.5 h-3 w-3" />
-              {copied ? "Copied" : "Copy"}
+              {syncedToWorkspace ? (
+                <>
+                  <Check className="mr-1.5 h-3 w-3 text-emerald-500" />
+                  Appended to Brief
+                </>
+              ) : (
+                <>
+                  <Send className="mr-1.5 h-3 w-3" />
+                  Append Scorecard to Brief
+                </>
+              )}
             </Button>
-            <Button
-              onClick={handleDownloadReport}
-              variant="outline"
-              size="sm"
-              className="flex-1 rounded-none border-2 border-border font-mono text-[10px] font-bold uppercase tracking-wider"
-              aria-label="Download audit scorecard report"
-            >
-              <FileDown className="mr-1.5 h-3 w-3" />
-              Export
-            </Button>
+            <div className="flex gap-2 w-full">
+              <Button
+                onClick={handleCopyReport}
+                variant="outline"
+                size="sm"
+                className="flex-1 rounded-none border-2 border-border font-mono text-[10px] font-bold uppercase tracking-wider"
+                aria-label="Copy audit scorecard JSON"
+              >
+                <Copy className="mr-1.5 h-3 w-3" />
+                {copied ? "Copied" : "Copy"}
+              </Button>
+              <Button
+                onClick={handleDownloadReport}
+                variant="outline"
+                size="sm"
+                className="flex-1 rounded-none border-2 border-border font-mono text-[10px] font-bold uppercase tracking-wider"
+                aria-label="Download audit scorecard report"
+              >
+                <FileDown className="mr-1.5 h-3 w-3" />
+                Export
+              </Button>
+            </div>
           </div>
         </SurfaceCard>
       </div>
@@ -553,7 +608,11 @@ export function ReadinessScorecard() {
               variant="outline"
               className="rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-widest hover:border-foreground transition-all"
             >
-              <Link href="/contact">Submit Stack Intake</Link>
+              <Link
+                href={`/contact?grade=${encodeURIComponent(`${stats.scorePercentage}% (${stats.tier.label})`)}&workload=governance-readiness`}
+              >
+                Submit Stack Intake
+              </Link>
             </Button>
           </div>
         </div>

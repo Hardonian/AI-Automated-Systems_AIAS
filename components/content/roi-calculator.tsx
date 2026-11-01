@@ -13,6 +13,8 @@ import {
   ArrowRight,
   Sparkles,
   Zap,
+  Check,
+  Send,
 } from "lucide-react";
 
 import { SurfaceCard } from "@/components/ui/section-primitives";
@@ -20,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { simulateRoi } from "@/lib/calculators/roi-monte-carlo";
+import { useBroadcastChannel } from "@/lib/utils/client-engines";
 
 const WEEKS_PER_YEAR = 48;
 const BASELINE_IMPLEMENTATION_COST = 48000;
@@ -75,6 +78,10 @@ export function RoiCalculator() {
   const [repetitionRate, setRepetitionRate] = useState(65);
   const [maturity, setMaturity] = useState(55);
   const [copyState, setCopyState] = useState<"idle" | "done" | "error">("idle");
+  const [syncedToWorkspace, setSyncedToWorkspace] = useState(false);
+  const { postMessage: postWorkspaceMessage } = useBroadcastChannel<{
+    notes: string;
+  }>("aias-workspace");
 
   const applyPreset = (preset: PresetScenario) => {
     setTeamSize(preset.teamSize);
@@ -174,6 +181,32 @@ export function RoiCalculator() {
       setTimeout(() => setCopyState("idle"), 2500);
     } catch {
       setCopyState("error");
+    }
+  };
+
+  const handleSyncToWorkspace = () => {
+    const roiSummary = [
+      "## Projected ROI Model & Efficiency Reclaim",
+      `- Team Size: ${teamSize} FTEs | Repetition Rate: ${repetitionRate}% | Baseline Maturity: ${maturity}%`,
+      `- Reclaimed Time: ${model.weeklySavedHours.toFixed(1)} hrs/week (~${Math.round(model.annualSavedHours).toLocaleString()} annual hours)`,
+      `- Projected Annual Savings: $${Math.round(model.annualCostSavings).toLocaleString()} CAD`,
+      `- Estimated Payback: ${model.breakEvenMonths <= 0.1 ? "< 1 month" : `${model.breakEvenMonths.toFixed(1)} months`} (${model.roiMultiplier}x first-year ROI)`,
+      `- Monte Carlo (5,000 runs): P10=$${monteCarlo.p10.toLocaleString()} | P50=$${monteCarlo.p50.toLocaleString()} | P90=$${monteCarlo.p90.toLocaleString()} (${monteCarlo.probabilityPositive}% positive probability)`,
+      `- Operational Risk Reduction Index: ${model.riskReduction}%`,
+    ].join("\n");
+
+    try {
+      const existing = window.localStorage.getItem("aias_workspace_notes");
+      const nextNotes =
+        existing && existing.trim().length > 0
+          ? `${existing.trim()}\n\n${roiSummary}`
+          : `# AIAS Architecture Handoff Brief\n\n${roiSummary}`;
+      window.localStorage.setItem("aias_workspace_notes", nextNotes);
+      postWorkspaceMessage({ notes: nextNotes });
+      setSyncedToWorkspace(true);
+      setTimeout(() => setSyncedToWorkspace(false), 2500);
+    } catch {
+      // Ignore storage quota errors
     }
   };
 
@@ -466,6 +499,25 @@ export function RoiCalculator() {
 
             {/* Export and Booking Actions */}
             <div className="mt-8 pt-4 border-t-2 border-border space-y-3">
+              <Button
+                onClick={handleSyncToWorkspace}
+                variant="outline"
+                size="sm"
+                className="w-full rounded-none border-2 border-primary bg-primary/10 font-mono text-xs font-bold uppercase tracking-wider text-primary hover:bg-primary hover:text-primary-foreground transition-all"
+              >
+                {syncedToWorkspace ? (
+                  <>
+                    <Check className="mr-2 h-3.5 w-3.5 text-emerald-500" />
+                    Appended ROI Model to Handoff Brief
+                  </>
+                ) : (
+                  <>
+                    <Send className="mr-2 h-3.5 w-3.5" />
+                    Append ROI Model to Handoff Brief
+                  </>
+                )}
+              </Button>
+
               <div className="flex gap-3">
                 <Button
                   onClick={downloadSummary}
@@ -491,8 +543,10 @@ export function RoiCalculator() {
                 asChild
                 className="w-full rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card hover:-translate-y-0.5 transition-all py-5"
               >
-                <Link href="/book">
-                  Book Diagnostic to Review ROI Model
+                <Link
+                  href={`/diagnostic?workload=roi-reclaim&volume=${Math.round(model.annualSavedHours)}`}
+                >
+                  Validate Assumptions in Architecture Diagnostic
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

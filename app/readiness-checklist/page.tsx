@@ -38,7 +38,7 @@ export default function ReadinessChecklistPage() {
       <div className="container pt-4">
         <Breadcrumbs
           items={[
-            { label: "Tools", href: "/automation-demo" },
+            { label: "Tools", href: "/tools" },
             { label: "Readiness Scorecard" },
           ]}
         />

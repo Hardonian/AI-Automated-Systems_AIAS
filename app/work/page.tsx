@@ -10,6 +10,7 @@ import {
   SurfaceCard,
 } from "@/components/ui/section-primitives";
 import { CaseStudySchema } from "@/components/seo/structured-data";
+import { SystemTearsheetInspector } from "@/components/content/system-tearsheet-inspector";
 import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
 import { caseStudies } from "@/src/content/caseStudies";
 
@@ -36,6 +37,10 @@ export default function WorkPage() {
         title="Work patterns designed to ship and scale"
         description="Each engagement starts with workflow mapping, then moves into deterministic implementation and measurable operational outcomes."
       />
+
+      <PageSection>
+        <SystemTearsheetInspector />
+      </PageSection>
 
       <PageSection>
         <p className="mb-6 max-w-3xl text-sm text-muted-foreground">

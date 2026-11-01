@@ -29,7 +29,21 @@ type OfferTier = {
 
 const tiers: OfferTier[] = [
   {
-    title: "Audit",
+    title: "Sovereign Digital Assets",
+    outcome:
+      "Instant-access developer workflow packs, runtime Zod kits, and private inference runbooks.",
+    scope: [
+      "ComfyUI 11-Workflow Production Pack ($29 one-time)",
+      "Deterministic Zod policy kits and schema guardrails",
+      "Full source code ownership with zero subscription lock-in",
+    ],
+    pricingRange:
+      "Starting at $29 one-time purchase with instant source delivery.",
+    ctaLabel: "Browse Digital Assets",
+    ctaHref: "/catalog",
+  },
+  {
+    title: "Audit & Architecture",
     outcome:
       "Diagnose control gaps, model risk, and delivery blockers before build spend.",
     scope: [
@@ -38,7 +52,7 @@ const tiers: OfferTier[] = [
       "Prioritized architecture plan and non-fit criteria",
     ],
     pricingRange:
-      "Typical range: $7,500-$20,000 based on system breadth and compliance depth.",
+      "Typical range: $2,500-$7,500 for fixed 5-day sprints; $7,500-$20,000 for enterprise compliance.",
     ctaLabel: "Book Diagnostic",
     ctaHref: "/book",
   },
@@ -78,11 +92,11 @@ export default function PricingPage() {
       <PageHero
         eyebrow="Offer structure"
         title="How money flows in AIAS engagements"
-        description="Three engagement tiers with explicit outcomes: Audit, Implementation, and Ongoing Governance. We price by risk surface, integration depth, and operating criticality."
+        description="Four engagement tiers with explicit outcomes: Sovereign Digital Assets, Audit Sprints, Full-Stack Implementation, and Ongoing Governance. We price by risk surface, integration depth, and operating criticality."
       />
 
       <PageSection>
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {tiers.map((tier) => (
             <SurfaceCard key={tier.title} className="p-7">
               <h2 className="text-2xl font-bold">{tier.title}</h2>

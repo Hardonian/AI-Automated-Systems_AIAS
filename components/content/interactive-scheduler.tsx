@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Calendar as CalendarIcon,
   Clock,
@@ -76,6 +76,26 @@ export function InteractiveScheduler() {
   const [notes, setNotes] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [hasWorkspaceBrief, setHasWorkspaceBrief] = useState(false);
+
+  useEffect(() => {
+    try {
+      const searchParams = new URLSearchParams(window.location.search);
+      const urlBrief = searchParams.get("brief") || searchParams.get("workload");
+      const localNotes = window.localStorage.getItem("aias_workspace_notes");
+
+      if (urlBrief) {
+        setNotes((prev) => (prev ? prev : `Referenced workload / brief: ${urlBrief}`));
+        setHasWorkspaceBrief(true);
+      } else if (localNotes && localNotes.trim().length > 0) {
+        const firstLine = localNotes.trim().split("\n")[0] || "Workspace Architecture Brief";
+        setNotes((prev) => (prev ? prev : `Attached Workspace Spec: ${firstLine}`));
+        setHasWorkspaceBrief(true);
+      }
+    } catch {
+      // Ignore quota/browser restrictions
+    }
+  }, []);
 
   // Generate next 10 business days
   const availableDates = useMemo(() => {
@@ -468,6 +488,12 @@ export function InteractiveScheduler() {
                 </div>
 
                 <div className="space-y-1.5">
+                  {hasWorkspaceBrief && (
+                    <div className="mb-2 flex items-center gap-2 border border-primary/40 bg-primary/10 px-3 py-1.5 font-mono text-xs text-primary">
+                      <Sparkles className="h-3.5 w-3.5 shrink-0" />
+                      <span>Workspace brief detected and attached to your appointment record.</span>
+                    </div>
+                  )}
                   <Label
                     htmlFor="notes"
                     className="font-mono text-xs uppercase font-bold text-foreground"

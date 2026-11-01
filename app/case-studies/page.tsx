@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/section-primitives";
 import { Button } from "@/components/ui/button";
 import { caseStudies } from "@/lib/case-studies-generator";
+import { SystemTearsheetInspector } from "@/components/content/system-tearsheet-inspector";
 
 export const metadata: Metadata = generateSEOMetadata({
   title: "AI Automation Architecture Scenarios & Evidence Plans | AIAS",
@@ -35,6 +36,10 @@ export default function CaseStudiesPage() {
         title="Architecture scenarios with measurable evidence plans"
         description="Architecture-backed scenario studies showing the constraints, controls, and evidence plans we use. Representative material is labeled and is not presented as verified client performance."
       />
+
+      <PageSection>
+        <SystemTearsheetInspector />
+      </PageSection>
 
       <PageSection>
         <div className="grid gap-8 md:grid-cols-3">

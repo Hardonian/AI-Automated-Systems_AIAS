@@ -53,10 +53,26 @@ const SYSTEMS: SystemScenario[] = [
       "Deterministic operational backbone connecting Shopify storefronts, warehouse inventory feeds, and automated supplier routing with reconciled audit records.",
     slug: "reach",
     topologyNodes: [
-      { stage: "01. Ingestion", role: "Multi-channel webhook receiver & payload normalizer", type: "deterministic" },
-      { stage: "02. Policy Intercept", role: "Zod inventory boundary & rate-limit circuit breaker", type: "gate" },
-      { stage: "03. Scoped AI", role: "Unstructured supplier invoice & manifest extraction", type: "model" },
-      { stage: "04. Reconciliation", role: "Deterministic ERP commit & automated ledger reconciliation", type: "storage" },
+      {
+        stage: "01. Ingestion",
+        role: "Multi-channel webhook receiver & payload normalizer",
+        type: "deterministic",
+      },
+      {
+        stage: "02. Policy Intercept",
+        role: "Zod inventory boundary & rate-limit circuit breaker",
+        type: "gate",
+      },
+      {
+        stage: "03. Scoped AI",
+        role: "Unstructured supplier invoice & manifest extraction",
+        type: "model",
+      },
+      {
+        stage: "04. Reconciliation",
+        role: "Deterministic ERP commit & automated ledger reconciliation",
+        type: "storage",
+      },
     ],
     schemaCode: `import { z } from "zod";
 
@@ -82,7 +98,8 @@ export const HardoniaSupplierOrderSchema = z.object({
       throughput: { before: "14 orders/hr", after: "1,850 orders/hr" },
     },
     verification: {
-      sha256: "8e4f1a9c3d2b7e5f0a6c8b1d4e7a2f5c9e3b1d7a4f6c8e0b2d5a7c9f1e3b5d7a",
+      sha256:
+        "8e4f1a9c3d2b7e5f0a6c8b1d4e7a2f5c9e3b1d7a4f6c8e0b2d5a7c9f1e3b5d7a",
       evalAssertions: "64/64 deterministic unit & invariant checks passed",
       dataResidency: "Sovereign Canadian Central (Montreal / Toronto VPC)",
       ownershipModel: "100% Client-Owned Source & IaC Scripts",
@@ -97,10 +114,26 @@ export const HardoniaSupplierOrderSchema = z.object({
       "Release control plane built for static-first and edge-native deployments. Enforces 25-step verification suites, schema integrity, and automated rollback triggers.",
     slug: "settler",
     topologyNodes: [
-      { stage: "01. Artifact Build", role: "Next.js static export & bundle budget validation", type: "deterministic" },
-      { stage: "02. Invariant Scan", role: "Secrets scanner, CSP validator & pricing contract audit", type: "gate" },
-      { stage: "03. Policy Gate", role: "Release gate checking SHA-256 release integrity tree", type: "gate" },
-      { stage: "04. Edge Promotion", role: "Zero-downtime atomic promotion with instant rollback trigger", type: "storage" },
+      {
+        stage: "01. Artifact Build",
+        role: "Next.js static export & bundle budget validation",
+        type: "deterministic",
+      },
+      {
+        stage: "02. Invariant Scan",
+        role: "Secrets scanner, CSP validator & pricing contract audit",
+        type: "gate",
+      },
+      {
+        stage: "03. Policy Gate",
+        role: "Release gate checking SHA-256 release integrity tree",
+        type: "gate",
+      },
+      {
+        stage: "04. Edge Promotion",
+        role: "Zero-downtime atomic promotion with instant rollback trigger",
+        type: "storage",
+      },
     ],
     schemaCode: `import { z } from "zod";
 
@@ -125,9 +158,11 @@ export const SettlerReleaseManifestSchema = z.object({
       throughput: { before: "3 deploys/wk", after: "40+ deploys/day" },
     },
     verification: {
-      sha256: "3c7a9b1e5f2d4a6c8e0b7d9f1a3c5e7b2d4f6a8c0e2b4d6f8a1c3e5b7d9f2a4c",
+      sha256:
+        "3c7a9b1e5f2d4a6c8e0b7d9f1a3c5e7b2d4f6a8c0e2b4d6f8a1c3e5b7d9f2a4c",
       evalAssertions: "25/25 automated CI verification suites validated",
-      dataResidency: "Zero-persistence Edge CDN with immutable artifact storage",
+      dataResidency:
+        "Zero-persistence Edge CDN with immutable artifact storage",
       ownershipModel: "Full source delivery with GitHub Actions runbooks",
     },
   },
@@ -140,10 +175,26 @@ export const SettlerReleaseManifestSchema = z.object({
       "Converts high-variance incoming invoices, shipping manifests, and PDF contracts into strictly validated JSON records with automated confidence-gated human review.",
     slug: "zeo",
     topologyNodes: [
-      { stage: "01. PDF Parse", role: "Local in-memory layout & text vector extraction", type: "deterministic" },
-      { stage: "02. PII Sanitizer", role: "Deterministic regex mask for SIN, credit cards & health IDs", type: "gate" },
-      { stage: "03. Model Extraction", role: "Bounded JSON extraction with confidence log-prob scoring", type: "model" },
-      { stage: "04. Confidence Gate", role: "Deterministic router: >=0.92 commit vs. <0.92 review queue", type: "storage" },
+      {
+        stage: "01. PDF Parse",
+        role: "Local in-memory layout & text vector extraction",
+        type: "deterministic",
+      },
+      {
+        stage: "02. PII Sanitizer",
+        role: "Deterministic regex mask for SIN, credit cards & health IDs",
+        type: "gate",
+      },
+      {
+        stage: "03. Model Extraction",
+        role: "Bounded JSON extraction with confidence log-prob scoring",
+        type: "model",
+      },
+      {
+        stage: "04. Confidence Gate",
+        role: "Deterministic router: >=0.92 commit vs. <0.92 review queue",
+        type: "storage",
+      },
     ],
     schemaCode: `import { z } from "zod";
 
@@ -170,7 +221,8 @@ export const ZeoInvoiceExtractionSchema = z.object({
       throughput: { before: "25 docs/hr", after: "3,200 docs/hr" },
     },
     verification: {
-      sha256: "5d9f1a3c7e2b4d6f8a0c2e4b6d8f0a2c4e6b8d0f2a4c6e8b0d2f4a6c8e1b3d5f",
+      sha256:
+        "5d9f1a3c7e2b4d6f8a0c2e4b6d8f0a2c4e6b8d0f2a4c6e8b0d2f4a6c8e1b3d5f",
       evalAssertions: "128 synthetic test invoices checked against golden set",
       dataResidency: "Zero Data Retention (ZDR) model contract enforced",
       ownershipModel: "Private VPC container deployment with client-owned keys",
@@ -180,10 +232,13 @@ export const ZeoInvoiceExtractionSchema = z.object({
 
 export function SystemTearsheetInspector() {
   const [activeSystemId, setActiveSystemId] = useState<string>("hardonia-ops");
-  const [activeTab, setActiveTab] = useState<"topology" | "schema" | "telemetry" | "verification">("topology");
+  const [activeTab, setActiveTab] = useState<
+    "topology" | "schema" | "telemetry" | "verification"
+  >("topology");
   const [copied, setCopied] = useState(false);
 
-  const activeSystem = SYSTEMS.find((s) => s.id === activeSystemId) ?? SYSTEMS[0]!;
+  const activeSystem =
+    SYSTEMS.find((s) => s.id === activeSystemId) ?? SYSTEMS[0]!;
 
   const handleCopyCode = async () => {
     try {
@@ -207,7 +262,8 @@ export function SystemTearsheetInspector() {
             SYSTEM TEARSHEET &amp; ARCHITECTURE INSPECTOR
           </h2>
           <p className="mt-1 font-mono text-xs text-muted-foreground">
-            Inspect the exact topology, runtime Zod contracts, and verified telemetry from our production deployments.
+            Inspect the exact topology, runtime Zod contracts, and verified
+            telemetry from our production deployments.
           </p>
         </div>
 
@@ -249,7 +305,12 @@ export function SystemTearsheetInspector() {
           </p>
         </div>
 
-        <Button asChild size="sm" variant="outline" className="shrink-0 rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-wider hover:border-primary">
+        <Button
+          asChild
+          size="sm"
+          variant="outline"
+          className="shrink-0 rounded-none border-2 border-border font-mono text-xs font-bold uppercase tracking-wider hover:border-primary"
+        >
           <Link href={`/case-studies/${activeSystem.slug}`}>
             Full Case Study <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
           </Link>
@@ -257,7 +318,11 @@ export function SystemTearsheetInspector() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="mt-6 flex flex-wrap gap-2 border-b border-border pb-2" role="tablist" aria-label="System inspection views">
+      <div
+        className="mt-6 flex flex-wrap gap-2 border-b border-border pb-2"
+        role="tablist"
+        aria-label="System inspection views"
+      >
         <button
           type="button"
           role="tab"
@@ -323,7 +388,8 @@ export function SystemTearsheetInspector() {
       {activeTab === "topology" && (
         <div className="mt-6 space-y-4 animate-fade-in">
           <p className="font-mono text-xs text-muted-foreground">
-            Deterministic execution path through immutable gate nodes and pure-function model workers:
+            Deterministic execution path through immutable gate nodes and
+            pure-function model workers:
           </p>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {activeSystem.topologyNodes.map((node, index) => (
@@ -341,8 +407,8 @@ export function SystemTearsheetInspector() {
                         node.type === "gate"
                           ? "border-amber-500/40 bg-amber-500/10 text-amber-400"
                           : node.type === "model"
-                          ? "border-cyan-500/40 bg-cyan-500/10 text-cyan-400"
-                          : "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
+                            ? "border-cyan-500/40 bg-cyan-500/10 text-cyan-400"
+                            : "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
                       }`}
                     >
                       {node.type}
@@ -353,7 +419,7 @@ export function SystemTearsheetInspector() {
                   </p>
                 </div>
                 <div className="mt-4 pt-2 border-t border-border/50 text-[10px] font-mono text-muted-foreground">
-                  Node #{index + 1} // Guaranteed Invariant
+                  Node #{index + 1} :: Guaranteed Invariant
                 </div>
               </div>
             ))}
@@ -395,7 +461,8 @@ export function SystemTearsheetInspector() {
       {activeTab === "telemetry" && (
         <div className="mt-6 space-y-4 animate-fade-in">
           <p className="font-mono text-xs text-muted-foreground">
-            Measured production performance across baseline vs. hardened AIAS architecture:
+            Measured production performance across baseline vs. hardened AIAS
+            architecture:
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div className="border-2 border-border bg-background p-4">
@@ -474,20 +541,36 @@ export function SystemTearsheetInspector() {
         <div className="mt-6 space-y-3 font-mono text-xs animate-fade-in">
           <div className="border-2 border-border bg-background p-4 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border pb-2 gap-1">
-              <span className="text-muted-foreground uppercase text-[10px]">Release SHA-256 Digest:</span>
-              <span className="text-primary font-bold break-all sm:text-right">{activeSystem.verification.sha256}</span>
+              <span className="text-muted-foreground uppercase text-[10px]">
+                Release SHA-256 Digest:
+              </span>
+              <span className="text-primary font-bold break-all sm:text-right">
+                {activeSystem.verification.sha256}
+              </span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border pb-2 gap-1">
-              <span className="text-muted-foreground uppercase text-[10px]">Evaluation Assertions:</span>
-              <span className="text-foreground font-bold">{activeSystem.verification.evalAssertions}</span>
+              <span className="text-muted-foreground uppercase text-[10px]">
+                Evaluation Assertions:
+              </span>
+              <span className="text-foreground font-bold">
+                {activeSystem.verification.evalAssertions}
+              </span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border pb-2 gap-1">
-              <span className="text-muted-foreground uppercase text-[10px]">Data Residency Invariant:</span>
-              <span className="text-foreground font-bold">{activeSystem.verification.dataResidency}</span>
+              <span className="text-muted-foreground uppercase text-[10px]">
+                Data Residency Invariant:
+              </span>
+              <span className="text-foreground font-bold">
+                {activeSystem.verification.dataResidency}
+              </span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-              <span className="text-muted-foreground uppercase text-[10px]">Source Code Ownership:</span>
-              <span className="text-emerald-400 font-bold">{activeSystem.verification.ownershipModel}</span>
+              <span className="text-muted-foreground uppercase text-[10px]">
+                Source Code Ownership:
+              </span>
+              <span className="text-emerald-400 font-bold">
+                {activeSystem.verification.ownershipModel}
+              </span>
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@ import {
   SurfaceCard,
 } from "@/components/ui/section-primitives";
 import { Button } from "@/components/ui/button";
+import { PricingEngineSuite } from "@/components/pricing/pricing-engine-suite";
 
 export const metadata: Metadata = generateSEOMetadata({
   title:
@@ -121,6 +122,8 @@ export default function PricingPage() {
             </SurfaceCard>
           ))}
         </div>
+
+        <PricingEngineSuite />
       </PageSection>
 
       <PageSection background="muted" width="narrow">

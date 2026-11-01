@@ -163,7 +163,7 @@ export function InteractiveScheduler() {
     if (!activeDate || !selectedSlot) return;
 
     const summary = `${activeSession?.title || "AI Strategy Session"} with AIAS`;
-    const description = `Consultation on deterministic AI architecture, workflow boundaries, and governance controls. Scheduled for ${name} (${company || "Client"}).`;
+    const description = `Session: ${activeSession?.title || "AI Strategy Session"}\\nParticipant: ${name} (${company || "Client Organization"})\\n\\nDiagnostic Spec / Notes:\\n${notes || "Direct Architecture Review"}\\n\\nStrategy Agenda:\\n1. Review Failure Modes & Operational Risk Surface\\n2. Map Deterministic Policy & Schema Boundaries\\n3. Define Deliverable Milestones, Fixed Pricing & Timeline`;
 
     // Parse time to ISO approx
     const icsContent = [
@@ -254,6 +254,16 @@ export function InteractiveScheduler() {
               Scott H. (Principal Systems Architect)
             </span>
           </div>
+          {notes && (
+            <div className="border-t border-border pt-2 text-[11px] text-muted-foreground">
+              <span className="uppercase text-primary font-bold">
+                Attached Intake Spec:
+              </span>
+              <p className="mt-1 line-clamp-2 text-foreground font-mono">
+                {notes}
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="mt-8 flex flex-wrap justify-center gap-4">

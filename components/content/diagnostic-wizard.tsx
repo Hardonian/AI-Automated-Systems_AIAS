@@ -1170,13 +1170,24 @@ export function DiagnosticWizard() {
               </Button>
               <Button
                 asChild
-                className="font-mono text-xs font-bold uppercase ml-auto shadow-md"
+                className="font-mono text-xs font-bold uppercase border-2 border-primary bg-primary text-primary-foreground shadow-md hover:-translate-y-0.5 ml-auto"
+              >
+                <Link
+                  href={`/book?brief=${encodeURIComponent(`Diagnostic: Grade ${evaluation.grade} (${evaluation.score}/100) ${workload} Workload`)}&workload=${workload}&grade=${evaluation.grade}&score=${evaluation.score}`}
+                >
+                  Book Strategy Sprint (Spec Pre-Attached)
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                className="font-mono text-xs font-bold uppercase border-border"
               >
                 <Link
                   href={`/contact?ref=diagnostic&grade=${evaluation.grade}&score=${evaluation.score}&workload=${workload}&track=${encodeURIComponent(evaluation.track)}`}
                 >
-                  Schedule Diligence Review with Spec Attached
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  Submit Diligence Request
                 </Link>
               </Button>
             </div>

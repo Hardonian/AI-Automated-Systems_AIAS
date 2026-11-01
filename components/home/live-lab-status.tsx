@@ -2,15 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  Activity,
-  CheckCircle2,
-  Cpu,
-  RefreshCw,
-  ShieldCheck,
-  Terminal,
-  Zap,
-} from "lucide-react";
+import { CheckCircle2, RefreshCw, ShieldCheck, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface LabStatus {

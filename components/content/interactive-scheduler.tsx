@@ -107,6 +107,35 @@ export function InteractiveScheduler() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const searchParams = new URLSearchParams(window.location.search);
+        const urlBrief =
+          searchParams.get("brief") || searchParams.get("workload");
+        const localNotes = window.localStorage.getItem("aias_workspace_notes");
+
+        if (urlBrief) {
+          setNotes((prev) =>
+            prev ? prev : `Referenced workload / brief: ${urlBrief}`,
+          );
+          setHasWorkspaceBrief(true);
+        } else if (localNotes && localNotes.trim().length > 0) {
+          const firstLine =
+            localNotes.trim().split("\n")[0] || "Workspace Architecture Brief";
+          setNotes((prev) =>
+            prev ? prev : `Attached Workspace Spec: ${firstLine}`,
+          );
+          setHasWorkspaceBrief(true);
+        }
+      } catch {
+        // Ignore quota/browser restrictions
+      }
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   // Generate next 10 business days
   const availableDates = useMemo(() => {
     const dates: {
@@ -254,6 +283,16 @@ export function InteractiveScheduler() {
               Scott H. (Principal Systems Architect)
             </span>
           </div>
+          {notes && (
+            <div className="border-t border-border pt-2 text-[11px] text-muted-foreground">
+              <span className="uppercase text-primary font-bold">
+                Attached Intake Spec:
+              </span>
+              <p className="mt-1 line-clamp-2 text-foreground font-mono">
+                {notes}
+              </p>
+            </div>
+          )}
           {notes && (
             <div className="border-t border-border pt-2 text-[11px] text-muted-foreground">
               <span className="uppercase text-primary font-bold">
@@ -508,6 +547,15 @@ export function InteractiveScheduler() {
                 </div>
 
                 <div className="space-y-1.5">
+                  {hasWorkspaceBrief && (
+                    <div className="mb-2 flex items-center gap-2 border border-primary/40 bg-primary/10 px-3 py-1.5 font-mono text-xs text-primary">
+                      <Sparkles className="h-3.5 w-3.5 shrink-0" />
+                      <span>
+                        Workspace brief detected and attached to your
+                        appointment record.
+                      </span>
+                    </div>
+                  )}
                   {hasWorkspaceBrief && (
                     <div className="mb-2 flex items-center gap-2 border border-primary/40 bg-primary/10 px-3 py-1.5 font-mono text-xs text-primary">
                       <Sparkles className="h-3.5 w-3.5 shrink-0" />

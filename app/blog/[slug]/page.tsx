@@ -114,6 +114,12 @@ export default async function BlogArticlePage({ params }: PageProps) {
                 day: "numeric",
               })}
             </time>
+            {article.readingTime && (
+              <>
+                <span>•</span>
+                <span>{article.readingTime}</span>
+              </>
+            )}
           </div>
         </header>
 

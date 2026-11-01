@@ -2289,6 +2289,18 @@ The workflow is complete only when the output schema is valid, policy receipts a
     },
     resources: [
       {
+        title: "AI clarity diagnostic",
+        description:
+          "Four-step capability allocation, risk scoring, and portable CTO permalinks.",
+        href: "/diagnostic",
+      },
+      {
+        title: "ROI & capacity calculator",
+        description:
+          "Deterministic payback, hours reclaimed, and error-reduction financial modeler.",
+        href: "/roi-calculator",
+      },
+      {
         title: "Readiness checklist",
         description:
           "A 16-point browser scorecard with a portable markdown checklist.",

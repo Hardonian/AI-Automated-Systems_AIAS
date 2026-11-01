@@ -28,3 +28,9 @@
 - `/` (service list + FAQ schema markers)
 - `/blog` (blog collection schema marker)
 - `/case-studies/[slug]` (case-study article schema marker on each prerendered detail page)
+
+## Answer Engine Optimization (AEO) & Distribution
+
+- Explicit AI bot crawler rules in `app/robots.ts` welcoming `GPTBot`, `ClaudeBot`, `PerplexityBot`, and indexers to `/llms.txt`.
+- Structured citation mappings in `public/llms.txt` and `public/llms-full.txt`.
+- Developer community launch packages in [Community Distribution Kit](./COMMUNITY_DISTRIBUTION_KIT.md).

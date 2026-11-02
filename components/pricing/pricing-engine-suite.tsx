@@ -31,43 +31,14 @@ const DIGITAL_ASSETS: DigitalAssetSpec[] = [
     id: "comfy-pack",
     title: "ComfyUI 11-Workflow Production Pack",
     price: "$29",
-    badge: "Instant Asset",
-    checksum:
-      "sha256:d8a1f3c9e2b4d6f8a0c2e4b6d8f0a2c4e6b8d0f2a4c6e8b0d2f4a6c8e0b2d4",
+    badge: "Available now",
+    checksum: "Source delivered as a one-time purchase",
     deliverables: [
-      "11 modular local pipeline templates (document OCR, layout, vision)",
-      "Zero cloud API key dependencies (100% local GPU execution)",
-      "Executable JSON configuration graph with step-by-step install guide",
+      "11 local-first ComfyUI workflows for portrait, product, and concept generation",
+      "Runs on your own GPU with no cloud API key dependency",
+      "One-time purchase with no subscription",
     ],
-    catalogSlug: "hardonia-suite-ops",
-  },
-  {
-    id: "zod-kit",
-    title: "Deterministic Zod Policy & Invariant Gate Kit",
-    price: "$49",
-    badge: "Core Schema Kit",
-    checksum:
-      "sha256:3c7a9b1e5f2d4a6c8e0b7d9f1a3c5e7b2d4f6a8c0e2b4d6f8a1c3e5b7d9f2a",
-    deliverables: [
-      "18 production-hardened TypeScript and Zod strict schema contracts",
-      "Rate-limit circuit breaker and dead-letter queue handlers",
-      "Plug-and-play middleware for Next.js, Express, and Cloudflare Workers",
-    ],
-    catalogSlug: "settler-release-fabric",
-  },
-  {
-    id: "pipeda-ledger",
-    title: "Sovereign Canadian & PIPEDA Invariant Ledger",
-    price: "$99",
-    badge: "Compliance Starter",
-    checksum:
-      "sha256:91b8d2e4a6f7c0e1b3d5a7f9c2e4b6a8d0f2e4b6a8c0d2e4f6a8b0c2d4e6f8",
-    deliverables: [
-      "Client-side AES-GCM 256-bit Web Crypto encryption runbooks",
-      "Tamper-evident SHA-256 audit log verifier for regulated workloads",
-      "PIPEDA-aligned sovereign data residency architecture blueprint",
-    ],
-    catalogSlug: "zeo-high-throughput-etl",
+    catalogSlug: "comfyui-workflow-pack",
   },
 ];
 
@@ -119,6 +90,7 @@ export function PricingEngineSuite() {
   const [weeklyHours, setWeeklyHours] = useState<number>(15);
   const [blendedRate, setBlendedRate] = useState<number>(95);
   const [roiAttached, setRoiAttached] = useState<boolean>(false);
+  const [recoveryPct, setRecoveryPct] = useState<number>(60);
 
   // Calculations
   const annualDrag = useMemo(() => {
@@ -126,8 +98,8 @@ export function PricingEngineSuite() {
   }, [teamSize, weeklyHours, blendedRate]);
 
   const annualReclaimed = useMemo(() => {
-    return Math.round(annualDrag * 0.82);
-  }, [annualDrag]);
+    return Math.round(annualDrag * (recoveryPct / 100));
+  }, [annualDrag, recoveryPct]);
 
   const auditPaybackDays = useMemo(() => {
     const dailyReclaimed = annualReclaimed / 250;
@@ -183,7 +155,7 @@ export function PricingEngineSuite() {
             </p>
           </div>
           <span className="font-mono text-xs text-primary font-bold border border-border bg-background px-3 py-1.5 uppercase">
-            Model: 82% Efficiency Recovery
+            Assumption: {recoveryPct}% recovery (editable)
           </span>
         </div>
 
@@ -256,6 +228,29 @@ export function PricingEngineSuite() {
                 <span>$220 / unit</span>
               </div>
             </div>
+
+            <div>
+              <div className="flex justify-between font-mono text-xs font-bold uppercase text-foreground mb-2">
+                <label htmlFor="recovery-pct">
+                  Assumed Efficiency Recovery:
+                </label>
+                <span className="text-primary">{recoveryPct}%</span>
+              </div>
+              <input
+                id="recovery-pct"
+                type="range"
+                min={10}
+                max={90}
+                step={5}
+                value={recoveryPct}
+                onChange={(e) => setRecoveryPct(Number(e.target.value))}
+                className="w-full accent-primary cursor-pointer"
+              />
+              <div className="flex justify-between text-[10px] font-mono text-muted-foreground mt-1">
+                <span>10% (conservative)</span>
+                <span>90% (optimistic)</span>
+              </div>
+            </div>
           </div>
 
           {/* Results Summary Box */}
@@ -264,7 +259,7 @@ export function PricingEngineSuite() {
               <div className="flex items-center justify-between border-b border-border pb-3 text-xs font-mono text-muted-foreground uppercase">
                 <span>Projected Economic Impact</span>
                 <span className="text-primary font-bold">
-                  50 Operating Weeks/Yr
+                  Assumes 50 working weeks/yr
                 </span>
               </div>
 
@@ -340,7 +335,7 @@ export function PricingEngineSuite() {
           <div>
             <div className="inline-flex items-center gap-2 border border-primary/40 bg-primary/10 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest text-primary mb-2">
               <PackageCheck className="h-3 w-3" />
-              <span>Tier 1 Sovereign Assets Storefront</span>
+              <span>Tier 1 Digital Assets</span>
             </div>
             <h2 className="text-2xl font-black uppercase tracking-tight text-foreground">
               SELF-SERVE DIGITAL ASSETS &amp; RUNTIME KITS
@@ -361,7 +356,7 @@ export function PricingEngineSuite() {
           </Button>
         </div>
 
-        <div className="mt-6 grid gap-6 md:grid-cols-3">
+        <div className="mt-6 grid gap-6 md:grid-cols-1 max-w-xl">
           {DIGITAL_ASSETS.map((asset) => (
             <div
               key={asset.id}
@@ -407,7 +402,9 @@ export function PricingEngineSuite() {
                     size="sm"
                     className="w-full font-mono text-[11px] uppercase font-bold"
                   >
-                    <Link href={`/catalog`}>Order Kit →</Link>
+                    <Link href="https://aiautomatedsystems.ca/p/comfyui-workflow-pack">
+                      Order Kit →
+                    </Link>
                   </Button>
                 </div>
               </div>

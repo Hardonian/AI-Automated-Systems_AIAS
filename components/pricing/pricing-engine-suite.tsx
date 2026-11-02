@@ -23,7 +23,8 @@ interface DigitalAssetSpec {
   badge: string;
   checksum: string;
   deliverables: string[];
-  catalogSlug: string;
+  targetHref: string;
+  isExternal?: boolean;
 }
 
 const DIGITAL_ASSETS: DigitalAssetSpec[] = [
@@ -32,13 +33,40 @@ const DIGITAL_ASSETS: DigitalAssetSpec[] = [
     title: "ComfyUI 11-Workflow Production Pack",
     price: "$29",
     badge: "Available now",
-    checksum: "Source delivered as a one-time purchase",
+    checksum: "One-time download with local GPU execution",
     deliverables: [
       "11 local-first ComfyUI workflows for portrait, product, and concept generation",
-      "Runs on your own GPU with no cloud API key dependency",
-      "One-time purchase with no subscription",
+      "Runs on your own GPU with zero cloud API key dependency",
+      "One-time purchase with instant source delivery",
     ],
-    catalogSlug: "comfyui-workflow-pack",
+    targetHref: "https://aiautomatedsystems.ca/p/comfyui-workflow-pack",
+    isExternal: true,
+  },
+  {
+    id: "policy-guardrail-kit",
+    title: "Deterministic Policy & Zod Guardrail Kit",
+    price: "Open Source",
+    badge: "Reference kit",
+    checksum: "Reusable TypeScript & Zod boundary contracts",
+    deliverables: [
+      "Strict Zod schema contracts for validating AI inputs and tool calls",
+      "Regex and semantic PII scrubbers for sensitive data isolation",
+      "Confidence score evaluation with human-in-the-loop triggers",
+    ],
+    targetHref: "/catalog/policy-guardrail-kit",
+  },
+  {
+    id: "invoice-document-parser",
+    title: "Autonomous Financial Doc & Invoice Parser",
+    price: "Modular scope",
+    badge: "Data engine",
+    checksum: "Confidence-scored extraction with reconciliation",
+    deliverables: [
+      "Multi-format document layout and text vector extraction pipeline",
+      "Deterministic policy intercept for currency, tax IDs, and totals",
+      "Automatic ERP commit router for high-confidence payloads",
+    ],
+    targetHref: "/catalog/invoice-document-parser",
   },
 ];
 
@@ -356,7 +384,7 @@ export function PricingEngineSuite() {
           </Button>
         </div>
 
-        <div className="mt-6 grid gap-6 md:grid-cols-1 max-w-xl">
+        <div className="mt-6 grid gap-6 md:grid-cols-3">
           {DIGITAL_ASSETS.map((asset) => (
             <div
               key={asset.id}
@@ -402,9 +430,17 @@ export function PricingEngineSuite() {
                     size="sm"
                     className="w-full font-mono text-[11px] uppercase font-bold"
                   >
-                    <Link href="https://aiautomatedsystems.ca/p/comfyui-workflow-pack">
-                      Order Kit →
-                    </Link>
+                    {asset.isExternal ? (
+                      <a
+                        href={asset.targetHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Get Pack →
+                      </a>
+                    ) : (
+                      <Link href={asset.targetHref}>Inspect Spec →</Link>
+                    )}
                   </Button>
                 </div>
               </div>

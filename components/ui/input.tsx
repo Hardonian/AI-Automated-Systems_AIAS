@@ -24,7 +24,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const prefersReduced = useSafeReducedMotion();
 
     const motionProps: HTMLMotionProps<"div"> = prefersReduced
-      ? {}
+      ? { animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
       : {
           initial: { opacity: 0, y: -10 },
           animate: { opacity: 1, y: 0 },

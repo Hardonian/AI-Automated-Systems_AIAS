@@ -91,7 +91,7 @@ export function Header() {
       data-testid="header-nav-cluster"
       role="banner"
     >
-      <div className="container flex h-16 items-center justify-between px-4">
+      <div className="container flex h-16 items-center justify-between px-4 min-[1800px]:max-w-none">
         <div>
           <Link
             aria-label="AI Automated Systems - Home"
@@ -107,7 +107,7 @@ export function Header() {
 
         <nav
           aria-label="Primary"
-          className="hidden items-center gap-5 2xl:flex 2xl:gap-6"
+          className="hidden items-center gap-3 min-[1800px]:flex"
           data-testid="header-primary-nav"
         >
           {siteContent.navigation.primary.map((item) => (
@@ -189,7 +189,7 @@ export function Header() {
           <ThemeToggle />
         </nav>
 
-        <div className="flex items-center gap-2 2xl:hidden">
+        <div className="flex items-center gap-2 min-[1800px]:hidden">
           <CommandPalette />
           <SoundToggle className="px-2" />
           <ThemeToggle />

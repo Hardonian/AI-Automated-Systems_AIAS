@@ -98,6 +98,37 @@ test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
     ).toBeVisible();
   });
 
+  for (const width of [1536, 1799, 1800, 1920]) {
+    test(`Header controls remain visible within a ${width}px viewport`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/docs");
+      await expect(
+        page
+          .getByRole("banner")
+          .getByRole("button", { name: /Switch to .* mode/i }),
+      ).toBeVisible();
+      const nav = page.getByTestId("header-primary-nav");
+      const mobile = page.getByTestId("mobile-nav-trigger");
+      if (width < 1800) {
+        await expect(mobile).toBeVisible();
+        await expect(nav).toBeHidden();
+      } else {
+        await expect(nav).toBeVisible();
+        await expect(mobile).toBeHidden();
+      }
+      expect(
+        await page.evaluate(() => document.body.scrollWidth),
+      ).toBeLessThanOrEqual(width);
+      const activeNav = width < 1800 ? mobile : nav;
+      const bounds = await activeNav.boundingBox();
+      expect(bounds).not.toBeNull();
+      expect(bounds!.x).toBeGreaterThanOrEqual(0);
+      expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width);
+    });
+  }
+
   test("Header stays within the viewport at compact desktop widths", async ({
     page,
   }) => {

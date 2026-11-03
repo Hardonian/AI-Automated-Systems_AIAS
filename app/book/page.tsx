@@ -55,7 +55,7 @@ export default function BookPage() {
       <PageHero
         eyebrow="Direct Architecture Booking"
         title="Schedule Your AI Systems Strategy Session"
-        description="Select a time slot below to review your workflow bottlenecks, test feasibility, and evaluate deterministic automation architecture. Zero sales pressure—just technical clarity."
+        description="Request a conversation about your workflow bottlenecks, automation feasibility, and system architecture. Online booking is currently unavailable."
       />
 
       {/* Main Interactive Scheduler */}

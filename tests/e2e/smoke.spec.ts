@@ -142,13 +142,23 @@ test.describe("@smoke Reality Mode Smoke Test", () => {
     await expect(page.getByText("Step 4 of 4")).toBeVisible();
     await expect(page.getByText(/AIAS Diligence Result/i)).toBeVisible();
 
-    // Verify handoff link to contact
-    const intakeLink = page.getByRole("link", {
-      name: /Schedule Diligence Review/i,
-    });
-    await expect(intakeLink).toBeVisible();
-    const href = await intakeLink.getAttribute("href");
-    expect(href).toContain("/contact?ref=diagnostic");
+    // Both handoffs must carry the diagnostic context to a real intake form.
+    for (const name of [
+      /Request Strategy Sprint/i,
+      /Submit Diligence Request/i,
+    ]) {
+      const intakeLink = page.getByRole("link", { name });
+      await expect(intakeLink).toBeVisible();
+      const url = new URL((await intakeLink.getAttribute("href"))!, page.url());
+      expect(url.pathname).toBe("/contact");
+      expect(url.searchParams.get("ref")).toBe("diagnostic");
+      for (const key of ["grade", "score", "workload", "track"]) {
+        expect(url.searchParams.get(key), key).toBeTruthy();
+      }
+    }
+    await page.getByRole("link", { name: /Submit Diligence Request/i }).click();
+    await expect(page).toHaveURL(/\/contact\?ref=diagnostic/);
+    await expect(page.locator("form")).toBeVisible();
   });
 
   test("Instant ROI Sizer on home and prefilled intake context", async ({

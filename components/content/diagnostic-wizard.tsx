@@ -16,6 +16,8 @@ import {
   ShieldAlert,
   ShieldCheck,
   Sparkles,
+  Wand2,
+  Zap,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -23,12 +25,18 @@ import { SurfaceCard } from "@/components/ui/section-primitives";
 import {
   DEFAULT_DIAGNOSTIC_CAPABILITIES,
   DIAGNOSTIC_FAILURE_MODES,
+  autoRemediateDiagnosticArchitecture,
   decodeDiagnosticState,
   encodeDiagnosticState,
   evaluateDiagnosticArchitecture,
+  generateDiagnosticZodContract,
+  simulateDiagnosticStress,
   useBroadcastChannel,
+  writeWorkspaceNotes,
   type DiagnosticAllocationMode,
   type DiagnosticLatencyTier,
+  type DiagnosticRemediationResult,
+  type DiagnosticStressScenarioId,
   type DiagnosticVolumeLevel,
   type DiagnosticWorkloadType,
 } from "@/lib/utils/client-engines";
@@ -37,7 +45,7 @@ type WorkloadType = DiagnosticWorkloadType;
 type VolumeLevel = DiagnosticVolumeLevel;
 type LatencyTier = DiagnosticLatencyTier;
 type AllocationMode = DiagnosticAllocationMode;
-type DepthMode = "executive" | "architect";
+type DepthMode = "executive" | "architect" | "code";
 
 const DEFAULT_CAPABILITIES = DEFAULT_DIAGNOSTIC_CAPABILITIES;
 const FAILURE_MODES = DIAGNOSTIC_FAILURE_MODES;
@@ -127,8 +135,13 @@ export function DiagnosticWizard() {
 
   const [copied, setCopied] = useState(false);
   const [rfcCopied, setRfcCopied] = useState(false);
+  const [codeCopied, setCodeCopied] = useState(false);
   const [shareLinkCopied, setShareLinkCopied] = useState(false);
   const [syncedToWorkspace, setSyncedToWorkspace] = useState(false);
+  const [lastRemediation, setLastRemediation] =
+    useState<DiagnosticRemediationResult | null>(null);
+  const [activeStressId, setActiveStressId] =
+    useState<DiagnosticStressScenarioId | null>("hallucination");
   const [announcement, setAnnouncement] = useState("");
   const formId = useId();
   const { postMessage } = useBroadcastChannel<{ notes: string }>(
@@ -158,6 +171,7 @@ export function DiagnosticWizard() {
     setLatency(preset.latency);
     setAllocations({ ...preset.allocations });
     setSelectedRisks([...preset.risks]);
+    setLastRemediation(null);
     setAnnouncement(`Applied scenario preset: ${preset.label}.`);
   };
 
@@ -177,6 +191,7 @@ export function DiagnosticWizard() {
 
   const handleAllocationChange = (id: string, mode: AllocationMode) => {
     setAllocations((prev) => ({ ...prev, [id]: mode }));
+    setLastRemediation(null);
     const cap = DEFAULT_CAPABILITIES.find((c) => c.id === id);
     setAnnouncement(
       `Set ${cap?.label ?? id} to ${mode.toUpperCase()} execution.`,
@@ -195,6 +210,55 @@ export function DiagnosticWizard() {
       ),
     [allocations, workload, volume, latency, selectedRisks],
   );
+
+  const remediationPreview = useMemo(
+    () =>
+      autoRemediateDiagnosticArchitecture(
+        allocations,
+        workload,
+        volume,
+        latency,
+        selectedRisks,
+      ),
+    [allocations, workload, volume, latency, selectedRisks],
+  );
+
+  const activeStressResult = useMemo(
+    () =>
+      activeStressId
+        ? simulateDiagnosticStress(
+            allocations,
+            workload,
+            latency,
+            activeStressId,
+          )
+        : null,
+    [allocations, workload, latency, activeStressId],
+  );
+
+  const zodContractCode = useMemo(
+    () =>
+      generateDiagnosticZodContract(
+        {
+          workload,
+          volume,
+          latency,
+          allocations,
+          risks: selectedRisks,
+        },
+        evaluation,
+      ),
+    [workload, volume, latency, allocations, selectedRisks, evaluation],
+  );
+
+  const handleAutoRemediate = () => {
+    if (remediationPreview.changesApplied.length === 0) return;
+    setLastRemediation(remediationPreview);
+    setAllocations({ ...remediationPreview.healedAllocations });
+    setAnnouncement(
+      `Auto-healed ${remediationPreview.changesApplied.length} boundary allocations. Reliability score increased by +${remediationPreview.scoreDelta} points to ${remediationPreview.afterEvaluation.score}/100 (Grade ${remediationPreview.afterEvaluation.grade}).`,
+    );
+  };
 
   const composition = evaluation.composition;
 
@@ -285,8 +349,11 @@ export function DiagnosticWizard() {
     composition,
   ]);
 
-  const handleDownload = (format: "json" | "md") => {
-    const filename = `aias-diagnostic-brief.${format}`;
+  const handleDownload = (format: "json" | "md" | "ts") => {
+    const filename =
+      format === "ts"
+        ? `aias-${workload}-guardrail.ts`
+        : `aias-diagnostic-brief.${format}`;
     let content = "";
     let mime = "";
 
@@ -306,6 +373,9 @@ export function DiagnosticWizard() {
         2,
       );
       mime = "application/json";
+    } else if (format === "ts") {
+      content = zodContractCode;
+      mime = "text/typescript";
     } else {
       content = briefMarkdown;
       mime = "text/markdown";
@@ -319,7 +389,7 @@ export function DiagnosticWizard() {
     anchor.click();
     URL.revokeObjectURL(url);
     setAnnouncement(
-      `Downloaded diagnostic brief in ${format.toUpperCase()} format.`,
+      `Downloaded diagnostic artifact in ${format.toUpperCase()} format.`,
     );
   };
 
@@ -335,6 +405,13 @@ export function DiagnosticWizard() {
     setRfcCopied(true);
     setAnnouncement("Engineering RFC copied to clipboard.");
     setTimeout(() => setRfcCopied(false), 2500);
+  };
+
+  const copyZodCode = async () => {
+    await navigator.clipboard.writeText(zodContractCode);
+    setCodeCopied(true);
+    setAnnouncement("Executable TypeScript Zod contract copied to clipboard.");
+    setTimeout(() => setCodeCopied(false), 2500);
   };
 
   const copyShareLink = async () => {
@@ -364,16 +441,14 @@ export function DiagnosticWizard() {
   };
 
   const syncToWorkspace = () => {
-    const payload = depthMode === "architect" ? rfcMarkdown : briefMarkdown;
-    try {
-      window.localStorage.setItem(
-        "aias_workspace_notes",
-        JSON.stringify(payload),
-      );
-    } catch {
-      // Ignore storage quota errors
-    }
-    postMessage({ notes: payload });
+    const payload =
+      depthMode === "architect"
+        ? rfcMarkdown
+        : depthMode === "code"
+          ? `${briefMarkdown}\n\n## 6. Executable TypeScript + Zod Guardrail\n\`\`\`typescript\n${zodContractCode}\n\`\`\``
+          : briefMarkdown;
+    const nextNotes = writeWorkspaceNotes(payload);
+    postMessage({ notes: nextNotes });
     setSyncedToWorkspace(true);
     setAnnouncement("Diagnostic brief synchronized to local Handoff Console.");
     setTimeout(() => setSyncedToWorkspace(false), 3000);
@@ -390,6 +465,7 @@ export function DiagnosticWizard() {
       ),
     );
     setSelectedRisks(["hallucination", "pii-leak"]);
+    setLastRemediation(null);
     if (typeof window !== "undefined" && window.location.search) {
       window.history.replaceState(null, "", window.location.pathname);
     }
@@ -456,6 +532,23 @@ export function DiagnosticWizard() {
                 type="button"
               >
                 Architect Spec
+              </button>
+              <button
+                aria-pressed={depthMode === "code"}
+                className={`px-2.5 py-1 font-bold transition-colors ${
+                  depthMode === "code"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                onClick={() => {
+                  setDepthMode("code");
+                  setAnnouncement(
+                    "Switched to Executable TypeScript Zod Contract mode.",
+                  );
+                }}
+                type="button"
+              >
+                Zod Contract (.ts)
               </button>
             </div>
             <span
@@ -734,18 +827,43 @@ export function DiagnosticWizard() {
       {step === 2 && (
         <div aria-labelledby="step-tab-2" id="step-panel-2" role="tabpanel">
           <SurfaceCard className="border-2 border-border p-6 sm:p-8 space-y-6">
-            <div>
-              <span className="font-mono text-xs font-bold uppercase tracking-widest text-primary">
-                Section 02 // Architectural Boundary Mapping
-              </span>
-              <h3 className="mt-1 font-mono text-xl font-bold uppercase text-foreground">
-                Map Deterministic vs. Probabilistic Components
-              </h3>
-              <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-                The #1 source of AI production failure is assigning
-                mission-critical invariants (math, permissions, schema
-                enforcement) to language models. Assign each pillar carefully.
-              </p>
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-border pb-4">
+              <div>
+                <span className="font-mono text-xs font-bold uppercase tracking-widest text-primary">
+                  Section 02 // Architectural Boundary Mapping
+                </span>
+                <h3 className="mt-1 font-mono text-xl font-bold uppercase text-foreground">
+                  Map Deterministic vs. Probabilistic Components
+                </h3>
+                <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                  The #1 source of AI production failure is assigning
+                  mission-critical invariants (math, permissions, schema
+                  enforcement) to language models. Assign each pillar carefully.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2 shrink-0">
+                <span className="border border-border bg-background px-3 py-1.5 font-mono text-xs font-bold uppercase">
+                  Live Score:{" "}
+                  <span className="text-primary">{evaluation.score}/100</span> (
+                  {evaluation.grade})
+                </span>
+                {remediationPreview.changesApplied.length > 0 && (
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={handleAutoRemediate}
+                    className="font-mono text-xs font-bold uppercase"
+                  >
+                    <Wand2 className="mr-1.5 h-3.5 w-3.5" />
+                    Auto-Heal Drift (
+                    {remediationPreview.scoreDelta > 0
+                      ? `+${remediationPreview.scoreDelta} pts`
+                      : "Align"}
+                    )
+                  </Button>
+                )}
+              </div>
             </div>
 
             <ul className="space-y-4" role="list">
@@ -1041,22 +1159,185 @@ export function DiagnosticWizard() {
             </div>
 
             {evaluation.operationalProfile.criticalDrifts.length > 0 && (
-              <div className="mt-4 border-2 border-amber-500/60 bg-amber-500/10 p-4 font-mono text-xs">
-                <p className="font-bold uppercase text-amber-400">
-                  ⚠ Critical Invariant Drift Detected (
-                  {evaluation.operationalProfile.criticalDrifts.length}{" "}
-                  boundaries exposed):
-                </p>
-                <p className="mt-1 text-muted-foreground">
-                  Assigned to probabilistic inference:{" "}
-                  <span className="font-bold text-foreground">
-                    {evaluation.operationalProfile.criticalDrifts.join(", ")}
-                  </span>
-                  . Refactor these pillars to Deterministic Code to eliminate
-                  silent failure risk.
-                </p>
+              <div className="mt-4 border-2 border-amber-500/60 bg-amber-500/10 p-4 font-mono text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <p className="font-bold uppercase text-amber-400">
+                    ⚠ Critical Invariant Drift Detected (
+                    {evaluation.operationalProfile.criticalDrifts.length}{" "}
+                    boundaries exposed):
+                  </p>
+                  <p className="mt-1 text-muted-foreground">
+                    Assigned to probabilistic inference:{" "}
+                    <span className="font-bold text-foreground">
+                      {evaluation.operationalProfile.criticalDrifts.join(", ")}
+                    </span>
+                    . Refactor these pillars to Deterministic Code to eliminate
+                    silent failure risk.
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={handleAutoRemediate}
+                  className="shrink-0 font-mono text-xs font-bold uppercase"
+                >
+                  <Wand2 className="mr-1.5 h-3.5 w-3.5" />
+                  Auto-Heal Architecture (+{remediationPreview.scoreDelta} pts)
+                </Button>
               </div>
             )}
+
+            {lastRemediation &&
+              lastRemediation.changesApplied.length > 0 &&
+              evaluation.operationalProfile.criticalDrifts.length === 0 && (
+                <div className="mt-4 border-2 border-emerald-500/60 bg-emerald-500/10 p-4 font-mono text-xs space-y-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-black uppercase text-emerald-400 flex items-center gap-1.5">
+                      <CheckCircle2 className="h-4 w-4" />
+                      Autonomous Remediation Applied // Score Upgraded:{" "}
+                      {lastRemediation.beforeEvaluation.score}/100 (Grade{" "}
+                      {lastRemediation.beforeEvaluation.grade}) →{" "}
+                      {lastRemediation.afterEvaluation.score}/100 (Grade{" "}
+                      {lastRemediation.afterEvaluation.grade})
+                    </span>
+                    <span className="border border-emerald-500/40 bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-emerald-300">
+                      +{lastRemediation.scoreDelta} Reliability Points Reclaimed
+                    </span>
+                  </div>
+                  <ul className="grid gap-1.5 sm:grid-cols-2 pt-1 text-[11px] text-muted-foreground">
+                    {lastRemediation.changesApplied.map((change) => (
+                      <li key={change.id} className="flex items-start gap-1.5">
+                        <span className="text-emerald-400 font-bold">✓</span>
+                        <span>
+                          <strong className="text-foreground">
+                            {change.label}:
+                          </strong>{" "}
+                          <span className="uppercase">{change.from}</span> →{" "}
+                          <span className="uppercase text-emerald-400 font-bold">
+                            {change.to}
+                          </span>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+            {/* Interactive Live Boundary Stress-Test Simulator */}
+            <div className="mt-6 border-2 border-border bg-muted/20 p-4 space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-primary" />
+                  <span className="font-mono text-xs font-black uppercase tracking-wider text-foreground">
+                    Live Boundary Fault &amp; Load Stress Simulator
+                  </span>
+                </div>
+                <span className="font-mono text-[10px] uppercase text-muted-foreground">
+                  Tests your current Step 2 allocations against production
+                  anomalies
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {(
+                  [
+                    {
+                      id: "hallucination",
+                      label: "Hallucination & Math Drift",
+                    },
+                    { id: "pii-leak", label: "PII Airlock Breach" },
+                    { id: "latency-spike", label: "Upstream 504 Spike" },
+                    { id: "budget-runaway", label: "Recursive Loop Runaway" },
+                  ] as const
+                ).map((item) => {
+                  const active = activeStressId === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => setActiveStressId(item.id)}
+                      className={`border px-3 py-2 text-left font-mono text-[11px] font-bold uppercase transition-all cursor-pointer ${
+                        active
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground"
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {activeStressResult && (
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="border border-border bg-background p-3.5 font-mono text-xs space-y-2"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 pb-2">
+                    <span className="font-bold uppercase text-foreground">
+                      {activeStressResult.title}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="border border-border px-2 py-0.5 text-[10px] text-muted-foreground">
+                        Latency: {activeStressResult.simulatedLatencyMs}ms
+                      </span>
+                      <span
+                        className={`px-2 py-0.5 text-[10px] font-bold uppercase border ${
+                          activeStressResult.contained
+                            ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
+                            : "border-amber-500/50 bg-amber-500/10 text-amber-400"
+                        }`}
+                      >
+                        Blast Radius: {activeStressResult.blastRadius}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">
+                    <strong className="text-foreground">
+                      Injected Vector:
+                    </strong>{" "}
+                    {activeStressResult.injectedPayloadSummary}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    <strong className="text-foreground">
+                      Active Intercept Gate:
+                    </strong>{" "}
+                    <span className="text-primary">
+                      {activeStressResult.interceptLayer}
+                    </span>
+                  </p>
+                  <p
+                    className={`text-xs font-bold ${
+                      activeStressResult.contained
+                        ? "text-emerald-400"
+                        : "text-amber-400"
+                    }`}
+                  >
+                    {activeStressResult.analysis}
+                  </p>
+                  {!activeStressResult.contained &&
+                    remediationPreview.changesApplied.length > 0 && (
+                      <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border/60">
+                        <span className="text-[10px] text-muted-foreground">
+                          {activeStressResult.remediationHint}
+                        </span>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={handleAutoRemediate}
+                          className="h-7 font-mono text-[10px] font-bold uppercase"
+                        >
+                          <Wand2 className="mr-1 h-3 w-3" />
+                          Auto-Heal &amp; Contain Fault
+                        </Button>
+                      </div>
+                    )}
+                </div>
+              )}
+            </div>
 
             {/* Architecture Composition Balance Meter */}
             <div className="mt-6 p-4 bg-background border border-border">
@@ -1149,6 +1430,24 @@ export function DiagnosticWizard() {
                 {rfcCopied ? "RFC Copied!" : "Copy 1-Page RFC"}
               </Button>
               <Button
+                className="font-mono text-xs font-bold uppercase border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10"
+                onClick={() => handleDownload("ts")}
+                type="button"
+                variant="outline"
+              >
+                <FileCode2 className="mr-2 h-4 w-4 text-emerald-400" />
+                Download Guardrail (.ts)
+              </Button>
+              <Button
+                className="font-mono text-xs font-bold uppercase"
+                onClick={copyZodCode}
+                type="button"
+                variant="outline"
+              >
+                <Copy className="mr-2 h-4 w-4" />
+                {codeCopied ? "Zod Code Copied!" : "Copy Zod Contract"}
+              </Button>
+              <Button
                 className="font-mono text-xs font-bold uppercase border-primary/50 text-primary hover:bg-primary/10"
                 onClick={copyShareLink}
                 type="button"
@@ -1193,18 +1492,22 @@ export function DiagnosticWizard() {
             </div>
           </div>
 
-          {/* Formatted Markdown Preview with Executive / Architect Switcher */}
+          {/* Formatted Markdown Preview with Executive / Architect / Code Switcher */}
           <SurfaceCard className="border-2 border-border p-6 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
               <span className="font-mono text-xs font-bold uppercase text-muted-foreground flex items-center gap-2">
                 {depthMode === "architect" ? (
                   <Layers className="h-4 w-4 text-cyan-400" />
+                ) : depthMode === "code" ? (
+                  <FileCode2 className="h-4 w-4 text-emerald-400" />
                 ) : (
                   <FileText className="h-4 w-4 text-primary" />
                 )}
                 {depthMode === "architect"
                   ? "Systems Engineering RFC & Boundary Specification"
-                  : "Diagnostic Technical Report (Executive Brief)"}
+                  : depthMode === "code"
+                    ? "Executable TypeScript + Zod Sovereign Guardrail Contract"
+                    : "Diagnostic Technical Report (Executive Brief)"}
               </span>
               <div className="flex items-center gap-3">
                 <Link
@@ -1219,7 +1522,11 @@ export function DiagnosticWizard() {
               </div>
             </div>
             <pre className="p-4 bg-black/60 border border-border text-xs font-mono text-muted-foreground overflow-x-auto whitespace-pre-wrap leading-relaxed">
-              {depthMode === "architect" ? rfcMarkdown : briefMarkdown}
+              {depthMode === "architect"
+                ? rfcMarkdown
+                : depthMode === "code"
+                  ? zodContractCode
+                  : briefMarkdown}
             </pre>
           </SurfaceCard>
         </div>

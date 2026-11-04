@@ -199,6 +199,7 @@ test.describe("@smoke Reality Mode Smoke Test", () => {
     await page
       .getByRole("button", { name: /Fragile Prototype Audit/i })
       .click();
+    await page.getByRole("tab", { name: /4\. Architecture Brief/i }).click();
     await expect(page.getByText("Step 4 of 4")).toBeVisible();
 
     // Auto-heal drifted architecture to Grade A
@@ -207,13 +208,15 @@ test.describe("@smoke Reality Mode Smoke Test", () => {
       .first()
       .click();
     await expect(
-      page.getByText(/Self-Healing Boundary Remediation Applied/i),
+      page.getByText(/Autonomous Remediation Applied \/\/ Score Upgraded/i),
     ).toBeVisible();
 
     // Switch to Zod Contract (.ts) preview mode
     await page.getByRole("button", { name: /Zod Contract \(\.ts\)/i }).click();
     await expect(
-      page.getByText(/Deterministic Boundary Contract/i),
+      page.getByText(
+        /Executable TypeScript \+ Zod Sovereign Guardrail Contract/i,
+      ),
     ).toBeVisible();
 
     // Navigate to /tools and verify Brief Readiness Audit & Auto-Enrich
@@ -225,26 +228,26 @@ test.describe("@smoke Reality Mode Smoke Test", () => {
     if (await enrichBtn.isVisible()) {
       await enrichBtn.click();
     }
-    await expect(page.getByText(/100\/100 \(Grade A\)/i).first()).toBeVisible();
+    await expect(page.getByText(/100% \(A\)/i).first()).toBeVisible();
 
     // Navigate to /dashboard and verify FinOps & Canary Fault controls
     await page.goto("/dashboard");
     await page.getByRole("button", { name: /Simulate Canary Fault/i }).click();
-    await expect(page.getByText(/Canary Auto-Rollback Active/i)).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /Restore Canary v4\.2/i }),
+    ).toBeVisible();
     await page.getByRole("button", { name: /FinOps & Capacity/i }).click();
     await expect(
-      page.getByText(/FinOps & Compute Unit Economics Ledger/i),
+      page.getByText(/Deterministic Cache Hit Ratio/i),
     ).toBeVisible();
 
-    // Navigate to /operator and verify deterministic risk gate enforcement
-    await page.goto("/operator");
+    // Navigate to /operator-demo and verify pipeline workspace sync
+    await page.goto("/operator-demo");
     await expect(
-      page.getByRole("heading", { name: /Operator Console/i }),
+      page.getByRole("heading", { name: /Operator Console Demo/i }),
     ).toBeVisible();
-    await page
-      .getByRole("button", { name: /Enforce Gate/i })
-      .first()
-      .click();
-    await expect(page.getByText(/Gate Enforced ✓/i).first()).toBeVisible();
+    await expect(page.getByText(/Live Handoff Brief Detected/i)).toBeVisible();
+    await page.getByRole("button", { name: /Sync to Console/i }).click();
+    await expect(page.getByRole("button", { name: /Synced ✓/i })).toBeVisible();
   });
 });

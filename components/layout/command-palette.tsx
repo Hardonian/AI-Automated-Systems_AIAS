@@ -200,11 +200,11 @@ const COMMAND_ITEMS: CommandItem[] = [
   },
   {
     id: "tool-operator",
-    title: "Sovereign Operator Console",
+    title: "Sovereign Operator Console Demo",
     description:
       "Inspect intake triage queues, deterministic risk mitigation gates, and signed runbooks.",
     category: "Tools",
-    href: "/operator",
+    href: "/operator-demo",
     icon: Terminal,
     badge: "Operator",
     keywords: [

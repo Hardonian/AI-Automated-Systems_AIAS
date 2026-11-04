@@ -365,45 +365,45 @@ export function OperatorConsole({
 
           <div className="flex flex-wrap items-center gap-2">
             {!readOnly && (
-              <>
-                <Button
-                  onClick={() => setIsAddingLead(!isAddingLead)}
-                  size="sm"
-                  className="rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-card"
-                >
-                  <Plus className="mr-1.5 h-3.5 w-3.5" />
-                  {isAddingLead ? "Cancel" : "Add Lead"}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={handleSyncPipelineToWorkspace}
-                  variant="outline"
-                  size="sm"
-                  className="rounded-none border-2 border-border font-mono text-xs font-bold uppercase"
-                >
-                  <Send className="mr-1.5 h-3.5 w-3.5" />
-                  {syncedToWorkspace ? "Synced ✓" : "Sync to Console"}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={handleExportSignedRunbook}
-                  variant="outline"
-                  size="sm"
-                  className="rounded-none border-2 border-border font-mono text-xs font-bold uppercase"
-                >
-                  <Download className="mr-1.5 h-3.5 w-3.5" />
-                  Sign Runbook (.json)
-                </Button>
-                <Button
-                  onClick={handleResetToDefault}
-                  variant="outline"
-                  size="sm"
-                  className="rounded-none border-2 border-border font-mono text-xs font-bold uppercase hover:border-foreground"
-                  title="Reset demo data"
-                >
-                  <RotateCcw className="h-3.5 w-3.5" />
-                </Button>
-              </>
+              <Button
+                onClick={() => setIsAddingLead(!isAddingLead)}
+                size="sm"
+                className="rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-card"
+              >
+                <Plus className="mr-1.5 h-3.5 w-3.5" />
+                {isAddingLead ? "Cancel" : "Add Lead"}
+              </Button>
+            )}
+            <Button
+              type="button"
+              onClick={handleSyncPipelineToWorkspace}
+              variant="outline"
+              size="sm"
+              className="rounded-none border-2 border-border font-mono text-xs font-bold uppercase"
+            >
+              <Send className="mr-1.5 h-3.5 w-3.5" />
+              {syncedToWorkspace ? "Synced ✓" : "Sync to Console"}
+            </Button>
+            <Button
+              type="button"
+              onClick={handleExportSignedRunbook}
+              variant="outline"
+              size="sm"
+              className="rounded-none border-2 border-border font-mono text-xs font-bold uppercase"
+            >
+              <Download className="mr-1.5 h-3.5 w-3.5" />
+              Sign Runbook (.json)
+            </Button>
+            {!readOnly && (
+              <Button
+                onClick={handleResetToDefault}
+                variant="outline"
+                size="sm"
+                className="rounded-none border-2 border-border font-mono text-xs font-bold uppercase hover:border-foreground"
+                title="Reset demo data"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+              </Button>
             )}
           </div>
         </div>

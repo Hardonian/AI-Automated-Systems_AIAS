@@ -365,8 +365,7 @@ export function ClientDashboardPreview() {
                 </p>
                 {evalRunDigest && (
                   <p className="pt-2 border-t border-emerald-500/30 text-cyan-400">
-                    [WEB-CRYPTO-VERIFIED] Signed Runbook Digest:{" "}
-                    {evalRunDigest}
+                    [WEB-CRYPTO-VERIFIED] Signed Runbook Digest: {evalRunDigest}
                   </p>
                 )}
               </div>

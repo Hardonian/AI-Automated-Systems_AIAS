@@ -21,6 +21,9 @@ import {
   X,
   Wrench,
   ShoppingBag,
+  Terminal,
+  Check,
+  Copy,
 } from "lucide-react";
 import {
   Dialog,
@@ -30,6 +33,14 @@ import {
 } from "@/components/ui/dialog";
 import { caseStudies } from "@/lib/case-studies-generator";
 import { siteContent } from "@/src/content/site";
+import {
+  readWorkspaceNotes,
+  writeWorkspaceNotes,
+  analyzeWorkspaceBrief,
+  generateSHA256Receipt,
+  useBroadcastChannel,
+  type WorkspaceBriefAudit,
+} from "@/lib/utils/client-engines";
 
 export interface CommandItem {
   id: string;
@@ -187,8 +198,69 @@ const COMMAND_ITEMS: CommandItem[] = [
     badge: "Booking",
     keywords: ["book", "schedule", "diagnostic", "call", "consultation"],
   },
+  {
+    id: "tool-operator",
+    title: "Sovereign Operator Console",
+    description:
+      "Inspect intake triage queues, deterministic risk mitigation gates, and signed runbooks.",
+    category: "Tools",
+    href: "/operator",
+    icon: Terminal,
+    badge: "Operator",
+    keywords: [
+      "operator",
+      "console",
+      "triage",
+      "leads",
+      "runbook",
+      "telemetry",
+    ],
+  },
+  {
+    id: "tool-audit-intake",
+    title: "Technical Discovery & Stack Audit Intake",
+    description:
+      "Configure boundary constraints and submit an architecture intake brief.",
+    category: "Tools",
+    href: "/audit",
+    icon: ShieldAlert,
+    badge: "Intake",
+    keywords: ["audit", "intake", "discovery", "stack", "assessment"],
+  },
 
   // Services & Consultancy
+  {
+    id: "srv-pricing",
+    title: "Pricing & Engagement Calculator",
+    description:
+      "Transparent fixed-scope sprint tiers, custom build estimator, and enterprise SLAs.",
+    category: "Services",
+    href: "/pricing",
+    icon: Calculator,
+    badge: "Pricing",
+    keywords: ["pricing", "cost", "tiers", "sprint", "estimate", "budget"],
+  },
+  {
+    id: "srv-work",
+    title: "Shipped Production Work & Proof",
+    description:
+      "Inspect verified enterprise deployments, governance architectures, and measured ROI.",
+    category: "Services",
+    href: "/work",
+    icon: Briefcase,
+    badge: "Portfolio",
+    keywords: ["work", "portfolio", "deployments", "production", "shipped"],
+  },
+  {
+    id: "srv-workflows",
+    title: "Deterministic Workflow Patterns",
+    description:
+      "Explore reference multi-step orchestration topologies and validation gates.",
+    category: "Services",
+    href: "/workflows",
+    icon: Layers,
+    keywords: ["workflows", "patterns", "orchestration", "pipelines", "gates"],
+  },
   {
     id: "srv-hire",
     title: "Hire AIAS to Build & Automate",
@@ -405,6 +477,57 @@ const COMMAND_ITEMS: CommandItem[] = [
     icon: HelpCircle,
     keywords: ["say no", "fit", "criteria", "governance", "boundaries"],
   },
+  {
+    id: "arch-docs",
+    title: "Architecture Documentation & Guides",
+    description:
+      "Reference documentation on deterministic boundaries, state contracts, and deployment.",
+    category: "Architecture",
+    href: "/docs",
+    icon: BookOpen,
+    badge: "Docs",
+    keywords: ["docs", "documentation", "guides", "reference", "manual"],
+  },
+  {
+    id: "arch-methodology",
+    title: "Systems Engineering Methodology",
+    description:
+      "How we separate probabilistic inference from deterministic state mutation.",
+    category: "Architecture",
+    href: "/methodology",
+    icon: Layers,
+    keywords: ["methodology", "engineering", "deterministic", "state"],
+  },
+  {
+    id: "arch-pov",
+    title: "Architectural Point of View",
+    description:
+      "Why unconstrained autonomous loops fail in enterprise production and how to govern them.",
+    category: "Architecture",
+    href: "/point-of-view",
+    icon: Sparkles,
+    keywords: ["point of view", "pov", "manifesto", "thesis", "philosophy"],
+  },
+  {
+    id: "arch-measure",
+    title: "What We Measure (SLO & FinOps Ledger)",
+    description:
+      "P95 latency budgets, schema pass rates, fallback triggers, and cost-per-run telemetry.",
+    category: "Architecture",
+    href: "/what-we-measure",
+    icon: BarChart3,
+    keywords: ["measure", "slo", "kpis", "latency", "finops", "accuracy"],
+  },
+  {
+    id: "arch-ecosystem",
+    title: "Sovereign Partner & Tool Ecosystem",
+    description:
+      "Supported model providers, observability sinks, and zero-trust runtime integrations.",
+    category: "Architecture",
+    href: "/ecosystem",
+    icon: Cpu,
+    keywords: ["ecosystem", "integrations", "models", "partners", "stack"],
+  },
 
   // Company & Resources
   {
@@ -497,15 +620,61 @@ export function CommandPalette() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [briefAudit, setBriefAudit] = useState<WorkspaceBriefAudit | null>(
+    null,
+  );
+  const [enrichedFlash, setEnrichedFlash] = useState(false);
+  const [receiptHash, setReceiptHash] = useState<string | null>(null);
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { postMessage: postWorkspaceMessage } = useBroadcastChannel<{
+    notes: string;
+  }>("aias_workspace_sync", (msg) => {
+    if (msg && typeof msg.notes === "string") {
+      setBriefAudit(analyzeWorkspaceBrief(msg.notes));
+    }
+  });
+
+  const handleOpenState = (nextOpen: boolean) => {
+    setIsOpen(nextOpen);
+    if (nextOpen) {
+      setBriefAudit(analyzeWorkspaceBrief(readWorkspaceNotes()));
+    }
+  };
+
+  const handleAutoEnrichBrief = () => {
+    const notes = readWorkspaceNotes();
+    const audit = analyzeWorkspaceBrief(notes);
+    const updated = writeWorkspaceNotes(audit.autoEnrichedBrief);
+    postWorkspaceMessage({ notes: updated });
+    setBriefAudit(analyzeWorkspaceBrief(updated));
+    setEnrichedFlash(true);
+    setTimeout(() => setEnrichedFlash(false), 2200);
+  };
+
+  const handleCopyBriefReceipt = async () => {
+    const notes = readWorkspaceNotes();
+    const hash = await generateSHA256Receipt(
+      notes || "AIAS_EMPTY_WORKSPACE_BRIEF",
+    );
+    await navigator.clipboard.writeText(hash);
+    setReceiptHash(hash.slice(0, 16));
+    setTimeout(() => setReceiptHash(null), 2500);
+  };
 
   // Global hotkey: Cmd+K or Ctrl+K
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        setIsOpen((prev) => !prev);
+        setIsOpen((prev) => {
+          const next = !prev;
+          if (next) {
+            setBriefAudit(analyzeWorkspaceBrief(readWorkspaceNotes()));
+          }
+          return next;
+        });
       }
     };
 
@@ -560,7 +729,7 @@ export function CommandPalette() {
     <>
       {/* Header Search Trigger Button */}
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={() => handleOpenState(true)}
         className="group flex items-center gap-2 rounded-none border-2 border-border bg-card px-3 py-1.5 font-mono text-xs font-bold uppercase text-muted-foreground transition-all hover:border-primary hover:text-foreground cursor-pointer"
         aria-label="Open command palette search"
         data-testid="command-palette-trigger"
@@ -573,7 +742,7 @@ export function CommandPalette() {
       </button>
 
       {/* Command Palette Modal */}
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog open={isOpen} onOpenChange={handleOpenState}>
         <DialogContent className="max-w-2xl rounded-none border-2 border-primary bg-background p-0 shadow-2xl overflow-hidden">
           <DialogHeader className="sr-only">
             <DialogTitle>Platform Command Search</DialogTitle>
@@ -609,6 +778,47 @@ export function CommandPalette() {
             )}
           </div>
 
+          {/* Live Sovereign Workspace Quick-Actions Bar */}
+          {briefAudit && (
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-muted/30 px-4 py-2 text-xs">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-primary">
+                  Local Brief Readiness:
+                </span>
+                <span className="border border-primary/40 bg-primary/10 px-1.5 py-0.5 font-mono text-[10px] font-bold text-foreground">
+                  {briefAudit.readinessScore}/100 (Grade {briefAudit.grade})
+                </span>
+                <span className="font-mono text-[10px] text-muted-foreground">
+                  {briefAudit.wordCount} words
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5">
+                {briefAudit.readinessScore < 100 && (
+                  <button
+                    type="button"
+                    onClick={handleAutoEnrichBrief}
+                    className="inline-flex items-center gap-1 border border-primary/50 bg-primary/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-primary hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
+                  >
+                    <Sparkles className="h-3 w-3" />
+                    {enrichedFlash ? "Enriched ✓" : "Auto-Enrich Brief"}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={handleCopyBriefReceipt}
+                  className="inline-flex items-center gap-1 border border-border bg-background px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-muted-foreground hover:border-primary hover:text-foreground transition-colors cursor-pointer"
+                >
+                  {receiptHash ? (
+                    <Check className="h-3 w-3 text-emerald-500" />
+                  ) : (
+                    <Copy className="h-3 w-3" />
+                  )}
+                  {receiptHash ? `SHA: ${receiptHash}…` : "Copy SHA-256"}
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Results List */}
           <div className="max-h-[60vh] overflow-y-auto p-2 divide-y divide-border/40">
             {filteredItems.length === 0 ? (
@@ -632,13 +842,13 @@ export function CommandPalette() {
                     key={item.id}
                     onClick={() => handleSelect(item)}
                     onMouseEnter={() => setSelectedIndex(idx)}
-                    className={`flex items-center justify-between p-3 transition-colors cursor-pointer border-l-2 ${
+                    className={`flex items-start sm:items-center justify-between gap-3 p-3 transition-colors cursor-pointer border-l-2 ${
                       isSelected
                         ? "border-l-primary bg-primary/10 text-foreground"
                         : "border-l-transparent hover:bg-muted/40 text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    <div className="flex items-start gap-3 min-w-0 pr-4">
+                    <div className="flex items-start gap-3 min-w-0 flex-1">
                       <div
                         className={`flex h-8 w-8 shrink-0 items-center justify-center border transition-colors mt-0.5 ${
                           isSelected
@@ -648,18 +858,18 @@ export function CommandPalette() {
                       >
                         <IconComponent className="h-4 w-4" />
                       </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <p className="font-mono text-sm font-bold uppercase tracking-wide text-foreground truncate">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="font-mono text-sm font-bold uppercase tracking-wide text-foreground break-words">
                             {item.title}
                           </p>
                           {item.badge && (
-                            <span className="font-mono text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.2 border border-primary/40 bg-primary/10 text-primary">
+                            <span className="font-mono text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 border border-primary/40 bg-primary/10 text-primary shrink-0">
                               {item.badge}
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
+                        <p className="text-xs text-muted-foreground leading-relaxed mt-0.5 break-words">
                           {item.description}
                         </p>
                       </div>

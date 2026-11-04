@@ -191,4 +191,60 @@ test.describe("@smoke Reality Mode Smoke Test", () => {
     ).toBeVisible();
     await expect(page.getByText(/Target Annual Efficiency:/i)).toBeVisible();
   });
+
+  test("Self-healing diagnostic, workspace auto-enrich, dashboard FinOps, and operator console flows", async ({
+    page,
+  }) => {
+    await page.goto("/diagnostic");
+    await page
+      .getByRole("button", { name: /Fragile Prototype Audit/i })
+      .click();
+    await expect(page.getByText("Step 4 of 4")).toBeVisible();
+
+    // Auto-heal drifted architecture to Grade A
+    await page
+      .getByRole("button", { name: /Auto-Heal Architecture/i })
+      .first()
+      .click();
+    await expect(
+      page.getByText(/Self-Healing Boundary Remediation Applied/i),
+    ).toBeVisible();
+
+    // Switch to Zod Contract (.ts) preview mode
+    await page.getByRole("button", { name: /Zod Contract \(\.ts\)/i }).click();
+    await expect(
+      page.getByText(/Deterministic Boundary Contract/i),
+    ).toBeVisible();
+
+    // Navigate to /tools and verify Brief Readiness Audit & Auto-Enrich
+    await page.goto("/tools");
+    await expect(page.getByText(/Brief Readiness Audit/i)).toBeVisible();
+    const enrichBtn = page.getByRole("button", {
+      name: /Auto-Enrich Missing Guardrails/i,
+    });
+    if (await enrichBtn.isVisible()) {
+      await enrichBtn.click();
+    }
+    await expect(page.getByText(/100\/100 \(Grade A\)/i).first()).toBeVisible();
+
+    // Navigate to /dashboard and verify FinOps & Canary Fault controls
+    await page.goto("/dashboard");
+    await page.getByRole("button", { name: /Simulate Canary Fault/i }).click();
+    await expect(page.getByText(/Canary Auto-Rollback Active/i)).toBeVisible();
+    await page.getByRole("button", { name: /FinOps & Capacity/i }).click();
+    await expect(
+      page.getByText(/FinOps & Compute Unit Economics Ledger/i),
+    ).toBeVisible();
+
+    // Navigate to /operator and verify deterministic risk gate enforcement
+    await page.goto("/operator");
+    await expect(
+      page.getByRole("heading", { name: /Operator Console/i }),
+    ).toBeVisible();
+    await page
+      .getByRole("button", { name: /Enforce Gate/i })
+      .first()
+      .click();
+    await expect(page.getByText(/Gate Enforced ✓/i).first()).toBeVisible();
+  });
 });

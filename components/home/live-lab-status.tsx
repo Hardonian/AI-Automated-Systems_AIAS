@@ -451,7 +451,7 @@ export function LiveLabStatus() {
                   <p className="mt-1 text-xl font-black text-foreground">
                     SHA-256 Gated
                   </p>
-                  <p className="mt-1 font-mono text-[9px] text-muted-foreground truncate">
+                  <p className="mt-1 font-mono text-[9px] text-muted-foreground">
                     Computed per release in CI
                   </p>
                   <p className="mt-2 text-[9px] text-emerald-400 font-bold uppercase">
@@ -509,7 +509,7 @@ export function LiveLabStatus() {
                     placeholder="Enter payload string to hash"
                     className="flex-1 bg-background border border-border px-3 py-1.5 font-mono text-xs text-foreground focus:outline-none focus:border-primary"
                   />
-                  <div className="border border-border bg-black/80 px-3 py-1.5 font-mono text-xs text-emerald-400 truncate max-w-sm">
+                  <div className="border border-border bg-black/80 px-3 py-1.5 font-mono text-xs text-emerald-400 break-all">
                     {computedDigest}
                   </div>
                   <Button

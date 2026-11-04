@@ -1,25 +1,30 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Search,
-  Filter,
   Plus,
-  ShieldAlert,
-  ShieldCheck,
-  User,
   Building2,
-  FileText,
-  Activity,
-  Layers,
   RotateCcw,
   Sparkles,
+  ShieldCheck,
+  Download,
+  Send,
+  Wand2,
 } from "lucide-react";
 
 import type { OperatorLead } from "@/src/content/moat";
 import { SurfaceCard } from "@/components/ui/section-primitives";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  analyzeWorkspaceBrief,
+  appendWorkspaceNotes,
+  DEFAULT_WORKSPACE_TEMPLATE,
+  generateSHA256Receipt,
+  readWorkspaceNotes,
+  useBroadcastChannel,
+} from "@/lib/utils/client-engines";
 
 const STORAGE_KEY = "aias-operator-leads";
 
@@ -49,6 +54,33 @@ export function OperatorConsole({
   const [newStage, setNewStage] = useState<OperatorLead["stage"]>("intake");
   const [newRiskScore, setNewRiskScore] = useState(45);
   const [newNotes, setNewNotes] = useState("");
+
+  // Live Workspace Handoff & Runbook Signing State
+  const [workspaceNotes, setWorkspaceNotes] = useState<string>("");
+  const [briefIngested, setBriefIngested] = useState(false);
+  const [syncedToWorkspace, setSyncedToWorkspace] = useState(false);
+  const [signedReceipt, setSignedReceipt] = useState<string | null>(null);
+
+  const onRemoteWorkspace = useCallback((msg: { notes: string }) => {
+    if (msg && typeof msg.notes === "string") {
+      setWorkspaceNotes(msg.notes);
+    }
+  }, []);
+  const { postMessage: postWorkspaceMessage } = useBroadcastChannel<{
+    notes: string;
+  }>("aias-workspace", onRemoteWorkspace);
+
+  useEffect(() => {
+    const current = readWorkspaceNotes();
+    if (current && current !== DEFAULT_WORKSPACE_TEMPLATE) {
+      queueMicrotask(() => setWorkspaceNotes(current));
+    }
+  }, []);
+
+  const briefAudit = useMemo(
+    () => (workspaceNotes ? analyzeWorkspaceBrief(workspaceNotes) : null),
+    [workspaceNotes],
+  );
 
   useEffect(() => {
     if (readOnly) {
@@ -141,7 +173,105 @@ export function OperatorConsole({
   const handleResetToDefault = () => {
     if (readOnly) return;
     setLeads(initialLeads);
+    setBriefIngested(false);
+    setSignedReceipt(null);
     window.localStorage.removeItem(STORAGE_KEY);
+  };
+
+  const handleIngestWorkspaceBrief = () => {
+    if (readOnly || !workspaceNotes || !briefAudit) return;
+    const firstLine =
+      workspaceNotes
+        .split("\n")
+        .map((l) => l.replace(/^#+\s*/, "").trim())
+        .find((l) => l.length > 4) ?? "Active Architecture Brief";
+    const computedRisk = Math.max(12, Math.min(85, 100 - briefAudit.score));
+    const ingestedLead: OperatorLead = {
+      account: `Workspace // ${firstLine.slice(0, 38)}`,
+      stage: briefAudit.score >= 80 ? "scoping" : "governance-review",
+      riskScore: computedRisk,
+      owner: "Scott H. (Auto-Routed)",
+      notes: `Readiness ${briefAudit.score}% (Grade ${briefAudit.grade}) · ${briefAudit.detectedGates} guardrail tokens detected.`,
+    };
+    setLeads((prev) => [ingestedLead, ...prev]);
+    setBriefIngested(true);
+  };
+
+  const handleMitigateLeadRisk = (index: number) => {
+    if (readOnly) return;
+    setLeads((current) =>
+      current.map((lead, idx) => {
+        if (idx !== index) return lead;
+        const nextRisk = Math.max(10, lead.riskScore - 22);
+        const nextStage: OperatorLead["stage"] =
+          lead.stage === "intake" || lead.stage === "governance-review"
+            ? "pilot"
+            : lead.stage;
+        const tag = "[GATE-VERIFIED: Deterministic Zod + Circuit Breaker]";
+        const nextNotes = lead.notes.includes(tag)
+          ? lead.notes
+          : `${lead.notes.trim()} ${tag}`;
+        return {
+          ...lead,
+          riskScore: nextRisk,
+          stage: nextStage,
+          notes: nextNotes,
+        };
+      }),
+    );
+  };
+
+  const handleSyncPipelineToWorkspace = () => {
+    const summary = [
+      "## Operator Control-Plane Pipeline Ledger",
+      `- Total Records: ${stats.count} | Active/Pilot: ${stats.activeCount} | Mean Risk Score: ${stats.averageRisk}/100`,
+      ...leads
+        .slice(0, 5)
+        .map(
+          (l) =>
+            `- **${l.account}** [${l.stage.toUpperCase()}] — Risk: ${l.riskScore}/100 · Owner: ${l.owner}`,
+        ),
+    ].join("\n");
+    const updated = appendWorkspaceNotes(summary);
+    setWorkspaceNotes(updated);
+    postWorkspaceMessage({ notes: updated });
+    setSyncedToWorkspace(true);
+    setTimeout(() => setSyncedToWorkspace(false), 2500);
+  };
+
+  const handleExportSignedRunbook = async () => {
+    const payloadString = JSON.stringify(
+      {
+        exportedAt: new Date().toISOString(),
+        stats,
+        leads,
+      },
+      null,
+      2,
+    );
+    const receipt = await generateSHA256Receipt(payloadString);
+    setSignedReceipt(`${receipt.receipt}\nFull SHA-256: ${receipt.hash}`);
+    const blob = new Blob(
+      [
+        JSON.stringify(
+          {
+            sha256: receipt.hash,
+            issuedAt: receipt.timestamp,
+            stats,
+            leads,
+          },
+          null,
+          2,
+        ),
+      ],
+      { type: "application/json" },
+    );
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `aias-operator-runbook-${receipt.hash.slice(0, 8)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -186,6 +316,40 @@ export function OperatorConsole({
         </SurfaceCard>
       </div>
 
+      {/* Active Workspace Handoff Ingestion Bar */}
+      {briefAudit && (
+        <SurfaceCard className="p-4 border-2 border-primary/50 bg-primary/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2 font-mono text-xs font-black uppercase text-primary">
+              <Sparkles className="h-4 w-4" />
+              <span>
+                Live Handoff Brief Detected // Readiness: {briefAudit.score}% (
+                {briefAudit.grade})
+              </span>
+            </div>
+            <p className="mt-1 font-mono text-xs text-muted-foreground">
+              {briefAudit.presentPillars.length}/5 architecture pillars verified
+              · {briefAudit.detectedGates} deterministic gate tokens in local
+              console.
+            </p>
+          </div>
+          {!readOnly && (
+            <Button
+              type="button"
+              size="sm"
+              onClick={handleIngestWorkspaceBrief}
+              disabled={briefIngested}
+              className="rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase text-primary-foreground shrink-0"
+            >
+              <Wand2 className="mr-1.5 h-3.5 w-3.5" />
+              {briefIngested
+                ? "Brief Ingested into Pipeline ✓"
+                : "Ingest Brief as Pipeline Record"}
+            </Button>
+          )}
+        </SurfaceCard>
+      )}
+
       {/* Control & Filter Toolbar */}
       <SurfaceCard className="p-4 sm:p-6 border-2 border-border space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -199,7 +363,7 @@ export function OperatorConsole({
             />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {!readOnly && (
               <>
                 <Button
@@ -209,6 +373,26 @@ export function OperatorConsole({
                 >
                   <Plus className="mr-1.5 h-3.5 w-3.5" />
                   {isAddingLead ? "Cancel" : "Add Lead"}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleSyncPipelineToWorkspace}
+                  variant="outline"
+                  size="sm"
+                  className="rounded-none border-2 border-border font-mono text-xs font-bold uppercase"
+                >
+                  <Send className="mr-1.5 h-3.5 w-3.5" />
+                  {syncedToWorkspace ? "Synced ✓" : "Sync to Console"}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleExportSignedRunbook}
+                  variant="outline"
+                  size="sm"
+                  className="rounded-none border-2 border-border font-mono text-xs font-bold uppercase"
+                >
+                  <Download className="mr-1.5 h-3.5 w-3.5" />
+                  Sign Runbook (.json)
                 </Button>
                 <Button
                   onClick={handleResetToDefault}
@@ -223,6 +407,11 @@ export function OperatorConsole({
             )}
           </div>
         </div>
+        {signedReceipt && (
+          <pre className="overflow-x-auto border border-border bg-black p-3 font-mono text-[10px] text-emerald-400">
+            {signedReceipt}
+          </pre>
+        )}
 
         {/* Stage Filter Buttons */}
         <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border">
@@ -384,12 +573,23 @@ export function OperatorConsole({
                     </h3>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <span
                       className={`font-mono text-[10px] font-black uppercase px-2 py-0.5 border ${riskColor}`}
                     >
                       Risk: {lead.riskScore}/100
                     </span>
+
+                    {!readOnly && lead.riskScore > 20 && (
+                      <button
+                        type="button"
+                        onClick={() => handleMitigateLeadRisk(index)}
+                        className="inline-flex items-center gap-1 border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-emerald-400 hover:bg-emerald-500/20 cursor-pointer"
+                      >
+                        <ShieldCheck className="h-3 w-3" />
+                        <span>Enforce Gate (-22 Risk)</span>
+                      </button>
+                    )}
 
                     <label className="flex items-center font-mono text-xs font-bold uppercase text-foreground">
                       <span className="mr-2 text-muted-foreground">Stage:</span>

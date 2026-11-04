@@ -12,16 +12,20 @@ import {
   Eye,
   FileCode2,
   Hash,
+  History,
   Mail,
   Plus,
+  RotateCcw,
   Share2,
   ShieldAlert,
   Upload,
+  Wand2,
   Zap,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
+  analyzeWorkspaceBrief,
   decryptClientState,
   encryptClientState,
   generateDiagnosticMailto,
@@ -33,7 +37,14 @@ import {
 } from "@/lib/utils/client-engines";
 
 type Status =
-  "idle" | "copied" | "hashed" | "encrypted" | "fault-verified" | "error";
+  | "idle"
+  | "copied"
+  | "hashed"
+  | "encrypted"
+  | "fault-verified"
+  | "enriched"
+  | "restored"
+  | "error";
 
 interface BriefTemplate {
   id: string;
@@ -162,6 +173,10 @@ export function WorkspaceConsole() {
   const [receipt, setReceipt] = useState("");
   const [viewMode, setViewMode] = useState<"edit" | "executive">("edit");
   const [activeFaultId, setActiveFaultId] = useState<string | null>(null);
+  const [checkpoints, setCheckpoints] = useState<string[]>([]);
+  const [workerAuditStatus, setWorkerAuditStatus] = useState<string | null>(
+    null,
+  );
   const { share } = useWebShare();
   const onRemoteNotes = useCallback(
     (message: { notes: string }) => {
@@ -174,9 +189,64 @@ export function WorkspaceConsole() {
     onRemoteNotes,
   );
 
+  const pushCheckpoint = useCallback((snapshot: string) => {
+    setCheckpoints((prev) => {
+      if (prev[0] === snapshot) return prev;
+      return [snapshot, ...prev].slice(0, 5);
+    });
+  }, []);
+
   const updateNotes = (value: string) => {
     setNotes(value.slice(0, 10_000));
     postMessage({ notes: value.slice(0, 10_000) });
+  };
+
+  const briefAudit = useMemo(() => analyzeWorkspaceBrief(notes), [notes]);
+
+  const handleAutoEnrich = () => {
+    pushCheckpoint(notes);
+    updateNotes(briefAudit.autoEnrichedBrief);
+    setStatus("enriched");
+  };
+
+  const handleRestoreCheckpoint = () => {
+    const latest = checkpoints[0];
+    if (!latest) return;
+    setCheckpoints((prev) => prev.slice(1));
+    updateNotes(latest);
+    setStatus("restored");
+  };
+
+  const runWorkerBriefAudit = () => {
+    if (typeof Worker === "undefined") {
+      setWorkerAuditStatus(
+        `Verified inline: ${briefAudit.presentPillars.length}/5 pillars (${briefAudit.score}%)`,
+      );
+      return;
+    }
+    const worker = new Worker("/workers/analysis-worker.js");
+    worker.onmessage = (
+      event: MessageEvent<{
+        type?: string;
+        passedPillars?: number;
+        totalPillars?: number;
+        score?: number;
+      }>,
+    ) => {
+      if (event.data?.type === "brief-audit") {
+        setWorkerAuditStatus(
+          `Worker verified: ${event.data.passedPillars ?? 0}/${event.data.totalPillars ?? 5} pillars (${event.data.score ?? briefAudit.score}%)`,
+        );
+      }
+      worker.terminate();
+    };
+    worker.onerror = () => {
+      setWorkerAuditStatus(
+        `Verified inline: ${briefAudit.presentPillars.length}/5 pillars (${briefAudit.score}%)`,
+      );
+      worker.terminate();
+    };
+    worker.postMessage({ type: "brief-audit", notes });
   };
 
   const activeFault = useMemo(
@@ -219,6 +289,7 @@ export function WorkspaceConsole() {
 
   const appendFaultGuardrail = (fault: FaultScenario) => {
     if (!notes.includes(fault.guardrailSnippet.trim())) {
+      pushCheckpoint(notes);
       updateNotes(`${notes.trimEnd()}\n${fault.guardrailSnippet}`);
     }
     setStatus("fault-verified");
@@ -370,32 +441,143 @@ export function WorkspaceConsole() {
                 ? "Check input"
                 : status === "fault-verified"
                   ? "Guardrail appended"
-                  : status}
+                  : status === "enriched"
+                    ? "Auto-enriched ✓"
+                    : status === "restored"
+                      ? "Snapshot restored"
+                      : status}
           </span>
         </div>
       </div>
 
       {/* 1-Click Reference Architecture Brief Templates */}
-      <div className="mt-4 flex flex-wrap items-center gap-2 border border-border/80 bg-muted/20 p-3">
-        <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-primary mr-1">
-          Load Reference Brief:
-        </span>
-        {BRIEF_TEMPLATES.map((tpl) => (
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border border-border/80 bg-muted/20 p-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-primary mr-1">
+            Load Reference Brief:
+          </span>
+          {BRIEF_TEMPLATES.map((tpl) => (
+            <button
+              key={tpl.id}
+              type="button"
+              onClick={() => {
+                pushCheckpoint(notes);
+                updateNotes(tpl.content);
+                setStatus("idle");
+              }}
+              className="inline-flex items-center gap-2 border border-border bg-background px-2.5 py-1 font-mono text-[11px] font-bold text-foreground transition-colors hover:border-primary hover:bg-primary/5 cursor-pointer"
+            >
+              <span>{tpl.label}</span>
+              <span className="border border-primary/30 bg-primary/10 px-1.5 py-0.2 text-[9px] uppercase text-primary">
+                {tpl.badge}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        {/* Non-Destructive Session Checkpoint Controls */}
+        <div className="flex items-center gap-1.5">
           <button
-            key={tpl.id}
             type="button"
             onClick={() => {
-              updateNotes(tpl.content);
-              setStatus("idle");
+              pushCheckpoint(notes);
             }}
-            className="inline-flex items-center gap-2 border border-border bg-background px-2.5 py-1 font-mono text-[11px] font-bold text-foreground transition-colors hover:border-primary hover:bg-primary/5 cursor-pointer"
+            className="inline-flex items-center gap-1 border border-border bg-background px-2 py-1 font-mono text-[10px] font-bold uppercase text-muted-foreground hover:border-primary hover:text-primary cursor-pointer"
           >
-            <span>{tpl.label}</span>
-            <span className="border border-primary/30 bg-primary/10 px-1.5 py-0.2 text-[9px] uppercase text-primary">
-              {tpl.badge}
-            </span>
+            <History className="h-3 w-3" aria-hidden="true" />
+            <span>Snapshot</span>
           </button>
-        ))}
+          {checkpoints.length > 0 && (
+            <button
+              type="button"
+              onClick={handleRestoreCheckpoint}
+              className="inline-flex items-center gap-1 border border-primary/50 bg-primary/10 px-2 py-1 font-mono text-[10px] font-bold uppercase text-primary hover:bg-primary/20 cursor-pointer"
+            >
+              <RotateCcw className="h-3 w-3" aria-hidden="true" />
+              <span>Undo ({checkpoints.length})</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Self-Maintaining Brief Completeness & Invariant Health Bar */}
+      <div className="mt-4 border border-border bg-background p-3.5 font-mono text-xs space-y-2.5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-bold uppercase text-foreground">
+              Brief Readiness Audit:
+            </span>
+            <span
+              className={`border px-2 py-0.5 text-[10px] font-bold uppercase ${
+                briefAudit.score >= 85
+                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
+                  : briefAudit.score >= 60
+                    ? "border-amber-500/40 bg-amber-500/10 text-amber-400"
+                    : "border-border bg-muted text-muted-foreground"
+              }`}
+            >
+              {briefAudit.score}% ({briefAudit.grade})
+            </span>
+            <span className="text-[10px] text-muted-foreground">
+              {briefAudit.presentPillars.length}/5 Core Pillars ·{" "}
+              {briefAudit.detectedGates} Guardrail Tokens
+            </span>
+            {workerAuditStatus && (
+              <span className="border border-primary/40 bg-primary/10 px-2 py-0.5 text-[10px] text-primary">
+                {workerAuditStatus}
+              </span>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={runWorkerBriefAudit}
+              className="h-7 px-2.5 font-mono text-[10px] font-bold uppercase"
+            >
+              Verify via Web Worker
+            </Button>
+            {briefAudit.missingPillars.length > 0 && (
+              <Button
+                type="button"
+                size="sm"
+                onClick={handleAutoEnrich}
+                className="h-7 px-2.5 font-mono text-[10px] font-bold uppercase"
+              >
+                <Wand2 className="mr-1 h-3 w-3" aria-hidden="true" />
+                Auto-Enrich Missing Guardrails (
+                {briefAudit.missingPillars.length})
+              </Button>
+            )}
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-1.5">
+          {[
+            "Objective",
+            "Constraints",
+            "Failure Modes",
+            "Deterministic Gates",
+            "Next Decision",
+          ].map((pillar) => {
+            const present = briefAudit.presentPillars.includes(pillar);
+            return (
+              <span
+                key={pillar}
+                className={`inline-flex items-center gap-1 border px-2 py-0.5 text-[10px] uppercase ${
+                  present
+                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold"
+                    : "border-border bg-muted/40 text-muted-foreground"
+                }`}
+              >
+                <span>{present ? "✓" : "○"}</span>
+                <span>{pillar}</span>
+              </span>
+            );
+          })}
+        </div>
       </div>
 
       <div className="mt-5 flex items-center justify-between">

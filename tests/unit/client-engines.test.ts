@@ -4,9 +4,18 @@ import {
   decryptClientState,
   generateSHA256Receipt,
   DEFAULT_DIAGNOSTIC_CAPABILITIES,
+  DEFAULT_WORKSPACE_TEMPLATE,
   evaluateDiagnosticArchitecture,
   encodeDiagnosticState,
   decodeDiagnosticState,
+  normalizeWorkspaceNotes,
+  readWorkspaceNotes,
+  writeWorkspaceNotes,
+  appendWorkspaceNotes,
+  autoRemediateDiagnosticArchitecture,
+  simulateDiagnosticStress,
+  generateDiagnosticZodContract,
+  analyzeWorkspaceBrief,
   type DiagnosticAllocationMode,
 } from "@/lib/utils/client-engines";
 
@@ -137,5 +146,161 @@ describe("client-engines cryptographic suite", () => {
     expect(tampered?.volume).toBeUndefined();
     expect(tampered?.allocations).toBeUndefined();
     expect(tampered?.risks).toEqual(["pii-leak"]);
+  });
+
+  it("self-heals and deduplicates workspace notes across JSON and raw storage formats", () => {
+    const store = new Map<string, string>();
+    const mockStorage = {
+      getItem: (key: string) => store.get(key) ?? null,
+      setItem: (key: string, value: string) => {
+        store.set(key, value);
+      },
+    };
+
+    expect(readWorkspaceNotes(mockStorage)).toBe(DEFAULT_WORKSPACE_TEMPLATE);
+
+    // Simulate legacy raw unquoted string combined with JSON string
+    const corrupted =
+      '"Objective: Recover 1,200 hrs/yr"\n\n## Deterministic Systems Lab Telemetry\n- Status: OK';
+    expect(normalizeWorkspaceNotes(corrupted)).toContain(
+      "Objective: Recover 1,200 hrs/yr",
+    );
+    expect(normalizeWorkspaceNotes(corrupted)).toContain(
+      "## Deterministic Systems Lab Telemetry",
+    );
+
+    writeWorkspaceNotes(
+      "Objective: Build governed FinOps pipeline",
+      mockStorage,
+    );
+    expect(readWorkspaceNotes(mockStorage)).toBe(
+      "Objective: Build governed FinOps pipeline",
+    );
+
+    // Append section and verify idempotent section replacement on re-sync
+    appendWorkspaceNotes(
+      "## Deterministic Systems Lab Telemetry\n- Latency: 1.2s",
+      mockStorage,
+    );
+    const afterFirstAppend = readWorkspaceNotes(mockStorage);
+    expect(afterFirstAppend).toContain("Latency: 1.2s");
+
+    appendWorkspaceNotes(
+      "## Deterministic Systems Lab Telemetry\n- Latency: 0.8s",
+      mockStorage,
+    );
+    const afterSecondAppend = readWorkspaceNotes(mockStorage);
+    expect(afterSecondAppend).toContain("Latency: 0.8s");
+    expect(afterSecondAppend).not.toContain("Latency: 1.2s");
+  });
+
+  it("autonomously remediates fragile diagnostic architectures to Grade A", () => {
+    const fragileAllocations: Record<string, DiagnosticAllocationMode> = {
+      "schema-validation": "ai",
+      "unstructured-synthesis": "deterministic",
+      "authorization-policy": "ai",
+      "math-calculations": "ai",
+      "customer-messaging": "ai",
+      "audit-receipts": "ai",
+    };
+
+    const remediation = autoRemediateDiagnosticArchitecture(
+      fragileAllocations,
+      "financial-ops",
+      "high",
+      "realtime",
+      ["hallucination", "pii-leak"],
+    );
+
+    expect(remediation.beforeEvaluation.grade).toBe("D");
+    expect(remediation.afterEvaluation.grade).toBe("A");
+    expect(remediation.scoreDelta).toBeGreaterThan(40);
+    expect(
+      remediation.afterEvaluation.operationalProfile.criticalDrifts,
+    ).toHaveLength(0);
+    expect(remediation.changesApplied.length).toBe(6);
+  });
+
+  it("simulates fault stress accurately before and after boundary remediation", () => {
+    const fragileAllocations: Record<string, DiagnosticAllocationMode> = {
+      "schema-validation": "ai",
+      "unstructured-synthesis": "ai",
+      "authorization-policy": "ai",
+      "math-calculations": "ai",
+      "customer-messaging": "ai",
+      "audit-receipts": "ai",
+    };
+
+    const breachedHallucination = simulateDiagnosticStress(
+      fragileAllocations,
+      "financial-ops",
+      "realtime",
+      "hallucination",
+    );
+    expect(breachedHallucination.contained).toBe(false);
+    expect(breachedHallucination.blastRadius).toContain("CRITICAL");
+
+    const { healedAllocations } = autoRemediateDiagnosticArchitecture(
+      fragileAllocations,
+      "financial-ops",
+      "high",
+      "realtime",
+      ["hallucination", "pii-leak", "latency-spike", "budget-runaway"],
+    );
+
+    for (const faultId of [
+      "hallucination",
+      "pii-leak",
+      "latency-spike",
+      "budget-runaway",
+    ] as const) {
+      const result = simulateDiagnosticStress(
+        healedAllocations,
+        "financial-ops",
+        "realtime",
+        faultId,
+      );
+      expect(result.contained).toBe(true);
+      expect(result.blastRadius).toBe("ZERO (Contained at Boundary)");
+    }
+  });
+
+  it("generates an executable TypeScript + Zod boundary contract and self-enriches incomplete briefs", () => {
+    const allocations = Object.fromEntries(
+      DEFAULT_DIAGNOSTIC_CAPABILITIES.map((c) => [c.id, c.recommended]),
+    ) as Record<string, DiagnosticAllocationMode>;
+    const evaluation = evaluateDiagnosticArchitecture(
+      allocations,
+      "financial-ops",
+      "high",
+      "realtime",
+      ["hallucination", "pii-leak", "budget-runaway"],
+    );
+
+    const code = generateDiagnosticZodContract(
+      {
+        workload: "financial-ops",
+        volume: "high",
+        latency: "realtime",
+        allocations,
+        risks: ["hallucination", "pii-leak", "budget-runaway"],
+      },
+      evaluation,
+    );
+
+    expect(code).toContain("export const WorkloadEnvelopeSchema = z.object");
+    expect(code).toContain("amountCents: z.number().int().nonnegative");
+    expect(code).toContain("scrubSensitiveTokens");
+    expect(code).toContain("crypto.subtle.digest");
+
+    // Audit default template vs auto-enriched brief
+    const initialAudit = analyzeWorkspaceBrief(DEFAULT_WORKSPACE_TEMPLATE);
+    expect(initialAudit.grade).toBe("Incomplete");
+    expect(initialAudit.missingPillars.length).toBe(5);
+
+    const enrichedAudit = analyzeWorkspaceBrief(initialAudit.autoEnrichedBrief);
+    expect(enrichedAudit.grade).toBe("A");
+    expect(enrichedAudit.missingPillars).toHaveLength(0);
+    expect(enrichedAudit.score).toBeGreaterThanOrEqual(85);
   });
 });

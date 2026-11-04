@@ -655,11 +655,11 @@ export function CommandPalette() {
 
   const handleCopyBriefReceipt = async () => {
     const notes = readWorkspaceNotes();
-    const hash = await generateSHA256Receipt(
+    const res = await generateSHA256Receipt(
       notes || "AIAS_EMPTY_WORKSPACE_BRIEF",
     );
-    await navigator.clipboard.writeText(hash);
-    setReceiptHash(hash.slice(0, 16));
+    await navigator.clipboard.writeText(res.hash);
+    setReceiptHash(res.hash.slice(0, 16));
     setTimeout(() => setReceiptHash(null), 2500);
   };
 
@@ -786,14 +786,14 @@ export function CommandPalette() {
                   Local Brief Readiness:
                 </span>
                 <span className="border border-primary/40 bg-primary/10 px-1.5 py-0.5 font-mono text-[10px] font-bold text-foreground">
-                  {briefAudit.readinessScore}/100 (Grade {briefAudit.grade})
+                  {briefAudit.score}/100 (Grade {briefAudit.grade})
                 </span>
                 <span className="font-mono text-[10px] text-muted-foreground">
                   {briefAudit.wordCount} words
                 </span>
               </div>
               <div className="flex flex-wrap items-center gap-1.5">
-                {briefAudit.readinessScore < 100 && (
+                {briefAudit.score < 100 && (
                   <button
                     type="button"
                     onClick={handleAutoEnrichBrief}

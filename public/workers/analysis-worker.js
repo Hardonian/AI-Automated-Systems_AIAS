@@ -24,16 +24,21 @@ self.addEventListener("message", (event) => {
 
   if (payload.type === "brief-audit") {
     const text = typeof payload.notes === "string" ? payload.notes.trim() : "";
-    const hasObjective = /Objective[:\s-].{8,}/i.test(text);
+    const hasObjective = /Objective[: \t-]+\S.{7,}/i.test(text);
     const hasConstraints =
-      /(?:Constraints|Latency|Workload Context)[:\s-].{8,}/i.test(text);
-    const hasFailures = /(?:Failure modes|Risk)[:\s-].{8,}/i.test(text);
+      /(?:Constraints|Latency|Workload Context)[: \t-]*(?:\n[-*]\s+\S.{5,}|\S.{7,})/i.test(
+        text,
+      );
+    const hasFailures =
+      /(?:Failure modes|Risk)[: \t-]*(?:\n[-*]\s+\S.{5,}|\S.{7,})/i.test(text);
     const hasGates =
       /(?:Gate\s*0[1-4]|Verified Guardrail|Deterministic|Zod|SHA-256)/i.test(
         text,
       );
     const hasNext =
-      /(?:Next decision|Next Implementation|Track)[:\s-].{8,}/i.test(text);
+      /(?:Next decision|Next Implementation|Track)[: \t-]*(?:\n(?:\d+\.|[-*])\s+\S.{5,}|\S.{7,})/i.test(
+        text,
+      );
     const checks = [
       hasObjective,
       hasConstraints,

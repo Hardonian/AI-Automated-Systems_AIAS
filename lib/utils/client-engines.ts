@@ -299,8 +299,7 @@ export function appendWorkspaceNotes(
   if (firstLine.startsWith("## ")) {
     const escapedHeading = firstLine.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const sectionRegex = new RegExp(
-      `${escapedHeading}[\\s\\S]*?(?=\\n## |$)`,
-      "m",
+      `${escapedHeading}[\\s\\S]*?(?=\\n## |(?![\\s\\S]))`,
     );
     if (sectionRegex.test(existing)) {
       const updated = existing.replace(sectionRegex, incoming);
@@ -1264,7 +1263,8 @@ const BRIEF_PILLAR_SPECS: ReadonlyArray<{
   {
     id: "objective",
     label: "Objective",
-    pattern: /(?:^|\n)(?:#+\s*)?(?:\d+\.\s*)?\**_?Objective\b[:\s-]*(.{8,})/i,
+    pattern:
+      /(?:^|\n)(?:#+\s*)?(?:\d+\.\s*)?\**_?Objective\b[: \t-]*(\S.{7,})/i,
     defaultLine:
       "Objective: Automate high-friction operational handoffs with deterministic policy gates and zero silent failure drift.",
   },
@@ -1272,7 +1272,7 @@ const BRIEF_PILLAR_SPECS: ReadonlyArray<{
     id: "constraints",
     label: "Constraints",
     pattern:
-      /(?:^|\n)(?:#+\s*)?(?:\d+\.\s*)?\**_?(?:Constraints|Latency|Workload Context|Target Status)\b[:\s-]*(.{8,})/i,
+      /(?:^|\n)(?:#+\s*)?(?:\d+\.\s*)?\**_?(?:Constraints|Latency|Workload Context|Target Status)\b[: \t-]*(?:\n[-*]\s+\S.{5,}|\S.{7,})/i,
     defaultLine:
       "Constraints: P95 latency < 2.5s | PIPEDA-informed tenant isolation | 100% strict Zod schema validation at ingress and egress.",
   },
@@ -1280,7 +1280,7 @@ const BRIEF_PILLAR_SPECS: ReadonlyArray<{
     id: "failure-modes",
     label: "Failure Modes",
     pattern:
-      /(?:^|\n)(?:#+\s*)?(?:\d+\.\s*)?\**_?(?:Failure modes|High-Priority Failure Modes|High-Priority Guardrail|Risk)\b[:\s-]*(.{8,})/i,
+      /(?:^|\n)(?:#+\s*)?(?:\d+\.\s*)?\**_?(?:Failure modes|High-Priority Failure Modes|High-Priority Guardrail|Risk)\b[: \t-]*(?:\n[-*]\s+\S.{5,}|\S.{7,})/i,
     defaultLine:
       "Failure modes: Unvalidated model output drift; upstream provider 504 timeout; unredacted PII token exposure.",
   },
@@ -1301,7 +1301,7 @@ const BRIEF_PILLAR_SPECS: ReadonlyArray<{
     id: "next-decision",
     label: "Next Decision",
     pattern:
-      /(?:^|\n)(?:#+\s*)?(?:\d+\.\s*)?\**_?(?:Next decision|Next Implementation Steps|Action Recommendation|Recommended Track)\b[:\s-]*(.{8,})/i,
+      /(?:^|\n)(?:#+\s*)?(?:\d+\.\s*)?\**_?(?:Next decision|Next Implementation Steps|Action Recommendation|Recommended Track)\b[: \t-]*(?:\n(?:\d+\.|[-*])\s+\S.{5,}|\S.{7,})/i,
     defaultLine:
       "Next decision: Validate boundary contracts against 50 representative production payloads in a 2-week AIAS Architecture Sprint.",
   },

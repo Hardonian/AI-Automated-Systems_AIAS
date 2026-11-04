@@ -104,6 +104,17 @@ export function LiveLabStatus() {
         computeOk: false,
       };
 
+      const isProductionHost =
+        typeof window !== "undefined" &&
+        (window.location.hostname === "aiautomatedsystems.ca" ||
+          window.location.hostname === "www.aiautomatedsystems.ca");
+
+      if (!isProductionHost) {
+        setStatus(result);
+        setLoaded(true);
+        return;
+      }
+
       try {
         const [productsRes, auditRes, computeRes] = await Promise.allSettled([
           fetch("https://api.aiautomatedsystems.ca/api/products", {

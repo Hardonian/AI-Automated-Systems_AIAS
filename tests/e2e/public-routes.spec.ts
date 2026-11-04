@@ -1,19 +1,30 @@
 import { test, expect } from "@playwright/test";
 
+import { siteContent } from "../../src/content/site";
+
 /**
  * Regression lock: every public marketing route must render without errors.
  * Fails on console errors, non-200 status, or missing heading.
  */
 const PUBLIC_ROUTES = [
-  { path: "/", heading: /Agentic Automation Consultancy/i },
-  { path: "/services", heading: /What we deliver/i },
+  { path: "/", heading: /AI Systems That Ship/i },
+  { path: "/services", heading: siteContent.servicesPage.hero.title },
   { path: "/process", heading: /From discovery to deployment/i },
-  { path: "/pricing", heading: /Transparent pricing/i },
-  { path: "/contact", heading: /Let.*talk automation/i },
-  { path: "/about", heading: /Engineering the future of work/i },
-  { path: "/case-studies", heading: /Proof of impact/i },
+  { path: "/pricing", heading: /How money flows in AIAS engagements/i },
+  {
+    path: "/contact",
+    heading: /Turn one blocked workflow into a decision-ready next step/i,
+  },
+  {
+    path: "/about",
+    heading: /A consultancy focused on reliable automation outcomes/i,
+  },
+  {
+    path: "/case-studies",
+    heading: /Architecture scenarios with measurable evidence plans/i,
+  },
   { path: "/blog", heading: /Systems Thinking.*AI Blog/i },
-  { path: "/dashboard", heading: /Dashboard/i },
+  { path: "/dashboard", heading: /Operations Workspace Reference/i },
   { path: "/privacy", heading: /Privacy Policy/i },
   { path: "/terms", heading: /Terms of Service/i },
 ];

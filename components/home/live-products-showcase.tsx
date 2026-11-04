@@ -20,6 +20,12 @@ export function LiveProductsShowcase() {
   const [isLiveApi, setIsLiveApi] = useState(false);
 
   useEffect(() => {
+    const isProductionHost =
+      typeof window !== "undefined" &&
+      (window.location.hostname === "aiautomatedsystems.ca" ||
+        window.location.hostname === "www.aiautomatedsystems.ca");
+    if (!isProductionHost) return;
+
     fetch("https://api.aiautomatedsystems.ca/api/products", {
       signal: AbortSignal.timeout(4000),
     })

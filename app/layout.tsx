@@ -238,7 +238,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </ThemeProvider>
         </EnhancedErrorBoundary>
         <Script
-          src={`https://chat.aiautomatedsystems.ca/widget.js?tenant=ebe5b024-b6dc-4233-9713-04ac268b87d3`}
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined' && (window.location.hostname === 'aiautomatedsystems.ca' || window.location.hostname === 'www.aiautomatedsystems.ca')) {
+                var s = document.createElement('script');
+                s.src = 'https://chat.aiautomatedsystems.ca/widget.js?tenant=ebe5b024-b6dc-4233-9713-04ac268b87d3';
+                s.async = true;
+                document.body.appendChild(s);
+              }
+            `,
+          }}
+          id="sovereign-chat-widget"
           strategy="lazyOnload"
         />
       </body>

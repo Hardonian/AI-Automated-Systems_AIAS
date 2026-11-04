@@ -193,6 +193,124 @@ export async function generateSHA256Receipt(
 /* ========================================
    Item 61: LocalStorage Workspace Persistence
    ======================================== */
+export const DEFAULT_WORKSPACE_TEMPLATE =
+  "Objective:\nConstraints:\nFailure modes:\nNext decision:";
+
+/**
+ * Normalizes raw localStorage values for `aias_workspace_notes`, self-healing
+ * both JSON-encoded strings, raw plain-text strings, and mixed concatenations.
+ */
+export function normalizeWorkspaceNotes(
+  raw: string | null | undefined,
+): string {
+  if (!raw || typeof raw !== "string") return "";
+  const trimmed = raw.trim();
+  if (!trimmed) return "";
+
+  try {
+    const parsed: unknown = JSON.parse(trimmed);
+    if (typeof parsed === "string") {
+      try {
+        const nested: unknown = JSON.parse(parsed);
+        if (typeof nested === "string") {
+          return nested.trim();
+        }
+      } catch {
+        // Not double-encoded
+      }
+      return parsed.trim();
+    }
+  } catch {
+    // Handle case where a JSON-quoted string was concatenated with raw markdown
+    if (trimmed.startsWith('"')) {
+      const closingQuoteMatch = /^("(?:[^"\\]|\\.)*")\s*\n+([\s\S]+)$/.exec(
+        trimmed,
+      );
+      if (closingQuoteMatch && closingQuoteMatch[1] && closingQuoteMatch[2]) {
+        try {
+          const head = JSON.parse(closingQuoteMatch[1]) as unknown;
+          if (typeof head === "string") {
+            return `${head.trim()}\n\n${closingQuoteMatch[2].trim()}`;
+          }
+        } catch {
+          // Fall through to raw string
+        }
+      }
+    }
+  }
+
+  return trimmed;
+}
+
+export function readWorkspaceNotes(storage?: Pick<Storage, "getItem">): string {
+  try {
+    const targetStorage =
+      storage ?? (typeof window !== "undefined" ? window.localStorage : null);
+    if (!targetStorage) return DEFAULT_WORKSPACE_TEMPLATE;
+    const raw = targetStorage.getItem("aias_workspace_notes");
+    const normalized = normalizeWorkspaceNotes(raw);
+    return normalized || DEFAULT_WORKSPACE_TEMPLATE;
+  } catch {
+    return DEFAULT_WORKSPACE_TEMPLATE;
+  }
+}
+
+export function writeWorkspaceNotes(
+  notes: string,
+  storage?: Pick<Storage, "setItem">,
+): string {
+  const clean = normalizeWorkspaceNotes(notes).slice(0, 10_000);
+  try {
+    const targetStorage =
+      storage ?? (typeof window !== "undefined" ? window.localStorage : null);
+    targetStorage?.setItem("aias_workspace_notes", JSON.stringify(clean));
+  } catch {
+    // Storage full — silently degrade
+  }
+  return clean;
+}
+
+export function appendWorkspaceNotes(
+  sectionBlock: string,
+  storage?: Pick<Storage, "getItem" | "setItem">,
+): string {
+  const incoming = normalizeWorkspaceNotes(sectionBlock);
+  if (!incoming) return readWorkspaceNotes(storage);
+
+  const existing = readWorkspaceNotes(storage);
+  const isDefaultOrEmpty =
+    !existing ||
+    existing === DEFAULT_WORKSPACE_TEMPLATE ||
+    existing.startsWith("Objective:\nConstraints:\nFailure modes:");
+
+  if (isDefaultOrEmpty) {
+    const fresh = incoming.startsWith("# ")
+      ? incoming
+      : `# AIAS Architecture Handoff Brief\n\n${incoming}`;
+    return writeWorkspaceNotes(fresh, storage);
+  }
+
+  if (existing.includes(incoming)) {
+    return writeWorkspaceNotes(existing, storage);
+  }
+
+  // Deduplicate by matching "## Heading" block if re-syncing from the same tool
+  const firstLine = incoming.split("\n")[0]?.trim() ?? "";
+  if (firstLine.startsWith("## ")) {
+    const escapedHeading = firstLine.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const sectionRegex = new RegExp(
+      `${escapedHeading}[\\s\\S]*?(?=\\n## |$)`,
+      "m",
+    );
+    if (sectionRegex.test(existing)) {
+      const updated = existing.replace(sectionRegex, incoming);
+      return writeWorkspaceNotes(updated, storage);
+    }
+  }
+
+  return writeWorkspaceNotes(`${existing}\n\n${incoming}`, storage);
+}
+
 export function useLocalStorage<T>(
   key: string,
   defaultValue: T,
@@ -205,8 +323,29 @@ export function useLocalStorage<T>(
     try {
       const item = window.localStorage.getItem(key);
       if (item) {
-        const parsed = JSON.parse(item) as T;
-        queueMicrotask(() => active && setStoredValue(parsed));
+        if (
+          key === "aias_workspace_notes" &&
+          typeof defaultValueRef.current === "string"
+        ) {
+          const normalized = normalizeWorkspaceNotes(item) as unknown as T;
+          window.localStorage.setItem(key, JSON.stringify(normalized));
+          queueMicrotask(() => active && setStoredValue(normalized));
+        } else {
+          try {
+            const parsed = JSON.parse(item) as T;
+            queueMicrotask(() => active && setStoredValue(parsed));
+          } catch {
+            if (typeof defaultValueRef.current === "string") {
+              const recovered = item as unknown as T;
+              window.localStorage.setItem(key, JSON.stringify(recovered));
+              queueMicrotask(() => active && setStoredValue(recovered));
+            } else {
+              queueMicrotask(
+                () => active && setStoredValue(defaultValueRef.current),
+              );
+            }
+          }
+        }
       }
     } catch {
       queueMicrotask(() => active && setStoredValue(defaultValueRef.current));

@@ -908,3 +908,479 @@ export function decodeDiagnosticState(
 
   return Object.keys(result).length > 0 ? result : null;
 }
+
+/* ========================================
+   Autonomous Self-Healing Diagnostic Optimizer
+   ======================================== */
+export interface DiagnosticRemediationChange {
+  id: string;
+  label: string;
+  from: DiagnosticAllocationMode;
+  to: DiagnosticAllocationMode;
+  reason: string;
+}
+
+export interface DiagnosticRemediationResult {
+  healedAllocations: Record<string, DiagnosticAllocationMode>;
+  beforeEvaluation: DiagnosticEvaluationResult;
+  afterEvaluation: DiagnosticEvaluationResult;
+  scoreDelta: number;
+  changesApplied: DiagnosticRemediationChange[];
+}
+
+export function autoRemediateDiagnosticArchitecture(
+  allocations: Record<string, DiagnosticAllocationMode>,
+  workload: DiagnosticWorkloadType = "financial-ops",
+  volume: DiagnosticVolumeLevel = "medium",
+  latency: DiagnosticLatencyTier = "near-realtime",
+  selectedRisks: string[] = ["hallucination", "pii-leak"],
+): DiagnosticRemediationResult {
+  const beforeEvaluation = evaluateDiagnosticArchitecture(
+    allocations,
+    workload,
+    volume,
+    latency,
+    selectedRisks,
+  );
+
+  const healedAllocations: Record<string, DiagnosticAllocationMode> = {};
+  const changesApplied: DiagnosticRemediationChange[] = [];
+
+  for (const cap of DEFAULT_DIAGNOSTIC_CAPABILITIES) {
+    const current = allocations[cap.id] ?? cap.recommended;
+    healedAllocations[cap.id] = cap.recommended;
+    if (current !== cap.recommended) {
+      changesApplied.push({
+        id: cap.id,
+        label: cap.label,
+        from: current,
+        to: cap.recommended,
+        reason: cap.contractInvariant,
+      });
+    }
+  }
+
+  const afterEvaluation = evaluateDiagnosticArchitecture(
+    healedAllocations,
+    workload,
+    volume,
+    latency,
+    selectedRisks,
+  );
+
+  return {
+    healedAllocations,
+    beforeEvaluation,
+    afterEvaluation,
+    scoreDelta: Math.max(0, afterEvaluation.score - beforeEvaluation.score),
+    changesApplied,
+  };
+}
+
+/* ========================================
+   Interactive Diagnostic Stress & Fault Simulator
+   ======================================== */
+export type DiagnosticStressScenarioId =
+  "hallucination" | "latency-spike" | "pii-leak" | "budget-runaway";
+
+export interface DiagnosticStressSimulationResult {
+  faultId: DiagnosticStressScenarioId;
+  title: string;
+  injectedPayloadSummary: string;
+  contained: boolean;
+  interceptLayer: string;
+  simulatedLatencyMs: number;
+  blastRadius:
+    | "ZERO (Contained at Boundary)"
+    | "MODERATE (Partial Escalation)"
+    | "CRITICAL (Unbounded Downstream Mutation)";
+  analysis: string;
+  remediationHint: string;
+}
+
+export function simulateDiagnosticStress(
+  allocations: Record<string, DiagnosticAllocationMode>,
+  workload: DiagnosticWorkloadType,
+  latency: DiagnosticLatencyTier,
+  faultId: DiagnosticStressScenarioId,
+): DiagnosticStressSimulationResult {
+  const schemaMode = allocations["schema-validation"] ?? "deterministic";
+  const authMode = allocations["authorization-policy"] ?? "deterministic";
+  const mathMode = allocations["math-calculations"] ?? "deterministic";
+  const auditMode = allocations["audit-receipts"] ?? "deterministic";
+  const messagingMode = allocations["customer-messaging"] ?? "hybrid";
+
+  const baseLatencyMs =
+    latency === "realtime" ? 18 : latency === "near-realtime" ? 42 : 95;
+
+  if (faultId === "hallucination") {
+    const vulnerable = schemaMode === "ai" || mathMode === "ai";
+    const partial = messagingMode === "ai" && !vulnerable;
+    return {
+      faultId,
+      title: "Adversarial Hallucination & Math Drift Injection",
+      injectedPayloadSummary:
+        workload === "financial-ops"
+          ? 'LLM emits unverified credit memo {"invoiceTotalCents": -450000, "confidence": 0.61}'
+          : 'LLM synthesizes fabricated policy clause ID "REG-994-NONEXISTENT"',
+      contained: !vulnerable && !partial,
+      interceptLayer: vulnerable
+        ? "NONE // Probabilistic pass-through to downstream state"
+        : partial
+          ? "Gate 01 // Zod Schema Gate (Outbound copy unreviewed)"
+          : "Gate 01 + Gate 03 // Deterministic Schema & Arithmetic Invariant Gate",
+      simulatedLatencyMs: baseLatencyMs + (vulnerable ? 1420 : 6),
+      blastRadius: vulnerable
+        ? "CRITICAL (Unbounded Downstream Mutation)"
+        : partial
+          ? "MODERATE (Partial Escalation)"
+          : "ZERO (Contained at Boundary)",
+      analysis: vulnerable
+        ? "FAILURE: Because Schema Validation or Calculations are assigned to Model Only, the hallucinated value bypassed code-level assertions and mutated downstream state."
+        : partial
+          ? "PARTIAL CONTAINMENT: Core ledger math held firm, but Outbound Content Generation is set to Model Only without a hybrid policy filter."
+          : "CONTAINED: Deterministic Zod schema validation and integer arithmetic invariants rejected the hallucinated payload in 6ms before any state mutation.",
+      remediationHint:
+        "Ensure Input Parsing & Schema Validation and Calculations & Financial Math are locked to DETERMINISTIC, and Outbound Content is HYBRID.",
+    };
+  }
+
+  if (faultId === "pii-leak") {
+    const vulnerable = authMode === "ai" || schemaMode === "ai";
+    return {
+      faultId,
+      title: "Unredacted PII & Cross-Tenant Context Bleed",
+      injectedPayloadSummary:
+        'Inbound context includes raw SIN "046-454-286" and cross-tenant header X-Tenant-ID mismatch',
+      contained: !vulnerable,
+      interceptLayer: vulnerable
+        ? "NONE // Prompt-level instruction only (Bypassed via injection)"
+        : "Gate 01 + Gate 02 // Pre-Flight PII Redaction Airlock & RBAC Lock",
+      simulatedLatencyMs: baseLatencyMs + (vulnerable ? 980 : 4),
+      blastRadius: vulnerable
+        ? "CRITICAL (Unbounded Downstream Mutation)"
+        : "ZERO (Contained at Boundary)",
+      analysis: vulnerable
+        ? "FAILURE: Policy Gates or Input Parsing rely on probabilistic prompts. Unsanitized PII tokens were transmitted to the external inference endpoint."
+        : "CONTAINED: Deterministic pre-flight airlock scrubbed sensitive tokens into vault placeholders [REDACTED_SIN_01] and enforced tenant isolation prior to model invocation.",
+      remediationHint:
+        "Assign Policy Gates & Permission Check and Input Parsing & Schema Validation to DETERMINISTIC.",
+    };
+  }
+
+  if (faultId === "latency-spike") {
+    const vulnerable = auditMode === "ai" || schemaMode === "ai";
+    const deadlineMs =
+      latency === "realtime" ? 450 : latency === "near-realtime" ? 2500 : 8000;
+    return {
+      faultId,
+      title: "Upstream Provider 504 Timeout & Latency Surge",
+      injectedPayloadSummary: `Upstream model endpoint stalls for 9,400ms (Target budget: ${deadlineMs}ms)`,
+      contained: !vulnerable,
+      interceptLayer: vulnerable
+        ? "UNBOUNDED // Cascading request stall without idempotent receipt"
+        : `Gate 03 // AbortSignal Circuit Breaker (${deadlineMs}ms) + Dead-Letter Queue`,
+      simulatedLatencyMs: vulnerable
+        ? 9400
+        : Math.min(deadlineMs, baseLatencyMs + 14),
+      blastRadius: vulnerable
+        ? "MODERATE (Partial Escalation)"
+        : "ZERO (Contained at Boundary)",
+      analysis: vulnerable
+        ? "DEGRADED: Without deterministic schema pre-filtering and immutable audit receipts, the stalled upstream call risks duplicate replay on retry."
+        : "CONTAINED: Circuit breaker tripped cleanly at deadline; request state was hashed to the dead-letter replay queue with zero unhandled 500 errors.",
+      remediationHint:
+        "Lock Audit Ledger & Receipts and Input Parsing to DETERMINISTIC to guarantee idempotent retry safety.",
+    };
+  }
+
+  // budget-runaway
+  const vulnerable = authMode === "ai" || mathMode === "ai";
+  return {
+    faultId,
+    title: "Recursive Tool-Call Loop & Compute Runaway",
+    injectedPayloadSummary:
+      "Agent enters recursive retry cycle attempting 48 consecutive tool invocations on ambiguous input",
+    contained: !vulnerable,
+    interceptLayer: vulnerable
+      ? "NONE // Unbounded agent loop"
+      : "Gate 02 // Hard Step-Count Ceiling (maxSteps <= 4) & Cost Breaker",
+    simulatedLatencyMs: baseLatencyMs + (vulnerable ? 6200 : 9),
+    blastRadius: vulnerable
+      ? "CRITICAL (Unbounded Downstream Mutation)"
+      : "ZERO (Contained at Boundary)",
+    analysis: vulnerable
+      ? "FAILURE: Policy Gates are delegated to the model, allowing recursive self-invocation without a deterministic step counter."
+      : "CONTAINED: Deterministic policy gate enforced maxSteps=4 ceiling, halted the runaway loop, and routed the trace to operator review.",
+    remediationHint:
+      "Lock Policy Gates & Permission Check to DETERMINISTIC to enforce hard step and compute ceilings in code.",
+  };
+}
+
+/* ========================================
+   Executable TypeScript + Zod Contract Generator
+   ======================================== */
+export function generateDiagnosticZodContract(
+  state: DiagnosticShareState,
+  evaluation: DiagnosticEvaluationResult,
+): string {
+  const timeoutMs =
+    state.latency === "realtime"
+      ? 450
+      : state.latency === "near-realtime"
+        ? 3500
+        : 15000;
+  const hasPiiGuard = state.risks.includes("pii-leak");
+  const hasBudgetGuard = state.risks.includes("budget-runaway");
+  const hasHallucinationGuard = state.risks.includes("hallucination");
+
+  return [
+    "/**",
+    ` * AIAS Sovereign Boundary Contract — ${state.workload.toUpperCase()}`,
+    ` * Reliability Score: ${evaluation.score}/100 (Grade ${evaluation.grade})`,
+    ` * Recommended Track: ${evaluation.track}`,
+    " * Generated 100% client-side by AIAS Diligence Engine",
+    " */",
+    'import { z } from "zod";',
+    "",
+    "// 1. Deterministic Input & Policy Envelope (Gate 01)",
+    "export const WorkloadEnvelopeSchema = z.object({",
+    '  requestId: z.string().uuid("Idempotency UUID required"),',
+    '  tenantId: z.string().min(3, "Strict tenant namespace lock"),',
+    `  workload: z.literal("${state.workload}"),`,
+    `  volumeTier: z.literal("${state.volume}"),`,
+    ...(state.workload === "financial-ops"
+      ? [
+          '  amountCents: z.number().int().nonnegative("IEEE-754 float drift forbidden; use integer cents"),',
+          '  currency: z.enum(["CAD", "USD"]),',
+        ]
+      : [
+          '  payloadText: z.string().min(1).max(8000, "Bounded context window"),',
+        ]),
+    ...(hasBudgetGuard
+      ? [
+          '  stepCount: z.number().int().min(0).max(4, "Hard loop-breaker ceiling: maxSteps <= 4"),',
+        ]
+      : []),
+    "}).strict();",
+    "",
+    "export type WorkloadEnvelope = z.infer<typeof WorkloadEnvelopeSchema>;",
+    "",
+    "// 2. Structured Model Inference Output Contract (Gate 02)",
+    "export const GovernedInferenceSchema = z.object({",
+    "  classification: z.string().min(1),",
+    `  confidenceScore: z.number().min(${hasHallucinationGuard ? "0.92" : "0.80"}).max(1.0),`,
+    "  citations: z.array(z.string().min(1)).min(1),",
+    "  requiresOperatorSignOff: z.boolean(),",
+    "}).strict();",
+    "",
+    ...(hasPiiGuard
+      ? [
+          "// 3. Pre-Flight PIPEDA-Informed Redaction Airlock",
+          "export function scrubSensitiveTokens(raw: string): string {",
+          "  return raw",
+          '    .replace(/\\b\\d{3}[-\\s]?\\d{3}[-\\s]?\\d{3}\\b/g, "[REDACTED_SIN]")',
+          '    .replace(/\\b(?:\\d[ -]*?){13,16}\\b/g, "[REDACTED_CARD]");',
+          "}",
+          "",
+        ]
+      : []),
+    "// 4. Sovereign Execution Pipeline with Circuit Breaker & SHA-256 Receipt",
+    "export async function executeGovernedPipeline(",
+    "  rawInput: unknown,",
+    "  runInference: (envelope: WorkloadEnvelope, signal: AbortSignal) => Promise<unknown>,",
+    ") {",
+    "  const parsedInput = WorkloadEnvelopeSchema.safeParse(rawInput);",
+    "  if (!parsedInput.success) {",
+    "    return {",
+    '      status: "REJECTED_AT_GATE_01" as const,',
+    "      issues: parsedInput.error.issues,",
+    "    };",
+    "  }",
+    "",
+    `  const controller = new AbortController();`,
+    `  const timer = setTimeout(() => controller.abort(), ${timeoutMs}); // ${state.latency} P95 budget`,
+    "",
+    "  try {",
+    "    const rawOutput = await runInference(parsedInput.data, controller.signal);",
+    "    const verifiedOutput = GovernedInferenceSchema.safeParse(rawOutput);",
+    "    if (!verifiedOutput.success) {",
+    "      return {",
+    '        status: "INTERCEPTED_HALLUCINATION_DRIFT" as const,',
+    '        fallback: "ROUTED_TO_DETERMINISTIC_OPERATOR_QUEUE",',
+    "      };",
+    "    }",
+    "",
+    "    const receiptPayload = JSON.stringify({",
+    "      requestId: parsedInput.data.requestId,",
+    "      tenantId: parsedInput.data.tenantId,",
+    "      verifiedOutput: verifiedOutput.data,",
+    "    });",
+    "    const digest = await crypto.subtle.digest(",
+    '      "SHA-256",',
+    "      new TextEncoder().encode(receiptPayload),",
+    "    );",
+    "    const sha256Receipt = Array.from(new Uint8Array(digest))",
+    '      .map((b) => b.toString(16).padStart(2, "0"))',
+    '      .join("");',
+    "",
+    "    return {",
+    '      status: "COMMITTED_WITH_PROVENANCE" as const,',
+    "      data: verifiedOutput.data,",
+    "      sha256Receipt,",
+    "    };",
+    "  } catch {",
+    "    return {",
+    '      status: "CIRCUIT_BREAKER_OPEN_DEAD_LETTER_QUEUED" as const,',
+    `      timeoutBudgetMs: ${timeoutMs},`,
+    "    };",
+    "  } finally {",
+    "    clearTimeout(timer);",
+    "  }",
+    "}",
+  ].join("\n");
+}
+
+/* ========================================
+   Self-Maintaining Workspace Brief Auditor
+   ======================================== */
+export interface WorkspaceBriefAudit {
+  score: number;
+  grade: "A" | "B" | "C" | "Incomplete";
+  presentPillars: string[];
+  missingPillars: string[];
+  detectedGates: number;
+  wordCount: number;
+  suggestions: string[];
+  autoEnrichedBrief: string;
+}
+
+const BRIEF_PILLAR_SPECS: ReadonlyArray<{
+  id: string;
+  label: string;
+  pattern: RegExp;
+  defaultLine: string;
+}> = [
+  {
+    id: "objective",
+    label: "Objective",
+    pattern: /(?:^|\n)(?:#+\s*)?(?:\d+\.\s*)?\**_?Objective\b[:\s-]*(.{8,})/i,
+    defaultLine:
+      "Objective: Automate high-friction operational handoffs with deterministic policy gates and zero silent failure drift.",
+  },
+  {
+    id: "constraints",
+    label: "Constraints",
+    pattern:
+      /(?:^|\n)(?:#+\s*)?(?:\d+\.\s*)?\**_?(?:Constraints|Latency|Workload Context|Target Status)\b[:\s-]*(.{8,})/i,
+    defaultLine:
+      "Constraints: P95 latency < 2.5s | PIPEDA-informed tenant isolation | 100% strict Zod schema validation at ingress and egress.",
+  },
+  {
+    id: "failure-modes",
+    label: "Failure Modes",
+    pattern:
+      /(?:^|\n)(?:#+\s*)?(?:\d+\.\s*)?\**_?(?:Failure modes|High-Priority Failure Modes|High-Priority Guardrail|Risk)\b[:\s-]*(.{8,})/i,
+    defaultLine:
+      "Failure modes: Unvalidated model output drift; upstream provider 504 timeout; unredacted PII token exposure.",
+  },
+  {
+    id: "gates",
+    label: "Deterministic Gates",
+    pattern:
+      /(?:Gate\s*0[1-4]|Boundary Allocation|Invariant Boundary|Verified Guardrail|Deterministic Systems Lab|Policy Studio Gate)/i,
+    defaultLine: [
+      "Architecture topology:",
+      "- Gate 01 (Deterministic): Strict Zod contract parse + idempotency key deduplication.",
+      "- Gate 02 (Governed AI): Scoped inference with structured output schema and confidence threshold >= 0.92.",
+      "- Gate 03 (Policy Gate): Deterministic rule & permission verification + timeout circuit breaker.",
+      "- Gate 04 (Audit Ledger): Append-only SHA-256 cryptographic execution receipt.",
+    ].join("\n"),
+  },
+  {
+    id: "next-decision",
+    label: "Next Decision",
+    pattern:
+      /(?:^|\n)(?:#+\s*)?(?:\d+\.\s*)?\**_?(?:Next decision|Next Implementation Steps|Action Recommendation|Recommended Track)\b[:\s-]*(.{8,})/i,
+    defaultLine:
+      "Next decision: Validate boundary contracts against 50 representative production payloads in a 2-week AIAS Architecture Sprint.",
+  },
+];
+
+export function analyzeWorkspaceBrief(rawNotes: string): WorkspaceBriefAudit {
+  const clean = normalizeWorkspaceNotes(rawNotes);
+  const words = clean.split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
+
+  const presentPillars: string[] = [];
+  const missingPillars: string[] = [];
+  const suggestions: string[] = [];
+  const enrichmentBlocks: string[] = [];
+
+  for (const pillar of BRIEF_PILLAR_SPECS) {
+    if (pillar.pattern.test(clean)) {
+      presentPillars.push(pillar.label);
+    } else {
+      missingPillars.push(pillar.label);
+      suggestions.push(`Add explicit ${pillar.label} specification.`);
+      enrichmentBlocks.push(pillar.defaultLine);
+    }
+  }
+
+  const gateMatches = clean.match(
+    /(?:Gate\s*0[1-4]|Verified Guardrail|Deterministic|Zod|SHA-256|Circuit Breaker)/gi,
+  );
+  const detectedGates = gateMatches ? Math.min(8, gateMatches.length) : 0;
+
+  let score = Math.round(
+    (presentPillars.length / BRIEF_PILLAR_SPECS.length) * 75,
+  );
+  if (detectedGates >= 3) score += 15;
+  else if (detectedGates >= 1) score += 8;
+  if (wordCount >= 35) score += 10;
+  else if (wordCount >= 15) score += 5;
+
+  if (clean === DEFAULT_WORKSPACE_TEMPLATE || wordCount <= 6) {
+    score = 15;
+  }
+
+  score = Math.max(0, Math.min(100, score));
+
+  const grade: WorkspaceBriefAudit["grade"] =
+    score >= 85 ? "A" : score >= 70 ? "B" : score >= 50 ? "C" : "Incomplete";
+
+  let autoEnrichedBrief = clean;
+  if (clean === DEFAULT_WORKSPACE_TEMPLATE || !clean) {
+    autoEnrichedBrief = BRIEF_PILLAR_SPECS.map((p) => p.defaultLine).join(
+      "\n\n",
+    );
+  } else if (enrichmentBlocks.length > 0) {
+    // Replace empty stub lines like "Objective:" if present, or append missing blocks
+    let working = clean;
+    for (const pillar of BRIEF_PILLAR_SPECS) {
+      if (!pillar.pattern.test(working)) {
+        const emptyStubRegex = new RegExp(
+          `^(?:${pillar.label})\\s*:\\s*$`,
+          "im",
+        );
+        if (emptyStubRegex.test(working)) {
+          working = working.replace(emptyStubRegex, pillar.defaultLine);
+        } else {
+          working = `${working.trimEnd()}\n\n${pillar.defaultLine}`;
+        }
+      }
+    }
+    autoEnrichedBrief = working.trim();
+  }
+
+  return {
+    score,
+    grade,
+    presentPillars,
+    missingPillars,
+    detectedGates,
+    wordCount,
+    suggestions,
+    autoEnrichedBrief,
+  };
+}

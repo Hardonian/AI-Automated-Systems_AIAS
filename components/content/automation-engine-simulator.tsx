@@ -19,7 +19,10 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SurfaceCard } from "@/components/ui/section-primitives";
-import { useBroadcastChannel } from "@/lib/utils/client-engines";
+import {
+  appendWorkspaceNotes,
+  useBroadcastChannel,
+} from "@/lib/utils/client-engines";
 
 type ScenarioKey =
   "lead-qualification" | "invoice-audit" | "governance-gate" | "support-triage";
@@ -634,12 +637,7 @@ export function AutomationEngineSimulator() {
     ].join("\n");
 
     try {
-      const existing = window.localStorage.getItem("aias_workspace_notes");
-      const nextNotes =
-        existing && existing.trim().length > 0
-          ? `${existing.trim()}\n\n${simulationSummary}`
-          : `# AIAS Architecture Handoff Brief\n\n${simulationSummary}`;
-      window.localStorage.setItem("aias_workspace_notes", nextNotes);
+      const nextNotes = appendWorkspaceNotes(simulationSummary);
       postWorkspaceMessage({ notes: nextNotes });
       setSyncedToWorkspace(true);
       setTimeout(() => setSyncedToWorkspace(false), 2500);

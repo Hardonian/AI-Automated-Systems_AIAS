@@ -37,6 +37,10 @@ import {
   readLeadAttribution,
   type LeadAttribution,
 } from "@/lib/lead-brief";
+import {
+  DEFAULT_WORKSPACE_TEMPLATE,
+  readWorkspaceNotes,
+} from "@/lib/utils/client-engines";
 
 const formSchema = z.object({
   orgType: z.enum(ORG_TYPES, { error: "Select organization type." }),
@@ -365,18 +369,15 @@ export function IntakeForm({
 
     let detectedWorkspaceNotes: string | null = null;
     try {
-      const rawNotes = window.localStorage.getItem("aias_workspace_notes");
-      if (rawNotes) {
-        const parsedNotes = JSON.parse(rawNotes) as unknown;
-        if (
-          typeof parsedNotes === "string" &&
-          parsedNotes.trim().length >= 25 &&
-          !parsedNotes.startsWith(
-            "Objective:\nConstraints:\nFailure modes:\nNext decision:",
-          )
-        ) {
-          detectedWorkspaceNotes = parsedNotes.trim().slice(0, 1150);
-        }
+      const normalizedNotes = readWorkspaceNotes();
+      if (
+        normalizedNotes.trim().length >= 25 &&
+        normalizedNotes !== DEFAULT_WORKSPACE_TEMPLATE &&
+        !normalizedNotes.startsWith(
+          "Objective:\nConstraints:\nFailure modes:\nNext decision:",
+        )
+      ) {
+        detectedWorkspaceNotes = normalizedNotes.trim().slice(0, 1150);
       }
     } catch {
       // Ignore storage parse issues

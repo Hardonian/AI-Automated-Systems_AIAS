@@ -22,7 +22,10 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { simulateRoi } from "@/lib/calculators/roi-monte-carlo";
-import { useBroadcastChannel } from "@/lib/utils/client-engines";
+import {
+  appendWorkspaceNotes,
+  useBroadcastChannel,
+} from "@/lib/utils/client-engines";
 
 const WEEKS_PER_YEAR = 48;
 const BASELINE_IMPLEMENTATION_COST = 48000;
@@ -196,12 +199,7 @@ export function RoiCalculator() {
     ].join("\n");
 
     try {
-      const existing = window.localStorage.getItem("aias_workspace_notes");
-      const nextNotes =
-        existing && existing.trim().length > 0
-          ? `${existing.trim()}\n\n${roiSummary}`
-          : `# AIAS Architecture Handoff Brief\n\n${roiSummary}`;
-      window.localStorage.setItem("aias_workspace_notes", nextNotes);
+      const nextNotes = appendWorkspaceNotes(roiSummary);
       postWorkspaceMessage({ notes: nextNotes });
       setSyncedToWorkspace(true);
       setTimeout(() => setSyncedToWorkspace(false), 2500);
@@ -544,7 +542,7 @@ export function RoiCalculator() {
                 className="w-full rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card hover:-translate-y-0.5 transition-all py-5"
               >
                 <Link
-                  href={`/diagnostic?workload=roi-reclaim&volume=${Math.round(model.annualSavedHours)}`}
+                  href={`/diagnostic?workload=financial-ops&volume=${teamSize >= 40 ? "high" : teamSize >= 15 ? "medium" : "low"}&step=2`}
                 >
                   Validate Assumptions in Architecture Diagnostic
                   <ArrowRight className="ml-2 h-4 w-4" />

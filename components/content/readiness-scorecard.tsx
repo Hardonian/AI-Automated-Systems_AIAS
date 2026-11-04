@@ -21,7 +21,10 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SurfaceCard } from "@/components/ui/section-primitives";
-import { useBroadcastChannel } from "@/lib/utils/client-engines";
+import {
+  appendWorkspaceNotes,
+  useBroadcastChannel,
+} from "@/lib/utils/client-engines";
 
 interface ChecklistItem {
   id: string;
@@ -297,12 +300,7 @@ export function ReadinessScorecard() {
     ].join("\n");
 
     try {
-      const existing = window.localStorage.getItem("aias_workspace_notes");
-      const nextNotes =
-        existing && existing.trim().length > 0
-          ? `${existing.trim()}\n\n${scorecardSummary}`
-          : `# AIAS Architecture Handoff Brief\n\n${scorecardSummary}`;
-      window.localStorage.setItem("aias_workspace_notes", nextNotes);
+      const nextNotes = appendWorkspaceNotes(scorecardSummary);
       postWorkspaceMessage({ notes: nextNotes });
       setSyncedToWorkspace(true);
       setTimeout(() => setSyncedToWorkspace(false), 2500);

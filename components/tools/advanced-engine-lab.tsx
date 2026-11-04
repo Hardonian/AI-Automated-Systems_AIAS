@@ -22,7 +22,10 @@ import {
   downloadPdf,
   downloadText,
 } from "@/lib/client/artifact-export";
-import { useBroadcastChannel } from "@/lib/utils/client-engines";
+import {
+  appendWorkspaceNotes,
+  useBroadcastChannel,
+} from "@/lib/utils/client-engines";
 
 const sampleSchema = z
   .object({
@@ -130,12 +133,7 @@ export function AdvancedEngineLab() {
     ].join("\n");
 
     try {
-      const existing = window.localStorage.getItem("aias_workspace_notes");
-      const nextNotes =
-        existing && existing.trim().length > 0
-          ? `${existing.trim()}\n\n${labSummary}`
-          : `# AIAS Architecture Handoff Brief\n\n${labSummary}`;
-      window.localStorage.setItem("aias_workspace_notes", nextNotes);
+      const nextNotes = appendWorkspaceNotes(labSummary);
       postWorkspaceMessage({ notes: nextNotes });
       setSyncedToWorkspace(true);
       setTimeout(() => setSyncedToWorkspace(false), 2500);

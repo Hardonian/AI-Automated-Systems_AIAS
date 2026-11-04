@@ -21,7 +21,10 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { useBroadcastChannel } from "@/lib/utils/client-engines";
+import {
+  appendWorkspaceNotes,
+  useBroadcastChannel,
+} from "@/lib/utils/client-engines";
 
 interface PresetScenario {
   id: string;
@@ -242,12 +245,7 @@ export const ${selectedPreset.id.replace(/-/g, "_")}_policy = z.object({
     ].join("\n");
 
     try {
-      const existing = window.localStorage.getItem("aias_workspace_notes");
-      const nextNotes =
-        existing && existing.trim().length > 0
-          ? `${existing.trim()}\n\n${summaryBlock}`
-          : `# AIAS Architecture Handoff Brief\n\n${summaryBlock}`;
-      window.localStorage.setItem("aias_workspace_notes", nextNotes);
+      const nextNotes = appendWorkspaceNotes(summaryBlock);
       postWorkspaceMessage({ notes: nextNotes });
       setSyncedToWorkspace(true);
       setTimeout(() => setSyncedToWorkspace(false), 3000);

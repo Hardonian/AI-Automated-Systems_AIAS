@@ -15,6 +15,7 @@ import {
   Terminal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { appendWorkspaceNotes } from "@/lib/utils/client-engines";
 
 interface DigitalAssetSpec {
   id: string;
@@ -138,8 +139,8 @@ export function PricingEngineSuite() {
 
   const handleAttachRoiToBooking = () => {
     try {
-      const summaryText = `Projected ROI Calculation: Team Size: ${teamSize} | Weekly Manual Burden: ${weeklyHours} hrs | Annual Drag: $${annualDrag.toLocaleString()} | Projected Reclaim: $${annualReclaimed.toLocaleString()} | Est. Payback: ${auditPaybackDays} days`;
-      window.localStorage.setItem("aias_workspace_notes", summaryText);
+      const summaryText = `## Pricing Engine ROI Projection\n- Team Size: ${teamSize} FTEs | Weekly Manual Burden: ${weeklyHours} hrs\n- Annual Operational Drag: $${annualDrag.toLocaleString()}\n- Projected Reclaim: $${annualReclaimed.toLocaleString()} | Est. Payback: ${auditPaybackDays} days`;
+      appendWorkspaceNotes(summaryText);
       setRoiAttached(true);
       setTimeout(() => setRoiAttached(false), 3000);
     } catch {

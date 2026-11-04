@@ -15,7 +15,10 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { useBroadcastChannel } from "@/lib/utils/client-engines";
+import {
+  useBroadcastChannel,
+  writeWorkspaceNotes,
+} from "@/lib/utils/client-engines";
 
 const WEEKS_PER_YEAR = 48;
 const AUTOMATION_FACTOR = 0.65; // realistic conservative capture rate
@@ -133,15 +136,8 @@ export function InstantRoiSizer() {
       `Next decision: Run AI Clarity Diagnostic (${inferredVolume} volume tier) and scope 2-week Architecture Sprint.`,
     ].join("\n");
 
-    try {
-      window.localStorage.setItem(
-        "aias_workspace_notes",
-        JSON.stringify(roiNotes),
-      );
-    } catch {
-      // Ignore storage errors
-    }
-    postWorkspaceMessage({ notes: roiNotes });
+    const nextNotes = writeWorkspaceNotes(roiNotes);
+    postWorkspaceMessage({ notes: nextNotes });
     setSyncedToWorkspace(true);
     setTimeout(() => setSyncedToWorkspace(false), 2500);
     router.push("/tools#workspace-title");

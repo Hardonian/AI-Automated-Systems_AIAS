@@ -1,18 +1,54 @@
 self.addEventListener("message", (event) => {
-  if (event.data?.type !== "pipeda-grade") return;
-  const checks = Array.isArray(event.data.checks) ? event.data.checks : [];
-  const score = Math.round(
-    (checks.filter(Boolean).length / Math.max(checks.length, 1)) * 100,
-  );
-  self.postMessage({
-    score,
-    grade:
-      score >= 90
-        ? "A"
-        : score >= 75
-          ? "B"
-          : score >= 60
-            ? "C"
-            : "Needs remediation",
-  });
+  const payload = event.data;
+  if (!payload || typeof payload !== "object") return;
+
+  if (payload.type === "pipeda-grade") {
+    const checks = Array.isArray(payload.checks) ? payload.checks : [];
+    const score = Math.round(
+      (checks.filter(Boolean).length / Math.max(checks.length, 1)) * 100,
+    );
+    self.postMessage({
+      type: "pipeda-grade",
+      score,
+      grade:
+        score >= 90
+          ? "A"
+          : score >= 75
+            ? "B"
+            : score >= 60
+              ? "C"
+              : "Needs remediation",
+    });
+    return;
+  }
+
+  if (payload.type === "brief-audit") {
+    const text = typeof payload.notes === "string" ? payload.notes.trim() : "";
+    const hasObjective = /Objective[:\s-].{8,}/i.test(text);
+    const hasConstraints =
+      /(?:Constraints|Latency|Workload Context)[:\s-].{8,}/i.test(text);
+    const hasFailures = /(?:Failure modes|Risk)[:\s-].{8,}/i.test(text);
+    const hasGates =
+      /(?:Gate\s*0[1-4]|Verified Guardrail|Deterministic|Zod|SHA-256)/i.test(
+        text,
+      );
+    const hasNext =
+      /(?:Next decision|Next Implementation|Track)[:\s-].{8,}/i.test(text);
+    const checks = [
+      hasObjective,
+      hasConstraints,
+      hasFailures,
+      hasGates,
+      hasNext,
+    ];
+    const passed = checks.filter(Boolean).length;
+    const score = Math.round((passed / checks.length) * 100);
+    self.postMessage({
+      type: "brief-audit",
+      workerVerified: true,
+      passedPillars: passed,
+      totalPillars: checks.length,
+      score,
+    });
+  }
 });

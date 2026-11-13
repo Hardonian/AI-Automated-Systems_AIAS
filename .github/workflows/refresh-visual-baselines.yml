@@ -24,8 +24,12 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
-      - name: Build static export (served by Playwright webServer)
+      - name: Build static export
         run: pnpm build
+      - name: Start static preview
+        run: pnpm serve:static > /tmp/aias-static.log 2>&1 &
+      - name: Wait for static preview
+        run: curl --fail --retry 20 --retry-delay 1 --retry-connrefused http://localhost:3000/
       - name: Update snapshots against current build
         run: pnpm test:visual --update-snapshots
       - name: Re-verify with updated baselines

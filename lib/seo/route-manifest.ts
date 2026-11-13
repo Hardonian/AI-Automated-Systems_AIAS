@@ -226,6 +226,15 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
     changeFrequency: "monthly",
   },
   {
+    path: "/p/comfyui-workflow-pack",
+    title: "ComfyUI Workflow Packs | AI Automated Systems",
+    description:
+      "Eight local-first ComfyUI packs — 24 production workflows for starter generation, blog visuals, thumbnails, podcast art, style transfer, product photos, social, and portraits. Buy once, run on your own GPU.",
+    canonical: "/p/comfyui-workflow-pack",
+    priority: 0.7,
+    changeFrequency: "monthly",
+  },
+  {
     path: "/point-of-view",
     title: "What We Believe About AI Systems | AI Automated Systems",
     description:

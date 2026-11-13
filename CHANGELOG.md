@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.1] - 2026-11-13
+
+- Shipped the `/p/comfyui-workflow-pack` product landing page showcasing all eight ComfyUI workflow packs (24 production workflows, $19–$29) with live Gumroad checkout links and an ItemList JSON-LD schema, closing the 404 that the `/pricing` Tier-1 card and the ComfyUI launch article were linking to. Route registered in the SEO route manifest, sitemap, and canonical metadata.
+
 ## [1.2.0] - 2026-11-01
 
 - Deployed Autonomous Self-Maintaining, Self-Serving, and Interactive Engineering Upgrades:

@@ -92,11 +92,27 @@ test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
       "https://api.aiautomatedsystems.ca/contact?product=enterprise-consulting";
     const consultation = page
       .getByRole("link", {
-        name: "Request an enterprise consultation",
+        name: "Request a consultation",
         exact: true,
       })
       .first();
     await expect(consultation).toBeInViewport();
+    expect(
+      await consultation.evaluate((link) => {
+        const text = Array.from(link.childNodes).find(
+          (node) =>
+            node.nodeType === Node.TEXT_NODE && node.textContent?.trim(),
+        );
+        if (!text) {
+          return false;
+        }
+        const range = document.createRange();
+        range.selectNodeContents(text);
+        const bounds = link.getBoundingClientRect();
+        const label = range.getBoundingClientRect();
+        return label.left >= bounds.left && label.right <= bounds.right;
+      }),
+    ).toBe(true);
     await expect(consultation).toHaveAttribute("href", inquiry);
     await expect(
       page.getByRole("link", { name: "Review our work", exact: true }),
@@ -119,7 +135,7 @@ test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
     await page.goto("/contact");
     await expect(
       page.getByRole("link", {
-        name: "Request an enterprise consultation",
+        name: "Request a consultation",
         exact: true,
       }),
     ).toHaveAttribute("href", inquiry);

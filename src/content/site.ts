@@ -1888,7 +1888,7 @@ The workflow is complete only when the output schema is valid, policy receipts a
         "AIAS helps operations and technology teams prove where AI saves work, stabilize automations they already rely on, and build the right system when existing tools fall short.",
     },
     inquiry: {
-      label: "Request an enterprise consultation",
+      label: "Request a consultation",
       href: enterpriseInquiryHref,
     },
     proof: { label: "Review our work", href: "/work" },

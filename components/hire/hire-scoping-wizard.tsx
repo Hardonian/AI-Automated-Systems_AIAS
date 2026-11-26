@@ -89,11 +89,12 @@ export function HireScopingWizard({
           <span>Interactive Architecture & Scope Estimator</span>
         </div>
         <h2 className="text-2xl font-black uppercase tracking-tight text-foreground sm:text-3xl">
-          Generate an Instant Custom Build Scope
+          Explore a starting scope
         </h2>
-        <p className="mt-2 text-xs font-mono text-muted-foreground uppercase">
-          Select your operational parameters to configure the recommended
-          engineering blueprint.
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          Compare a starting point for your workflow. This estimate is not a
+          proposal, and your selections are not sent when you open the inquiry
+          form.
         </p>
       </div>
 

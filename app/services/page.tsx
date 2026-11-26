@@ -98,6 +98,7 @@ export default function ServicesPage() {
               { label: "Point of view", href: "/point-of-view" },
               { label: "Diagnostic", href: "/diagnostic" },
               { label: "What we measure", href: "/what-we-measure" },
+              siteContent.workflowProofSprint.discovery,
             ]}
           />
         </div>

@@ -97,12 +97,14 @@ test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
       })
       .first();
     await expect(consultation).toBeInViewport();
+    await page.evaluate(() => document.fonts.ready);
     expect(
       await consultation.evaluate((link) => {
-        const text = Array.from(link.childNodes).find(
-          (node) =>
-            node.nodeType === Node.TEXT_NODE && node.textContent?.trim(),
-        );
+        const walker = document.createTreeWalker(link, NodeFilter.SHOW_TEXT);
+        let text = walker.nextNode();
+        while (text && !text.textContent?.trim()) {
+          text = walker.nextNode();
+        }
         if (!text) {
           return false;
         }

@@ -18,11 +18,13 @@ export function PageHero({
   title,
   description,
   className,
+  children,
 }: {
   eyebrow?: string;
   title: string;
   description: string;
   className?: string;
+  children?: ReactNode;
 }) {
   return (
     <section
@@ -42,6 +44,7 @@ export function PageHero({
           <p className={cn(TYPOGRAPHY.body, "mt-4 text-muted-foreground")}>
             {description}
           </p>
+          {children}
         </header>
       </div>
     </section>

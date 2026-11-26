@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Refined the enterprise buyer journey across Services, Hire, and Contact. Added a direct project inquiry, clarified procurement and handoff expectations, and replaced unsupported guarantees and booking CTAs on the Hire page with scoped review criteria and an existing tagged intake.
+
 - Added `/p/workflow-proof-sprint`, a fixed-scope support-operations pilot that compares manual and AI-assisted labor and quality. Linked it from Services and registered the canonical route for discovery. Inquiries use the existing tagged enterprise contact form; no checkout or intake backend changes.
 
 ## [1.2.1] - 2026-11-13

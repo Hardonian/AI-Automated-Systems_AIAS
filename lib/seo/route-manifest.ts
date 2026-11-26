@@ -110,9 +110,9 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
   },
   {
     path: "/contact",
-    title: "Book a Free AI Automation Diagnostic Call | AIAS",
+    title: "Contact AIAS | Enterprise Automation Inquiries",
     description:
-      "Book a diagnostic, request an architecture review, or submit your AI stack intake for governance-first implementation planning.",
+      "Request an enterprise automation consultation or architecture review. Share the workflow, outcome, and existing constraints without sending sensitive records.",
     canonical: "/contact",
     priority: 0.7,
     changeFrequency: "monthly",

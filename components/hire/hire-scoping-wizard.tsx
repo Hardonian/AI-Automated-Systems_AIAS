@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sliders,
@@ -17,7 +16,11 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-export function HireScopingWizard() {
+export function HireScopingWizard({
+  inquiry,
+}: {
+  inquiry: { label: string; href: string };
+}) {
   const [industry, setIndustry] = useState<string>("ecommerce");
   const [bottleneck, setBottleneck] = useState<string>("triage");
   const [volume, setVolume] = useState<string>("mid");
@@ -32,7 +35,7 @@ export function HireScopingWizard() {
         architecturePattern:
           "Deterministic Policy Wrapper + Retry Budget Matrix",
         coreDeliverable:
-          "Zero-hallucination policy gates and incident recovery playbooks",
+          "Tests for unsafe outputs and a recovery runbook for known failures",
         idealEngagement:
           "Rapid 2-3 week remediation of existing agents to stop silent failures and protect production data.",
       };
@@ -45,7 +48,7 @@ export function HireScopingWizard() {
         architecturePattern:
           "High-Throughput Intake Controller + Operator Console",
         coreDeliverable:
-          "Turnkey ingestion and routing pipeline with sub-minute SLAs",
+          "Ingestion and routing pipeline with measured latency targets",
         idealEngagement:
           "Complete custom build replacing manual queue sorting with deterministic policy-gated triage.",
       };
@@ -241,14 +244,10 @@ export function HireScopingWizard() {
               asChild
               className="w-full rounded-none border-2 border-primary bg-primary py-5 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card hover:-translate-y-0.5 transition-transform"
             >
-              <Link
-                href="https://calendly.com/scottrmhardie"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Book Strategy Call with this Scope
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
+              <a href={inquiry.href}>
+                {inquiry.label}
+                <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
+              </a>
             </Button>
           </div>
         </div>

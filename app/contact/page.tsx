@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Calendar, Clock, Mail } from "lucide-react";
+import { BriefcaseBusiness, Mail } from "lucide-react";
 
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
 import {
@@ -13,9 +13,9 @@ import { IntakeForm } from "@/components/IntakeForm";
 import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: "Book a Free AI Automation Diagnostic Call | AIAS",
+  title: "Contact AIAS | Enterprise Automation Inquiries",
   description:
-    "Book a diagnostic, request an architecture review, or submit your AI stack intake for governance-first implementation planning.",
+    "Request an enterprise automation consultation or architecture review. Share the workflow, outcome, and existing constraints without sending sensitive records.",
   canonical: "/contact",
 });
 
@@ -36,19 +36,21 @@ export default function ContactPage() {
 
       <PageSection>
         <div className="grid gap-8 md:grid-cols-2">
-          <SurfaceCard>
-            <Calendar className="h-6 w-6 text-primary" />
-            <h2 className="mt-4 text-2xl font-semibold">Book Diagnostic</h2>
+          <SurfaceCard className="border-primary/40 bg-primary/5">
+            <BriefcaseBusiness
+              aria-hidden="true"
+              className="h-6 w-6 text-primary"
+            />
+            <h2 className="mt-4 text-2xl font-semibold">
+              Enterprise project inquiries
+            </h2>
             <p className="mt-3 text-muted-foreground">
-              Schedule a consult to review current workflows, constraints, and
-              immediate quick wins.
-            </p>
-            <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-              <Clock className="h-4 w-4" />
-              30 minutes • no-pressure planning call
+              {siteContent.enterpriseEngagement.inquiryNote}
             </p>
             <Button asChild className="mt-6 w-full" size="lg">
-              <a href={bookingHref}>Book Diagnostic</a>
+              <a href={siteContent.enterpriseEngagement.inquiry.href}>
+                {siteContent.enterpriseEngagement.inquiry.label}
+              </a>
             </Button>
           </SurfaceCard>
 

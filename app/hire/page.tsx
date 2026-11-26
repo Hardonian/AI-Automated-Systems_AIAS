@@ -8,11 +8,14 @@ import {
   Users,
   Clock,
   Lock,
-  Layers,
-  ExternalLink,
+  LifeBuoy,
 } from "lucide-react";
 
-import { PageHero, PageSection } from "@/components/ui/section-primitives";
+import {
+  PageHero,
+  PageSection,
+  SurfaceCard,
+} from "@/components/ui/section-primitives";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
 import { siteContent } from "@/src/content/site";
@@ -26,8 +29,25 @@ export const metadata: Metadata = generateSEOMetadata({
   canonical: "/hire",
 });
 
+const commitmentIcons = {
+  ownership: Lock,
+  approval: ShieldCheck,
+  recovery: LifeBuoy,
+  handoff: Users,
+};
+
 export default function HireConsultancyPage() {
-  const tracks = siteContent.consultancyTracks || [];
+  const tracks = siteContent.consultancyTracks;
+  const {
+    hero,
+    inquiry,
+    proof,
+    procurement,
+    pilot,
+    commitments,
+    inquiryNote,
+    tracks: trackCopy,
+  } = siteContent.enterpriseEngagement;
 
   return (
     <>
@@ -35,57 +55,56 @@ export default function HireConsultancyPage() {
         <Breadcrumbs items={[{ label: "Hire AIAS" }]} />
       </div>
 
-      <PageHero
-        eyebrow="Prong 02 // Enterprise Engineering"
-        title="Hire AIAS to Build, Modernize & Automate"
-        description="We architect, build, and operate production-grade automation systems for high-growth operations teams. From single workflow stabilization to end-to-end bespoke platform engineering."
-      />
+      <PageHero {...hero} className="!py-12 sm:!py-16">
+        <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+          <Button asChild size="lg">
+            <a href={inquiry.href}>
+              {inquiry.label}
+              <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            </a>
+          </Button>
+          <Button asChild size="lg" variant="outline">
+            <Link href={proof.href}>{proof.label}</Link>
+          </Button>
+        </div>
+        <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
+          {inquiryNote}
+        </p>
+      </PageHero>
 
       <PageSection>
-        {/* Value Proposition Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-16">
-          {[
-            {
-              title: "Contract-Defined IP & Code Ownership",
-              description:
-                "You own every line of code, schema definition, and Docker configuration.",
-              icon: Lock,
-            },
-            {
-              title: "Policy Before Execution",
-              description:
-                "Zero unintercepted hallucinated actions or uncontrolled API dispatches.",
-              icon: ShieldCheck,
-            },
-            {
-              title: "Zero Vendor Lock-in",
-              description:
-                "Built on open standards (TypeScript, Python, Next.js, Zod, PostgreSQL).",
-              icon: Layers,
-            },
-            {
-              title: "Operator Enablement",
-              description:
-                "Complete runbooks, SOPs, and training sessions so your team operates independently.",
-              icon: Users,
-            },
-          ].map((item, idx) => {
-            const Icon = item.icon;
+        <div className="mb-8 grid gap-6 lg:grid-cols-2">
+          <SurfaceCard>
+            <h2 className="text-xl font-semibold">{procurement.title}</h2>
+            <p className="mt-3 leading-relaxed text-muted-foreground">
+              {procurement.description}
+            </p>
+          </SurfaceCard>
+          <SurfaceCard className="border-primary/40 bg-primary/5">
+            <h2 className="text-xl font-semibold">{pilot.title}</h2>
+            <p className="mt-3 leading-relaxed text-muted-foreground">
+              {pilot.description}
+            </p>
+            <Button asChild variant="outline" className="mt-5">
+              <Link href={siteContent.workflowProofSprint.discovery.href}>
+                {pilot.label}
+                <ArrowRight aria-hidden="true" className="h-4 w-4" />
+              </Link>
+            </Button>
+          </SurfaceCard>
+        </div>
+
+        <div className="mb-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {commitments.map((item) => {
+            const Icon = commitmentIcons[item.id];
             return (
-              <div
-                key={idx}
-                className="border-2 border-border bg-card p-6 shadow-card transition-all hover:border-primary"
-              >
-                <div className="flex h-10 w-10 items-center justify-center border-2 border-border bg-surface-muted text-primary">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <h3 className="mt-4 font-mono text-sm font-bold uppercase text-foreground">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+              <SurfaceCard key={item.id} className="p-5">
+                <Icon aria-hidden="true" className="h-5 w-5 text-primary" />
+                <p className="mt-3 font-semibold">{item.title}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {item.description}
                 </p>
-              </div>
+              </SurfaceCard>
             );
           })}
         </div>
@@ -93,15 +112,11 @@ export default function HireConsultancyPage() {
         {/* 4 Structured Engagement Tracks */}
         <div className="space-y-8">
           <div className="text-center max-w-3xl mx-auto">
-            <span className="border border-primary bg-primary/10 px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-primary">
-              Structured Engagement Packages
-            </span>
-            <h2 className="mt-3 text-2xl font-black uppercase tracking-tight text-foreground sm:text-4xl">
-              Choose How Your Team Engages
+            <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-4xl">
+              {trackCopy.title}
             </h2>
-            <p className="mt-2 font-mono text-xs text-muted-foreground uppercase tracking-wider">
-              Scoper-backed delivery models with transparent deliverables and
-              zero runaway scopes.
+            <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+              {trackCopy.description}
             </p>
           </div>
 
@@ -175,24 +190,10 @@ export default function HireConsultancyPage() {
                     asChild
                     className="w-full rounded-none border-2 border-primary bg-primary py-5 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-card hover:-translate-y-0.5 transition-transform"
                   >
-                    <Link
-                      href={track.ctaHref}
-                      target={
-                        track.ctaHref.startsWith("http") ? "_blank" : undefined
-                      }
-                      rel={
-                        track.ctaHref.startsWith("http")
-                          ? "noopener noreferrer"
-                          : undefined
-                      }
-                    >
+                    <a href={track.ctaHref}>
                       {track.ctaLabel}
-                      {track.ctaHref.startsWith("http") ? (
-                        <ExternalLink className="ml-2 h-4 w-4" />
-                      ) : (
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      )}
-                    </Link>
+                      <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
+                    </a>
                   </Button>
                 </div>
               </div>
@@ -202,7 +203,7 @@ export default function HireConsultancyPage() {
 
         {/* Interactive Scoping & Architecture Wizard */}
         <div className="mt-20">
-          <HireScopingWizard />
+          <HireScopingWizard inquiry={inquiry} />
         </div>
 
         {/* Cross-Prong Navigation Banner */}

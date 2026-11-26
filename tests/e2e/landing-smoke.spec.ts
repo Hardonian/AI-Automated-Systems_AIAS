@@ -76,6 +76,55 @@ test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
     await expect(page.getByText("Isolated intake navigation")).toBeVisible();
   });
 
+  test("Enterprise buyers can review the scope and reach tagged intake on mobile", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/services");
+    await page
+      .getByRole("link", { name: "Explore enterprise engagements" })
+      .click();
+    await expect(page).toHaveURL(/\/hire\/?$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "Make critical workflows easier to run and safer to change",
+    );
+    const inquiry =
+      "https://api.aiautomatedsystems.ca/contact?product=enterprise-consulting";
+    const consultation = page
+      .getByRole("link", {
+        name: "Request an enterprise consultation",
+        exact: true,
+      })
+      .first();
+    await expect(consultation).toBeInViewport();
+    await expect(consultation).toHaveAttribute("href", inquiry);
+    await expect(
+      page.getByRole("link", { name: "Review our work", exact: true }),
+    ).toHaveAttribute("href", "/work");
+    await expect(
+      page.getByRole("link", { name: "See the fixed-scope pilot" }),
+    ).toHaveAttribute("href", "/p/workflow-proof-sprint");
+    for (const track of siteContent.consultancyTracks) {
+      await expect(
+        page.getByRole("link", { name: track.ctaLabel, exact: true }),
+      ).toHaveAttribute("href", inquiry);
+    }
+    await page.route(inquiry, async (route) => {
+      expect(route.request().method()).toBe("GET");
+      await route.fulfill({ status: 200, body: "Isolated enterprise intake" });
+    });
+    await consultation.click();
+    await expect(page).toHaveURL(inquiry);
+    await expect(page.getByText("Isolated enterprise intake")).toBeVisible();
+    await page.goto("/contact");
+    await expect(
+      page.getByRole("link", {
+        name: "Request an enterprise consultation",
+        exact: true,
+      }),
+    ).toHaveAttribute("href", inquiry);
+  });
+
   test("Contact intake flow is functional", async ({ page }) => {
     await page.goto("/contact");
 

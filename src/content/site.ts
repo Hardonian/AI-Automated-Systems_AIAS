@@ -237,6 +237,19 @@ export interface SiteConfig {
     automationWeb: Array<{ question: string; answer: string }>;
     appAiSystems: Array<{ question: string; answer: string }>;
   };
+  workflowProofSprint: {
+    discovery: { label: string; href: string };
+    hero: { eyebrow: string; title: string; description: string };
+    steps: Array<{ id: string; title: string; description: string }>;
+    terms: { title: string; description: string };
+    privacy: { title: string; description: string };
+    cta: {
+      title: string;
+      description: string;
+      primary: { label: string; href: string };
+      secondary: { label: string; href: string };
+    };
+  };
   servicesPage: {
     hero: {
       eyebrow: string;
@@ -1847,6 +1860,58 @@ The workflow is complete only when the output schema is valid, policy receipts a
           "Yes. We design replayable logs and governance artifacts to support post-incident review and enterprise reporting.",
       },
     ],
+  },
+  workflowProofSprint: {
+    discovery: {
+      label: "Private AI Workflow Proof Sprint",
+      href: "/p/workflow-proof-sprint",
+    },
+    hero: {
+      eyebrow: "Private AI Workflow Proof Sprint",
+      title: "Find out whether AI gives your support team time back",
+      description:
+        "Evaluate one repeatable support workflow before investing in a wider rollout. Compare AI-assisted triage and internal drafting with the way your team already works. We report the result even when it says stop.",
+    },
+    steps: [
+      {
+        id: "baseline",
+        title: "Agree on what counts as a good outcome",
+        description:
+          "Choose one support queue, establish the manual baseline, and agree with the process owner and reviewer on what makes a case pass or fail.",
+      },
+      {
+        id: "comparison",
+        title: "Compare the same cases",
+        description:
+          "Measure triage and internal draft preparation with and without assistance on at least 20 eligible paired cases. Count doing the work, human review, and rework in both arms.",
+      },
+      {
+        id: "decision",
+        title: "Decide before rolling it out",
+        description:
+          "Get an offline scoring kit and a decision brief showing observed labor, quality failures, limits, and whether a limited rollout is worth reviewing. Faster work does not override a quality failure.",
+      },
+    ],
+    terms: {
+      title: "CAD $1,500 founding pilot",
+      description:
+        "One workweek after we agree on the scope, confirm access approval, and have a usable sample. Includes a kickoff, measurement protocol, reviewer rubric, offline scoring kit, decision brief, and handoff call. Your team provides an accountable owner, a reviewer, and approved cases. Integration and implementation are not included. No performance guarantee or payment at inquiry.",
+    },
+    privacy: {
+      title: "Your team keeps control",
+      description:
+        "Keep case content and individual identities in your approved environment. Run the scorer on your machine and share only an approved aggregate brief. No employee scoring, automated replies, production changes, or transfer of ticket content to us.",
+    },
+    cta: {
+      title: "Is your workflow a fit?",
+      description:
+        "In the inquiry form, tell us the workflow name, approximate monthly volume, and reviewer availability. Use your business contact details. Do not send tickets, customer data, or credentials.",
+      primary: {
+        label: "Request a fit check",
+        href: "https://api.aiautomatedsystems.ca/contact?product=workflow-proof-sprint",
+      },
+      secondary: { label: "What we measure", href: "/what-we-measure" },
+    },
   },
   servicesPage: {
     hero: {

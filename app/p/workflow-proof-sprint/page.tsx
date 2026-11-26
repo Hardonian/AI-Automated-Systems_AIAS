@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import {
-  PageCta,
   PageHero,
   PageSection,
   SurfaceCard,
 } from "@/components/ui/section-primitives";
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
+import { siteContent } from "@/src/content/site";
 
 export const metadata: Metadata = generateSEOMetadata({
   title: "Private AI Workflow Proof Sprint | AI Automated Systems",
@@ -15,39 +18,19 @@ export const metadata: Metadata = generateSEOMetadata({
   canonical: "/p/workflow-proof-sprint",
 });
 
-const steps = [
-  {
-    title: "Agree on what counts as a good outcome",
-    text: "Choose one support queue, establish the manual baseline, and agree with the process owner and reviewer on what makes a case pass or fail.",
-  },
-  {
-    title: "Compare the same cases",
-    text: "Measure triage and internal draft preparation with and without assistance on at least 20 eligible paired cases. Count doing the work, human review, and rework in both arms.",
-  },
-  {
-    title: "Decide before rolling it out",
-    text: "Get an offline scoring kit and a decision brief showing observed labor, quality failures, limits, and whether a limited rollout is worth reviewing. Faster work does not override a quality failure.",
-  },
-];
-
-const inquiryHref =
-  "https://api.aiautomatedsystems.ca/contact?product=workflow-proof-sprint";
-
 export default function WorkflowProofSprintPage() {
+  const { hero, steps, terms, privacy, cta } = siteContent.workflowProofSprint;
+
   return (
     <>
-      <PageHero
-        eyebrow="Private AI Workflow Proof Sprint"
-        title="Find out whether AI gives your support team time back"
-        description="Evaluate one repeatable support workflow before investing in a wider rollout. Compare AI-assisted triage and internal drafting with the way your team already works. We report the result even when it says stop."
-      />
+      <PageHero {...hero} />
 
       <PageSection>
         <div className="grid gap-6 md:grid-cols-3">
           {steps.map((step) => (
-            <SurfaceCard key={step.title}>
+            <SurfaceCard key={step.id}>
               <h2 className="text-xl font-semibold">{step.title}</h2>
-              <p className="mt-3 text-muted-foreground">{step.text}</p>
+              <p className="mt-3 text-muted-foreground">{step.description}</p>
             </SurfaceCard>
           ))}
         </div>
@@ -55,35 +38,34 @@ export default function WorkflowProofSprintPage() {
 
       <PageSection background="muted" width="narrow">
         <div className="space-y-6">
-          <SurfaceCard>
-            <h2 className="text-xl font-semibold">CAD $1,500 founding pilot</h2>
-            <p className="mt-3 text-muted-foreground">
-              One workweek after scope, access approval, and a usable sample are
-              agreed. Includes a kickoff, measurement protocol, reviewer rubric,
-              offline scoring kit, decision brief, and handoff call. Your team
-              provides an accountable owner, a reviewer, and approved cases.
-              Integration and implementation are not included. No performance
-              guarantee or payment at inquiry.
-            </p>
-          </SurfaceCard>
-          <SurfaceCard>
-            <h2 className="text-xl font-semibold">Your team keeps control</h2>
-            <p className="mt-3 text-muted-foreground">
-              Keep case content and individual identities in your approved
-              environment. Run the scorer on your machine and share only an
-              approved aggregate brief. No employee scoring, automated replies,
-              production changes, or transfer of ticket content to us.
-            </p>
-          </SurfaceCard>
+          {[terms, privacy].map(({ title, description }) => (
+            <SurfaceCard key={title}>
+              <h2 className="text-xl font-semibold">{title}</h2>
+              <p className="mt-3 text-muted-foreground">{description}</p>
+            </SurfaceCard>
+          ))}
         </div>
       </PageSection>
 
-      <PageCta
-        title="Is your workflow a fit?"
-        description="In the inquiry form, tell us the workflow name, approximate monthly volume, and reviewer availability. Use your business contact details. Do not send tickets, customer data, or credentials."
-        primary={{ label: "Request a fit check", href: inquiryHref }}
-        secondary={{ label: "What we measure", href: "/what-we-measure" }}
-      />
+      <PageSection width="narrow">
+        <SurfaceCard className="bg-gradient-to-br from-primary/10 to-accent/10 text-center">
+          <h2 className="text-2xl font-bold">{cta.title}</h2>
+          <p className="mt-3 text-sm text-muted-foreground">
+            {cta.description}
+          </p>
+          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+            <Button asChild size="lg">
+              <a href={cta.primary.href}>
+                {cta.primary.label}
+                <ArrowRight aria-hidden="true" className="h-4 w-4" />
+              </a>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link href={cta.secondary.href}>{cta.secondary.label}</Link>
+            </Button>
+          </div>
+        </SurfaceCard>
+      </PageSection>
     </>
   );
 }

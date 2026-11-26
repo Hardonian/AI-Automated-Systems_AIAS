@@ -45,7 +45,10 @@ test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
       "Find out whether AI gives your support team time back",
     );
     await expect(
-      page.getByRole("heading", { name: "CAD $1,500 founding pilot" }),
+      page.getByRole("heading", {
+        name: "CAD $1,500 founding pilot",
+        level: 2,
+      }),
     ).toBeVisible();
     await expect(
       page.getByRole("link", { name: "Request a fit check" }),
@@ -60,6 +63,17 @@ test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
       .getByRole("link", { name: "What we measure", exact: true })
       .click();
     await expect(page).toHaveURL(/\/what-we-measure\/?$/);
+
+    const inquiryUrl =
+      "https://api.aiautomatedsystems.ca/contact?product=workflow-proof-sprint";
+    await page.route(inquiryUrl, async (route) => {
+      expect(route.request().method()).toBe("GET");
+      await route.fulfill({ status: 200, body: "Isolated intake navigation" });
+    });
+    await page.goBack();
+    await page.getByRole("link", { name: "Request a fit check" }).click();
+    await expect(page).toHaveURL(inquiryUrl);
+    await expect(page.getByText("Isolated intake navigation")).toBeVisible();
   });
 
   test("Contact intake flow is functional", async ({ page }) => {

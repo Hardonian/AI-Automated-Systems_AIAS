@@ -137,7 +137,7 @@ const llmsFullTxt = [
     `- Timeline: ${t.timeline} | Focus: ${t.architectureFocus}`,
     `- Description: ${t.description}`,
     `- Deliverables: ${t.deliverables.join("; ")}`,
-    `- SLA Guarantees: ${t.slaGuarantees.join("; ")}`,
+    `- Review criteria: ${t.reviewCriteria.join("; ")}`,
     "",
   ]),
   "## 3. Turnkey Catalog Modules",

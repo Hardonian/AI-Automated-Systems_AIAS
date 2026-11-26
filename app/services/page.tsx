@@ -15,7 +15,7 @@ import { RelatedPages } from "@/components/content/related-pages";
 import FadeIn from "@/components/motion/fade-in";
 import { FeatureIllustration } from "@/components/visual/FeatureIllustration";
 import { WorkflowDiagram } from "@/components/visual/WorkflowDiagram";
-import { getPrimaryCtaHref, siteContent } from "@/src/content/site";
+import { siteContent } from "@/src/content/site";
 
 export const metadata: Metadata = generateSEOMetadata({
   title: "AI Automation Consulting Services — Audit, Build, Govern | AIAS",
@@ -82,10 +82,10 @@ export default function ServicesPage() {
             Proof
           </Link>
           <Link
-            href="/contact"
-            className="font-medium text-primary underline-offset-4 hover:underline"
+            href={siteContent.enterpriseEngagement.servicesLink.href}
+            className="font-semibold text-primary underline underline-offset-4"
           >
-            Start intake
+            {siteContent.enterpriseEngagement.servicesLink.label}
           </Link>
         </div>
         <ServiceTrackLinks />
@@ -198,7 +198,7 @@ export default function ServicesPage() {
         description={siteContent.servicesPage.cta.description}
         primary={{
           label: siteContent.servicesPage.cta.primaryLabel,
-          href: getPrimaryCtaHref(),
+          href: siteContent.enterpriseEngagement.servicesLink.href,
         }}
         secondary={{
           label: siteContent.servicesPage.cta.secondaryLabel,

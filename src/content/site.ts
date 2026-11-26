@@ -43,7 +43,7 @@ export interface ConsultancyTrack {
   description: string;
   idealFor: string[];
   deliverables: string[];
-  slaGuarantees: string[];
+  reviewCriteria: string[];
   architectureFocus: string;
   ctaLabel: string;
   ctaHref: string;
@@ -237,6 +237,21 @@ export interface SiteConfig {
     automationWeb: Array<{ question: string; answer: string }>;
     appAiSystems: Array<{ question: string; answer: string }>;
   };
+  enterpriseEngagement: {
+    hero: { eyebrow: string; title: string; description: string };
+    inquiry: { label: string; href: string };
+    proof: { label: string; href: string };
+    servicesLink: { label: string; href: string };
+    inquiryNote: string;
+    procurement: { title: string; description: string };
+    pilot: { title: string; description: string; label: string };
+    tracks: { title: string; description: string };
+    commitments: Array<{
+      id: "ownership" | "approval" | "recovery" | "handoff";
+      title: string;
+      description: string;
+    }>;
+  };
   workflowProofSprint: {
     discovery: { label: string; href: string };
     hero: { eyebrow: string; title: string; description: string };
@@ -407,6 +422,10 @@ export interface SiteConfig {
     };
   };
 }
+
+const enterpriseInquiryHref =
+  "https://api.aiautomatedsystems.ca/contact?product=enterprise-consulting";
+const workflowProofPilotPrice = "CAD $1,500";
 
 const rawSiteContent: SiteConfig = {
   brand: {
@@ -700,15 +719,15 @@ const rawSiteContent: SiteConfig = {
         "System Architecture Blueprint with Schema Contracts",
         "Prioritized Implementation Brief & ROI Projection",
       ],
-      slaGuarantees: [
-        "Deterministic boundary definitions for in-scope actions",
-        "Zero vendor lock-in; open-standard architectural artifacts",
-        "Executive & technical stakeholder sign-off alignment",
+      reviewCriteria: [
+        "Named owner and agreed boundaries for in-scope actions",
+        "Risks, costs, and assumptions visible to approvers",
+        "A clear recommendation to build, revise the scope, or stop",
       ],
       architectureFocus:
         "Decision boundary identification, failure mode mapping, and constraint registries.",
-      ctaLabel: "Book Clarity Audit Call",
-      ctaHref: "https://calendly.com/scottrmhardie",
+      ctaLabel: "Discuss an AI clarity audit",
+      ctaHref: enterpriseInquiryHref,
     },
     {
       id: "stabilization-sprint",
@@ -730,15 +749,15 @@ const rawSiteContent: SiteConfig = {
         "Automated Retry & Human-in-the-Loop Fallback Paths",
         "Operational Runbooks & Incident Playbooks for Ops Teams",
       ],
-      slaGuarantees: [
-        "99%+ Workflow execution reliability target",
-        "Zero unintercepted high-impact error transitions",
-        "Replayable audit trails for all operations",
+      reviewCriteria: [
+        "Reliability target agreed against the observed baseline",
+        "High-impact failure paths tested with the process owner",
+        "Recovery steps and audit evidence reviewed before rollout",
       ],
       architectureFocus:
         "Input schema validation, deterministic retry budgets, and human-in-the-loop exception routing.",
-      ctaLabel: "Schedule Stabilization Review",
-      ctaHref: "https://calendly.com/scottrmhardie",
+      ctaLabel: "Discuss stabilization",
+      ctaHref: enterpriseInquiryHref,
     },
     {
       id: "custom-build",
@@ -761,15 +780,15 @@ const rawSiteContent: SiteConfig = {
         "Automated CI/CD Test Suites & Verification Pipelines",
         "Hands-on Operator Enablement Sessions & Complete Documentation",
       ],
-      slaGuarantees: [
+      reviewCriteria: [
         "Contract-defined ownership of custom deliverables",
-        "Policy-before-execution guarantees on all state transitions",
-        "Full test suite coverage for automated regression prevention",
+        "Approval and fallback for agreed high-impact actions",
+        "Acceptance tests, operator handoff, and rollback review",
       ],
       architectureFocus:
         "Modular agent orchestration, deterministic state machines, and private connector infrastructure.",
-      ctaLabel: "Scope a Custom Build",
-      ctaHref: "https://calendly.com/scottrmhardie",
+      ctaLabel: "Discuss a custom build",
+      ctaHref: enterpriseInquiryHref,
     },
     {
       id: "strategic-governance",
@@ -791,15 +810,15 @@ const rawSiteContent: SiteConfig = {
         "Security & Data Handling Compliance Verification",
         "Quarterly Executive Briefings & Systems Roadmap Updates",
       ],
-      slaGuarantees: [
-        "Continuous architectural drift prevention",
-        "Priority incident escalation advisory",
-        "Proactive technology radar updates",
+      reviewCriteria: [
+        "Agreed review cadence and decision owners",
+        "Documented risk and performance findings for in-scope systems",
+        "Prioritized changes with an accountable handoff",
       ],
       architectureFocus:
         "Model portfolio governance, enterprise policy evolution, and cross-department automation alignment.",
-      ctaLabel: "Discuss Advisory Partnership",
-      ctaHref: "https://calendly.com/scottrmhardie",
+      ctaLabel: "Discuss an advisory engagement",
+      ctaHref: enterpriseInquiryHref,
     },
   ],
   catalogProducts: [
@@ -1861,6 +1880,63 @@ The workflow is complete only when the output schema is valid, policy receipts a
       },
     ],
   },
+  enterpriseEngagement: {
+    hero: {
+      eyebrow: "Enterprise automation consulting",
+      title: "Make critical workflows easier to run and safer to change",
+      description:
+        "AIAS helps operations and technology teams prove where AI saves work, stabilize automations they already rely on, and build the right system when existing tools fall short.",
+    },
+    inquiry: {
+      label: "Request a consultation",
+      href: enterpriseInquiryHref,
+    },
+    proof: { label: "Review our work", href: "/work" },
+    servicesLink: { label: "Explore enterprise engagements", href: "/hire" },
+    inquiryNote:
+      "Tell us the workflow, the outcome you need, and who owns it. Use business contact details only; don’t send customer records, credentials, or proprietary files. We’ll review fit before proposing scope or terms.",
+    procurement: {
+      title: "Know what you’re approving before work starts",
+      description:
+        "Agree on scope, required access, data handling, acceptance tests, and handoff before implementation. If a workflow isn’t ready for automation, the recommendation may be to fix the process first or stop.",
+    },
+    pilot: {
+      title: "Need proof before a larger commitment?",
+      description: `The ${workflowProofPilotPrice} Workflow Proof Sprint tests one support workflow. Compare human effort and quality with and without AI, then decide whether it’s worth rolling out.`,
+      label: "See the fixed-scope pilot",
+    },
+    tracks: {
+      title: "Choose the engagement that fits your situation",
+      description:
+        "These are starting scopes, not fixed delivery promises. We confirm the timeline and deliverables once we understand your systems and constraints.",
+    },
+    commitments: [
+      {
+        id: "ownership",
+        title: "Clear ownership",
+        description:
+          "Put source access, custom deliverables, and third-party licenses in the scope of work.",
+      },
+      {
+        id: "approval",
+        title: "Human approval where it matters",
+        description:
+          "Agree on which actions can run automatically and which require approval or escalation.",
+      },
+      {
+        id: "recovery",
+        title: "A way back",
+        description:
+          "Plan and test the fallback or rollback for the systems we change.",
+      },
+      {
+        id: "handoff",
+        title: "A handoff your team can use",
+        description:
+          "Name the operator and agree on runbooks, access, and support boundaries before release.",
+      },
+    ],
+  },
   workflowProofSprint: {
     discovery: {
       label: "Private AI Workflow Proof Sprint",
@@ -1893,7 +1969,7 @@ The workflow is complete only when the output schema is valid, policy receipts a
       },
     ],
     terms: {
-      title: "CAD $1,500 founding pilot",
+      title: `${workflowProofPilotPrice} founding pilot`,
       description:
         "One workweek after we agree on the scope, confirm access approval, and have a usable sample. Includes a kickoff, measurement protocol, reviewer rubric, offline scoring kit, decision brief, and handoff call. Your team provides an accountable owner, a reviewer, and approved cases. Integration and implementation are not included. No performance guarantee or payment at inquiry.",
     },
@@ -1937,10 +2013,10 @@ The workflow is complete only when the output schema is valid, policy receipts a
         "We standardize around input validation, deterministic routing, controlled execution, and human escalation on low-confidence branches.",
     },
     cta: {
-      title: "Need a service mix tailored to your operating model?",
+      title: "Find the right starting point for your team",
       description:
-        "Start with a strategy call and we will scope the smallest practical rollout for your team.",
-      primaryLabel: "Book a strategy call",
+        "Compare an audit, a stabilization sprint, a custom build, and ongoing governance. See what each includes before requesting a consultation.",
+      primaryLabel: "Compare engagement options",
       secondaryLabel: "View engagement shapes",
       secondaryHref: "/pricing",
     },

@@ -235,6 +235,15 @@ export const ROUTE_MANIFEST: RouteManifestEntry[] = [
     changeFrequency: "monthly",
   },
   {
+    path: "/p/workflow-proof-sprint",
+    title: "Private AI Workflow Proof Sprint | AI Automated Systems",
+    description:
+      "Measure whether AI-assisted support triage saves labor without lowering quality. One workflow, human review, and a decision brief from a fixed-scope pilot.",
+    canonical: "/p/workflow-proof-sprint",
+    priority: 0.7,
+    changeFrequency: "monthly",
+  },
+  {
     path: "/point-of-view",
     title: "What We Believe About AI Systems | AI Automated Systems",
     description:

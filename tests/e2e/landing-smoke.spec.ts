@@ -30,6 +30,32 @@ test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
       .toBe(true);
   });
 
+  test("Workflow Proof Sprint is discoverable and offers private inbound contact", async ({
+    page,
+  }) => {
+    await page.goto("/services");
+    await page
+      .getByRole("link", {
+        name: "Private AI Workflow Proof Sprint",
+        exact: true,
+      })
+      .click();
+    await expect(page).toHaveURL(/\/p\/workflow-proof-sprint\/?$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "Find out whether AI gives your support team time back",
+    );
+    await expect(
+      page.getByRole("heading", { name: "CAD $1,500 founding pilot" }),
+    ).toBeVisible();
+    const email = page.getByRole("link", { name: "Email a fit request" });
+    await expect(email).toBeVisible();
+    const href = (await email.getAttribute("href")) ?? "";
+    expect(href.startsWith(`mailto:${siteContent.contact.email}?`)).toBe(true);
+    expect(decodeURIComponent(href)).toContain("Please do not include tickets");
+    await page.getByRole("link", { name: "Other contact options" }).click();
+    await expect(page).toHaveURL(/\/contact\/?$/);
+  });
+
   test("Contact intake flow is functional", async ({ page }) => {
     await page.goto("/contact");
 

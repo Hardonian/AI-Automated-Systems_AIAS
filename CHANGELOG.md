@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-- Added `/p/workflow-proof-sprint`, a fixed-scope support-operations pilot that compares manual and AI-assisted labor and quality. Linked it from Services and registered the canonical route for discovery. Inquiries use the existing business email and Contact page; no checkout or intake backend changes.
+- Added `/p/workflow-proof-sprint`, a fixed-scope support-operations pilot that compares manual and AI-assisted labor and quality. Linked it from Services and registered the canonical route for discovery. Inquiries use the existing tagged enterprise contact form; no checkout or intake backend changes.
 
 ## [1.2.1] - 2026-11-13
 

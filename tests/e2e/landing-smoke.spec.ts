@@ -47,13 +47,19 @@ test.describe("@smoke AIAS Landing & Workflow Smoke Test", () => {
     await expect(
       page.getByRole("heading", { name: "CAD $1,500 founding pilot" }),
     ).toBeVisible();
-    const email = page.getByRole("link", { name: "Email a fit request" });
-    await expect(email).toBeVisible();
-    const href = (await email.getAttribute("href")) ?? "";
-    expect(href.startsWith(`mailto:${siteContent.contact.email}?`)).toBe(true);
-    expect(decodeURIComponent(href)).toContain("Please do not include tickets");
-    await page.getByRole("link", { name: "Other contact options" }).click();
-    await expect(page).toHaveURL(/\/contact\/?$/);
+    await expect(
+      page.getByRole("link", { name: "Request a fit check" }),
+    ).toHaveAttribute(
+      "href",
+      "https://api.aiautomatedsystems.ca/contact?product=workflow-proof-sprint",
+    );
+    await expect(
+      page.getByText(/Do not send tickets, customer data/),
+    ).toBeVisible();
+    await page
+      .getByRole("link", { name: "What we measure", exact: true })
+      .click();
+    await expect(page).toHaveURL(/\/what-we-measure\/?$/);
   });
 
   test("Contact intake flow is functional", async ({ page }) => {

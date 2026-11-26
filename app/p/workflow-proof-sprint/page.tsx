@@ -7,7 +7,6 @@ import {
   SurfaceCard,
 } from "@/components/ui/section-primitives";
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo/metadata";
-import { siteContent } from "@/src/content/site";
 
 export const metadata: Metadata = generateSEOMetadata({
   title: "Private AI Workflow Proof Sprint | AI Automated Systems",
@@ -31,13 +30,10 @@ const steps = [
   },
 ];
 
-export default function WorkflowProofSprintPage() {
-  const subject = encodeURIComponent("Workflow Proof Sprint — fit check");
-  const body = encodeURIComponent(
-    "Workflow name:\nApproximate monthly case volume:\nCan a process owner and reviewer participate?\n\nPlease do not include tickets, customer information, or credentials.",
-  );
-  const emailHref = `mailto:${siteContent.contact.email}?subject=${subject}&body=${body}`;
+const inquiryHref =
+  "https://api.aiautomatedsystems.ca/contact?product=workflow-proof-sprint";
 
+export default function WorkflowProofSprintPage() {
   return (
     <>
       <PageHero
@@ -84,9 +80,9 @@ export default function WorkflowProofSprintPage() {
 
       <PageCta
         title="Is your workflow a fit?"
-        description="Ask for a fit check with only the workflow name, approximate monthly volume, and reviewer availability. Do not send tickets, personal data, or credentials."
-        primary={{ label: "Email a fit request", href: emailHref }}
-        secondary={{ label: "Other contact options", href: "/contact" }}
+        description="In the inquiry form, tell us the workflow name, approximate monthly volume, and reviewer availability. Use your business contact details. Do not send tickets, customer data, or credentials."
+        primary={{ label: "Request a fit check", href: inquiryHref }}
+        secondary={{ label: "What we measure", href: "/what-we-measure" }}
       />
     </>
   );
